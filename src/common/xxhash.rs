@@ -85,7 +85,6 @@ unsafe extern "C" fn XXH32_round(mut acc: xxh_u32, mut input: xxh_u32) -> xxh_u3
 pub const XXH_PRIME32_3: libc::c_uint = 0xc2b2ae3d as libc::c_uint;
 pub const XXH_PRIME32_2: libc::c_uint = 0x85ebca77 as libc::c_uint;
 pub const XXH_PRIME32_1: libc::c_uint = 0x9e3779b1 as libc::c_uint;
-pub const XXH_rotl32: unsafe extern "C" fn(libc::c_uint, libc::c_uint) -> libc::c_uint = __builtin_rotateleft32;
 pub const XXH_PRIME32_5: libc::c_uint = 0x165667b1 as libc::c_uint;
 pub const XXH_PRIME32_4: libc::c_uint = 0x27d4eb2f as libc::c_uint;
 unsafe extern "C" fn XXH_readLE32_align(
@@ -135,10 +134,6 @@ unsafe extern "C" fn XXH_memcpy(
 unsafe extern "C" fn XXH_free(mut p: *mut libc::c_void) {
     free(p);
 }
-pub const XXH_rotl64: unsafe extern "C" fn(
-    libc::c_ulong,
-    libc::c_ulong,
-) -> libc::c_ulong = __builtin_rotateleft64;
 unsafe extern "C" fn XXH_readBE32(mut ptr: *const libc::c_void) -> xxh_u32 {
     return if XXH_CPU_LITTLE_ENDIAN != 0 {
         XXH_swap32(XXH_read32(ptr))

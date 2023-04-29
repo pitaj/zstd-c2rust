@@ -278,11 +278,20 @@ unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
+const fn ZSTD_countLeadingZeros32_const(mut val: U32) -> libc::c_uint {
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    return val.leading_zeros() as i32 as libc::c_uint;
+}
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
+}
+const fn ZSTD_highbit32_const(mut val: U32) -> libc::c_uint {
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    return (31 as libc::c_int as libc::c_uint)
+        .wrapping_sub(ZSTD_countLeadingZeros32_const(val));
 }
 pub const HUF_BLOCKSIZE_MAX: libc::c_int = 128 as libc::c_int * 1024 as libc::c_int;
 pub const HUF_TABLELOG_MAX: libc::c_int = 12 as libc::c_int;
@@ -796,7 +805,7 @@ pub const RANK_POSITION_LOG_BUCKETS_BEGIN: libc::c_int = RANK_POSITION_TABLE_SIZ
     - 1 as libc::c_int - RANK_POSITION_MAX_COUNT_LOG - 1 as libc::c_int;
 pub const RANK_POSITION_DISTINCT_COUNT_CUTOFF: libc::c_uint = (RANK_POSITION_LOG_BUCKETS_BEGIN
     as libc::c_uint)
-    .wrapping_add(ZSTD_highbit32(RANK_POSITION_LOG_BUCKETS_BEGIN as U32));
+    .wrapping_add(ZSTD_highbit32_const(RANK_POSITION_LOG_BUCKETS_BEGIN as U32));
 unsafe extern "C" fn HUF_getIndex(count: U32) -> U32 {
     return if count < RANK_POSITION_DISTINCT_COUNT_CUTOFF {
         count
