@@ -53,3 +53,9 @@ compile_commands.json
 .clangd
 perf.data
 perf.data.old
+
+build/cmake/output
+c2rust.*
+
+# Rust
+/target
