@@ -418,26 +418,10 @@ unsafe extern "C" fn AIO_fwriteSparse(
         let restStart = bufferTEnd as *const libc::c_char;
         let mut restPtr = restStart;
         let restEnd = (buffer as *const libc::c_char).offset(bufferSize as isize);
-        if restEnd > restStart
+        debug_assert!(restEnd > restStart
             && restEnd
                 < restStart
-                    .offset(::core::mem::size_of::<size_t>() as libc::c_ulong as isize)
-        {} else {
-            __assert_fail(
-                b"restEnd > restStart && restEnd < restStart + sizeof(size_t)\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                93 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 100],
-                    &[libc::c_char; 100],
-                >(
-                    b"unsigned int AIO_fwriteSparse(FILE *, const void *, size_t, const FIO_prefs_t *const, unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+                    .offset(::core::mem::size_of::<size_t>() as libc::c_ulong as isize));
         while restPtr < restEnd && *restPtr as libc::c_int == 0 as libc::c_int {
             restPtr = restPtr.offset(1);
         }
@@ -531,38 +515,10 @@ unsafe extern "C" fn AIO_fwriteSparseEnd(
     mut storedSkips: libc::c_uint,
 ) {
     if (*prefs).testMode != 0 {
-        if storedSkips == 0 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"storedSkips == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                113 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 73],
-                    &[libc::c_char; 73],
-                >(
-                    b"void AIO_fwriteSparseEnd(const FIO_prefs_t *const, FILE *, unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(storedSkips == 0 as libc::c_int as libc::c_uint);
     }
     if storedSkips > 0 as libc::c_int as libc::c_uint {
-        if (*prefs).sparseFileSupport > 0 as libc::c_int {} else {
-            __assert_fail(
-                b"prefs->sparseFileSupport > 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                115 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 73],
-                    &[libc::c_char; 73],
-                >(
-                    b"void AIO_fwriteSparseEnd(const FIO_prefs_t *const, FILE *, unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*prefs).sparseFileSupport > 0 as libc::c_int);
         if fseek(
             file,
             storedSkips.wrapping_sub(1 as libc::c_int as libc::c_uint) as libc::c_long,
@@ -735,21 +691,7 @@ unsafe extern "C" fn AIO_IOPool_createThreadPool(
             }
             exit(102 as libc::c_int);
         }
-        if 10 as libc::c_int >= 2 as libc::c_int {} else {
-            __assert_fail(
-                b"MAX_IO_JOBS >= 2\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                172 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 69],
-                    &[libc::c_char; 69],
-                >(
-                    b"void AIO_IOPool_createThreadPool(IOPoolCtx_t *, const FIO_prefs_t *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(10 as libc::c_int >= 2 as libc::c_int);
         (*ctx)
             .threadPool = POOL_create(
             1 as libc::c_int as size_t,
@@ -833,20 +775,7 @@ unsafe extern "C" fn AIO_IOPool_unlockJobsMutex(mut ctx: *mut IOPoolCtx_t) {
 unsafe extern "C" fn AIO_IOPool_releaseIoJob(mut job: *mut IOJob_t) {
     let ctx = (*job).ctx as *mut IOPoolCtx_t;
     AIO_IOPool_lockJobsMutex(ctx);
-    if (*ctx).availableJobsCount < (*ctx).totalIoJobs {} else {
-        __assert_fail(
-            b"ctx->availableJobsCount < ctx->totalIoJobs\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            224 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 40],
-                &[libc::c_char; 40],
-            >(b"void AIO_IOPool_releaseIoJob(IOJob_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ctx).availableJobsCount < (*ctx).totalIoJobs);
     let fresh0 = (*ctx).availableJobsCount;
     (*ctx).availableJobsCount = (*ctx).availableJobsCount + 1;
     (*ctx).availableJobs[fresh0 as usize] = job as *mut libc::c_void;
@@ -861,32 +790,8 @@ unsafe extern "C" fn AIO_IOPool_setThreaded(
     mut ctx: *mut IOPoolCtx_t,
     mut threaded: libc::c_int,
 ) {
-    if threaded == 0 as libc::c_int || threaded == 1 as libc::c_int {} else {
-        __assert_fail(
-            b"threaded == 0 || threaded == 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            240 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 48],
-                &[libc::c_char; 48],
-            >(b"void AIO_IOPool_setThreaded(IOPoolCtx_t *, int)\0"))
-                .as_ptr(),
-        );
-    }
-    if !ctx.is_null() {} else {
-        __assert_fail(
-            b"ctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            241 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 48],
-                &[libc::c_char; 48],
-            >(b"void AIO_IOPool_setThreaded(IOPoolCtx_t *, int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(threaded == 0 as libc::c_int || threaded == 1 as libc::c_int);
+    debug_assert!(!ctx.is_null());
     if (*ctx).threadPoolActive != threaded {
         AIO_IOPool_join(ctx);
         (*ctx).threadPoolActive = threaded;
@@ -896,35 +801,10 @@ unsafe extern "C" fn AIO_IOPool_destroy(mut ctx: *mut IOPoolCtx_t) {
     let mut i: libc::c_int = 0;
     if !((*ctx).threadPool).is_null() {
         AIO_IOPool_join(ctx);
-        if (*ctx).availableJobsCount == (*ctx).totalIoJobs {} else {
-            __assert_fail(
-                b"ctx->availableJobsCount == ctx->totalIoJobs\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                256 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 39],
-                    &[libc::c_char; 39],
-                >(b"void AIO_IOPool_destroy(IOPoolCtx_t *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*ctx).availableJobsCount == (*ctx).totalIoJobs);
         POOL_free((*ctx).threadPool);
     }
-    if ((*ctx).file).is_null() {} else {
-        __assert_fail(
-            b"ctx->file == NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            260 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 39],
-                &[libc::c_char; 39],
-            >(b"void AIO_IOPool_destroy(IOPoolCtx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(((*ctx).file).is_null());
     i = 0 as libc::c_int;
     while i < (*ctx).availableJobsCount {
         let mut job = (*ctx).availableJobs[i as usize] as *mut IOJob_t;
@@ -935,34 +815,9 @@ unsafe extern "C" fn AIO_IOPool_destroy(mut ctx: *mut IOPoolCtx_t) {
 }
 unsafe extern "C" fn AIO_IOPool_acquireJob(mut ctx: *mut IOPoolCtx_t) -> *mut IOJob_t {
     let mut job = 0 as *mut IOJob_t;
-    if !((*ctx).file).is_null() || (*(*ctx).prefs).testMode != 0 {} else {
-        __assert_fail(
-            b"ctx->file != NULL || ctx->prefs->testMode\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            272 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 46],
-                &[libc::c_char; 46],
-            >(b"IOJob_t *AIO_IOPool_acquireJob(IOPoolCtx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!((*ctx).file).is_null() || (*(*ctx).prefs).testMode != 0);
     AIO_IOPool_lockJobsMutex(ctx);
-    if (*ctx).availableJobsCount > 0 as libc::c_int {} else {
-        __assert_fail(
-            b"ctx->availableJobsCount > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            274 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 46],
-                &[libc::c_char; 46],
-            >(b"IOJob_t *AIO_IOPool_acquireJob(IOPoolCtx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ctx).availableJobsCount > 0 as libc::c_int);
     (*ctx).availableJobsCount -= 1;
     job = (*ctx).availableJobs[(*ctx).availableJobsCount as usize] as *mut IOJob_t;
     AIO_IOPool_unlockJobsMutex(ctx);
@@ -972,34 +827,9 @@ unsafe extern "C" fn AIO_IOPool_acquireJob(mut ctx: *mut IOPoolCtx_t) -> *mut IO
     return job;
 }
 unsafe extern "C" fn AIO_IOPool_setFile(mut ctx: *mut IOPoolCtx_t, mut file: *mut FILE) {
-    if !ctx.is_null() {} else {
-        __assert_fail(
-            b"ctx!=NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            288 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 47],
-                &[libc::c_char; 47],
-            >(b"void AIO_IOPool_setFile(IOPoolCtx_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ctx.is_null());
     AIO_IOPool_join(ctx);
-    if (*ctx).availableJobsCount == (*ctx).totalIoJobs {} else {
-        __assert_fail(
-            b"ctx->availableJobsCount == ctx->totalIoJobs\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            290 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 47],
-                &[libc::c_char; 47],
-            >(b"void AIO_IOPool_setFile(IOPoolCtx_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ctx).availableJobsCount == (*ctx).totalIoJobs);
     (*ctx).file = file;
 }
 unsafe extern "C" fn AIO_IOPool_getFile(mut ctx: *const IOPoolCtx_t) -> *mut FILE {
@@ -1029,19 +859,7 @@ pub unsafe extern "C" fn AIO_WritePool_enqueueAndReacquireWriteJob(
 }
 #[no_mangle]
 pub unsafe extern "C" fn AIO_WritePool_sparseWriteEnd(mut ctx: *mut WritePoolCtx_t) {
-    if !ctx.is_null() {} else {
-        __assert_fail(
-            b"ctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            333 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 52],
-                &[libc::c_char; 52],
-            >(b"void AIO_WritePool_sparseWriteEnd(WritePoolCtx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ctx.is_null());
     AIO_IOPool_join(&mut (*ctx).base);
     AIO_fwriteSparseEnd((*ctx).base.prefs, (*ctx).base.file, (*ctx).storedSkips);
     (*ctx).storedSkips = 0 as libc::c_int as libc::c_uint;
@@ -1052,19 +870,7 @@ pub unsafe extern "C" fn AIO_WritePool_setFile(
     mut file: *mut FILE,
 ) {
     AIO_IOPool_setFile(&mut (*ctx).base, file);
-    if (*ctx).storedSkips == 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"ctx->storedSkips == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            345 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 53],
-                &[libc::c_char; 53],
-            >(b"void AIO_WritePool_setFile(WritePoolCtx_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    };
+    debug_assert!((*ctx).storedSkips == 0 as libc::c_int as libc::c_uint);;
 }
 #[no_mangle]
 pub unsafe extern "C" fn AIO_WritePool_getFile(
@@ -1081,20 +887,7 @@ pub unsafe extern "C" fn AIO_WritePool_closeFile(
     mut ctx: *mut WritePoolCtx_t,
 ) -> libc::c_int {
     let dstFile = (*ctx).base.file;
-    if !dstFile.is_null() || (*(*ctx).base.prefs).testMode != 0 as libc::c_int {} else {
-        __assert_fail(
-            b"dstFile!=NULL || ctx->base.prefs->testMode!=0\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            365 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 46],
-                &[libc::c_char; 46],
-            >(b"int AIO_WritePool_closeFile(WritePoolCtx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dstFile.is_null() || (*(*ctx).base.prefs).testMode != 0 as libc::c_int);
     AIO_WritePool_sparseWriteEnd(ctx);
     AIO_IOPool_setFile(&mut (*ctx).base, NULL as *mut FILE);
     return fclose(dstFile);
@@ -1170,19 +963,7 @@ pub unsafe extern "C" fn AIO_WritePool_free(mut ctx: *mut WritePoolCtx_t) {
         AIO_WritePool_closeFile(ctx);
     }
     AIO_IOPool_destroy(&mut (*ctx).base);
-    if (*ctx).storedSkips == 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"ctx->storedSkips==0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            397 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 42],
-                &[libc::c_char; 42],
-            >(b"void AIO_WritePool_free(WritePoolCtx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ctx).storedSkips == 0 as libc::c_int as libc::c_uint);
     free(ctx as *mut libc::c_void);
 }
 #[no_mangle]
@@ -1205,20 +986,7 @@ unsafe extern "C" fn AIO_ReadPool_releaseAllCompletedJobs(mut ctx: *mut ReadPool
 unsafe extern "C" fn AIO_ReadPool_addJobToCompleted(mut job: *mut IOJob_t) {
     let ctx = (*job).ctx as *mut ReadPoolCtx_t;
     AIO_IOPool_lockJobsMutex(&mut (*ctx).base);
-    if (*ctx).completedJobsCount < 10 as libc::c_int {} else {
-        __assert_fail(
-            b"ctx->completedJobsCount < MAX_IO_JOBS\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            424 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 47],
-                &[libc::c_char; 47],
-            >(b"void AIO_ReadPool_addJobToCompleted(IOJob_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ctx).completedJobsCount < 10 as libc::c_int);
     let fresh1 = (*ctx).completedJobsCount;
     (*ctx).completedJobsCount = (*ctx).completedJobsCount + 1;
     (*ctx).completedJobs[fresh1 as usize] = job as *mut libc::c_void;
@@ -1268,36 +1036,11 @@ unsafe extern "C" fn AIO_ReadPool_getNextCompletedJob(
     while job.is_null()
         && AIO_ReadPool_numReadsInFlight(ctx) > 0 as libc::c_int as libc::c_ulong
     {
-        if !((*ctx).base.threadPool).is_null() {} else {
-            __assert_fail(
-                b"ctx->base.threadPool != NULL\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                471 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 59],
-                    &[libc::c_char; 59],
-                >(b"IOJob_t *AIO_ReadPool_getNextCompletedJob(ReadPoolCtx_t *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(!((*ctx).base.threadPool).is_null());
         job = AIO_ReadPool_findNextWaitingOffsetCompletedJob_locked(ctx);
     }
     if !job.is_null() {
-        if (*job).offset == (*ctx).waitingOnOffset {} else {
-            __assert_fail(
-                b"job->offset == ctx->waitingOnOffset\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                477 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 59],
-                    &[libc::c_char; 59],
-                >(b"IOJob_t *AIO_ReadPool_getNextCompletedJob(ReadPoolCtx_t *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*job).offset == (*ctx).waitingOnOffset);
         (*ctx)
             .waitingOnOffset = ((*ctx).waitingOnOffset as libc::c_ulong)
             .wrapping_add((*job).usedBufferSize) as U64 as U64;
@@ -1409,19 +1152,7 @@ pub unsafe extern "C" fn AIO_ReadPool_setFile(
     mut ctx: *mut ReadPoolCtx_t,
     mut file: *mut FILE,
 ) {
-    if !ctx.is_null() {} else {
-        __assert_fail(
-            b"ctx!=NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            527 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 51],
-                &[libc::c_char; 51],
-            >(b"void AIO_ReadPool_setFile(ReadPoolCtx_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ctx.is_null());
     AIO_IOPool_join(&mut (*ctx).base);
     AIO_ReadPool_releaseAllCompletedJobs(ctx);
     if !((*ctx).currentJobHeld).is_null() {
@@ -1546,19 +1277,7 @@ pub unsafe extern "C" fn AIO_ReadPool_consumeBytes(
     mut ctx: *mut ReadPoolCtx_t,
     mut n: size_t,
 ) {
-    if n <= (*ctx).srcBufferLoaded {} else {
-        __assert_fail(
-            b"n <= ctx->srcBufferLoaded\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                as *const libc::c_char,
-            581 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 56],
-                &[libc::c_char; 56],
-            >(b"void AIO_ReadPool_consumeBytes(ReadPoolCtx_t *, size_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(n <= (*ctx).srcBufferLoaded);
     (*ctx)
         .srcBufferLoaded = ((*ctx).srcBufferLoaded as libc::c_ulong).wrapping_sub(n)
         as size_t as size_t;
@@ -1602,23 +1321,9 @@ pub unsafe extern "C" fn AIO_ReadPool_fillBuffer(
         return 0 as libc::c_int as size_t;
     }
     if useCoalesce != 0 {
-        if ((*ctx).srcBufferLoaded).wrapping_add((*job).usedBufferSize)
+        debug_assert!(((*ctx).srcBufferLoaded).wrapping_add((*job).usedBufferSize)
             <= (2 as libc::c_int as libc::c_ulong)
-                .wrapping_mul((*ctx).base.jobBufferSize)
-        {} else {
-            __assert_fail(
-                b"ctx->srcBufferLoaded + job->usedBufferSize <= 2*ctx->base.jobBufferSize\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
-                    as *const libc::c_char,
-                626 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 56],
-                    &[libc::c_char; 56],
-                >(b"size_t AIO_ReadPool_fillBuffer(ReadPoolCtx_t *, size_t)\0"))
-                    .as_ptr(),
-            );
-        }
+                .wrapping_mul((*ctx).base.jobBufferSize));
         memcpy(
             ((*ctx).coalesceBuffer).offset((*ctx).srcBufferLoaded as isize)
                 as *mut libc::c_void,

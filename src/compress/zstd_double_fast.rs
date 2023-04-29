@@ -233,75 +233,14 @@ unsafe extern "C" fn ZSTD_storeSeq(
 ) {
     let litLimit_w = litLimit.offset(-(WILDCOPY_OVERLENGTH as isize));
     let litEnd = literals.offset(litLength as isize);
-    if (((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart)
-        as libc::c_long as size_t) < (*seqStorePtr).maxNbSeq
-    {} else {
-        __assert_fail(
-            b"(size_t)(seqStorePtr->sequences - seqStorePtr->sequencesStart) < seqStorePtr->maxNbSeq\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            669 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void ZSTD_storeSeq(seqStore_t *, size_t, const BYTE *, const BYTE *, U32, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (*seqStorePtr).maxNbLit
+    debug_assert!((((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart)
+        as libc::c_long as size_t) < (*seqStorePtr).maxNbSeq);
+    debug_assert!((*seqStorePtr).maxNbLit
         <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
-            as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"seqStorePtr->maxNbLit <= 128 KB\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            671 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void ZSTD_storeSeq(seqStore_t *, size_t, const BYTE *, const BYTE *, U32, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if ((*seqStorePtr).lit).offset(litLength as isize)
-        <= ((*seqStorePtr).litStart).offset((*seqStorePtr).maxNbLit as isize)
-    {} else {
-        __assert_fail(
-            b"seqStorePtr->lit + litLength <= seqStorePtr->litStart + seqStorePtr->maxNbLit\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            672 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void ZSTD_storeSeq(seqStore_t *, size_t, const BYTE *, const BYTE *, U32, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if literals.offset(litLength as isize) <= litLimit {} else {
-        __assert_fail(
-            b"literals + litLength <= litLimit\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            673 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void ZSTD_storeSeq(seqStore_t *, size_t, const BYTE *, const BYTE *, U32, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+            as libc::c_ulong);
+    debug_assert!(((*seqStorePtr).lit).offset(litLength as isize)
+        <= ((*seqStorePtr).litStart).offset((*seqStorePtr).maxNbLit as isize));
+    debug_assert!(literals.offset(litLength as isize) <= litLimit);
     if litEnd <= litLimit_w {
         ZSTD_copy16(
             (*seqStorePtr).lit as *mut libc::c_void,
@@ -321,24 +260,8 @@ unsafe extern "C" fn ZSTD_storeSeq(
     }
     (*seqStorePtr).lit = ((*seqStorePtr).lit).offset(litLength as isize);
     if litLength > 0xffff as libc::c_int as libc::c_ulong {
-        if (*seqStorePtr).longLengthType as libc::c_uint
-            == ZSTD_llt_none as libc::c_int as libc::c_uint
-        {} else {
-            __assert_fail(
-                b"seqStorePtr->longLengthType == ZSTD_llt_none\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                    as *const u8 as *const libc::c_char,
-                690 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 82],
-                    &[libc::c_char; 82],
-                >(
-                    b"void ZSTD_storeSeq(seqStore_t *, size_t, const BYTE *, const BYTE *, U32, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*seqStorePtr).longLengthType as libc::c_uint
+            == ZSTD_llt_none as libc::c_int as libc::c_uint);
         (*seqStorePtr).longLengthType = ZSTD_llt_literalLength;
         (*seqStorePtr)
             .longLengthPos = ((*seqStorePtr).sequences)
@@ -347,41 +270,11 @@ unsafe extern "C" fn ZSTD_storeSeq(
     (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize))
         .litLength = litLength as U16;
     (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize)).offBase = offBase;
-    if matchLength >= 3 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"matchLength >= MINMATCH\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            700 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void ZSTD_storeSeq(seqStore_t *, size_t, const BYTE *, const BYTE *, U32, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(matchLength >= 3 as libc::c_int as libc::c_ulong);
     let mlBase = matchLength.wrapping_sub(MINMATCH as libc::c_ulong);
     if mlBase > 0xffff as libc::c_int as libc::c_ulong {
-        if (*seqStorePtr).longLengthType as libc::c_uint
-            == ZSTD_llt_none as libc::c_int as libc::c_uint
-        {} else {
-            __assert_fail(
-                b"seqStorePtr->longLengthType == ZSTD_llt_none\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                    as *const u8 as *const libc::c_char,
-                703 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 82],
-                    &[libc::c_char; 82],
-                >(
-                    b"void ZSTD_storeSeq(seqStore_t *, size_t, const BYTE *, const BYTE *, U32, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*seqStorePtr).longLengthType as libc::c_uint
+            == ZSTD_llt_none as libc::c_int as libc::c_uint);
         (*seqStorePtr).longLengthType = ZSTD_llt_matchLength;
         (*seqStorePtr)
             .longLengthPos = ((*seqStorePtr).sequences)
@@ -442,70 +335,22 @@ unsafe extern "C" fn MEM_swap64(mut in_0: U64) -> U64 {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            30 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"unsigned int ZSTD_countTrailingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: U64) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            92 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"unsigned int ZSTD_countTrailingZeros64(U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: U64) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            123 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros64(U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
     return (val as libc::c_ulonglong).leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -558,24 +403,8 @@ unsafe extern "C" fn ZSTD_wildcopy(
             }
         }
     } else {
-        if diff >= 16 as libc::c_int as libc::c_long
-            || diff <= -(16 as libc::c_int) as libc::c_long
-        {} else {
-            __assert_fail(
-                b"diff >= WILDCOPY_VECLEN || diff <= -WILDCOPY_VECLEN\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/zstd_internal.h\0"
-                    as *const u8 as *const libc::c_char,
-                233 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 74],
-                    &[libc::c_char; 74],
-                >(
-                    b"void ZSTD_wildcopy(void *, const void *, ptrdiff_t, const ZSTD_overlap_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(diff >= 16 as libc::c_int as libc::c_long
+            || diff <= -(16 as libc::c_int) as libc::c_long);
         ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
         if 16 as libc::c_int as libc::c_long >= length {
             return;
@@ -603,21 +432,7 @@ unsafe extern "C" fn ZSTD_safecopyLiterals(
     iend: *const BYTE,
     mut ilimit_w: *const BYTE,
 ) {
-    if iend > ilimit_w {} else {
-        __assert_fail(
-            b"iend > ilimit_w\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            627 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void ZSTD_safecopyLiterals(BYTE *, const BYTE *, const BYTE *const, const BYTE *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(iend > ilimit_w);
     if ip <= ilimit_w {
         ZSTD_wildcopy(
             op as *mut libc::c_void,
@@ -646,19 +461,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(mut ptr: *const libc::c_void, mut h: U32) -> 
 }
 static mut prime5bytes: U64 = 889523592379 as libc::c_ulonglong as U64;
 unsafe extern "C" fn ZSTD_hash5(mut u: U64, mut h: U32, mut s: U64) -> size_t {
-    if h <= 64 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"h <= 64\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            809 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"size_t ZSTD_hash5(U64, U32, U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(h <= 64 as libc::c_int as libc::c_uint);
     return ((u << 64 as libc::c_int - 40 as libc::c_int).wrapping_mul(prime5bytes) ^ s)
         >> (64 as libc::c_int as libc::c_uint).wrapping_sub(h);
 }
@@ -671,19 +474,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(mut p: *const libc::c_void, mut h: U32) -> si
 }
 static mut prime7bytes: U64 = 58295818150454627 as libc::c_ulonglong as U64;
 unsafe extern "C" fn ZSTD_hash7(mut u: U64, mut h: U32, mut s: U64) -> size_t {
-    if h <= 64 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"h <= 64\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            819 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"size_t ZSTD_hash7(U64, U32, U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(h <= 64 as libc::c_int as libc::c_uint);
     return ((u << 64 as libc::c_int - 56 as libc::c_int).wrapping_mul(prime7bytes) ^ s)
         >> (64 as libc::c_int as libc::c_uint).wrapping_sub(h);
 }
@@ -692,19 +483,7 @@ unsafe extern "C" fn ZSTD_hash7Ptr(mut p: *const libc::c_void, mut h: U32) -> si
 }
 static mut prime8bytes: U64 = 0xcf1bbcdcb7a56463 as libc::c_ulonglong as U64;
 unsafe extern "C" fn ZSTD_hash8(mut u: U64, mut h: U32, mut s: U64) -> size_t {
-    if h <= 64 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"h <= 64\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            824 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"size_t ZSTD_hash8(U64, U32, U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(h <= 64 as libc::c_int as libc::c_uint);
     return (u.wrapping_mul(prime8bytes) ^ s)
         >> (64 as libc::c_int as libc::c_uint).wrapping_sub(h);
 }
@@ -717,19 +496,7 @@ unsafe extern "C" fn ZSTD_hashPtr(
     mut hBits: U32,
     mut mls: U32,
 ) -> size_t {
-    if hBits <= 32 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"hBits <= 32\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            834 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"size_t ZSTD_hashPtr(const void *, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(hBits <= 32 as libc::c_int as libc::c_uint);
     match mls {
         5 => return ZSTD_hash5Ptr(p, hBits),
         6 => return ZSTD_hash6Ptr(p, hBits),
@@ -739,19 +506,7 @@ unsafe extern "C" fn ZSTD_hashPtr(
     };
 }
 unsafe extern "C" fn ZSTD_hash4(mut u: U32, mut h: U32, mut s: U32) -> U32 {
-    if h <= 32 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"h <= 32\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            804 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 30],
-                &[libc::c_char; 30],
-            >(b"U32 ZSTD_hash4(U32, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(h <= 32 as libc::c_int as libc::c_uint);
     return (u.wrapping_mul(prime4bytes) ^ s)
         >> (32 as libc::c_int as libc::c_uint).wrapping_sub(h);
 }
@@ -811,19 +566,7 @@ unsafe extern "C" fn ZSTD_count(
 }
 static mut prime4bytes: U32 = 2654435761 as libc::c_uint;
 unsafe extern "C" fn ZSTD_hash6(mut u: U64, mut h: U32, mut s: U64) -> size_t {
-    if h <= 64 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"h <= 64\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            814 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"size_t ZSTD_hash6(U64, U32, U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(h <= 64 as libc::c_int as libc::c_uint);
     return ((u << 64 as libc::c_int - 48 as libc::c_int).wrapping_mul(prime6bytes) ^ s)
         >> (64 as libc::c_int as libc::c_uint).wrapping_sub(h);
 }
@@ -891,21 +634,7 @@ unsafe extern "C" fn ZSTD_writeTaggedIndex(
 ) {
     let hash = hashAndTag >> ZSTD_SHORT_CACHE_TAG_BITS;
     let tag = (hashAndTag & ZSTD_SHORT_CACHE_TAG_MASK as libc::c_ulong) as U32;
-    if index >> 32 as libc::c_int - 8 as libc::c_int == 0 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"index >> (32 - ZSTD_SHORT_CACHE_TAG_BITS) == 0\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            1377 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 52],
-                &[libc::c_char; 52],
-            >(b"void ZSTD_writeTaggedIndex(U32 *const, size_t, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(index >> 32 as libc::c_int - 8 as libc::c_int == 0 as libc::c_int as libc::c_uint);
     *hashTable.offset(hash as isize) = index << ZSTD_SHORT_CACHE_TAG_BITS | tag;
 }
 pub const ZSTD_SHORT_CACHE_TAG_BITS: libc::c_int = 8 as libc::c_int;
@@ -1138,36 +867,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                     ))
                         .wrapping_add(4 as libc::c_int as libc::c_ulong);
                     ip = ip.offset(1);
-                    if 1 as libc::c_int >= 1 as libc::c_int {} else {
-                        __assert_fail(
-                            b"(1)>=1\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                                as *const u8 as *const libc::c_char,
-                            181 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 127],
-                                &[libc::c_char; 127],
-                            >(
-                                b"size_t ZSTD_compressBlock_doubleFast_noDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if 1 as libc::c_int <= 3 as libc::c_int {} else {
-                        __assert_fail(
-                            b"(1)<=ZSTD_REP_NUM\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                                as *const u8 as *const libc::c_char,
-                            181 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 127],
-                                &[libc::c_char; 127],
-                            >(
-                                b"size_t ZSTD_compressBlock_doubleFast_noDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(1 as libc::c_int >= 1 as libc::c_int);
+                    debug_assert!(1 as libc::c_int <= 3 as libc::c_int);
                     ZSTD_storeSeq(
                         seqStore,
                         ip.offset_from(anchor) as libc::c_long as size_t,
@@ -1304,21 +1005,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                         hl1 as isize,
                                     ) = ip1.offset_from(base) as libc::c_long as U32;
                             }
-                            if offset > 0 as libc::c_int as libc::c_uint {} else {
-                                __assert_fail(
-                                    b"(offset)>0\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    271 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 127],
-                                        &[libc::c_char; 127],
-                                    >(
-                                        b"size_t ZSTD_compressBlock_doubleFast_noDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(offset > 0 as libc::c_int as libc::c_uint);
                             ZSTD_storeSeq(
                                 seqStore,
                                 ip.offset_from(anchor) as libc::c_long as size_t,
@@ -1403,36 +1090,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                         8 as libc::c_int as U32,
                                     ) as isize,
                                 ) = ip.offset_from(base) as libc::c_long as U32;
-                            if 1 as libc::c_int >= 1 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"(1)>=1\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    297 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 127],
-                                        &[libc::c_char; 127],
-                                    >(
-                                        b"size_t ZSTD_compressBlock_doubleFast_noDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            if 1 as libc::c_int <= 3 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"(1)<=ZSTD_REP_NUM\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    297 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 127],
-                                        &[libc::c_char; 127],
-                                    >(
-                                        b"size_t ZSTD_compressBlock_doubleFast_noDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(1 as libc::c_int >= 1 as libc::c_int);
+                            debug_assert!(1 as libc::c_int <= 3 as libc::c_int);
                             ZSTD_storeSeq(
                                 seqStore,
                                 0 as libc::c_int as size_t,
@@ -1514,24 +1173,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
         .wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
     let dictAndPrefixLength = (ip.offset_from(prefixLowest) as libc::c_long
         + dictEnd.offset_from(dictStart) as libc::c_long) as U32;
-    if ((*ms).window.dictLimit).wrapping_add((1 as libc::c_uint) << (*cParams).windowLog)
-        >= endIndex
-    {} else {
-        __assert_fail(
-            b"ms->window.dictLimit + (1U << cParams->windowLog) >= endIndex\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0" as *const u8
-                as *const libc::c_char,
-            346 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(((*ms).window.dictLimit).wrapping_add((1 as libc::c_uint) << (*cParams).windowLog)
+        >= endIndex);
     if (*ms).prefetchCDictTables != 0 {
         let hashTableBytes = ((1 as libc::c_int as size_t) << (*dictCParams).hashLog)
             .wrapping_mul(::core::mem::size_of::<U32>() as libc::c_ulong);
@@ -1559,36 +1202,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
             (dictAndPrefixLength == 0 as libc::c_int as libc::c_uint) as libc::c_int
                 as isize,
         );
-    if offset_1 <= dictAndPrefixLength {} else {
-        __assert_fail(
-            b"offset_1 <= dictAndPrefixLength\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0" as *const u8
-                as *const libc::c_char,
-            360 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if offset_2 <= dictAndPrefixLength {} else {
-        __assert_fail(
-            b"offset_2 <= dictAndPrefixLength\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0" as *const u8
-                as *const libc::c_char,
-            361 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(offset_1 <= dictAndPrefixLength);
+    debug_assert!(offset_2 <= dictAndPrefixLength);
     while ip < ilimit {
         let mut mLength: size_t = 0;
         let mut offset: U32 = 0;
@@ -1654,36 +1269,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
             ))
                 .wrapping_add(4 as libc::c_int as libc::c_ulong);
             ip = ip.offset(1);
-            if 1 as libc::c_int >= 1 as libc::c_int {} else {
-                __assert_fail(
-                    b"(1)>=1\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                        as *const u8 as *const libc::c_char,
-                    392 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 135],
-                        &[libc::c_char; 135],
-                    >(
-                        b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if 1 as libc::c_int <= 3 as libc::c_int {} else {
-                __assert_fail(
-                    b"(1)<=ZSTD_REP_NUM\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                        as *const u8 as *const libc::c_char,
-                    392 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 135],
-                        &[libc::c_char; 135],
-                    >(
-                        b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(1 as libc::c_int >= 1 as libc::c_int);
+            debug_assert!(1 as libc::c_int <= 3 as libc::c_int);
             ZSTD_storeSeq(
                 seqStore,
                 ip.offset_from(anchor) as libc::c_long as size_t,
@@ -1721,21 +1308,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
             } else if dictTagsMatchL != 0 {
                 let dictMatchIndexL = dictMatchIndexAndTagL >> ZSTD_SHORT_CACHE_TAG_BITS;
                 let mut dictMatchL = dictBase.offset(dictMatchIndexL as isize);
-                if dictMatchL < dictEnd {} else {
-                    __assert_fail(
-                        b"dictMatchL < dictEnd\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                            as *const u8 as *const libc::c_char,
-                        408 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 135],
-                            &[libc::c_char; 135],
-                        >(
-                            b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(dictMatchL < dictEnd);
                 if dictMatchL > dictStart
                     && MEM_read64(dictMatchL as *const libc::c_void)
                         == MEM_read64(ip as *const libc::c_void)
@@ -1861,22 +1434,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                     >> ZSTD_SHORT_CACHE_TAG_BITS;
                                 let mut dictMatchL3 = dictBase
                                     .offset(dictMatchIndexL3 as isize);
-                                if dictMatchL3 < dictEnd {} else {
-                                    __assert_fail(
-                                        b"dictMatchL3 < dictEnd\0" as *const u8
-                                            as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        460 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 135],
-                                            &[libc::c_char; 135],
-                                        >(
-                                            b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(dictMatchL3 < dictEnd);
                                 if dictMatchL3 > dictStart
                                     && MEM_read64(dictMatchL3 as *const libc::c_void)
                                         == MEM_read64(
@@ -1966,21 +1524,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
             }
             offset_2 = offset_1;
             offset_1 = offset;
-            if offset > 0 as libc::c_int as libc::c_uint {} else {
-                __assert_fail(
-                    b"(offset)>0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                        as *const u8 as *const libc::c_char,
-                    484 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 135],
-                        &[libc::c_char; 135],
-                    >(
-                        b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(offset > 0 as libc::c_int as libc::c_uint);
             ZSTD_storeSeq(
                 seqStore,
                 ip.offset_from(anchor) as libc::c_long as size_t,
@@ -2058,36 +1602,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                 let mut tmpOffset = offset_2;
                 offset_2 = offset_1;
                 offset_1 = tmpOffset;
-                if 1 as libc::c_int >= 1 as libc::c_int {} else {
-                    __assert_fail(
-                        b"(1)>=1\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                            as *const u8 as *const libc::c_char,
-                        513 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 135],
-                            &[libc::c_char; 135],
-                        >(
-                            b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
-                if 1 as libc::c_int <= 3 as libc::c_int {} else {
-                    __assert_fail(
-                        b"(1)<=ZSTD_REP_NUM\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                            as *const u8 as *const libc::c_char,
-                        513 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 135],
-                            &[libc::c_char; 135],
-                        >(
-                            b"size_t ZSTD_compressBlock_doubleFast_dictMatchState_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(1 as libc::c_int >= 1 as libc::c_int);
+                debug_assert!(1 as libc::c_int <= 3 as libc::c_int);
                 ZSTD_storeSeq(
                     seqStore,
                     0 as libc::c_int as size_t,
@@ -2428,36 +1944,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
             ))
                 .wrapping_add(4 as libc::c_int as libc::c_ulong);
             ip = ip.offset(1);
-            if 1 as libc::c_int >= 1 as libc::c_int {} else {
-                __assert_fail(
-                    b"(1)>=1\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                        as *const u8 as *const libc::c_char,
-                    650 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 128],
-                        &[libc::c_char; 128],
-                    >(
-                        b"size_t ZSTD_compressBlock_doubleFast_extDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if 1 as libc::c_int <= 3 as libc::c_int {} else {
-                __assert_fail(
-                    b"(1)<=ZSTD_REP_NUM\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                        as *const u8 as *const libc::c_char,
-                    650 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 128],
-                        &[libc::c_char; 128],
-                    >(
-                        b"size_t ZSTD_compressBlock_doubleFast_extDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(1 as libc::c_int >= 1 as libc::c_int);
+            debug_assert!(1 as libc::c_int <= 3 as libc::c_int);
             ZSTD_storeSeq(
                 seqStore,
                 ip.offset_from(anchor) as libc::c_long as size_t,
@@ -2501,21 +1989,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
             }
             offset_2 = offset_1;
             offset_1 = offset;
-            if offset > 0 as libc::c_int as libc::c_uint {} else {
-                __assert_fail(
-                    b"(offset)>0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                        as *const u8 as *const libc::c_char,
-                    661 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 128],
-                        &[libc::c_char; 128],
-                    >(
-                        b"size_t ZSTD_compressBlock_doubleFast_extDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(offset > 0 as libc::c_int as libc::c_uint);
             ZSTD_storeSeq(
                 seqStore,
                 ip.offset_from(anchor) as libc::c_long as size_t,
@@ -2614,21 +2088,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
             }
             offset_2 = offset_1;
             offset_1 = offset_0;
-            if offset_0 > 0 as libc::c_int as libc::c_uint {} else {
-                __assert_fail(
-                    b"(offset)>0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                        as *const u8 as *const libc::c_char,
-                    686 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 128],
-                        &[libc::c_char; 128],
-                    >(
-                        b"size_t ZSTD_compressBlock_doubleFast_extDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(offset_0 > 0 as libc::c_int as libc::c_uint);
             ZSTD_storeSeq(
                 seqStore,
                 ip.offset_from(anchor) as libc::c_long as size_t,
@@ -2714,36 +2174,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 let tmpOffset = offset_2;
                 offset_2 = offset_1;
                 offset_1 = tmpOffset;
-                if 1 as libc::c_int >= 1 as libc::c_int {} else {
-                    __assert_fail(
-                        b"(1)>=1\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                            as *const u8 as *const libc::c_char,
-                        718 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 128],
-                            &[libc::c_char; 128],
-                        >(
-                            b"size_t ZSTD_compressBlock_doubleFast_extDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
-                if 1 as libc::c_int <= 3 as libc::c_int {} else {
-                    __assert_fail(
-                        b"(1)<=ZSTD_REP_NUM\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_double_fast.c\0"
-                            as *const u8 as *const libc::c_char,
-                        718 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 128],
-                            &[libc::c_char; 128],
-                        >(
-                            b"size_t ZSTD_compressBlock_doubleFast_extDict_generic(ZSTD_matchState_t *, seqStore_t *, U32 *, const void *, size_t, const U32)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(1 as libc::c_int >= 1 as libc::c_int);
+                debug_assert!(1 as libc::c_int <= 3 as libc::c_int);
                 ZSTD_storeSeq(
                     seqStore,
                     0 as libc::c_int as size_t,

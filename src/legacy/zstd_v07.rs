@@ -16910,15 +16910,7 @@ unsafe extern "C" fn ZSTDv07_execSequence(
     let oend_w = oend.offset(-(WILDCOPY_OVERLENGTH as isize));
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
     let mut match_0: *const BYTE = oLitEnd.offset(-(sequence.offset as isize));
-    if oend >= op {} else {
-        __assert_fail(
-            b"oend >= op\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/legacy/zstd_v07.c\0" as *const u8
-                as *const libc::c_char,
-            3555 as libc::c_int as libc::c_uint,
-            __ASSERT_FUNCTION.as_ptr(),
-        );
-    }
+    debug_assert!(oend >= op);
     if (sequence.litLength).wrapping_add(WILDCOPY_OVERLENGTH as libc::c_ulong)
         > oend.offset_from(op) as libc::c_long as size_t
     {
@@ -16927,15 +16919,7 @@ unsafe extern "C" fn ZSTDv07_execSequence(
     if sequenceLength > oend.offset_from(op) as libc::c_long as size_t {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
     }
-    if litLimit >= *litPtr {} else {
-        __assert_fail(
-            b"litLimit >= *litPtr\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/legacy/zstd_v07.c\0" as *const u8
-                as *const libc::c_char,
-            3558 as libc::c_int as libc::c_uint,
-            __ASSERT_FUNCTION.as_ptr(),
-        );
-    }
+    debug_assert!(litLimit >= *litPtr);
     if sequence.litLength > litLimit.offset_from(*litPtr) as libc::c_long as size_t {
         return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
     }

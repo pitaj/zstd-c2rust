@@ -995,21 +995,7 @@ unsafe extern "C" fn ss_mintrosort(
             {
                 ss_insertionsort(T, PA, first, last, depth);
             }
-            if 0 as libc::c_int <= ssize {} else {
-                __assert_fail(
-                    b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    418 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 74],
-                        &[libc::c_char; 74],
-                    >(
-                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(0 as libc::c_int <= ssize);
             if ssize == 0 as libc::c_int {
                 return;
             }
@@ -1057,21 +1043,7 @@ unsafe extern "C" fn ss_mintrosort(
                     if (1 as libc::c_int as libc::c_long)
                         < a.offset_from(first) as libc::c_long
                     {
-                        if ssize < 16 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                437 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[libc::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 16 as libc::c_int);
                         stack[ssize as usize].a = a;
                         stack[ssize as usize].b = last;
                         stack[ssize as usize].c = depth;
@@ -1090,21 +1062,7 @@ unsafe extern "C" fn ss_mintrosort(
                 } else if (1 as libc::c_int as libc::c_long)
                     < last.offset_from(a) as libc::c_long
                 {
-                    if ssize < 16 as libc::c_int {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            444 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 74],
-                                &[libc::c_char; 74],
-                            >(
-                                b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(ssize < 16 as libc::c_int);
                     stack[ssize as usize].a = first;
                     stack[ssize as usize].b = a;
                     stack[ssize as usize].c = depth + 1 as libc::c_int;
@@ -1285,21 +1243,7 @@ unsafe extern "C" fn ss_mintrosort(
                         if last.offset_from(c) as libc::c_long
                             <= c.offset_from(b) as libc::c_long
                         {
-                            if ssize < 16 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    494 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[libc::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 16 as libc::c_int);
                             stack[ssize as usize].a = b;
                             stack[ssize as usize].b = c;
                             stack[ssize as usize].c = depth + 1 as libc::c_int;
@@ -1309,21 +1253,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 .d = ss_ilg(
                                 c.offset_from(b) as libc::c_long as libc::c_int,
                             );
-                            if ssize < 16 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    495 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[libc::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 16 as libc::c_int);
                             stack[ssize as usize].a = c;
                             stack[ssize as usize].b = last;
                             stack[ssize as usize].c = depth;
@@ -1334,42 +1264,14 @@ unsafe extern "C" fn ss_mintrosort(
                         } else if a.offset_from(first) as libc::c_long
                             <= c.offset_from(b) as libc::c_long
                         {
-                            if ssize < 16 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    498 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[libc::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 16 as libc::c_int);
                             stack[ssize as usize].a = c;
                             stack[ssize as usize].b = last;
                             stack[ssize as usize].c = depth;
                             let fresh6 = ssize;
                             ssize = ssize + 1;
                             stack[fresh6 as usize].d = limit;
-                            if ssize < 16 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    499 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[libc::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 16 as libc::c_int);
                             stack[ssize as usize].a = b;
                             stack[ssize as usize].b = c;
                             stack[ssize as usize].c = depth + 1 as libc::c_int;
@@ -1381,42 +1283,14 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                             last = a;
                         } else {
-                            if ssize < 16 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    502 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[libc::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 16 as libc::c_int);
                             stack[ssize as usize].a = c;
                             stack[ssize as usize].b = last;
                             stack[ssize as usize].c = depth;
                             let fresh8 = ssize;
                             ssize = ssize + 1;
                             stack[fresh8 as usize].d = limit;
-                            if ssize < 16 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    503 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[libc::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 16 as libc::c_int);
                             stack[ssize as usize].a = first;
                             stack[ssize as usize].b = a;
                             stack[ssize as usize].c = depth;
@@ -1433,21 +1307,7 @@ unsafe extern "C" fn ss_mintrosort(
                     } else if a.offset_from(first) as libc::c_long
                         <= c.offset_from(b) as libc::c_long
                     {
-                        if ssize < 16 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                508 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[libc::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 16 as libc::c_int);
                         stack[ssize as usize].a = b;
                         stack[ssize as usize].b = c;
                         stack[ssize as usize].c = depth + 1 as libc::c_int;
@@ -1455,21 +1315,7 @@ unsafe extern "C" fn ss_mintrosort(
                         ssize = ssize + 1;
                         stack[fresh10 as usize]
                             .d = ss_ilg(c.offset_from(b) as libc::c_long as libc::c_int);
-                        if ssize < 16 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                509 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[libc::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 16 as libc::c_int);
                         stack[ssize as usize].a = first;
                         stack[ssize as usize].b = a;
                         stack[ssize as usize].c = depth;
@@ -1480,42 +1326,14 @@ unsafe extern "C" fn ss_mintrosort(
                     } else if last.offset_from(c) as libc::c_long
                         <= c.offset_from(b) as libc::c_long
                     {
-                        if ssize < 16 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                512 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[libc::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 16 as libc::c_int);
                         stack[ssize as usize].a = first;
                         stack[ssize as usize].b = a;
                         stack[ssize as usize].c = depth;
                         let fresh12 = ssize;
                         ssize = ssize + 1;
                         stack[fresh12 as usize].d = limit;
-                        if ssize < 16 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                513 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[libc::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 16 as libc::c_int);
                         stack[ssize as usize].a = b;
                         stack[ssize as usize].b = c;
                         stack[ssize as usize].c = depth + 1 as libc::c_int;
@@ -1525,42 +1343,14 @@ unsafe extern "C" fn ss_mintrosort(
                             .d = ss_ilg(c.offset_from(b) as libc::c_long as libc::c_int);
                         first = c;
                     } else {
-                        if ssize < 16 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                516 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[libc::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 16 as libc::c_int);
                         stack[ssize as usize].a = first;
                         stack[ssize as usize].b = a;
                         stack[ssize as usize].c = depth;
                         let fresh14 = ssize;
                         ssize = ssize + 1;
                         stack[fresh14 as usize].d = limit;
-                        if ssize < 16 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                517 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[libc::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 16 as libc::c_int);
                         stack[ssize as usize].a = c;
                         stack[ssize as usize].b = last;
                         stack[ssize as usize].c = depth;
@@ -2113,21 +1903,7 @@ unsafe extern "C" fn ss_swapmerge(
             {
                 *last = !*last;
             }
-            if 0 as libc::c_int <= ssize {} else {
-                __assert_fail(
-                    b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    771 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 92],
-                        &[libc::c_char; 92],
-                    >(
-                        b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(0 as libc::c_int <= ssize);
             if ssize == 0 as libc::c_int {
                 return;
             }
@@ -2179,21 +1955,7 @@ unsafe extern "C" fn ss_swapmerge(
             {
                 *last = !*last;
             }
-            if 0 as libc::c_int <= ssize {} else {
-                __assert_fail(
-                    b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    780 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 92],
-                        &[libc::c_char; 92],
-                    >(
-                        b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(0 as libc::c_int <= ssize);
             if ssize == 0 as libc::c_int {
                 return;
             }
@@ -2283,21 +2045,7 @@ unsafe extern "C" fn ss_swapmerge(
                 if l.offset_from(first) as libc::c_long
                     <= last.offset_from(r) as libc::c_long
                 {
-                    if ssize < 32 as libc::c_int {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            810 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 92],
-                                &[libc::c_char; 92],
-                            >(
-                                b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(ssize < 32 as libc::c_int);
                     stack[ssize as usize].a = r;
                     stack[ssize as usize].b = rm;
                     stack[ssize as usize].c = last;
@@ -2312,21 +2060,7 @@ unsafe extern "C" fn ss_swapmerge(
                     if next & 2 as libc::c_int != 0 && r == middle {
                         next ^= 6 as libc::c_int;
                     }
-                    if ssize < 32 as libc::c_int {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            814 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 92],
-                                &[libc::c_char; 92],
-                            >(
-                                b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(ssize < 32 as libc::c_int);
                     stack[ssize as usize].a = first;
                     stack[ssize as usize].b = lm;
                     stack[ssize as usize].c = l;
@@ -2396,21 +2130,7 @@ unsafe extern "C" fn ss_swapmerge(
                 {
                     *last = !*last;
                 }
-                if 0 as libc::c_int <= ssize {} else {
-                    __assert_fail(
-                        b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const libc::c_char,
-                        822 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 92],
-                            &[libc::c_char; 92],
-                        >(
-                            b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(0 as libc::c_int <= ssize);
                 if ssize == 0 as libc::c_int {
                     return;
                 }
@@ -3140,21 +2860,7 @@ unsafe extern "C" fn tr_introsort(
                 }
                 if (1 as libc::c_int as libc::c_long) < b.offset_from(a) as libc::c_long
                 {
-                    if ssize < 64 as libc::c_int {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1204 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[libc::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(ssize < 64 as libc::c_int);
                     stack[ssize as usize].a = 0 as *const libc::c_int;
                     stack[ssize as usize].b = a;
                     stack[ssize as usize].c = b;
@@ -3162,21 +2868,7 @@ unsafe extern "C" fn tr_introsort(
                     let fresh55 = ssize;
                     ssize = ssize + 1;
                     stack[fresh55 as usize].e = 0 as libc::c_int;
-                    if ssize < 64 as libc::c_int {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1205 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[libc::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(ssize < 64 as libc::c_int);
                     stack[ssize as usize].a = ISAd.offset(-(incr as isize));
                     stack[ssize as usize].b = first;
                     stack[ssize as usize].c = last;
@@ -3192,21 +2884,7 @@ unsafe extern "C" fn tr_introsort(
                     if (1 as libc::c_int as libc::c_long)
                         < a.offset_from(first) as libc::c_long
                     {
-                        if ssize < 64 as libc::c_int {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                1210 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 73],
-                                    &[libc::c_char; 73],
-                                >(
-                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(ssize < 64 as libc::c_int);
                         stack[ssize as usize].a = ISAd;
                         stack[ssize as usize].b = b;
                         stack[ssize as usize].c = last;
@@ -3229,21 +2907,7 @@ unsafe extern "C" fn tr_introsort(
                             last.offset_from(b) as libc::c_long as libc::c_int,
                         );
                     } else {
-                        if 0 as libc::c_int <= ssize {} else {
-                            __assert_fail(
-                                b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                1215 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 73],
-                                    &[libc::c_char; 73],
-                                >(
-                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!(0 as libc::c_int <= ssize);
                         if ssize == 0 as libc::c_int {
                             return;
                         }
@@ -3257,21 +2921,7 @@ unsafe extern "C" fn tr_introsort(
                 } else if (1 as libc::c_int as libc::c_long)
                     < last.offset_from(b) as libc::c_long
                 {
-                    if ssize < 64 as libc::c_int {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1219 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[libc::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(ssize < 64 as libc::c_int);
                     stack[ssize as usize].a = ISAd;
                     stack[ssize as usize].b = first;
                     stack[ssize as usize].c = a;
@@ -3288,21 +2938,7 @@ unsafe extern "C" fn tr_introsort(
                     last = a;
                     limit = tr_ilg(a.offset_from(first) as libc::c_long as libc::c_int);
                 } else {
-                    if 0 as libc::c_int <= ssize {} else {
-                        __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1224 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[libc::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(0 as libc::c_int <= ssize);
                     if ssize == 0 as libc::c_int {
                         return;
                     }
@@ -3341,21 +2977,7 @@ unsafe extern "C" fn tr_introsort(
                         ISAd.offset_from(ISA) as libc::c_long as libc::c_int,
                     );
                 }
-                if 0 as libc::c_int <= ssize {} else {
-                    __assert_fail(
-                        b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1236 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 73],
-                            &[libc::c_char; 73],
-                        >(
-                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(0 as libc::c_int <= ssize);
                 if ssize == 0 as libc::c_int {
                     return;
                 }
@@ -3415,21 +3037,7 @@ unsafe extern "C" fn tr_introsort(
                         if a.offset_from(first) as libc::c_long
                             <= last.offset_from(a) as libc::c_long
                         {
-                            if ssize < 64 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1252 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[libc::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 64 as libc::c_int);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = a;
                             stack[ssize as usize].c = last;
@@ -3443,21 +3051,7 @@ unsafe extern "C" fn tr_introsort(
                         } else if (1 as libc::c_int as libc::c_long)
                             < last.offset_from(a) as libc::c_long
                         {
-                            if ssize < 64 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1256 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[libc::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 64 as libc::c_int);
                             stack[ssize as usize].a = ISAd.offset(incr as isize);
                             stack[ssize as usize].b = first;
                             stack[ssize as usize].c = a;
@@ -3482,21 +3076,7 @@ unsafe extern "C" fn tr_introsort(
                             first = a;
                             limit = -(3 as libc::c_int);
                         } else {
-                            if 0 as libc::c_int <= ssize {} else {
-                                __assert_fail(
-                                    b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1267 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[libc::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(0 as libc::c_int <= ssize);
                             if ssize == 0 as libc::c_int {
                                 return;
                             }
@@ -3509,21 +3089,7 @@ unsafe extern "C" fn tr_introsort(
                         }
                     }
                 } else {
-                    if 0 as libc::c_int <= ssize {} else {
-                        __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1271 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[libc::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(0 as libc::c_int <= ssize);
                     if ssize == 0 as libc::c_int {
                         return;
                     }
@@ -3615,21 +3181,7 @@ unsafe extern "C" fn tr_introsort(
                                 if (1 as libc::c_int as libc::c_long)
                                     < a.offset_from(first) as libc::c_long
                                 {
-                                    if ssize < 64 as libc::c_int {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            1311 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[libc::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!(ssize < 64 as libc::c_int);
                                     stack[ssize as usize].a = ISAd.offset(incr as isize);
                                     stack[ssize as usize].b = a;
                                     stack[ssize as usize].c = b;
@@ -3637,21 +3189,7 @@ unsafe extern "C" fn tr_introsort(
                                     let fresh62 = ssize;
                                     ssize = ssize + 1;
                                     stack[fresh62 as usize].e = trlink;
-                                    if ssize < 64 as libc::c_int {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            1312 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[libc::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!(ssize < 64 as libc::c_int);
                                     stack[ssize as usize].a = ISAd;
                                     stack[ssize as usize].b = b;
                                     stack[ssize as usize].c = last;
@@ -3663,21 +3201,7 @@ unsafe extern "C" fn tr_introsort(
                                 } else if (1 as libc::c_int as libc::c_long)
                                     < last.offset_from(b) as libc::c_long
                                 {
-                                    if ssize < 64 as libc::c_int {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            1315 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[libc::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!(ssize < 64 as libc::c_int);
                                     stack[ssize as usize].a = ISAd.offset(incr as isize);
                                     stack[ssize as usize].b = a;
                                     stack[ssize as usize].c = b;
@@ -3698,21 +3222,7 @@ unsafe extern "C" fn tr_introsort(
                                 if (1 as libc::c_int as libc::c_long)
                                     < a.offset_from(first) as libc::c_long
                                 {
-                                    if ssize < 64 as libc::c_int {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            1322 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[libc::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!(ssize < 64 as libc::c_int);
                                     stack[ssize as usize].a = ISAd;
                                     stack[ssize as usize].b = b;
                                     stack[ssize as usize].c = last;
@@ -3720,21 +3230,7 @@ unsafe extern "C" fn tr_introsort(
                                     let fresh65 = ssize;
                                     ssize = ssize + 1;
                                     stack[fresh65 as usize].e = trlink;
-                                    if ssize < 64 as libc::c_int {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            1323 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[libc::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!(ssize < 64 as libc::c_int);
                                     stack[ssize as usize].a = ISAd.offset(incr as isize);
                                     stack[ssize as usize].b = a;
                                     stack[ssize as usize].c = b;
@@ -3744,21 +3240,7 @@ unsafe extern "C" fn tr_introsort(
                                     stack[fresh66 as usize].e = trlink;
                                     last = a;
                                 } else {
-                                    if ssize < 64 as libc::c_int {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            1326 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[libc::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!(ssize < 64 as libc::c_int);
                                     stack[ssize as usize].a = ISAd;
                                     stack[ssize as usize].b = b;
                                     stack[ssize as usize].c = last;
@@ -3772,21 +3254,7 @@ unsafe extern "C" fn tr_introsort(
                                     limit = next;
                                 }
                             } else {
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1330 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = b;
                                 stack[ssize as usize].c = last;
@@ -3794,21 +3262,7 @@ unsafe extern "C" fn tr_introsort(
                                 let fresh68 = ssize;
                                 ssize = ssize + 1;
                                 stack[fresh68 as usize].e = trlink;
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1331 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3827,21 +3281,7 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as libc::c_int as libc::c_long)
                                 < last.offset_from(b) as libc::c_long
                             {
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1337 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd.offset(incr as isize);
                                 stack[ssize as usize].b = a;
                                 stack[ssize as usize].c = b;
@@ -3849,21 +3289,7 @@ unsafe extern "C" fn tr_introsort(
                                 let fresh70 = ssize;
                                 ssize = ssize + 1;
                                 stack[fresh70 as usize].e = trlink;
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1338 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3875,21 +3301,7 @@ unsafe extern "C" fn tr_introsort(
                             } else if (1 as libc::c_int as libc::c_long)
                                 < a.offset_from(first) as libc::c_long
                             {
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1341 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd.offset(incr as isize);
                                 stack[ssize as usize].b = a;
                                 stack[ssize as usize].c = b;
@@ -3910,21 +3322,7 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as libc::c_int as libc::c_long)
                                 < last.offset_from(b) as libc::c_long
                             {
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1348 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3932,21 +3330,7 @@ unsafe extern "C" fn tr_introsort(
                                 let fresh73 = ssize;
                                 ssize = ssize + 1;
                                 stack[fresh73 as usize].e = trlink;
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1349 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd.offset(incr as isize);
                                 stack[ssize as usize].b = a;
                                 stack[ssize as usize].c = b;
@@ -3956,21 +3340,7 @@ unsafe extern "C" fn tr_introsort(
                                 stack[fresh74 as usize].e = trlink;
                                 first = b;
                             } else {
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1352 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3984,21 +3354,7 @@ unsafe extern "C" fn tr_introsort(
                                 limit = next;
                             }
                         } else {
-                            if ssize < 64 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1356 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[libc::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 64 as libc::c_int);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = first;
                             stack[ssize as usize].c = a;
@@ -4006,21 +3362,7 @@ unsafe extern "C" fn tr_introsort(
                             let fresh76 = ssize;
                             ssize = ssize + 1;
                             stack[fresh76 as usize].e = trlink;
-                            if ssize < 64 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1357 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[libc::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 64 as libc::c_int);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = b;
                             stack[ssize as usize].c = last;
@@ -4046,21 +3388,7 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as libc::c_int as libc::c_long)
                                 < a.offset_from(first) as libc::c_long
                             {
-                                if ssize < 64 as libc::c_int {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1365 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(ssize < 64 as libc::c_int);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = b;
                                 stack[ssize as usize].c = last;
@@ -4074,21 +3402,7 @@ unsafe extern "C" fn tr_introsort(
                             {
                                 first = b;
                             } else {
-                                if 0 as libc::c_int <= ssize {} else {
-                                    __assert_fail(
-                                        b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1370 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[libc::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(0 as libc::c_int <= ssize);
                                 if ssize == 0 as libc::c_int {
                                     return;
                                 }
@@ -4102,21 +3416,7 @@ unsafe extern "C" fn tr_introsort(
                         } else if (1 as libc::c_int as libc::c_long)
                             < last.offset_from(b) as libc::c_long
                         {
-                            if ssize < 64 as libc::c_int {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1374 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[libc::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(ssize < 64 as libc::c_int);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = first;
                             stack[ssize as usize].c = a;
@@ -4130,21 +3430,7 @@ unsafe extern "C" fn tr_introsort(
                         {
                             last = a;
                         } else {
-                            if 0 as libc::c_int <= ssize {} else {
-                                __assert_fail(
-                                    b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1379 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[libc::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(0 as libc::c_int <= ssize);
                             if ssize == 0 as libc::c_int {
                                 return;
                             }
@@ -4169,21 +3455,7 @@ unsafe extern "C" fn tr_introsort(
                     if 0 as libc::c_int <= trlink {
                         stack[trlink as usize].d = -(1 as libc::c_int);
                     }
-                    if 0 as libc::c_int <= ssize {} else {
-                        __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1388 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[libc::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(0 as libc::c_int <= ssize);
                     if ssize == 0 as libc::c_int {
                         return;
                     }
@@ -4534,57 +3806,12 @@ unsafe extern "C" fn construct_SA(
             while i <= j {
                 s = *j;
                 if (0 as libc::c_int) < s {
-                    if *T.offset(s as isize) as libc::c_int == c1 {} else {
-                        __assert_fail(
-                            b"T[s] == c1\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1630 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if (s + 1 as libc::c_int) < n
+                    debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
+                    debug_assert!((s + 1 as libc::c_int) < n
                         && *T.offset(s as isize) as libc::c_int
-                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int
-                    {} else {
-                        __assert_fail(
-                            b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1631 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
-                        <= *T.offset(s as isize) as libc::c_int
-                    {} else {
-                        __assert_fail(
-                            b"T[s - 1] <= T[s]\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1632 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int);
+                    debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
+                        <= *T.offset(s as isize) as libc::c_int);
                     *j = !s;
                     s -= 1;
                     c0 = *T.offset(s as isize) as libc::c_int;
@@ -4607,59 +3834,15 @@ unsafe extern "C" fn construct_SA(
                                     as isize,
                             );
                     }
-                    if k < j {} else {
-                        __assert_fail(
-                            b"k < j\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1640 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if !k.is_null() {} else {
-                        __assert_fail(
-                            b"k != NULL\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1640 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(k < j);
+                    debug_assert!(!k.is_null());
                     let fresh86 = k;
                     k = k.offset(-1);
                     *fresh86 = s;
                 } else {
-                    if s == 0 as libc::c_int
+                    debug_assert!(s == 0 as libc::c_int
                         && *T.offset(s as isize) as libc::c_int == c1
-                        || s < 0 as libc::c_int
-                    {} else {
-                        __assert_fail(
-                            b"((s == 0) && (T[s] == c1)) || (s < 0)\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1643 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                        || s < 0 as libc::c_int);
                     *j = !s;
                 }
                 j = j.offset(-1);
@@ -4681,23 +3864,8 @@ unsafe extern "C" fn construct_SA(
     while i < j {
         s = *i;
         if (0 as libc::c_int) < s {
-            if *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
-                >= *T.offset(s as isize) as libc::c_int
-            {} else {
-                __assert_fail(
-                    b"T[s - 1] >= T[s]\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1657 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 72],
-                        &[libc::c_char; 72],
-                    >(
-                        b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
+                >= *T.offset(s as isize) as libc::c_int);
             s -= 1;
             c0 = *T.offset(s as isize) as libc::c_int;
             if s == 0 as libc::c_int
@@ -4713,40 +3881,12 @@ unsafe extern "C" fn construct_SA(
                 c2 = c0;
                 k = SA.offset(*bucket_A.offset(c2 as isize) as isize);
             }
-            if i < k {} else {
-                __assert_fail(
-                    b"i < k\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1664 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 72],
-                        &[libc::c_char; 72],
-                    >(
-                        b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(i < k);
             let fresh88 = k;
             k = k.offset(1);
             *fresh88 = s;
         } else {
-            if s < 0 as libc::c_int {} else {
-                __assert_fail(
-                    b"s < 0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1667 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 72],
-                        &[libc::c_char; 72],
-                    >(
-                        b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(s < 0 as libc::c_int);
             *i = !s;
         }
         i = i.offset(1);
@@ -4786,57 +3926,12 @@ unsafe extern "C" fn construct_BWT(
             while i <= j {
                 s = *j;
                 if (0 as libc::c_int) < s {
-                    if *T.offset(s as isize) as libc::c_int == c1 {} else {
-                        __assert_fail(
-                            b"T[s] == c1\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1694 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if (s + 1 as libc::c_int) < n
+                    debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
+                    debug_assert!((s + 1 as libc::c_int) < n
                         && *T.offset(s as isize) as libc::c_int
-                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int
-                    {} else {
-                        __assert_fail(
-                            b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1695 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
-                        <= *T.offset(s as isize) as libc::c_int
-                    {} else {
-                        __assert_fail(
-                            b"T[s - 1] <= T[s]\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1696 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int);
+                    debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
+                        <= *T.offset(s as isize) as libc::c_int);
                     s -= 1;
                     c0 = *T.offset(s as isize) as libc::c_int;
                     *j = !c0;
@@ -4859,36 +3954,8 @@ unsafe extern "C" fn construct_BWT(
                                     as isize,
                             );
                     }
-                    if k < j {} else {
-                        __assert_fail(
-                            b"k < j\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1704 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if !k.is_null() {} else {
-                        __assert_fail(
-                            b"k != NULL\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1704 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(k < j);
+                    debug_assert!(!k.is_null());
                     let fresh89 = k;
                     k = k.offset(-1);
                     *fresh89 = s;
@@ -4929,23 +3996,8 @@ unsafe extern "C" fn construct_BWT(
     while i < j {
         s = *i;
         if (0 as libc::c_int) < s {
-            if *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
-                >= *T.offset(s as isize) as libc::c_int
-            {} else {
-                __assert_fail(
-                    b"T[s - 1] >= T[s]\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1724 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 72],
-                        &[libc::c_char; 72],
-                    >(
-                        b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
+                >= *T.offset(s as isize) as libc::c_int);
             s -= 1;
             c0 = *T.offset(s as isize) as libc::c_int;
             *i = c0;
@@ -4962,21 +4014,7 @@ unsafe extern "C" fn construct_BWT(
                 c2 = c0;
                 k = SA.offset(*bucket_A.offset(c2 as isize) as isize);
             }
-            if i < k {} else {
-                __assert_fail(
-                    b"i < k\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1732 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 72],
-                        &[libc::c_char; 72],
-                    >(
-                        b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(i < k);
             let fresh91 = k;
             k = k.offset(1);
             *fresh91 = s;
@@ -5034,57 +4072,12 @@ unsafe extern "C" fn construct_BWT_indexes(
             while i <= j {
                 s = *j;
                 if (0 as libc::c_int) < s {
-                    if *T.offset(s as isize) as libc::c_int == c1 {} else {
-                        __assert_fail(
-                            b"T[s] == c1\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1775 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 104],
-                                &[libc::c_char; 104],
-                            >(
-                                b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if (s + 1 as libc::c_int) < n
+                    debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
+                    debug_assert!((s + 1 as libc::c_int) < n
                         && *T.offset(s as isize) as libc::c_int
-                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int
-                    {} else {
-                        __assert_fail(
-                            b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1776 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 104],
-                                &[libc::c_char; 104],
-                            >(
-                                b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
-                        <= *T.offset(s as isize) as libc::c_int
-                    {} else {
-                        __assert_fail(
-                            b"T[s - 1] <= T[s]\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1777 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 104],
-                                &[libc::c_char; 104],
-                            >(
-                                b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int);
+                    debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
+                        <= *T.offset(s as isize) as libc::c_int);
                     if s & mod_0 == 0 as libc::c_int {
                         *indexes
                             .offset(
@@ -5113,36 +4106,8 @@ unsafe extern "C" fn construct_BWT_indexes(
                                     as isize,
                             );
                     }
-                    if k < j {} else {
-                        __assert_fail(
-                            b"k < j\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1788 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 104],
-                                &[libc::c_char; 104],
-                            >(
-                                b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if !k.is_null() {} else {
-                        __assert_fail(
-                            b"k != NULL\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1788 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 104],
-                                &[libc::c_char; 104],
-                            >(
-                                b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(k < j);
+                    debug_assert!(!k.is_null());
                     let fresh92 = k;
                     k = k.offset(-1);
                     *fresh92 = s;
@@ -5192,23 +4157,8 @@ unsafe extern "C" fn construct_BWT_indexes(
     while i < j {
         s = *i;
         if (0 as libc::c_int) < s {
-            if *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
-                >= *T.offset(s as isize) as libc::c_int
-            {} else {
-                __assert_fail(
-                    b"T[s - 1] >= T[s]\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1815 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 104],
-                        &[libc::c_char; 104],
-                    >(
-                        b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
+                >= *T.offset(s as isize) as libc::c_int);
             if s & mod_0 == 0 as libc::c_int {
                 *indexes
                     .offset(
@@ -5226,21 +4176,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                 c2 = c0;
                 k = SA.offset(*bucket_A.offset(c2 as isize) as isize);
             }
-            if i < k {} else {
-                __assert_fail(
-                    b"i < k\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1825 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 104],
-                        &[libc::c_char; 104],
-                    >(
-                        b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(i < k);
             if (0 as libc::c_int) < s
                 && (*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int) < c0
             {

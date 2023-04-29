@@ -825,70 +825,22 @@ unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut libc::c_void, mut val32: U32
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            30 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"unsigned int ZSTD_countTrailingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: U64) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            92 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"unsigned int ZSTD_countTrailingZeros64(U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: U64) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            123 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros64(U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
     return (val as libc::c_ulonglong).leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -907,19 +859,7 @@ unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
@@ -2427,21 +2367,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         wksp.as_mut_ptr() as *mut libc::c_void,
                         ::core::mem::size_of::<[U32; 1216]>() as libc::c_ulong,
                     );
-                    if maxNbBits == 9 as libc::c_int as libc::c_ulong {} else {
-                        __assert_fail(
-                            b"maxNbBits==9\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/zdict.c\0"
-                                as *const u8 as *const libc::c_char,
-                            729 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 129],
-                                &[libc::c_char; 129],
-                            >(
-                                b"size_t ZDICT_analyzeEntropy(void *, size_t, int, const void *, const size_t *, unsigned int, const void *, size_t, unsigned int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(maxNbBits == 9 as libc::c_int as libc::c_ulong);
                 }
                 huffLog = maxNbBits as U32;
                 let mut offset: U32 = 0;
@@ -2776,39 +2702,9 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
     let outDictHeader = dictBuffer as *mut BYTE;
     let outDictPadding = outDictHeader.offset(hSize as isize);
     let outDictContent = outDictPadding.offset(paddingSize as isize);
-    if dictSize <= dictBufferCapacity {} else {
-        __assert_fail(
-            b"dictSize <= dictBufferCapacity\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/zdict.c\0" as *const u8
-                as *const libc::c_char,
-            917 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 130],
-                &[libc::c_char; 130],
-            >(
-                b"size_t ZDICT_finalizeDictionary(void *, size_t, const void *, size_t, const void *, const size_t *, unsigned int, ZDICT_params_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if outDictContent.offset(dictContentSize as isize)
-        == (dictBuffer as *mut BYTE).offset(dictSize as isize)
-    {} else {
-        __assert_fail(
-            b"outDictContent + dictContentSize == (BYTE*)dictBuffer + dictSize\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/zdict.c\0" as *const u8
-                as *const libc::c_char,
-            918 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 130],
-                &[libc::c_char; 130],
-            >(
-                b"size_t ZDICT_finalizeDictionary(void *, size_t, const void *, size_t, const void *, const size_t *, unsigned int, ZDICT_params_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(dictSize <= dictBufferCapacity);
+    debug_assert!(outDictContent.offset(dictContentSize as isize)
+        == (dictBuffer as *mut BYTE).offset(dictSize as isize));
     memmove(outDictContent as *mut libc::c_void, customDictContent, dictContentSize);
     memcpy(
         outDictHeader as *mut libc::c_void,

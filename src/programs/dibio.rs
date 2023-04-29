@@ -258,24 +258,9 @@ unsafe extern "C" fn DiB_loadFiles(
     let mut nbSamplesLoaded = 0 as libc::c_int;
     let mut fileIndex = 0 as libc::c_int;
     let mut f = NULL as *mut FILE;
-    if targetChunkSize
+    debug_assert!(targetChunkSize
         <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
-            as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"targetChunkSize <= SAMPLESIZE_MAX\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/dibio.c\0" as *const u8
-                as *const libc::c_char,
-            126 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 84],
-                &[libc::c_char; 84],
-            >(
-                b"int DiB_loadFiles(void *, size_t *, size_t *, int, const char **, int, size_t, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+            as libc::c_ulong);
     while nbSamplesLoaded < sstSize && fileIndex < nbFiles {
         let mut fileDataLoaded: size_t = 0;
         let fileSize = DiB_getFileSize(*fileNamesTable.offset(fileIndex as isize));
@@ -562,22 +547,9 @@ unsafe extern "C" fn DiB_fileStats(
         0 as libc::c_int,
         ::core::mem::size_of::<fileStats>() as libc::c_ulong,
     );
-    if chunkSize
+    debug_assert!(chunkSize
         <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
-            as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"chunkSize <= SAMPLESIZE_MAX\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/dibio.c\0" as *const u8
-                as *const libc::c_char,
-            278 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"fileStats DiB_fileStats(const char **, int, size_t, int)\0"))
-                .as_ptr(),
-        );
-    }
+            as libc::c_ulong);
     n = 0 as libc::c_int;
     while n < nbFiles {
         let fileSize = DiB_getFileSize(*fileNamesTable.offset(n as isize));

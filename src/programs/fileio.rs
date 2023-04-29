@@ -855,19 +855,7 @@ pub const DEFAULT_FILE_PERMISSIONS: libc::c_int = S_IRUSR | S_IWUSR | S_IRGRP | 
 pub const TEMPORARY_FILE_PERMISSIONS: libc::c_int = S_IRUSR | S_IWUSR;
 static mut g_artefact: *const libc::c_char = NULL as *const libc::c_char;
 unsafe extern "C" fn INThandler(mut sig: libc::c_int) {
-    if sig == 2 as libc::c_int {} else {
-        __assert_fail(
-            b"sig==SIGINT\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            134 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 21],
-                &[libc::c_char; 21],
-            >(b"void INThandler(int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(sig == 2 as libc::c_int);
     signal(
         sig,
         ::core::mem::transmute::<
@@ -876,19 +864,7 @@ unsafe extern "C" fn INThandler(mut sig: libc::c_int) {
         >(SIG_IGN as libc::intptr_t),
     );
     if !g_artefact.is_null() {
-        if UTIL_isRegularFile(g_artefact) != 0 {} else {
-            __assert_fail(
-                b"UTIL_isRegularFile(g_artefact)\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                    as *const libc::c_char,
-                139 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 21],
-                    &[libc::c_char; 21],
-                >(b"void INThandler(int)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(UTIL_isRegularFile(g_artefact) != 0);
         remove(g_artefact);
     }
     fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
@@ -990,22 +966,8 @@ unsafe extern "C" fn FIO_shouldDisplayMultipleFileSummary(
 ) -> libc::c_int {
     let shouldDisplay = ((*fCtx).nbFilesProcessed >= 1 as libc::c_int
         && (*fCtx).nbFilesTotal > 1 as libc::c_int) as libc::c_int;
-    if shouldDisplay != 0 || FIO_shouldDisplayFileSummary(fCtx) != 0
-        || (*fCtx).nbFilesProcessed == 0 as libc::c_int
-    {} else {
-        __assert_fail(
-            b"shouldDisplay || FIO_shouldDisplayFileSummary(fCtx) || fCtx->nbFilesProcessed == 0\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            265 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"int FIO_shouldDisplayMultipleFileSummary(const FIO_ctx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(shouldDisplay != 0 || FIO_shouldDisplayFileSummary(fCtx) != 0
+        || (*fCtx).nbFilesProcessed == 0 as libc::c_int);
     return shouldDisplay;
 }
 pub const FIO_OVERLAP_LOG_NOTSET: libc::c_int = 9999 as libc::c_int;
@@ -1379,19 +1341,7 @@ pub unsafe extern "C" fn FIO_setAdaptMin(
     prefs: *mut FIO_prefs_t,
     mut minCLevel: libc::c_int,
 ) {
-    if minCLevel >= ZSTD_minCLevel() {} else {
-        __assert_fail(
-            b"minCLevel >= ZSTD_minCLevel()\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            433 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 46],
-                &[libc::c_char; 46],
-            >(b"void FIO_setAdaptMin(FIO_prefs_t *const, int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(minCLevel >= ZSTD_minCLevel());
     (*prefs).minAdaptLevel = minCLevel;
 }
 #[no_mangle]
@@ -1558,36 +1508,8 @@ unsafe extern "C" fn FIO_openSrcFile(
     } else {
         0 as libc::c_int
     };
-    if !srcFileName.is_null() {} else {
-        __assert_fail(
-            b"srcFileName != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            546 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 72],
-                &[libc::c_char; 72],
-            >(
-                b"FILE *FIO_openSrcFile(const FIO_prefs_t *const, const char *, stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if !statbuf.is_null() {} else {
-        __assert_fail(
-            b"statbuf != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            547 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 72],
-                &[libc::c_char; 72],
-            >(
-                b"FILE *FIO_openSrcFile(const FIO_prefs_t *const, const char *, stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!srcFileName.is_null());
+    debug_assert!(!statbuf.is_null());
     if strcmp(srcFileName, stdinmark.as_ptr()) == 0 {
         if g_display_prefs.displayLevel >= 4 as libc::c_int {
             fprintf(
@@ -1646,21 +1568,7 @@ unsafe extern "C" fn FIO_openDstFile(
     if (*prefs).testMode != 0 {
         return NULL as *mut FILE;
     }
-    if !dstFileName.is_null() {} else {
-        __assert_fail(
-            b"dstFileName != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            588 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 94],
-                &[libc::c_char; 94],
-            >(
-                b"FILE *FIO_openDstFile(FIO_ctx_t *, FIO_prefs_t *const, const char *, const char *, const int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dstFileName.is_null());
     if strcmp(dstFileName, stdoutmark.as_ptr()) == 0 {
         if g_display_prefs.displayLevel >= 4 as libc::c_int {
             fprintf(
@@ -1805,19 +1713,7 @@ unsafe extern "C" fn FIO_getDictFileStat(
     mut fileName: *const libc::c_char,
     mut dictFileStat: *mut stat_t,
 ) {
-    if !dictFileStat.is_null() {} else {
-        __assert_fail(
-            b"dictFileStat != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            685 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 49],
-                &[libc::c_char; 49],
-            >(b"void FIO_getDictFileStat(const char *, stat_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dictFileStat.is_null());
     if fileName.is_null() {
         return;
     }
@@ -1900,36 +1796,8 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
     let mut fileHandle = 0 as *mut FILE;
     let mut fileSize: U64 = 0;
     let mut bufferPtr: *mut *mut libc::c_void = &mut (*dict).dictBuffer;
-    if !bufferPtr.is_null() {} else {
-        __assert_fail(
-            b"bufferPtr != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            709 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 89],
-                &[libc::c_char; 89],
-            >(
-                b"size_t FIO_setDictBufferMalloc(FIO_Dict_t *, const char *, FIO_prefs_t *const, stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if !dictFileStat.is_null() {} else {
-        __assert_fail(
-            b"dictFileStat != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            710 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 89],
-                &[libc::c_char; 89],
-            >(
-                b"size_t FIO_setDictBufferMalloc(FIO_Dict_t *, const char *, FIO_prefs_t *const, stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!bufferPtr.is_null());
+    debug_assert!(!dictFileStat.is_null());
     *bufferPtr = NULL as *mut libc::c_void;
     if fileName.is_null() {
         return 0 as libc::c_int as size_t;
@@ -2111,36 +1979,8 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
     let mut fileHandle: libc::c_int = 0;
     let mut fileSize: U64 = 0;
     let mut bufferPtr: *mut *mut libc::c_void = &mut (*dict).dictBuffer;
-    if !bufferPtr.is_null() {} else {
-        __assert_fail(
-            b"bufferPtr != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            756 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 87],
-                &[libc::c_char; 87],
-            >(
-                b"size_t FIO_setDictBufferMMap(FIO_Dict_t *, const char *, FIO_prefs_t *const, stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if !dictFileStat.is_null() {} else {
-        __assert_fail(
-            b"dictFileStat != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            757 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 87],
-                &[libc::c_char; 87],
-            >(
-                b"size_t FIO_setDictBufferMMap(FIO_Dict_t *, const char *, FIO_prefs_t *const, stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!bufferPtr.is_null());
+    debug_assert!(!dictFileStat.is_null());
     *bufferPtr = NULL as *mut libc::c_void;
     if fileName.is_null() {
         return 0 as libc::c_int as size_t;
@@ -2497,19 +2337,7 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
 }
 unsafe extern "C" fn FIO_highbit64(mut v: libc::c_ulonglong) -> libc::c_uint {
     let mut count = 0 as libc::c_int as libc::c_uint;
-    if v != 0 as libc::c_int as libc::c_ulonglong {} else {
-        __assert_fail(
-            b"v != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            957 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 47],
-                &[libc::c_char; 47],
-            >(b"unsigned int FIO_highbit64(unsigned long long)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(v != 0 as libc::c_int as libc::c_ulonglong);
     v >>= 1 as libc::c_int;
     while v != 0 {
         v >>= 1 as libc::c_int;
@@ -2572,21 +2400,7 @@ unsafe extern "C" fn FIO_adjustMemLimitForPatchFromMode(
         }
         exit(42 as libc::c_int);
     }
-    if maxSize != -(1 as libc::c_int) as U64 as libc::c_ulonglong {} else {
-        __assert_fail(
-            b"maxSize != UTIL_FILESIZE_UNKNOWN\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            971 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"void FIO_adjustMemLimitForPatchFromMode(FIO_prefs_t *const, const unsigned long long, const unsigned long long)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(maxSize != -(1 as libc::c_int) as U64 as libc::c_ulonglong);
     if maxSize > maxWindowSize as libc::c_ulonglong {
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -2707,21 +2521,7 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
     if (*fCtx).nbFilesTotal == 1 as libc::c_int {
         return 0 as libc::c_int;
     }
-    if (*fCtx).nbFilesTotal > 1 as libc::c_int {} else {
-        __assert_fail(
-            b"fCtx->nbFilesTotal > 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            1013 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 85],
-                &[libc::c_char; 85],
-            >(
-                b"int FIO_multiFilesConcatWarning(const FIO_ctx_t *, FIO_prefs_t *, const char *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*fCtx).nbFilesTotal > 1 as libc::c_int);
     if outFileName.is_null() {
         return 0 as libc::c_int;
     }
@@ -2817,19 +2617,7 @@ unsafe extern "C" fn setOutBuffer(
 unsafe extern "C" fn ZSTD_cycleLog(mut hashLog: U32, mut strat: ZSTD_strategy) -> U32 {
     let btScale = (strat as U32 >= ZSTD_btlazy2 as libc::c_int as U32) as libc::c_int
         as U32;
-    if hashLog > 1 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"hashLog > 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            1081 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 38],
-                &[libc::c_char; 38],
-            >(b"U32 ZSTD_cycleLog(U32, ZSTD_strategy)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(hashLog > 1 as libc::c_int as libc::c_uint);
     return hashLog.wrapping_sub(btScale);
 }
 unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
@@ -4545,38 +4333,8 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         .wrapping_sub(previous_zfp_update.produced);
                     let mut newlyFlushed = (zfp.flushed)
                         .wrapping_sub(previous_zfp_update.flushed);
-                    if zfp.produced >= previous_zfp_update.produced {} else {
-                        __assert_fail(
-                            b"zfp.produced >= previous_zfp_update.produced\0"
-                                as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1594 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 127],
-                                &[libc::c_char; 127],
-                            >(
-                                b"unsigned long long FIO_compressZstdFrame(FIO_ctx_t *const, FIO_prefs_t *const, const cRess_t *, const char *, U64, int, U64 *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    if (*prefs).nbWorkers >= 1 as libc::c_int {} else {
-                        __assert_fail(
-                            b"prefs->nbWorkers >= 1\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1595 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 127],
-                                &[libc::c_char; 127],
-                            >(
-                                b"unsigned long long FIO_compressZstdFrame(FIO_ctx_t *const, FIO_prefs_t *const, const cRess_t *, const char *, U64, int, U64 *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(zfp.produced >= previous_zfp_update.produced);
+                    debug_assert!((*prefs).nbWorkers >= 1 as libc::c_int);
                     if zfp.consumed == previous_zfp_update.consumed
                         && zfp.nbActiveWorkers == 0 as libc::c_int as libc::c_uint
                     {
@@ -4641,22 +4399,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             let mut newlyFlushed_0 = (zfp.flushed)
                                 .wrapping_sub(previous_zfp_correction.flushed);
                             previous_zfp_correction = zfp;
-                            if inputPresented > 0 as libc::c_int as libc::c_uint
-                            {} else {
-                                __assert_fail(
-                                    b"inputPresented > 0\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    1634 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 127],
-                                        &[libc::c_char; 127],
-                                    >(
-                                        b"unsigned long long FIO_compressZstdFrame(FIO_ctx_t *const, FIO_prefs_t *const, const cRess_t *, const char *, U64, int, U64 *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(inputPresented > 0 as libc::c_int as libc::c_uint);
                             if g_display_prefs.displayLevel >= 6 as libc::c_int {
                                 fprintf(
                                     stderr,
@@ -5187,22 +4930,7 @@ unsafe extern "C" fn FIO_compressFilename_dstFile(
     let mut transferStat = 0 as libc::c_int;
     let mut dstFile = 0 as *mut FILE;
     let mut dstFd = -(1 as libc::c_int);
-    if !(AIO_ReadPool_getFile(ress.readCtx)).is_null() {} else {
-        __assert_fail(
-            b"AIO_ReadPool_getFile(ress.readCtx) != NULL\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            1845 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 129],
-                &[libc::c_char; 129],
-            >(
-                b"int FIO_compressFilename_dstFile(FIO_ctx_t *const, FIO_prefs_t *const, cRess_t, const char *, const char *, const stat_t *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!(AIO_ReadPool_getFile(ress.readCtx)).is_null());
     if (AIO_WritePool_getFile(ress.writeCtx)).is_null() {
         let mut dstFileInitialPermissions = DEFAULT_FILE_PERMISSIONS;
         if strcmp(srcFileName, stdinmark.as_ptr()) != 0
@@ -5442,19 +5170,7 @@ unsafe extern "C" fn checked_index(
     mut length: size_t,
     mut index: size_t,
 ) -> *const libc::c_char {
-    if index < length {} else {
-        __assert_fail(
-            b"index < length\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            1995 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"const char *checked_index(const char **, size_t, size_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(index < length);
     return *options.offset(index as isize);
 }
 #[no_mangle]
@@ -5488,19 +5204,7 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
         b" --compress-literals\0" as *const u8 as *const libc::c_char,
         b" --no-compress-literals\0" as *const u8 as *const libc::c_char,
     ];
-    if g_display_prefs.displayLevel >= 4 as libc::c_int {} else {
-        __assert_fail(
-            b"g_display_prefs.displayLevel >= 4\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            2012 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 59],
-                &[libc::c_char; 59],
-            >(b"void FIO_displayCompressionParameters(const FIO_prefs_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(g_display_prefs.displayLevel >= 4 as libc::c_int);
     fprintf(
         stderr,
         b"--format=%s\0" as *const u8 as *const libc::c_char,
@@ -5689,21 +5393,7 @@ unsafe extern "C" fn FIO_determineCompressedName(
             srcSuffixLen,
         );
         sfnSize = strlen(outDirFilename);
-        if !outDirFilename.is_null() {} else {
-            __assert_fail(
-                b"outDirFilename != NULL\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                    as *const libc::c_char,
-                2073 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 82],
-                    &[libc::c_char; 82],
-                >(
-                    b"const char *FIO_determineCompressedName(const char *, const char *, const char *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(!outDirFilename.is_null());
     }
     if dfnbCapacity
         <= sfnSize
@@ -5749,21 +5439,7 @@ unsafe extern "C" fn FIO_determineCompressedName(
             exit(30 as libc::c_int);
         }
     }
-    if !dstFileNameBuffer.is_null() {} else {
-        __assert_fail(
-            b"dstFileNameBuffer != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            2085 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"const char *FIO_determineCompressedName(const char *, const char *, const char *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dstFileNameBuffer.is_null());
     if !outDirFilename.is_null() {
         memcpy(
             dstFileNameBuffer as *mut libc::c_void,
@@ -5823,22 +5499,7 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
         compressionLevel,
         comprParams,
     );
-    if !outFileName.is_null() || !suffix.is_null() {} else {
-        __assert_fail(
-            b"outFileName != NULL || suffix != NULL\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            2130 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 190],
-                &[libc::c_char; 190],
-            >(
-                b"int FIO_compressMultipleFilenames(FIO_ctx_t *const, FIO_prefs_t *const, const char **, const char *, const char *, const char *, const char *, const char *, int, ZSTD_compressionParameters)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!outFileName.is_null() || !suffix.is_null());
     if !outFileName.is_null() {
         let mut dstFile = 0 as *mut FILE;
         if FIO_multiFilesConcatWarning(fCtx, prefs, outFileName, 1 as libc::c_int) != 0 {
@@ -6444,20 +6105,7 @@ unsafe extern "C" fn FIO_passThrough(mut ress: *mut dRess_t) -> libc::c_int {
         } else {
             (*(*ress).readCtx).srcBufferLoaded
         };
-        if writeSize <= (*writeJob).bufferSize {} else {
-            __assert_fail(
-                b"writeSize <= writeJob->bufferSize\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                    as *const libc::c_char,
-                2280 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 31],
-                    &[libc::c_char; 31],
-                >(b"int FIO_passThrough(dRess_t *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(writeSize <= (*writeJob).bufferSize);
         memcpy(
             (*writeJob).buffer,
             (*(*ress).readCtx).srcBuffer as *const libc::c_void,
@@ -6468,19 +6116,7 @@ unsafe extern "C" fn FIO_passThrough(mut ress: *mut dRess_t) -> libc::c_int {
         AIO_ReadPool_consumeBytes((*ress).readCtx, writeSize);
         AIO_ReadPool_fillBuffer((*ress).readCtx, blockSize);
     }
-    if (*(*ress).readCtx).reachedEof != 0 {} else {
-        __assert_fail(
-            b"ress->readCtx->reachedEof\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            2287 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 31],
-                &[libc::c_char; 31],
-            >(b"int FIO_passThrough(dRess_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*(*ress).readCtx).reachedEof != 0);
     AIO_WritePool_releaseIoJob(writeJob);
     AIO_WritePool_sparseWriteEnd((*ress).writeCtx);
     return 0 as libc::c_int;
@@ -6521,21 +6157,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
                     != 0 as libc::c_int as libc::c_ulonglong) as libc::c_int
                     as libc::c_uint,
             );
-        if (*prefs).memLimit > 0 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"prefs->memLimit > 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                    as *const libc::c_char,
-                2312 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 88],
-                    &[libc::c_char; 88],
-                >(
-                    b"void FIO_zstdErrorHelp(const FIO_prefs_t *const, const dRess_t *, size_t, const char *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*prefs).memLimit > 0 as libc::c_int as libc::c_uint);
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
             fprintf(
                 stderr,
@@ -6563,25 +6185,9 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
                         != 0 as libc::c_int as libc::c_ulonglong) as libc::c_int
                         as libc::c_ulonglong,
                 ) as libc::c_uint;
-            if windowSize
+            debug_assert!(windowSize
                 < ((1 as libc::c_ulonglong) << 52 as libc::c_int) as U64
-                    as libc::c_ulonglong
-            {} else {
-                __assert_fail(
-                    b"windowSize < (U64)(1ULL << 52)\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                        as *const libc::c_char,
-                    2317 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 88],
-                        &[libc::c_char; 88],
-                    >(
-                        b"void FIO_zstdErrorHelp(const FIO_prefs_t *const, const dRess_t *, size_t, const char *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+                    as libc::c_ulonglong);
             if g_display_prefs.displayLevel >= 1 as libc::c_int {
                 fprintf(
                     stderr,
@@ -6804,22 +6410,7 @@ unsafe extern "C" fn FIO_decompressFrames(
         passThrough = ((*prefs).overwrite != 0
             && strcmp(dstFileName, stdoutmark.as_ptr()) == 0) as libc::c_int;
     }
-    if passThrough == 0 as libc::c_int || passThrough == 1 as libc::c_int {} else {
-        __assert_fail(
-            b"passThrough == 0 || passThrough == 1\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            2637 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 106],
-                &[libc::c_char; 106],
-            >(
-                b"int FIO_decompressFrames(FIO_ctx_t *const, dRess_t, const FIO_prefs_t *const, const char *, const char *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(passThrough == 0 as libc::c_int || passThrough == 1 as libc::c_int);
     loop {
         let toRead = 4 as libc::c_int as size_t;
         let mut buf = 0 as *const BYTE;
@@ -7208,19 +6799,7 @@ unsafe extern "C" fn FIO_determineDstName(
             0 as libc::c_int as size_t,
         );
         sfnSize = strlen(outDirFilename);
-        if !outDirFilename.is_null() {} else {
-            __assert_fail(
-                b"outDirFilename != NULL\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                    as *const libc::c_char,
-                2948 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 61],
-                    &[libc::c_char; 61],
-                >(b"const char *FIO_determineDstName(const char *, const char *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(!outDirFilename.is_null());
     }
     if dfnbCapacity.wrapping_add(srcSuffixLen)
         <= sfnSize
@@ -7265,19 +6844,7 @@ unsafe extern "C" fn FIO_determineDstName(
             exit(74 as libc::c_int);
         }
     }
-    if !dstFileNameBuffer.is_null() {} else {
-        __assert_fail(
-            b"dstFileNameBuffer != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            2962 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 61],
-                &[libc::c_char; 61],
-            >(b"const char *FIO_determineDstName(const char *, const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dstFileNameBuffer.is_null());
     dstFileNameEndPos = sfnSize.wrapping_sub(srcSuffixLen);
     if !outDirFilename.is_null() {
         memcpy(
@@ -8080,22 +7647,8 @@ unsafe extern "C" fn FIO_listFile(
     }
     displayInfo(inFileName, &mut info, displayLevel);
     *total = FIO_addFInfo(*total, info);
-    if error as libc::c_uint == info_success as libc::c_int as libc::c_uint
-        || error as libc::c_uint == info_frame_error as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"error == info_success || error == info_frame_error\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            3305 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 50],
-                &[libc::c_char; 50],
-            >(b"int FIO_listFile(fileInfo_t *, const char *, int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(error as libc::c_uint == info_success as libc::c_int as libc::c_uint
+        || error as libc::c_uint == info_frame_error as libc::c_int as libc::c_uint);
     return error as libc::c_int;
 }
 #[no_mangle]

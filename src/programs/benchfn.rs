@@ -323,30 +323,12 @@ pub unsafe extern "C" fn BMK_benchTimedFn(
                 .wrapping_add(1 as libc::c_int as libc::c_uint);
         } else {
             let multiplier = 10 as libc::c_int as libc::c_uint;
-            if (*cont).nbLoops
-                < (-(1 as libc::c_int) as libc::c_uint).wrapping_div(multiplier)
-            {} else {
-                __assert_fail(
-                    b"cont->nbLoops < ((unsigned)-1) / multiplier\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/benchfn.c\0" as *const u8
-                        as *const libc::c_char,
-                    238 as libc::c_int as libc::c_uint,
-                    __ASSERT_FUNCTION.as_ptr(),
-                );
-            }
+            debug_assert!((*cont).nbLoops
+                < (-(1 as libc::c_int) as libc::c_uint).wrapping_div(multiplier));
             (*cont).nbLoops = ((*cont).nbLoops).wrapping_mul(multiplier);
         }
         if loopDuration_ns < runTimeMin_ns as libc::c_double {
-            if completed == 0 as libc::c_int {} else {
-                __assert_fail(
-                    b"completed == 0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/benchfn.c\0" as *const u8
-                        as *const libc::c_char,
-                    244 as libc::c_int as libc::c_uint,
-                    __ASSERT_FUNCTION.as_ptr(),
-                );
-            }
+            debug_assert!(completed == 0 as libc::c_int);
         } else {
             if newRunTime.nanoSecPerRun < bestRunTime.nanoSecPerRun {
                 bestRunTime = newRunTime;

@@ -105,19 +105,7 @@ unsafe extern "C" fn ERR_getErrorName(mut code: size_t) -> *const libc::c_char {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            30 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"unsigned int ZSTD_countTrailingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 pub const FSE_VERSION_NUMBER: libc::c_int = FSE_VERSION_MAJOR * 100 as libc::c_int
@@ -125,37 +113,13 @@ pub const FSE_VERSION_NUMBER: libc::c_int = FSE_VERSION_MAJOR * 100 as libc::c_i
 pub const FSE_VERSION_MAJOR: libc::c_int = 0 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 pub const FSE_VERSION_MINOR: libc::c_int = 9 as libc::c_int;
@@ -233,21 +197,7 @@ unsafe extern "C" fn FSE_readNCount_body(
         }
         return countSize;
     }
-    if hbSize >= 8 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"hbSize >= 8\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/common/entropy_common.c\0" as *const u8
-                as *const libc::c_char,
-            67 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 90],
-                &[libc::c_char; 90],
-            >(
-                b"size_t FSE_readNCount_body(short *, unsigned int *, unsigned int *, const void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(hbSize >= 8 as libc::c_int as libc::c_ulong);
     libc::memset(
         normalizedCounter as *mut libc::c_void,
         0 as libc::c_int,
@@ -297,23 +247,8 @@ unsafe extern "C" fn FSE_readNCount_body(
             charnum = charnum.wrapping_add((3 as libc::c_int * repeats) as libc::c_uint);
             bitStream >>= 2 as libc::c_int * repeats;
             bitCount += 2 as libc::c_int * repeats;
-            if (bitStream & 3 as libc::c_int as libc::c_uint)
-                < 3 as libc::c_int as libc::c_uint
-            {} else {
-                __assert_fail(
-                    b"(bitStream & 3) < 3\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/common/entropy_common.c\0"
-                        as *const u8 as *const libc::c_char,
-                    106 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 90],
-                        &[libc::c_char; 90],
-                    >(
-                        b"size_t FSE_readNCount_body(short *, unsigned int *, unsigned int *, const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!((bitStream & 3 as libc::c_int as libc::c_uint)
+                < 3 as libc::c_int as libc::c_uint);
             charnum = charnum.wrapping_add(bitStream & 3 as libc::c_int as libc::c_uint);
             bitCount += 2 as libc::c_int;
             if charnum >= maxSV1 {
@@ -324,21 +259,7 @@ unsafe extern "C" fn FSE_readNCount_body(
                 || ip.offset((bitCount >> 3 as libc::c_int) as isize)
                     <= iend.offset(-(4 as libc::c_int as isize))
             {
-                if bitCount >> 3 as libc::c_int <= 3 as libc::c_int {} else {
-                    __assert_fail(
-                        b"(bitCount >> 3) <= 3\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/common/entropy_common.c\0"
-                            as *const u8 as *const libc::c_char,
-                        121 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 90],
-                            &[libc::c_char; 90],
-                        >(
-                            b"size_t FSE_readNCount_body(short *, unsigned int *, unsigned int *, const void *, size_t)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(bitCount >> 3 as libc::c_int <= 3 as libc::c_int);
                 ip = ip.offset((bitCount >> 3 as libc::c_int) as isize);
                 bitCount &= 7 as libc::c_int;
             } else {
@@ -370,42 +291,14 @@ unsafe extern "C" fn FSE_readNCount_body(
         if count >= 0 as libc::c_int {
             remaining -= count;
         } else {
-            if count == -(1 as libc::c_int) {} else {
-                __assert_fail(
-                    b"count == -1\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/common/entropy_common.c\0"
-                        as *const u8 as *const libc::c_char,
-                    151 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 90],
-                        &[libc::c_char; 90],
-                    >(
-                        b"size_t FSE_readNCount_body(short *, unsigned int *, unsigned int *, const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(count == -(1 as libc::c_int));
             remaining += count;
         }
         let fresh0 = charnum;
         charnum = charnum.wrapping_add(1);
         *normalizedCounter.offset(fresh0 as isize) = count as libc::c_short;
         previous0 = (count == 0) as libc::c_int;
-        if threshold > 1 as libc::c_int {} else {
-            __assert_fail(
-                b"threshold > 1\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/common/entropy_common.c\0" as *const u8
-                    as *const libc::c_char,
-                157 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 90],
-                    &[libc::c_char; 90],
-                >(
-                    b"size_t FSE_readNCount_body(short *, unsigned int *, unsigned int *, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(threshold > 1 as libc::c_int);
         if remaining < threshold {
             if remaining <= 1 as libc::c_int {
                 break;

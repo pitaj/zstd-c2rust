@@ -471,19 +471,7 @@ unsafe extern "C" fn POOL_add_internal(
     };
     job.function = function;
     job.opaque = opaque;
-    if !ctx.is_null() {} else {
-        __assert_fail(
-            b"ctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/common/pool.c\0" as *const u8
-                as *const libc::c_char,
-            277 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 58],
-                &[libc::c_char; 58],
-            >(b"void POOL_add_internal(POOL_ctx *, POOL_function, void *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ctx.is_null());
     if (*ctx).shutdown != 0 {
         return;
     }
@@ -501,19 +489,7 @@ pub unsafe extern "C" fn POOL_add(
     mut function: POOL_function,
     mut opaque: *mut libc::c_void,
 ) {
-    if !ctx.is_null() {} else {
-        __assert_fail(
-            b"ctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/common/pool.c\0" as *const u8
-                as *const libc::c_char,
-            288 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 49],
-                &[libc::c_char; 49],
-            >(b"void POOL_add(POOL_ctx *, POOL_function, void *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ctx.is_null());
     pthread_mutex_lock((*ctx).queueMutex);
     while isQueueFull(ctx) != 0 && (*ctx).shutdown == 0 {
         pthread_cond_wait((*ctx).queuePushCond, (*ctx).queueMutex);
@@ -527,19 +503,7 @@ pub unsafe extern "C" fn POOL_tryAdd(
     mut function: POOL_function,
     mut opaque: *mut libc::c_void,
 ) -> libc::c_int {
-    if !ctx.is_null() {} else {
-        __assert_fail(
-            b"ctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/common/pool.c\0" as *const u8
-                as *const libc::c_char,
-            301 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 51],
-                &[libc::c_char; 51],
-            >(b"int POOL_tryAdd(POOL_ctx *, POOL_function, void *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ctx.is_null());
     pthread_mutex_lock((*ctx).queueMutex);
     if isQueueFull(ctx) != 0 {
         pthread_mutex_unlock((*ctx).queueMutex);

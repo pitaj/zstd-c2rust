@@ -243,60 +243,20 @@ unsafe extern "C" fn BIT_addBits(
     mut value: size_t,
     mut nbBits: libc::c_uint,
 ) {
-    if (nbBits as libc::c_ulong)
+    debug_assert!((nbBits as libc::c_ulong)
         < (::core::mem::size_of::<[libc::c_uint; 32]>() as libc::c_ulong)
-            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits < BIT_MASK_SIZE\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            182 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 56],
-                &[libc::c_char; 56],
-            >(b"void BIT_addBits(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
-    if (nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
+            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong));
+    debug_assert!((nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits + bitC->bitPos < sizeof(bitC->bitContainer) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            183 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 56],
-                &[libc::c_char; 56],
-            >(b"void BIT_addBits(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     (*bitC).bitContainer |= BIT_getLowerBits(value, nbBits) << (*bitC).bitPos;
     (*bitC).bitPos = ((*bitC).bitPos).wrapping_add(nbBits);
 }
 #[inline(always)]
 unsafe extern "C" fn BIT_getLowerBits(mut bitContainer: size_t, nbBits: U32) -> size_t {
-    if (nbBits as libc::c_ulong)
+    debug_assert!((nbBits as libc::c_ulong)
         < (::core::mem::size_of::<[libc::c_uint; 32]>() as libc::c_ulong)
-            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits < BIT_MASK_SIZE\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            170 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"size_t BIT_getLowerBits(size_t, const U32)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong));
     return bitContainer & BIT_mask[nbBits as usize] as libc::c_ulong;
 }
 static mut BIT_mask: [libc::c_uint; 32] = [
@@ -336,36 +296,10 @@ static mut BIT_mask: [libc::c_uint; 32] = [
 #[inline]
 unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
     let nbBytes = ((*bitC).bitPos >> 3 as libc::c_int) as size_t;
-    if ((*bitC).bitPos as libc::c_ulong)
+    debug_assert!(((*bitC).bitPos as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"bitC->bitPos < sizeof(bitC->bitContainer) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            222 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 36],
-                &[libc::c_char; 36],
-            >(b"void BIT_flushBits(BIT_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*bitC).ptr <= (*bitC).endPtr {} else {
-        __assert_fail(
-            b"bitC->ptr <= bitC->endPtr\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            223 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 36],
-                &[libc::c_char; 36],
-            >(b"void BIT_flushBits(BIT_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
+    debug_assert!((*bitC).ptr <= (*bitC).endPtr);
     MEM_writeLEST((*bitC).ptr as *mut libc::c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
     if (*bitC).ptr > (*bitC).endPtr {
@@ -391,36 +325,10 @@ unsafe extern "C" fn BIT_addBitsFast(
     mut value: size_t,
     mut nbBits: libc::c_uint,
 ) {
-    if value >> nbBits == 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"(value>>nbBits) == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            194 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"void BIT_addBitsFast(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
-    if (nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
+    debug_assert!(value >> nbBits == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!((nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits + bitC->bitPos < sizeof(bitC->bitContainer) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            195 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"void BIT_addBitsFast(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     (*bitC).bitContainer |= value << (*bitC).bitPos;
     (*bitC).bitPos = ((*bitC).bitPos).wrapping_add(nbBits);
 }
@@ -510,32 +418,8 @@ unsafe extern "C" fn FSE_bitCost(
         >> 16 as libc::c_int;
     let threshold = minNbBits.wrapping_add(1 as libc::c_int as libc::c_uint)
         << 16 as libc::c_int;
-    if tableLog < 16 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"tableLog < 16\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/fse.h\0"
-                as *const u8 as *const libc::c_char,
-            498 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 45],
-                &[libc::c_char; 45],
-            >(b"U32 FSE_bitCost(const void *, U32, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
-    if accuracyLog < (31 as libc::c_int as libc::c_uint).wrapping_sub(tableLog) {} else {
-        __assert_fail(
-            b"accuracyLog < 31-tableLog\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/fse.h\0"
-                as *const u8 as *const libc::c_char,
-            499 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 45],
-                &[libc::c_char; 45],
-            >(b"U32 FSE_bitCost(const void *, U32, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(tableLog < 16 as libc::c_int as libc::c_uint);
+    debug_assert!(accuracyLog < (31 as libc::c_int as libc::c_uint).wrapping_sub(tableLog));
     let tableSize = ((1 as libc::c_int) << tableLog) as U32;
     let deltaFromThreshold = threshold
         .wrapping_sub(
@@ -544,36 +428,9 @@ unsafe extern "C" fn FSE_bitCost(
         );
     let normalizedDeltaFromThreshold = deltaFromThreshold << accuracyLog >> tableLog;
     let bitMultiplier = ((1 as libc::c_int) << accuracyLog) as U32;
-    if ((*symbolTT.offset(symbolValue as isize)).deltaNbBits).wrapping_add(tableSize)
-        <= threshold
-    {} else {
-        __assert_fail(
-            b"symbolTT[symbolValue].deltaNbBits + tableSize <= threshold\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/fse.h\0"
-                as *const u8 as *const libc::c_char,
-            504 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 45],
-                &[libc::c_char; 45],
-            >(b"U32 FSE_bitCost(const void *, U32, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
-    if normalizedDeltaFromThreshold <= bitMultiplier {} else {
-        __assert_fail(
-            b"normalizedDeltaFromThreshold <= bitMultiplier\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/fse.h\0"
-                as *const u8 as *const libc::c_char,
-            505 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 45],
-                &[libc::c_char; 45],
-            >(b"U32 FSE_bitCost(const void *, U32, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(((*symbolTT.offset(symbolValue as isize)).deltaNbBits).wrapping_add(tableSize)
+        <= threshold);
+    debug_assert!(normalizedDeltaFromThreshold <= bitMultiplier);
     return minNbBits
         .wrapping_add(1 as libc::c_int as libc::c_uint)
         .wrapping_mul(bitMultiplier)
@@ -979,21 +836,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
 ) -> size_t {
     let mut cost = 0 as libc::c_int as libc::c_uint;
     let mut s: libc::c_uint = 0;
-    if total > 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"total > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                as *const u8 as *const libc::c_char,
-            89 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 80],
-                &[libc::c_char; 80],
-            >(
-                b"size_t ZSTD_entropyCost(const unsigned int *, const unsigned int, const size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(total > 0 as libc::c_int as libc::c_ulong);
     s = 0 as libc::c_int as libc::c_uint;
     while s <= max {
         let mut norm = ((256 as libc::c_int as libc::c_uint)
@@ -1004,21 +847,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
         {
             norm = 1 as libc::c_int as libc::c_uint;
         }
-        if (*count.offset(s as isize) as libc::c_ulong) < total {} else {
-            __assert_fail(
-                b"count[s] < total\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                    as *const u8 as *const libc::c_char,
-                94 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 80],
-                    &[libc::c_char; 80],
-                >(
-                    b"size_t ZSTD_entropyCost(const unsigned int *, const unsigned int, const size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*count.offset(s as isize) as libc::c_ulong) < total);
         cost = cost
             .wrapping_add(
                 (*count.offset(s as isize))
@@ -1077,21 +906,7 @@ pub unsafe extern "C" fn ZSTD_crossEntropyCost(
     let shift = (8 as libc::c_int as libc::c_uint).wrapping_sub(accuracyLog);
     let mut cost = 0 as libc::c_int as size_t;
     let mut s: libc::c_uint = 0;
-    if accuracyLog <= 8 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"accuracyLog <= 8\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                as *const u8 as *const libc::c_char,
-            145 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 100],
-                &[libc::c_char; 100],
-            >(
-                b"size_t ZSTD_crossEntropyCost(const short *, unsigned int, const unsigned int *, const unsigned int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(accuracyLog <= 8 as libc::c_int as libc::c_uint);
     s = 0 as libc::c_int as libc::c_uint;
     while s <= max {
         let normAcc = if *norm.offset(s as isize) as libc::c_int != -(1 as libc::c_int) {
@@ -1100,36 +915,8 @@ pub unsafe extern "C" fn ZSTD_crossEntropyCost(
             1 as libc::c_int as libc::c_uint
         };
         let norm256 = normAcc << shift;
-        if norm256 > 0 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"norm256 > 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                    as *const u8 as *const libc::c_char,
-                149 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 100],
-                    &[libc::c_char; 100],
-                >(
-                    b"size_t ZSTD_crossEntropyCost(const short *, unsigned int, const unsigned int *, const unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if norm256 < 256 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"norm256 < 256\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                    as *const u8 as *const libc::c_char,
-                150 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 100],
-                    &[libc::c_char; 100],
-                >(
-                    b"size_t ZSTD_crossEntropyCost(const short *, unsigned int, const unsigned int *, const unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(norm256 > 0 as libc::c_int as libc::c_uint);
+        debug_assert!(norm256 < 256 as libc::c_int as libc::c_uint);
         cost = (cost as libc::c_ulong)
             .wrapping_add(
                 (*count.offset(s as isize))
@@ -1171,41 +958,10 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
             let baseLog = 3 as libc::c_int as size_t;
             let dynamicFse_nbSeq_min = ((1 as libc::c_int as size_t) << defaultNormLog)
                 .wrapping_mul(mult) >> baseLog;
-            if defaultNormLog >= 5 as libc::c_int as libc::c_uint
-                && defaultNormLog <= 6 as libc::c_int as libc::c_uint
-            {} else {
-                __assert_fail(
-                    b"defaultNormLog >= 5 && defaultNormLog <= 6\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    185 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 232],
-                        &[libc::c_char; 232],
-                    >(
-                        b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if mult <= 9 as libc::c_int as libc::c_ulong
-                && mult >= 7 as libc::c_int as libc::c_ulong
-            {} else {
-                __assert_fail(
-                    b"mult <= 9 && mult >= 7\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    186 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 232],
-                        &[libc::c_char; 232],
-                    >(
-                        b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(defaultNormLog >= 5 as libc::c_int as libc::c_uint
+                && defaultNormLog <= 6 as libc::c_int as libc::c_uint);
+            debug_assert!(mult <= 9 as libc::c_int as libc::c_ulong
+                && mult >= 7 as libc::c_int as libc::c_ulong);
             if *repeatMode as libc::c_uint
                 == FSE_repeat_valid as libc::c_int as libc::c_uint
                 && nbSeq < staticFse_nbSeq_max
@@ -1238,124 +994,23 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
         let compressedCost = (NCountCost << 3 as libc::c_int)
             .wrapping_add(ZSTD_entropyCost(count, max, nbSeq));
         if isDefaultAllowed as u64 != 0 {
-            if ERR_isError(basicCost) == 0 {} else {
-                __assert_fail(
-                    b"!ZSTD_isError(basicCost)\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    212 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 232],
-                        &[libc::c_char; 232],
-                    >(
-                        b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if !(*repeatMode as libc::c_uint
+            debug_assert!(ERR_isError(basicCost) == 0);
+            debug_assert!(!(*repeatMode as libc::c_uint
                 == FSE_repeat_valid as libc::c_int as libc::c_uint
-                && ERR_isError(repeatCost) != 0)
-            {} else {
-                __assert_fail(
-                    b"!(*repeatMode == FSE_repeat_valid && ZSTD_isError(repeatCost))\0"
-                        as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    213 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 232],
-                        &[libc::c_char; 232],
-                    >(
-                        b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+                && ERR_isError(repeatCost) != 0));
         }
-        if ERR_isError(NCountCost) == 0 {} else {
-            __assert_fail(
-                b"!ZSTD_isError(NCountCost)\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                    as *const u8 as *const libc::c_char,
-                215 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 232],
-                    &[libc::c_char; 232],
-                >(
-                    b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if compressedCost < -(ZSTD_error_maxCode as libc::c_int) as size_t {} else {
-            __assert_fail(
-                b"compressedCost < ERROR(maxCode)\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                    as *const u8 as *const libc::c_char,
-                216 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 232],
-                    &[libc::c_char; 232],
-                >(
-                    b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(ERR_isError(NCountCost) == 0);
+        debug_assert!(compressedCost < -(ZSTD_error_maxCode as libc::c_int) as size_t);
         if basicCost <= repeatCost && basicCost <= compressedCost {
-            if isDefaultAllowed as u64 != 0 {} else {
-                __assert_fail(
-                    b"isDefaultAllowed\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    221 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 232],
-                        &[libc::c_char; 232],
-                    >(
-                        b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(isDefaultAllowed as u64 != 0);
             *repeatMode = FSE_repeat_none;
             return set_basic;
         }
         if repeatCost <= compressedCost {
-            if ERR_isError(repeatCost) == 0 {} else {
-                __assert_fail(
-                    b"!ZSTD_isError(repeatCost)\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    227 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 232],
-                        &[libc::c_char; 232],
-                    >(
-                        b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(ERR_isError(repeatCost) == 0);
             return set_repeat;
         }
-        if compressedCost < basicCost && compressedCost < repeatCost {} else {
-            __assert_fail(
-                b"compressedCost < basicCost && compressedCost < repeatCost\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                    as *const u8 as *const libc::c_char,
-                230 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 232],
-                    &[libc::c_char; 232],
-                >(
-                    b"symbolEncodingType_e ZSTD_selectEncodingType(FSE_repeat *, const unsigned int *, const unsigned int, const size_t, size_t, const unsigned int, const FSE_CTable *, const short *, U32, const ZSTD_defaultPolicy_e, const ZSTD_strategy)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(compressedCost < basicCost && compressedCost < repeatCost);
     }
     *repeatMode = FSE_repeat_check;
     return set_compressed;
@@ -1439,39 +1094,9 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
                 *fresh0 = (*fresh0).wrapping_sub(1);
                 nbSeq_1 = nbSeq_1.wrapping_sub(1);
             }
-            if nbSeq_1 > 1 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"nbSeq_1 > 1\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    275 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 191],
-                        &[libc::c_char; 191],
-                    >(
-                        b"size_t ZSTD_buildCTable(void *, size_t, FSE_CTable *, U32, symbolEncodingType_e, unsigned int *, U32, const BYTE *, size_t, const S16 *, U32, U32, const FSE_CTable *, size_t, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if entropyWorkspaceSize
-                >= ::core::mem::size_of::<ZSTD_BuildCTableWksp>() as libc::c_ulong
-            {} else {
-                __assert_fail(
-                    b"entropyWorkspaceSize >= sizeof(ZSTD_BuildCTableWksp)\0"
-                        as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    276 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 191],
-                        &[libc::c_char; 191],
-                    >(
-                        b"size_t ZSTD_buildCTable(void *, size_t, FSE_CTable *, U32, symbolEncodingType_e, unsigned int *, U32, const BYTE *, size_t, const S16 *, U32, U32, const FSE_CTable *, size_t, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(nbSeq_1 > 1 as libc::c_int as libc::c_ulong);
+            debug_assert!(entropyWorkspaceSize
+                >= ::core::mem::size_of::<ZSTD_BuildCTableWksp>() as libc::c_ulong);
             let err_code_1 = FSE_normalizeCount(
                 ((*wksp).norm).as_mut_ptr(),
                 tableLog,
@@ -1483,21 +1108,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
             if ERR_isError(err_code_1) != 0 {
                 return err_code_1;
             }
-            if oend >= op as *const BYTE {} else {
-                __assert_fail(
-                    b"oend >= op\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                        as *const u8 as *const libc::c_char,
-                    279 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 191],
-                        &[libc::c_char; 191],
-                    >(
-                        b"size_t ZSTD_buildCTable(void *, size_t, FSE_CTable *, U32, symbolEncodingType_e, unsigned int *, U32, const BYTE *, size_t, const S16 *, U32, U32, const FSE_CTable *, size_t, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(oend >= op as *const BYTE);
             let NCountSize = FSE_writeNCount(
                 op as *mut libc::c_void,
                 oend.offset_from(op) as libc::c_long as size_t,

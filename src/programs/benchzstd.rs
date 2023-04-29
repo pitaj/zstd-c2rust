@@ -537,21 +537,7 @@ unsafe extern "C" fn XXH64_finalize(
     mut align: XXH_alignment,
 ) -> xxh_u64 {
     if ptr.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../programs/../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                2434 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 71],
-                    &[libc::c_char; 71],
-                >(
-                    b"xxh_u64 XXH64_finalize(xxh_u64, const xxh_u8 *, size_t, XXH_alignment)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
     }
     len &= 31 as libc::c_int as libc::c_ulong;
     while len >= 8 as libc::c_int as libc::c_ulong {
@@ -601,21 +587,7 @@ unsafe extern "C" fn XXH64_endian_align(
 ) -> xxh_u64 {
     let mut h64: xxh_u64 = 0;
     if input.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../programs/../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                2471 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 75],
-                    &[libc::c_char; 75],
-                >(
-                    b"xxh_u64 XXH64_endian_align(const xxh_u8 *, size_t, xxh_u64, XXH_alignment)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
     }
     if len >= 32 as libc::c_int as libc::c_ulong {
         let bEnd = input.offset(len as isize);
@@ -1167,19 +1139,7 @@ pub unsafe extern "C" fn BMK_isSuccessful_benchOutcome(
 pub unsafe extern "C" fn BMK_extract_benchResult(
     mut outcome: BMK_benchOutcome_t,
 ) -> BMK_benchResult_t {
-    if outcome.tag == 0 as libc::c_int {} else {
-        __assert_fail(
-            b"outcome.tag == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/benchzstd.c\0" as *const u8
-                as *const libc::c_char,
-            277 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 62],
-                &[libc::c_char; 62],
-            >(b"BMK_benchResult_t BMK_extract_benchResult(BMK_benchOutcome_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(outcome.tag == 0 as libc::c_int);
     return outcome.internal_never_use_directly;
 }
 unsafe extern "C" fn BMK_benchOutcome_error() -> BMK_benchOutcome_t {
@@ -1261,36 +1221,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     let mut cSize = 0 as libc::c_int as size_t;
     let mut ratio = 0.0f64;
     let mut nbBlocks: U32 = 0;
-    if !cctx.is_null() {} else {
-        __assert_fail(
-            b"cctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/benchzstd.c\0" as *const u8
-                as *const libc::c_char,
-            325 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 385],
-                &[libc::c_char; 385],
-            >(
-                b"BMK_benchOutcome_t BMK_benchMemAdvancedNoAlloc(const void **, size_t *, void **, size_t *, size_t *, void **, size_t *, void **, void *, size_t, BMK_timedFnState_t *, BMK_timedFnState_t *, const void *, size_t, const size_t *, unsigned int, const int, const ZSTD_compressionParameters *, const void *, size_t, ZSTD_CCtx *, ZSTD_DCtx *, int, const char *, const BMK_advancedParams_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if !dctx.is_null() {} else {
-        __assert_fail(
-            b"dctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/benchzstd.c\0" as *const u8
-                as *const libc::c_char,
-            325 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 385],
-                &[libc::c_char; 385],
-            >(
-                b"BMK_benchOutcome_t BMK_benchMemAdvancedNoAlloc(const void **, size_t *, void **, size_t *, size_t *, void **, size_t *, void **, void *, size_t, BMK_timedFnState_t *, BMK_timedFnState_t *, const void *, size_t, const size_t *, unsigned int, const int, const ZSTD_compressionParameters *, const void *, size_t, ZSTD_CCtx *, ZSTD_DCtx *, int, const char *, const BMK_advancedParams_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!cctx.is_null());
+    debug_assert!(!dctx.is_null());
     memset(
         &mut benchResult as *mut BMK_benchResult_t as *mut libc::c_void,
         0 as libc::c_int,
@@ -1395,22 +1327,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             fileNb = fileNb.wrapping_add(1);
         }
         let decodedSize = totalDSize64;
-        if decodedSize == totalDSize64 {} else {
-            __assert_fail(
-                b"(U64)decodedSize == totalDSize64\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/benchzstd.c\0" as *const u8
-                    as *const libc::c_char,
-                347 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 385],
-                    &[libc::c_char; 385],
-                >(
-                    b"BMK_benchOutcome_t BMK_benchMemAdvancedNoAlloc(const void **, size_t *, void **, size_t *, size_t *, void **, size_t *, void **, void *, size_t, BMK_timedFnState_t *, BMK_timedFnState_t *, const void *, size_t, const size_t *, unsigned int, const int, const ZSTD_compressionParameters *, const void *, size_t, ZSTD_CCtx *, ZSTD_DCtx *, int, const char *, const BMK_advancedParams_t *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(decodedSize == totalDSize64);
         free(*resultBufferPtr);
         if totalDSize64 > decodedSize {
             let mut r_1 = BMK_benchOutcome_t {
@@ -1703,25 +1620,10 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         );
         fflush(NULL as *mut FILE);
     }
-    if srcSize
+    debug_assert!(srcSize
         < (2147483647 as libc::c_int as libc::c_uint)
             .wrapping_mul(2 as libc::c_uint)
-            .wrapping_add(1 as libc::c_uint) as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"srcSize < UINT_MAX\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/benchzstd.c\0" as *const u8
-                as *const libc::c_char,
-            446 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 385],
-                &[libc::c_char; 385],
-            >(
-                b"BMK_benchOutcome_t BMK_benchMemAdvancedNoAlloc(const void **, size_t *, void **, size_t *, size_t *, void **, size_t *, void **, void *, size_t, BMK_timedFnState_t *, BMK_timedFnState_t *, const void *, size_t, const size_t *, unsigned int, const int, const ZSTD_compressionParameters *, const void *, size_t, ZSTD_CCtx *, ZSTD_DCtx *, int, const char *, const BMK_advancedParams_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+            .wrapping_add(1 as libc::c_uint) as libc::c_ulong);
     if displayLevel >= 2 as libc::c_int {
         fprintf(
             stdout,
@@ -1793,25 +1695,10 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             } else {
                 2 as libc::c_int
             };
-            if cSize
+            debug_assert!(cSize
                 < (2147483647 as libc::c_int as libc::c_uint)
                     .wrapping_mul(2 as libc::c_uint)
-                    .wrapping_add(1 as libc::c_uint) as libc::c_ulong
-            {} else {
-                __assert_fail(
-                    b"cSize < UINT_MAX\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/benchzstd.c\0" as *const u8
-                        as *const libc::c_char,
-                    468 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 385],
-                        &[libc::c_char; 385],
-                    >(
-                        b"BMK_benchOutcome_t BMK_benchMemAdvancedNoAlloc(const void **, size_t *, void **, size_t *, size_t *, void **, size_t *, void **, void *, size_t, BMK_timedFnState_t *, BMK_timedFnState_t *, const void *, size_t, const size_t *, unsigned int, const int, const ZSTD_compressionParameters *, const void *, size_t, ZSTD_CCtx *, ZSTD_DCtx *, int, const char *, const BMK_advancedParams_t *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+                    .wrapping_add(1 as libc::c_uint) as libc::c_ulong);
             if displayLevel >= 2 as libc::c_int {
                 fprintf(
                     stdout,

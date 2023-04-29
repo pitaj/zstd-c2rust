@@ -350,19 +350,7 @@ unsafe extern "C" fn ERR_isError(mut code: size_t) -> libc::c_uint {
 }
 static mut prime6bytes: U64 = 227718039650203 as libc::c_ulonglong as U64;
 unsafe extern "C" fn ZSTD_hash6(mut u: U64, mut h: U32, mut s: U64) -> size_t {
-    if h <= 64 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"h <= 64\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            814 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"size_t ZSTD_hash6(U64, U32, U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(h <= 64 as libc::c_int as libc::c_uint);
     return ((u << 64 as libc::c_int - 48 as libc::c_int).wrapping_mul(prime6bytes) ^ s)
         >> (64 as libc::c_int as libc::c_uint).wrapping_sub(h);
 }
@@ -371,19 +359,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(mut p: *const libc::c_void, mut h: U32) -> si
 }
 static mut prime8bytes: U64 = 0xcf1bbcdcb7a56463 as libc::c_ulonglong as U64;
 unsafe extern "C" fn ZSTD_hash8(mut u: U64, mut h: U32, mut s: U64) -> size_t {
-    if h <= 64 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"h <= 64\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            824 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"size_t ZSTD_hash8(U64, U32, U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(h <= 64 as libc::c_int as libc::c_uint);
     return (u.wrapping_mul(prime8bytes) ^ s)
         >> (64 as libc::c_int as libc::c_uint).wrapping_sub(h);
 }
@@ -642,33 +618,8 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
         8 as libc::c_int as libc::c_uint
     };
     let mut i: size_t = 0;
-    if (*ctx).nbTrainSamples >= 5 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"ctx->nbTrainSamples >= 5\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/fastcover.c\0" as *const u8
-                as *const libc::c_char,
-            291 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 64],
-                &[libc::c_char; 64],
-            >(b"void FASTCOVER_computeFrequency(U32 *, const FASTCOVER_ctx_t *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*ctx).nbTrainSamples <= (*ctx).nbSamples {} else {
-        __assert_fail(
-            b"ctx->nbTrainSamples <= ctx->nbSamples\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/fastcover.c\0" as *const u8
-                as *const libc::c_char,
-            292 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 64],
-                &[libc::c_char; 64],
-            >(b"void FASTCOVER_computeFrequency(U32 *, const FASTCOVER_ctx_t *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ctx).nbTrainSamples >= 5 as libc::c_int as libc::c_ulong);
+    debug_assert!((*ctx).nbTrainSamples <= (*ctx).nbSamples);
     i = 0 as libc::c_int as size_t;
     while i < (*ctx).nbTrainSamples {
         let mut start = *((*ctx).offsets).offset(i as isize);
@@ -842,21 +793,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     }
     let mut i: U32 = 0;
     *((*ctx).offsets).offset(0 as libc::c_int as isize) = 0 as libc::c_int as size_t;
-    if nbSamples >= 5 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"nbSamples >= 5\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/fastcover.c\0" as *const u8
-                as *const libc::c_char,
-            375 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t FASTCOVER_ctx_init(FASTCOVER_ctx_t *, const void *, const size_t *, unsigned int, unsigned int, double, unsigned int, FASTCOVER_accel_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbSamples >= 5 as libc::c_int as libc::c_uint);
     i = 1 as libc::c_int as U32;
     while i <= nbSamples {
         *((*ctx).offsets)

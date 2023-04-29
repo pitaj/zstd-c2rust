@@ -471,36 +471,12 @@ unsafe extern "C" fn MEM_readLEST(mut memPtr: *const libc::c_void) -> size_t {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
@@ -729,22 +705,9 @@ unsafe extern "C" fn BIT_getMiddleBits(
     let regMask = (::core::mem::size_of::<size_t>() as libc::c_ulong)
         .wrapping_mul(8 as libc::c_int as libc::c_ulong)
         .wrapping_sub(1 as libc::c_int as libc::c_ulong) as U32;
-    if (nbBits as libc::c_ulong)
+    debug_assert!((nbBits as libc::c_ulong)
         < (::core::mem::size_of::<[libc::c_uint; 32]>() as libc::c_ulong)
-            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits < BIT_MASK_SIZE\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            309 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 55],
-                &[libc::c_char; 55],
-            >(b"size_t BIT_getMiddleBits(size_t, const U32, const U32)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong));
     return bitContainer >> (start & regMask)
         & ((1 as libc::c_int as U64) << nbBits)
             .wrapping_sub(1 as libc::c_int as libc::c_ulong);
@@ -795,23 +758,9 @@ unsafe extern "C" fn BIT_reloadDStreamFast(
     if ((*bitD).ptr < (*bitD).limitPtr) as libc::c_int as libc::c_long != 0 {
         return BIT_DStream_overflow;
     }
-    if (*bitD).bitsConsumed as libc::c_ulong
+    debug_assert!((*bitD).bitsConsumed as libc::c_ulong
         <= (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"bitD->bitsConsumed <= sizeof(bitD->bitContainer)*8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            387 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 58],
-                &[libc::c_char; 58],
-            >(b"BIT_DStream_status BIT_reloadDStreamFast(BIT_DStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     (*bitD)
         .ptr = ((*bitD).ptr)
         .offset(-(((*bitD).bitsConsumed >> 3 as libc::c_int) as isize));
@@ -825,19 +774,7 @@ unsafe extern "C" fn BIT_readBitsFast(
     mut nbBits: libc::c_uint,
 ) -> size_t {
     let value = BIT_lookBitsFast(bitD, nbBits);
-    if nbBits >= 1 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"nbBits >= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            372 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 55],
-                &[libc::c_char; 55],
-            >(b"size_t BIT_readBitsFast(BIT_DStream_t *, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbBits >= 1 as libc::c_int as libc::c_uint);
     BIT_skipBits(bitD, nbBits);
     return value;
 }
@@ -849,19 +786,7 @@ unsafe extern "C" fn BIT_lookBitsFast(
     let regMask = (::core::mem::size_of::<size_t>() as libc::c_ulong)
         .wrapping_mul(8 as libc::c_int as libc::c_ulong)
         .wrapping_sub(1 as libc::c_int as libc::c_ulong) as U32;
-    if nbBits >= 1 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"nbBits >= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            347 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 52],
-                &[libc::c_char; 52],
-            >(b"size_t BIT_lookBitsFast(const BIT_DStream_t *, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbBits >= 1 as libc::c_int as libc::c_uint);
     return (*bitD).bitContainer << ((*bitD).bitsConsumed & regMask)
         >> (regMask.wrapping_add(1 as libc::c_int as libc::c_uint).wrapping_sub(nbBits)
             & regMask);
@@ -907,24 +832,8 @@ unsafe extern "C" fn ZSTD_wildcopy(
             }
         }
     } else {
-        if diff >= 16 as libc::c_int as libc::c_long
-            || diff <= -(16 as libc::c_int) as libc::c_long
-        {} else {
-            __assert_fail(
-                b"diff >= WILDCOPY_VECLEN || diff <= -WILDCOPY_VECLEN\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/zstd_internal.h\0"
-                    as *const u8 as *const libc::c_char,
-                233 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 74],
-                    &[libc::c_char; 74],
-                >(
-                    b"void ZSTD_wildcopy(void *, const void *, ptrdiff_t, const ZSTD_overlap_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(diff >= 16 as libc::c_int as libc::c_long
+            || diff <= -(16 as libc::c_int) as libc::c_long);
         ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
         if 16 as libc::c_int as libc::c_long >= length {
             return;
@@ -1239,20 +1148,7 @@ unsafe extern "C" fn ZSTD_blockSizeMax(mut dctx: *const ZSTD_DCtx) -> size_t {
     } else {
         ZSTD_BLOCKSIZE_MAX as libc::c_uint
     }) as size_t;
-    if blockSizeMax <= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"blockSizeMax <= ZSTD_BLOCKSIZE_MAX\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            57 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"size_t ZSTD_blockSizeMax(const ZSTD_DCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(blockSizeMax <= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
     return blockSizeMax;
 }
 #[no_mangle]
@@ -1289,54 +1185,10 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
     splitImmediately: libc::c_uint,
 ) {
     let blockSizeMax = ZSTD_blockSizeMax(dctx);
-    if litSize <= blockSizeMax {} else {
-        __assert_fail(
-            b"litSize <= blockSizeMax\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            84 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 148],
-                &[libc::c_char; 148],
-            >(
-                b"void ZSTD_allocateLiteralsBuffer(ZSTD_DCtx *, void *const, const size_t, const size_t, const streaming_operation, const size_t, const unsigned int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (*dctx).isFrameDecompression != 0
-        || streaming as libc::c_uint == not_streaming as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"dctx->isFrameDecompression || streaming == not_streaming\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            85 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 148],
-                &[libc::c_char; 148],
-            >(
-                b"void ZSTD_allocateLiteralsBuffer(ZSTD_DCtx *, void *const, const size_t, const size_t, const streaming_operation, const size_t, const unsigned int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if expectedWriteSize <= blockSizeMax {} else {
-        __assert_fail(
-            b"expectedWriteSize <= blockSizeMax\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            86 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 148],
-                &[libc::c_char; 148],
-            >(
-                b"void ZSTD_allocateLiteralsBuffer(ZSTD_DCtx *, void *const, const size_t, const size_t, const streaming_operation, const size_t, const unsigned int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(litSize <= blockSizeMax);
+    debug_assert!((*dctx).isFrameDecompression != 0
+        || streaming as libc::c_uint == not_streaming as libc::c_int as libc::c_uint);
+    debug_assert!(expectedWriteSize <= blockSizeMax);
     if streaming as libc::c_uint == not_streaming as libc::c_int as libc::c_uint
         && dstCapacity
             > blockSizeMax
@@ -1470,24 +1322,8 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
             (*dctx).litBufferEnd = (dst as *mut BYTE).offset(expectedWriteSize as isize);
         }
         (*dctx).litBufferLocation = ZSTD_split;
-        if (*dctx).litBufferEnd
-            <= (dst as *mut BYTE).offset(expectedWriteSize as isize) as *const BYTE
-        {} else {
-            __assert_fail(
-                b"dctx->litBufferEnd <= (BYTE*)dst + expectedWriteSize\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                122 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 148],
-                    &[libc::c_char; 148],
-                >(
-                    b"void ZSTD_allocateLiteralsBuffer(ZSTD_DCtx *, void *const, const size_t, const size_t, const streaming_operation, const size_t, const unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*dctx).litBufferEnd
+            <= (dst as *mut BYTE).offset(expectedWriteSize as isize) as *const BYTE);
     };
 }
 unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
@@ -1874,22 +1710,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 flags,
             );
         } else {
-            if litSize >= 6 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"litSize >= MIN_LITERALS_FOR_4_STREAMS\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                        as *const u8 as *const libc::c_char,
-                    206 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 110],
-                        &[libc::c_char; 110],
-                    >(
-                        b"size_t ZSTD_decodeLiteralsBlock(ZSTD_DCtx *, const void *, size_t, void *, size_t, const streaming_operation)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(litSize >= 6 as libc::c_int as libc::c_ulong);
             hufSuccess = HUF_decompress4X_usingDTable(
                 (*dctx).litBuffer as *mut libc::c_void,
                 litSize,
@@ -2077,24 +1898,8 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
         (*dctx)
             .litBufferEnd = ((*dctx).litBufferEnd)
             .offset(-(WILDCOPY_OVERLENGTH as isize));
-        if (*dctx).litBufferEnd
-            <= (dst as *mut BYTE).offset(blockSizeMax as isize) as *const BYTE
-        {} else {
-            __assert_fail(
-                b"dctx->litBufferEnd <= (BYTE*)dst + blockSizeMax\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                238 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 110],
-                    &[libc::c_char; 110],
-                >(
-                    b"size_t ZSTD_decodeLiteralsBlock(ZSTD_DCtx *, const void *, size_t, void *, size_t, const streaming_operation)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*dctx).litBufferEnd
+            <= (dst as *mut BYTE).offset(blockSizeMax as isize) as *const BYTE);
     }
     if ERR_isError(hufSuccess) != 0 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
@@ -3603,19 +3408,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable_rle(
     (*DTableH).fastMode = 0 as libc::c_int as U32;
     (*cell).nbBits = 0 as libc::c_int as BYTE;
     (*cell).nextState = 0 as libc::c_int as U16;
-    if (nbAddBits as libc::c_int) < 255 as libc::c_int {} else {
-        __assert_fail(
-            b"nbAddBits < 255\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            474 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 55],
-                &[libc::c_char; 55],
-            >(b"void ZSTD_buildSeqTable_rle(ZSTD_seqSymbol *, U32, U8)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((nbAddBits as libc::c_int) < 255 as libc::c_int);
     (*cell).nbAdditionalBits = nbAddBits;
     (*cell).baseValue = baseValue;
 }
@@ -3760,22 +3553,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             {
                 DTableH.fastMode = 0 as libc::c_int as U32;
             }
-            if *normalizedCounter.offset(s as isize) as libc::c_int >= 0 as libc::c_int
-            {} else {
-                __assert_fail(
-                    b"normalizedCounter[s]>=0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                        as *const u8 as *const libc::c_char,
-                    516 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 131],
-                        &[libc::c_char; 131],
-                    >(
-                        b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(*normalizedCounter.offset(s as isize) as libc::c_int >= 0 as libc::c_int);
             *symbolNext
                 .offset(s as isize) = *normalizedCounter.offset(s as isize) as U16;
         }
@@ -3786,21 +3564,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
         &mut DTableH as *mut ZSTD_seqSymbol_header as *const libc::c_void,
         ::core::mem::size_of::<ZSTD_seqSymbol_header>() as libc::c_ulong as libc::size_t,
     );
-    if tableSize <= 512 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"tableSize <= 512\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            523 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 131],
-                &[libc::c_char; 131],
-            >(
-                b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(tableSize <= 512 as libc::c_int as libc::c_uint);
     if highThreshold == tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint) {
         let tableMask = tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint)
             as size_t;
@@ -3824,21 +3588,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
                 );
                 i += 8 as libc::c_int;
             }
-            if n >= 0 as libc::c_int {} else {
-                __assert_fail(
-                    b"n>=0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                        as *const u8 as *const libc::c_char,
-                    550 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 131],
-                        &[libc::c_char; 131],
-                    >(
-                        b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(n >= 0 as libc::c_int);
             pos = (pos as libc::c_ulong).wrapping_add(n as size_t) as size_t as size_t;
             s_0 = s_0.wrapping_add(1);
             sv = (sv as libc::c_ulong).wrapping_add(add) as U64 as U64;
@@ -3846,23 +3596,8 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
         let mut position = 0 as libc::c_int as size_t;
         let mut s_1: size_t = 0;
         let unroll = 2 as libc::c_int as size_t;
-        if (tableSize as libc::c_ulong).wrapping_rem(unroll)
-            == 0 as libc::c_int as libc::c_ulong
-        {} else {
-            __assert_fail(
-                b"tableSize % unroll == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                564 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 131],
-                    &[libc::c_char; 131],
-                >(
-                    b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((tableSize as libc::c_ulong).wrapping_rem(unroll)
+            == 0 as libc::c_int as libc::c_ulong);
         s_1 = 0 as libc::c_int as size_t;
         while s_1 < tableSize as size_t {
             let mut u: size_t = 0;
@@ -3876,21 +3611,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             position = position.wrapping_add(unroll.wrapping_mul(step)) & tableMask;
             s_1 = (s_1 as libc::c_ulong).wrapping_add(unroll) as size_t as size_t;
         }
-        if position == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"position == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                573 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 131],
-                    &[libc::c_char; 131],
-                >(
-                    b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(position == 0 as libc::c_int as libc::c_ulong);
     } else {
         let tableMask_0 = tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint);
         let step_0 = (tableSize >> 1 as libc::c_int)
@@ -3913,21 +3634,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             }
             s_2 = s_2.wrapping_add(1);
         }
-        if position_0 == 0 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"position == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                587 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 131],
-                    &[libc::c_char; 131],
-                >(
-                    b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(position_0 == 0 as libc::c_int as libc::c_uint);
     }
     let mut u_0: U32 = 0;
     u_0 = 0 as libc::c_int as U32;
@@ -3943,23 +3650,8 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             .nextState = (nextState
             << (*tableDecode.offset(u_0 as isize)).nbBits as libc::c_int)
             .wrapping_sub(tableSize) as U16;
-        if (*nbAdditionalBits.offset(symbol as isize) as libc::c_int)
-            < 255 as libc::c_int
-        {} else {
-            __assert_fail(
-                b"nbAdditionalBits[symbol] < 255\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                598 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 131],
-                    &[libc::c_char; 131],
-                >(
-                    b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*nbAdditionalBits.offset(symbol as isize) as libc::c_int)
+            < 255 as libc::c_int);
         (*tableDecode.offset(u_0 as isize))
             .nbAdditionalBits = *nbAdditionalBits.offset(symbol as isize);
         (*tableDecode.offset(u_0 as isize))
@@ -4278,19 +3970,7 @@ unsafe extern "C" fn ZSTD_overlapCopy8(
     mut ip: *mut *const BYTE,
     mut offset: size_t,
 ) {
-    if *ip <= *op as *const BYTE {} else {
-        __assert_fail(
-            b"*ip <= *op\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            802 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 55],
-                &[libc::c_char; 55],
-            >(b"void ZSTD_overlapCopy8(BYTE **, const BYTE **, size_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(*ip <= *op as *const BYTE);
     if offset < 8 as libc::c_int as libc::c_ulong {
         static mut dec32table: [U32; 8] = [
             0 as libc::c_int as U32,
@@ -4340,20 +4020,7 @@ unsafe extern "C" fn ZSTD_overlapCopy8(
     }
     *ip = (*ip).offset(8 as libc::c_int as isize);
     *op = (*op).offset(8 as libc::c_int as isize);
-    if (*op).offset_from(*ip) as libc::c_long >= 8 as libc::c_int as libc::c_long
-    {} else {
-        __assert_fail(
-            b"*op - *ip >= 8\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            820 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 55],
-                &[libc::c_char; 55],
-            >(b"void ZSTD_overlapCopy8(BYTE **, const BYTE **, size_t)\0"))
-                .as_ptr(),
-        );
-    };
+    debug_assert!((*op).offset_from(*ip) as libc::c_long >= 8 as libc::c_int as libc::c_long);;
 }
 unsafe extern "C" fn ZSTD_safecopy(
     mut op: *mut BYTE,
@@ -4364,28 +4031,12 @@ unsafe extern "C" fn ZSTD_safecopy(
 ) {
     let diff = op.offset_from(ip) as libc::c_long;
     let oend = op.offset(length as isize);
-    if ovtype as libc::c_uint == ZSTD_no_overlap as libc::c_int as libc::c_uint
+    debug_assert!(ovtype as libc::c_uint == ZSTD_no_overlap as libc::c_int as libc::c_uint
         && (diff <= -(8 as libc::c_int) as libc::c_long
             || diff >= 8 as libc::c_int as libc::c_long || op >= oend_w as *mut BYTE)
         || ovtype as libc::c_uint
             == ZSTD_overlap_src_before_dst as libc::c_int as libc::c_uint
-            && diff >= 0 as libc::c_int as libc::c_long
-    {} else {
-        __assert_fail(
-            b"(ovtype == ZSTD_no_overlap && (diff <= -8 || diff >= 8 || op >= oend_w)) || (ovtype == ZSTD_overlap_src_before_dst && diff >= 0)\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            839 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 87],
-                &[libc::c_char; 87],
-            >(
-                b"void ZSTD_safecopy(BYTE *, const BYTE *const, const BYTE *, ptrdiff_t, ZSTD_overlap_e)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+            && diff >= 0 as libc::c_int as libc::c_long);
     if length < 8 as libc::c_int as libc::c_long {
         while op < oend {
             let fresh5 = ip;
@@ -4399,54 +4050,11 @@ unsafe extern "C" fn ZSTD_safecopy(
     if ovtype as libc::c_uint
         == ZSTD_overlap_src_before_dst as libc::c_int as libc::c_uint
     {
-        if length >= 8 as libc::c_int as libc::c_long {} else {
-            __assert_fail(
-                b"length >= 8\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                848 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 87],
-                    &[libc::c_char; 87],
-                >(
-                    b"void ZSTD_safecopy(BYTE *, const BYTE *const, const BYTE *, ptrdiff_t, ZSTD_overlap_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(length >= 8 as libc::c_int as libc::c_long);
         ZSTD_overlapCopy8(&mut op, &mut ip, diff as size_t);
         length -= 8 as libc::c_int as libc::c_long;
-        if op.offset_from(ip) as libc::c_long >= 8 as libc::c_int as libc::c_long
-        {} else {
-            __assert_fail(
-                b"op - ip >= 8\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                851 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 87],
-                    &[libc::c_char; 87],
-                >(
-                    b"void ZSTD_safecopy(BYTE *, const BYTE *const, const BYTE *, ptrdiff_t, ZSTD_overlap_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if op <= oend {} else {
-            __assert_fail(
-                b"op <= oend\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                852 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 87],
-                    &[libc::c_char; 87],
-                >(
-                    b"void ZSTD_safecopy(BYTE *, const BYTE *const, const BYTE *, ptrdiff_t, ZSTD_overlap_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(op.offset_from(ip) as libc::c_long >= 8 as libc::c_int as libc::c_long);
+        debug_assert!(op <= oend);
     }
     if oend <= oend_w as *mut BYTE {
         ZSTD_wildcopy(
@@ -4458,21 +4066,7 @@ unsafe extern "C" fn ZSTD_safecopy(
         return;
     }
     if op <= oend_w as *mut BYTE {
-        if oend > oend_w as *mut BYTE {} else {
-            __assert_fail(
-                b"oend > oend_w\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                862 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 87],
-                    &[libc::c_char; 87],
-                >(
-                    b"void ZSTD_safecopy(BYTE *, const BYTE *const, const BYTE *, ptrdiff_t, ZSTD_overlap_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(oend > oend_w as *mut BYTE);
         ZSTD_wildcopy(
             op as *mut libc::c_void,
             ip as *const libc::c_void,
@@ -4559,36 +4153,8 @@ unsafe extern "C" fn ZSTD_execSequenceEnd(
     if sequence.litLength > litLimit.offset_from(*litPtr) as libc::c_long as size_t {
         return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
     }
-    if op < op.offset(sequenceLength as isize) {} else {
-        __assert_fail(
-            b"op < op + sequenceLength\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            917 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 147],
-                &[libc::c_char; 147],
-            >(
-                b"size_t ZSTD_execSequenceEnd(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oLitEnd < op.offset(sequenceLength as isize) {} else {
-        __assert_fail(
-            b"oLitEnd < op + sequenceLength\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            918 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 147],
-                &[libc::c_char; 147],
-            >(
-                b"size_t ZSTD_execSequenceEnd(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op < op.offset(sequenceLength as isize));
+    debug_assert!(oLitEnd < op.offset(sequenceLength as isize));
     ZSTD_safecopy(op, oend_w, *litPtr, sequence.litLength as ptrdiff_t, ZSTD_no_overlap);
     op = oLitEnd;
     *litPtr = iLitEnd;
@@ -4650,36 +4216,8 @@ unsafe extern "C" fn ZSTD_execSequenceEndSplitLitBuffer(
     if sequence.litLength > litLimit.offset_from(*litPtr) as libc::c_long as size_t {
         return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
     }
-    if op < op.offset(sequenceLength as isize) {} else {
-        __assert_fail(
-            b"op < op + sequenceLength\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            964 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 180],
-                &[libc::c_char; 180],
-            >(
-                b"size_t ZSTD_execSequenceEndSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oLitEnd < op.offset(sequenceLength as isize) {} else {
-        __assert_fail(
-            b"oLitEnd < op + sequenceLength\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            965 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 180],
-                &[libc::c_char; 180],
-            >(
-                b"size_t ZSTD_execSequenceEndSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op < op.offset(sequenceLength as isize));
+    debug_assert!(oLitEnd < op.offset(sequenceLength as isize));
     if op > *litPtr as *mut BYTE
         && op < (*litPtr).offset(sequence.litLength as isize) as *mut BYTE
     {
@@ -4741,36 +4279,8 @@ unsafe extern "C" fn ZSTD_execSequence(
     let oend_w = oend.offset(-(WILDCOPY_OVERLENGTH as isize));
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
     let mut match_0: *const BYTE = oLitEnd.offset(-(sequence.offset as isize));
-    if !op.is_null() {} else {
-        __assert_fail(
-            b"op != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1007 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oend_w < oend {} else {
-        __assert_fail(
-            b"oend_w < oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1008 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!op.is_null());
+    debug_assert!(oend_w < oend);
     if (iLitEnd > litLimit || oMatchEnd > oend_w
         || MEM_32bits() != 0
             && (oend.offset_from(op) as libc::c_long as size_t)
@@ -4788,111 +4298,13 @@ unsafe extern "C" fn ZSTD_execSequence(
             dictEnd,
         );
     }
-    if op <= oLitEnd {} else {
-        __assert_fail(
-            b"op <= oLitEnd\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1026 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oLitEnd < oMatchEnd {} else {
-        __assert_fail(
-            b"oLitEnd < oMatchEnd\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1027 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oMatchEnd <= oend {} else {
-        __assert_fail(
-            b"oMatchEnd <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1028 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if iLitEnd <= litLimit {} else {
-        __assert_fail(
-            b"iLitEnd <= litLimit\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1029 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oLitEnd <= oend_w {} else {
-        __assert_fail(
-            b"oLitEnd <= oend_w\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1030 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oMatchEnd <= oend_w {} else {
-        __assert_fail(
-            b"oMatchEnd <= oend_w\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1031 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if 32 as libc::c_int >= 16 as libc::c_int {} else {
-        __assert_fail(
-            b"WILDCOPY_OVERLENGTH >= 16\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1037 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oLitEnd);
+    debug_assert!(oLitEnd < oMatchEnd);
+    debug_assert!(oMatchEnd <= oend);
+    debug_assert!(iLitEnd <= litLimit);
+    debug_assert!(oLitEnd <= oend_w);
+    debug_assert!(oMatchEnd <= oend_w);
+    debug_assert!(32 as libc::c_int >= 16 as libc::c_int);
     ZSTD_copy16(op as *mut libc::c_void, *litPtr as *const libc::c_void);
     if (sequence.litLength > 16 as libc::c_int as libc::c_ulong) as libc::c_int
         as libc::c_long != 0
@@ -4936,66 +4348,10 @@ unsafe extern "C" fn ZSTD_execSequence(
             as size_t as size_t;
         match_0 = prefixStart;
     }
-    if op <= oMatchEnd {} else {
-        __assert_fail(
-            b"op <= oMatchEnd\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1063 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oMatchEnd <= oend_w {} else {
-        __assert_fail(
-            b"oMatchEnd <= oend_w\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1064 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if match_0 >= prefixStart {} else {
-        __assert_fail(
-            b"match >= prefixStart\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1065 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if sequence.matchLength >= 1 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"sequence.matchLength >= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1066 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oMatchEnd);
+    debug_assert!(oMatchEnd <= oend_w);
+    debug_assert!(match_0 >= prefixStart);
+    debug_assert!(sequence.matchLength >= 1 as libc::c_int as libc::c_ulong);
     if (sequence.offset >= 16 as libc::c_int as libc::c_ulong) as libc::c_int
         as libc::c_long != 0
     {
@@ -5007,38 +4363,10 @@ unsafe extern "C" fn ZSTD_execSequence(
         );
         return sequenceLength;
     }
-    if sequence.offset < 16 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"sequence.offset < WILDCOPY_VECLEN\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1079 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 144],
-                &[libc::c_char; 144],
-            >(
-                b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(sequence.offset < 16 as libc::c_int as libc::c_ulong);
     ZSTD_overlapCopy8(&mut op, &mut match_0, sequence.offset);
     if sequence.matchLength > 8 as libc::c_int as libc::c_ulong {
-        if op < oMatchEnd {} else {
-            __assert_fail(
-                b"op < oMatchEnd\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                1086 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 144],
-                    &[libc::c_char; 144],
-                >(
-                    b"size_t ZSTD_execSequence(BYTE *, BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(op < oMatchEnd);
         ZSTD_wildcopy(
             op as *mut libc::c_void,
             match_0 as *const libc::c_void,
@@ -5065,36 +4393,8 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
     let oMatchEnd = op.offset(sequenceLength as isize);
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
     let mut match_0: *const BYTE = oLitEnd.offset(-(sequence.offset as isize));
-    if !op.is_null() {} else {
-        __assert_fail(
-            b"op != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1104 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oend_w < oend as *const BYTE {} else {
-        __assert_fail(
-            b"oend_w < oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1105 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!op.is_null());
+    debug_assert!(oend_w < oend as *const BYTE);
     if (iLitEnd > litLimit || oMatchEnd > oend_w as *mut BYTE
         || MEM_32bits() != 0
             && (oend.offset_from(op) as libc::c_long as size_t)
@@ -5113,111 +4413,13 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
             dictEnd,
         );
     }
-    if op <= oLitEnd {} else {
-        __assert_fail(
-            b"op <= oLitEnd\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1118 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oLitEnd < oMatchEnd {} else {
-        __assert_fail(
-            b"oLitEnd < oMatchEnd\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1119 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oMatchEnd <= oend {} else {
-        __assert_fail(
-            b"oMatchEnd <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1120 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if iLitEnd <= litLimit {} else {
-        __assert_fail(
-            b"iLitEnd <= litLimit\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1121 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oLitEnd <= oend_w as *mut BYTE {} else {
-        __assert_fail(
-            b"oLitEnd <= oend_w\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1122 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oMatchEnd <= oend_w as *mut BYTE {} else {
-        __assert_fail(
-            b"oMatchEnd <= oend_w\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1123 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if 32 as libc::c_int >= 16 as libc::c_int {} else {
-        __assert_fail(
-            b"WILDCOPY_OVERLENGTH >= 16\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1129 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oLitEnd);
+    debug_assert!(oLitEnd < oMatchEnd);
+    debug_assert!(oMatchEnd <= oend);
+    debug_assert!(iLitEnd <= litLimit);
+    debug_assert!(oLitEnd <= oend_w as *mut BYTE);
+    debug_assert!(oMatchEnd <= oend_w as *mut BYTE);
+    debug_assert!(32 as libc::c_int >= 16 as libc::c_int);
     ZSTD_copy16(op as *mut libc::c_void, *litPtr as *const libc::c_void);
     if (sequence.litLength > 16 as libc::c_int as libc::c_ulong) as libc::c_int
         as libc::c_long != 0
@@ -5261,66 +4463,10 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
             as size_t as size_t;
         match_0 = prefixStart;
     }
-    if op <= oMatchEnd {} else {
-        __assert_fail(
-            b"op <= oMatchEnd\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1154 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if oMatchEnd <= oend_w as *mut BYTE {} else {
-        __assert_fail(
-            b"oMatchEnd <= oend_w\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1155 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if match_0 >= prefixStart {} else {
-        __assert_fail(
-            b"match >= prefixStart\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1156 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if sequence.matchLength >= 1 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"sequence.matchLength >= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1157 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oMatchEnd);
+    debug_assert!(oMatchEnd <= oend_w as *mut BYTE);
+    debug_assert!(match_0 >= prefixStart);
+    debug_assert!(sequence.matchLength >= 1 as libc::c_int as libc::c_ulong);
     if (sequence.offset >= 16 as libc::c_int as libc::c_ulong) as libc::c_int
         as libc::c_long != 0
     {
@@ -5332,38 +4478,10 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
         );
         return sequenceLength;
     }
-    if sequence.offset < 16 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"sequence.offset < WILDCOPY_VECLEN\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1170 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 177],
-                &[libc::c_char; 177],
-            >(
-                b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(sequence.offset < 16 as libc::c_int as libc::c_ulong);
     ZSTD_overlapCopy8(&mut op, &mut match_0, sequence.offset);
     if sequence.matchLength > 8 as libc::c_int as libc::c_ulong {
-        if op < oMatchEnd {} else {
-            __assert_fail(
-                b"op < oMatchEnd\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                1177 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 177],
-                    &[libc::c_char; 177],
-                >(
-                    b"size_t ZSTD_execSequenceSplitLitBuffer(BYTE *, BYTE *const, const BYTE *const, seq_t, const BYTE **, const BYTE *const, const BYTE *const, const BYTE *const, const BYTE *const)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(op < oMatchEnd);
         ZSTD_wildcopy(
             op as *mut libc::c_void,
             match_0 as *const libc::c_void,
@@ -5422,45 +4540,9 @@ unsafe extern "C" fn ZSTD_decodeSequence(
     let llnbBits = (*llDInfo).nbBits as U32;
     let mlnbBits = (*mlDInfo).nbBits as U32;
     let ofnbBits = (*ofDInfo).nbBits as U32;
-    if llBits as libc::c_int <= 16 as libc::c_int {} else {
-        __assert_fail(
-            b"llBits <= MaxLLBits\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1255 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 65],
-                &[libc::c_char; 65],
-            >(b"seq_t ZSTD_decodeSequence(seqState_t *, const ZSTD_longOffset_e)\0"))
-                .as_ptr(),
-        );
-    }
-    if mlBits as libc::c_int <= 16 as libc::c_int {} else {
-        __assert_fail(
-            b"mlBits <= MaxMLBits\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1256 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 65],
-                &[libc::c_char; 65],
-            >(b"seq_t ZSTD_decodeSequence(seqState_t *, const ZSTD_longOffset_e)\0"))
-                .as_ptr(),
-        );
-    }
-    if ofBits as libc::c_int <= 31 as libc::c_int {} else {
-        __assert_fail(
-            b"ofBits <= MaxOff\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            1257 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 65],
-                &[libc::c_char; 65],
-            >(b"seq_t ZSTD_decodeSequence(seqState_t *, const ZSTD_longOffset_e)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(llBits as libc::c_int <= 16 as libc::c_int);
+    debug_assert!(mlBits as libc::c_int <= 16 as libc::c_int);
+    debug_assert!(ofBits as libc::c_int <= 31 as libc::c_int);
     let mut offset: size_t = 0;
     if ofBits as libc::c_int > 1 as libc::c_int {
         if MEM_32bits() != 0 && longOffsets as libc::c_uint != 0
@@ -5665,21 +4747,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             (*dctx).OFTptr,
         );
         ZSTD_initFseState(&mut seqState.stateML, &mut seqState.DStream, (*dctx).MLTptr);
-        if !dst.is_null() {} else {
-            __assert_fail(
-                b"dst != NULL\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                1412 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 132],
-                    &[libc::c_char; 132],
-                >(
-                    b"size_t ZSTD_decompressSequences_bodySplitLitBuffer(ZSTD_DCtx *, void *, size_t, const void *, size_t, int, const ZSTD_longOffset_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(!dst.is_null());
         let mut sequence = ZSTD_decodeSequence(&mut seqState, isLongOffset);
         asm!(".p2align 6", options(preserves_flags, att_syntax));
         while litPtr.offset(sequence.litLength as isize) <= (*dctx).litBufferEnd {
@@ -5936,21 +5004,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
             (*dctx).OFTptr,
         );
         ZSTD_initFseState(&mut seqState.stateML, &mut seqState.DStream, (*dctx).MLTptr);
-        if !dst.is_null() {} else {
-            __assert_fail(
-                b"dst != NULL\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                1627 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 118],
-                    &[libc::c_char; 118],
-                >(
-                    b"size_t ZSTD_decompressSequences_body(ZSTD_DCtx *, void *, size_t, const void *, size_t, int, const ZSTD_longOffset_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(!dst.is_null());
         asm!(".p2align 6", options(preserves_flags, att_syntax));
         asm!("nop", options(preserves_flags, att_syntax));
         asm!(".p2align 4", options(preserves_flags, att_syntax));
@@ -6124,36 +5178,8 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as size_t;
             i += 1;
         }
-        if !dst.is_null() {} else {
-            __assert_fail(
-                b"dst != NULL\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                1753 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 122],
-                    &[libc::c_char; 122],
-                >(
-                    b"size_t ZSTD_decompressSequencesLong_body(ZSTD_DCtx *, void *, size_t, const void *, size_t, int, const ZSTD_longOffset_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if iend >= ip {} else {
-            __assert_fail(
-                b"iend >= ip\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                1754 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 122],
-                    &[libc::c_char; 122],
-                >(
-                    b"size_t ZSTD_decompressSequencesLong_body(ZSTD_DCtx *, void *, size_t, const void *, size_t, int, const ZSTD_longOffset_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(!dst.is_null());
+        debug_assert!(iend >= ip);
         if ERR_isError(
             BIT_initDStream(
                 &mut seqState.DStream,
@@ -6662,19 +5688,7 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
         let mut table = offTable.offset(1 as libc::c_int as isize);
         let max = ((1 as libc::c_int) << tableLog) as U32;
         let mut u: U32 = 0;
-        if max <= ((1 as libc::c_int) << 8 as libc::c_int) as libc::c_uint {} else {
-            __assert_fail(
-                b"max <= (1 << OffFSELog)\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                2030 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 64],
-                    &[libc::c_char; 64],
-                >(b"ZSTD_OffsetInfo ZSTD_getOffsetInfo(const ZSTD_seqSymbol *, int)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(max <= ((1 as libc::c_int) << 8 as libc::c_int) as libc::c_uint);
         u = 0 as libc::c_int as U32;
         while u < max {
             info
@@ -6694,19 +5708,7 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
             }
             u = u.wrapping_add(1);
         }
-        if tableLog <= 8 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"tableLog <= OffFSELog\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                2036 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 64],
-                    &[libc::c_char; 64],
-                >(b"ZSTD_OffsetInfo ZSTD_getOffsetInfo(const ZSTD_seqSymbol *, int)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(tableLog <= 8 as libc::c_int as libc::c_uint);
         info.longOffsetShare <<= (OffFSELog as libc::c_uint).wrapping_sub(tableLog);
     }
     return info;

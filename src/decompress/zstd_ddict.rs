@@ -330,36 +330,12 @@ pub const ZSTD_isError: unsafe extern "C" fn(size_t) -> libc::c_uint = ERR_isErr
 pub unsafe extern "C" fn ZSTD_DDict_dictContent(
     mut ddict: *const ZSTD_DDict,
 ) -> *const libc::c_void {
-    if !ddict.is_null() {} else {
-        __assert_fail(
-            b"ddict != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_ddict.c\0" as *const u8
-                as *const libc::c_char,
-            48 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 55],
-                &[libc::c_char; 55],
-            >(b"const void *ZSTD_DDict_dictContent(const ZSTD_DDict *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ddict.is_null());
     return (*ddict).dictContent;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_DDict_dictSize(mut ddict: *const ZSTD_DDict) -> size_t {
-    if !ddict.is_null() {} else {
-        __assert_fail(
-            b"ddict != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_ddict.c\0" as *const u8
-                as *const libc::c_char,
-            54 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 47],
-                &[libc::c_char; 47],
-            >(b"size_t ZSTD_DDict_dictSize(const ZSTD_DDict *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!ddict.is_null());
     return (*ddict).dictSize;
 }
 #[no_mangle]
@@ -367,32 +343,8 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
     mut dctx: *mut ZSTD_DCtx,
     mut ddict: *const ZSTD_DDict,
 ) {
-    if !dctx.is_null() {} else {
-        __assert_fail(
-            b"dctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_ddict.c\0" as *const u8
-                as *const libc::c_char,
-            61 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 63],
-                &[libc::c_char; 63],
-            >(b"void ZSTD_copyDDictParameters(ZSTD_DCtx *, const ZSTD_DDict *)\0"))
-                .as_ptr(),
-        );
-    }
-    if !ddict.is_null() {} else {
-        __assert_fail(
-            b"ddict != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_ddict.c\0" as *const u8
-                as *const libc::c_char,
-            62 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 63],
-                &[libc::c_char; 63],
-            >(b"void ZSTD_copyDDictParameters(ZSTD_DCtx *, const ZSTD_DDict *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dctx.is_null());
+    debug_assert!(!ddict.is_null());
     (*dctx).dictID = (*ddict).dictID;
     (*dctx).prefixStart = (*ddict).dictContent;
     (*dctx).virtualStart = (*ddict).dictContent;
@@ -609,36 +561,8 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
             }),
         );
     let ddict = sBuffer as *mut ZSTD_DDict;
-    if !sBuffer.is_null() {} else {
-        __assert_fail(
-            b"sBuffer != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_ddict.c\0" as *const u8
-                as *const libc::c_char,
-            196 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 124],
-                &[libc::c_char; 124],
-            >(
-                b"const ZSTD_DDict *ZSTD_initStaticDDict(void *, size_t, const void *, size_t, ZSTD_dictLoadMethod_e, ZSTD_dictContentType_e)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if !dict.is_null() {} else {
-        __assert_fail(
-            b"dict != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_ddict.c\0" as *const u8
-                as *const libc::c_char,
-            197 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 124],
-                &[libc::c_char; 124],
-            >(
-                b"const ZSTD_DDict *ZSTD_initStaticDDict(void *, size_t, const void *, size_t, ZSTD_dictLoadMethod_e, ZSTD_dictContentType_e)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!sBuffer.is_null());
+    debug_assert!(!dict.is_null());
     if sBuffer as size_t & 7 as libc::c_int as libc::c_ulong != 0 {
         return NULL as *const ZSTD_DDict;
     }

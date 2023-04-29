@@ -1035,36 +1035,12 @@ unsafe extern "C" fn _force_has_format_string(
 ) {}
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
@@ -1083,52 +1059,13 @@ unsafe extern "C" fn ZSTD_window_update(
     if srcSize == 0 as libc::c_int as libc::c_ulong {
         return contiguous;
     }
-    if !((*window).base).is_null() {} else {
-        __assert_fail(
-            b"window->base != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            1258 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 67],
-                &[libc::c_char; 67],
-            >(b"U32 ZSTD_window_update(ZSTD_window_t *, const void *, size_t, int)\0"))
-                .as_ptr(),
-        );
-    }
-    if !((*window).dictBase).is_null() {} else {
-        __assert_fail(
-            b"window->dictBase != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            1259 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 67],
-                &[libc::c_char; 67],
-            >(b"U32 ZSTD_window_update(ZSTD_window_t *, const void *, size_t, int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!((*window).base).is_null());
+    debug_assert!(!((*window).dictBase).is_null());
     if src != (*window).nextSrc as *const libc::c_void || forceNonContiguous != 0 {
         let distanceFromBase = ((*window).nextSrc).offset_from((*window).base)
             as libc::c_long as size_t;
         (*window).lowLimit = (*window).dictLimit;
-        if distanceFromBase == distanceFromBase as U32 as size_t {} else {
-            __assert_fail(
-                b"distanceFromBase == (size_t)(U32)distanceFromBase\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                    as *const u8 as *const libc::c_char,
-                1266 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 67],
-                    &[libc::c_char; 67],
-                >(
-                    b"U32 ZSTD_window_update(ZSTD_window_t *, const void *, size_t, int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(distanceFromBase == distanceFromBase as U32 as size_t);
         (*window).dictLimit = distanceFromBase as U32;
         (*window).dictBase = (*window).base;
         (*window).base = ip.offset(-(distanceFromBase as isize));
@@ -1505,19 +1442,7 @@ unsafe extern "C" fn ZSTDMT_createCCtxPool(
             ),
         cMem,
     ) as *mut ZSTDMT_CCtxPool;
-    if nbWorkers > 0 as libc::c_int {} else {
-        __assert_fail(
-            b"nbWorkers > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            373 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"ZSTDMT_CCtxPool *ZSTDMT_createCCtxPool(int, ZSTD_customMem)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbWorkers > 0 as libc::c_int);
     if cctxPool.is_null() {
         return NULL_0 as *mut ZSTDMT_CCtxPool;
     }
@@ -1577,19 +1502,7 @@ unsafe extern "C" fn ZSTDMT_sizeof_CCtxPool(
         u = u.wrapping_add(1);
     }
     pthread_mutex_unlock((*cctxPool).poolMutex);
-    if nbWorkers > 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"nbWorkers > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            413 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 49],
-                &[libc::c_char; 49],
-            >(b"size_t ZSTDMT_sizeof_CCtxPool(ZSTDMT_CCtxPool *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbWorkers > 0 as libc::c_int as libc::c_uint);
     return poolSize.wrapping_add(totalCCtxSize);
 }
 unsafe extern "C" fn ZSTDMT_getCCtx(
@@ -1638,38 +1551,8 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
         == ZSTD_ps_enable as libc::c_int as libc::c_uint
     {
         ZSTD_ldm_adjustParameters(&mut params.ldmParams, &mut params.cParams);
-        if params.ldmParams.hashLog >= params.ldmParams.bucketSizeLog {} else {
-            __assert_fail(
-                b"params.ldmParams.hashLog >= params.ldmParams.bucketSizeLog\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                482 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 142],
-                    &[libc::c_char; 142],
-                >(
-                    b"int ZSTDMT_serialState_reset(serialState_t *, ZSTDMT_seqPool *, ZSTD_CCtx_params, size_t, const void *, const size_t, ZSTD_dictContentType_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if params.ldmParams.hashRateLog < 32 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"params.ldmParams.hashRateLog < 32\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                483 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 142],
-                    &[libc::c_char; 142],
-                >(
-                    b"int ZSTDMT_serialState_reset(serialState_t *, ZSTDMT_seqPool *, ZSTD_CCtx_params, size_t, const void *, const size_t, ZSTD_dictContentType_e)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(params.ldmParams.hashLog >= params.ldmParams.bucketSizeLog);
+        debug_assert!(params.ldmParams.hashRateLog < 32 as libc::c_int as libc::c_uint);
     } else {
         libc::memset(
             &mut params.ldmParams as *mut ldmParams_t as *mut libc::c_void,
@@ -1821,42 +1704,11 @@ unsafe extern "C" fn ZSTDMT_serialState_update(
             == ZSTD_ps_enable as libc::c_int as libc::c_uint
         {
             let mut error: size_t = 0;
-            if !(seqStore.seq).is_null()
+            debug_assert!(!(seqStore.seq).is_null()
                 && seqStore.pos == 0 as libc::c_int as libc::c_ulong
                 && seqStore.size == 0 as libc::c_int as libc::c_ulong
-                && seqStore.capacity > 0 as libc::c_int as libc::c_ulong
-            {} else {
-                __assert_fail(
-                    b"seqStore.seq != NULL && seqStore.pos == 0 && seqStore.size == 0 && seqStore.capacity > 0\0"
-                        as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    579 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 99],
-                        &[libc::c_char; 99],
-                    >(
-                        b"void ZSTDMT_serialState_update(serialState_t *, ZSTD_CCtx *, rawSeqStore_t, range_t, unsigned int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if src.size <= (*serialState).params.jobSize {} else {
-                __assert_fail(
-                    b"src.size <= serialState->params.jobSize\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    580 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 99],
-                        &[libc::c_char; 99],
-                    >(
-                        b"void ZSTDMT_serialState_update(serialState_t *, ZSTD_CCtx *, rawSeqStore_t, range_t, unsigned int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+                && seqStore.capacity > 0 as libc::c_int as libc::c_ulong);
+            debug_assert!(src.size <= (*serialState).params.jobSize);
             ZSTD_window_update(
                 &mut (*serialState).ldmState.window,
                 src.start,
@@ -1870,21 +1722,7 @@ unsafe extern "C" fn ZSTDMT_serialState_update(
                 src.start,
                 src.size,
             );
-            if ERR_isError(error) == 0 {} else {
-                __assert_fail(
-                    b"!ZSTD_isError(error)\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    586 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 99],
-                        &[libc::c_char; 99],
-                    >(
-                        b"void ZSTDMT_serialState_update(serialState_t *, ZSTD_CCtx *, rawSeqStore_t, range_t, unsigned int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(ERR_isError(error) == 0);
             pthread_mutex_lock((*serialState).ldmWindowMutex);
             (*serialState).ldmWindow = (*serialState).ldmState.window;
             pthread_cond_signal((*serialState).ldmWindowCond);
@@ -1901,39 +1739,9 @@ unsafe extern "C" fn ZSTDMT_serialState_update(
     pthread_mutex_unlock((*serialState).mutex);
     if seqStore.size > 0 as libc::c_int as libc::c_ulong {
         let err = ZSTD_referenceExternalSequences(jobCCtx, seqStore.seq, seqStore.size);
-        if (*serialState).params.ldmParams.enableLdm as libc::c_uint
-            == ZSTD_ps_enable as libc::c_int as libc::c_uint
-        {} else {
-            __assert_fail(
-                b"serialState->params.ldmParams.enableLdm == ZSTD_ps_enable\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                606 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 99],
-                    &[libc::c_char; 99],
-                >(
-                    b"void ZSTDMT_serialState_update(serialState_t *, ZSTD_CCtx *, rawSeqStore_t, range_t, unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if ERR_isError(err) == 0 {} else {
-            __assert_fail(
-                b"!ZSTD_isError(err)\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                607 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 99],
-                    &[libc::c_char; 99],
-                >(
-                    b"void ZSTDMT_serialState_update(serialState_t *, ZSTD_CCtx *, rawSeqStore_t, range_t, unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*serialState).params.ldmParams.enableLdm as libc::c_uint
+            == ZSTD_ps_enable as libc::c_int as libc::c_uint);
+        debug_assert!(ERR_isError(err) == 0);
     }
 }
 unsafe extern "C" fn ZSTDMT_serialState_ensureFinished(
@@ -1943,21 +1751,7 @@ unsafe extern "C" fn ZSTDMT_serialState_ensureFinished(
 ) {
     pthread_mutex_lock((*serialState).mutex);
     if (*serialState).nextJobID <= jobID {
-        if ERR_isError(cSize) != 0 {} else {
-            __assert_fail(
-                b"ZSTD_isError(cSize)\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                617 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 78],
-                    &[libc::c_char; 78],
-                >(
-                    b"void ZSTDMT_serialState_ensureFinished(serialState_t *, unsigned int, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(ERR_isError(cSize) != 0);
         (*serialState).nextJobID = jobID.wrapping_add(1 as libc::c_int as libc::c_uint);
         pthread_cond_broadcast((*serialState).cond);
         pthread_mutex_lock((*serialState).ldmWindowMutex);
@@ -2030,19 +1824,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                             &mut jobParams,
                             (*job).fullFrameSize,
                         );
-                        if (*job).firstJob != 0 {} else {
-                            __assert_fail(
-                                b"job->firstJob\0" as *const u8 as *const libc::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                                    as *const u8 as *const libc::c_char,
-                                700 as libc::c_int as libc::c_uint,
-                                (*::core::mem::transmute::<
-                                    &[u8; 35],
-                                    &[libc::c_char; 35],
-                                >(b"void ZSTDMT_compressionJob(void *)\0"))
-                                    .as_ptr(),
-                            );
-                        }
+                        debug_assert!((*job).firstJob != 0);
                         if ERR_isError(initError) != 0 {
                             pthread_mutex_lock((*job).job_mutex);
                             (*job).cSize = initError;
@@ -2158,38 +1940,11 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                                     if ::core::mem::size_of::<size_t>() as libc::c_ulong
                                         > ::core::mem::size_of::<libc::c_int>() as libc::c_ulong
                                     {
-                                        if (*job).src.size
+                                        debug_assert!((*job).src.size
                                             < (2147483647 as libc::c_int as size_t)
-                                                .wrapping_mul(chunkSize)
-                                        {} else {
-                                            __assert_fail(
-                                                b"job->src.size < ((size_t)INT_MAX) * chunkSize\0"
-                                                    as *const u8 as *const libc::c_char,
-                                                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                                                    as *const u8 as *const libc::c_char,
-                                                737 as libc::c_int as libc::c_uint,
-                                                (*::core::mem::transmute::<
-                                                    &[u8; 35],
-                                                    &[libc::c_char; 35],
-                                                >(b"void ZSTDMT_compressionJob(void *)\0"))
-                                                    .as_ptr(),
-                                            );
-                                        }
+                                                .wrapping_mul(chunkSize));
                                     }
-                                    if (*job).cSize == 0 as libc::c_int as libc::c_ulong
-                                    {} else {
-                                        __assert_fail(
-                                            b"job->cSize == 0\0" as *const u8 as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            739 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 35],
-                                                &[libc::c_char; 35],
-                                            >(b"void ZSTDMT_compressionJob(void *)\0"))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!((*job).cSize == 0 as libc::c_int as libc::c_ulong);
                                     chunkNb = 1 as libc::c_int;
                                     loop {
                                         if !(chunkNb < nbChunks) {
@@ -2212,19 +1967,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                                         } else {
                                             ip = ip.offset(chunkSize as isize);
                                             op = op.offset(cSize as isize);
-                                            if op < oend {} else {
-                                                __assert_fail(
-                                                    b"op < oend\0" as *const u8 as *const libc::c_char,
-                                                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                                                        as *const u8 as *const libc::c_char,
-                                                    744 as libc::c_int as libc::c_uint,
-                                                    (*::core::mem::transmute::<
-                                                        &[u8; 35],
-                                                        &[libc::c_char; 35],
-                                                    >(b"void ZSTDMT_compressionJob(void *)\0"))
-                                                        .as_ptr(),
-                                                );
-                                            }
+                                            debug_assert!(op < oend);
                                             pthread_mutex_lock((*job).job_mutex);
                                             (*job)
                                                 .cSize = ((*job).cSize as libc::c_ulong).wrapping_add(cSize)
@@ -2240,36 +1983,10 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                                     match current_block {
                                         15223880703280672966 => {}
                                         _ => {
-                                            if chunkSize > 0 as libc::c_int as libc::c_ulong {} else {
-                                                __assert_fail(
-                                                    b"chunkSize > 0\0" as *const u8 as *const libc::c_char,
-                                                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                                                        as *const u8 as *const libc::c_char,
-                                                    755 as libc::c_int as libc::c_uint,
-                                                    (*::core::mem::transmute::<
-                                                        &[u8; 35],
-                                                        &[libc::c_char; 35],
-                                                    >(b"void ZSTDMT_compressionJob(void *)\0"))
-                                                        .as_ptr(),
-                                                );
-                                            }
-                                            if chunkSize
+                                            debug_assert!(chunkSize > 0 as libc::c_int as libc::c_ulong);
+                                            debug_assert!(chunkSize
                                                 & chunkSize.wrapping_sub(1 as libc::c_int as libc::c_ulong)
-                                                == 0 as libc::c_int as libc::c_ulong
-                                            {} else {
-                                                __assert_fail(
-                                                    b"(chunkSize & (chunkSize - 1)) == 0\0" as *const u8
-                                                        as *const libc::c_char,
-                                                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                                                        as *const u8 as *const libc::c_char,
-                                                    756 as libc::c_int as libc::c_uint,
-                                                    (*::core::mem::transmute::<
-                                                        &[u8; 35],
-                                                        &[libc::c_char; 35],
-                                                    >(b"void ZSTDMT_compressionJob(void *)\0"))
-                                                        .as_ptr(),
-                                                );
-                                            }
+                                                == 0 as libc::c_int as libc::c_ulong);
                                             if (nbChunks > 0 as libc::c_int) as libc::c_int
                                                 as libc::c_uint | (*job).lastJob != 0
                                             {
@@ -2316,23 +2033,9 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                                                 15223880703280672966 => {}
                                                 _ => {
                                                     if (*job).firstJob == 0 {
-                                                        if ZSTD_window_hasExtDict(
+                                                        debug_assert!(ZSTD_window_hasExtDict(
                                                             (*cctx).blockState.matchState.window,
-                                                        ) == 0
-                                                        {} else {
-                                                            __assert_fail(
-                                                                b"!ZSTD_window_hasExtDict(cctx->blockState.matchState.window)\0"
-                                                                    as *const u8 as *const libc::c_char,
-                                                                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                                                                    as *const u8 as *const libc::c_char,
-                                                                770 as libc::c_int as libc::c_uint,
-                                                                (*::core::mem::transmute::<
-                                                                    &[u8; 35],
-                                                                    &[libc::c_char; 35],
-                                                                >(b"void ZSTDMT_compressionJob(void *)\0"))
-                                                                    .as_ptr(),
-                                                            );
-                                                        }
+                                                        ) == 0);
                                                     }
                                                     ZSTD_CCtx_trace(cctx, 0 as libc::c_int as size_t);
                                                 }
@@ -2353,19 +2056,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
     ZSTDMT_releaseCCtx((*job).cctxPool, cctx);
     pthread_mutex_lock((*job).job_mutex);
     if ERR_isError((*job).cSize) != 0 {
-        if lastCBlockSize == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"lastCBlockSize == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                784 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 35],
-                    &[libc::c_char; 35],
-                >(b"void ZSTDMT_compressionJob(void *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(lastCBlockSize == 0 as libc::c_int as libc::c_ulong);
     }
     (*job)
         .cSize = ((*job).cSize as libc::c_ulong).wrapping_add(lastCBlockSize) as size_t
@@ -2458,23 +2149,9 @@ unsafe extern "C" fn ZSTDMT_expandJobsTable(
         if ((*mtctx).jobs).is_null() {
             return -(ZSTD_error_memory_allocation as libc::c_int) as size_t;
         }
-        if nbJobs != 0 as libc::c_int as libc::c_uint
+        debug_assert!(nbJobs != 0 as libc::c_int as libc::c_uint
             && nbJobs & nbJobs.wrapping_sub(1 as libc::c_int as libc::c_uint)
-                == 0 as libc::c_int as libc::c_uint
-        {} else {
-            __assert_fail(
-                b"(nbJobs != 0) && ((nbJobs & (nbJobs - 1)) == 0)\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                905 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 50],
-                    &[libc::c_char; 50],
-                >(b"size_t ZSTDMT_expandJobsTable(ZSTDMT_CCtx *, U32)\0"))
-                    .as_ptr(),
-            );
-        }
+                == 0 as libc::c_int as libc::c_uint);
         (*mtctx).jobIDMask = nbJobs.wrapping_sub(1 as libc::c_int as libc::c_uint);
     }
     return 0 as libc::c_int as size_t;
@@ -2548,38 +2225,9 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
         (*mtctx).set_providedFactory(0 as libc::c_int as libc::c_uint);
     }
     (*mtctx).jobs = ZSTDMT_createJobsTable(&mut nbJobs, cMem);
-    if nbJobs > 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"nbJobs > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            946 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 98],
-                &[libc::c_char; 98],
-            >(
-                b"ZSTDMT_CCtx *ZSTDMT_createCCtx_advanced_internal(unsigned int, ZSTD_customMem, ZSTD_threadPool *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if nbJobs & nbJobs.wrapping_sub(1 as libc::c_int as libc::c_uint)
-        == 0 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"(nbJobs & (nbJobs - 1)) == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            946 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 98],
-                &[libc::c_char; 98],
-            >(
-                b"ZSTDMT_CCtx *ZSTDMT_createCCtx_advanced_internal(unsigned int, ZSTD_customMem, ZSTD_threadPool *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbJobs > 0 as libc::c_int as libc::c_uint);
+    debug_assert!(nbJobs & nbJobs.wrapping_sub(1 as libc::c_int as libc::c_uint)
+        == 0 as libc::c_int as libc::c_uint);
     (*mtctx).jobIDMask = nbJobs.wrapping_sub(1 as libc::c_int as libc::c_uint);
     (*mtctx)
         .bufPool = ZSTDMT_createBufferPool(
@@ -2772,19 +2420,7 @@ pub unsafe extern "C" fn ZSTDMT_getFrameProgression(
     let mut jobNb: libc::c_uint = 0;
     let mut lastJobNb = ((*mtctx).nextJobID)
         .wrapping_add((*mtctx).jobReady as libc::c_uint);
-    if (*mtctx).jobReady <= 1 as libc::c_int {} else {
-        __assert_fail(
-            b"mtctx->jobReady <= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1092 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 64],
-                &[libc::c_char; 64],
-            >(b"ZSTD_frameProgression ZSTDMT_getFrameProgression(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*mtctx).jobReady <= 1 as libc::c_int);
     jobNb = (*mtctx).doneJobID;
     while jobNb < lastJobNb {
         let wJobID = jobNb & (*mtctx).jobIDMask;
@@ -2802,19 +2438,7 @@ pub unsafe extern "C" fn ZSTDMT_getFrameProgression(
         } else {
             (*jobPtr).dstFlushed
         };
-        if flushed <= produced {} else {
-            __assert_fail(
-                b"flushed <= produced\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1102 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 64],
-                    &[libc::c_char; 64],
-                >(b"ZSTD_frameProgression ZSTDMT_getFrameProgression(ZSTDMT_CCtx *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(flushed <= produced);
         fps
             .ingested = (fps.ingested)
             .wrapping_add((*jobPtr).src.size as libc::c_ulonglong);
@@ -2837,19 +2461,7 @@ pub unsafe extern "C" fn ZSTDMT_getFrameProgression(
 pub unsafe extern "C" fn ZSTDMT_toFlushNow(mut mtctx: *mut ZSTDMT_CCtx) -> size_t {
     let mut toFlush: size_t = 0;
     let jobID = (*mtctx).doneJobID;
-    if jobID <= (*mtctx).nextJobID {} else {
-        __assert_fail(
-            b"jobID <= mtctx->nextJobID\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1120 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 40],
-                &[libc::c_char; 40],
-            >(b"size_t ZSTDMT_toFlushNow(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(jobID <= (*mtctx).nextJobID);
     if jobID == (*mtctx).nextJobID {
         return 0 as libc::c_int as size_t;
     }
@@ -2868,49 +2480,11 @@ pub unsafe extern "C" fn ZSTDMT_toFlushNow(mut mtctx: *mut ZSTDMT_CCtx) -> size_
     } else {
         (*jobPtr).dstFlushed
     };
-    if flushed <= produced {} else {
-        __assert_fail(
-            b"flushed <= produced\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1130 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 40],
-                &[libc::c_char; 40],
-            >(b"size_t ZSTDMT_toFlushNow(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*jobPtr).consumed <= (*jobPtr).src.size {} else {
-        __assert_fail(
-            b"jobPtr->consumed <= jobPtr->src.size\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1131 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 40],
-                &[libc::c_char; 40],
-            >(b"size_t ZSTDMT_toFlushNow(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(flushed <= produced);
+    debug_assert!((*jobPtr).consumed <= (*jobPtr).src.size);
     toFlush = produced.wrapping_sub(flushed);
     if toFlush == 0 as libc::c_int as libc::c_ulong {
-        if (*jobPtr).consumed < (*jobPtr).src.size {} else {
-            __assert_fail(
-                b"jobPtr->consumed < jobPtr->src.size\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1139 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 40],
-                    &[libc::c_char; 40],
-                >(b"size_t ZSTDMT_toFlushNow(ZSTDMT_CCtx *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*jobPtr).consumed < (*jobPtr).src.size);
     }
     pthread_mutex_unlock((*((*mtctx).jobs).offset(wJobID as isize)).job_mutex);
     return toFlush;
@@ -2964,19 +2538,7 @@ unsafe extern "C" fn ZSTDMT_overlapLog(
     mut ovlog: libc::c_int,
     mut strat: ZSTD_strategy,
 ) -> libc::c_int {
-    if 0 as libc::c_int <= ovlog && ovlog <= 9 as libc::c_int {} else {
-        __assert_fail(
-            b"0 <= ovlog && ovlog <= 9\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1190 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 42],
-                &[libc::c_char; 42],
-            >(b"int ZSTDMT_overlapLog(int, ZSTD_strategy)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(0 as libc::c_int <= ovlog && ovlog <= 9 as libc::c_int);
     if ovlog == 0 as libc::c_int {
         return ZSTDMT_overlapLog_default(strat);
     }
@@ -2992,20 +2554,7 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
     } else {
         ((*params).cParams.windowLog).wrapping_sub(overlapRLog as libc::c_uint)
     }) as libc::c_int;
-    if 0 as libc::c_int <= overlapRLog && overlapRLog <= 8 as libc::c_int {} else {
-        __assert_fail(
-            b"0 <= overlapRLog && overlapRLog <= 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1199 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 59],
-                &[libc::c_char; 59],
-            >(b"size_t ZSTDMT_computeOverlapSize(const ZSTD_CCtx_params *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(0 as libc::c_int <= overlapRLog && overlapRLog <= 8 as libc::c_int);
     if (*params).ldmParams.enableLdm as libc::c_uint
         == ZSTD_ps_enable as libc::c_int as libc::c_uint
     {
@@ -3020,7 +2569,7 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
         })
             .wrapping_sub(overlapRLog as libc::c_uint) as libc::c_int;
     }
-    if 0 as libc::c_int <= ovLog
+    debug_assert!(0 as libc::c_int <= ovLog
         && ovLog
             <= (if ::core::mem::size_of::<size_t>() as libc::c_ulong
                 == 4 as libc::c_int as libc::c_ulong
@@ -3028,21 +2577,7 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
                 30 as libc::c_int
             } else {
                 31 as libc::c_int
-            })
-    {} else {
-        __assert_fail(
-            b"0 <= ovLog && ovLog <= ZSTD_WINDOWLOG_MAX\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1208 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 59],
-                &[libc::c_char; 59],
-            >(b"size_t ZSTDMT_computeOverlapSize(const ZSTD_CCtx_params *)\0"))
-                .as_ptr(),
-        );
-    }
+            }));
     return if ovLog == 0 as libc::c_int {
         0 as libc::c_int as libc::c_ulong
     } else {
@@ -3059,37 +2594,8 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     mut params: ZSTD_CCtx_params,
     mut pledgedSrcSize: libc::c_ulonglong,
 ) -> size_t {
-    if ERR_isError(ZSTD_checkCParams(params.cParams)) == 0 {} else {
-        __assert_fail(
-            b"!ZSTD_isError(ZSTD_checkCParams(params.cParams))\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1228 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 154],
-                &[libc::c_char; 154],
-            >(
-                b"size_t ZSTDMT_initCStream_internal(ZSTDMT_CCtx *, const void *, size_t, ZSTD_dictContentType_e, const ZSTD_CDict *, ZSTD_CCtx_params, unsigned long long)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if !(!dict.is_null() && !cdict.is_null()) {} else {
-        __assert_fail(
-            b"!((dict) && (cdict))\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1229 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 154],
-                &[libc::c_char; 154],
-            >(
-                b"size_t ZSTDMT_initCStream_internal(ZSTDMT_CCtx *, const void *, size_t, ZSTD_dictContentType_e, const ZSTD_CDict *, ZSTD_CCtx_params, unsigned long long)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(ERR_isError(ZSTD_checkCParams(params.cParams)) == 0);
+    debug_assert!(!(!dict.is_null() && !cdict.is_null()));
     if params.nbWorkers != (*mtctx).params.nbWorkers {
         let err_code = ZSTDMT_resize(mtctx, params.nbWorkers as libc::c_uint);
         if ERR_isError(err_code) != 0 {
@@ -3173,39 +2679,10 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     }
     if params.rsyncable != 0 {
         let jobSizeKB = ((*mtctx).targetSectionSize >> 10 as libc::c_int) as U32;
-        if jobSizeKB >= 1 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"jobSizeKB >= 1\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1272 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 154],
-                    &[libc::c_char; 154],
-                >(
-                    b"size_t ZSTDMT_initCStream_internal(ZSTDMT_CCtx *, const void *, size_t, ZSTD_dictContentType_e, const ZSTD_CDict *, ZSTD_CCtx_params, unsigned long long)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(jobSizeKB >= 1 as libc::c_int as libc::c_uint);
         let rsyncBits = (ZSTD_highbit32(jobSizeKB))
             .wrapping_add(10 as libc::c_int as libc::c_uint);
-        if rsyncBits >= (17 as libc::c_int + 2 as libc::c_int) as libc::c_uint {} else {
-            __assert_fail(
-                b"rsyncBits >= RSYNC_MIN_BLOCK_LOG + 2\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1275 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 154],
-                    &[libc::c_char; 154],
-                >(
-                    b"size_t ZSTDMT_initCStream_internal(ZSTDMT_CCtx *, const void *, size_t, ZSTD_dictContentType_e, const ZSTD_CDict *, ZSTD_CCtx_params, unsigned long long)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(rsyncBits >= (17 as libc::c_int + 2 as libc::c_int) as libc::c_uint);
         (*mtctx).rsync.hash = 0 as libc::c_int as U64;
         (*mtctx)
             .rsync
@@ -3280,106 +2757,21 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     return 0 as libc::c_int as size_t;
 }
 unsafe extern "C" fn ZSTDMT_writeLastEmptyBlock(mut job: *mut ZSTDMT_jobDescription) {
-    if (*job).lastJob == 1 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"job->lastJob == 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1336 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void ZSTDMT_writeLastEmptyBlock(ZSTDMT_jobDescription *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*job).src.size == 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"job->src.size == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1337 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void ZSTDMT_writeLastEmptyBlock(ZSTDMT_jobDescription *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*job).firstJob == 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"job->firstJob == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1338 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void ZSTDMT_writeLastEmptyBlock(ZSTDMT_jobDescription *)\0"))
-                .as_ptr(),
-        );
-    }
-    if ((*job).dstBuff.start).is_null() {} else {
-        __assert_fail(
-            b"job->dstBuff.start == NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1339 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void ZSTDMT_writeLastEmptyBlock(ZSTDMT_jobDescription *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*job).lastJob == 1 as libc::c_int as libc::c_uint);
+    debug_assert!((*job).src.size == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!((*job).firstJob == 0 as libc::c_int as libc::c_uint);
+    debug_assert!(((*job).dstBuff.start).is_null());
     (*job).dstBuff = ZSTDMT_getBuffer((*job).bufPool);
     if ((*job).dstBuff.start).is_null() {
         (*job).cSize = -(ZSTD_error_memory_allocation as libc::c_int) as size_t;
         return;
     }
-    if (*job).dstBuff.capacity >= ZSTD_blockHeaderSize {} else {
-        __assert_fail(
-            b"job->dstBuff.capacity >= ZSTD_blockHeaderSize\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1345 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void ZSTDMT_writeLastEmptyBlock(ZSTDMT_jobDescription *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*job).dstBuff.capacity >= ZSTD_blockHeaderSize);
     (*job).src = kNullRange;
     (*job)
         .cSize = ZSTD_writeLastEmptyBlock((*job).dstBuff.start, (*job).dstBuff.capacity);
-    if ERR_isError((*job).cSize) == 0 {} else {
-        __assert_fail(
-            b"!ZSTD_isError(job->cSize)\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1348 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void ZSTDMT_writeLastEmptyBlock(ZSTDMT_jobDescription *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*job).consumed == 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"job->consumed == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1349 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void ZSTDMT_writeLastEmptyBlock(ZSTDMT_jobDescription *)\0"))
-                .as_ptr(),
-        );
-    };
+    debug_assert!(ERR_isError((*job).cSize) == 0);
+    debug_assert!((*job).consumed == 0 as libc::c_int as libc::c_ulong);;
 }
 unsafe extern "C" fn ZSTDMT_createCompressionJob(
     mut mtctx: *mut ZSTDMT_CCtx,
@@ -3390,24 +2782,8 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
     let endFrame = (endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint)
         as libc::c_int;
     if (*mtctx).nextJobID > ((*mtctx).doneJobID).wrapping_add((*mtctx).jobIDMask) {
-        if (*mtctx).nextJobID & (*mtctx).jobIDMask
-            == (*mtctx).doneJobID & (*mtctx).jobIDMask
-        {} else {
-            __assert_fail(
-                b"(mtctx->nextJobID & mtctx->jobIDMask) == (mtctx->doneJobID & mtctx->jobIDMask)\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1359 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 77],
-                    &[libc::c_char; 77],
-                >(
-                    b"size_t ZSTDMT_createCompressionJob(ZSTDMT_CCtx *, size_t, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*mtctx).nextJobID & (*mtctx).jobIDMask
+            == (*mtctx).doneJobID & (*mtctx).jobIDMask);
         return 0 as libc::c_int as size_t;
     }
     if (*mtctx).jobReady == 0 {
@@ -3415,21 +2791,7 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
         let ref mut fresh6 = (*((*mtctx).jobs).offset(jobID as isize)).src.start;
         *fresh6 = src as *const libc::c_void;
         (*((*mtctx).jobs).offset(jobID as isize)).src.size = srcSize;
-        if (*mtctx).inBuff.filled >= srcSize {} else {
-            __assert_fail(
-                b"mtctx->inBuff.filled >= srcSize\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1369 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 77],
-                    &[libc::c_char; 77],
-                >(
-                    b"size_t ZSTDMT_createCompressionJob(ZSTDMT_CCtx *, size_t, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*mtctx).inBuff.filled >= srcSize);
         (*((*mtctx).jobs).offset(jobID as isize)).prefix = (*mtctx).inBuff.prefix;
         (*((*mtctx).jobs).offset(jobID as isize)).consumed = 0 as libc::c_int as size_t;
         (*((*mtctx).jobs).offset(jobID as isize)).cSize = 0 as libc::c_int as size_t;
@@ -3490,22 +2852,7 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
         if srcSize == 0 as libc::c_int as libc::c_ulong
             && (*mtctx).nextJobID > 0 as libc::c_int as libc::c_uint
         {
-            if endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint
-            {} else {
-                __assert_fail(
-                    b"endOp == ZSTD_e_end\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1407 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 77],
-                        &[libc::c_char; 77],
-                    >(
-                        b"size_t ZSTDMT_createCompressionJob(ZSTDMT_CCtx *, size_t, ZSTD_EndDirective)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint);
             ZSTDMT_writeLastEmptyBlock(((*mtctx).jobs).offset(jobID as isize));
             (*mtctx).nextJobID = ((*mtctx).nextJobID).wrapping_add(1);
             return 0 as libc::c_int as size_t;
@@ -3532,41 +2879,11 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
     mut end: ZSTD_EndDirective,
 ) -> size_t {
     let wJobID = (*mtctx).doneJobID & (*mtctx).jobIDMask;
-    if (*output).size >= (*output).pos {} else {
-        __assert_fail(
-            b"output->size >= output->pos\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1442 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 94],
-                &[libc::c_char; 94],
-            >(
-                b"size_t ZSTDMT_flushProduced(ZSTDMT_CCtx *, ZSTD_outBuffer *, unsigned int, ZSTD_EndDirective)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*output).size >= (*output).pos);
     pthread_mutex_lock((*((*mtctx).jobs).offset(wJobID as isize)).job_mutex);
     if blockToFlush != 0 && (*mtctx).doneJobID < (*mtctx).nextJobID {
-        if (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed
-            <= (*((*mtctx).jobs).offset(wJobID as isize)).cSize
-        {} else {
-            __assert_fail(
-                b"mtctx->jobs[wJobID].dstFlushed <= mtctx->jobs[wJobID].cSize\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1447 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 94],
-                    &[libc::c_char; 94],
-                >(
-                    b"size_t ZSTDMT_flushProduced(ZSTDMT_CCtx *, ZSTD_outBuffer *, unsigned int, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed
+            <= (*((*mtctx).jobs).offset(wJobID as isize)).cSize);
         while (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed
             == (*((*mtctx).jobs).offset(wJobID as isize)).cSize
         {
@@ -3590,21 +2907,7 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
         ZSTDMT_releaseAllJobResources(mtctx);
         return cSize;
     }
-    if srcConsumed <= srcSize {} else {
-        __assert_fail(
-            b"srcConsumed <= srcSize\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1472 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 94],
-                &[libc::c_char; 94],
-            >(
-                b"size_t ZSTDMT_flushProduced(ZSTDMT_CCtx *, ZSTD_outBuffer *, unsigned int, ZSTD_EndDirective)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(srcConsumed <= srcSize);
     if srcConsumed == srcSize
         && (*((*mtctx).jobs).offset(wJobID as isize)).frameChecksumNeeded != 0
     {
@@ -3633,55 +2936,9 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
         } else {
             ((*output).size).wrapping_sub((*output).pos)
         };
-        if (*mtctx).doneJobID < (*mtctx).nextJobID {} else {
-            __assert_fail(
-                b"mtctx->doneJobID < mtctx->nextJobID\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1487 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 94],
-                    &[libc::c_char; 94],
-                >(
-                    b"size_t ZSTDMT_flushProduced(ZSTDMT_CCtx *, ZSTD_outBuffer *, unsigned int, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if cSize >= (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed {} else {
-            __assert_fail(
-                b"cSize >= mtctx->jobs[wJobID].dstFlushed\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1488 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 94],
-                    &[libc::c_char; 94],
-                >(
-                    b"size_t ZSTDMT_flushProduced(ZSTDMT_CCtx *, ZSTD_outBuffer *, unsigned int, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if !((*((*mtctx).jobs).offset(wJobID as isize)).dstBuff.start).is_null()
-        {} else {
-            __assert_fail(
-                b"mtctx->jobs[wJobID].dstBuff.start != NULL\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1489 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 94],
-                    &[libc::c_char; 94],
-                >(
-                    b"size_t ZSTDMT_flushProduced(ZSTDMT_CCtx *, ZSTD_outBuffer *, unsigned int, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*mtctx).doneJobID < (*mtctx).nextJobID);
+        debug_assert!(cSize >= (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed);
+        debug_assert!(!((*((*mtctx).jobs).offset(wJobID as isize)).dstBuff.start).is_null());
         if toFlush > 0 as libc::c_int as libc::c_ulong {
             libc::memcpy(
                 ((*output).dst as *mut libc::c_char).offset((*output).pos as isize)
@@ -3754,21 +3011,7 @@ unsafe extern "C" fn ZSTDMT_getInputDataInUse(mut mtctx: *mut ZSTDMT_CCtx) -> ra
             if range.size == 0 as libc::c_int as libc::c_ulong {
                 range = (*((*mtctx).jobs).offset(wJobID as isize)).src;
             }
-            if range.start <= (*((*mtctx).jobs).offset(wJobID as isize)).src.start
-            {} else {
-                __assert_fail(
-                    b"range.start <= mtctx->jobs[wJobID].src.start\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1549 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 48],
-                        &[libc::c_char; 48],
-                    >(b"range_t ZSTDMT_getInputDataInUse(ZSTDMT_CCtx *)\0"))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(range.start <= (*((*mtctx).jobs).offset(wJobID as isize)).src.start);
             return range;
         }
         jobID = jobID.wrapping_add(1);
@@ -3841,32 +3084,8 @@ unsafe extern "C" fn ZSTDMT_tryGetInputRange(
         start: 0 as *mut libc::c_void,
         capacity: 0,
     };
-    if ((*mtctx).inBuff.buffer.start).is_null() {} else {
-        __assert_fail(
-            b"mtctx->inBuff.buffer.start == NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1632 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"int ZSTDMT_tryGetInputRange(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*mtctx).roundBuff.capacity >= target {} else {
-        __assert_fail(
-            b"mtctx->roundBuff.capacity >= target\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1633 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"int ZSTDMT_tryGetInputRange(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(((*mtctx).inBuff.buffer.start).is_null());
+    debug_assert!((*mtctx).roundBuff.capacity >= target);
     if spaceLeft < target {
         let start = (*mtctx).roundBuff.buffer;
         let prefixSize = (*mtctx).inBuff.prefix.size;
@@ -3891,39 +3110,12 @@ unsafe extern "C" fn ZSTDMT_tryGetInputRange(
     if ZSTDMT_isOverlapped(buffer, inUse) != 0 {
         return 0 as libc::c_int;
     }
-    if ZSTDMT_isOverlapped(buffer, (*mtctx).inBuff.prefix) == 0 {} else {
-        __assert_fail(
-            b"!ZSTDMT_isOverlapped(buffer, mtctx->inBuff.prefix)\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1660 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"int ZSTDMT_tryGetInputRange(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(ZSTDMT_isOverlapped(buffer, (*mtctx).inBuff.prefix) == 0);
     ZSTDMT_waitForLdmComplete(mtctx, buffer);
     (*mtctx).inBuff.buffer = buffer;
     (*mtctx).inBuff.filled = 0 as libc::c_int as size_t;
-    if ((*mtctx).roundBuff.pos).wrapping_add(buffer.capacity)
-        <= (*mtctx).roundBuff.capacity
-    {} else {
-        __assert_fail(
-            b"mtctx->roundBuff.pos + buffer.capacity <= mtctx->roundBuff.capacity\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1674 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"int ZSTDMT_tryGetInputRange(ZSTDMT_CCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(((*mtctx).roundBuff.pos).wrapping_add(buffer.capacity)
+        <= (*mtctx).roundBuff.capacity);
     return 1 as libc::c_int;
 }
 unsafe extern "C" fn findSynchronizationPoint(
@@ -3969,22 +3161,7 @@ unsafe extern "C" fn findSynchronizationPoint(
                 RSYNC_LENGTH as size_t,
             );
         } else {
-            if (*mtctx).inBuff.filled >= 32 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"mtctx->inBuff.filled >= RSYNC_LENGTH\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1731 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 79],
-                        &[libc::c_char; 79],
-                    >(
-                        b"syncPoint_t findSynchronizationPoint(const ZSTDMT_CCtx *, const ZSTD_inBuffer)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!((*mtctx).inBuff.filled >= 32 as libc::c_int as libc::c_ulong);
             prev = ((*mtctx).inBuff.buffer.start as *const BYTE)
                 .offset((*mtctx).inBuff.filled as isize)
                 .offset(-(RSYNC_LENGTH as isize));
@@ -3995,40 +3172,9 @@ unsafe extern "C" fn findSynchronizationPoint(
             hash = ZSTD_rollingHash_append(hash, istart as *const libc::c_void, pos);
         }
     } else {
-        if (*mtctx).inBuff.filled
-            >= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong
-        {} else {
-            __assert_fail(
-                b"mtctx->inBuff.filled >= RSYNC_MIN_BLOCK_SIZE\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1741 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 79],
-                    &[libc::c_char; 79],
-                >(
-                    b"syncPoint_t findSynchronizationPoint(const ZSTDMT_CCtx *, const ZSTD_inBuffer)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if (1 as libc::c_int) << 17 as libc::c_int >= 32 as libc::c_int {} else {
-            __assert_fail(
-                b"RSYNC_MIN_BLOCK_SIZE >= RSYNC_LENGTH\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1742 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 79],
-                    &[libc::c_char; 79],
-                >(
-                    b"syncPoint_t findSynchronizationPoint(const ZSTDMT_CCtx *, const ZSTD_inBuffer)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*mtctx).inBuff.filled
+            >= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
+        debug_assert!((1 as libc::c_int) << 17 as libc::c_int >= 32 as libc::c_int);
         pos = 0 as libc::c_int as size_t;
         prev = ((*mtctx).inBuff.buffer.start as *const BYTE)
             .offset((*mtctx).inBuff.filled as isize)
@@ -4043,28 +3189,12 @@ unsafe extern "C" fn findSynchronizationPoint(
             return syncPoint;
         }
     }
-    if pos < 32 as libc::c_int as libc::c_ulong
+    debug_assert!(pos < 32 as libc::c_int as libc::c_ulong
         || ZSTD_rollingHash_compute(
             istart.offset(pos as isize).offset(-(32 as libc::c_int as isize))
                 as *const libc::c_void,
             32 as libc::c_int as size_t,
-        ) == hash
-    {} else {
-        __assert_fail(
-            b"pos < RSYNC_LENGTH || ZSTD_rollingHash_compute(istart + pos - RSYNC_LENGTH, RSYNC_LENGTH) == hash\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1765 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 79],
-                &[libc::c_char; 79],
-            >(
-                b"syncPoint_t findSynchronizationPoint(const ZSTDMT_CCtx *, const ZSTD_inBuffer)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+        ) == hash);
     while pos < syncPoint.toLoad {
         let toRemove = (if pos < RSYNC_LENGTH as libc::c_ulong {
             *prev.offset(pos as isize) as libc::c_int
@@ -4078,24 +3208,8 @@ unsafe extern "C" fn findSynchronizationPoint(
             *istart.offset(pos as isize),
             primePower,
         );
-        if ((*mtctx).inBuff.filled).wrapping_add(pos)
-            >= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong
-        {} else {
-            __assert_fail(
-                b"mtctx->inBuff.filled + pos >= RSYNC_MIN_BLOCK_SIZE\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1774 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 79],
-                    &[libc::c_char; 79],
-                >(
-                    b"syncPoint_t findSynchronizationPoint(const ZSTDMT_CCtx *, const ZSTD_inBuffer)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(((*mtctx).inBuff.filled).wrapping_add(pos)
+            >= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
         if hash & hitMask == hitMask {
             syncPoint.toLoad = pos.wrapping_add(1 as libc::c_int as libc::c_ulong);
             syncPoint.flush = 1 as libc::c_int;
@@ -4105,28 +3219,12 @@ unsafe extern "C" fn findSynchronizationPoint(
             pos = pos.wrapping_add(1);
         }
     }
-    if pos < 32 as libc::c_int as libc::c_ulong
+    debug_assert!(pos < 32 as libc::c_int as libc::c_ulong
         || ZSTD_rollingHash_compute(
             istart.offset(pos as isize).offset(-(32 as libc::c_int as isize))
                 as *const libc::c_void,
             32 as libc::c_int as size_t,
-        ) == hash
-    {} else {
-        __assert_fail(
-            b"pos < RSYNC_LENGTH || ZSTD_rollingHash_compute(istart + pos - RSYNC_LENGTH, RSYNC_LENGTH) == hash\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1782 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 79],
-                &[libc::c_char; 79],
-            >(
-                b"syncPoint_t findSynchronizationPoint(const ZSTDMT_CCtx *, const ZSTD_inBuffer)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+        ) == hash);
     return syncPoint;
 }
 #[no_mangle]
@@ -4148,36 +3246,8 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
     mut endOp: ZSTD_EndDirective,
 ) -> size_t {
     let mut forwardInputProgress = 0 as libc::c_int as libc::c_uint;
-    if (*output).pos <= (*output).size {} else {
-        __assert_fail(
-            b"output->pos <= output->size\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1805 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 106],
-                &[libc::c_char; 106],
-            >(
-                b"size_t ZSTDMT_compressStream_generic(ZSTDMT_CCtx *, ZSTD_outBuffer *, ZSTD_inBuffer *, ZSTD_EndDirective)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (*input).pos <= (*input).size {} else {
-        __assert_fail(
-            b"input->pos <= input->size\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1806 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 106],
-                &[libc::c_char; 106],
-            >(
-                b"size_t ZSTDMT_compressStream_generic(ZSTDMT_CCtx *, ZSTD_outBuffer *, ZSTD_inBuffer *, ZSTD_EndDirective)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*output).pos <= (*output).size);
+    debug_assert!((*input).pos <= (*input).size);
     if (*mtctx).frameEnded != 0
         && endOp as libc::c_uint == ZSTD_e_continue as libc::c_int as libc::c_uint
     {
@@ -4185,38 +3255,9 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
     }
     if (*mtctx).jobReady == 0 && (*input).size > (*input).pos {
         if ((*mtctx).inBuff.buffer.start).is_null() {
-            if (*mtctx).inBuff.filled == 0 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"mtctx->inBuff.filled == 0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1817 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 106],
-                        &[libc::c_char; 106],
-                    >(
-                        b"size_t ZSTDMT_compressStream_generic(ZSTDMT_CCtx *, ZSTD_outBuffer *, ZSTD_inBuffer *, ZSTD_EndDirective)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!((*mtctx).inBuff.filled == 0 as libc::c_int as libc::c_ulong);
             if ZSTDMT_tryGetInputRange(mtctx) == 0 {
-                if (*mtctx).doneJobID != (*mtctx).nextJobID {} else {
-                    __assert_fail(
-                        b"mtctx->doneJobID != mtctx->nextJobID\0" as *const u8
-                            as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1823 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 106],
-                            &[libc::c_char; 106],
-                        >(
-                            b"size_t ZSTDMT_compressStream_generic(ZSTDMT_CCtx *, ZSTD_outBuffer *, ZSTD_inBuffer *, ZSTD_EndDirective)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!((*mtctx).doneJobID != (*mtctx).nextJobID);
             }
         }
         if !((*mtctx).inBuff.buffer.start).is_null() {
@@ -4227,22 +3268,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
             {
                 endOp = ZSTD_e_flush;
             }
-            if (*mtctx).inBuff.buffer.capacity >= (*mtctx).targetSectionSize {} else {
-                __assert_fail(
-                    b"mtctx->inBuff.buffer.capacity >= mtctx->targetSectionSize\0"
-                        as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1832 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 106],
-                        &[libc::c_char; 106],
-                    >(
-                        b"size_t ZSTDMT_compressStream_generic(ZSTDMT_CCtx *, ZSTD_outBuffer *, ZSTD_inBuffer *, ZSTD_EndDirective)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!((*mtctx).inBuff.buffer.capacity >= (*mtctx).targetSectionSize);
             libc::memcpy(
                 ((*mtctx).inBuff.buffer.start as *mut libc::c_char)
                     .offset((*mtctx).inBuff.filled as isize) as *mut libc::c_void,
@@ -4264,25 +3290,9 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
     if (*input).pos < (*input).size
         && endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint
     {
-        if (*mtctx).inBuff.filled == 0 as libc::c_int as libc::c_ulong
+        debug_assert!((*mtctx).inBuff.filled == 0 as libc::c_int as libc::c_ulong
             || (*mtctx).inBuff.filled == (*mtctx).targetSectionSize
-            || (*mtctx).params.rsyncable != 0
-        {} else {
-            __assert_fail(
-                b"mtctx->inBuff.filled == 0 || mtctx->inBuff.filled == mtctx->targetSectionSize || mtctx->params.rsyncable\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1848 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 106],
-                    &[libc::c_char; 106],
-                >(
-                    b"size_t ZSTDMT_compressStream_generic(ZSTDMT_CCtx *, ZSTD_outBuffer *, ZSTD_inBuffer *, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+            || (*mtctx).params.rsyncable != 0);
         endOp = ZSTD_e_flush;
     }
     if (*mtctx).jobReady != 0 || (*mtctx).inBuff.filled >= (*mtctx).targetSectionSize
@@ -4292,22 +3302,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
             && (*mtctx).frameEnded == 0
     {
         let jobSize = (*mtctx).inBuff.filled;
-        if (*mtctx).inBuff.filled <= (*mtctx).targetSectionSize {} else {
-            __assert_fail(
-                b"mtctx->inBuff.filled <= mtctx->targetSectionSize\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1857 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 106],
-                    &[libc::c_char; 106],
-                >(
-                    b"size_t ZSTDMT_compressStream_generic(ZSTDMT_CCtx *, ZSTD_outBuffer *, ZSTD_inBuffer *, ZSTD_EndDirective)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((*mtctx).inBuff.filled <= (*mtctx).targetSectionSize);
         let err_code = ZSTDMT_createCompressionJob(mtctx, jobSize, endOp);
         if ERR_isError(err_code) != 0 {
             return err_code;

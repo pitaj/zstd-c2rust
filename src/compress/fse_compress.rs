@@ -143,36 +143,12 @@ unsafe extern "C" fn ERR_isError(mut code: size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
@@ -193,72 +169,20 @@ unsafe extern "C" fn BIT_addBitsFast(
     mut value: size_t,
     mut nbBits: libc::c_uint,
 ) {
-    if value >> nbBits == 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"(value>>nbBits) == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            194 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"void BIT_addBitsFast(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
-    if (nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
+    debug_assert!(value >> nbBits == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!((nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits + bitC->bitPos < sizeof(bitC->bitContainer) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            195 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"void BIT_addBitsFast(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     (*bitC).bitContainer |= value << (*bitC).bitPos;
     (*bitC).bitPos = ((*bitC).bitPos).wrapping_add(nbBits);
 }
 #[inline]
 unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
     let nbBytes = ((*bitC).bitPos >> 3 as libc::c_int) as size_t;
-    if ((*bitC).bitPos as libc::c_ulong)
+    debug_assert!(((*bitC).bitPos as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"bitC->bitPos < sizeof(bitC->bitContainer) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            222 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 36],
-                &[libc::c_char; 36],
-            >(b"void BIT_flushBits(BIT_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*bitC).ptr <= (*bitC).endPtr {} else {
-        __assert_fail(
-            b"bitC->ptr <= bitC->endPtr\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            223 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 36],
-                &[libc::c_char; 36],
-            >(b"void BIT_flushBits(BIT_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
+    debug_assert!((*bitC).ptr <= (*bitC).endPtr);
     MEM_writeLEST((*bitC).ptr as *mut libc::c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
     if (*bitC).ptr > (*bitC).endPtr {
@@ -270,36 +194,10 @@ unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
 #[inline]
 unsafe extern "C" fn BIT_flushBitsFast(mut bitC: *mut BIT_CStream_t) {
     let nbBytes = ((*bitC).bitPos >> 3 as libc::c_int) as size_t;
-    if ((*bitC).bitPos as libc::c_ulong)
+    debug_assert!(((*bitC).bitPos as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"bitC->bitPos < sizeof(bitC->bitContainer) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            206 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 40],
-                &[libc::c_char; 40],
-            >(b"void BIT_flushBitsFast(BIT_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*bitC).ptr <= (*bitC).endPtr {} else {
-        __assert_fail(
-            b"bitC->ptr <= bitC->endPtr\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            207 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 40],
-                &[libc::c_char; 40],
-            >(b"void BIT_flushBitsFast(BIT_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
+    debug_assert!((*bitC).ptr <= (*bitC).endPtr);
     MEM_writeLEST((*bitC).ptr as *mut libc::c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
     (*bitC).bitPos &= 7 as libc::c_int as libc::c_uint;
@@ -330,39 +228,12 @@ unsafe extern "C" fn BIT_addBits(
     mut value: size_t,
     mut nbBits: libc::c_uint,
 ) {
-    if (nbBits as libc::c_ulong)
+    debug_assert!((nbBits as libc::c_ulong)
         < (::core::mem::size_of::<[libc::c_uint; 32]>() as libc::c_ulong)
-            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits < BIT_MASK_SIZE\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            182 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 56],
-                &[libc::c_char; 56],
-            >(b"void BIT_addBits(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
-    if (nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
+            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong));
+    debug_assert!((nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits + bitC->bitPos < sizeof(bitC->bitContainer) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            183 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 56],
-                &[libc::c_char; 56],
-            >(b"void BIT_addBits(BIT_CStream_t *, size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     (*bitC).bitContainer |= BIT_getLowerBits(value, nbBits) << (*bitC).bitPos;
     (*bitC).bitPos = ((*bitC).bitPos).wrapping_add(nbBits);
 }
@@ -402,22 +273,9 @@ static mut BIT_mask: [libc::c_uint; 32] = [
 ];
 #[inline(always)]
 unsafe extern "C" fn BIT_getLowerBits(mut bitContainer: size_t, nbBits: U32) -> size_t {
-    if (nbBits as libc::c_ulong)
+    debug_assert!((nbBits as libc::c_ulong)
         < (::core::mem::size_of::<[libc::c_uint; 32]>() as libc::c_ulong)
-            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits < BIT_MASK_SIZE\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            170 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"size_t BIT_getLowerBits(size_t, const U32)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong));
     return bitContainer & BIT_mask[nbBits as usize] as libc::c_ulong;
 }
 pub const FSE_NCOUNTBOUND: libc::c_int = 512 as libc::c_int;
@@ -534,23 +392,8 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
         .offset(maxSV1.wrapping_add(1 as libc::c_int as libc::c_uint) as isize)
         as *mut BYTE;
     let mut highThreshold = tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint);
-    if workSpace as size_t & 1 as libc::c_int as libc::c_ulong
-        == 0 as libc::c_int as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"((size_t)workSpace & 1) == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                as *const libc::c_char,
-            86 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(workSpace as size_t & 1 as libc::c_int as libc::c_ulong
+        == 0 as libc::c_int as libc::c_ulong);
     if (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong as libc::c_ulonglong)
         .wrapping_mul(
             (maxSymbolValue.wrapping_add(2 as libc::c_int as libc::c_uint)
@@ -568,21 +411,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
     }
     *tableU16.offset(-(2 as libc::c_int) as isize) = tableLog as U16;
     *tableU16.offset(-(1 as libc::c_int) as isize) = maxSymbolValue as U16;
-    if tableLog < 16 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"tableLog < 16\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                as *const libc::c_char,
-            91 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(tableLog < 16 as libc::c_int as libc::c_uint);
     let mut u: U32 = 0;
     *cumul.offset(0 as libc::c_int as isize) = 0 as libc::c_int as U16;
     u = 1 as libc::c_int as U32;
@@ -604,24 +433,9 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                     fresh0 as isize,
                 ) = u.wrapping_sub(1 as libc::c_int as libc::c_uint) as BYTE;
         } else {
-            if *normalizedCounter
+            debug_assert!(*normalizedCounter
                 .offset(u.wrapping_sub(1 as libc::c_int as libc::c_uint) as isize)
-                as libc::c_int >= 0 as libc::c_int
-            {} else {
-                __assert_fail(
-                    b"normalizedCounter[u-1] >= 0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    108 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 101],
-                        &[libc::c_char; 101],
-                    >(
-                        b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+                as libc::c_int >= 0 as libc::c_int);
             *cumul
                 .offset(
                     u as isize,
@@ -631,25 +445,10 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                 + *normalizedCounter
                     .offset(u.wrapping_sub(1 as libc::c_int as libc::c_uint) as isize)
                     as U16 as libc::c_int) as U16;
-            if *cumul.offset(u as isize) as libc::c_int
+            debug_assert!(*cumul.offset(u as isize) as libc::c_int
                 >= *cumul
                     .offset(u.wrapping_sub(1 as libc::c_int as libc::c_uint) as isize)
-                    as libc::c_int
-            {} else {
-                __assert_fail(
-                    b"cumul[u] >= cumul[u-1]\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    110 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 101],
-                        &[libc::c_char; 101],
-                    >(
-                        b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+                    as libc::c_int);
         }
         u = u.wrapping_add(1);
     }
@@ -676,21 +475,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                 );
                 i += 8 as libc::c_int;
             }
-            if n >= 0 as libc::c_int {} else {
-                __assert_fail(
-                    b"n>=0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    132 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 101],
-                        &[libc::c_char; 101],
-                    >(
-                        b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(n >= 0 as libc::c_int);
             pos = (pos as libc::c_ulong).wrapping_add(n as size_t) as size_t as size_t;
             s = s.wrapping_add(1);
             sv = (sv as libc::c_ulong).wrapping_add(add) as U64 as U64;
@@ -698,23 +483,8 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
         let mut position = 0 as libc::c_int as size_t;
         let mut s_0: size_t = 0;
         let unroll = 2 as libc::c_int as size_t;
-        if (tableSize as libc::c_ulong).wrapping_rem(unroll)
-            == 0 as libc::c_int as libc::c_ulong
-        {} else {
-            __assert_fail(
-                b"tableSize % unroll == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                143 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 101],
-                    &[libc::c_char; 101],
-                >(
-                    b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((tableSize as libc::c_ulong).wrapping_rem(unroll)
+            == 0 as libc::c_int as libc::c_ulong);
         s_0 = 0 as libc::c_int as size_t;
         while s_0 < tableSize as size_t {
             let mut u_0: size_t = 0;
@@ -733,21 +503,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                 & tableMask as libc::c_ulong;
             s_0 = (s_0 as libc::c_ulong).wrapping_add(unroll) as size_t as size_t;
         }
-        if position == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"position == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                152 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 101],
-                    &[libc::c_char; 101],
-                >(
-                    b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(position == 0 as libc::c_int as libc::c_ulong);
     } else {
         let mut position_0 = 0 as libc::c_int as U32;
         let mut symbol: U32 = 0;
@@ -766,21 +522,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
             }
             symbol = symbol.wrapping_add(1);
         }
-        if position_0 == 0 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"position==0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                166 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 101],
-                    &[libc::c_char; 101],
-                >(
-                    b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(position_0 == 0 as libc::c_int as libc::c_uint);
     }
     let mut u_1: U32 = 0;
     u_1 = 0 as libc::c_int as U32;
@@ -807,45 +549,15 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                 (*symbolTT.offset(s_2 as isize))
                     .deltaNbBits = (tableLog << 16 as libc::c_int)
                     .wrapping_sub(((1 as libc::c_int) << tableLog) as libc::c_uint);
-                if total <= 2147483647 as libc::c_int as libc::c_uint {} else {
-                    __assert_fail(
-                        b"total <= INT_MAX\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        189 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 101],
-                            &[libc::c_char; 101],
-                        >(
-                            b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(total <= 2147483647 as libc::c_int as libc::c_uint);
                 (*symbolTT.offset(s_2 as isize))
                     .deltaFindState = total
                     .wrapping_sub(1 as libc::c_int as libc::c_uint) as libc::c_int;
                 total = total.wrapping_add(1);
             }
             _ => {
-                if *normalizedCounter.offset(s_2 as isize) as libc::c_int
-                    > 1 as libc::c_int
-                {} else {
-                    __assert_fail(
-                        b"normalizedCounter[s] > 1\0" as *const u8
-                            as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        194 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 101],
-                            &[libc::c_char; 101],
-                        >(
-                            b"size_t FSE_buildCTable_wksp(FSE_CTable *, const short *, unsigned int, unsigned int, void *, size_t)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(*normalizedCounter.offset(s_2 as isize) as libc::c_int
+                    > 1 as libc::c_int);
                 let maxBitsOut = tableLog
                     .wrapping_sub(
                         ZSTD_highbit32(
@@ -1008,21 +720,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
     if remaining != 1 as libc::c_int {
         return -(ZSTD_error_GENERIC as libc::c_int) as size_t;
     }
-    if symbol <= alphabetSize {} else {
-        __assert_fail(
-            b"symbol <= alphabetSize\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                as *const libc::c_char,
-            316 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t FSE_writeNCount_generic(void *, size_t, const short *, unsigned int, unsigned int, unsigned int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(symbol <= alphabetSize);
     if writeIsSafe == 0 && out > oend.offset(-(2 as libc::c_int as isize)) {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
     }
@@ -1077,19 +775,7 @@ unsafe extern "C" fn FSE_minTableLog(
     } else {
         minBitsSymbols
     };
-    if srcSize > 1 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"srcSize > 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                as *const libc::c_char,
-            352 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 51],
-                &[libc::c_char; 51],
-            >(b"unsigned int FSE_minTableLog(size_t, unsigned int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(srcSize > 1 as libc::c_int as libc::c_ulong);
     return minBits;
 }
 #[no_mangle]
@@ -1105,21 +791,7 @@ pub unsafe extern "C" fn FSE_optimalTableLog_internal(
         .wrapping_sub(minus);
     let mut tableLog = maxTableLog;
     let mut minBits = FSE_minTableLog(srcSize, maxSymbolValue);
-    if srcSize > 1 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"srcSize > 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/fse_compress.c\0" as *const u8
-                as *const libc::c_char,
-            361 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 92],
-                &[libc::c_char; 92],
-            >(
-                b"unsigned int FSE_optimalTableLog_internal(unsigned int, size_t, unsigned int, unsigned int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(srcSize > 1 as libc::c_int as libc::c_ulong);
     if tableLog == 0 as libc::c_int as libc::c_uint {
         tableLog = FSE_DEFAULT_TABLELOG as U32;
     }

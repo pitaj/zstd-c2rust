@@ -202,21 +202,7 @@ unsafe extern "C" fn XXH32_endian_align(
 ) -> xxh_u32 {
     let mut h32: xxh_u32 = 0;
     if input.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                2060 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 75],
-                    &[libc::c_char; 75],
-                >(
-                    b"xxh_u32 XXH32_endian_align(const xxh_u8 *, size_t, xxh_u32, XXH_alignment)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
     }
     if len >= 16 as libc::c_int as libc::c_ulong {
         let bEnd = input.offset(len as isize);
@@ -273,21 +259,7 @@ unsafe extern "C" fn XXH32_finalize(
     mut align: XXH_alignment,
 ) -> xxh_u32 {
     if ptr.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                1980 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 71],
-                    &[libc::c_char; 71],
-                >(
-                    b"xxh_u32 XXH32_finalize(xxh_u32, const xxh_u8 *, size_t, XXH_alignment)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
     }
     if XXH32_ENDJMP == 0 {
         len &= 15 as libc::c_int as libc::c_ulong;
@@ -700,21 +672,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
     mut len: size_t,
 ) -> XXH_errorcode {
     if input.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                2148 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 71],
-                    &[libc::c_char; 71],
-                >(
-                    b"XXH_errorcode ZSTD_XXH32_update(XXH32_state_t *, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
         return XXH_OK;
     }
     let mut p = input as *const xxh_u8;
@@ -833,19 +791,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_reset(
     mut statePtr: *mut XXH32_state_t,
     mut seed: XXH32_hash_t,
 ) -> XXH_errorcode {
-    if !statePtr.is_null() {} else {
-        __assert_fail(
-            b"statePtr != ((void*)0)\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                as *const u8 as *const libc::c_char,
-            2133 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 62],
-                &[libc::c_char; 62],
-            >(b"XXH_errorcode ZSTD_XXH32_reset(XXH32_state_t *, XXH32_hash_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!statePtr.is_null());
     memset(
         statePtr as *mut libc::c_void,
         0 as libc::c_int,
@@ -920,21 +866,7 @@ unsafe extern "C" fn XXH64_endian_align(
 ) -> xxh_u64 {
     let mut h64: xxh_u64 = 0;
     if input.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                2471 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 75],
-                    &[libc::c_char; 75],
-                >(
-                    b"xxh_u64 XXH64_endian_align(const xxh_u8 *, size_t, xxh_u64, XXH_alignment)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
     }
     if len >= 32 as libc::c_int as libc::c_ulong {
         let bEnd = input.offset(len as isize);
@@ -1024,21 +956,7 @@ unsafe extern "C" fn XXH64_finalize(
     mut align: XXH_alignment,
 ) -> xxh_u64 {
     if ptr.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                2434 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 71],
-                    &[libc::c_char; 71],
-                >(
-                    b"xxh_u64 XXH64_finalize(xxh_u64, const xxh_u8 *, size_t, XXH_alignment)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
     }
     len &= 31 as libc::c_int as libc::c_ulong;
     while len >= 8 as libc::c_int as libc::c_ulong {
@@ -1118,19 +1036,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_reset(
     mut statePtr: *mut XXH64_state_t,
     mut seed: XXH64_hash_t,
 ) -> XXH_errorcode {
-    if !statePtr.is_null() {} else {
-        __assert_fail(
-            b"statePtr != ((void*)0)\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                as *const u8 as *const libc::c_char,
-            2547 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 62],
-                &[libc::c_char; 62],
-            >(b"XXH_errorcode ZSTD_XXH64_reset(XXH64_state_t *, XXH64_hash_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!statePtr.is_null());
     memset(
         statePtr as *mut libc::c_void,
         0 as libc::c_int,
@@ -1161,21 +1067,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
     mut len: size_t,
 ) -> XXH_errorcode {
     if input.is_null() {
-        if len == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"len == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                    as *const u8 as *const libc::c_char,
-                2561 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 71],
-                    &[libc::c_char; 71],
-                >(
-                    b"XXH_errorcode ZSTD_XXH64_update(XXH64_state_t *, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
         return XXH_OK;
     }
     let mut p = input as *const xxh_u8;

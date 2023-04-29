@@ -260,20 +260,7 @@ unsafe extern "C" fn ZSTD_minGain(
     } else {
         6 as libc::c_int as libc::c_uint
     };
-    if ZSTD_cParam_withinBounds(ZSTD_c_strategy, strat as libc::c_int) != 0 {} else {
-        __assert_fail(
-            b"ZSTD_cParam_withinBounds(ZSTD_c_strategy, (int)strat)\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                as *const u8 as *const libc::c_char,
-            600 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"size_t ZSTD_minGain(size_t, ZSTD_strategy)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(ZSTD_cParam_withinBounds(ZSTD_c_strategy, strat as libc::c_int) != 0);
     return (srcSize >> minlog).wrapping_add(2 as libc::c_int as libc::c_ulong);
 }
 #[no_mangle]
@@ -345,32 +332,8 @@ unsafe extern "C" fn allBytesIdentical(
     mut src: *const libc::c_void,
     mut srcSize: size_t,
 ) -> libc::c_int {
-    if srcSize >= 1 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"srcSize >= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                as *const u8 as *const libc::c_char,
-            70 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"int allBytesIdentical(const void *, size_t)\0"))
-                .as_ptr(),
-        );
-    }
-    if !src.is_null() {} else {
-        __assert_fail(
-            b"src != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                as *const u8 as *const libc::c_char,
-            71 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"int allBytesIdentical(const void *, size_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(srcSize >= 1 as libc::c_int as libc::c_ulong);
+    debug_assert!(!src.is_null());
     let b = *(src as *const BYTE).offset(0 as libc::c_int as isize);
     let mut p: size_t = 0;
     p = 1 as libc::c_int as size_t;
@@ -393,36 +356,8 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
     let flSize = (1 as libc::c_int
         + (srcSize > 31 as libc::c_int as libc::c_ulong) as libc::c_int
         + (srcSize > 4095 as libc::c_int as libc::c_ulong) as libc::c_int) as U32;
-    if dstCapacity >= 4 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"dstCapacity >= 4\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                as *const u8 as *const libc::c_char,
-            86 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 75],
-                &[libc::c_char; 75],
-            >(
-                b"size_t ZSTD_compressRleLiteralsBlock(void *, size_t, const void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if allBytesIdentical(src, srcSize) != 0 {} else {
-        __assert_fail(
-            b"allBytesIdentical(src, srcSize)\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                as *const u8 as *const libc::c_char,
-            87 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 75],
-                &[libc::c_char; 75],
-            >(
-                b"size_t ZSTD_compressRleLiteralsBlock(void *, size_t, const void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(dstCapacity >= 4 as libc::c_int as libc::c_ulong);
+    debug_assert!(allBytesIdentical(src, srcSize) != 0);
     match flSize {
         1 => {
             *ostart
@@ -474,32 +409,8 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     mut strategy: ZSTD_strategy,
     mut huf_repeat: HUF_repeat,
 ) -> size_t {
-    if strategy as libc::c_int >= 0 as libc::c_int {} else {
-        __assert_fail(
-            b"(int)strategy >= 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                as *const u8 as *const libc::c_char,
-            117 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 61],
-                &[libc::c_char; 61],
-            >(b"size_t ZSTD_minLiteralsToCompress(ZSTD_strategy, HUF_repeat)\0"))
-                .as_ptr(),
-        );
-    }
-    if strategy as libc::c_int <= 9 as libc::c_int {} else {
-        __assert_fail(
-            b"(int)strategy <= 9\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                as *const u8 as *const libc::c_char,
-            118 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 61],
-                &[libc::c_char; 61],
-            >(b"size_t ZSTD_minLiteralsToCompress(ZSTD_strategy, HUF_repeat)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(strategy as libc::c_int >= 0 as libc::c_int);
+    debug_assert!(strategy as libc::c_int <= 9 as libc::c_int);
     let shift = if (9 as libc::c_int - strategy as libc::c_int) < 3 as libc::c_int {
         9 as libc::c_int - strategy as libc::c_int
     } else {
@@ -665,22 +576,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     match lhSize {
         3 => {
             if singleStream == 0 {
-                if srcSize >= 6 as libc::c_int as libc::c_ulong {} else {
-                    __assert_fail(
-                        b"srcSize >= MIN_LITERALS_FOR_4_STREAMS\0" as *const u8
-                            as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                            as *const u8 as *const libc::c_char,
-                        212 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 161],
-                            &[libc::c_char; 161],
-                        >(
-                            b"size_t ZSTD_compressLiterals(void *, size_t, const void *, size_t, void *, size_t, const ZSTD_hufCTables_t *, ZSTD_hufCTables_t *, ZSTD_strategy, int, int, int)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(srcSize >= 6 as libc::c_int as libc::c_ulong);
             }
             let lhc = (hType as libc::c_uint)
                 .wrapping_add(
@@ -691,22 +587,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             MEM_writeLE24(ostart as *mut libc::c_void, lhc);
         }
         4 => {
-            if srcSize >= 6 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"srcSize >= MIN_LITERALS_FOR_4_STREAMS\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                        as *const u8 as *const libc::c_char,
-                    218 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 161],
-                        &[libc::c_char; 161],
-                    >(
-                        b"size_t ZSTD_compressLiterals(void *, size_t, const void *, size_t, void *, size_t, const ZSTD_hufCTables_t *, ZSTD_hufCTables_t *, ZSTD_strategy, int, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(srcSize >= 6 as libc::c_int as libc::c_ulong);
             let lhc_0 = (hType as libc::c_uint)
                 .wrapping_add(((2 as libc::c_int) << 2 as libc::c_int) as libc::c_uint)
                 .wrapping_add((srcSize as U32) << 4 as libc::c_int)
@@ -714,22 +595,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             MEM_writeLE32(ostart as *mut libc::c_void, lhc_0);
         }
         5 => {
-            if srcSize >= 6 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"srcSize >= MIN_LITERALS_FOR_4_STREAMS\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                        as *const u8 as *const libc::c_char,
-                    224 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 161],
-                        &[libc::c_char; 161],
-                    >(
-                        b"size_t ZSTD_compressLiterals(void *, size_t, const void *, size_t, void *, size_t, const ZSTD_hufCTables_t *, ZSTD_hufCTables_t *, ZSTD_strategy, int, int, int)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(srcSize >= 6 as libc::c_int as libc::c_ulong);
             let lhc_1 = (hType as libc::c_uint)
                 .wrapping_add(((3 as libc::c_int) << 2 as libc::c_int) as libc::c_uint)
                 .wrapping_add((srcSize as U32) << 4 as libc::c_int)

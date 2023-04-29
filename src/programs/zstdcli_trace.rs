@@ -231,19 +231,7 @@ unsafe extern "C" fn TRACE_log(
         );
         ZSTD_CCtxParams_getParameter((*trace).params, ZSTD_c_nbWorkers, &mut workers);
     }
-    if !g_traceFile.is_null() {} else {
-        __assert_fail(
-            b"g_traceFile != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli_trace.c\0" as *const u8
-                as *const libc::c_char,
-            90 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 56],
-                &[libc::c_char; 56],
-            >(b"void TRACE_log(const char *, PTime, const ZSTD_Trace *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!g_traceFile.is_null());
     pthread_mutex_lock(g_mutex);
     fprintf(
         g_traceFile,
@@ -288,36 +276,10 @@ pub unsafe extern "C" fn ZSTD_trace_compress_end(
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    if !g_traceFile.is_null() {} else {
-        __assert_fail(
-            b"g_traceFile != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli_trace.c\0" as *const u8
-                as *const libc::c_char,
-            140 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 64],
-                &[libc::c_char; 64],
-            >(b"void ZSTD_trace_compress_end(ZSTD_TraceCtx, const ZSTD_Trace *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*trace).version
+    debug_assert!(!g_traceFile.is_null());
+    debug_assert!((*trace).version
         == (1 as libc::c_int * 100 as libc::c_int * 100 as libc::c_int
-            + 5 as libc::c_int * 100 as libc::c_int + 5 as libc::c_int) as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"trace->version == ZSTD_VERSION_NUMBER\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli_trace.c\0" as *const u8
-                as *const libc::c_char,
-            141 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 64],
-                &[libc::c_char; 64],
-            >(b"void ZSTD_trace_compress_end(ZSTD_TraceCtx, const ZSTD_Trace *)\0"))
-                .as_ptr(),
-        );
-    }
+            + 5 as libc::c_int * 100 as libc::c_int + 5 as libc::c_int) as libc::c_uint);
     TRACE_log(b"compress\0" as *const u8 as *const libc::c_char, durationNanos, trace);
 }
 #[no_mangle]
@@ -341,35 +303,9 @@ pub unsafe extern "C" fn ZSTD_trace_decompress_end(
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    if !g_traceFile.is_null() {} else {
-        __assert_fail(
-            b"g_traceFile != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli_trace.c\0" as *const u8
-                as *const libc::c_char,
-            158 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 66],
-                &[libc::c_char; 66],
-            >(b"void ZSTD_trace_decompress_end(ZSTD_TraceCtx, const ZSTD_Trace *)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*trace).version
+    debug_assert!(!g_traceFile.is_null());
+    debug_assert!((*trace).version
         == (1 as libc::c_int * 100 as libc::c_int * 100 as libc::c_int
-            + 5 as libc::c_int * 100 as libc::c_int + 5 as libc::c_int) as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"trace->version == ZSTD_VERSION_NUMBER\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli_trace.c\0" as *const u8
-                as *const libc::c_char,
-            159 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 66],
-                &[libc::c_char; 66],
-            >(b"void ZSTD_trace_decompress_end(ZSTD_TraceCtx, const ZSTD_Trace *)\0"))
-                .as_ptr(),
-        );
-    }
+            + 5 as libc::c_int * 100 as libc::c_int + 5 as libc::c_int) as libc::c_uint);
     TRACE_log(b"decompress\0" as *const u8 as *const libc::c_char, durationNanos, trace);
 }

@@ -176,53 +176,17 @@ pub struct HUF_DecompressFastArgs {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: U64) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            92 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"unsigned int ZSTD_countTrailingZeros64(U64)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
@@ -320,19 +284,7 @@ unsafe extern "C" fn BIT_lookBitsFast(
     let regMask = (::core::mem::size_of::<size_t>() as libc::c_ulong)
         .wrapping_mul(8 as libc::c_int as libc::c_ulong)
         .wrapping_sub(1 as libc::c_int as libc::c_ulong) as U32;
-    if nbBits >= 1 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"nbBits >= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            347 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 52],
-                &[libc::c_char; 52],
-            >(b"size_t BIT_lookBitsFast(const BIT_DStream_t *, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbBits >= 1 as libc::c_int as libc::c_uint);
     return (*bitD).bitContainer << ((*bitD).bitsConsumed & regMask)
         >> (regMask.wrapping_add(1 as libc::c_int as libc::c_uint).wrapping_sub(nbBits)
             & regMask);
@@ -507,23 +459,9 @@ unsafe extern "C" fn BIT_reloadDStreamFast(
     if ((*bitD).ptr < (*bitD).limitPtr) as libc::c_int as libc::c_long != 0 {
         return BIT_DStream_overflow;
     }
-    if (*bitD).bitsConsumed as libc::c_ulong
+    debug_assert!((*bitD).bitsConsumed as libc::c_ulong
         <= (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"bitD->bitsConsumed <= sizeof(bitD->bitContainer)*8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/bitstream.h\0"
-                as *const u8 as *const libc::c_char,
-            387 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 58],
-                &[libc::c_char; 58],
-            >(b"BIT_DStream_status BIT_reloadDStreamFast(BIT_DStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     (*bitD)
         .ptr = ((*bitD).ptr)
         .offset(-(((*bitD).bitsConsumed >> 3 as libc::c_int) as isize));
@@ -603,34 +541,9 @@ unsafe extern "C" fn HUF_initFastDStream(mut ip: *const BYTE) -> size_t {
     }) as size_t;
     let value = MEM_readLEST(ip as *const libc::c_void)
         | 1 as libc::c_int as libc::c_ulong;
-    if bitsConsumed <= 8 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"bitsConsumed <= 8\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            148 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"size_t HUF_initFastDStream(const BYTE *)\0"))
-                .as_ptr(),
-        );
-    }
-    if ::core::mem::size_of::<size_t>() as libc::c_ulong
-        == 8 as libc::c_int as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"sizeof(size_t) == 8\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            149 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"size_t HUF_initFastDStream(const BYTE *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(bitsConsumed <= 8 as libc::c_int as libc::c_ulong);
+    debug_assert!(::core::mem::size_of::<size_t>() as libc::c_ulong
+        == 8 as libc::c_int as libc::c_ulong);
     return value << bitsConsumed;
 }
 unsafe extern "C" fn HUF_DecompressFastArgs_init(
@@ -767,23 +680,8 @@ unsafe extern "C" fn HUF_initRemainingDStream(
     {
         return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
     }
-    if ::core::mem::size_of::<size_t>() as libc::c_ulong
-        == 8 as libc::c_int as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"sizeof(size_t) == 8\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            285 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 94],
-                &[libc::c_char; 94],
-            >(
-                b"size_t HUF_initRemainingDStream(BIT_DStream_t *, const HUF_DecompressFastArgs *, int, BYTE *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(::core::mem::size_of::<size_t>() as libc::c_ulong
+        == 8 as libc::c_int as libc::c_ulong);
     (*bit)
         .bitContainer = MEM_readLEST((*args).ip[stream as usize] as *const libc::c_void);
     (*bit).bitsConsumed = ZSTD_countTrailingZeros64((*args).bits[stream as usize]);
@@ -803,19 +701,7 @@ unsafe extern "C" fn HUF_DEltX1_set4(mut symbol: BYTE, mut nbBits: BYTE) -> U64 
         D4 = (symbol as libc::c_int + ((nbBits as libc::c_int) << 8 as libc::c_int))
             as U64;
     }
-    if D4 < ((1 as libc::c_uint) << 16 as libc::c_int) as libc::c_ulong {} else {
-        __assert_fail(
-            b"D4 < (1U << 16)\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            314 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 32],
-                &[libc::c_char; 32],
-            >(b"U64 HUF_DEltX1_set4(BYTE, BYTE)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(D4 < ((1 as libc::c_uint) << 16 as libc::c_int) as libc::c_ulong);
     D4 = (D4 as libc::c_ulonglong).wrapping_mul(0x1000100010001 as libc::c_ulonglong)
         as U64 as U64;
     return D4;
@@ -1054,21 +940,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
                         );
                         u_0 += 16 as libc::c_int;
                     }
-                    if u_0 == length {} else {
-                        __assert_fail(
-                            b"u == length\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            481 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 86],
-                                &[libc::c_char; 86],
-                            >(
-                                b"size_t HUF_readDTableX1_wksp(HUF_DTable *, const void *, size_t, void *, size_t, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(u_0 == length);
                     uStart += length;
                     s += 1;
                 }
@@ -1460,36 +1332,8 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
         &mut (*args).op as *mut [*mut BYTE; 4] as *const libc::c_void,
         ::core::mem::size_of::<[*mut BYTE; 4]>() as libc::c_ulong as libc::size_t,
     );
-    if MEM_isLittleEndian() != 0 {} else {
-        __assert_fail(
-            b"MEM_isLittleEndian()\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            702 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void HUF_decompress4X1_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if MEM_32bits() == 0 {} else {
-        __assert_fail(
-            b"!MEM_32bits()\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            703 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void HUF_decompress4X1_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(MEM_isLittleEndian() != 0);
+    debug_assert!(MEM_32bits() == 0);
     's_33: loop {
         let mut olimit = 0 as *mut BYTE;
         let mut stream: libc::c_int = 0;
@@ -1518,21 +1362,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
                         .as_ptr(),
                 );
             }
-            if ip[stream as usize] >= ilimit {} else {
-                __assert_fail(
-                    b"ip[stream] >= ilimit\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    714 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"void HUF_decompress4X1_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(ip[stream as usize] >= ilimit);
             stream += 1;
         }
         let oiters = (oend.offset_from(op[3 as libc::c_int as usize]) as libc::c_long
@@ -1556,22 +1386,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
         }
         stream = 1 as libc::c_int;
         while stream < 4 as libc::c_int {
-            if ip[stream as usize] >= ip[(stream - 1 as libc::c_int) as usize] {} else {
-                __assert_fail(
-                    b"ip[stream] >= ip[stream - 1]\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    751 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"void HUF_decompress4X1_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(ip[stream as usize] >= ip[(stream - 1 as libc::c_int) as usize]);
             stream += 1;
         }
         loop {
@@ -1662,97 +1477,13 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
     if ret == 0 as libc::c_int as libc::c_ulong {
         return 0 as libc::c_int as size_t;
     }
-    if args.ip[0 as libc::c_int as usize] >= args.ilimit {} else {
-        __assert_fail(
-            b"args.ip[0] >= args.ilimit\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            809 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X1_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(args.ip[0 as libc::c_int as usize] >= args.ilimit);
     loopFn.expect("non-null function pointer")(&mut args);
-    if args.ip[0 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[0] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            815 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X1_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.ip[1 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[1] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            816 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X1_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.ip[2 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[2] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            817 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X1_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.ip[3 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[3] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            818 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X1_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.op[3 as libc::c_int as usize] <= oend {} else {
-        __assert_fail(
-            b"args.op[3] <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            819 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X1_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(args.ip[0 as libc::c_int as usize] >= iend);
+    debug_assert!(args.ip[1 as libc::c_int as usize] >= iend);
+    debug_assert!(args.ip[2 as libc::c_int as usize] >= iend);
+    debug_assert!(args.ip[3 as libc::c_int as usize] >= iend);
+    debug_assert!(args.op[3 as libc::c_int as usize] <= oend);
     let segmentSize = dstSize
         .wrapping_add(3 as libc::c_int as libc::c_ulong)
         .wrapping_div(4 as libc::c_int as libc::c_ulong);
@@ -1793,21 +1524,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
         }
         i += 1;
     }
-    if dstSize != 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"dstSize != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            840 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X1_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(dstSize != 0 as libc::c_int as libc::c_ulong);
     return dstSize;
 }
 unsafe extern "C" fn HUF_decompress1X1_usingDTable_internal(
@@ -2020,21 +1737,7 @@ unsafe extern "C" fn HUF_fillDTableX2ForWeight(
     let length = (1 as libc::c_uint)
         << (tableLog.wrapping_sub(nbBits) & 0x1f as libc::c_int as libc::c_uint);
     let mut ptr = 0 as *const sortedSymbol_t;
-    if level >= 1 as libc::c_int && level <= 2 as libc::c_int {} else {
-        __assert_fail(
-            b"level >= 1 && level <= 2\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            967 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 119],
-                &[libc::c_char; 119],
-            >(
-                b"void HUF_fillDTableX2ForWeight(HUF_DEltX2 *, const sortedSymbol_t *, const sortedSymbol_t *, U32, U32, U16, const int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(level >= 1 as libc::c_int && level <= 2 as libc::c_int);
     match length {
         1 => {
             ptr = begin;
@@ -2187,53 +1890,11 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
             1 as libc::c_int,
         );
         let skipSize = *rankVal.offset(minWeight as isize) as libc::c_int;
-        if length > 1 as libc::c_int as libc::c_uint {} else {
-            __assert_fail(
-                b"length > 1\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1031 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 140],
-                    &[libc::c_char; 140],
-                >(
-                    b"void HUF_fillDTableX2Level2(HUF_DEltX2 *, U32, const U32, const U32 *, const int, const int, const sortedSymbol_t *, const U32 *, U32, U16)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if (skipSize as U32) < length {} else {
-            __assert_fail(
-                b"(U32)skipSize < length\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1032 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 140],
-                    &[libc::c_char; 140],
-                >(
-                    b"void HUF_fillDTableX2Level2(HUF_DEltX2 *, U32, const U32, const U32 *, const int, const int, const sortedSymbol_t *, const U32 *, U32, U16)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(length > 1 as libc::c_int as libc::c_uint);
+        debug_assert!((skipSize as U32) < length);
         match length {
             2 => {
-                if skipSize == 1 as libc::c_int {} else {
-                    __assert_fail(
-                        b"skipSize == 1\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1035 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 140],
-                            &[libc::c_char; 140],
-                        >(
-                            b"void HUF_fillDTableX2Level2(HUF_DEltX2 *, U32, const U32, const U32 *, const int, const int, const sortedSymbol_t *, const U32 *, U32, U16)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(skipSize == 1 as libc::c_int);
                 libc::memcpy(
                     DTable as *mut libc::c_void,
                     &DEltX2 as *const U64 as *const libc::c_void,
@@ -2241,21 +1902,7 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
                 );
             }
             4 => {
-                if skipSize <= 4 as libc::c_int {} else {
-                    __assert_fail(
-                        b"skipSize <= 4\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1039 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 140],
-                            &[libc::c_char; 140],
-                        >(
-                            b"void HUF_fillDTableX2Level2(HUF_DEltX2 *, U32, const U32, const U32 *, const int, const int, const sortedSymbol_t *, const U32 *, U32, U16)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(skipSize <= 4 as libc::c_int);
                 libc::memcpy(
                     DTable.offset(0 as libc::c_int as isize) as *mut libc::c_void,
                     &DEltX2 as *const U64 as *const libc::c_void,
@@ -3101,72 +2748,16 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
     oend[1 as libc::c_int as usize] = op[2 as libc::c_int as usize];
     oend[2 as libc::c_int as usize] = op[3 as libc::c_int as usize];
     oend[3 as libc::c_int as usize] = (*args).oend;
-    if MEM_isLittleEndian() != 0 {} else {
-        __assert_fail(
-            b"MEM_isLittleEndian()\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1487 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void HUF_decompress4X2_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if MEM_32bits() == 0 {} else {
-        __assert_fail(
-            b"!MEM_32bits()\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1488 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 82],
-                &[libc::c_char; 82],
-            >(
-                b"void HUF_decompress4X2_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(MEM_isLittleEndian() != 0);
+    debug_assert!(MEM_32bits() == 0);
     's_45: loop {
         let mut olimit = 0 as *mut BYTE;
         let mut stream: libc::c_int = 0;
         let mut symbol: libc::c_int = 0;
         stream = 0 as libc::c_int;
         while stream < 4 as libc::c_int {
-            if op[stream as usize] <= oend[stream as usize] {} else {
-                __assert_fail(
-                    b"op[stream] <= oend[stream]\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1498 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"void HUF_decompress4X2_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if ip[stream as usize] >= ilimit {} else {
-                __assert_fail(
-                    b"ip[stream] >= ilimit\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1499 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"void HUF_decompress4X2_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(op[stream as usize] <= oend[stream as usize]);
+            debug_assert!(ip[stream as usize] >= ilimit);
             stream += 1;
         }
         let mut iters = ((ip[0 as libc::c_int as usize]).offset_from(ilimit)
@@ -3194,22 +2785,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
         }
         stream = 1 as libc::c_int;
         while stream < 4 as libc::c_int {
-            if ip[stream as usize] >= ip[(stream - 1 as libc::c_int) as usize] {} else {
-                __assert_fail(
-                    b"ip[stream] >= ip[stream - 1]\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1546 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"void HUF_decompress4X2_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(ip[stream as usize] >= ip[(stream - 1 as libc::c_int) as usize]);
             stream += 1;
         }
         loop {
@@ -3323,97 +2899,13 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
     if ret == 0 as libc::c_int as libc::c_ulong {
         return 0 as libc::c_int as size_t;
     }
-    if args.ip[0 as libc::c_int as usize] >= args.ilimit {} else {
-        __assert_fail(
-            b"args.ip[0] >= args.ilimit\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1624 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X2_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(args.ip[0 as libc::c_int as usize] >= args.ilimit);
     loopFn.expect("non-null function pointer")(&mut args);
-    if args.ip[0 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[0] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1628 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X2_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.ip[1 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[1] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1629 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X2_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.ip[2 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[2] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1630 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X2_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.ip[3 as libc::c_int as usize] >= iend {} else {
-        __assert_fail(
-            b"args.ip[3] >= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1631 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X2_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if args.op[3 as libc::c_int as usize] <= oend {} else {
-        __assert_fail(
-            b"args.op[3] <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1632 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 135],
-                &[libc::c_char; 135],
-            >(
-                b"size_t HUF_decompress4X2_usingDTable_internal_fast(void *, size_t, const void *, size_t, const HUF_DTable *, HUF_DecompressFastLoopFn)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(args.ip[0 as libc::c_int as usize] >= iend);
+    debug_assert!(args.ip[1 as libc::c_int as usize] >= iend);
+    debug_assert!(args.ip[2 as libc::c_int as usize] >= iend);
+    debug_assert!(args.ip[3 as libc::c_int as usize] >= iend);
+    debug_assert!(args.op[3 as libc::c_int as usize] <= oend);
     let segmentSize = dstSize
         .wrapping_add(3 as libc::c_int as libc::c_ulong)
         .wrapping_div(4 as libc::c_int as libc::c_ulong);
@@ -3899,32 +3391,8 @@ pub unsafe extern "C" fn HUF_selectDecoder(
     mut dstSize: size_t,
     mut cSrcSize: size_t,
 ) -> U32 {
-    if dstSize > 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"dstSize > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1761 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 38],
-                &[libc::c_char; 38],
-            >(b"U32 HUF_selectDecoder(size_t, size_t)\0"))
-                .as_ptr(),
-        );
-    }
-    if dstSize <= (128 as libc::c_int * 1024 as libc::c_int) as libc::c_ulong {} else {
-        __assert_fail(
-            b"dstSize <= 128*1024\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0" as *const u8
-                as *const libc::c_char,
-            1762 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 38],
-                &[libc::c_char; 38],
-            >(b"U32 HUF_selectDecoder(size_t, size_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(dstSize > 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(dstSize <= (128 as libc::c_int * 1024 as libc::c_int) as libc::c_ulong);
     let Q = if cSrcSize >= dstSize {
         15 as libc::c_int as libc::c_uint
     } else {

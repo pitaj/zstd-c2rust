@@ -92,21 +92,7 @@ pub unsafe extern "C" fn HIST_count_simple(
         return 0 as libc::c_int as libc::c_uint;
     }
     while ip < end {
-        if *ip as libc::c_uint <= maxSymbolValue {} else {
-            __assert_fail(
-                b"*ip <= maxSymbolValue\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/hist.c\0" as *const u8
-                    as *const libc::c_char,
-                41 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 85],
-                    &[libc::c_char; 85],
-                >(
-                    b"unsigned int HIST_count_simple(unsigned int *, unsigned int *, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(*ip as libc::c_uint <= maxSymbolValue);
         let fresh0 = ip;
         ip = ip.offset(1);
         let ref mut fresh1 = *count.offset(*fresh0 as isize);
@@ -144,21 +130,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     let Counting2 = Counting1.offset(256 as libc::c_int as isize);
     let Counting3 = Counting2.offset(256 as libc::c_int as isize);
     let Counting4 = Counting3.offset(256 as libc::c_int as isize);
-    if *maxSymbolValuePtr <= 255 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"*maxSymbolValuePtr <= 255\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/hist.c\0" as *const u8
-                as *const libc::c_char,
-            82 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t HIST_count_parallel_wksp(unsigned int *, unsigned int *, const void *, size_t, HIST_checkInput_e, U32 *const)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(*maxSymbolValuePtr <= 255 as libc::c_int as libc::c_uint);
     if sourceSize == 0 {
         libc::memset(
             count as *mut libc::c_void,

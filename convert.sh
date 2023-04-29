@@ -17,10 +17,15 @@ mv -f src/lib/decompress/* src/decompress
 mv -f src/lib/dictBuilder/* src/dict_builder
 mv -f src/lib/legacy/* src/legacy
 rmdir src/lib/*
+rmdir src/lib
 
+# Fix missing imports
 sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs
 sed -i "1i use crate::__m128i_u;" src/compress/zstd_compress.rs src/compress/zstd_double_fast.rs src/compress/zstd_fast.rs \
   src/compress/zstd_lazy.rs src/compress/zstd_ldm.rs src/compress/zstd_opt.rs src/decompress/zstd_decompress_block.rs
+
+# Replace code from C `assert(...)` with `debug_assert!(...)`
+perl -i -p0e 's/^( *)if[\s\n]+([^\{]*?(?:\n\1 +\{[^\}]*?(?:\} else \{[^\}]*?)\n\1 +\}[^\{]*?)?)[\s\n]*\{\} else \{\n\1    __assert_fail\([\s\n]*([^,]+)[^\}]*?\1\}/$1debug_assert!($2);/gm' src/*/*.rs
 
 # Replace intrinsics with inherent methods
 # ::core::intrinsics::rotate_(left|right)\([\s\n]*([^,]+)[\s\n]*,[\s\n]*([^\),]+?[\s\n]+as[\s\n]+libc::c_int[\s\n]+as[\s\n]+)libc::c_u\w+,?[\s\n]*\)

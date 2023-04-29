@@ -275,36 +275,12 @@ unsafe extern "C" fn ERR_isError(mut code: size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
@@ -323,62 +299,12 @@ unsafe extern "C" fn HUF_alignUpWorkspace(
     let rem = workspace as size_t & mask;
     let add = align.wrapping_sub(rem) & mask;
     let aligned = (workspace as *mut BYTE).offset(add as isize);
-    if align & align.wrapping_sub(1 as libc::c_int as libc::c_ulong)
-        == 0 as libc::c_int as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"(align & (align - 1)) == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            118 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 53],
-                &[libc::c_char; 53],
-            >(b"void *HUF_alignUpWorkspace(void *, size_t *, size_t)\0"))
-                .as_ptr(),
-        );
-    }
-    if align <= 8 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"align <= HUF_WORKSPACE_MAX_ALIGNMENT\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            119 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 53],
-                &[libc::c_char; 53],
-            >(b"void *HUF_alignUpWorkspace(void *, size_t *, size_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(align & align.wrapping_sub(1 as libc::c_int as libc::c_ulong)
+        == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(align <= 8 as libc::c_int as libc::c_ulong);
     if *workspaceSizePtr >= add {
-        if add < align {} else {
-            __assert_fail(
-                b"add < align\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                121 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 53],
-                    &[libc::c_char; 53],
-                >(b"void *HUF_alignUpWorkspace(void *, size_t *, size_t)\0"))
-                    .as_ptr(),
-            );
-        }
-        if aligned as size_t & mask == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"((size_t)aligned & mask) == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                122 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 53],
-                    &[libc::c_char; 53],
-                >(b"void *HUF_alignUpWorkspace(void *, size_t *, size_t)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(add < align);
+        debug_assert!(aligned as size_t & mask == 0 as libc::c_int as libc::c_ulong);
         *workspaceSizePtr = (*workspaceSizePtr as libc::c_ulong).wrapping_sub(add)
             as size_t as size_t;
         return aligned as *mut libc::c_void;
@@ -488,37 +414,13 @@ unsafe extern "C" fn HUF_getValueFast(mut elt: HUF_CElt) -> size_t {
     return elt;
 }
 unsafe extern "C" fn HUF_setNbBits(mut elt: *mut HUF_CElt, mut nbBits: size_t) {
-    if nbBits <= 12 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"nbBits <= HUF_TABLELOG_ABSOLUTEMAX\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            210 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 39],
-                &[libc::c_char; 39],
-            >(b"void HUF_setNbBits(HUF_CElt *, size_t)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(nbBits <= 12 as libc::c_int as libc::c_ulong);
     *elt = nbBits;
 }
 unsafe extern "C" fn HUF_setValue(mut elt: *mut HUF_CElt, mut value: size_t) {
     let nbBits = HUF_getNbBits(*elt);
     if nbBits > 0 as libc::c_int as libc::c_ulong {
-        if value >> nbBits == 0 as libc::c_int as libc::c_ulong {} else {
-            __assert_fail(
-                b"(value >> nbBits) == 0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                218 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 38],
-                    &[libc::c_char; 38],
-                >(b"void HUF_setValue(HUF_CElt *, size_t)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(value >> nbBits == 0 as libc::c_int as libc::c_ulong);
         *elt
             |= value
                 << (::core::mem::size_of::<HUF_CElt>() as libc::c_ulong)
@@ -754,19 +656,7 @@ pub unsafe extern "C" fn HUF_getNbBitsFromCTable(
     mut symbolValue: U32,
 ) -> U32 {
     let ct = CTable.offset(1 as libc::c_int as isize);
-    if symbolValue <= 255 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"symbolValue <= HUF_SYMBOLVALUE_MAX\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            325 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 51],
-                &[libc::c_char; 51],
-            >(b"U32 HUF_getNbBitsFromCTable(const HUF_CElt *, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(symbolValue <= 255 as libc::c_int as libc::c_uint);
     return HUF_getNbBits(*ct.offset(symbolValue as isize)) as U32;
 }
 unsafe extern "C" fn HUF_setMaxHeight(
@@ -796,52 +686,14 @@ unsafe extern "C" fn HUF_setMaxHeight(
         (*huffNode.offset(n as isize)).nbBits = targetNbBits as BYTE;
         n -= 1;
     }
-    if (*huffNode.offset(n as isize)).nbBits as libc::c_uint <= targetNbBits {} else {
-        __assert_fail(
-            b"huffNode[n].nbBits <= targetNbBits\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            374 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 42],
-                &[libc::c_char; 42],
-            >(b"U32 HUF_setMaxHeight(nodeElt *, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*huffNode.offset(n as isize)).nbBits as libc::c_uint <= targetNbBits);
     while (*huffNode.offset(n as isize)).nbBits as libc::c_uint == targetNbBits {
         n -= 1;
     }
-    if totalCost as U32 & baseCost.wrapping_sub(1 as libc::c_int as libc::c_uint)
-        == 0 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"((U32)totalCost & (baseCost - 1)) == 0\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            380 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 42],
-                &[libc::c_char; 42],
-            >(b"U32 HUF_setMaxHeight(nodeElt *, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(totalCost as U32 & baseCost.wrapping_sub(1 as libc::c_int as libc::c_uint)
+        == 0 as libc::c_int as libc::c_uint);
     totalCost >>= largestBits.wrapping_sub(targetNbBits);
-    if totalCost > 0 as libc::c_int {} else {
-        __assert_fail(
-            b"totalCost > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            382 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 42],
-                &[libc::c_char; 42],
-            >(b"U32 HUF_setMaxHeight(nodeElt *, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(totalCost > 0 as libc::c_int);
     let noSymbol = 0xf0f0f0f0 as libc::c_uint;
     let mut rankLast: [U32; 14] = [0; 14];
     libc::memset(
@@ -879,41 +731,14 @@ unsafe extern "C" fn HUF_setMaxHeight(
             }
             nBitsToDecrease = nBitsToDecrease.wrapping_sub(1);
         }
-        if rankLast[nBitsToDecrease as usize] != noSymbol
-            || nBitsToDecrease == 1 as libc::c_int as libc::c_uint
-        {} else {
-            __assert_fail(
-                b"rankLast[nBitsToDecrease] != noSymbol || nBitsToDecrease == 1\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                416 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 42],
-                    &[libc::c_char; 42],
-                >(b"U32 HUF_setMaxHeight(nodeElt *, U32, U32)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(rankLast[nBitsToDecrease as usize] != noSymbol
+            || nBitsToDecrease == 1 as libc::c_int as libc::c_uint);
         while nBitsToDecrease <= HUF_TABLELOG_MAX as libc::c_uint
             && rankLast[nBitsToDecrease as usize] == noSymbol
         {
             nBitsToDecrease = nBitsToDecrease.wrapping_add(1);
         }
-        if rankLast[nBitsToDecrease as usize] != noSymbol {} else {
-            __assert_fail(
-                b"rankLast[nBitsToDecrease] != noSymbol\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                420 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 42],
-                    &[libc::c_char; 42],
-                >(b"U32 HUF_setMaxHeight(nodeElt *, U32, U32)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(rankLast[nBitsToDecrease as usize] != noSymbol);
         totalCost
             -= (1 as libc::c_int)
                 << nBitsToDecrease.wrapping_sub(1 as libc::c_int as libc::c_uint);
@@ -947,19 +772,7 @@ unsafe extern "C" fn HUF_setMaxHeight(
             let ref mut fresh2 = (*huffNode.offset((n + 1 as libc::c_int) as isize))
                 .nbBits;
             *fresh2 = (*fresh2).wrapping_sub(1);
-            if n >= 0 as libc::c_int {} else {
-                __assert_fail(
-                    b"n >= 0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    460 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 42],
-                        &[libc::c_char; 42],
-                    >(b"U32 HUF_setMaxHeight(nodeElt *, U32, U32)\0"))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(n >= 0 as libc::c_int);
             rankLast[1 as libc::c_int as usize] = (n + 1 as libc::c_int) as U32;
             totalCost += 1;
         } else {
@@ -1097,42 +910,13 @@ unsafe extern "C" fn HUF_sort(
     n = 0 as libc::c_int as U32;
     while n < maxSymbolValue1 {
         let mut lowerRank = HUF_getIndex(*count.offset(n as isize));
-        if lowerRank < (192 as libc::c_int - 1 as libc::c_int) as libc::c_uint {} else {
-            __assert_fail(
-                b"lowerRank < RANK_POSITION_TABLE_SIZE - 1\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                608 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 69],
-                    &[libc::c_char; 69],
-                >(
-                    b"void HUF_sort(nodeElt *, const unsigned int *, const U32, rankPos *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(lowerRank < (192 as libc::c_int - 1 as libc::c_int) as libc::c_uint);
         let ref mut fresh4 = (*rankPosition.offset(lowerRank as isize)).base;
         *fresh4 = (*fresh4).wrapping_add(1);
         n = n.wrapping_add(1);
     }
-    if (*rankPosition.offset((192 as libc::c_int - 1 as libc::c_int) as isize)).base
-        as libc::c_int == 0 as libc::c_int
-    {} else {
-        __assert_fail(
-            b"rankPosition[RANK_POSITION_TABLE_SIZE - 1].base == 0\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            612 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 69],
-                &[libc::c_char; 69],
-            >(b"void HUF_sort(nodeElt *, const unsigned int *, const U32, rankPos *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*rankPosition.offset((192 as libc::c_int - 1 as libc::c_int) as isize)).base
+        as libc::c_int == 0 as libc::c_int);
     n = (RANK_POSITION_TABLE_SIZE - 1 as libc::c_int) as U32;
     while n > 0 as libc::c_int as libc::c_uint {
         let ref mut fresh5 = (*rankPosition
@@ -1154,21 +938,7 @@ unsafe extern "C" fn HUF_sort(
         let fresh7 = *fresh6;
         *fresh6 = (*fresh6).wrapping_add(1);
         let pos = fresh7 as U32;
-        if pos < maxSymbolValue1 {} else {
-            __assert_fail(
-                b"pos < maxSymbolValue1\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                    as *const libc::c_char,
-                624 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 69],
-                    &[libc::c_char; 69],
-                >(
-                    b"void HUF_sort(nodeElt *, const unsigned int *, const U32, rankPos *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(pos < maxSymbolValue1);
         (*huffNode.offset(pos as isize)).count = c;
         (*huffNode.offset(pos as isize)).byte = n as BYTE;
         n = n.wrapping_add(1);
@@ -1179,22 +949,7 @@ unsafe extern "C" fn HUF_sort(
             - (*rankPosition.offset(n as isize)).base as libc::c_int;
         let bucketStartIdx = (*rankPosition.offset(n as isize)).base as U32;
         if bucketSize > 1 as libc::c_int {
-            if bucketStartIdx < maxSymbolValue1 {} else {
-                __assert_fail(
-                    b"bucketStartIdx < maxSymbolValue1\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    634 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 69],
-                        &[libc::c_char; 69],
-                    >(
-                        b"void HUF_sort(nodeElt *, const unsigned int *, const U32, rankPos *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(bucketStartIdx < maxSymbolValue1);
             HUF_simpleQuickSort(
                 huffNode.offset(bucketStartIdx as isize),
                 0 as libc::c_int,
@@ -1203,20 +958,7 @@ unsafe extern "C" fn HUF_sort(
         }
         n = n.wrapping_add(1);
     }
-    if HUF_isSorted(huffNode, maxSymbolValue1) != 0 {} else {
-        __assert_fail(
-            b"HUF_isSorted(huffNode, maxSymbolValue1)\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            639 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 69],
-                &[libc::c_char; 69],
-            >(b"void HUF_sort(nodeElt *, const unsigned int *, const U32, rankPos *)\0"))
-                .as_ptr(),
-        );
-    };
+    debug_assert!(HUF_isSorted(huffNode, maxSymbolValue1) != 0);;
 }
 pub const STARTNODE: libc::c_int = HUF_SYMBOLVALUE_MAX + 1 as libc::c_int;
 unsafe extern "C" fn HUF_buildTree(
@@ -1503,33 +1245,8 @@ unsafe extern "C" fn HUF_addBits(
     mut idx: libc::c_int,
     mut kFast: libc::c_int,
 ) {
-    if idx <= 1 as libc::c_int {} else {
-        __assert_fail(
-            b"idx <= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            846 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 54],
-                &[libc::c_char; 54],
-            >(b"void HUF_addBits(HUF_CStream_t *, HUF_CElt, int, int)\0"))
-                .as_ptr(),
-        );
-    }
-    if HUF_getNbBits(elt) <= 12 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"HUF_getNbBits(elt) <= HUF_TABLELOG_ABSOLUTEMAX\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            847 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 54],
-                &[libc::c_char; 54],
-            >(b"void HUF_addBits(HUF_CStream_t *, HUF_CElt, int, int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(idx <= 1 as libc::c_int);
+    debug_assert!(HUF_getNbBits(elt) <= 12 as libc::c_int as libc::c_ulong);
     (*bitC).bitContainer[idx as usize] >>= HUF_getNbBits(elt);
     (*bitC).bitContainer[idx as usize]
         |= if kFast != 0 { HUF_getValueFast(elt) } else { HUF_getValue(elt) };
@@ -1537,63 +1254,21 @@ unsafe extern "C" fn HUF_addBits(
         .bitPos[idx
         as usize] = ((*bitC).bitPos[idx as usize] as libc::c_ulong)
         .wrapping_add(HUF_getNbBitsFast(elt)) as size_t as size_t;
-    if (*bitC).bitPos[idx as usize] & 0xff as libc::c_int as libc::c_ulong
+    debug_assert!((*bitC).bitPos[idx as usize] & 0xff as libc::c_int as libc::c_ulong
         <= (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"(bitC->bitPos[idx] & 0xFF) <= HUF_BITS_IN_CONTAINER\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            859 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 54],
-                &[libc::c_char; 54],
-            >(b"void HUF_addBits(HUF_CStream_t *, HUF_CElt, int, int)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     let nbBits = HUF_getNbBits(elt);
     let dirtyBits = (if nbBits == 0 as libc::c_int as libc::c_ulong {
         0 as libc::c_int as libc::c_uint
     } else {
         (ZSTD_highbit32(nbBits as U32)).wrapping_add(1 as libc::c_int as libc::c_uint)
     }) as size_t;
-    if elt >> dirtyBits << dirtyBits.wrapping_add(nbBits)
-        == 0 as libc::c_int as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"((elt >> dirtyBits) << (dirtyBits + nbBits)) == 0\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            870 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 54],
-                &[libc::c_char; 54],
-            >(b"void HUF_addBits(HUF_CStream_t *, HUF_CElt, int, int)\0"))
-                .as_ptr(),
-        );
-    }
-    if kFast == 0
+    debug_assert!(elt >> dirtyBits << dirtyBits.wrapping_add(nbBits)
+        == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(kFast == 0
         || (*bitC).bitPos[idx as usize] & 0xff as libc::c_int as libc::c_ulong
             <= (::core::mem::size_of::<size_t>() as libc::c_ulong)
-                .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"!kFast || (bitC->bitPos[idx] & 0xFF) <= HUF_BITS_IN_CONTAINER\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            872 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 54],
-                &[libc::c_char; 54],
-            >(b"void HUF_addBits(HUF_CStream_t *, HUF_CElt, int, int)\0"))
-                .as_ptr(),
-        );
-    };
+                .wrapping_mul(8 as libc::c_int as libc::c_ulong));;
 }
 #[inline(always)]
 unsafe extern "C" fn HUF_zeroIndex1(mut bitC: *mut HUF_CStream_t) {
@@ -1602,23 +1277,9 @@ unsafe extern "C" fn HUF_zeroIndex1(mut bitC: *mut HUF_CStream_t) {
 }
 #[inline(always)]
 unsafe extern "C" fn HUF_mergeIndex1(mut bitC: *mut HUF_CStream_t) {
-    if ((*bitC).bitPos[1 as libc::c_int as usize] & 0xff as libc::c_int as libc::c_ulong)
+    debug_assert!(((*bitC).bitPos[1 as libc::c_int as usize] & 0xff as libc::c_int as libc::c_ulong)
         < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"(bitC->bitPos[1] & 0xFF) < HUF_BITS_IN_CONTAINER\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            890 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 38],
-                &[libc::c_char; 38],
-            >(b"void HUF_mergeIndex1(HUF_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
     (*bitC).bitContainer[0 as libc::c_int as usize]
         >>= (*bitC).bitPos[1 as libc::c_int as usize]
             & 0xff as libc::c_int as libc::c_ulong;
@@ -1628,23 +1289,9 @@ unsafe extern "C" fn HUF_mergeIndex1(mut bitC: *mut HUF_CStream_t) {
         .bitPos[0 as libc::c_int
         as usize] = ((*bitC).bitPos[0 as libc::c_int as usize] as libc::c_ulong)
         .wrapping_add((*bitC).bitPos[1 as libc::c_int as usize]) as size_t as size_t;
-    if (*bitC).bitPos[0 as libc::c_int as usize] & 0xff as libc::c_int as libc::c_ulong
+    debug_assert!((*bitC).bitPos[0 as libc::c_int as usize] & 0xff as libc::c_int as libc::c_ulong
         <= (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"(bitC->bitPos[0] & 0xFF) <= HUF_BITS_IN_CONTAINER\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            894 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 38],
-                &[libc::c_char; 38],
-            >(b"void HUF_mergeIndex1(HUF_CStream_t *)\0"))
-                .as_ptr(),
-        );
-    };
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));;
 }
 #[inline(always)]
 unsafe extern "C" fn HUF_flushBits(
@@ -1657,64 +1304,14 @@ unsafe extern "C" fn HUF_flushBits(
     let bitContainer = (*bitC).bitContainer[0 as libc::c_int as usize]
         >> HUF_BITS_IN_CONTAINER.wrapping_sub(nbBits);
     (*bitC).bitPos[0 as libc::c_int as usize] &= 7 as libc::c_int as libc::c_ulong;
-    if nbBits > 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"nbBits > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            913 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"void HUF_flushBits(HUF_CStream_t *, int)\0"))
-                .as_ptr(),
-        );
-    }
-    if nbBits
+    debug_assert!(nbBits > 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(nbBits
         <= (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"nbBits <= sizeof(bitC->bitContainer[0]) * 8\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            914 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"void HUF_flushBits(HUF_CStream_t *, int)\0"))
-                .as_ptr(),
-        );
-    }
-    if (*bitC).ptr <= (*bitC).endPtr {} else {
-        __assert_fail(
-            b"bitC->ptr <= bitC->endPtr\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            915 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"void HUF_flushBits(HUF_CStream_t *, int)\0"))
-                .as_ptr(),
-        );
-    }
+            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
+    debug_assert!((*bitC).ptr <= (*bitC).endPtr);
     MEM_writeLEST((*bitC).ptr as *mut libc::c_void, bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
-    if kFast == 0 || (*bitC).ptr <= (*bitC).endPtr {} else {
-        __assert_fail(
-            b"!kFast || bitC->ptr <= bitC->endPtr\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            918 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"void HUF_flushBits(HUF_CStream_t *, int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(kFast == 0 || (*bitC).ptr <= (*bitC).endPtr);
     if kFast == 0 && (*bitC).ptr > (*bitC).endPtr {
         (*bitC).ptr = (*bitC).endPtr;
     }
@@ -1774,21 +1371,7 @@ unsafe extern "C" fn HUF_compress1X_usingCTable_internal_body_loop(
         }
         HUF_flushBits(bitC, kFastFlush);
     }
-    if n % kUnroll == 0 as libc::c_int {} else {
-        __assert_fail(
-            b"n % kUnroll == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            972 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 123],
-                &[libc::c_char; 123],
-            >(
-                b"void HUF_compress1X_usingCTable_internal_body_loop(HUF_CStream_t *, const BYTE *, size_t, const HUF_CElt *, int, int, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(n % kUnroll == 0 as libc::c_int);
     if n % (2 as libc::c_int * kUnroll) != 0 {
         let mut u: libc::c_int = 0;
         u = 1 as libc::c_int;
@@ -1812,21 +1395,7 @@ unsafe extern "C" fn HUF_compress1X_usingCTable_internal_body_loop(
         HUF_flushBits(bitC, kFastFlush);
         n -= kUnroll;
     }
-    if n % (2 as libc::c_int * kUnroll) == 0 as libc::c_int {} else {
-        __assert_fail(
-            b"n % (2 * kUnroll) == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            984 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 123],
-                &[libc::c_char; 123],
-            >(
-                b"void HUF_compress1X_usingCTable_internal_body_loop(HUF_CStream_t *, const BYTE *, size_t, const HUF_CElt *, int, int, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(n % (2 as libc::c_int * kUnroll) == 0 as libc::c_int);
     while n > 0 as libc::c_int {
         let mut u_0: libc::c_int = 0;
         u_0 = 1 as libc::c_int;
@@ -1871,21 +1440,7 @@ unsafe extern "C" fn HUF_compress1X_usingCTable_internal_body_loop(
         HUF_flushBits(bitC, kFastFlush);
         n -= 2 as libc::c_int * kUnroll;
     }
-    if n == 0 as libc::c_int {} else {
-        __assert_fail(
-            b"n == 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1007 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 123],
-                &[libc::c_char; 123],
-            >(
-                b"void HUF_compress1X_usingCTable_internal_body_loop(HUF_CStream_t *, const BYTE *, size_t, const HUF_CElt *, int, int, int)\0",
-            ))
-                .as_ptr(),
-        );
-    };
+    debug_assert!(n == 0 as libc::c_int);;
 }
 unsafe extern "C" fn HUF_tightCompressBound(
     mut srcSize: size_t,
@@ -2044,21 +1599,7 @@ unsafe extern "C" fn HUF_compress1X_usingCTable_internal_body(
             }
         }
     }
-    if bitC.ptr <= bitC.endPtr {} else {
-        __assert_fail(
-            b"bitC.ptr <= bitC.endPtr\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1082 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t HUF_compress1X_usingCTable_internal_body(void *, size_t, const void *, size_t, const HUF_CElt *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(bitC.ptr <= bitC.endPtr);
     return HUF_closeCStream(&mut bitC);
 }
 unsafe extern "C" fn HUF_compress1X_usingCTable_internal_bmi2(
@@ -2148,21 +1689,7 @@ unsafe extern "C" fn HUF_compress4X_usingCTable_internal(
         return 0 as libc::c_int as size_t;
     }
     op = op.offset(6 as libc::c_int as isize);
-    if op <= oend {} else {
-        __assert_fail(
-            b"op <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1150 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t HUF_compress4X_usingCTable_internal(void *, size_t, const void *, size_t, const HUF_CElt *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oend);
     let cSize = HUF_compress1X_usingCTable_internal(
         op as *mut libc::c_void,
         oend.offset_from(op) as libc::c_long as size_t,
@@ -2182,21 +1709,7 @@ unsafe extern "C" fn HUF_compress4X_usingCTable_internal(
     MEM_writeLE16(ostart as *mut libc::c_void, cSize as U16);
     op = op.offset(cSize as isize);
     ip = ip.offset(segmentSize as isize);
-    if op <= oend {} else {
-        __assert_fail(
-            b"op <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1158 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t HUF_compress4X_usingCTable_internal(void *, size_t, const void *, size_t, const HUF_CElt *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oend);
     let cSize_0 = HUF_compress1X_usingCTable_internal(
         op as *mut libc::c_void,
         oend.offset_from(op) as libc::c_long as size_t,
@@ -2219,21 +1732,7 @@ unsafe extern "C" fn HUF_compress4X_usingCTable_internal(
     );
     op = op.offset(cSize_0 as isize);
     ip = ip.offset(segmentSize as isize);
-    if op <= oend {} else {
-        __assert_fail(
-            b"op <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1166 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t HUF_compress4X_usingCTable_internal(void *, size_t, const void *, size_t, const HUF_CElt *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oend);
     let cSize_1 = HUF_compress1X_usingCTable_internal(
         op as *mut libc::c_void,
         oend.offset_from(op) as libc::c_long as size_t,
@@ -2256,36 +1755,8 @@ unsafe extern "C" fn HUF_compress4X_usingCTable_internal(
     );
     op = op.offset(cSize_1 as isize);
     ip = ip.offset(segmentSize as isize);
-    if op <= oend {} else {
-        __assert_fail(
-            b"op <= oend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1174 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t HUF_compress4X_usingCTable_internal(void *, size_t, const void *, size_t, const HUF_CElt *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if ip <= iend {} else {
-        __assert_fail(
-            b"ip <= iend\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1175 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t HUF_compress4X_usingCTable_internal(void *, size_t, const void *, size_t, const HUF_CElt *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op <= oend);
+    debug_assert!(ip <= iend);
     let cSize_2 = HUF_compress1X_usingCTable_internal(
         op as *mut libc::c_void,
         oend.offset_from(op) as libc::c_long as size_t,
@@ -2361,21 +1832,7 @@ unsafe extern "C" fn HUF_compressCTable_internal(
         return 0 as libc::c_int as size_t;
     }
     op = op.offset(cSize as isize);
-    if op >= ostart {} else {
-        __assert_fail(
-            b"op >= ostart\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1203 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 137],
-                &[libc::c_char; 137],
-            >(
-                b"size_t HUF_compressCTable_internal(BYTE *const, BYTE *, BYTE *const, const void *, size_t, HUF_nbStreams_e, const HUF_CElt *, const int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(op >= ostart);
     if op.offset_from(ostart) as libc::c_long as size_t
         >= srcSize.wrapping_sub(1 as libc::c_int as libc::c_ulong)
     {
@@ -2420,38 +1877,8 @@ pub unsafe extern "C" fn HUF_optimalTableLog(
     mut count: *const libc::c_uint,
     mut flags: libc::c_int,
 ) -> libc::c_uint {
-    if srcSize > 1 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"srcSize > 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1248 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 124],
-                &[libc::c_char; 124],
-            >(
-                b"unsigned int HUF_optimalTableLog(unsigned int, size_t, unsigned int, void *, size_t, HUF_CElt *, const unsigned int *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if wkspSize >= ::core::mem::size_of::<HUF_buildCTable_wksp_tables>() as libc::c_ulong
-    {} else {
-        __assert_fail(
-            b"wkspSize >= sizeof(HUF_buildCTable_wksp_tables)\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1249 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 124],
-                &[libc::c_char; 124],
-            >(
-                b"unsigned int HUF_optimalTableLog(unsigned int, size_t, unsigned int, void *, size_t, HUF_CElt *, const unsigned int *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(srcSize > 1 as libc::c_int as libc::c_ulong);
+    debug_assert!(wkspSize >= ::core::mem::size_of::<HUF_buildCTable_wksp_tables>() as libc::c_ulong);
     if flags & HUF_flags_optimalDepth as libc::c_int == 0 {
         return FSE_optimalTableLog_internal(
             maxTableLog,
@@ -2510,21 +1937,7 @@ pub unsafe extern "C" fn HUF_optimalTableLog(
         }
         optLogGuess = optLogGuess.wrapping_add(1);
     }
-    if optLog <= 12 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"optLog <= HUF_TABLELOG_MAX\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/huf_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1289 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 124],
-                &[libc::c_char; 124],
-            >(
-                b"unsigned int HUF_optimalTableLog(unsigned int, size_t, unsigned int, void *, size_t, HUF_CElt *, const unsigned int *, int)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(optLog <= 12 as libc::c_int as libc::c_uint);
     return optLog;
 }
 unsafe extern "C" fn HUF_compress_internal(

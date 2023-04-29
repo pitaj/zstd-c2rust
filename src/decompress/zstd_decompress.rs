@@ -727,37 +727,13 @@ unsafe extern "C" fn _force_has_format_string(
 ) {}
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/../common/bits.h\0" as *const u8
-                as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -1447,25 +1423,9 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfoLegacy(
         frameSizeInfo.decompressedBound = ZSTD_CONTENTSIZE_ERROR;
     }
     if frameSizeInfo.decompressedBound != ZSTD_CONTENTSIZE_ERROR {
-        if frameSizeInfo.decompressedBound
+        debug_assert!(frameSizeInfo.decompressedBound
             & (((1 as libc::c_int) << 17 as libc::c_int) - 1 as libc::c_int)
-                as libc::c_ulonglong == 0 as libc::c_int as libc::c_ulonglong
-        {} else {
-            __assert_fail(
-                b"(frameSizeInfo.decompressedBound & (ZSTD_BLOCKSIZE_MAX - 1)) == 0\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/../legacy/zstd_legacy.h\0"
-                    as *const u8 as *const libc::c_char,
-                249 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 70],
-                    &[libc::c_char; 70],
-                >(
-                    b"ZSTD_frameSizeInfo ZSTD_findFrameSizeInfoLegacy(const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+                as libc::c_ulonglong == 0 as libc::c_int as libc::c_ulonglong);
         frameSizeInfo
             .nbBlocks = (frameSizeInfo.decompressedBound)
             .wrapping_div(ZSTD_BLOCKSIZE_MAX as libc::c_ulonglong) as size_t;
@@ -1660,40 +1620,13 @@ unsafe extern "C" fn ZSTD_startingInputLength(mut format: ZSTD_format_e) -> size
     } else {
         1 as libc::c_int
     }) as size_t;
-    if format as libc::c_uint == ZSTD_f_zstd1 as libc::c_int as libc::c_uint
+    debug_assert!(format as libc::c_uint == ZSTD_f_zstd1 as libc::c_int as libc::c_uint
         || format as libc::c_uint
-            == ZSTD_f_zstd1_magicless as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"(format == ZSTD_f_zstd1) || (format == ZSTD_f_zstd1_magicless)\0"
-                as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            235 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 47],
-                &[libc::c_char; 47],
-            >(b"size_t ZSTD_startingInputLength(ZSTD_format_e)\0"))
-                .as_ptr(),
-        );
-    }
+            == ZSTD_f_zstd1_magicless as libc::c_int as libc::c_uint);
     return startingInputLength;
 }
 unsafe extern "C" fn ZSTD_DCtx_resetParameters(mut dctx: *mut ZSTD_DCtx) {
-    if (*dctx).streamStage as libc::c_uint == zdss_init as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"dctx->streamStage == zdss_init\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            241 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 44],
-                &[libc::c_char; 44],
-            >(b"void ZSTD_DCtx_resetParameters(ZSTD_DCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*dctx).streamStage as libc::c_uint == zdss_init as libc::c_int as libc::c_uint);
     (*dctx).format = ZSTD_f_zstd1;
     (*dctx).maxWindowSize = ZSTD_MAXWINDOWSIZE_DEFAULT as size_t;
     (*dctx).outBufferMode = ZSTD_bm_buffered;
@@ -1813,21 +1746,7 @@ pub unsafe extern "C" fn ZSTD_copyDCtx(
     );
 }
 unsafe extern "C" fn ZSTD_DCtx_selectFrameDDict(mut dctx: *mut ZSTD_DCtx) {
-    if (*dctx).refMultipleDDicts as libc::c_uint != 0 && !((*dctx).ddictSet).is_null()
-    {} else {
-        __assert_fail(
-            b"dctx->refMultipleDDicts && dctx->ddictSet\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            360 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 45],
-                &[libc::c_char; 45],
-            >(b"void ZSTD_DCtx_selectFrameDDict(ZSTD_DCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*dctx).refMultipleDDicts as libc::c_uint != 0 && !((*dctx).ddictSet).is_null());
     if !((*dctx).ddict).is_null() {
         let mut frameDDict = ZSTD_DDictHashSet_getDDict(
             (*dctx).ddictSet,
@@ -1931,21 +1850,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
             };
             let mut hbuf: [libc::c_uchar; 4] = [0; 4];
             MEM_writeLE32(hbuf.as_mut_ptr() as *mut libc::c_void, ZSTD_MAGICNUMBER);
-            if !src.is_null() {} else {
-                __assert_fail(
-                    b"src != NULL\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    465 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 93],
-                        &[libc::c_char; 93],
-                    >(
-                        b"size_t ZSTD_getFrameHeader_advanced(ZSTD_frameHeader *, const void *, size_t, ZSTD_format_e)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(!src.is_null());
             libc::memcpy(
                 hbuf.as_mut_ptr() as *mut libc::c_void,
                 src,
@@ -2265,21 +2170,7 @@ pub unsafe extern "C" fn ZSTD_findDecompressedSize(
             if ERR_isError(skippableSize) != 0 {
                 return ZSTD_CONTENTSIZE_ERROR;
             }
-            if skippableSize <= srcSize {} else {
-                __assert_fail(
-                    b"skippableSize <= srcSize\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    650 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 67],
-                        &[libc::c_char; 67],
-                    >(
-                        b"unsigned long long ZSTD_findDecompressedSize(const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(skippableSize <= srcSize);
             src = (src as *const BYTE).offset(skippableSize as isize)
                 as *const libc::c_void;
             srcSize = (srcSize as libc::c_ulong).wrapping_sub(skippableSize) as size_t
@@ -2297,21 +2188,7 @@ pub unsafe extern "C" fn ZSTD_findDecompressedSize(
             if ERR_isError(frameSrcSize) != 0 {
                 return ZSTD_CONTENTSIZE_ERROR;
             }
-            if frameSrcSize <= srcSize {} else {
-                __assert_fail(
-                    b"frameSrcSize <= srcSize\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    667 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 67],
-                        &[libc::c_char; 67],
-                    >(
-                        b"unsigned long long ZSTD_findDecompressedSize(const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(frameSrcSize <= srcSize);
             src = (src as *const BYTE).offset(frameSrcSize as isize)
                 as *const libc::c_void;
             srcSize = (srcSize as libc::c_ulong).wrapping_sub(frameSrcSize) as size_t
@@ -2409,22 +2286,8 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfo(
             == ZSTD_MAGIC_SKIPPABLE_START as libc::c_uint
     {
         frameSizeInfo.compressedSize = readSkippableFrameSize(src, srcSize);
-        if ERR_isError(frameSizeInfo.compressedSize) != 0
-            || frameSizeInfo.compressedSize <= srcSize
-        {} else {
-            __assert_fail(
-                b"ZSTD_isError(frameSizeInfo.compressedSize) || frameSizeInfo.compressedSize <= srcSize\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                745 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 64],
-                    &[libc::c_char; 64],
-                >(b"ZSTD_frameSizeInfo ZSTD_findFrameSizeInfo(const void *, size_t)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(ERR_isError(frameSizeInfo.compressedSize) != 0
+            || frameSizeInfo.compressedSize <= srcSize);
         return frameSizeInfo;
     } else {
         let mut ip = src as *const BYTE;
@@ -2525,19 +2388,7 @@ pub unsafe extern "C" fn ZSTD_decompressBound(
         {
             return ZSTD_CONTENTSIZE_ERROR;
         }
-        if srcSize >= compressedSize {} else {
-            __assert_fail(
-                b"srcSize >= compressedSize\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                825 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 62],
-                    &[libc::c_char; 62],
-                >(b"unsigned long long ZSTD_decompressBound(const void *, size_t)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(srcSize >= compressedSize);
         src = (src as *const BYTE).offset(compressedSize as isize)
             as *const libc::c_void;
         srcSize = (srcSize as libc::c_ulong).wrapping_sub(compressedSize) as size_t
@@ -2599,38 +2450,12 @@ pub unsafe extern "C" fn ZSTD_decompressionMargin(
                 zfh.blockSizeMax
             };
         } else {
-            if zfh.frameType as libc::c_uint
-                == ZSTD_skippableFrame as libc::c_int as libc::c_uint
-            {} else {
-                __assert_fail(
-                    b"zfh.frameType == ZSTD_skippableFrame\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    860 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 54],
-                        &[libc::c_char; 54],
-                    >(b"size_t ZSTD_decompressionMargin(const void *, size_t)\0"))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(zfh.frameType as libc::c_uint
+                == ZSTD_skippableFrame as libc::c_int as libc::c_uint);
             margin = (margin as libc::c_ulong).wrapping_add(compressedSize) as size_t
                 as size_t;
         }
-        if srcSize >= compressedSize {} else {
-            __assert_fail(
-                b"srcSize >= compressedSize\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                865 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 54],
-                    &[libc::c_char; 54],
-                >(b"size_t ZSTD_decompressionMargin(const void *, size_t)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(srcSize >= compressedSize);
         src = (src as *const BYTE).offset(compressedSize as isize)
             as *const libc::c_void;
         srcSize = (srcSize as libc::c_ulong).wrapping_sub(compressedSize) as size_t
@@ -2825,22 +2650,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
         }
         match blockProperties.blockType as libc::c_uint {
             2 => {
-                if (*dctx).isFrameDecompression == 1 as libc::c_int {} else {
-                    __assert_fail(
-                        b"dctx->isFrameDecompression == 1\0" as *const u8
-                            as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1012 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 82],
-                            &[libc::c_char; 82],
-                        >(
-                            b"size_t ZSTD_decompressFrame(ZSTD_DCtx *, void *, size_t, const void **, size_t *)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!((*dctx).isFrameDecompression == 1 as libc::c_int);
                 decodedSize = ZSTD_decompressBlock_internal(
                     dctx,
                     op as *mut libc::c_void,
@@ -2881,21 +2691,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
         if decodedSize != 0 as libc::c_int as libc::c_ulong {
             op = op.offset(decodedSize as isize);
         }
-        if !ip.is_null() {} else {
-            __assert_fail(
-                b"ip != NULL\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1032 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 82],
-                    &[libc::c_char; 82],
-                >(
-                    b"size_t ZSTD_decompressFrame(ZSTD_DCtx *, void *, size_t, const void **, size_t *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(!ip.is_null());
         ip = ip.offset(cBlockSize as isize);
         remainingSrcSize = (remainingSrcSize as libc::c_ulong).wrapping_sub(cBlockSize)
             as size_t as size_t;
@@ -2948,21 +2744,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
 ) -> size_t {
     let dststart = dst;
     let mut moreThan1Frame = 0 as libc::c_int;
-    if dict.is_null() || ddict.is_null() {} else {
-        __assert_fail(
-            b"dict==NULL || ddict==NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            1071 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 126],
-                &[libc::c_char; 126],
-            >(
-                b"size_t ZSTD_decompressMultiFrame(ZSTD_DCtx *, void *, size_t, const void *, size_t, const void *, size_t, const ZSTD_DDict *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(dict.is_null() || ddict.is_null());
     if !ddict.is_null() {
         dict = ZSTD_DDict_dictContent(ddict);
         dictSize = ZSTD_DDict_dictSize(ddict);
@@ -2988,21 +2770,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
             if ERR_isError(decodedSize) != 0 {
                 return decodedSize;
             }
-            if decodedSize <= dstCapacity {} else {
-                __assert_fail(
-                    b"decodedSize <= dstCapacity\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1091 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 126],
-                        &[libc::c_char; 126],
-                    >(
-                        b"size_t ZSTD_decompressMultiFrame(ZSTD_DCtx *, void *, size_t, const void *, size_t, const void *, size_t, const ZSTD_DDict *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(decodedSize <= dstCapacity);
             dst = (dst as *mut BYTE).offset(decodedSize as isize) as *mut libc::c_void;
             dstCapacity = (dstCapacity as libc::c_ulong).wrapping_sub(decodedSize)
                 as size_t as size_t;
@@ -3020,22 +2788,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
                     if ERR_isError(err_code) != 0 {
                         return err_code;
                     }
-                    if skippableSize <= srcSize {} else {
-                        __assert_fail(
-                            b"skippableSize <= srcSize\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1109 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 126],
-                                &[libc::c_char; 126],
-                            >(
-                                b"size_t ZSTD_decompressMultiFrame(ZSTD_DCtx *, void *, size_t, const void *, size_t, const void *, size_t, const ZSTD_DDict *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(skippableSize <= srcSize);
                     src = (src as *const BYTE).offset(skippableSize as isize)
                         as *const libc::c_void;
                     srcSize = (srcSize as libc::c_ulong).wrapping_sub(skippableSize)
@@ -3071,21 +2824,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
             if ERR_isError(res) != 0 {
                 return res;
             }
-            if res <= dstCapacity {} else {
-                __assert_fail(
-                    b"res <= dstCapacity\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1140 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 126],
-                        &[libc::c_char; 126],
-                    >(
-                        b"size_t ZSTD_decompressMultiFrame(ZSTD_DCtx *, void *, size_t, const void *, size_t, const void *, size_t, const ZSTD_DDict *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(res <= dstCapacity);
             if res != 0 as libc::c_int as libc::c_ulong {
                 dst = (dst as *mut BYTE).offset(res as isize) as *mut libc::c_void;
             }
@@ -3257,40 +2996,11 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
         as U64 as U64;
     match (*dctx).stage as libc::c_uint {
         0 => {
-            if !src.is_null() {} else {
-                __assert_fail(
-                    b"src != NULL\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1269 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(!src.is_null());
             if (*dctx).format as libc::c_uint
                 == ZSTD_f_zstd1 as libc::c_int as libc::c_uint
             {
-                if srcSize >= 4 as libc::c_int as libc::c_ulong {} else {
-                    __assert_fail(
-                        b"srcSize >= ZSTD_FRAMEIDSIZE\0" as *const u8
-                            as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1271 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 82],
-                            &[libc::c_char; 82],
-                        >(
-                            b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(srcSize >= 4 as libc::c_int as libc::c_ulong);
                 if MEM_readLE32(src) & ZSTD_MAGIC_SKIPPABLE_MASK
                     == ZSTD_MAGIC_SKIPPABLE_START as libc::c_uint
                 {
@@ -3325,21 +3035,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
             return 0 as libc::c_int as size_t;
         }
         1 => {
-            if !src.is_null() {} else {
-                __assert_fail(
-                    b"src != NULL\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1286 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(!src.is_null());
             libc::memcpy(
                 ((*dctx).headerBuffer)
                     .as_mut_ptr()
@@ -3403,22 +3099,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
             let mut rSize: size_t = 0;
             match (*dctx).bType as libc::c_uint {
                 2 => {
-                    if (*dctx).isFrameDecompression == 1 as libc::c_int {} else {
-                        __assert_fail(
-                            b"dctx->isFrameDecompression == 1\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1329 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 82],
-                                &[libc::c_char; 82],
-                            >(
-                                b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!((*dctx).isFrameDecompression == 1 as libc::c_int);
                     rSize = ZSTD_decompressBlock_internal(
                         dctx,
                         dst,
@@ -3430,42 +3111,13 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
                     (*dctx).expected = 0 as libc::c_int as size_t;
                 }
                 0 => {
-                    if srcSize <= (*dctx).expected {} else {
-                        __assert_fail(
-                            b"srcSize <= dctx->expected\0" as *const u8
-                                as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1334 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 82],
-                                &[libc::c_char; 82],
-                            >(
-                                b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(srcSize <= (*dctx).expected);
                     rSize = ZSTD_copyRawBlock(dst, dstCapacity, src, srcSize);
                     let err_code_0 = rSize;
                     if ERR_isError(err_code_0) != 0 {
                         return err_code_0;
                     }
-                    if rSize == srcSize {} else {
-                        __assert_fail(
-                            b"rSize == srcSize\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1337 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 82],
-                                &[libc::c_char; 82],
-                            >(
-                                b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(rSize == srcSize);
                     (*dctx)
                         .expected = ((*dctx).expected as libc::c_ulong)
                         .wrapping_sub(rSize) as size_t as size_t;
@@ -3533,21 +3185,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
             return rSize;
         }
         5 => {
-            if srcSize == 4 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"srcSize == 4\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1382 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(srcSize == 4 as libc::c_int as libc::c_ulong);
             if (*dctx).validateChecksum != 0 {
                 let h32 = ZSTD_XXH64_digest(&mut (*dctx).xxhState) as U32;
                 let check32 = MEM_readLE32(src);
@@ -3566,37 +3204,8 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
             return 0 as libc::c_int as size_t;
         }
         6 => {
-            if !src.is_null() {} else {
-                __assert_fail(
-                    b"src != NULL\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1397 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
-            if srcSize <= 8 as libc::c_int as libc::c_ulong {} else {
-                __assert_fail(
-                    b"srcSize <= ZSTD_SKIPPABLEHEADERSIZE\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1398 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"size_t ZSTD_decompressContinue(ZSTD_DCtx *, void *, size_t, const void *, size_t)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!(!src.is_null());
+            debug_assert!(srcSize <= 8 as libc::c_int as libc::c_ulong);
             libc::memcpy(
                 ((*dctx).headerBuffer)
                     .as_mut_ptr()
@@ -3668,22 +3277,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
     if dictSize <= 8 as libc::c_int as libc::c_ulong {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as size_t;
     }
-    if MEM_readLE32(dict) == 0xec30a437 as libc::c_uint {} else {
-        __assert_fail(
-            b"MEM_readLE32(dict) == ZSTD_MAGIC_DICTIONARY\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            1440 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 83],
-                &[libc::c_char; 83],
-            >(
-                b"size_t ZSTD_loadDEntropy(ZSTD_entropyDTables_t *, const void *const, const size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(MEM_readLE32(dict) == 0xec30a437 as libc::c_uint);
     dictPtr = dictPtr.offset(8 as libc::c_int as isize);
     let workspace = &mut (*entropy).LLTable as *mut [ZSTD_seqSymbol; 513]
         as *mut libc::c_void;
@@ -3845,19 +3439,7 @@ unsafe extern "C" fn ZSTD_decompress_insertDictionary(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_decompressBegin(mut dctx: *mut ZSTD_DCtx) -> size_t {
-    if !dctx.is_null() {} else {
-        __assert_fail(
-            b"dctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            1543 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"size_t ZSTD_decompressBegin(ZSTD_DCtx *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dctx.is_null());
     (*dctx)
         .traceCtx = if (Some(
         ZSTD_trace_decompress_begin
@@ -3919,21 +3501,7 @@ pub unsafe extern "C" fn ZSTD_decompressBegin_usingDDict(
     mut dctx: *mut ZSTD_DCtx,
     mut ddict: *const ZSTD_DDict,
 ) -> size_t {
-    if !dctx.is_null() {} else {
-        __assert_fail(
-            b"dctx != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            1585 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 72],
-                &[libc::c_char; 72],
-            >(
-                b"size_t ZSTD_decompressBegin_usingDDict(ZSTD_DCtx *, const ZSTD_DDict *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dctx.is_null());
     if !ddict.is_null() {
         let dictStart = ZSTD_DDict_dictContent(ddict) as *const libc::c_char;
         let dictSize = ZSTD_DDict_dictSize(ddict);
@@ -4196,19 +3764,7 @@ pub unsafe extern "C" fn ZSTD_DCtx_refDDict(
                     return -(ZSTD_error_memory_allocation as libc::c_int) as size_t;
                 }
             }
-            if (*dctx).staticSize == 0 {} else {
-                __assert_fail(
-                    b"!dctx->staticSize\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    1775 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 59],
-                        &[libc::c_char; 59],
-                    >(b"size_t ZSTD_DCtx_refDDict(ZSTD_DCtx *, const ZSTD_DDict *)\0"))
-                        .as_ptr(),
-                );
-            }
+            debug_assert!((*dctx).staticSize == 0);
             let err_code = ZSTD_DDictHashSet_addDDict(
                 (*dctx).ddictSet,
                 ddict,
@@ -4670,39 +4226,9 @@ unsafe extern "C" fn ZSTD_decompressContinueStream(
         }
         *op = (*op).offset(decodedSize_0 as isize);
         (*zds).streamStage = zdss_read;
-        if *op <= oend {} else {
-            __assert_fail(
-                b"*op <= oend\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                2061 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 92],
-                    &[libc::c_char; 92],
-                >(
-                    b"size_t ZSTD_decompressContinueStream(ZSTD_DStream *, char **, char *, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
-        if (*zds).outBufferMode as libc::c_uint
-            == ZSTD_bm_stable as libc::c_int as libc::c_uint
-        {} else {
-            __assert_fail(
-                b"zds->outBufferMode == ZSTD_bm_stable\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                    as *const u8 as *const libc::c_char,
-                2062 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 92],
-                    &[libc::c_char; 92],
-                >(
-                    b"size_t ZSTD_decompressContinueStream(ZSTD_DStream *, char **, char *, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(*op <= oend);
+        debug_assert!((*zds).outBufferMode as libc::c_uint
+            == ZSTD_bm_stable as libc::c_int as libc::c_uint);
     }
     return 0 as libc::c_int as size_t;
 }
@@ -4893,21 +4419,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                 if hSize != 0 as libc::c_int as libc::c_ulong {
                     let toLoad = hSize.wrapping_sub((*zds).lhSize);
                     let remainingInput = iend.offset_from(ip) as libc::c_long as size_t;
-                    if iend >= ip {} else {
-                        __assert_fail(
-                            b"iend >= ip\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            2146 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 80],
-                                &[libc::c_char; 80],
-                            >(
-                                b"size_t ZSTD_decompressStream(ZSTD_DStream *, ZSTD_outBuffer *, ZSTD_inBuffer *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(iend >= ip);
                     if toLoad > remainingInput {
                         if remainingInput > 0 as libc::c_int as libc::c_ulong {
                             libc::memcpy(
@@ -4952,21 +4464,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             .wrapping_sub((*zds).lhSize)
                             .wrapping_add(ZSTD_blockHeaderSize);
                     }
-                    if !ip.is_null() {} else {
-                        __assert_fail(
-                            b"ip != NULL\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            2160 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 80],
-                                &[libc::c_char; 80],
-                            >(
-                                b"size_t ZSTD_decompressStream(ZSTD_DStream *, ZSTD_outBuffer *, ZSTD_inBuffer *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(!ip.is_null());
                     libc::memcpy(
                         ((*zds).headerBuffer).as_mut_ptr().offset((*zds).lhSize as isize)
                             as *mut libc::c_void,
@@ -4999,21 +4497,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             if ERR_isError(decompressedSize) != 0 {
                                 return decompressedSize;
                             }
-                            if !istart.is_null() {} else {
-                                __assert_fail(
-                                    b"istart != NULL\0" as *const u8 as *const libc::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                        as *const u8 as *const libc::c_char,
-                                    2175 as libc::c_int as libc::c_uint,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 80],
-                                        &[libc::c_char; 80],
-                                    >(
-                                        b"size_t ZSTD_decompressStream(ZSTD_DStream *, ZSTD_outBuffer *, ZSTD_inBuffer *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
+                            debug_assert!(!istart.is_null());
                             ip = istart.offset(cSize as isize);
                             op = if !op.is_null() {
                                 op.offset(decompressedSize as isize)
@@ -5135,24 +4619,8 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 let bufferSize = neededInBuffSize
                                     .wrapping_add(neededOutBuffSize);
                                 if (*zds).staticSize != 0 {
-                                    if (*zds).staticSize
-                                        >= ::core::mem::size_of::<ZSTD_DCtx>() as libc::c_ulong
-                                    {} else {
-                                        __assert_fail(
-                                            b"zds->staticSize >= sizeof(ZSTD_DCtx)\0" as *const u8
-                                                as *const libc::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                                as *const u8 as *const libc::c_char,
-                                            2234 as libc::c_int as libc::c_uint,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 80],
-                                                &[libc::c_char; 80],
-                                            >(
-                                                b"size_t ZSTD_decompressStream(ZSTD_DStream *, ZSTD_outBuffer *, ZSTD_inBuffer *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
+                                    debug_assert!((*zds).staticSize
+                                        >= ::core::mem::size_of::<ZSTD_DCtx>() as libc::c_ulong);
                                     if bufferSize
                                         > ((*zds).staticSize)
                                             .wrapping_sub(
@@ -5213,21 +4681,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                     if ERR_isError(err_code_4) != 0 {
                         return err_code_4;
                     }
-                    if !ip.is_null() {} else {
-                        __assert_fail(
-                            b"ip != NULL\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                                as *const u8 as *const libc::c_char,
-                            2263 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 80],
-                                &[libc::c_char; 80],
-                            >(
-                                b"size_t ZSTD_decompressStream(ZSTD_DStream *, ZSTD_outBuffer *, ZSTD_inBuffer *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(!ip.is_null());
                     ip = ip.offset(neededInSize as isize);
                     current_block_384 = 9422951997864425805;
                 } else if ip == iend {
@@ -5246,27 +4700,11 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                 let toLoad_0 = neededInSize_0.wrapping_sub((*zds).inPos);
                 let isSkipFrame = ZSTD_isSkipFrame(zds);
                 let mut loadedSize: size_t = 0;
-                if neededInSize_0
+                debug_assert!(neededInSize_0
                     == ZSTD_nextSrcSizeToDecompressWithInputSize(
                         zds,
                         iend.offset_from(ip) as libc::c_long as size_t,
-                    )
-                {} else {
-                    __assert_fail(
-                        b"neededInSize == ZSTD_nextSrcSizeToDecompressWithInputSize(zds, (size_t)(iend - ip))\0"
-                            as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                            as *const u8 as *const libc::c_char,
-                        2278 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 80],
-                            &[libc::c_char; 80],
-                        >(
-                            b"size_t ZSTD_decompressStream(ZSTD_DStream *, ZSTD_outBuffer *, ZSTD_inBuffer *)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                    ));
                 if isSkipFrame != 0 {
                     loadedSize = if toLoad_0
                         < iend.offset_from(ip) as libc::c_long as size_t
@@ -5374,21 +4812,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                         as libc::c_ulong,
                 ),
         ) as size_t as size_t;
-    if (*zds).inPos <= nextSrcSizeHint {} else {
-        __assert_fail(
-            b"zds->inPos <= nextSrcSizeHint\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress.c\0"
-                as *const u8 as *const libc::c_char,
-            2365 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 80],
-                &[libc::c_char; 80],
-            >(
-                b"size_t ZSTD_decompressStream(ZSTD_DStream *, ZSTD_outBuffer *, ZSTD_inBuffer *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*zds).inPos <= nextSrcSizeHint);
     nextSrcSizeHint = (nextSrcSizeHint as libc::c_ulong).wrapping_sub((*zds).inPos)
         as size_t as size_t;
     return nextSrcSizeHint;

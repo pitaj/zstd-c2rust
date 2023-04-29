@@ -1369,22 +1369,8 @@ unsafe extern "C" fn printDefaultCParams(
         b" - targetLength  : %u\n\0" as *const u8 as *const libc::c_char,
         cParams.targetLength,
     );
-    if (cParams.strategy as libc::c_uint)
-        < (9 as libc::c_int + 1 as libc::c_int) as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"cParams.strategy < ZSTD_NB_STRATEGIES + 1\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0" as *const u8
-                as *const libc::c_char,
-            707 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 58],
-                &[libc::c_char; 58],
-            >(b"void printDefaultCParams(const char *, const char *, int)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((cParams.strategy as libc::c_uint)
+        < (9 as libc::c_int + 1 as libc::c_int) as libc::c_uint);
     fprintf(
         stderr,
         b" - strategy      : %s (%u)\n\0" as *const u8 as *const libc::c_char,
@@ -1405,21 +1391,7 @@ unsafe extern "C" fn printActualCParams(
         0 as libc::c_int as libc::c_ulong
     };
     let mut actualCParams = ZSTD_getCParams(cLevel, fileSize, dictSize);
-    if g_displayLevel >= 4 as libc::c_int {} else {
-        __assert_fail(
-            b"g_displayLevel >= 4\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0" as *const u8
-                as *const libc::c_char,
-            715 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 93],
-                &[libc::c_char; 93],
-            >(
-                b"void printActualCParams(const char *, const char *, int, const ZSTD_compressionParameters *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(g_displayLevel >= 4 as libc::c_int);
     actualCParams
         .windowLog = if (*cParams).windowLog == 0 as libc::c_int as libc::c_uint {
         actualCParams.windowLog
@@ -1594,19 +1566,7 @@ unsafe fn main_0(
     let mut dictSelect = g_defaultSelectivityLevel;
     let mut literalCompressionMode = ZSTD_ps_auto;
     checkLibVersion();
-    if argCount >= 1 as libc::c_int {} else {
-        __assert_fail(
-            b"argCount >= 1\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0" as *const u8
-                as *const libc::c_char,
-            904 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 29],
-                &[libc::c_char; 29],
-            >(b"int main(int, const char **)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(argCount >= 1 as libc::c_int);
     if filenames.is_null() || file_of_names.is_null() {
         if g_displayLevel >= 1 as libc::c_int {
             fprintf(
@@ -2089,19 +2049,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb = *argv.offset(argNb as isize);
-                                if !__nb.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1052 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb.is_null());
                                 if *__nb.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2151,19 +2099,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_0 = *argv.offset(argNb as isize);
-                                if !__nb_0.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1053 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_0.is_null());
                                 if *__nb_0.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2213,19 +2149,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_1 = *argv.offset(argNb as isize);
-                                if !__nb_1.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1054 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_1.is_null());
                                 if *__nb_1.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2275,19 +2199,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_2 = *argv.offset(argNb as isize);
-                                if !__nb_2.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1055 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_2.is_null());
                                 if *__nb_2.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2337,19 +2249,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_3 = *argv.offset(argNb as isize);
-                                if !__nb_3.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1056 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_3.is_null());
                                 if *__nb_3.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2399,19 +2299,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_4 = *argv.offset(argNb as isize);
-                                if !__nb_4.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1057 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_4.is_null());
                                 if *__nb_4.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2461,19 +2349,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_5 = *argv.offset(argNb as isize);
-                                if !__nb_5.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1058 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_5.is_null());
                                 if *__nb_5.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2539,19 +2415,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_6 = *argv.offset(argNb as isize);
-                                if !__nb_6.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1060 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_6.is_null());
                                 if *__nb_6.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2602,19 +2466,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_7 = *argv.offset(argNb as isize);
-                                if !__nb_7.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1061 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_7.is_null());
                                 if *__nb_7.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2664,19 +2516,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 __nb_8 = *argv.offset(argNb as isize);
-                                if !__nb_8.is_null() {} else {
-                                    __assert_fail(
-                                        b"__nb != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1062 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!__nb_8.is_null());
                                 if *__nb_8.offset(0 as libc::c_int as isize) as libc::c_int
                                     == '-' as i32
                                 {
@@ -2725,19 +2565,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 outDirName = *argv.offset(argNb as isize);
-                                if !outDirName.is_null() {} else {
-                                    __assert_fail(
-                                        b"outDirName != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1064 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!outDirName.is_null());
                                 if *outDirName.offset(0 as libc::c_int as isize)
                                     as libc::c_int == '-' as i32
                                 {
@@ -2793,20 +2621,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 threadDefault = *argv.offset(argNb as isize);
-                                if !threadDefault.is_null() {} else {
-                                    __assert_fail(
-                                        b"threadDefault != NULL\0" as *const u8
-                                            as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1073 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!threadDefault.is_null());
                                 if *threadDefault.offset(0 as libc::c_int as isize)
                                     as libc::c_int == '-' as i32
                                 {
@@ -2856,20 +2671,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 outMirroredDirName = *argv.offset(argNb as isize);
-                                if !outMirroredDirName.is_null() {} else {
-                                    __assert_fail(
-                                        b"outMirroredDirName != NULL\0" as *const u8
-                                            as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1080 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!outMirroredDirName.is_null());
                                 if *outMirroredDirName.offset(0 as libc::c_int as isize)
                                     as libc::c_int == '-' as i32
                                 {
@@ -2927,20 +2729,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 patchFromDictFileName = *argv.offset(argNb as isize);
-                                if !patchFromDictFileName.is_null() {} else {
-                                    __assert_fail(
-                                        b"patchFromDictFileName != NULL\0" as *const u8
-                                            as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1091 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!patchFromDictFileName.is_null());
                                 if *patchFromDictFileName.offset(0 as libc::c_int as isize)
                                     as libc::c_int == '-' as i32
                                 {
@@ -3038,19 +2827,7 @@ unsafe fn main_0(
                                 break;
                             } else {
                                 listName = *argv.offset(argNb as isize);
-                                if !listName.is_null() {} else {
-                                    __assert_fail(
-                                        b"listName != NULL\0" as *const u8 as *const libc::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                            as *const u8 as *const libc::c_char,
-                                        1139 as libc::c_int as libc::c_uint,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 29],
-                                            &[libc::c_char; 29],
-                                        >(b"int main(int, const char **)\0"))
-                                            .as_ptr(),
-                                    );
-                                }
+                                debug_assert!(!listName.is_null());
                                 if *listName.offset(0 as libc::c_int as isize)
                                     as libc::c_int == '-' as i32
                                 {
@@ -3147,20 +2924,7 @@ unsafe fn main_0(
                                                 break 's_369;
                                             } else {
                                                 dictFileName = *argv.offset(argNb as isize);
-                                                if !dictFileName.is_null() {} else {
-                                                    __assert_fail(
-                                                        b"dictFileName != NULL\0" as *const u8
-                                                            as *const libc::c_char,
-                                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                                            as *const u8 as *const libc::c_char,
-                                                        1183 as libc::c_int as libc::c_uint,
-                                                        (*::core::mem::transmute::<
-                                                            &[u8; 29],
-                                                            &[libc::c_char; 29],
-                                                        >(b"int main(int, const char **)\0"))
-                                                            .as_ptr(),
-                                                    );
-                                                }
+                                                debug_assert!(!dictFileName.is_null());
                                                 if !(*dictFileName.offset(0 as libc::c_int as isize)
                                                     as libc::c_int == '-' as i32)
                                                 {
@@ -3228,20 +2992,7 @@ unsafe fn main_0(
                                                 break 's_369;
                                             } else {
                                                 outFileName = *argv.offset(argNb as isize);
-                                                if !outFileName.is_null() {} else {
-                                                    __assert_fail(
-                                                        b"outFileName != NULL\0" as *const u8
-                                                            as *const libc::c_char,
-                                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                                            as *const u8 as *const libc::c_char,
-                                                        1204 as libc::c_int as libc::c_uint,
-                                                        (*::core::mem::transmute::<
-                                                            &[u8; 29],
-                                                            &[libc::c_char; 29],
-                                                        >(b"int main(int, const char **)\0"))
-                                                            .as_ptr(),
-                                                    );
-                                                }
+                                                debug_assert!(!outFileName.is_null());
                                                 if !(*outFileName.offset(0 as libc::c_int as isize)
                                                     as libc::c_int == '-' as i32)
                                                 {
@@ -3660,20 +3411,7 @@ unsafe fn main_0(
                                                                 let mut strategyBounds = ZSTD_cParam_getBounds(
                                                                     ZSTD_c_strategy,
                                                                 );
-                                                                if 9 as libc::c_int == strategyBounds.upperBound {} else {
-                                                                    __assert_fail(
-                                                                        b"ZSTD_NB_STRATEGIES == strategyBounds.upperBound\0"
-                                                                            as *const u8 as *const libc::c_char,
-                                                                        b"/home/peter/Dev/zstd-c2rust/programs/zstdcli.c\0"
-                                                                            as *const u8 as *const libc::c_char,
-                                                                        1567 as libc::c_int as libc::c_uint,
-                                                                        (*::core::mem::transmute::<
-                                                                            &[u8; 29],
-                                                                            &[libc::c_char; 29],
-                                                                        >(b"int main(int, const char **)\0"))
-                                                                            .as_ptr(),
-                                                                    );
-                                                                }
+                                                                debug_assert!(9 as libc::c_int == strategyBounds.upperBound);
                                                                 if showDefaultCParams != 0
                                                                     || g_displayLevel >= 4 as libc::c_int
                                                                 {

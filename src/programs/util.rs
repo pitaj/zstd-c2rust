@@ -968,32 +968,8 @@ pub unsafe extern "C" fn UTIL_isSameFile(
     mut fName2: *const libc::c_char,
 ) -> libc::c_int {
     let mut ret: libc::c_int = 0;
-    if !fName1.is_null() {} else {
-        __assert_fail(
-            b"fName1 != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            365 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 48],
-                &[libc::c_char; 48],
-            >(b"int UTIL_isSameFile(const char *, const char *)\0"))
-                .as_ptr(),
-        );
-    }
-    if !fName2.is_null() {} else {
-        __assert_fail(
-            b"fName2 != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            365 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 48],
-                &[libc::c_char; 48],
-            >(b"int UTIL_isSameFile(const char *, const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!fName1.is_null());
+    debug_assert!(!fName2.is_null());
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
@@ -1068,36 +1044,8 @@ pub unsafe extern "C" fn UTIL_isSameFileStat(
     mut file2Stat: *const stat_t,
 ) -> libc::c_int {
     let mut ret: libc::c_int = 0;
-    if !fName1.is_null() {} else {
-        __assert_fail(
-            b"fName1 != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            390 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 84],
-                &[libc::c_char; 84],
-            >(
-                b"int UTIL_isSameFileStat(const char *, const char *, const stat_t *, const stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if !fName2.is_null() {} else {
-        __assert_fail(
-            b"fName2 != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            390 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 84],
-                &[libc::c_char; 84],
-            >(
-                b"int UTIL_isSameFileStat(const char *, const char *, const stat_t *, const stat_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!fName1.is_null());
+    debug_assert!(!fName2.is_null());
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
@@ -1535,19 +1483,7 @@ unsafe extern "C" fn readLineFromFile(
     mut len: size_t,
     mut file: *mut FILE,
 ) -> size_t {
-    if feof(file) == 0 {} else {
-        __assert_fail(
-            b"!feof(file)\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            611 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 48],
-                &[libc::c_char; 48],
-            >(b"size_t readLineFromFile(char *, size_t, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(feof(file) == 0);
     if (fgets(buf, len as libc::c_int, file)).is_null() {
         return 0 as libc::c_int as size_t;
     }
@@ -1572,19 +1508,7 @@ unsafe extern "C" fn readLinesFromFile(
     let mut pos = 0 as libc::c_int as size_t;
     let buf = dst as *mut libc::c_char;
     let inputFile = fopen(inputFileName, b"r\0" as *const u8 as *const libc::c_char);
-    if !dst.is_null() {} else {
-        __assert_fail(
-            b"dst != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            636 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 52],
-                &[libc::c_char; 52],
-            >(b"int readLinesFromFile(void *, size_t, const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dst.is_null());
     if inputFile.is_null() {
         if g_utilDisplayLevel >= 1 as libc::c_int {
             perror(b"zstd:util:readLinesFromFile\0" as *const u8 as *const libc::c_char);
@@ -1600,19 +1524,7 @@ unsafe extern "C" fn readLinesFromFile(
         if lineLength == 0 as libc::c_int as libc::c_ulong {
             break;
         }
-        if pos.wrapping_add(lineLength) <= dstCapacity {} else {
-            __assert_fail(
-                b"pos + lineLength <= dstCapacity\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                646 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 52],
-                    &[libc::c_char; 52],
-                >(b"int readLinesFromFile(void *, size_t, const char *)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(pos.wrapping_add(lineLength) <= dstCapacity);
         pos = (pos as libc::c_ulong).wrapping_add(lineLength) as size_t as size_t;
         nbFiles += 1;
     }
@@ -1720,19 +1632,7 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
             ) as size_t as size_t;
         fnb = fnb.wrapping_add(1);
     }
-    if pos <= bufSize {} else {
-        __assert_fail(
-            b"pos <= bufSize\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            695 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 69],
-                &[libc::c_char; 69],
-            >(b"FileNamesTable *UTIL_createFileNamesTable_fromFileName(const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(pos <= bufSize);
     return UTIL_assembleFileNamesTable(filenamesTable, nbFiles, buf);
 }
 unsafe extern "C" fn UTIL_assembleFileNamesTable2(
@@ -1815,19 +1715,7 @@ pub unsafe extern "C" fn UTIL_refFilename(
     mut fnt: *mut FileNamesTable,
     mut filename: *const libc::c_char,
 ) {
-    if (*fnt).tableSize < (*fnt).tableCapacity {} else {
-        __assert_fail(
-            b"fnt->tableSize < fnt->tableCapacity\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            749 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 54],
-                &[libc::c_char; 54],
-            >(b"void UTIL_refFilename(FileNamesTable *, const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*fnt).tableSize < (*fnt).tableCapacity);
     let ref mut fresh1 = *((*fnt).fileNames).offset((*fnt).tableSize as isize);
     *fresh1 = filename;
     (*fnt).tableSize = ((*fnt).tableSize).wrapping_add(1);
@@ -1926,22 +1814,7 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
             *((*table1).fileNames).offset(idx1 as isize) as *const libc::c_void,
             curLen,
         );
-        if newTableIdx as libc::c_ulong <= (*newTable).tableSize {} else {
-            __assert_fail(
-                b"newTableIdx <= newTable->tableSize\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                788 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 77],
-                    &[libc::c_char; 77],
-                >(
-                    b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!(newTableIdx as libc::c_ulong <= (*newTable).tableSize);
         let ref mut fresh2 = *((*newTable).fileNames).offset(newTableIdx as isize);
         *fresh2 = buf.offset(pos as isize);
         pos = (pos as libc::c_ulong)
@@ -1962,22 +1835,7 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
             *((*table2).fileNames).offset(idx2 as isize) as *const libc::c_void,
             curLen_0,
         );
-        if (newTableIdx as libc::c_ulong) < (*newTable).tableSize {} else {
-            __assert_fail(
-                b"newTableIdx < newTable->tableSize\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                797 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 77],
-                    &[libc::c_char; 77],
-                >(
-                    b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((newTableIdx as libc::c_ulong) < (*newTable).tableSize);
         let ref mut fresh3 = *((*newTable).fileNames).offset(newTableIdx as isize);
         *fresh3 = buf.offset(pos as isize);
         pos = (pos as libc::c_ulong)
@@ -1986,21 +1844,7 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
         idx2 = idx2.wrapping_add(1);
         newTableIdx = newTableIdx.wrapping_add(1);
     }
-    if pos <= newTotalTableSize {} else {
-        __assert_fail(
-            b"pos <= newTotalTableSize\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            801 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 77],
-                &[libc::c_char; 77],
-            >(
-                b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(pos <= newTotalTableSize);
     (*newTable).tableSize = newTableIdx as size_t;
     UTIL_freeFileNamesTable(table1);
     UTIL_freeFileNamesTable(table2);
@@ -2098,21 +1942,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
                 {
                     let mut newListSize = (*bufEnd).offset_from(*bufStart)
                         as libc::c_long + LIST_SIZE_INCREASE as libc::c_long;
-                    if newListSize >= 0 as libc::c_int as libc::c_long {} else {
-                        __assert_fail(
-                            b"newListSize >= 0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                                as *const libc::c_char,
-                            919 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 72],
-                                &[libc::c_char; 72],
-                            >(
-                                b"int UTIL_prepareFileList(const char *, char **, size_t *, char **, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
+                    debug_assert!(newListSize >= 0 as libc::c_int as libc::c_long);
                     *bufStart = UTIL_realloc(
                         *bufStart as *mut libc::c_void,
                         newListSize as size_t,
@@ -2266,33 +2096,9 @@ unsafe extern "C" fn makeDir(
 unsafe extern "C" fn convertPathnameToDirName(mut pathname: *mut libc::c_char) {
     let mut len = 0 as libc::c_int as size_t;
     let mut pos = NULL as *mut libc::c_char;
-    if !pathname.is_null() {} else {
-        __assert_fail(
-            b"pathname != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            1047 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 38],
-                &[libc::c_char; 38],
-            >(b"void convertPathnameToDirName(char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!pathname.is_null());
     len = strlen(pathname);
-    if len > 0 as libc::c_int as libc::c_ulong {} else {
-        __assert_fail(
-            b"len > 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            1051 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 38],
-                &[libc::c_char; 38],
-            >(b"void convertPathnameToDirName(char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(len > 0 as libc::c_int as libc::c_ulong);
     while *pathname.offset(len as isize) as libc::c_int == PATH_SEP {
         *pathname.offset(len as isize) = '\0' as i32 as libc::c_char;
         len = len.wrapping_sub(1);
@@ -2311,19 +2117,7 @@ unsafe extern "C" fn convertPathnameToDirName(mut pathname: *mut libc::c_char) {
 unsafe extern "C" fn trimLeadingRootChar(
     mut pathname: *const libc::c_char,
 ) -> *const libc::c_char {
-    if !pathname.is_null() {} else {
-        __assert_fail(
-            b"pathname != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            1075 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 46],
-                &[libc::c_char; 46],
-            >(b"const char *trimLeadingRootChar(const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!pathname.is_null());
     if *pathname.offset(0 as libc::c_int as isize) as libc::c_int == PATH_SEP {
         return pathname.offset(1 as libc::c_int as isize);
     }
@@ -2332,19 +2126,7 @@ unsafe extern "C" fn trimLeadingRootChar(
 unsafe extern "C" fn trimLeadingCurrentDirConst(
     mut pathname: *const libc::c_char,
 ) -> *const libc::c_char {
-    if !pathname.is_null() {} else {
-        __assert_fail(
-            b"pathname != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            1084 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 53],
-                &[libc::c_char; 53],
-            >(b"const char *trimLeadingCurrentDirConst(const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!pathname.is_null());
     if *pathname.offset(0 as libc::c_int as isize) as libc::c_int == '.' as i32
         && *pathname.offset(1 as libc::c_int as isize) as libc::c_int == PATH_SEP
     {
@@ -2368,19 +2150,7 @@ unsafe extern "C" fn mallocAndJoin2Dir(
     mut dir1: *const libc::c_char,
     mut dir2: *const libc::c_char,
 ) -> *mut libc::c_char {
-    if !dir1.is_null() && !dir2.is_null() {} else {
-        __assert_fail(
-            b"dir1 != NULL && dir2 != NULL\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                as *const libc::c_char,
-            1111 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 52],
-                &[libc::c_char; 52],
-            >(b"char *mallocAndJoin2Dir(const char *, const char *)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(!dir1.is_null() && !dir2.is_null());
     let dir1Size = strlen(dir1);
     let dir2Size = strlen(dir2);
     let mut outDirBuffer = 0 as *mut libc::c_char;
@@ -2659,21 +2429,7 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
             if buf.offset(pos as isize).offset(len as isize) >= bufend {
                 let mut newListSize = bufend.offset_from(buf) as libc::c_long
                     + LIST_SIZE_INCREASE as libc::c_long;
-                if newListSize >= 0 as libc::c_int as libc::c_long {} else {
-                    __assert_fail(
-                        b"newListSize >= 0\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                            as *const libc::c_char,
-                        1299 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 73],
-                            &[libc::c_char; 73],
-                        >(
-                            b"FileNamesTable *UTIL_createExpandedFNT(const char *const *, size_t, int)\0",
-                        ))
-                            .as_ptr(),
-                    );
-                }
+                debug_assert!(newListSize >= 0 as libc::c_int as libc::c_long);
                 buf = UTIL_realloc(buf as *mut libc::c_void, newListSize as size_t)
                     as *mut libc::c_char;
                 if buf.is_null() {

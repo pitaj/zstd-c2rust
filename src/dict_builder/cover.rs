@@ -370,36 +370,12 @@ unsafe extern "C" fn ERR_isError(mut code: size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            69 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 43],
-                &[libc::c_char; 43],
-            >(b"unsigned int ZSTD_countLeadingZeros32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
-    if val != 0 as libc::c_int as libc::c_uint {} else {
-        __assert_fail(
-            b"val != 0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/../common/bits.h\0"
-                as *const u8 as *const libc::c_char,
-            171 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 33],
-                &[libc::c_char; 33],
-            >(b"unsigned int ZSTD_highbit32(U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
@@ -1102,37 +1078,12 @@ pub unsafe extern "C" fn COVER_computeEpochs(
     };
     epochs.size = nbDmers.wrapping_div(epochs.num);
     if epochs.size >= minEpochSize {
-        if (epochs.size).wrapping_mul(epochs.num) <= nbDmers {} else {
-            __assert_fail(
-                b"epochs.size * epochs.num <= nbDmers\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/cover.c\0" as *const u8
-                    as *const libc::c_char,
-                672 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 59],
-                    &[libc::c_char; 59],
-                >(b"COVER_epoch_info_t COVER_computeEpochs(U32, U32, U32, U32)\0"))
-                    .as_ptr(),
-            );
-        }
+        debug_assert!((epochs.size).wrapping_mul(epochs.num) <= nbDmers);
         return epochs;
     }
     epochs.size = if minEpochSize < nbDmers { minEpochSize } else { nbDmers };
     epochs.num = nbDmers.wrapping_div(epochs.size);
-    if (epochs.size).wrapping_mul(epochs.num) <= nbDmers {} else {
-        __assert_fail(
-            b"epochs.size * epochs.num <= nbDmers\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/cover.c\0" as *const u8
-                as *const libc::c_char,
-            677 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 59],
-                &[libc::c_char; 59],
-            >(b"COVER_epoch_info_t COVER_computeEpochs(U32, U32, U32, U32)\0"))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((epochs.size).wrapping_mul(epochs.num) <= nbDmers);
     return epochs;
 }
 unsafe extern "C" fn COVER_buildDictionary(
