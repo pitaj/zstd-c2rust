@@ -425,10 +425,6 @@ unsafe extern "C" fn XXH_read32(mut memPtr: *const libc::c_void) -> xxh_u32 {
     return val;
 }
 pub const XXH_CPU_LITTLE_ENDIAN: libc::c_int = 1 as libc::c_int;
-pub const XXH_rotl64: unsafe extern "C" fn(
-    libc::c_ulong,
-    libc::c_ulong,
-) -> libc::c_ulong = __builtin_rotateleft64;
 unsafe extern "C" fn XXH_swap32(mut x: xxh_u32) -> xxh_u32 {
     return x << 24 as libc::c_int & 0xff000000 as libc::c_uint
         | x << 8 as libc::c_int & 0xff0000 as libc::c_int as libc::c_uint

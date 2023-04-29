@@ -1494,8 +1494,6 @@ unsafe extern "C" fn init_cLevel() -> libc::c_int {
     }
     return ZSTDCLI_CLEVEL_DEFAULT;
 }
-pub const MINCLEVEL: libc::c_int = ZSTD_minCLevel();
-pub const MAXCLEVEL: libc::c_int = ZSTD_maxCLevel();
 unsafe fn main_0(
     mut argCount: libc::c_int,
     mut argv: *mut *const libc::c_char,
@@ -1510,8 +1508,8 @@ unsafe fn main_0(
     let mut ldmFlag = 0 as libc::c_int;
     let mut main_pause = 0 as libc::c_int;
     let mut adapt = 0 as libc::c_int;
-    let mut adaptMin = MINCLEVEL;
-    let mut adaptMax = MAXCLEVEL;
+    let mut adaptMin = ZSTD_minCLevel() /* MINCLEVEL */;
+    let mut adaptMax = ZSTD_maxCLevel() /* MAXCLEVEL */;
     let mut rsyncable = 0 as libc::c_int;
     let mut nextArgumentsAreFiles = 0 as libc::c_int;
     let mut operationResult = 0 as libc::c_int;
@@ -1544,7 +1542,7 @@ unsafe fn main_0(
         strategy: 0 as ZSTD_strategy,
     };
     let mut cLevel = init_cLevel();
-    let mut cLevelLast = MINCLEVEL - 1 as libc::c_int;
+    let mut cLevelLast = ZSTD_minCLevel() /* MINCLEVEL */ - 1 as libc::c_int;
     let mut recursive = 0 as libc::c_int as libc::c_uint;
     let mut memLimit = 0 as libc::c_int as libc::c_uint;
     let mut filenames = UTIL_allocateFileNamesTable(argCount as size_t);

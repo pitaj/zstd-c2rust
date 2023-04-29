@@ -420,7 +420,6 @@ pub const _SC_NPROCESSORS_ONLN_0: libc::c_int = _SC_NPROCESSORS_ONLN as libc::c_
 pub const PATH_SEP: libc::c_int = '/' as i32;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const EEXIST: libc::c_int = 17 as libc::c_int;
-pub const errno: libc::c_int = *__errno_location();
 pub const ENOMEM: libc::c_int = 12 as libc::c_int;
 pub const AT_FDCWD: libc::c_int = -(100 as libc::c_int);
 static mut g_traceDepth: libc::c_int = 0 as libc::c_int;
@@ -768,7 +767,7 @@ pub unsafe extern "C" fn UTIL_utime(
         timebuf.as_mut_ptr() as *const timespec,
         0 as libc::c_int,
     );
-    errno = 0 as libc::c_int;
+    (*__errno_location() /* errno */) = 0 as libc::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
         fprintf(
@@ -860,7 +859,7 @@ pub unsafe extern "C" fn UTIL_setFDStat(
     } else {
         res += chown(filename, (*statbuf).st_uid, -(1 as libc::c_int) as __gid_t);
     }
-    errno = 0 as libc::c_int;
+    (*__errno_location() /* errno */) = 0 as libc::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
         fprintf(
@@ -1875,7 +1874,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
         return 0 as libc::c_int;
     }
     dirLength = strlen(dirName);
-    errno = 0 as libc::c_int;
+    (*__errno_location() /* errno */) = 0 as libc::c_int;
     loop {
         entry = readdir(dir);
         if entry.is_null() {
@@ -1971,10 +1970,10 @@ unsafe extern "C" fn UTIL_prepareFileList(
                 }
             }
             free(path as *mut libc::c_void);
-            errno = 0 as libc::c_int;
+            (*__errno_location() /* errno */) = 0 as libc::c_int;
         }
     }
-    if errno != 0 as libc::c_int {
+    if (*__errno_location() /* errno */) != 0 as libc::c_int {
         if g_utilDisplayLevel >= 1 as libc::c_int {
             fprintf(
                 stderr,
@@ -2081,7 +2080,7 @@ unsafe extern "C" fn makeDir(
 ) -> libc::c_int {
     let mut ret = mkdir(dir, mode);
     if ret != 0 as libc::c_int {
-        if errno == EEXIST {
+        if (*__errno_location() /* errno */) == EEXIST {
             return 0 as libc::c_int;
         }
         fprintf(

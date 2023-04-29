@@ -12,3 +12,5 @@ mod compress;
 mod decompress;
 mod dict_builder;
 mod legacy;
+
+pub mod programs;
