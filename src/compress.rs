@@ -1,0 +1,13 @@
+mod fse_compress;
+mod hist;
+mod huf_compress;
+mod zstd_compress_literals;
+mod zstd_compress;
+mod zstd_compress_sequences;
+mod zstd_compress_superblock;
+mod zstd_double_fast;
+mod zstd_fast;
+mod zstd_lazy;
+mod zstd_ldm;
+mod zstdmt_compress;
+mod zstd_opt;
