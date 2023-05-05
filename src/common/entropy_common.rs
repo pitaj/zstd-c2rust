@@ -1,11 +1,5 @@
 use ::libc;
 extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ERR_getErrorString(code: ERR_enum) -> *const libc::c_char;
     fn FSE_decompress_wksp_bmi2(
         dst: *mut libc::c_void,

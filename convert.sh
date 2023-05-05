@@ -24,9 +24,58 @@ sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" sr
 sed -i "1i use crate::__m128i_u;" src/compress/zstd_compress.rs src/compress/zstd_double_fast.rs src/compress/zstd_fast.rs \
   src/compress/zstd_lazy.rs src/compress/zstd_ldm.rs src/compress/zstd_opt.rs src/decompress/zstd_decompress_block.rs
 
+# Replace MIN(MAX()) with .clamp
+# (if 4 as libc::c_int as libc::c_uint
+#         > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
+#             6 as libc::c_int as libc::c_uint
+#         } else {
+#             (*ms).cParams.minMatch
+#         })
+#     {
+#         4 as libc::c_int as libc::c_uint
+#     } else {
+#         (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
+#             6 as libc::c_int as libc::c_uint
+#         } else {
+#             (*ms).cParams.minMatch
+#         })
+#     })
+# -> (*ms).cParams.minMatch.clamp(4, 6)
+# (if 4 as libc::c_int as libc::c_uint
+#         > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
+#             6 as libc::c_int as libc::c_uint
+#         } else {
+#             (*ms).cParams.searchLog
+#         })
+#     {
+#         4 as libc::c_int as libc::c_uint
+#     } else {
+#         (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
+#             6 as libc::c_int as libc::c_uint
+#         } else {
+#             (*ms).cParams.searchLog
+#         })
+#     })
+# -> (*ms).cParams.searchLog.clamp(4, 6)
+
 # Replace code from C `assert(...)` with `debug_assert!(...)`
 perl -i -p0e 's/^( *)if[\s\n]+([^\{]*?(?:\n\1 +\{[^\}]*?(?:\} else \{[^\}]*?)\n\1 +\}[^\{]*?)?)[\s\n]*\{\} else \{\n\1    __assert_fail\([\s\n]*([^,]+)[^\}]*?\1\}/$1debug_assert!($2);/gm' src/*/*.rs
 
+# ^( *)__assert_fail\([\s\n]*b"0\\0"[\s\S]*?\n\1\);[\s\n]*?( *unreachable!\(\);)
+# -> $2;
+
+# ^( *)__assert_fail\([\s\n]*b"0\\0"[\s\S]*?\n\1\);
+# -> $1debug_assert!(false);
+
+# 
+#     fn __assert_fail(
+#         __assertion: *const libc::c_char,
+#         __file: *const libc::c_char,
+#         __line: libc::c_uint,
+#         __function: *const libc::c_char,
+#     ) -> !;
+# -> 
+
 # Replace intrinsics with inherent methods
 # ::core::intrinsics::rotate_(left|right)\([\s\n]*([^,]+)[\s\n]*,[\s\n]*([^\),]+?[\s\n]+as[\s\n]+libc::c_int[\s\n]+as[\s\n]+)libc::c_u\w+,?[\s\n]*\)
-# $2.rotate_$1($3u32)
+# -> $2.rotate_$1($3u32)

@@ -12,12 +12,6 @@ extern "C" {
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn calloc(_: libc::c_ulong, _: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn HIST_count_wksp(
         count: *mut libc::c_uint,
         maxSymbolValuePtr: *mut libc::c_uint,
@@ -2631,17 +2625,7 @@ unsafe extern "C" fn ZSTD_literalsCompressionIsDisabled(
         2 => return 1 as libc::c_int,
         0 => {}
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_internal.h\0"
-                    as *const u8 as *const libc::c_char,
-                612 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 65],
-                    &[libc::c_char; 65],
-                >(b"int ZSTD_literalsCompressionIsDisabled(const ZSTD_CCtx_params *)\0"))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     return ((*cctxParams).cParams.strategy as libc::c_uint
@@ -4992,19 +4976,7 @@ unsafe extern "C" fn ZSTD_adjustCParams_internal(
             dictSize = 0 as libc::c_int as size_t;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                1493 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 150],
-                    &[libc::c_char; 150],
-                >(
-                    b"ZSTD_compressionParameters ZSTD_adjustCParams_internal(ZSTD_compressionParameters, unsigned long long, size_t, ZSTD_cParamMode_e, ZSTD_paramSwitch_e)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     if srcSize <= maxWindowResize as libc::c_ulonglong && dictSize <= maxWindowResize {
@@ -6624,27 +6596,13 @@ pub unsafe extern "C" fn ZSTD_seqToCodes(
         *llCodeTable.offset(u as isize) = ZSTD_LLcode(llv) as BYTE;
         *ofCodeTable.offset(u as isize) = ofCode as BYTE;
         *mlCodeTable.offset(u as isize) = ZSTD_MLcode(mlv) as BYTE;
-        if !(MEM_64bits() != 0
+        debug_assert!(!(MEM_64bits() != 0
             && ofCode
                 >= (if MEM_32bits() != 0 {
                     25 as libc::c_int
                 } else {
                     57 as libc::c_int
-                }) as U32)
-        {} else {
-            __assert_fail(
-                b"!(MEM_64bits() && ofCode >= STREAM_ACCUMULATOR_MIN)\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                2653 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 40],
-                    &[libc::c_char; 40],
-                >(b"int ZSTD_seqToCodes(const seqStore_t *)\0"))
-                    .as_ptr(),
-            );
-        }
+                }) as U32));
         if MEM_32bits() != 0
             && ofCode
                 >= (if MEM_32bits() != 0 {
@@ -8488,19 +8446,7 @@ unsafe extern "C" fn ZSTD_estimateBlockSize_literal(
             }
         }
     }
-    __assert_fail(
-        b"0\0" as *const u8 as *const libc::c_char,
-        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0" as *const u8
-            as *const libc::c_char,
-        3691 as libc::c_int as libc::c_uint,
-        (*::core::mem::transmute::<
-            &[u8; 143],
-            &[libc::c_char; 143],
-        >(
-            b"size_t ZSTD_estimateBlockSize_literal(const BYTE *, size_t, const ZSTD_hufCTables_t *, const ZSTD_hufCTablesMetadata_t *, void *, size_t, int)\0",
-        ))
-            .as_ptr(),
-    );
+    debug_assert!(false);
     return 0 as libc::c_int as size_t;
 }
 unsafe extern "C" fn ZSTD_estimateBlockSize_symbolType(
@@ -9644,19 +9590,7 @@ unsafe extern "C" fn ZSTD_writeFrameHeader(
                 as size_t as size_t;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                4501 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 81],
-                    &[libc::c_char; 81],
-                >(
-                    b"size_t ZSTD_writeFrameHeader(void *, size_t, const ZSTD_CCtx_params *, U64, U32)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     let mut current_block_44: u64;
@@ -9689,19 +9623,7 @@ unsafe extern "C" fn ZSTD_writeFrameHeader(
             current_block_44 = 5330834795799507926;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                4511 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 81],
-                    &[libc::c_char; 81],
-                >(
-                    b"size_t ZSTD_writeFrameHeader(void *, size_t, const ZSTD_CCtx_params *, U64, U32)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
             current_block_44 = 6598120286135757988;
         }
     }
@@ -10117,19 +10039,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
             ZSTD_updateTree(ms, iend.offset(-(HASH_READ_SIZE as isize)), iend);
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                4796 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 184],
-                    &[libc::c_char; 184],
-                >(
-                    b"size_t ZSTD_loadDictionaryContent(ZSTD_matchState_t *, ldmState_t *, ZSTD_cwksp *, const ZSTD_CCtx_params *, const void *, size_t, ZSTD_dictTableLoadMethod_e, ZSTD_tableFillPurpose_e)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     (*ms).nextToUpdate = iend.offset_from((*ms).window.base) as libc::c_long as U32;
@@ -10440,19 +10350,7 @@ unsafe extern "C" fn ZSTD_compress_insertDictionary(
         {
             return -(ZSTD_error_dictionary_wrong as libc::c_int) as size_t;
         }
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0" as *const u8
-                as *const libc::c_char,
-            4986 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 251],
-                &[libc::c_char; 251],
-            >(
-                b"size_t ZSTD_compress_insertDictionary(ZSTD_compressedBlockState_t *, ZSTD_matchState_t *, ldmState_t *, ZSTD_cwksp *, const ZSTD_CCtx_params *, const void *, size_t, ZSTD_dictContentType_e, ZSTD_dictTableLoadMethod_e, ZSTD_tableFillPurpose_e, void *)\0",
-            ))
-                .as_ptr(),
-        );
+        debug_assert!(false);
     }
     return ZSTD_loadZstdDictionary(
         bs,
@@ -12864,19 +12762,7 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
                 current_block_155 = 5636883459695696059;
             }
             _ => {
-                __assert_fail(
-                    b"0\0" as *const u8 as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    6038 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 111],
-                        &[libc::c_char; 111],
-                    >(
-                        b"size_t ZSTD_compressStream_generic(ZSTD_CStream *, ZSTD_outBuffer *, ZSTD_inBuffer *, const ZSTD_EndDirective)\0",
-                    ))
-                        .as_ptr(),
-                );
+                debug_assert!(false);
                 current_block_155 = 7293850626974290116;
             }
         }
@@ -15357,17 +15243,7 @@ unsafe extern "C" fn ZSTD_getCParamRowSize(
             dictSize = 0 as libc::c_int as size_t;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress.c\0"
-                    as *const u8 as *const libc::c_char,
-                6945 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 58],
-                    &[libc::c_char; 58],
-                >(b"U64 ZSTD_getCParamRowSize(U64, size_t, ZSTD_cParamMode_e)\0"))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     let unknown = (srcSizeHint as libc::c_ulonglong == ZSTD_CONTENTSIZE_UNKNOWN)

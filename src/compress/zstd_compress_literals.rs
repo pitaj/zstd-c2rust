@@ -1,11 +1,5 @@
 use ::libc;
 extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ZSTD_cParam_getBounds(cParam: ZSTD_cParameter) -> ZSTD_bounds;
     fn HUF_compress4X_repeat(
         dst: *mut libc::c_void,
@@ -306,19 +300,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
             );
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                    as *const u8 as *const libc::c_char,
-                60 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 69],
-                    &[libc::c_char; 69],
-                >(
-                    b"size_t ZSTD_noCompressLiterals(void *, size_t, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     libc::memcpy(
@@ -387,19 +369,7 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
             );
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                    as *const u8 as *const libc::c_char,
-                101 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 75],
-                    &[libc::c_char; 75],
-                >(
-                    b"size_t ZSTD_compressRleLiteralsBlock(void *, size_t, const void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     *ostart.offset(flSize as isize) = *(src as *const BYTE);
@@ -607,19 +577,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
                 ) = (cLitSize >> 10 as libc::c_int) as BYTE;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_literals.c\0"
-                    as *const u8 as *const libc::c_char,
-                231 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 161],
-                    &[libc::c_char; 161],
-                >(
-                    b"size_t ZSTD_compressLiterals(void *, size_t, const void *, size_t, void *, size_t, const ZSTD_hufCTables_t *, ZSTD_hufCTables_t *, ZSTD_strategy, int, int, int)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     return lhSize.wrapping_add(cLitSize);

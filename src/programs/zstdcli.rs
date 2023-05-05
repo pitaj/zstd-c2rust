@@ -24,12 +24,6 @@ extern "C" {
     ) -> libc::c_int;
     fn strrchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     static mut g_utilDisplayLevel: libc::c_int;
     fn UTIL_isLink(infilename: *const libc::c_char) -> libc::c_int;
     fn UTIL_isFIFO(infilename: *const libc::c_char) -> libc::c_int;

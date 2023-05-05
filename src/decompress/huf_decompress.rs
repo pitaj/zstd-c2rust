@@ -1,11 +1,5 @@
 use ::libc;
 extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn HUF_readStats_wksp(
         huffWeight: *mut BYTE,
         hwSize: size_t,
@@ -1340,28 +1334,12 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
         let mut symbol: libc::c_int = 0;
         stream = 0 as libc::c_int;
         while stream < 4 as libc::c_int {
-            if op[stream as usize]
+            debug_assert!(op[stream as usize]
                 <= (if stream == 3 as libc::c_int {
                     oend
                 } else {
                     op[(stream + 1 as libc::c_int) as usize]
-                })
-            {} else {
-                __assert_fail(
-                    b"op[stream] <= (stream == 3 ? oend : op[stream + 1])\0" as *const u8
-                        as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/lib/decompress/huf_decompress.c\0"
-                        as *const u8 as *const libc::c_char,
-                    713 as libc::c_int as libc::c_uint,
-                    (*::core::mem::transmute::<
-                        &[u8; 82],
-                        &[libc::c_char; 82],
-                    >(
-                        b"void HUF_decompress4X1_usingDTable_internal_fast_c_loop(HUF_DecompressFastArgs *)\0",
-                    ))
-                        .as_ptr(),
-                );
-            }
+                }));
             debug_assert!(ip[stream as usize] >= ilimit);
             stream += 1;
         }

@@ -5,12 +5,6 @@ pub use core::arch::x86::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 #[cfg(target_arch = "x86_64")]
 pub use core::arch::x86_64::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ZSTD_XXH64(
         input: *const libc::c_void,
         length: size_t,
@@ -1268,7 +1262,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
         } else {
             ((*params).windowLog).wrapping_sub(7 as libc::c_int as libc::c_uint)
         };
-        if (*params).hashLog
+        debug_assert!((*params).hashLog
             <= (if (if ::core::mem::size_of::<size_t>() as libc::c_ulong
                 == 4 as libc::c_int as libc::c_ulong
             {
@@ -1286,23 +1280,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
                 })
             } else {
                 30 as libc::c_int
-            }) as libc::c_uint
-        {} else {
-            __assert_fail(
-                b"params->hashLog <= ZSTD_HASHLOG_MAX\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_ldm.c\0" as *const u8
-                    as *const libc::c_char,
-                145 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 82],
-                    &[libc::c_char; 82],
-                >(
-                    b"void ZSTD_ldm_adjustParameters(ldmParams_t *, const ZSTD_compressionParameters *)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+            }) as libc::c_uint);
     }
     if (*params).hashRateLog == 0 as libc::c_int as libc::c_uint {
         (*params)
@@ -1443,19 +1421,7 @@ unsafe extern "C" fn ZSTD_ldm_fillFastTables(
         }
         3 | 4 | 5 | 6 | 7 | 8 | 9 => {}
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_ldm.c\0" as *const u8
-                    as *const libc::c_char,
-                261 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 66],
-                    &[libc::c_char; 66],
-                >(
-                    b"size_t ZSTD_ldm_fillFastTables(ZSTD_matchState_t *, const void *)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     return 0 as libc::c_int as size_t;

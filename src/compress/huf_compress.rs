@@ -1,11 +1,5 @@
 use ::libc;
 extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn HIST_count_wksp(
         count: *mut libc::c_uint,
         maxSymbolValuePtr: *mut libc::c_uint,

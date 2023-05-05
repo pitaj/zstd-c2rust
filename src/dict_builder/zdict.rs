@@ -27,12 +27,6 @@ extern "C" {
     fn fflush(__stream: *mut FILE) -> libc::c_int;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn clock() -> clock_t;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn FSE_normalizeCount(
         normalizedCounter: *mut libc::c_short,
         tableLog: libc::c_uint,

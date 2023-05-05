@@ -20,12 +20,6 @@ extern "C" {
         srcSize: size_t,
         maxSymbolValue: libc::c_uint,
     ) -> libc::c_uint;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn FSE_buildCTable_rle(ct: *mut FSE_CTable, symbolValue: libc::c_uchar) -> size_t;
     fn FSE_buildCTable_wksp(
         ct: *mut FSE_CTable,
@@ -1134,19 +1128,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
             return NCountSize;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_sequences.c\0"
-                    as *const u8 as *const libc::c_char,
-                286 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 191],
-                    &[libc::c_char; 191],
-                >(
-                    b"size_t ZSTD_buildCTable(void *, size_t, FSE_CTable *, U32, symbolEncodingType_e, unsigned int *, U32, const BYTE *, size_t, const S16 *, U32, U32, const FSE_CTable *, size_t, void *, size_t)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
             return -(ZSTD_error_GENERIC as libc::c_int) as size_t;
         }
     };

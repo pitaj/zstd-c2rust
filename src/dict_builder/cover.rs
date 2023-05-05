@@ -33,12 +33,6 @@ extern "C" {
         _: libc::c_ulong,
     ) -> libc::c_int;
     fn clock() -> clock_t;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ZSTD_compressBound(srcSize: size_t) -> size_t;
     fn ZSTD_createCCtx() -> *mut ZSTD_CCtx;
     fn ZSTD_freeCCtx(cctx: *mut ZSTD_CCtx) -> size_t;

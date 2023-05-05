@@ -44,12 +44,6 @@ extern "C" {
     ) -> U64;
     fn UTIL_getFileSize(infilename: *const libc::c_char) -> U64;
     fn UTIL_isDirectory(infilename: *const libc::c_char) -> libc::c_int;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn setpriority(
         __which: __priority_which_t,
         __who: id_t,

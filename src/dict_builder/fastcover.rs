@@ -21,12 +21,6 @@ extern "C" {
         _: libc::c_ulong,
     ) -> *mut libc::c_void;
     fn clock() -> clock_t;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn POOL_create(numThreads: size_t, queueSize: size_t) -> *mut POOL_ctx;
     fn POOL_free(ctx: *mut POOL_ctx);
     fn POOL_add(ctx: *mut POOL_ctx, function: POOL_function, opaque: *mut libc::c_void);

@@ -24,12 +24,6 @@ extern "C" {
         CTable: *const HUF_CElt,
         flags: libc::c_int,
     ) -> size_t;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn HIST_count_wksp(
         count: *mut libc::c_uint,
         maxSymbolValuePtr: *mut libc::c_uint,
@@ -1208,19 +1202,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
                 ) = (cLitSize >> 10 as libc::c_int) as BYTE;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_superblock.c\0"
-                    as *const u8 as *const libc::c_char,
-                121 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 151],
-                    &[libc::c_char; 151],
-                >(
-                    b"size_t ZSTD_compressSubBlock_literal(const HUF_CElt *, const ZSTD_hufCTablesMetadata_t *, const BYTE *, size_t, void *, size_t, const int, int, int *)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
         }
     }
     *entropyWritten = 1 as libc::c_int;
@@ -1482,19 +1464,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
             }
         }
     }
-    __assert_fail(
-        b"0\0" as *const u8 as *const libc::c_char,
-        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_compress_superblock.c\0"
-            as *const u8 as *const libc::c_char,
-        325 as libc::c_int as libc::c_uint,
-        (*::core::mem::transmute::<
-            &[u8; 146],
-            &[libc::c_char; 146],
-        >(
-            b"size_t ZSTD_estimateSubBlockSize_literal(const BYTE *, size_t, const ZSTD_hufCTables_t *, const ZSTD_hufCTablesMetadata_t *, void *, size_t, int)\0",
-        ))
-            .as_ptr(),
-    );
+    debug_assert!(false);
     return 0 as libc::c_int as size_t;
 }
 unsafe extern "C" fn ZSTD_estimateSubBlockSize_symbolType(

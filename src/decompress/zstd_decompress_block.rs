@@ -7,12 +7,6 @@ pub use core::arch::x86_64::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 use core::arch::asm;
 extern "C" {
     pub type ZSTD_DDict_s;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn FSE_readNCount(
         normalizedCounter: *mut libc::c_short,
         maxSymbolValuePtr: *mut libc::c_uint,
@@ -1227,7 +1221,7 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
         (*dctx).litBufferEnd = ((*dctx).litBuffer).offset(litSize as isize);
         (*dctx).litBufferLocation = ZSTD_not_in_dst;
     } else {
-        if blockSizeMax
+        debug_assert!(blockSizeMax
             > (if 64 as libc::c_int
                 > (if ((1 as libc::c_int) << 16 as libc::c_int)
                     < (128 as libc::c_int) << 10 as libc::c_int
@@ -1246,23 +1240,7 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
                 } else {
                     (128 as libc::c_int) << 10 as libc::c_int
                 })
-            }) as libc::c_ulong
-        {} else {
-            __assert_fail(
-                b"blockSizeMax > ZSTD_LITBUFFEREXTRASIZE\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                104 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 148],
-                    &[libc::c_char; 148],
-                >(
-                    b"void ZSTD_allocateLiteralsBuffer(ZSTD_DCtx *, void *const, const size_t, const size_t, const streaming_operation, const size_t, const unsigned int)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+            }) as libc::c_ulong);
         if splitImmediately != 0 {
             (*dctx)
                 .litBuffer = (dst as *mut BYTE)
@@ -1746,7 +1724,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     if (*dctx).litBufferLocation as libc::c_uint
         == ZSTD_split as libc::c_int as libc::c_uint
     {
-        if litSize
+        debug_assert!(litSize
             > (if 64 as libc::c_int
                 > (if ((1 as libc::c_int) << 16 as libc::c_int)
                     < (128 as libc::c_int) << 10 as libc::c_int
@@ -1765,23 +1743,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 } else {
                     (128 as libc::c_int) << 10 as libc::c_int
                 })
-            }) as libc::c_ulong
-        {} else {
-            __assert_fail(
-                b"litSize > ZSTD_LITBUFFEREXTRASIZE\0" as *const u8
-                    as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                233 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 110],
-                    &[libc::c_char; 110],
-                >(
-                    b"size_t ZSTD_decodeLiteralsBlock(ZSTD_DCtx *, const void *, size_t, void *, size_t, const streaming_operation)\0",
-                ))
-                    .as_ptr(),
-            );
-        }
+            }) as libc::c_ulong);
         libc::memcpy(
             ((*dctx).litExtraBuffer).as_mut_ptr() as *mut libc::c_void,
             ((*dctx).litBufferEnd)
@@ -3437,28 +3399,13 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
         )
         .offset(1 as libc::c_int as isize) as *mut BYTE;
     let mut highThreshold = tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint);
-    if maxSymbolValue
+    debug_assert!(maxSymbolValue
         <= (if 35 as libc::c_int > 52 as libc::c_int {
             35 as libc::c_int
         } else {
             52 as libc::c_int
-        }) as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"maxSymbolValue <= MaxSeq\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            500 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 131],
-                &[libc::c_char; 131],
-            >(
-                b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if tableLog
+        }) as libc::c_uint);
+    debug_assert!(tableLog
         <= (if (if 9 as libc::c_int > 9 as libc::c_int {
             9 as libc::c_int
         } else {
@@ -3472,23 +3419,8 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             })
         } else {
             8 as libc::c_int
-        }) as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"tableLog <= MaxFSELog\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            501 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 131],
-                &[libc::c_char; 131],
-            >(
-                b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if wkspSize
+        }) as libc::c_uint);
+    debug_assert!(wkspSize
         >= (::core::mem::size_of::<S16>() as libc::c_ulong)
             .wrapping_mul(
                 ((if 35 as libc::c_int > 52 as libc::c_int {
@@ -3514,23 +3446,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
                         8 as libc::c_int
                     })) as libc::c_ulong,
             )
-            .wrapping_add(::core::mem::size_of::<U64>() as libc::c_ulong)
-    {} else {
-        __assert_fail(
-            b"wkspSize >= ZSTD_BUILD_FSE_TABLE_WKSP_SIZE\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                as *const u8 as *const libc::c_char,
-            502 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 131],
-                &[libc::c_char; 131],
-            >(
-                b"void ZSTD_buildFSETable_body(ZSTD_seqSymbol *, const short *, unsigned int, const U32 *, const U8 *, unsigned int, void *, size_t)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+            .wrapping_add(::core::mem::size_of::<U64>() as libc::c_ulong));
     let mut DTableH = ZSTD_seqSymbol_header {
         fastMode: 0,
         tableLog: 0,
@@ -3828,19 +3744,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
             return headerSize;
         }
         _ => {
-            __assert_fail(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                690 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 216],
-                    &[libc::c_char; 216],
-                >(
-                    b"size_t ZSTD_buildSeqTable(ZSTD_seqSymbol *, const ZSTD_seqSymbol **, symbolEncodingType_e, unsigned int, U32, const void *, size_t, const U32 *, const U8 *, const ZSTD_seqSymbol *, U32, int, int, U32 *, size_t, int)\0",
-                ))
-                    .as_ptr(),
-            );
+            debug_assert!(false);
             return -(ZSTD_error_GENERIC as libc::c_int) as size_t;
         }
     };
@@ -5726,23 +5630,9 @@ unsafe extern "C" fn ZSTD_maxShortOffset() -> size_t {
                 .wrapping_add(1 as libc::c_int as libc::c_uint))
             .wrapping_sub(1 as libc::c_int as libc::c_ulong);
         let maxOffset = maxOffbase.wrapping_sub(ZSTD_REP_NUM as libc::c_ulong);
-        if ZSTD_highbit32(maxOffbase as U32)
+        debug_assert!(ZSTD_highbit32(maxOffbase as U32)
             == (if MEM_32bits() != 0 { 25 as libc::c_int } else { 57 as libc::c_int })
-                as U32
-        {} else {
-            __assert_fail(
-                b"ZSTD_highbit32((U32)maxOffbase) == STREAM_ACCUMULATOR_MIN\0"
-                    as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/lib/decompress/zstd_decompress_block.c\0"
-                    as *const u8 as *const libc::c_char,
-                2063 as libc::c_int as libc::c_uint,
-                (*::core::mem::transmute::<
-                    &[u8; 33],
-                    &[libc::c_char; 33],
-                >(b"size_t ZSTD_maxShortOffset(void)\0"))
-                    .as_ptr(),
-            );
-        }
+                as U32);
         return maxOffset;
     };
 }

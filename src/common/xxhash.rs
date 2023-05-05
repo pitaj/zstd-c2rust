@@ -1,11 +1,5 @@
 use ::libc;
 extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
     fn memset(
@@ -590,19 +584,7 @@ unsafe extern "C" fn XXH32_finalize(
             }
             return XXH32_avalanche(h32);
         }
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/build/cmake/../../lib/common/xxhash.h\0"
-                as *const u8 as *const libc::c_char,
-            2034 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 71],
-                &[libc::c_char; 71],
-            >(
-                b"xxh_u32 XXH32_finalize(xxh_u32, const xxh_u8 *, size_t, XXH_alignment)\0",
-            ))
-                .as_ptr(),
-        );
+        debug_assert!(false);
         return h32;
     };
 }

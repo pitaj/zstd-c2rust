@@ -24,12 +24,6 @@ extern "C" {
     fn free(_: *mut libc::c_void);
     fn exit(_: libc::c_int) -> !;
     fn UTIL_getFileSize(infilename: *const libc::c_char) -> U64;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn memset(
         _: *mut libc::c_void,
         _: libc::c_int,
@@ -908,19 +902,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
             );
         }
     } else {
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/dibio.c\0" as *const u8
-                as *const libc::c_char,
-            422 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 169],
-                &[libc::c_char; 169],
-            >(
-                b"int DiB_trainFromFiles(const char *, size_t, const char **, int, size_t, ZDICT_legacy_params_t *, ZDICT_cover_params_t *, ZDICT_fastCover_params_t *, int, unsigned int)\0",
-            ))
-                .as_ptr(),
-        );
+        debug_assert!(false);
     }
     if ZDICT_isError(dictSize) != 0 {
         if displayLevel >= 1 as libc::c_int {

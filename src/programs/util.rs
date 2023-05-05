@@ -69,12 +69,6 @@ extern "C" {
     fn strstr(_: *const libc::c_char, _: *const libc::c_char) -> *mut libc::c_char;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
     fn strerror(_: libc::c_int) -> *mut libc::c_char;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn __errno_location() -> *mut libc::c_int;
     fn closedir(__dirp: *mut DIR) -> libc::c_int;
     fn opendir(__name: *const libc::c_char) -> *mut DIR;

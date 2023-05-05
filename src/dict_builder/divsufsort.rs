@@ -1,11 +1,5 @@
 use ::libc;
 extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
 }
@@ -3961,20 +3955,8 @@ unsafe extern "C" fn construct_BWT(
                     *fresh89 = s;
                 } else if s != 0 as libc::c_int {
                     *j = !s;
-                } else if *T.offset(s as isize) as libc::c_int == c1 {} else {
-                    __assert_fail(
-                        b"T[s] == c1\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1710 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 72],
-                            &[libc::c_char; 72],
-                        >(
-                            b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
-                        ))
-                            .as_ptr(),
-                    );
+                } else {
+                    debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
                 }
                 j = j.offset(-1);
             }
@@ -4113,20 +4095,8 @@ unsafe extern "C" fn construct_BWT_indexes(
                     *fresh92 = s;
                 } else if s != 0 as libc::c_int {
                     *j = !s;
-                } else if *T.offset(s as isize) as libc::c_int == c1 {} else {
-                    __assert_fail(
-                        b"T[s] == c1\0" as *const u8 as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const libc::c_char,
-                        1794 as libc::c_int as libc::c_uint,
-                        (*::core::mem::transmute::<
-                            &[u8; 104],
-                            &[libc::c_char; 104],
-                        >(
-                            b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
-                        ))
-                            .as_ptr(),
-                    );
+                } else {
+                    debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
                 }
                 j = j.offset(-1);
             }

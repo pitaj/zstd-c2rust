@@ -27,12 +27,6 @@ extern "C" {
         length: size_t,
     ) -> XXH_errorcode;
     fn ZSTD_XXH64_digest(statePtr: *const XXH64_state_t) -> XXH64_hash_t;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ERR_getErrorString(code: ERR_enum) -> *const libc::c_char;
 }
 pub type ptrdiff_t = libc::c_long;

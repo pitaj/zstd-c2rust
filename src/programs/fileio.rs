@@ -61,12 +61,6 @@ extern "C" {
     fn strrchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
     fn strerror(_: libc::c_int) -> *mut libc::c_char;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn UTIL_requireUserConfirmation(
         prompt: *const libc::c_char,
         abortMsg: *const libc::c_char,
@@ -2124,17 +2118,7 @@ unsafe extern "C" fn FIO_freeDict(mut dict: *mut FIO_Dict_t) {
     {
         FIO_munmap(dict);
     } else {
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            852 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 32],
-                &[libc::c_char; 32],
-            >(b"void FIO_freeDict(FIO_Dict_t *)\0"))
-                .as_ptr(),
-        );
+        debug_assert!(false);
     };
 }
 unsafe extern "C" fn FIO_initDict(
@@ -2161,19 +2145,7 @@ unsafe extern "C" fn FIO_initDict(
         (*dict)
             .dictBufferSize = FIO_setDictBufferMMap(dict, fileName, prefs, dictFileStat);
     } else {
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/programs/fileio.c\0" as *const u8
-                as *const libc::c_char,
-            863 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 98],
-                &[libc::c_char; 98],
-            >(
-                b"void FIO_initDict(FIO_Dict_t *, const char *, FIO_prefs_t *const, stat_t *, FIO_dictBufferType_t)\0",
-            ))
-                .as_ptr(),
-        );
+        debug_assert!(false);
     };
 }
 #[no_mangle]

@@ -11,14 +11,7 @@ pub use core::arch::x86_64::{
     _mm_storeu_si128, _mm_movemask_epi8, _mm_setzero_si128,
 };
 use core::arch::asm;
-extern "C" {
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
-}
+
 pub type size_t = libc::c_ulong;
 pub type __uint8_t = libc::c_uchar;
 pub type __uint16_t = libc::c_ushort;
@@ -2383,68 +2376,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_5_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -2462,68 +2395,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_4_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -2541,68 +2414,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_4_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -2620,68 +2433,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_4_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -2699,68 +2452,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_6_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -2778,68 +2471,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_6_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -2857,68 +2490,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_6_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -2936,68 +2509,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_5_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3015,68 +2528,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_5_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3094,68 +2547,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_5_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3173,68 +2566,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_4_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3252,68 +2585,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_4_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3331,68 +2604,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_4_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 105],
-                &[libc::c_char; 105],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_extDict_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3410,68 +2623,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_6_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3489,68 +2642,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_6_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3568,68 +2661,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_6_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3647,68 +2680,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_6_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3726,68 +2699,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_6_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3805,68 +2718,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_6_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3884,68 +2737,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_5_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -3963,68 +2756,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_5_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4042,68 +2775,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_5_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4121,68 +2794,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_4_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4200,68 +2813,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_5_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_5_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4279,68 +2832,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_4_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 104],
-                &[libc::c_char; 104],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_noDict_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4358,68 +2851,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_5_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4437,68 +2870,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_5_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4516,68 +2889,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_6_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_6_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4595,68 +2908,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_5_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_5_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4674,68 +2927,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_5_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_5_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4753,68 +2946,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_4_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4832,68 +2965,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_6_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_6_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4911,68 +2984,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_6_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 117],
-                &[libc::c_char; 117],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dedicatedDictSearch_6_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -4990,68 +3003,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_4_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_4_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -5069,68 +3022,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_4_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_4_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -5148,68 +3041,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_4_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.searchLog {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.searchLog
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.searchLog)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1396 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 112],
-                &[libc::c_char; 112],
-            >(
-                b"size_t ZSTD_RowFindBestMatch_dictMatchState_4_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
+    debug_assert!((*ms).cParams.searchLog.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_RowFindBestMatch(
         ms,
         ip,
@@ -5227,37 +3060,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dictMatchState_6(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 109],
-                &[libc::c_char; 109],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_dictMatchState_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5274,37 +3077,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dedicatedDictSearch_6(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 114],
-                &[libc::c_char; 114],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_dedicatedDictSearch_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5321,37 +3094,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dictMatchState_4(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 109],
-                &[libc::c_char; 109],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_dictMatchState_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5368,37 +3111,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_noDict_4(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_noDict_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5415,37 +3128,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_noDict_5(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_noDict_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5462,37 +3145,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_noDict_6(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_noDict_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5509,37 +3162,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dictMatchState_5(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 109],
-                &[libc::c_char; 109],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_dictMatchState_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5556,37 +3179,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_extDict_4(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 102],
-                &[libc::c_char; 102],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_extDict_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5603,37 +3196,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_extDict_5(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 102],
-                &[libc::c_char; 102],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_extDict_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5650,37 +3213,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_extDict_6(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 102],
-                &[libc::c_char; 102],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_extDict_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5697,37 +3230,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dedicatedDictSearch_4(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 114],
-                &[libc::c_char; 114],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_dedicatedDictSearch_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5744,37 +3247,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dedicatedDictSearch_5(
     iLimit: *const BYTE,
     mut offBasePtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1398 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 114],
-                &[libc::c_char; 114],
-            >(
-                b"size_t ZSTD_BtFindBestMatch_dedicatedDictSearch_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_BtFindBestMatch(
         ms,
         ip,
@@ -5791,37 +3264,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dictMatchState_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 109],
-                &[libc::c_char; 109],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_dictMatchState_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -5838,37 +3281,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_extDict_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 102],
-                &[libc::c_char; 102],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_extDict_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -5885,37 +3298,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dedicatedDictSearch_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 114],
-                &[libc::c_char; 114],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_dedicatedDictSearch_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -5932,37 +3315,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dedicatedDictSearch_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 114],
-                &[libc::c_char; 114],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_dedicatedDictSearch_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -5979,37 +3332,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dedicatedDictSearch_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 114],
-                &[libc::c_char; 114],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_dedicatedDictSearch_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6026,37 +3349,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dictMatchState_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 109],
-                &[libc::c_char; 109],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_dictMatchState_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6073,37 +3366,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dictMatchState_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 109],
-                &[libc::c_char; 109],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_dictMatchState_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6120,37 +3383,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_extDict_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 102],
-                &[libc::c_char; 102],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_extDict_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6167,37 +3400,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_noDict_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_noDict_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6214,37 +3417,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_noDict_5(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 5 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 5\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_noDict_5(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 5 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6261,37 +3434,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_noDict_4(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 4 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 4\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 101],
-                &[libc::c_char; 101],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_noDict_4(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 4 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6308,37 +3451,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_extDict_6(
     iLimit: *const BYTE,
     mut offsetPtr: *mut size_t,
 ) -> size_t {
-    if (if 4 as libc::c_int as libc::c_uint
-        > (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    {
-        4 as libc::c_int as libc::c_uint
-    } else {
-        (if (6 as libc::c_int as libc::c_uint) < (*ms).cParams.minMatch {
-            6 as libc::c_int as libc::c_uint
-        } else {
-            (*ms).cParams.minMatch
-        })
-    }) == 6 as libc::c_int as libc::c_uint
-    {} else {
-        __assert_fail(
-            b"MAX(4, MIN(6, ms->cParams.minMatch)) == 6\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1400 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 102],
-                &[libc::c_char; 102],
-            >(
-                b"size_t ZSTD_HcFindBestMatch_extDict_6(ZSTD_matchState_t *, const BYTE *, const BYTE *const, size_t *)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    debug_assert!((*ms).cParams.minMatch.clamp(4, 6) == 6 as libc::c_int as libc::c_uint);
     return ZSTD_HcFindBestMatch(
         ms,
         ip,
@@ -6407,19 +3520,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1476 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     5 => {
@@ -6450,19 +3550,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1476 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     6 => {
@@ -6493,19 +3580,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1476 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     _ => {}
@@ -6513,19 +3587,6 @@ unsafe extern "C" fn ZSTD_searchMax(
             }
             _ => {}
         }
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1476 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 148],
-                &[libc::c_char; 148],
-            >(
-                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-            ))
-                .as_ptr(),
-        );
         unreachable!();
     } else if dictMode as libc::c_uint == ZSTD_extDict as libc::c_int as libc::c_uint {
         match searchMethod as libc::c_uint {
@@ -6575,19 +3636,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1478 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     5 => {
@@ -6618,19 +3666,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1478 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     6 => {
@@ -6661,19 +3696,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1478 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     _ => {}
@@ -6681,19 +3703,6 @@ unsafe extern "C" fn ZSTD_searchMax(
             }
             _ => {}
         }
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1478 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 148],
-                &[libc::c_char; 148],
-            >(
-                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-            ))
-                .as_ptr(),
-        );
         unreachable!();
     } else if dictMode as libc::c_uint
         == ZSTD_dictMatchState as libc::c_int as libc::c_uint
@@ -6787,19 +3796,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1480 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     5 => {
@@ -6830,19 +3826,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1480 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     6 => {
@@ -6873,19 +3856,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1480 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     _ => {}
@@ -6893,19 +3863,6 @@ unsafe extern "C" fn ZSTD_searchMax(
             }
             _ => {}
         }
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1480 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 148],
-                &[libc::c_char; 148],
-            >(
-                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-            ))
-                .as_ptr(),
-        );
         unreachable!();
     } else if dictMode as libc::c_uint
         == ZSTD_dedicatedDictSearch as libc::c_int as libc::c_uint
@@ -6999,19 +3956,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1482 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     5 => {
@@ -7042,19 +3986,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1482 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     6 => {
@@ -7085,19 +4016,6 @@ unsafe extern "C" fn ZSTD_searchMax(
                             }
                             _ => {}
                         }
-                        __assert_fail(
-                            b"0\0" as *const u8 as *const libc::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0"
-                                as *const u8 as *const libc::c_char,
-                            1482 as libc::c_int as libc::c_uint,
-                            (*::core::mem::transmute::<
-                                &[u8; 148],
-                                &[libc::c_char; 148],
-                            >(
-                                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-                            ))
-                                .as_ptr(),
-                        );
                         unreachable!();
                     }
                     _ => {}
@@ -7105,34 +4023,8 @@ unsafe extern "C" fn ZSTD_searchMax(
             }
             _ => {}
         }
-        __assert_fail(
-            b"0\0" as *const u8 as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-                as *const libc::c_char,
-            1482 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 148],
-                &[libc::c_char; 148],
-            >(
-                b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-            ))
-                .as_ptr(),
-        );
         unreachable!();
     }
-    __assert_fail(
-        b"0\0" as *const u8 as *const libc::c_char,
-        b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_lazy.c\0" as *const u8
-            as *const libc::c_char,
-        1484 as libc::c_int as libc::c_uint,
-        (*::core::mem::transmute::<
-            &[u8; 148],
-            &[libc::c_char; 148],
-        >(
-            b"size_t ZSTD_searchMax(ZSTD_matchState_t *, const BYTE *, const BYTE *, size_t *, const U32, const U32, const searchMethod_e, const ZSTD_dictMode_e)\0",
-        ))
-            .as_ptr(),
-    );
     unreachable!();
     return 0 as libc::c_int as size_t;
 }

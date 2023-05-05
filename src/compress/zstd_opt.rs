@@ -10,12 +10,6 @@ extern "C" {
         _: *const libc::c_void,
         _: libc::c_ulong,
     ) -> libc::c_int;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ZSTD_resetSeqStore(ssPtr: *mut seqStore_t);
     fn HUF_getNbBitsFromCTable(symbolTable: *const HUF_CElt, symbolValue: U32) -> U32;
     fn HIST_count_simple(
@@ -2399,7 +2393,7 @@ unsafe extern "C" fn ZSTD_btGetAllMatches_internal(
     dictMode: ZSTD_dictMode_e,
     mls: U32,
 ) -> U32 {
-    if (if 3 as libc::c_int as libc::c_uint
+    debug_assert!((if 3 as libc::c_int as libc::c_uint
         > (if (*ms).cParams.minMatch < 6 as libc::c_int as libc::c_uint {
             (*ms).cParams.minMatch
         } else {
@@ -2413,23 +2407,7 @@ unsafe extern "C" fn ZSTD_btGetAllMatches_internal(
         } else {
             6 as libc::c_int as libc::c_uint
         })
-    }) == mls
-    {} else {
-        __assert_fail(
-            b"BOUNDED(3, ms->cParams.minMatch, 6) == mls\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstd_opt.c\0" as *const u8
-                as *const libc::c_char,
-            831 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 180],
-                &[libc::c_char; 180],
-            >(
-                b"U32 ZSTD_btGetAllMatches_internal(ZSTD_match_t *, ZSTD_matchState_t *, U32 *, const BYTE *, const BYTE *const, const U32 *, const U32, const U32, const ZSTD_dictMode_e, const U32)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+    }) == mls);
     if ip < ((*ms).window.base).offset((*ms).nextToUpdate as isize) {
         return 0 as libc::c_int as U32;
     }

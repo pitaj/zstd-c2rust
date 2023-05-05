@@ -6,12 +6,6 @@ extern "C" {
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn calloc(_: libc::c_ulong, _: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ZSTD_compressBound(srcSize: size_t) -> size_t;
     fn ZSTD_CCtxParams_setParameter(
         params: *mut ZSTD_CCtx_params,
@@ -2655,28 +2649,12 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
             .targetSectionSize = ((1 as libc::c_ulonglong)
             << ZSTDMT_computeTargetJobLog(&mut params)) as size_t;
     }
-    if (*mtctx).targetSectionSize
+    debug_assert!((*mtctx).targetSectionSize
         <= (if MEM_32bits() != 0 {
             512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
         } else {
             1024 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
-        }) as size_t
-    {} else {
-        __assert_fail(
-            b"mtctx->targetSectionSize <= (size_t)ZSTDMT_JOBSIZE_MAX\0" as *const u8
-                as *const libc::c_char,
-            b"/home/peter/Dev/zstd-c2rust/lib/compress/zstdmt_compress.c\0" as *const u8
-                as *const libc::c_char,
-            1267 as libc::c_int as libc::c_uint,
-            (*::core::mem::transmute::<
-                &[u8; 154],
-                &[libc::c_char; 154],
-            >(
-                b"size_t ZSTDMT_initCStream_internal(ZSTDMT_CCtx *, const void *, size_t, ZSTD_dictContentType_e, const ZSTD_CDict *, ZSTD_CCtx_params, unsigned long long)\0",
-            ))
-                .as_ptr(),
-        );
-    }
+        }) as size_t);
     if params.rsyncable != 0 {
         let jobSizeKB = ((*mtctx).targetSectionSize >> 10 as libc::c_int) as U32;
         debug_assert!(jobSizeKB >= 1 as libc::c_int as libc::c_uint);

@@ -12,12 +12,6 @@ extern "C" {
     fn UTIL_clockSpanNano(clockStart: UTIL_time_t) -> PTime;
     fn UTIL_getTime() -> UTIL_time_t;
     fn UTIL_isRegularFile(infilename: *const libc::c_char) -> libc::c_int;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn ZSTD_CCtxParams_getParameter(
         params: *const ZSTD_CCtx_params,
         param: ZSTD_cParameter,
