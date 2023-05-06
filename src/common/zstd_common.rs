@@ -55,9 +55,8 @@ unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_
 pub const ZSTD_VERSION_MAJOR: libc::c_int = 1 as libc::c_int;
 pub const ZSTD_VERSION_MINOR: libc::c_int = 5 as libc::c_int;
 pub const ZSTD_VERSION_RELEASE: libc::c_int = 5 as libc::c_int;
-pub const ZSTD_VERSION_NUMBER: libc::c_int = ZSTD_VERSION_MAJOR * 100
-    * 100 + ZSTD_VERSION_MINOR * 100
-    + ZSTD_VERSION_RELEASE;
+pub const ZSTD_VERSION_NUMBER: libc::c_int =
+    ZSTD_VERSION_MAJOR * 100 * 100 + ZSTD_VERSION_MINOR * 100 + ZSTD_VERSION_RELEASE;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_versionNumber() -> libc::c_uint {
     return ZSTD_VERSION_NUMBER as libc::c_uint;
@@ -79,8 +78,6 @@ pub unsafe extern "C" fn ZSTD_getErrorCode(mut code: libc::size_t) -> ZSTD_Error
     return ERR_getErrorCode(code);
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_getErrorString(
-    mut code: ZSTD_ErrorCode,
-) -> *const libc::c_char {
+pub unsafe extern "C" fn ZSTD_getErrorString(mut code: ZSTD_ErrorCode) -> *const libc::c_char {
     return ERR_getErrorString(code);
 }

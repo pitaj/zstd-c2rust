@@ -31,15 +31,11 @@ pub unsafe extern "C" fn UTIL_getTime() -> UTIL_time_t {
         init
     };
     if clock_gettime(CLOCK_MONOTONIC, &mut time) != 0 as libc::c_int {
-        perror(
-            b"timefn::clock_gettime(CLOCK_MONOTONIC)\0" as *const u8
-                as *const libc::c_char,
-        );
+        perror(b"timefn::clock_gettime(CLOCK_MONOTONIC)\0" as *const u8 as *const libc::c_char);
         abort();
     }
     let mut r = UTIL_time_t { t: 0 };
-    r
-        .t = (time.tv_sec as PTime as libc::c_ulonglong)
+    r.t = (time.tv_sec as PTime as libc::c_ulonglong)
         .wrapping_mul(1000000000)
         .wrapping_add(time.tv_nsec as PTime as libc::c_ulonglong) as PTime;
     return r;
@@ -56,8 +52,7 @@ pub unsafe extern "C" fn UTIL_getSpanTimeMicro(
     mut begin: UTIL_time_t,
     mut end: UTIL_time_t,
 ) -> PTime {
-    return (UTIL_getSpanTimeNano(begin, end) as libc::c_ulonglong)
-        .wrapping_div(1000) as PTime;
+    return (UTIL_getSpanTimeNano(begin, end) as libc::c_ulonglong).wrapping_div(1000) as PTime;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_clockSpanMicro(mut clockStart: UTIL_time_t) -> PTime {
@@ -75,12 +70,10 @@ pub unsafe extern "C" fn UTIL_waitForNextTick() {
     let mut clockEnd = UTIL_time_t { t: 0 };
     loop {
         clockEnd = UTIL_getTime();
-        if !(UTIL_getSpanTimeNano(clockStart, clockEnd)
-            == 0)
-        {
+        if !(UTIL_getSpanTimeNano(clockStart, clockEnd) == 0) {
             break;
         }
-    };
+    }
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_support_MT_measurements() -> libc::c_int {

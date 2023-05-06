@@ -19,22 +19,14 @@ extern "C" {
         _: libc::c_ulong,
         _: *mut FILE,
     ) -> libc::c_ulong;
-    fn fseek(
-        __stream: *mut FILE,
-        __off: libc::c_long,
-        __whence: libc::c_int,
-    ) -> libc::c_int;
+    fn fseek(__stream: *mut FILE, __off: libc::c_long, __whence: libc::c_int) -> libc::c_int;
     fn feof(__stream: *mut FILE) -> libc::c_int;
     fn ferror(__stream: *mut FILE) -> libc::c_int;
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
     fn exit(_: libc::c_int) -> !;
     fn __errno_location() -> *mut libc::c_int;
-    fn memcpy(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
+    fn memcpy(_: *mut libc::c_void, _: *const libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
     fn strerror(_: libc::c_int) -> *mut libc::c_char;
     fn POOL_create(numThreads: libc::size_t, queueSize: libc::size_t) -> *mut POOL_ctx;
     fn POOL_free(ctx: *mut POOL_ctx);
@@ -138,7 +130,7 @@ pub struct FIO_prefs_s {
 }
 pub type FIO_prefs_t = FIO_prefs_s;
 pub type POOL_ctx = POOL_ctx_s;
-pub type POOL_function = Option::<unsafe extern "C" fn(*mut libc::c_void) -> ()>;
+pub type POOL_function = Option<unsafe extern "C" fn(*mut libc::c_void) -> ()>;
 pub type ZSTD_pthread_mutex_t = libc::c_int;
 pub type ZSTD_pthread_cond_t = libc::c_int;
 #[derive(Copy, Clone)]
@@ -189,11 +181,8 @@ pub struct IOJob_t {
 pub const SEEK_CUR: libc::c_int = 1 as libc::c_int;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const MAX_IO_JOBS: libc::c_int = 10 as libc::c_int;
-pub const LONG_SEEK: unsafe extern "C" fn(
-    *mut FILE,
-    libc::c_long,
-    libc::c_int,
-) -> libc::c_int = fseek;
+pub const LONG_SEEK: unsafe extern "C" fn(*mut FILE, libc::c_long, libc::c_int) -> libc::c_int =
+    fseek;
 static mut segmentSizeT: libc::size_t = 0;
 static mut maskT: libc::size_t = 0;
 unsafe extern "C" fn AIO_fwriteSparse(
@@ -204,20 +193,14 @@ unsafe extern "C" fn AIO_fwriteSparse(
     mut storedSkips: libc::c_uint,
 ) -> libc::c_uint {
     let bufferT = buffer as *const libc::size_t;
-    let mut bufferSizeT = bufferSize
-        .wrapping_div(::core::mem::size_of::<libc::size_t>());
+    let mut bufferSizeT = bufferSize.wrapping_div(::core::mem::size_of::<libc::size_t>());
     let bufferTEnd = bufferT.offset(bufferSizeT as isize);
     let mut ptrT = bufferT;
     if (*prefs).testMode != 0 {
         return 0 as libc::c_int as libc::c_uint;
     }
     if (*prefs).sparseFileSupport == 0 {
-        let sizeCheck = fwrite(
-            buffer,
-            1 as libc::c_int as libc::c_ulong,
-            bufferSize,
-            file,
-        );
+        let sizeCheck = fwrite(buffer, 1 as libc::c_int as libc::c_ulong, bufferSize, file);
         if sizeCheck != bufferSize {
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -225,10 +208,9 @@ unsafe extern "C" fn AIO_fwriteSparse(
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     50 as libc::c_int,
                 );
             }
@@ -242,8 +224,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"Write error : cannot write block : %s\0" as *const u8
-                        as *const libc::c_char,
+                    b"Write error : cannot write block : %s\0" as *const u8 as *const libc::c_char,
                     strerror(*__errno_location()),
                 );
             }
@@ -254,14 +235,10 @@ unsafe extern "C" fn AIO_fwriteSparse(
         }
         return 0 as libc::c_int as libc::c_uint;
     }
-    if storedSkips
-        > (1)
-            .wrapping_mul((1) << 30 as libc::c_int)
-    {
+    if storedSkips > (1).wrapping_mul((1) << 30 as libc::c_int) {
         if fseek(
             file,
-            (1)
-                .wrapping_mul((1) << 30 as libc::c_int) as libc::c_long,
+            (1).wrapping_mul((1) << 30 as libc::c_int) as libc::c_long,
             SEEK_CUR,
         ) != 0 as libc::c_int
         {
@@ -271,10 +248,9 @@ unsafe extern "C" fn AIO_fwriteSparse(
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     57 as libc::c_int,
                 );
             }
@@ -288,8 +264,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"1 GB skip error (sparse file support)\0" as *const u8
-                        as *const libc::c_char,
+                    b"1 GB skip error (sparse file support)\0" as *const u8 as *const libc::c_char,
                 );
             }
             if g_display_prefs.displayLevel >= 1 {
@@ -297,11 +272,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
             }
             exit(91);
         }
-        storedSkips = storedSkips
-            .wrapping_sub(
-                (1)
-                    .wrapping_mul((1) << 30 as libc::c_int),
-            );
+        storedSkips = storedSkips.wrapping_sub((1).wrapping_mul((1) << 30 as libc::c_int));
     }
     while ptrT < bufferTEnd {
         let mut nb0T: libc::size_t = 0;
@@ -309,18 +280,15 @@ unsafe extern "C" fn AIO_fwriteSparse(
         if seg0SizeT > bufferSizeT {
             seg0SizeT = bufferSizeT;
         }
-        bufferSizeT = (bufferSizeT as libc::c_ulong).wrapping_sub(seg0SizeT) as libc::size_t
-            as libc::size_t;
+        bufferSizeT =
+            (bufferSizeT as libc::c_ulong).wrapping_sub(seg0SizeT) as libc::size_t as libc::size_t;
         nb0T = 0 as libc::c_int as libc::size_t;
-        while nb0T < seg0SizeT
-            && *ptrT.offset(nb0T as isize) == 0
-        {
+        while nb0T < seg0SizeT && *ptrT.offset(nb0T as isize) == 0 {
             nb0T = nb0T.wrapping_add(1);
         }
-        storedSkips = storedSkips
-            .wrapping_add(
-                nb0T.wrapping_mul(::core::mem::size_of::<libc::size_t>())
-                    as libc::c_uint,
+        storedSkips =
+            storedSkips.wrapping_add(
+                nb0T.wrapping_mul(::core::mem::size_of::<libc::size_t>()) as libc::c_uint
             );
         if nb0T != seg0SizeT {
             let nbNon0ST = seg0SizeT.wrapping_sub(nb0T);
@@ -331,10 +299,9 @@ unsafe extern "C" fn AIO_fwriteSparse(
                 if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
-                        b"Error defined at %s, line %i : \n\0" as *const u8
+                        b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                             as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                            as *const u8 as *const libc::c_char,
                         77 as libc::c_int,
                     );
                 }
@@ -371,10 +338,9 @@ unsafe extern "C" fn AIO_fwriteSparse(
                 if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
-                        b"Error defined at %s, line %i : \n\0" as *const u8
+                        b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                             as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                            as *const u8 as *const libc::c_char,
                         82 as libc::c_int,
                     );
                 }
@@ -405,17 +371,15 @@ unsafe extern "C" fn AIO_fwriteSparse(
         let restStart = bufferTEnd as *const libc::c_char;
         let mut restPtr = restStart;
         let restEnd = (buffer as *const libc::c_char).offset(bufferSize as isize);
-        debug_assert!(restEnd > restStart
-            && restEnd
-                < restStart
-                    .offset(::core::mem::size_of::<libc::size_t>() as isize));
+        debug_assert!(
+            restEnd > restStart
+                && restEnd < restStart.offset(::core::mem::size_of::<libc::size_t>() as isize)
+        );
         while restPtr < restEnd && *restPtr as libc::c_int == 0 {
             restPtr = restPtr.offset(1);
         }
         storedSkips = storedSkips
-            .wrapping_add(
-                restPtr.offset_from(restStart) as libc::c_long as libc::c_uint,
-            );
+            .wrapping_add(restPtr.offset_from(restStart) as libc::c_long as libc::c_uint);
         if restPtr != restEnd {
             let restSize = restEnd.offset_from(restPtr) as libc::c_long as libc::size_t;
             if fseek(file, storedSkips as libc::c_long, SEEK_CUR) != 0 as libc::c_int {
@@ -425,10 +389,9 @@ unsafe extern "C" fn AIO_fwriteSparse(
                 if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
-                        b"Error defined at %s, line %i : \n\0" as *const u8
+                        b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                             as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                            as *const u8 as *const libc::c_char,
                         100 as libc::c_int,
                     );
                 }
@@ -464,10 +427,9 @@ unsafe extern "C" fn AIO_fwriteSparse(
                 if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
-                        b"Error defined at %s, line %i : \n\0" as *const u8
+                        b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                             as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                            as *const u8 as *const libc::c_char,
                         103 as libc::c_int,
                     );
                 }
@@ -481,8 +443,8 @@ unsafe extern "C" fn AIO_fwriteSparse(
                 if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
-                        b"Write error : cannot write end of decoded block : %s\0"
-                            as *const u8 as *const libc::c_char,
+                        b"Write error : cannot write end of decoded block : %s\0" as *const u8
+                            as *const libc::c_char,
                         strerror(*__errno_location()),
                     );
                 }
@@ -506,22 +468,16 @@ unsafe extern "C" fn AIO_fwriteSparseEnd(
     }
     if storedSkips > 0 {
         debug_assert!((*prefs).sparseFileSupport > 0);
-        if fseek(
-            file,
-            storedSkips.wrapping_sub(1) as libc::c_long,
-            SEEK_CUR,
-        ) != 0 as libc::c_int
-        {
+        if fseek(file, storedSkips.wrapping_sub(1) as libc::c_long, SEEK_CUR) != 0 as libc::c_int {
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     118 as libc::c_int,
                 );
             }
@@ -535,8 +491,7 @@ unsafe extern "C" fn AIO_fwriteSparseEnd(
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"Final skip error (sparse file support)\0" as *const u8
-                        as *const libc::c_char,
+                    b"Final skip error (sparse file support)\0" as *const u8 as *const libc::c_char,
                 );
             }
             if g_display_prefs.displayLevel >= 1 {
@@ -558,10 +513,9 @@ unsafe extern "C" fn AIO_fwriteSparseEnd(
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     123 as libc::c_int,
                 );
             }
@@ -604,8 +558,7 @@ unsafe extern "C" fn AIO_IOPool_createIoJob(
         if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
-                b"Error defined at %s, line %i : \n\0" as *const u8
-                    as *const libc::c_char,
+                b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                     as *const libc::c_char,
                 150 as libc::c_int,
@@ -621,8 +574,7 @@ unsafe extern "C" fn AIO_IOPool_createIoJob(
         if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"Allocation error : not enough memory\0" as *const u8
-                    as *const libc::c_char,
+                b"Allocation error : not enough memory\0" as *const u8 as *const libc::c_char,
             );
         }
         if g_display_prefs.displayLevel >= 1 {
@@ -652,10 +604,9 @@ unsafe extern "C" fn AIO_IOPool_createThreadPool(
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     169 as libc::c_int,
                 );
             }
@@ -669,8 +620,7 @@ unsafe extern "C" fn AIO_IOPool_createThreadPool(
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"Failed creating ioJobsMutex mutex\0" as *const u8
-                        as *const libc::c_char,
+                    b"Failed creating ioJobsMutex mutex\0" as *const u8 as *const libc::c_char,
                 );
             }
             if g_display_prefs.displayLevel >= 1 {
@@ -679,8 +629,7 @@ unsafe extern "C" fn AIO_IOPool_createThreadPool(
             exit(102);
         }
         debug_assert!(10 as libc::c_int >= 2);
-        (*ctx)
-            .threadPool = POOL_create(
+        (*ctx).threadPool = POOL_create(
             1 as libc::c_int as libc::size_t,
             (MAX_IO_JOBS - 2 as libc::c_int) as libc::size_t,
         );
@@ -692,10 +641,9 @@ unsafe extern "C" fn AIO_IOPool_createThreadPool(
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     176 as libc::c_int,
                 );
             }
@@ -709,8 +657,7 @@ unsafe extern "C" fn AIO_IOPool_createThreadPool(
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"Failed creating I/O thread pool\0" as *const u8
-                        as *const libc::c_char,
+                    b"Failed creating I/O thread pool\0" as *const u8 as *const libc::c_char,
                 );
             }
             if g_display_prefs.displayLevel >= 1 {
@@ -730,8 +677,7 @@ unsafe extern "C" fn AIO_IOPool_init(
     AIO_IOPool_createThreadPool(ctx, prefs);
     (*ctx).prefs = prefs;
     (*ctx).poolFunction = poolFunction;
-    (*ctx)
-        .totalIoJobs = if !((*ctx).threadPool).is_null() {
+    (*ctx).totalIoJobs = if !((*ctx).threadPool).is_null() {
         MAX_IO_JOBS
     } else {
         2 as libc::c_int
@@ -739,19 +685,15 @@ unsafe extern "C" fn AIO_IOPool_init(
     (*ctx).availableJobsCount = (*ctx).totalIoJobs;
     i = 0 as libc::c_int;
     while i < (*ctx).availableJobsCount {
-        (*ctx)
-            .availableJobs[i
-            as usize] = AIO_IOPool_createIoJob(ctx, bufferSize) as *mut libc::c_void;
+        (*ctx).availableJobs[i as usize] =
+            AIO_IOPool_createIoJob(ctx, bufferSize) as *mut libc::c_void;
         i += 1;
     }
     (*ctx).jobBufferSize = bufferSize;
     (*ctx).file = NULL as *mut FILE;
 }
-unsafe extern "C" fn AIO_IOPool_threadPoolActive(
-    mut ctx: *mut IOPoolCtx_t,
-) -> libc::c_int {
-    return (!((*ctx).threadPool).is_null() && (*ctx).threadPoolActive != 0)
-        as libc::c_int;
+unsafe extern "C" fn AIO_IOPool_threadPoolActive(mut ctx: *mut IOPoolCtx_t) -> libc::c_int {
+    return (!((*ctx).threadPool).is_null() && (*ctx).threadPoolActive != 0) as libc::c_int;
 }
 unsafe extern "C" fn AIO_IOPool_lockJobsMutex(mut ctx: *mut IOPoolCtx_t) {
     AIO_IOPool_threadPoolActive(ctx) != 0;
@@ -773,10 +715,7 @@ unsafe extern "C" fn AIO_IOPool_join(mut ctx: *mut IOPoolCtx_t) {
         POOL_joinJobs((*ctx).threadPool);
     }
 }
-unsafe extern "C" fn AIO_IOPool_setThreaded(
-    mut ctx: *mut IOPoolCtx_t,
-    mut threaded: libc::c_int,
-) {
+unsafe extern "C" fn AIO_IOPool_setThreaded(mut ctx: *mut IOPoolCtx_t, mut threaded: libc::c_int) {
     debug_assert!(threaded == 0 || threaded == 1);
     debug_assert!(!ctx.is_null());
     if (*ctx).threadPoolActive != threaded {
@@ -825,22 +764,21 @@ unsafe extern "C" fn AIO_IOPool_getFile(mut ctx: *const IOPoolCtx_t) -> *mut FIL
 unsafe extern "C" fn AIO_IOPool_enqueueJob(mut job: *mut IOJob_t) {
     let ctx = (*job).ctx as *mut IOPoolCtx_t;
     if AIO_IOPool_threadPoolActive(ctx) != 0 {
-        POOL_add((*ctx).threadPool, (*ctx).poolFunction, job as *mut libc::c_void);
+        POOL_add(
+            (*ctx).threadPool,
+            (*ctx).poolFunction,
+            job as *mut libc::c_void,
+        );
     } else {
-        ((*ctx).poolFunction)
-            .expect("non-null function pointer")(job as *mut libc::c_void);
+        ((*ctx).poolFunction).expect("non-null function pointer")(job as *mut libc::c_void);
     };
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_WritePool_acquireJob(
-    mut ctx: *mut WritePoolCtx_t,
-) -> *mut IOJob_t {
+pub unsafe extern "C" fn AIO_WritePool_acquireJob(mut ctx: *mut WritePoolCtx_t) -> *mut IOJob_t {
     return AIO_IOPool_acquireJob(&mut (*ctx).base);
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_WritePool_enqueueAndReacquireWriteJob(
-    mut job: *mut *mut IOJob_t,
-) {
+pub unsafe extern "C" fn AIO_WritePool_enqueueAndReacquireWriteJob(mut job: *mut *mut IOJob_t) {
     AIO_IOPool_enqueueJob(*job);
     *job = AIO_IOPool_acquireJob((**job).ctx as *mut IOPoolCtx_t);
 }
@@ -852,17 +790,12 @@ pub unsafe extern "C" fn AIO_WritePool_sparseWriteEnd(mut ctx: *mut WritePoolCtx
     (*ctx).storedSkips = 0 as libc::c_int as libc::c_uint;
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_WritePool_setFile(
-    mut ctx: *mut WritePoolCtx_t,
-    mut file: *mut FILE,
-) {
+pub unsafe extern "C" fn AIO_WritePool_setFile(mut ctx: *mut WritePoolCtx_t, mut file: *mut FILE) {
     AIO_IOPool_setFile(&mut (*ctx).base, file);
-    debug_assert!((*ctx).storedSkips == 0);;
+    debug_assert!((*ctx).storedSkips == 0);
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_WritePool_getFile(
-    mut ctx: *const WritePoolCtx_t,
-) -> *mut FILE {
+pub unsafe extern "C" fn AIO_WritePool_getFile(mut ctx: *const WritePoolCtx_t) -> *mut FILE {
     return AIO_IOPool_getFile(&(*ctx).base);
 }
 #[no_mangle]
@@ -870,9 +803,7 @@ pub unsafe extern "C" fn AIO_WritePool_releaseIoJob(mut job: *mut IOJob_t) {
     AIO_IOPool_releaseIoJob(job);
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_WritePool_closeFile(
-    mut ctx: *mut WritePoolCtx_t,
-) -> libc::c_int {
+pub unsafe extern "C" fn AIO_WritePool_closeFile(mut ctx: *mut WritePoolCtx_t) -> libc::c_int {
     let dstFile = (*ctx).base.file;
     debug_assert!(!dstFile.is_null() || (*(*ctx).base.prefs).testMode != 0 as libc::c_int);
     AIO_WritePool_sparseWriteEnd(ctx);
@@ -882,8 +813,7 @@ pub unsafe extern "C" fn AIO_WritePool_closeFile(
 unsafe extern "C" fn AIO_WritePool_executeWriteJob(mut opaque: *mut libc::c_void) {
     let job = opaque as *mut IOJob_t;
     let ctx = (*job).ctx as *mut WritePoolCtx_t;
-    (*ctx)
-        .storedSkips = AIO_fwriteSparse(
+    (*ctx).storedSkips = AIO_fwriteSparse(
         (*job).file,
         (*job).buffer,
         (*job).usedBufferSize,
@@ -897,8 +827,7 @@ pub unsafe extern "C" fn AIO_WritePool_create(
     mut prefs: *const FIO_prefs_t,
     mut bufferSize: libc::size_t,
 ) -> *mut WritePoolCtx_t {
-    let ctx = malloc(::core::mem::size_of::<WritePoolCtx_t>())
-        as *mut WritePoolCtx_t;
+    let ctx = malloc(::core::mem::size_of::<WritePoolCtx_t>()) as *mut WritePoolCtx_t;
     if ctx.is_null() {
         if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -906,8 +835,7 @@ pub unsafe extern "C" fn AIO_WritePool_create(
         if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
-                b"Error defined at %s, line %i : \n\0" as *const u8
-                    as *const libc::c_char,
+                b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                     as *const libc::c_char,
                 384 as libc::c_int,
@@ -923,8 +851,7 @@ pub unsafe extern "C" fn AIO_WritePool_create(
         if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"Allocation error : not enough memory\0" as *const u8
-                    as *const libc::c_char,
+                b"Allocation error : not enough memory\0" as *const u8 as *const libc::c_char,
             );
         }
         if g_display_prefs.displayLevel >= 1 {
@@ -935,10 +862,7 @@ pub unsafe extern "C" fn AIO_WritePool_create(
     AIO_IOPool_init(
         &mut (*ctx).base,
         prefs,
-        Some(
-            AIO_WritePool_executeWriteJob
-                as unsafe extern "C" fn(*mut libc::c_void) -> (),
-        ),
+        Some(AIO_WritePool_executeWriteJob as unsafe extern "C" fn(*mut libc::c_void) -> ()),
         bufferSize,
     );
     (*ctx).storedSkips = 0 as libc::c_int as libc::c_uint;
@@ -990,47 +914,37 @@ unsafe extern "C" fn AIO_ReadPool_findNextWaitingOffsetCompletedJob_locked(
         job = (*ctx).completedJobs[i as usize] as *mut IOJob_t;
         if (*job).offset == (*ctx).waitingOnOffset {
             (*ctx).completedJobsCount -= 1;
-            (*ctx)
-                .completedJobs[i
-                as usize] = (*ctx).completedJobs[(*ctx).completedJobsCount as usize];
+            (*ctx).completedJobs[i as usize] =
+                (*ctx).completedJobs[(*ctx).completedJobsCount as usize];
             return job;
         }
         i += 1;
     }
     return NULL as *mut IOJob_t;
 }
-unsafe extern "C" fn AIO_ReadPool_numReadsInFlight(
-    mut ctx: *mut ReadPoolCtx_t,
-) -> libc::size_t {
+unsafe extern "C" fn AIO_ReadPool_numReadsInFlight(mut ctx: *mut ReadPoolCtx_t) -> libc::size_t {
     let jobsHeld = (if ((*ctx).currentJobHeld).is_null() {
         0 as libc::c_int
     } else {
         1 as libc::c_int
     }) as libc::size_t;
-    return ((*ctx).base.totalIoJobs as libc::c_ulong)
-        .wrapping_sub(
-            (((*ctx).base.availableJobsCount + (*ctx).completedJobsCount)
-                as libc::c_ulong)
-                .wrapping_add(jobsHeld),
-        );
+    return ((*ctx).base.totalIoJobs as libc::c_ulong).wrapping_sub(
+        (((*ctx).base.availableJobsCount + (*ctx).completedJobsCount) as libc::c_ulong)
+            .wrapping_add(jobsHeld),
+    );
 }
-unsafe extern "C" fn AIO_ReadPool_getNextCompletedJob(
-    mut ctx: *mut ReadPoolCtx_t,
-) -> *mut IOJob_t {
+unsafe extern "C" fn AIO_ReadPool_getNextCompletedJob(mut ctx: *mut ReadPoolCtx_t) -> *mut IOJob_t {
     let mut job = NULL as *mut IOJob_t;
     AIO_IOPool_lockJobsMutex(&mut (*ctx).base);
     job = AIO_ReadPool_findNextWaitingOffsetCompletedJob_locked(ctx);
-    while job.is_null()
-        && AIO_ReadPool_numReadsInFlight(ctx) > 0
-    {
+    while job.is_null() && AIO_ReadPool_numReadsInFlight(ctx) > 0 {
         debug_assert!(!((*ctx).base.threadPool).is_null());
         job = AIO_ReadPool_findNextWaitingOffsetCompletedJob_locked(ctx);
     }
     if !job.is_null() {
         debug_assert!((*job).offset == (*ctx).waitingOnOffset);
-        (*ctx)
-            .waitingOnOffset = ((*ctx).waitingOnOffset as libc::c_ulong)
-            .wrapping_add((*job).usedBufferSize) ;
+        (*ctx).waitingOnOffset =
+            ((*ctx).waitingOnOffset as libc::c_ulong).wrapping_add((*job).usedBufferSize);
     }
     AIO_IOPool_unlockJobsMutex(&mut (*ctx).base);
     return job;
@@ -1043,8 +957,7 @@ unsafe extern "C" fn AIO_ReadPool_executeReadJob(mut opaque: *mut libc::c_void) 
         AIO_ReadPool_addJobToCompleted(job);
         return;
     }
-    (*job)
-        .usedBufferSize = fread(
+    (*job).usedBufferSize = fread(
         (*job).buffer,
         1 as libc::c_int as libc::c_ulong,
         (*job).bufferSize,
@@ -1058,10 +971,9 @@ unsafe extern "C" fn AIO_ReadPool_executeReadJob(mut opaque: *mut libc::c_void) 
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     499 as libc::c_int,
                 );
             }
@@ -1089,10 +1001,9 @@ unsafe extern "C" fn AIO_ReadPool_executeReadJob(mut opaque: *mut libc::c_void) 
                 if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
-                        b"Error defined at %s, line %i : \n\0" as *const u8
+                        b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                             as *const libc::c_char,
-                        b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                            as *const u8 as *const libc::c_char,
                         503 as libc::c_int,
                     );
                 }
@@ -1121,9 +1032,8 @@ unsafe extern "C" fn AIO_ReadPool_executeReadJob(mut opaque: *mut libc::c_void) 
 unsafe extern "C" fn AIO_ReadPool_enqueueRead(mut ctx: *mut ReadPoolCtx_t) {
     let job = AIO_IOPool_acquireJob(&mut (*ctx).base);
     (*job).offset = (*ctx).nextReadOffset;
-    (*ctx)
-        .nextReadOffset = ((*ctx).nextReadOffset as libc::c_ulong)
-        .wrapping_add((*job).bufferSize) ;
+    (*ctx).nextReadOffset =
+        ((*ctx).nextReadOffset as libc::c_ulong).wrapping_add((*job).bufferSize);
     AIO_IOPool_enqueueJob(job);
 }
 unsafe extern "C" fn AIO_ReadPool_startReading(mut ctx: *mut ReadPoolCtx_t) {
@@ -1135,10 +1045,7 @@ unsafe extern "C" fn AIO_ReadPool_startReading(mut ctx: *mut ReadPoolCtx_t) {
     }
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_ReadPool_setFile(
-    mut ctx: *mut ReadPoolCtx_t,
-    mut file: *mut FILE,
-) {
+pub unsafe extern "C" fn AIO_ReadPool_setFile(mut ctx: *mut ReadPoolCtx_t, mut file: *mut FILE) {
     debug_assert!(!ctx.is_null());
     AIO_IOPool_join(&mut (*ctx).base);
     AIO_ReadPool_releaseAllCompletedJobs(ctx);
@@ -1161,8 +1068,7 @@ pub unsafe extern "C" fn AIO_ReadPool_create(
     mut prefs: *const FIO_prefs_t,
     mut bufferSize: libc::size_t,
 ) -> *mut ReadPoolCtx_t {
-    let ctx = malloc(::core::mem::size_of::<ReadPoolCtx_t>())
-        as *mut ReadPoolCtx_t;
+    let ctx = malloc(::core::mem::size_of::<ReadPoolCtx_t>()) as *mut ReadPoolCtx_t;
     if ctx.is_null() {
         if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -1170,8 +1076,7 @@ pub unsafe extern "C" fn AIO_ReadPool_create(
         if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
-                b"Error defined at %s, line %i : \n\0" as *const u8
-                    as *const libc::c_char,
+                b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                     as *const libc::c_char,
                 550 as libc::c_int,
@@ -1187,8 +1092,7 @@ pub unsafe extern "C" fn AIO_ReadPool_create(
         if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"Allocation error : not enough memory\0" as *const u8
-                    as *const libc::c_char,
+                b"Allocation error : not enough memory\0" as *const u8 as *const libc::c_char,
             );
         }
         if g_display_prefs.displayLevel >= 1 {
@@ -1199,15 +1103,10 @@ pub unsafe extern "C" fn AIO_ReadPool_create(
     AIO_IOPool_init(
         &mut (*ctx).base,
         prefs,
-        Some(
-            AIO_ReadPool_executeReadJob as unsafe extern "C" fn(*mut libc::c_void) -> (),
-        ),
+        Some(AIO_ReadPool_executeReadJob as unsafe extern "C" fn(*mut libc::c_void) -> ()),
         bufferSize,
     );
-    (*ctx)
-        .coalesceBuffer = malloc(
-        bufferSize.wrapping_mul(2),
-    ) as *mut u8;
+    (*ctx).coalesceBuffer = malloc(bufferSize.wrapping_mul(2)) as *mut u8;
     (*ctx).srcBuffer = (*ctx).coalesceBuffer;
     (*ctx).srcBufferLoaded = 0 as libc::c_int as libc::size_t;
     (*ctx).completedJobsCount = 0 as libc::c_int;
@@ -1220,10 +1119,9 @@ pub unsafe extern "C" fn AIO_ReadPool_create(
             if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
-                    b"Error defined at %s, line %i : \n\0" as *const u8
+                    b"Error defined at %s, line %i : \n\0" as *const u8 as *const libc::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0" as *const u8
                         as *const libc::c_char,
-                    b"/home/peter/Dev/zstd-c2rust/programs/fileio_asyncio.c\0"
-                        as *const u8 as *const libc::c_char,
                     561 as libc::c_int,
                 );
             }
@@ -1237,8 +1135,7 @@ pub unsafe extern "C" fn AIO_ReadPool_create(
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"Failed creating jobCompletedCond cond\0" as *const u8
-                        as *const libc::c_char,
+                    b"Failed creating jobCompletedCond cond\0" as *const u8 as *const libc::c_char,
                 );
             }
             if g_display_prefs.displayLevel >= 1 {
@@ -1265,9 +1162,7 @@ pub unsafe extern "C" fn AIO_ReadPool_consumeBytes(
     mut n: libc::size_t,
 ) {
     debug_assert!(n <= (*ctx).srcBufferLoaded);
-    (*ctx)
-        .srcBufferLoaded = ((*ctx).srcBufferLoaded as libc::c_ulong).wrapping_sub(n)
-        ;
+    (*ctx).srcBufferLoaded = ((*ctx).srcBufferLoaded as libc::c_ulong).wrapping_sub(n);
     (*ctx).srcBuffer = ((*ctx).srcBuffer).offset(n as isize);
 }
 unsafe extern "C" fn AIO_ReadPool_releaseCurrentHeldAndGetNext(
@@ -1308,18 +1203,17 @@ pub unsafe extern "C" fn AIO_ReadPool_fillBuffer(
         return 0 as libc::c_int as libc::size_t;
     }
     if useCoalesce != 0 {
-        debug_assert!(((*ctx).srcBufferLoaded).wrapping_add((*job).usedBufferSize)
-            <= (2)
-                .wrapping_mul((*ctx).base.jobBufferSize));
+        debug_assert!(
+            ((*ctx).srcBufferLoaded).wrapping_add((*job).usedBufferSize)
+                <= (2).wrapping_mul((*ctx).base.jobBufferSize)
+        );
         memcpy(
-            ((*ctx).coalesceBuffer).offset((*ctx).srcBufferLoaded as isize)
-                as *mut libc::c_void,
+            ((*ctx).coalesceBuffer).offset((*ctx).srcBufferLoaded as isize) as *mut libc::c_void,
             (*job).buffer,
             (*job).usedBufferSize,
         );
-        (*ctx)
-            .srcBufferLoaded = ((*ctx).srcBufferLoaded as libc::c_ulong)
-            .wrapping_add((*job).usedBufferSize) ;
+        (*ctx).srcBufferLoaded =
+            ((*ctx).srcBufferLoaded as libc::c_ulong).wrapping_add((*job).usedBufferSize);
     } else {
         (*ctx).srcBuffer = (*job).buffer as *mut u8;
         (*ctx).srcBufferLoaded = (*job).usedBufferSize;
@@ -1334,15 +1228,11 @@ pub unsafe extern "C" fn AIO_ReadPool_consumeAndRefill(
     return AIO_ReadPool_fillBuffer(ctx, (*ctx).base.jobBufferSize);
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_ReadPool_getFile(
-    mut ctx: *const ReadPoolCtx_t,
-) -> *mut FILE {
+pub unsafe extern "C" fn AIO_ReadPool_getFile(mut ctx: *const ReadPoolCtx_t) -> *mut FILE {
     return AIO_IOPool_getFile(&(*ctx).base);
 }
 #[no_mangle]
-pub unsafe extern "C" fn AIO_ReadPool_closeFile(
-    mut ctx: *mut ReadPoolCtx_t,
-) -> libc::c_int {
+pub unsafe extern "C" fn AIO_ReadPool_closeFile(mut ctx: *mut ReadPoolCtx_t) -> libc::c_int {
     let file = AIO_ReadPool_getFile(ctx);
     AIO_ReadPool_setFile(ctx, NULL as *mut FILE);
     return fclose(file);
@@ -1355,11 +1245,9 @@ pub unsafe extern "C" fn AIO_ReadPool_setAsync(
     AIO_IOPool_setThreaded(&mut (*ctx).base, async_0);
 }
 unsafe extern "C" fn run_static_initializers() {
-    segmentSizeT = ((32 as libc::c_int * ((1) << 10 as libc::c_int))
-        as libc::c_ulong)
+    segmentSizeT = ((32 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::c_ulong)
         .wrapping_div(::core::mem::size_of::<libc::size_t>());
-    maskT = (::core::mem::size_of::<libc::size_t>())
-        .wrapping_sub(1);
+    maskT = (::core::mem::size_of::<libc::size_t>()).wrapping_sub(1);
 }
 #[used]
 #[cfg_attr(target_os = "linux", link_section = ".init_array")]

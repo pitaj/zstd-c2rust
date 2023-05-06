@@ -14,16 +14,8 @@ extern "C" {
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
     fn exit(_: libc::c_int) -> !;
-    fn memcpy(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
+    fn memcpy(_: *mut libc::c_void, _: *const libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
+    fn memset(_: *mut libc::c_void, _: libc::c_int, _: libc::c_ulong) -> *mut libc::c_void;
 }
 pub type FILE = _IO_FILE;
 #[derive(Copy, Clone)]
@@ -71,17 +63,13 @@ unsafe extern "C" fn RDG_rand(mut src: *mut u32) -> u32 {
     static mut prime1: u32 = 2654435761 as libc::c_uint;
     static mut prime2: u32 = 2246822519 as libc::c_uint;
     let mut rand32 = *src;
-    rand32 = (rand32 as libc::c_uint).wrapping_mul(prime1) ;
+    rand32 = (rand32 as libc::c_uint).wrapping_mul(prime1);
     rand32 ^= prime2;
-    rand32 = rand32 << 13 as libc::c_int
-        | rand32 >> 32 as libc::c_int - 13 as libc::c_int;
+    rand32 = rand32 << 13 as libc::c_int | rand32 >> 32 as libc::c_int - 13 as libc::c_int;
     *src = rand32;
     return rand32 >> 5 as libc::c_int;
 }
-unsafe extern "C" fn RDG_fillLiteralDistrib(
-    mut ldt: *mut u8,
-    mut ld: fixedPoint_24_8,
-) {
+unsafe extern "C" fn RDG_fillLiteralDistrib(mut ldt: *mut u8, mut ld: fixedPoint_24_8) {
     let firstChar = (if ld as libc::c_double <= 0.0f64 {
         0 as libc::c_int
     } else {
@@ -106,9 +94,7 @@ unsafe extern "C" fn RDG_fillLiteralDistrib(
         let weight = ((LTSIZE as libc::c_uint).wrapping_sub(u).wrapping_mul(ld)
             >> 8 as libc::c_int)
             .wrapping_add(1);
-        let end = if u.wrapping_add(weight)
-            < ((1) << 13 as libc::c_int) as libc::c_uint
-        {
+        let end = if u.wrapping_add(weight) < ((1) << 13 as libc::c_int) as libc::c_uint {
             u.wrapping_add(weight)
         } else {
             ((1) << 13 as libc::c_int) as libc::c_uint
@@ -152,14 +138,9 @@ unsafe extern "C" fn RDG_genBlock(
     let mut prevOffset = 1 as libc::c_int as u32;
     while matchProba >= 1.0f64 {
         let mut size0 = (RDG_rand(seedPtr) & 3) as libc::size_t;
-        size0 = (1)
-            << (16)
-                .wrapping_add(size0.wrapping_mul(2));
+        size0 = (1) << (16).wrapping_add(size0.wrapping_mul(2));
         size0 = (size0 as libc::c_ulong)
-            .wrapping_add(
-                RDG_rand(seedPtr) as libc::c_ulong
-                    & size0.wrapping_sub(1),
-            ) ;
+            .wrapping_add(RDG_rand(seedPtr) as libc::c_ulong & size0.wrapping_sub(1));
         if buffSize < pos.wrapping_add(size0) {
             memset(
                 buffPtr.offset(pos as isize) as *mut libc::c_void,
@@ -173,11 +154,8 @@ unsafe extern "C" fn RDG_genBlock(
             0 as libc::c_int,
             size0,
         );
-        pos = (pos as libc::c_ulong).wrapping_add(size0) ;
-        *buffPtr
-            .offset(
-                pos.wrapping_sub(1) as isize,
-            ) = RDG_genChar(seedPtr, ldt);
+        pos = (pos as libc::c_ulong).wrapping_add(size0);
+        *buffPtr.offset(pos.wrapping_sub(1) as isize) = RDG_genChar(seedPtr, ldt);
     }
     if pos == 0 {
         *buffPtr.offset(0) = RDG_genChar(seedPtr, ldt);
@@ -185,17 +163,14 @@ unsafe extern "C" fn RDG_genBlock(
     }
     while pos < buffSize {
         if RDG_rand15Bits(seedPtr) < matchProba32 {
-            let length = (RDG_randLength(seedPtr))
-                .wrapping_add(4);
+            let length = (RDG_randLength(seedPtr)).wrapping_add(4);
             let d = (if pos.wrapping_add(length as libc::c_ulong) < buffSize {
                 pos.wrapping_add(length as libc::c_ulong)
             } else {
                 buffSize
             }) as u32;
-            let repeatOffset = (RDG_rand(seedPtr) & 15
-                == 2) as libc::c_int as u32;
-            let randOffset = (RDG_rand15Bits(seedPtr))
-                .wrapping_add(1);
+            let repeatOffset = (RDG_rand(seedPtr) & 15 == 2) as libc::c_int as u32;
+            let randOffset = (RDG_rand15Bits(seedPtr)).wrapping_add(1);
             let offset = if repeatOffset != 0 {
                 prevOffset
             } else {
@@ -268,10 +243,8 @@ pub unsafe extern "C" fn RDG_genStdout(
     mut seed: libc::c_uint,
 ) {
     let mut seed32 = seed;
-    let stdBlockSize = (128 as libc::c_int * ((1) << 10 as libc::c_int))
-        as libc::size_t;
-    let stdDictSize = (32 as libc::c_int * ((1) << 10 as libc::c_int))
-        as libc::size_t;
+    let stdBlockSize = (128 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t;
+    let stdDictSize = (32 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t;
     let buff = malloc(stdDictSize.wrapping_add(stdBlockSize)) as *mut u8;
     let mut total = 0 as libc::c_int as u64;
     let mut ldt: [u8; 8192] = [0; 8192];
@@ -315,7 +288,7 @@ pub unsafe extern "C" fn RDG_genStdout(
             ldt.as_mut_ptr(),
             &mut seed32,
         );
-        total = (total as libc::c_ulong).wrapping_add(genBlockSize) ;
+        total = (total as libc::c_ulong).wrapping_add(genBlockSize);
         let unused = fwrite(
             buff as *const libc::c_void,
             1 as libc::c_int as libc::c_ulong,

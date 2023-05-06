@@ -88,8 +88,7 @@ pub unsafe extern "C" fn ZSTD_pthread_mutex_init(
     mut mutex: *mut *mut pthread_mutex_t,
     mut attr: *const pthread_mutexattr_t,
 ) -> libc::c_int {
-    *mutex = malloc(::core::mem::size_of::<pthread_mutex_t>())
-        as *mut pthread_mutex_t;
+    *mutex = malloc(::core::mem::size_of::<pthread_mutex_t>()) as *mut pthread_mutex_t;
     if (*mutex).is_null() {
         return 1 as libc::c_int;
     }
@@ -111,8 +110,7 @@ pub unsafe extern "C" fn ZSTD_pthread_cond_init(
     mut cond: *mut *mut pthread_cond_t,
     mut attr: *const pthread_condattr_t,
 ) -> libc::c_int {
-    *cond = malloc(::core::mem::size_of::<pthread_cond_t>())
-        as *mut pthread_cond_t;
+    *cond = malloc(::core::mem::size_of::<pthread_cond_t>()) as *mut pthread_cond_t;
     if (*cond).is_null() {
         return 1 as libc::c_int;
     }

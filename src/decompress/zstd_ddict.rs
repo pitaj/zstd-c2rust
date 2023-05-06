@@ -127,12 +127,10 @@ pub struct ZSTD_customMem {
     pub customFree: ZSTD_freeFunction,
     pub opaque: *mut libc::c_void,
 }
-pub type ZSTD_freeFunction = Option::<
-    unsafe extern "C" fn(*mut libc::c_void, *mut libc::c_void) -> (),
->;
-pub type ZSTD_allocFunction = Option::<
-    unsafe extern "C" fn(*mut libc::c_void, libc::size_t) -> *mut libc::c_void,
->;
+pub type ZSTD_freeFunction =
+    Option<unsafe extern "C" fn(*mut libc::c_void, *mut libc::c_void) -> ()>;
+pub type ZSTD_allocFunction =
+    Option<unsafe extern "C" fn(*mut libc::c_void, libc::size_t) -> *mut libc::c_void>;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_entropyDTables_t {
@@ -260,9 +258,9 @@ unsafe extern "C" fn MEM_read32(mut ptr: *const libc::c_void) -> u32 {
 #[inline]
 unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> u32 {
     if MEM_isLittleEndian() != 0 {
-        return MEM_read32(memPtr)
+        return MEM_read32(memPtr);
     } else {
-        return MEM_swap32(MEM_read32(memPtr))
+        return MEM_swap32(MEM_read32(memPtr));
     };
 }
 #[inline]
@@ -276,20 +274,15 @@ unsafe extern "C" fn ZSTD_customMalloc(
     mut customMem: ZSTD_customMem,
 ) -> *mut libc::c_void {
     if (customMem.customAlloc).is_some() {
-        return (customMem.customAlloc)
-            .expect("non-null function pointer")(customMem.opaque, size);
+        return (customMem.customAlloc).expect("non-null function pointer")(customMem.opaque, size);
     }
     return malloc(size);
 }
 #[inline]
-unsafe extern "C" fn ZSTD_customFree(
-    mut ptr: *mut libc::c_void,
-    mut customMem: ZSTD_customMem,
-) {
+unsafe extern "C" fn ZSTD_customFree(mut ptr: *mut libc::c_void, mut customMem: ZSTD_customMem) {
     if !ptr.is_null() {
         if (customMem.customFree).is_some() {
-            (customMem.customFree)
-                .expect("non-null function pointer")(customMem.opaque, ptr);
+            (customMem.customFree).expect("non-null function pointer")(customMem.opaque, ptr);
         } else {
             free(ptr);
         }
@@ -297,10 +290,7 @@ unsafe extern "C" fn ZSTD_customFree(
 }
 pub const ZSTD_MAGIC_DICTIONARY: libc::c_uint = 0xec30a437 as libc::c_uint;
 #[inline]
-unsafe extern "C" fn _force_has_format_string(
-    mut format: *const libc::c_char,
-    mut args: ...
-) {}
+unsafe extern "C" fn _force_has_format_string(mut format: *const libc::c_char, mut args: ...) {}
 unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
     return (code > -(ZSTD_error_maxCode as libc::c_int) as libc::size_t) as libc::c_int
         as libc::c_uint;
@@ -329,9 +319,8 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
     (*dctx).dictID = (*ddict).dictID;
     (*dctx).prefixStart = (*ddict).dictContent;
     (*dctx).virtualStart = (*ddict).dictContent;
-    (*dctx)
-        .dictEnd = ((*ddict).dictContent as *const u8)
-        .offset((*ddict).dictSize as isize) as *const libc::c_void;
+    (*dctx).dictEnd = ((*ddict).dictContent as *const u8).offset((*ddict).dictSize as isize)
+        as *const libc::c_void;
     (*dctx).previousDstEnd = (*dctx).dictEnd;
     if (*ddict).entropyPresent != 0 {
         (*dctx).litEntropy = 1 as libc::c_int as u32;
@@ -340,18 +329,12 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
         (*dctx).MLTptr = ((*ddict).entropy.MLTable).as_ptr();
         (*dctx).OFTptr = ((*ddict).entropy.OFTable).as_ptr();
         (*dctx).HUFptr = ((*ddict).entropy.hufTable).as_ptr();
-        (*dctx)
-            .entropy
-            .rep[0 as libc::c_int
-            as usize] = (*ddict).entropy.rep[0 as libc::c_int as usize];
-        (*dctx)
-            .entropy
-            .rep[1 as libc::c_int
-            as usize] = (*ddict).entropy.rep[1 as libc::c_int as usize];
-        (*dctx)
-            .entropy
-            .rep[2 as libc::c_int
-            as usize] = (*ddict).entropy.rep[2 as libc::c_int as usize];
+        (*dctx).entropy.rep[0 as libc::c_int as usize] =
+            (*ddict).entropy.rep[0 as libc::c_int as usize];
+        (*dctx).entropy.rep[1 as libc::c_int as usize] =
+            (*ddict).entropy.rep[1 as libc::c_int as usize];
+        (*dctx).entropy.rep[2 as libc::c_int as usize] =
+            (*ddict).entropy.rep[2 as libc::c_int as usize];
     } else {
         (*dctx).litEntropy = 0 as libc::c_int as u32;
         (*dctx).fseEntropy = 0 as libc::c_int as u32;
@@ -363,36 +346,31 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
 ) -> libc::size_t {
     (*ddict).dictID = 0 as libc::c_int as u32;
     (*ddict).entropyPresent = 0 as libc::c_int as u32;
-    if dictContentType as libc::c_uint
-        == ZSTD_dct_rawContent as libc::c_int as libc::c_uint
-    {
+    if dictContentType as libc::c_uint == ZSTD_dct_rawContent as libc::c_int as libc::c_uint {
         return 0 as libc::c_int as libc::size_t;
     }
     if (*ddict).dictSize < 8 {
-        if dictContentType as libc::c_uint
-            == ZSTD_dct_fullDict as libc::c_int as libc::c_uint
-        {
+        if dictContentType as libc::c_uint == ZSTD_dct_fullDict as libc::c_int as libc::c_uint {
             return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
         }
         return 0 as libc::c_int as libc::size_t;
     }
     let magic = MEM_readLE32((*ddict).dictContent);
     if magic != ZSTD_MAGIC_DICTIONARY {
-        if dictContentType as libc::c_uint
-            == ZSTD_dct_fullDict as libc::c_int as libc::c_uint
-        {
+        if dictContentType as libc::c_uint == ZSTD_dct_fullDict as libc::c_int as libc::c_uint {
             return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
         }
         return 0 as libc::c_int as libc::size_t;
     }
-    (*ddict)
-        .dictID = MEM_readLE32(
+    (*ddict).dictID = MEM_readLE32(
         ((*ddict).dictContent as *const libc::c_char).offset(ZSTD_FRAMEIDSIZE as isize)
             as *const libc::c_void,
     );
-    if ERR_isError(
-        ZSTD_loadDEntropy(&mut (*ddict).entropy, (*ddict).dictContent, (*ddict).dictSize),
-    ) != 0
+    if ERR_isError(ZSTD_loadDEntropy(
+        &mut (*ddict).entropy,
+        (*ddict).dictContent,
+        (*ddict).dictSize,
+    )) != 0
     {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
@@ -407,7 +385,8 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
     mut dictContentType: ZSTD_dictContentType_e,
 ) -> libc::size_t {
     if dictLoadMethod as libc::c_uint == ZSTD_dlm_byRef as libc::c_int as libc::c_uint
-        || dict.is_null() || dictSize == 0
+        || dict.is_null()
+        || dictSize == 0
     {
         (*ddict).dictBuffer = NULL as *mut libc::c_void;
         (*ddict).dictContent = dict;
@@ -424,10 +403,8 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
         libc::memcpy(internalBuffer, dict, dictSize as libc::size_t);
     }
     (*ddict).dictSize = dictSize;
-    (*ddict)
-        .entropy
-        .hufTable[0 as libc::c_int
-        as usize] = (12 as libc::c_int * 0x1000001 as libc::c_int) as HUF_DTable;
+    (*ddict).entropy.hufTable[0 as libc::c_int as usize] =
+        (12 as libc::c_int * 0x1000001 as libc::c_int) as HUF_DTable;
     let err_code = ZSTD_loadEntropy_intoDDict(ddict, dictContentType);
     if ERR_isError(err_code) != 0 {
         return err_code;
@@ -443,25 +420,19 @@ pub unsafe extern "C" fn ZSTD_createDDict_advanced(
     mut customMem: ZSTD_customMem,
 ) -> *mut ZSTD_DDict {
     if (customMem.customAlloc).is_none() as libc::c_int
-        ^ (customMem.customFree).is_none() as libc::c_int != 0
+        ^ (customMem.customFree).is_none() as libc::c_int
+        != 0
     {
         return NULL as *mut ZSTD_DDict;
     }
-    let ddict = ZSTD_customMalloc(
-        ::core::mem::size_of::<ZSTD_DDict>(),
-        customMem,
-    ) as *mut ZSTD_DDict;
+    let ddict =
+        ZSTD_customMalloc(::core::mem::size_of::<ZSTD_DDict>(), customMem) as *mut ZSTD_DDict;
     if ddict.is_null() {
         return NULL as *mut ZSTD_DDict;
     }
     (*ddict).cMem = customMem;
-    let initResult = ZSTD_initDDict_internal(
-        ddict,
-        dict,
-        dictSize,
-        dictLoadMethod,
-        dictContentType,
-    );
+    let initResult =
+        ZSTD_initDDict_internal(ddict, dict, dictSize, dictLoadMethod, dictContentType);
     if ERR_isError(initResult) != 0 {
         ZSTD_freeDDict(ddict);
         return NULL as *mut ZSTD_DDict;
@@ -475,25 +446,17 @@ pub unsafe extern "C" fn ZSTD_createDDict(
 ) -> *mut ZSTD_DDict {
     let allocator = {
         let mut init = ZSTD_customMem {
-            customAlloc: ::core::mem::transmute::<
-                libc::intptr_t,
-                ZSTD_allocFunction,
-            >(NULL as libc::intptr_t),
-            customFree: ::core::mem::transmute::<
-                libc::intptr_t,
-                ZSTD_freeFunction,
-            >(NULL as libc::intptr_t),
+            customAlloc: ::core::mem::transmute::<libc::intptr_t, ZSTD_allocFunction>(
+                NULL as libc::intptr_t,
+            ),
+            customFree: ::core::mem::transmute::<libc::intptr_t, ZSTD_freeFunction>(
+                NULL as libc::intptr_t,
+            ),
             opaque: NULL as *mut libc::c_void,
         };
         init
     };
-    return ZSTD_createDDict_advanced(
-        dict,
-        dictSize,
-        ZSTD_dlm_byCopy,
-        ZSTD_dct_auto,
-        allocator,
-    );
+    return ZSTD_createDDict_advanced(dict, dictSize, ZSTD_dlm_byCopy, ZSTD_dct_auto, allocator);
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_createDDict_byReference(
@@ -502,14 +465,12 @@ pub unsafe extern "C" fn ZSTD_createDDict_byReference(
 ) -> *mut ZSTD_DDict {
     let allocator = {
         let mut init = ZSTD_customMem {
-            customAlloc: ::core::mem::transmute::<
-                libc::intptr_t,
-                ZSTD_allocFunction,
-            >(NULL as libc::intptr_t),
-            customFree: ::core::mem::transmute::<
-                libc::intptr_t,
-                ZSTD_freeFunction,
-            >(NULL as libc::intptr_t),
+            customAlloc: ::core::mem::transmute::<libc::intptr_t, ZSTD_allocFunction>(
+                NULL as libc::intptr_t,
+            ),
+            customFree: ::core::mem::transmute::<libc::intptr_t, ZSTD_freeFunction>(
+                NULL as libc::intptr_t,
+            ),
             opaque: NULL as *mut libc::c_void,
         };
         init
@@ -531,16 +492,13 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
     mut dictContentType: ZSTD_dictContentType_e,
 ) -> *const ZSTD_DDict {
-    let neededSpace = (::core::mem::size_of::<ZSTD_DDict>())
-        .wrapping_add(
-            (if dictLoadMethod as libc::c_uint
-                == ZSTD_dlm_byRef as libc::c_int as libc::c_uint
-            {
-                0 as libc::c_int as libc::c_ulong
-            } else {
-                dictSize
-            }),
-        );
+    let neededSpace = (::core::mem::size_of::<ZSTD_DDict>()).wrapping_add(
+        (if dictLoadMethod as libc::c_uint == ZSTD_dlm_byRef as libc::c_int as libc::c_uint {
+            0 as libc::c_int as libc::c_ulong
+        } else {
+            dictSize
+        }),
+    );
     let ddict = sBuffer as *mut ZSTD_DDict;
     debug_assert!(!sBuffer.is_null());
     debug_assert!(!dict.is_null());
@@ -558,9 +516,13 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
         );
         dict = ddict.offset(1) as *const libc::c_void;
     }
-    if ERR_isError(
-        ZSTD_initDDict_internal(ddict, dict, dictSize, ZSTD_dlm_byRef, dictContentType),
-    ) != 0
+    if ERR_isError(ZSTD_initDDict_internal(
+        ddict,
+        dict,
+        dictSize,
+        ZSTD_dlm_byRef,
+        dictContentType,
+    )) != 0
     {
         return NULL as *const ZSTD_DDict;
     }
@@ -581,35 +543,29 @@ pub unsafe extern "C" fn ZSTD_estimateDDictSize(
     mut dictSize: libc::size_t,
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
 ) -> libc::size_t {
-    return (::core::mem::size_of::<ZSTD_DDict>())
-        .wrapping_add(
-            (if dictLoadMethod as libc::c_uint
-                == ZSTD_dlm_byRef as libc::c_int as libc::c_uint
-            {
-                0 as libc::c_int as libc::c_ulong
-            } else {
-                dictSize
-            }),
-        );
+    return (::core::mem::size_of::<ZSTD_DDict>()).wrapping_add(
+        (if dictLoadMethod as libc::c_uint == ZSTD_dlm_byRef as libc::c_int as libc::c_uint {
+            0 as libc::c_int as libc::c_ulong
+        } else {
+            dictSize
+        }),
+    );
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_sizeof_DDict(mut ddict: *const ZSTD_DDict) -> libc::size_t {
     if ddict.is_null() {
         return 0 as libc::c_int as libc::size_t;
     }
-    return (::core::mem::size_of::<ZSTD_DDict>())
-        .wrapping_add(
-            (if !((*ddict).dictBuffer).is_null() {
-                (*ddict).dictSize
-            } else {
-                0 as libc::c_int as libc::c_ulong
-            }),
-        );
+    return (::core::mem::size_of::<ZSTD_DDict>()).wrapping_add(
+        (if !((*ddict).dictBuffer).is_null() {
+            (*ddict).dictSize
+        } else {
+            0 as libc::c_int as libc::c_ulong
+        }),
+    );
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_getDictID_fromDDict(
-    mut ddict: *const ZSTD_DDict,
-) -> libc::c_uint {
+pub unsafe extern "C" fn ZSTD_getDictID_fromDDict(mut ddict: *const ZSTD_DDict) -> libc::c_uint {
     if ddict.is_null() {
         return 0 as libc::c_int as libc::c_uint;
     }

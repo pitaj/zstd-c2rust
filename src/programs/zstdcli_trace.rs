@@ -160,8 +160,7 @@ pub type ZSTD_TraceCtx = libc::c_ulonglong;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 static mut g_traceFile: *mut FILE = NULL as *mut FILE;
 static mut g_mutexInit: libc::c_int = 0 as libc::c_int;
-static mut g_mutex: *mut pthread_mutex_t = 0 as *const pthread_mutex_t
-    as *mut pthread_mutex_t;
+static mut g_mutex: *mut pthread_mutex_t = 0 as *const pthread_mutex_t as *mut pthread_mutex_t;
 static mut g_enableTime: UTIL_time_t = {
     let mut init = UTIL_time_t {
         t: 0 as libc::c_int as PTime,
@@ -184,8 +183,7 @@ pub unsafe extern "C" fn TRACE_enable(mut filename: *const libc::c_char) {
     }
     g_enableTime = UTIL_getTime();
     if g_mutexInit == 0 {
-        if ZSTD_pthread_mutex_init(&mut g_mutex, NULL as *const pthread_mutexattr_t) == 0
-        {
+        if ZSTD_pthread_mutex_init(&mut g_mutex, NULL as *const pthread_mutexattr_t) == 0 {
             g_mutexInit = 1 as libc::c_int;
         } else {
             TRACE_finish();
@@ -210,16 +208,11 @@ unsafe extern "C" fn TRACE_log(
 ) {
     let mut level = 0 as libc::c_int;
     let mut workers = 0 as libc::c_int;
-    let ratio = (*trace).uncompressedSize as libc::c_double
-        / (*trace).compressedSize as libc::c_double;
-    let speed = (*trace).uncompressedSize as libc::c_double
-        * 1000 / duration as libc::c_double;
+    let ratio =
+        (*trace).uncompressedSize as libc::c_double / (*trace).compressedSize as libc::c_double;
+    let speed = (*trace).uncompressedSize as libc::c_double * 1000 / duration as libc::c_double;
     if !((*trace).params).is_null() {
-        ZSTD_CCtxParams_getParameter(
-            (*trace).params,
-            ZSTD_c_compressionLevel,
-            &mut level,
-        );
+        ZSTD_CCtxParams_getParameter((*trace).params, ZSTD_c_compressionLevel, &mut level);
         ZSTD_CCtxParams_getParameter((*trace).params, ZSTD_c_nbWorkers, &mut workers);
     }
     debug_assert!(!g_traceFile.is_null());
@@ -247,9 +240,7 @@ unsafe extern "C" fn TRACE_log(
     pthread_mutex_unlock(g_mutex);
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_trace_compress_begin(
-    mut cctx: *const ZSTD_CCtx,
-) -> ZSTD_TraceCtx {
+pub unsafe extern "C" fn ZSTD_trace_compress_begin(mut cctx: *const ZSTD_CCtx) -> ZSTD_TraceCtx {
     if g_traceFile.is_null() {
         return 0 as libc::c_int as ZSTD_TraceCtx;
     }
@@ -268,15 +259,15 @@ pub unsafe extern "C" fn ZSTD_trace_compress_end(
         0 as libc::c_int as libc::c_ulong
     };
     debug_assert!(!g_traceFile.is_null());
-    debug_assert!((*trace).version
-        == (1 as libc::c_int * 100 * 100
-            + 5 * 100 + 5) as libc::c_uint);
-    TRACE_log(b"compress\0" as *const u8 as *const libc::c_char, durationNanos, trace);
+    debug_assert!((*trace).version == (1 as libc::c_int * 100 * 100 + 5 * 100 + 5) as libc::c_uint);
+    TRACE_log(
+        b"compress\0" as *const u8 as *const libc::c_char,
+        durationNanos,
+        trace,
+    );
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_trace_decompress_begin(
-    mut dctx: *const ZSTD_DCtx,
-) -> ZSTD_TraceCtx {
+pub unsafe extern "C" fn ZSTD_trace_decompress_begin(mut dctx: *const ZSTD_DCtx) -> ZSTD_TraceCtx {
     if g_traceFile.is_null() {
         return 0 as libc::c_int as ZSTD_TraceCtx;
     }
@@ -295,8 +286,10 @@ pub unsafe extern "C" fn ZSTD_trace_decompress_end(
         0 as libc::c_int as libc::c_ulong
     };
     debug_assert!(!g_traceFile.is_null());
-    debug_assert!((*trace).version
-        == (1 as libc::c_int * 100 * 100
-            + 5 * 100 + 5) as libc::c_uint);
-    TRACE_log(b"decompress\0" as *const u8 as *const libc::c_char, durationNanos, trace);
+    debug_assert!((*trace).version == (1 as libc::c_int * 100 * 100 + 5 * 100 + 5) as libc::c_uint);
+    TRACE_log(
+        b"decompress\0" as *const u8 as *const libc::c_char,
+        durationNanos,
+        trace,
+    );
 }

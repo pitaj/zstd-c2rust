@@ -28,27 +28,15 @@ extern "C" {
     fn calloc(_: libc::c_ulong, _: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
     fn exit(_: libc::c_int) -> !;
-    fn memcpy(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
+    fn memcpy(_: *mut libc::c_void, _: *const libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
+    fn memset(_: *mut libc::c_void, _: libc::c_int, _: libc::c_ulong) -> *mut libc::c_void;
     fn UTIL_getTotalFileSize(
         fileNamesTable: *const *const libc::c_char,
         nbFiles: libc::c_uint,
     ) -> u64;
     fn UTIL_getFileSize(infilename: *const libc::c_char) -> u64;
     fn UTIL_isDirectory(infilename: *const libc::c_char) -> libc::c_int;
-    fn setpriority(
-        __which: __priority_which_t,
-        __who: id_t,
-        __prio: libc::c_int,
-    ) -> libc::c_int;
+    fn setpriority(__which: __priority_which_t, __who: id_t, __prio: libc::c_int) -> libc::c_int;
     fn strrchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
     fn strerror(_: libc::c_int) -> *mut libc::c_char;
@@ -173,7 +161,7 @@ pub struct BMK_runOutcome_t {
     pub error_result_never_ever_use_directly: libc::size_t,
     pub error_tag_never_ever_use_directly: libc::c_int,
 }
-pub type BMK_benchFn_t = Option::<
+pub type BMK_benchFn_t = Option<
     unsafe extern "C" fn(
         *const libc::c_void,
         libc::size_t,
@@ -182,8 +170,8 @@ pub type BMK_benchFn_t = Option::<
         *mut libc::c_void,
     ) -> libc::size_t,
 >;
-pub type BMK_initFn_t = Option::<unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t>;
-pub type BMK_errorFn_t = Option::<unsafe extern "C" fn(libc::size_t) -> libc::c_uint>;
+pub type BMK_initFn_t = Option<unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t>;
+pub type BMK_errorFn_t = Option<unsafe extern "C" fn(libc::size_t) -> libc::c_uint>;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct BMK_benchParams_t {
@@ -387,10 +375,8 @@ pub const BMK_TIMETEST_DEFAULT_S: libc::c_int = 3 as libc::c_int;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1);
 pub const PRIO_PROCESS_0: libc::c_int = PRIO_PROCESS as libc::c_int;
-pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0)
-    .wrapping_sub(1);
-pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0)
-    .wrapping_sub(2);
+pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0).wrapping_sub(1);
+pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0).wrapping_sub(2);
 pub const XXH_FORCE_ALIGN_CHECK: libc::c_int = 0 as libc::c_int;
 unsafe extern "C" fn XXH_memcpy(
     mut dest: *mut libc::c_void,
@@ -427,13 +413,13 @@ unsafe extern "C" fn XXH_readLE32_align(
     mut align: XXH_alignment,
 ) -> xxh_u32 {
     if align as libc::c_uint == XXH_unaligned as libc::c_int as libc::c_uint {
-        return XXH_readLE32(ptr)
+        return XXH_readLE32(ptr);
     } else {
         return if XXH_CPU_LITTLE_ENDIAN != 0 {
             *(ptr as *const xxh_u32)
         } else {
             XXH_swap32(*(ptr as *const xxh_u32))
-        }
+        };
     };
 }
 unsafe extern "C" fn XXH_read64(mut memPtr: *const libc::c_void) -> xxh_u64 {
@@ -446,14 +432,10 @@ unsafe extern "C" fn XXH_read64(mut memPtr: *const libc::c_void) -> xxh_u64 {
     return val;
 }
 unsafe extern "C" fn XXH_swap64(mut x: xxh_u64) -> xxh_u64 {
-    return ((x << 56 as libc::c_int) as libc::c_ulonglong
-        & 0xff00000000000000 as libc::c_ulonglong
-        | (x << 40 as libc::c_int) as libc::c_ulonglong
-            & 0xff000000000000 as libc::c_ulonglong
-        | (x << 24 as libc::c_int) as libc::c_ulonglong
-            & 0xff0000000000 as libc::c_ulonglong
-        | (x << 8 as libc::c_int) as libc::c_ulonglong
-            & 0xff00000000 as libc::c_ulonglong
+    return ((x << 56 as libc::c_int) as libc::c_ulonglong & 0xff00000000000000 as libc::c_ulonglong
+        | (x << 40 as libc::c_int) as libc::c_ulonglong & 0xff000000000000 as libc::c_ulonglong
+        | (x << 24 as libc::c_int) as libc::c_ulonglong & 0xff0000000000 as libc::c_ulonglong
+        | (x << 8 as libc::c_int) as libc::c_ulonglong & 0xff00000000 as libc::c_ulonglong
         | (x >> 8 as libc::c_int) as libc::c_ulonglong & 0xff000000 as libc::c_ulonglong
         | (x >> 24 as libc::c_int) as libc::c_ulonglong & 0xff0000 as libc::c_ulonglong
         | (x >> 40 as libc::c_int) as libc::c_ulonglong & 0xff00 as libc::c_ulonglong
@@ -472,13 +454,13 @@ unsafe extern "C" fn XXH_readLE64_align(
     mut align: XXH_alignment,
 ) -> xxh_u64 {
     if align as libc::c_uint == XXH_unaligned as libc::c_int as libc::c_uint {
-        return XXH_readLE64(ptr)
+        return XXH_readLE64(ptr);
     } else {
         return if XXH_CPU_LITTLE_ENDIAN != 0 {
             *(ptr as *const xxh_u64)
         } else {
             XXH_swap64(*(ptr as *const xxh_u64))
-        }
+        };
     };
 }
 pub const XXH_PRIME64_1: libc::c_ulonglong = 0x9e3779b185ebca87 as libc::c_ulonglong;
@@ -488,10 +470,9 @@ pub const XXH_PRIME64_4: libc::c_ulonglong = 0x85ebca77c2b2ae63 as libc::c_ulong
 pub const XXH_PRIME64_5: libc::c_ulonglong = 0x27d4eb2f165667c5 as libc::c_ulonglong;
 unsafe extern "C" fn XXH64_round(mut acc: xxh_u64, mut input: xxh_u64) -> xxh_u64 {
     acc = (acc as libc::c_ulonglong)
-        .wrapping_add((input as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_2))
-        ;
+        .wrapping_add((input as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_2));
     acc = ::core::intrinsics::rotate_left(acc, 31 as libc::c_int as libc::c_ulong);
-    acc = (acc as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_1) ;
+    acc = (acc as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_1);
     return acc;
 }
 unsafe extern "C" fn XXH64_mergeRound(mut acc: xxh_u64, mut val: xxh_u64) -> xxh_u64 {
@@ -504,9 +485,9 @@ unsafe extern "C" fn XXH64_mergeRound(mut acc: xxh_u64, mut val: xxh_u64) -> xxh
 }
 unsafe extern "C" fn XXH64_avalanche(mut h64: xxh_u64) -> xxh_u64 {
     h64 ^= h64 >> 33 as libc::c_int;
-    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_2) ;
+    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_2);
     h64 ^= h64 >> 29 as libc::c_int;
-    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_3) ;
+    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_3);
     h64 ^= h64 >> 32 as libc::c_int;
     return h64;
 }
@@ -531,8 +512,7 @@ unsafe extern "C" fn XXH64_finalize(
             as libc::c_ulonglong)
             .wrapping_mul(XXH_PRIME64_1)
             .wrapping_add(XXH_PRIME64_4) as xxh_u64;
-        len = (len as libc::c_ulong).wrapping_sub(8)
-            ;
+        len = (len as libc::c_ulong).wrapping_sub(8);
     }
     if len >= 4 {
         h64 = (h64 as libc::c_ulonglong
@@ -544,8 +524,7 @@ unsafe extern "C" fn XXH64_finalize(
             as libc::c_ulonglong)
             .wrapping_mul(XXH_PRIME64_2)
             .wrapping_add(XXH_PRIME64_3) as xxh_u64;
-        len = (len as libc::c_ulong).wrapping_sub(4)
-            ;
+        len = (len as libc::c_ulong).wrapping_sub(4);
     }
     while len > 0 {
         let fresh0 = ptr;
@@ -579,40 +558,31 @@ unsafe extern "C" fn XXH64_endian_align(
         let mut v3 = seed.wrapping_add(0);
         let mut v4 = (seed as libc::c_ulonglong).wrapping_sub(XXH_PRIME64_1) as xxh_u64;
         loop {
-            v1 = XXH64_round(
-                v1,
-                XXH_readLE64_align(input as *const libc::c_void, align),
-            );
+            v1 = XXH64_round(v1, XXH_readLE64_align(input as *const libc::c_void, align));
             input = input.offset(8);
-            v2 = XXH64_round(
-                v2,
-                XXH_readLE64_align(input as *const libc::c_void, align),
-            );
+            v2 = XXH64_round(v2, XXH_readLE64_align(input as *const libc::c_void, align));
             input = input.offset(8);
-            v3 = XXH64_round(
-                v3,
-                XXH_readLE64_align(input as *const libc::c_void, align),
-            );
+            v3 = XXH64_round(v3, XXH_readLE64_align(input as *const libc::c_void, align));
             input = input.offset(8);
-            v4 = XXH64_round(
-                v4,
-                XXH_readLE64_align(input as *const libc::c_void, align),
-            );
+            v4 = XXH64_round(v4, XXH_readLE64_align(input as *const libc::c_void, align));
             input = input.offset(8);
             if !(input < limit) {
                 break;
             }
         }
         h64 = (::core::intrinsics::rotate_left(v1, 1 as libc::c_int as libc::c_ulong))
-            .wrapping_add(
-                ::core::intrinsics::rotate_left(v2, 7 as libc::c_int as libc::c_ulong),
-            )
-            .wrapping_add(
-                ::core::intrinsics::rotate_left(v3, 12 as libc::c_int as libc::c_ulong),
-            )
-            .wrapping_add(
-                ::core::intrinsics::rotate_left(v4, 18 as libc::c_int as libc::c_ulong),
-            );
+            .wrapping_add(::core::intrinsics::rotate_left(
+                v2,
+                7 as libc::c_int as libc::c_ulong,
+            ))
+            .wrapping_add(::core::intrinsics::rotate_left(
+                v3,
+                12 as libc::c_int as libc::c_ulong,
+            ))
+            .wrapping_add(::core::intrinsics::rotate_left(
+                v4,
+                18 as libc::c_int as libc::c_ulong,
+            ));
         h64 = XXH64_mergeRound(h64, v1);
         h64 = XXH64_mergeRound(h64, v2);
         h64 = XXH64_mergeRound(h64, v3);
@@ -620,7 +590,7 @@ unsafe extern "C" fn XXH64_endian_align(
     } else {
         h64 = (seed as libc::c_ulonglong).wrapping_add(XXH_PRIME64_5) as xxh_u64;
     }
-    h64 = (h64 as libc::c_ulong).wrapping_add(len) ;
+    h64 = (h64 as libc::c_ulong).wrapping_add(len);
     return XXH64_finalize(h64, input, len, align);
 }
 #[inline]
@@ -632,8 +602,7 @@ unsafe extern "C" fn XXH_INLINE_XXH64(
     return XXH64_endian_align(input as *const xxh_u8, len, seed, XXH_unaligned);
 }
 pub const MB_UNIT: libc::c_int = 1000000 as libc::c_int;
-pub const TIMELOOP_NANOSEC: libc::c_ulonglong = (1)
-    .wrapping_mul(1000000000);
+pub const TIMELOOP_NANOSEC: libc::c_ulonglong = (1).wrapping_mul(1000000000);
 pub const BMK_RUNTEST_DEFAULT_MS: libc::c_int = 1000 as libc::c_int;
 static mut maxMemory: libc::size_t = 0;
 pub const DEBUG: libc::c_int = 0 as libc::c_int;
@@ -693,8 +662,8 @@ unsafe extern "C" fn BMK_initCCtx(
             fprintf(
                 stderr,
                 b"%s failed : %s\0" as *const u8 as *const libc::c_char,
-                b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_nbWorkers, adv->nbWorkers)\0"
-                    as *const u8 as *const libc::c_char,
+                b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_nbWorkers, adv->nbWorkers)\0" as *const u8
+                    as *const libc::c_char,
                 ZSTD_getErrorName(zerr_0),
             );
             fflush(NULL as *mut FILE);
@@ -710,8 +679,8 @@ unsafe extern "C" fn BMK_initCCtx(
         fprintf(
             stderr,
             b"%s failed : %s\0" as *const u8 as *const libc::c_char,
-            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_compressionLevel, cLevel)\0"
-                as *const u8 as *const libc::c_char,
+            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_compressionLevel, cLevel)\0" as *const u8
+                as *const libc::c_char,
             ZSTD_getErrorName(zerr_1),
         );
         fflush(NULL as *mut FILE);
@@ -719,11 +688,7 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_2 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_experimentalParam14,
-        (*adv).useRowMatchFinder,
-    );
+    let zerr_2 = ZSTD_CCtx_setParameter(ctx, ZSTD_c_experimentalParam14, (*adv).useRowMatchFinder);
     if ZSTD_isError(zerr_2) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
@@ -739,11 +704,7 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_3 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_enableLongDistanceMatching,
-        (*adv).ldmFlag,
-    );
+    let zerr_3 = ZSTD_CCtx_setParameter(ctx, ZSTD_c_enableLongDistanceMatching, (*adv).ldmFlag);
     if ZSTD_isError(zerr_3) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
@@ -766,8 +727,8 @@ unsafe extern "C" fn BMK_initCCtx(
         fprintf(
             stderr,
             b"%s failed : %s\0" as *const u8 as *const libc::c_char,
-            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_ldmMinMatch, adv->ldmMinMatch)\0"
-                as *const u8 as *const libc::c_char,
+            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_ldmMinMatch, adv->ldmMinMatch)\0" as *const u8
+                as *const libc::c_char,
             ZSTD_getErrorName(zerr_4),
         );
         fflush(NULL as *mut FILE);
@@ -782,8 +743,8 @@ unsafe extern "C" fn BMK_initCCtx(
         fprintf(
             stderr,
             b"%s failed : %s\0" as *const u8 as *const libc::c_char,
-            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_ldmHashLog, adv->ldmHashLog)\0"
-                as *const u8 as *const libc::c_char,
+            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_ldmHashLog, adv->ldmHashLog)\0" as *const u8
+                as *const libc::c_char,
             ZSTD_getErrorName(zerr_5),
         );
         fflush(NULL as *mut FILE);
@@ -791,11 +752,7 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_6 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_ldmBucketSizeLog,
-        (*adv).ldmBucketSizeLog,
-    );
+    let zerr_6 = ZSTD_CCtx_setParameter(ctx, ZSTD_c_ldmBucketSizeLog, (*adv).ldmBucketSizeLog);
     if ZSTD_isError(zerr_6) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
@@ -811,11 +768,7 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_7 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_ldmHashRateLog,
-        (*adv).ldmHashRateLog,
-    );
+    let zerr_7 = ZSTD_CCtx_setParameter(ctx, ZSTD_c_ldmHashRateLog, (*adv).ldmHashRateLog);
     if ZSTD_isError(zerr_7) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
@@ -851,19 +804,15 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_9 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_hashLog,
-        (*comprParams).hashLog as libc::c_int,
-    );
+    let zerr_9 = ZSTD_CCtx_setParameter(ctx, ZSTD_c_hashLog, (*comprParams).hashLog as libc::c_int);
     if ZSTD_isError(zerr_9) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
         fprintf(
             stderr,
             b"%s failed : %s\0" as *const u8 as *const libc::c_char,
-            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_hashLog, (int)comprParams->hashLog)\0"
-                as *const u8 as *const libc::c_char,
+            b"ZSTD_CCtx_setParameter(ctx, ZSTD_c_hashLog, (int)comprParams->hashLog)\0" as *const u8
+                as *const libc::c_char,
             ZSTD_getErrorName(zerr_9),
         );
         fflush(NULL as *mut FILE);
@@ -871,11 +820,8 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_10 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_chainLog,
-        (*comprParams).chainLog as libc::c_int,
-    );
+    let zerr_10 =
+        ZSTD_CCtx_setParameter(ctx, ZSTD_c_chainLog, (*comprParams).chainLog as libc::c_int);
     if ZSTD_isError(zerr_10) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
@@ -911,11 +857,8 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_12 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_minMatch,
-        (*comprParams).minMatch as libc::c_int,
-    );
+    let zerr_12 =
+        ZSTD_CCtx_setParameter(ctx, ZSTD_c_minMatch, (*comprParams).minMatch as libc::c_int);
     if ZSTD_isError(zerr_12) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
@@ -971,11 +914,8 @@ unsafe extern "C" fn BMK_initCCtx(
         fflush(NULL as *mut FILE);
         exit(1);
     }
-    let zerr_15 = ZSTD_CCtx_setParameter(
-        ctx,
-        ZSTD_c_strategy,
-        (*comprParams).strategy as libc::c_int,
-    );
+    let zerr_15 =
+        ZSTD_CCtx_setParameter(ctx, ZSTD_c_strategy, (*comprParams).strategy as libc::c_int);
     if ZSTD_isError(zerr_15) != 0 {
         fprintf(stderr, b"Error : \0" as *const u8 as *const libc::c_char);
         fflush(NULL as *mut FILE);
@@ -1190,7 +1130,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     } else {
         srcSize
     })
-        .wrapping_add((srcSize == 0) as libc::c_int as libc::c_ulong);
+    .wrapping_add((srcSize == 0) as libc::c_int as libc::c_ulong);
     let mut benchResult = BMK_benchResult_t {
         cSize: 0,
         cSpeed: 0,
@@ -1209,11 +1149,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         ::core::mem::size_of::<BMK_benchResult_t>(),
     );
     if strlen(displayName) > 17 {
-        displayName = displayName
-            .offset(
-                (strlen(displayName)).wrapping_sub(17)
-                    as isize,
-            );
+        displayName = displayName.offset((strlen(displayName)).wrapping_sub(17) as isize);
     }
     if (*adv).mode as libc::c_uint == BMK_decodeOnly as libc::c_int as libc::c_uint {
         let mut srcPtr = srcBuffer as *const libc::c_char;
@@ -1251,8 +1187,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 if displayLevel >= 1 {
                     fprintf(
                         stderr,
-                        b"Decompressed size cannot be determined: cannot benchmark\0"
-                            as *const u8 as *const libc::c_char,
+                        b"Decompressed size cannot be determined: cannot benchmark\0" as *const u8
+                            as *const libc::c_char,
                     );
                     fflush(NULL as *mut FILE);
                 }
@@ -1301,8 +1237,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 r_0.tag = 32 as libc::c_int;
                 return r_0;
             }
-            totalDSize64 = (totalDSize64 as libc::c_ulong).wrapping_add(fSize64) as u64
-                as u64;
+            totalDSize64 = (totalDSize64 as libc::c_ulong).wrapping_add(fSize64) as u64 as u64;
             srcPtr = srcPtr.offset(*fileSizes.offset(fileNb as isize) as isize);
             fileNb = fileNb.wrapping_add(1);
         }
@@ -1374,8 +1309,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             if displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"allocation error: not enough memory\0" as *const u8
-                        as *const libc::c_char,
+                    b"allocation error: not enough memory\0" as *const u8 as *const libc::c_char,
                 );
                 fflush(NULL as *mut FILE);
             }
@@ -1398,15 +1332,14 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     fileNb_0 = 0 as libc::c_int as u32;
     while fileNb_0 < nbFiles {
         let mut remaining = *fileSizes.offset(fileNb_0 as isize);
-        let nbBlocksforThisFile = if (*adv).mode as libc::c_uint
-            == BMK_decodeOnly as libc::c_int as libc::c_uint
-        {
-            1 as libc::c_int as libc::c_uint
-        } else {
-            remaining
-                .wrapping_add(blockSize.wrapping_sub(1))
-                .wrapping_div(blockSize) as u32
-        };
+        let nbBlocksforThisFile =
+            if (*adv).mode as libc::c_uint == BMK_decodeOnly as libc::c_int as libc::c_uint {
+                1 as libc::c_int as libc::c_uint
+            } else {
+                remaining
+                    .wrapping_add(blockSize.wrapping_sub(1))
+                    .wrapping_div(blockSize) as u32
+            };
         let blockEnd = nbBlocks.wrapping_add(nbBlocksforThisFile);
         while nbBlocks < blockEnd {
             let thisBlockSize = if remaining < blockSize {
@@ -1419,37 +1352,26 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             *srcSizes.offset(nbBlocks as isize) = thisBlockSize;
             let ref mut fresh2 = *cPtrs.offset(nbBlocks as isize);
             *fresh2 = cPtr as *mut libc::c_void;
-            *cCapacities
-                .offset(
-                    nbBlocks as isize,
-                ) = if (*adv).mode as libc::c_uint
-                == BMK_decodeOnly as libc::c_int as libc::c_uint
-            {
-                thisBlockSize
-            } else {
-                ZSTD_compressBound(thisBlockSize)
-            };
+            *cCapacities.offset(nbBlocks as isize) =
+                if (*adv).mode as libc::c_uint == BMK_decodeOnly as libc::c_int as libc::c_uint {
+                    thisBlockSize
+                } else {
+                    ZSTD_compressBound(thisBlockSize)
+                };
             let ref mut fresh3 = *resPtrs.offset(nbBlocks as isize);
             *fresh3 = resPtr as *mut libc::c_void;
-            *resSizes
-                .offset(
-                    nbBlocks as isize,
-                ) = if (*adv).mode as libc::c_uint
-                == BMK_decodeOnly as libc::c_int as libc::c_uint
-            {
-                ZSTD_findDecompressedSize(srcPtr_0 as *const libc::c_void, thisBlockSize)
-                    as libc::size_t
-            } else {
-                thisBlockSize
-            };
+            *resSizes.offset(nbBlocks as isize) =
+                if (*adv).mode as libc::c_uint == BMK_decodeOnly as libc::c_int as libc::c_uint {
+                    ZSTD_findDecompressedSize(srcPtr_0 as *const libc::c_void, thisBlockSize)
+                        as libc::size_t
+                } else {
+                    thisBlockSize
+                };
             srcPtr_0 = srcPtr_0.offset(thisBlockSize as isize);
             cPtr = cPtr.offset(*cCapacities.offset(nbBlocks as isize) as isize);
             resPtr = resPtr.offset(thisBlockSize as isize);
-            remaining = (remaining as libc::c_ulong).wrapping_sub(thisBlockSize)
-                ;
-            if (*adv).mode as libc::c_uint
-                == BMK_decodeOnly as libc::c_int as libc::c_uint
-            {
+            remaining = (remaining as libc::c_ulong).wrapping_sub(thisBlockSize);
+            if (*adv).mode as libc::c_uint == BMK_decodeOnly as libc::c_int as libc::c_uint {
                 *cSizes.offset(nbBlocks as isize) = thisBlockSize;
                 benchResult.cSize = thisBlockSize;
             }
@@ -1478,9 +1400,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             fflush(NULL as *mut FILE);
         }
     }
-    let crcOrig = if (*adv).mode as libc::c_uint
-        == BMK_decodeOnly as libc::c_int as libc::c_uint
-    {
+    let crcOrig = if (*adv).mode as libc::c_uint == BMK_decodeOnly as libc::c_int as libc::c_uint {
         0 as libc::c_int as libc::c_ulong
     } else {
         XXH_INLINE_XXH64(srcBuffer, srcSize, 0 as libc::c_int as XXH64_hash_t)
@@ -1493,9 +1413,11 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     ];
     let mut markNb = 0 as libc::c_int as u32;
     let mut compressionCompleted = ((*adv).mode as libc::c_uint
-        == BMK_decodeOnly as libc::c_int as libc::c_uint) as libc::c_int;
+        == BMK_decodeOnly as libc::c_int as libc::c_uint)
+        as libc::c_int;
     let mut decompressionCompleted = ((*adv).mode as libc::c_uint
-        == BMK_compressOnly as libc::c_int as libc::c_uint) as libc::c_int;
+        == BMK_compressOnly as libc::c_int as libc::c_uint)
+        as libc::c_int;
     let mut cbp = BMK_benchParams_t {
         benchFn: None,
         benchPayload: 0 as *mut libc::c_void,
@@ -1535,8 +1457,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         dictBuffer: 0 as *const libc::c_void,
         dictBufferSize: 0,
     };
-    cbp
-        .benchFn = Some(
+    cbp.benchFn = Some(
         local_defaultCompress
             as unsafe extern "C" fn(
                 *const libc::c_void,
@@ -1547,10 +1468,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             ) -> libc::size_t,
     );
     cbp.benchPayload = cctx as *mut libc::c_void;
-    cbp
-        .initFn = Some(
-        local_initCCtx as unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t,
-    );
+    cbp.initFn = Some(local_initCCtx as unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t);
     cbp.initPayload = &mut cctxprep as *mut BMK_initCCtxArgs as *mut libc::c_void;
     cbp.errorFn = Some(ZSTD_isError as unsafe extern "C" fn(libc::size_t) -> libc::c_uint);
     cbp.blockCount = nbBlocks as libc::size_t;
@@ -1565,8 +1483,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     cctxprep.cLevel = cLevel;
     cctxprep.comprParams = comprParams;
     cctxprep.adv = adv;
-    dbp
-        .benchFn = Some(
+    dbp.benchFn = Some(
         local_defaultDecompress
             as unsafe extern "C" fn(
                 *const libc::c_void,
@@ -1577,10 +1494,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             ) -> libc::size_t,
     );
     dbp.benchPayload = dctx as *mut libc::c_void;
-    dbp
-        .initFn = Some(
-        local_initDCtx as unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t,
-    );
+    dbp.initFn = Some(local_initDCtx as unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t);
     dbp.initPayload = &mut dctxprep as *mut BMK_initDCtxArgs as *mut libc::c_void;
     dbp.errorFn = Some(ZSTD_isError as unsafe extern "C" fn(libc::size_t) -> libc::c_uint);
     dbp.blockCount = nbBlocks as libc::size_t;
@@ -1600,10 +1514,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         );
         fflush(NULL as *mut FILE);
     }
-    debug_assert!(srcSize
-        < (2147483647)
-            .wrapping_mul(2)
-            .wrapping_add(1) as libc::c_ulong);
+    debug_assert!(srcSize < (2147483647).wrapping_mul(2).wrapping_add(1) as libc::c_ulong);
     if displayLevel >= 2 {
         fprintf(
             stdout,
@@ -1663,8 +1574,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 dSpeed: 0,
                 cMem: 0,
             };
-            newResult
-                .cSpeed = (srcSize as libc::c_double * TIMELOOP_NANOSEC as libc::c_double
+            newResult.cSpeed = (srcSize as libc::c_double * TIMELOOP_NANOSEC as libc::c_double
                 / cResult.nanoSecPerRun) as u64 as libc::c_ulonglong;
             benchResult.cSize = cSize;
             if newResult.cSpeed > benchResult.cSpeed {
@@ -1675,10 +1585,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             } else {
                 2 as libc::c_int
             };
-            debug_assert!(cSize
-                < (2147483647)
-                    .wrapping_mul(2)
-                    .wrapping_add(1) as libc::c_ulong);
+            debug_assert!(cSize < (2147483647).wrapping_mul(2).wrapping_add(1) as libc::c_ulong);
             if displayLevel >= 2 {
                 fprintf(
                     stdout,
@@ -1690,16 +1597,12 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                     cSize as libc::c_uint,
                     ratioAccuracy,
                     ratio,
-                    if benchResult.cSpeed
-                        < (10 as libc::c_int * 1000000)
-                            as libc::c_ulonglong
-                    {
+                    if benchResult.cSpeed < (10 as libc::c_int * 1000000) as libc::c_ulonglong {
                         2 as libc::c_int
                     } else {
                         1 as libc::c_int
                     },
-                    benchResult.cSpeed as libc::c_double
-                        / 1000000 as libc::c_int as libc::c_double,
+                    benchResult.cSpeed as libc::c_double / 1000000 as libc::c_int as libc::c_double,
                 );
                 fflush(NULL as *mut FILE);
             }
@@ -1745,8 +1648,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 return r_4;
             }
             let dResult = BMK_extract_runTime(dOutcome);
-            let newDSpeed = (srcSize as libc::c_double
-                * TIMELOOP_NANOSEC as libc::c_double / dResult.nanoSecPerRun) as u64;
+            let newDSpeed = (srcSize as libc::c_double * TIMELOOP_NANOSEC as libc::c_double
+                / dResult.nanoSecPerRun) as u64;
             if newDSpeed as libc::c_ulonglong > benchResult.dSpeed {
                 benchResult.dSpeed = newDSpeed as libc::c_ulonglong;
             }
@@ -1758,26 +1661,21 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             if displayLevel >= 2 {
                 fprintf(
                     stdout,
-                    b"%2s-%-17.17s :%10u ->%10u (x%5.*f), %6.*f MB/s, %6.1f MB/s\r\0"
-                        as *const u8 as *const libc::c_char,
+                    b"%2s-%-17.17s :%10u ->%10u (x%5.*f), %6.*f MB/s, %6.1f MB/s\r\0" as *const u8
+                        as *const libc::c_char,
                     marks[markNb as usize],
                     displayName,
                     srcSize as libc::c_uint,
                     cSize as libc::c_uint,
                     ratioAccuracy_0,
                     ratio,
-                    if benchResult.cSpeed
-                        < (10 as libc::c_int * 1000000)
-                            as libc::c_ulonglong
-                    {
+                    if benchResult.cSpeed < (10 as libc::c_int * 1000000) as libc::c_ulonglong {
                         2 as libc::c_int
                     } else {
                         1 as libc::c_int
                     },
-                    benchResult.cSpeed as libc::c_double
-                        / 1000000 as libc::c_int as libc::c_double,
-                    benchResult.dSpeed as libc::c_double
-                        / 1000000 as libc::c_int as libc::c_double,
+                    benchResult.cSpeed as libc::c_double / 1000000 as libc::c_int as libc::c_double,
+                    benchResult.dSpeed as libc::c_double / 1000000 as libc::c_int as libc::c_double,
                 );
                 fflush(NULL as *mut FILE);
             }
@@ -1793,8 +1691,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         srcSize,
         0 as libc::c_int as XXH64_hash_t,
     );
-    if (*adv).mode as libc::c_uint == BMK_both as libc::c_int as libc::c_uint
-        && crcOrig != crcCheck
+    if (*adv).mode as libc::c_uint == BMK_both as libc::c_int as libc::c_uint && crcOrig != crcCheck
     {
         let mut u: libc::size_t = 0;
         fprintf(
@@ -1826,21 +1723,17 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                     if bacc.wrapping_add(*srcSizes.offset(segNb as isize)) > u {
                         break;
                     }
-                    bacc = (bacc as libc::c_ulong)
-                        .wrapping_add(*srcSizes.offset(segNb as isize)) as libc::size_t
-                        as libc::size_t;
+                    bacc = (bacc as libc::c_ulong).wrapping_add(*srcSizes.offset(segNb as isize))
+                        as libc::size_t as libc::size_t;
                     segNb = segNb.wrapping_add(1);
                 }
                 pos = u.wrapping_sub(bacc) as u32;
-                bNb = pos
-                    .wrapping_div(
-                        (128 as libc::c_int * ((1) << 10 as libc::c_int))
-                            as libc::c_uint,
-                    );
+                bNb = pos.wrapping_div(
+                    (128 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::c_uint,
+                );
                 fprintf(
                     stderr,
-                    b"(sample %u, block %u, pos %u) \n\0" as *const u8
-                        as *const libc::c_char,
+                    b"(sample %u, block %u, pos %u) \n\0" as *const u8 as *const libc::c_char,
                     segNb,
                     bNb,
                     pos,
@@ -1859,8 +1752,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                     fprintf(
                         stderr,
                         b"%02X \0" as *const u8 as *const libc::c_char,
-                        *(srcBuffer as *const u8).offset(u.wrapping_sub(n) as isize)
-                            as libc::c_int,
+                        *(srcBuffer as *const u8).offset(u.wrapping_sub(n) as isize) as libc::c_int,
                     );
                     fflush(NULL as *mut FILE);
                     n = n.wrapping_sub(1);
@@ -1876,8 +1768,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                     fprintf(
                         stderr,
                         b"%02X \0" as *const u8 as *const libc::c_char,
-                        *(srcBuffer as *const u8).offset(u.wrapping_add(n) as isize)
-                            as libc::c_int,
+                        *(srcBuffer as *const u8).offset(u.wrapping_add(n) as isize) as libc::c_int,
                     );
                     fflush(NULL as *mut FILE);
                     n = n.wrapping_add(1);
@@ -1933,8 +1824,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         if (*adv).additionalParam != 0 {
             fprintf(
                 stdout,
-                b"-%-3i%11i (%5.3f) %6.2f MB/s %6.1f MB/s  %s (param=%d)\n\0"
-                    as *const u8 as *const libc::c_char,
+                b"-%-3i%11i (%5.3f) %6.2f MB/s %6.1f MB/s  %s (param=%d)\n\0" as *const u8
+                    as *const libc::c_char,
                 cLevel,
                 cSize as libc::c_int,
                 ratio,
@@ -1960,12 +1851,16 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         }
     }
     if displayLevel >= 2 {
-        fprintf(stdout, b"%2i#\n\0" as *const u8 as *const libc::c_char, cLevel);
+        fprintf(
+            stdout,
+            b"%2i#\n\0" as *const u8 as *const libc::c_char,
+            cLevel,
+        );
         fflush(NULL as *mut FILE);
     }
-    benchResult
-        .cMem = ((1) << (*comprParams).windowLog)
-        .wrapping_add(ZSTD_sizeof_CCtx(cctx) as libc::c_ulonglong) as libc::size_t;
+    benchResult.cMem = ((1) << (*comprParams).windowLog)
+        .wrapping_add(ZSTD_sizeof_CCtx(cctx) as libc::c_ulonglong)
+        as libc::size_t;
     return BMK_benchOutcome_setValidResult(benchResult);
 }
 pub const NB_MARKS: libc::c_int = 4 as libc::c_int;
@@ -1985,8 +1880,7 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
     mut displayName: *const libc::c_char,
     mut adv: *const BMK_advancedParams_t,
 ) -> BMK_benchOutcome_t {
-    let dstParamsError = dstBuffer.is_null() as libc::c_int
-        ^ (dstCapacity == 0) as libc::c_int;
+    let dstParamsError = dstBuffer.is_null() as libc::c_int ^ (dstCapacity == 0) as libc::c_int;
     let blockSize = (if (*adv).blockSize >= 32
         && (*adv).mode as libc::c_uint != BMK_decodeOnly as libc::c_int as libc::c_uint
     {
@@ -1994,39 +1888,32 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
     } else {
         srcSize
     })
-        .wrapping_add((srcSize == 0) as libc::c_int as libc::c_ulong);
+    .wrapping_add((srcSize == 0) as libc::c_int as libc::c_ulong);
     let maxNbBlocks = (srcSize
         .wrapping_add(blockSize.wrapping_sub(1))
         .wrapping_div(blockSize) as u32)
         .wrapping_add(nbFiles);
     let srcPtrs = malloc(
-        (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<*mut libc::c_void>()),
+        (maxNbBlocks as libc::c_ulong).wrapping_mul(::core::mem::size_of::<*mut libc::c_void>()),
     ) as *mut *const libc::c_void;
-    let srcSizes = malloc(
-        (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::size_t>()),
-    ) as *mut libc::size_t;
+    let srcSizes =
+        malloc((maxNbBlocks as libc::c_ulong).wrapping_mul(::core::mem::size_of::<libc::size_t>()))
+            as *mut libc::size_t;
     let cPtrs = malloc(
-        (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<*mut libc::c_void>()),
+        (maxNbBlocks as libc::c_ulong).wrapping_mul(::core::mem::size_of::<*mut libc::c_void>()),
     ) as *mut *mut libc::c_void;
-    let cSizes = malloc(
-        (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::size_t>()),
-    ) as *mut libc::size_t;
-    let cCapacities = malloc(
-        (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::size_t>()),
-    ) as *mut libc::size_t;
+    let cSizes =
+        malloc((maxNbBlocks as libc::c_ulong).wrapping_mul(::core::mem::size_of::<libc::size_t>()))
+            as *mut libc::size_t;
+    let cCapacities =
+        malloc((maxNbBlocks as libc::c_ulong).wrapping_mul(::core::mem::size_of::<libc::size_t>()))
+            as *mut libc::size_t;
     let resPtrs = malloc(
-        (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<*mut libc::c_void>()),
+        (maxNbBlocks as libc::c_ulong).wrapping_mul(::core::mem::size_of::<*mut libc::c_void>()),
     ) as *mut *mut libc::c_void;
-    let resSizes = malloc(
-        (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::size_t>()),
-    ) as *mut libc::size_t;
+    let resSizes =
+        malloc((maxNbBlocks as libc::c_ulong).wrapping_mul(::core::mem::size_of::<libc::size_t>()))
+            as *mut libc::size_t;
     let mut timeStateCompress = BMK_createTimedFnState(
         ((*adv).nbSeconds).wrapping_mul(1000),
         BMK_RUNTEST_DEFAULT_MS as libc::c_uint,
@@ -2040,11 +1927,7 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
     let maxCompressedSize = if dstCapacity != 0 {
         dstCapacity
     } else {
-        (ZSTD_compressBound(srcSize))
-            .wrapping_add(
-                maxNbBlocks.wrapping_mul(1024)
-                    as libc::c_ulong,
-            )
+        (ZSTD_compressBound(srcSize)).wrapping_add(maxNbBlocks.wrapping_mul(1024) as libc::c_ulong)
     };
     let internalDstBuffer = if !dstBuffer.is_null() {
         NULL as *mut libc::c_void
@@ -2062,11 +1945,19 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
     } else {
         NULL as *mut libc::c_void
     };
-    let allocationincomplete = (srcPtrs.is_null() || srcSizes.is_null()
-        || cPtrs.is_null() || cSizes.is_null() || cCapacities.is_null()
-        || resPtrs.is_null() || resSizes.is_null() || timeStateCompress.is_null()
-        || timeStateDecompress.is_null() || cctx.is_null() || dctx.is_null()
-        || compressedBuffer.is_null() || resultBuffer.is_null()) as libc::c_int;
+    let allocationincomplete = (srcPtrs.is_null()
+        || srcSizes.is_null()
+        || cPtrs.is_null()
+        || cSizes.is_null()
+        || cCapacities.is_null()
+        || resPtrs.is_null()
+        || resSizes.is_null()
+        || timeStateCompress.is_null()
+        || timeStateDecompress.is_null()
+        || cctx.is_null()
+        || dctx.is_null()
+        || compressedBuffer.is_null()
+        || resultBuffer.is_null()) as libc::c_int;
     if allocationincomplete == 0 && dstParamsError == 0 {
         outcome = BMK_benchMemAdvancedNoAlloc(
             srcPtrs,
@@ -2135,8 +2026,7 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
         if displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"allocation error : not enough memory\0" as *const u8
-                    as *const libc::c_char,
+                b"allocation error : not enough memory\0" as *const u8 as *const libc::c_char,
             );
             fflush(NULL as *mut FILE);
         }
@@ -2240,8 +2130,7 @@ unsafe extern "C" fn BMK_benchCLevel(
         if displayLevel >= 2 {
             fprintf(
                 stderr,
-                b"Note : switching to real-time priority \n\0" as *const u8
-                    as *const libc::c_char,
+                b"Note : switching to real-time priority \n\0" as *const u8 as *const libc::c_char,
             );
             fflush(NULL as *mut FILE);
         }
@@ -2332,8 +2221,7 @@ pub unsafe extern "C" fn BMK_syntheticTest(
         if displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"allocation error : not enough memory\0" as *const u8
-                    as *const libc::c_char,
+                b"allocation error : not enough memory\0" as *const u8 as *const libc::c_char,
             );
             fflush(NULL as *mut FILE);
         }
@@ -2371,15 +2259,14 @@ pub unsafe extern "C" fn BMK_syntheticTest(
 unsafe extern "C" fn BMK_findMaxMem(mut requiredMem: u64) -> libc::size_t {
     let step = (64 as libc::c_int * ((1) << 20 as libc::c_int)) as libc::size_t;
     let mut testmem = NULL as *mut u8;
-    requiredMem = (requiredMem >> 26 as libc::c_int)
-        .wrapping_add(1) << 26 as libc::c_int;
-    requiredMem = (requiredMem as libc::c_ulong).wrapping_add(step) ;
+    requiredMem = (requiredMem >> 26 as libc::c_int).wrapping_add(1) << 26 as libc::c_int;
+    requiredMem = (requiredMem as libc::c_ulong).wrapping_add(step);
     if requiredMem > maxMemory {
         requiredMem = maxMemory;
     }
     loop {
         testmem = malloc(requiredMem) as *mut u8;
-        requiredMem = (requiredMem as libc::c_ulong).wrapping_sub(step) ;
+        requiredMem = (requiredMem as libc::c_ulong).wrapping_sub(step);
         if !(testmem.is_null() && requiredMem > 0) {
             break;
         }
@@ -2405,8 +2292,7 @@ unsafe extern "C" fn BMK_loadFiles(
             if displayLevel >= 2 {
                 fprintf(
                     stderr,
-                    b"Ignoring %s directory...       \n\0" as *const u8
-                        as *const libc::c_char,
+                    b"Ignoring %s directory...       \n\0" as *const u8 as *const libc::c_char,
                     *fileNamesTable.offset(n as isize),
                 );
                 fflush(NULL as *mut FILE);
@@ -2440,8 +2326,7 @@ unsafe extern "C" fn BMK_loadFiles(
                 if displayLevel >= 1 {
                     fprintf(
                         stderr,
-                        b"impossible to open file %s\0" as *const u8
-                            as *const libc::c_char,
+                        b"impossible to open file %s\0" as *const u8 as *const libc::c_char,
                         *fileNamesTable.offset(n as isize),
                     );
                     fflush(NULL as *mut FILE);
@@ -2493,10 +2378,10 @@ unsafe extern "C" fn BMK_loadFiles(
                 }
                 return 11 as libc::c_int;
             }
-            pos = (pos as libc::c_ulong).wrapping_add(readSize) ;
+            pos = (pos as libc::c_ulong).wrapping_add(readSize);
             *fileSizes.offset(n as isize) = fileSize;
-            totalSize = (totalSize as libc::c_ulong).wrapping_add(fileSize) as libc::size_t
-                as libc::size_t;
+            totalSize =
+                (totalSize as libc::c_ulong).wrapping_add(fileSize) as libc::size_t as libc::size_t;
             fclose(f);
         }
         n = n.wrapping_add(1);
@@ -2511,7 +2396,10 @@ unsafe extern "C" fn BMK_loadFiles(
             fflush(NULL as *mut FILE);
         }
         if displayLevel >= 1 {
-            fprintf(stderr, b"no data to bench\0" as *const u8 as *const libc::c_char);
+            fprintf(
+                stderr,
+                b"no data to bench\0" as *const u8 as *const libc::c_char,
+            );
             fflush(NULL as *mut FILE);
         }
         if displayLevel >= 1 {
@@ -2614,16 +2502,12 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
             }
             return 17 as libc::c_int;
         }
-        if dictFileSize
-            > (64 as libc::c_int * ((1) << 20 as libc::c_int))
-                as libc::c_ulong
-        {
+        if dictFileSize > (64 as libc::c_int * ((1) << 20 as libc::c_int)) as libc::c_ulong {
             free(fileSizes as *mut libc::c_void);
             if displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"dictionary file %s too large\0" as *const u8
-                        as *const libc::c_char,
+                    b"dictionary file %s too large\0" as *const u8 as *const libc::c_char,
                     dictFileName,
                 );
                 fflush(NULL as *mut FILE);
@@ -2664,10 +2548,7 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
     }
     match current_block {
         13707613154239713890 => {
-            benchedSize = (BMK_findMaxMem(
-                totalSizeToLoad.wrapping_mul(3),
-            ))
-                .wrapping_div(3);
+            benchedSize = (BMK_findMaxMem(totalSizeToLoad.wrapping_mul(3))).wrapping_div(3);
             if benchedSize > totalSizeToLoad {
                 benchedSize = totalSizeToLoad;
             }
@@ -2691,8 +2572,7 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
                 if displayLevel >= 1 {
                     fprintf(
                         stderr,
-                        b"not enough memory for srcBuffer\0" as *const u8
-                            as *const libc::c_char,
+                        b"not enough memory for srcBuffer\0" as *const u8 as *const libc::c_char,
                     );
                     fflush(NULL as *mut FILE);
                 }
@@ -2785,20 +2665,14 @@ pub unsafe extern "C" fn BMK_benchFiles(
     );
 }
 unsafe extern "C" fn run_static_initializers() {
-    maxMemory = if ::core::mem::size_of::<libc::size_t>()
-        == 4
-    {
-        (2)
-            .wrapping_mul((1) << 30 as libc::c_int)
-            .wrapping_sub(
-                (64 as libc::c_int * ((1) << 20 as libc::c_int))
-                    as libc::c_uint,
-            ) as libc::c_ulong
+    maxMemory = if ::core::mem::size_of::<libc::size_t>() == 4 {
+        (2).wrapping_mul((1) << 30 as libc::c_int)
+            .wrapping_sub((64 as libc::c_int * ((1) << 20 as libc::c_int)) as libc::c_uint)
+            as libc::c_ulong
     } else {
-        ((1)
-            << (::core::mem::size_of::<libc::size_t>())
-                .wrapping_mul(8)
-                .wrapping_sub(31)) as libc::size_t
+        ((1) << (::core::mem::size_of::<libc::size_t>())
+            .wrapping_mul(8)
+            .wrapping_sub(31)) as libc::size_t
     };
 }
 #[used]

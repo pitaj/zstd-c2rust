@@ -213,13 +213,19 @@ unsafe extern "C" fn ZSTD_storeSeq(
 ) {
     let litLimit_w = litLimit.offset(-(WILDCOPY_OVERLENGTH as isize));
     let litEnd = literals.offset(litLength as isize);
-    debug_assert!((((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart)
-        as libc::c_long as libc::size_t) < (*seqStorePtr).maxNbSeq);
-    debug_assert!((*seqStorePtr).maxNbLit
-        <= (128 as libc::c_int * ((1) << 10 as libc::c_int))
-            as libc::c_ulong);
-    debug_assert!(((*seqStorePtr).lit).offset(litLength as isize)
-        <= ((*seqStorePtr).litStart).offset((*seqStorePtr).maxNbLit as isize));
+    debug_assert!(
+        (((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart) as libc::c_long
+            as libc::size_t)
+            < (*seqStorePtr).maxNbSeq
+    );
+    debug_assert!(
+        (*seqStorePtr).maxNbLit
+            <= (128 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::c_ulong
+    );
+    debug_assert!(
+        ((*seqStorePtr).lit).offset(litLength as isize)
+            <= ((*seqStorePtr).litStart).offset((*seqStorePtr).maxNbLit as isize)
+    );
     debug_assert!(literals.offset(litLength as isize) <= litLimit);
     if litEnd <= litLimit_w {
         ZSTD_copy16(
@@ -228,8 +234,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
         );
         if litLength > 16 {
             ZSTD_wildcopy(
-                ((*seqStorePtr).lit).offset(16)
-                    as *mut libc::c_void,
+                ((*seqStorePtr).lit).offset(16) as *mut libc::c_void,
                 literals.offset(16) as *const libc::c_void,
                 litLength as ptrdiff_t - 16 as libc::c_int as libc::c_long,
                 ZSTD_no_overlap,
@@ -240,34 +245,35 @@ unsafe extern "C" fn ZSTD_storeSeq(
     }
     (*seqStorePtr).lit = ((*seqStorePtr).lit).offset(litLength as isize);
     if litLength > 0xffff as libc::c_int as libc::c_ulong {
-        debug_assert!((*seqStorePtr).longLengthType as libc::c_uint
-            == ZSTD_llt_none as libc::c_int as libc::c_uint);
+        debug_assert!(
+            (*seqStorePtr).longLengthType as libc::c_uint
+                == ZSTD_llt_none as libc::c_int as libc::c_uint
+        );
         (*seqStorePtr).longLengthType = ZSTD_llt_literalLength;
-        (*seqStorePtr)
-            .longLengthPos = ((*seqStorePtr).sequences)
-            .offset_from((*seqStorePtr).sequencesStart) as libc::c_long as u32;
+        (*seqStorePtr).longLengthPos = ((*seqStorePtr).sequences)
+            .offset_from((*seqStorePtr).sequencesStart)
+            as libc::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0))
-        .litLength = litLength as u16;
+    (*((*seqStorePtr).sequences).offset(0)).litLength = litLength as u16;
     (*((*seqStorePtr).sequences).offset(0)).offBase = offBase;
     debug_assert!(matchLength >= 3);
     let mlBase = matchLength.wrapping_sub(MINMATCH as libc::c_ulong);
     if mlBase > 0xffff as libc::c_int as libc::c_ulong {
-        debug_assert!((*seqStorePtr).longLengthType as libc::c_uint
-            == ZSTD_llt_none as libc::c_int as libc::c_uint);
+        debug_assert!(
+            (*seqStorePtr).longLengthType as libc::c_uint
+                == ZSTD_llt_none as libc::c_int as libc::c_uint
+        );
         (*seqStorePtr).longLengthType = ZSTD_llt_matchLength;
-        (*seqStorePtr)
-            .longLengthPos = ((*seqStorePtr).sequences)
-            .offset_from((*seqStorePtr).sequencesStart) as libc::c_long as u32;
+        (*seqStorePtr).longLengthPos = ((*seqStorePtr).sequences)
+            .offset_from((*seqStorePtr).sequencesStart)
+            as libc::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0))
-        .mlBase = mlBase as u16;
+    (*((*seqStorePtr).sequences).offset(0)).mlBase = mlBase as u16;
     (*seqStorePtr).sequences = ((*seqStorePtr).sequences).offset(1);
 }
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>()
-        == 8) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>() == 8) as libc::c_int as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
@@ -292,9 +298,9 @@ unsafe extern "C" fn MEM_readST(mut ptr: *const libc::c_void) -> libc::size_t {
 #[inline]
 unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> u32 {
     if MEM_isLittleEndian() != 0 {
-        return MEM_read32(memPtr)
+        return MEM_read32(memPtr);
     } else {
-        return MEM_swap32(MEM_read32(memPtr))
+        return MEM_swap32(MEM_read32(memPtr));
     };
 }
 #[inline]
@@ -304,9 +310,9 @@ unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
 #[inline]
 unsafe extern "C" fn MEM_readLE64(mut memPtr: *const libc::c_void) -> u64 {
     if MEM_isLittleEndian() != 0 {
-        return MEM_read64(memPtr)
+        return MEM_read64(memPtr);
     } else {
-        return MEM_swap64(MEM_read64(memPtr))
+        return MEM_swap64(MEM_read64(memPtr));
     };
 }
 #[inline]
@@ -337,26 +343,20 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> libc::c_uint {
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: libc::size_t) -> libc::c_uint {
     if MEM_isLittleEndian() != 0 {
         if MEM_64bits() != 0 {
-            return ZSTD_countTrailingZeros64(val) >> 3 as libc::c_int
+            return ZSTD_countTrailingZeros64(val) >> 3 as libc::c_int;
         } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3 as libc::c_int
+            return ZSTD_countTrailingZeros32(val as u32) >> 3 as libc::c_int;
         }
     } else if MEM_64bits() != 0 {
-        return ZSTD_countLeadingZeros64(val) >> 3 as libc::c_int
+        return ZSTD_countLeadingZeros64(val) >> 3 as libc::c_int;
     } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3 as libc::c_int
+        return ZSTD_countLeadingZeros32(val as u32) >> 3 as libc::c_int;
     };
 }
-unsafe extern "C" fn ZSTD_copy8(
-    mut dst: *mut libc::c_void,
-    mut src: *const libc::c_void,
-) {
+unsafe extern "C" fn ZSTD_copy8(mut dst: *mut libc::c_void, mut src: *const libc::c_void) {
     libc::memcpy(dst, src, 8 as libc::c_int as libc::c_ulong as libc::size_t);
 }
-unsafe extern "C" fn ZSTD_copy16(
-    mut dst: *mut libc::c_void,
-    mut src: *const libc::c_void,
-) {
+unsafe extern "C" fn ZSTD_copy16(mut dst: *mut libc::c_void, mut src: *const libc::c_void) {
     _mm_storeu_si128(dst as *mut __m128i, _mm_loadu_si128(src as *const __m128i));
 }
 #[inline(always)]
@@ -370,8 +370,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
     let mut ip = src as *const u8;
     let mut op = dst as *mut u8;
     let oend = op.offset(length as isize);
-    if ovtype as libc::c_uint
-        == ZSTD_overlap_src_before_dst as libc::c_int as libc::c_uint
+    if ovtype as libc::c_uint == ZSTD_overlap_src_before_dst as libc::c_int as libc::c_uint
         && diff < WILDCOPY_VECLEN as libc::c_long
     {
         loop {
@@ -383,8 +382,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
             }
         }
     } else {
-        debug_assert!(diff >= 16
-            || diff <= -(16) as libc::c_long);
+        debug_assert!(diff >= 16 || diff <= -(16) as libc::c_long);
         ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
         if 16 as libc::c_int as libc::c_long >= length {
             return;
@@ -464,8 +462,7 @@ unsafe extern "C" fn ZSTD_hash7Ptr(mut p: *const libc::c_void, mut h: u32) -> li
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as libc::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> libc::size_t {
     debug_assert!(h <= 64);
-    return (u.wrapping_mul(prime8bytes) ^ s)
-        >> (64).wrapping_sub(h);
+    return (u.wrapping_mul(prime8bytes) ^ s) >> (64).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash8Ptr(mut p: *const libc::c_void, mut h: u32) -> libc::size_t {
     return ZSTD_hash8(MEM_readLE64(p), h, 0 as libc::c_int as u64);
@@ -487,8 +484,7 @@ unsafe extern "C" fn ZSTD_hashPtr(
 }
 unsafe extern "C" fn ZSTD_hash4(mut u: u32, mut h: u32, mut s: u32) -> u32 {
     debug_assert!(h <= 32);
-    return (u.wrapping_mul(prime4bytes) ^ s)
-        >> (32).wrapping_sub(h);
+    return (u.wrapping_mul(prime4bytes) ^ s) >> (32).wrapping_sub(h);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_count(
@@ -497,37 +493,31 @@ unsafe extern "C" fn ZSTD_count(
     pInLimit: *const u8,
 ) -> libc::size_t {
     let pStart = pIn;
-    let pInLoopLimit = pInLimit
-        .offset(
-            -((::core::mem::size_of::<libc::size_t>())
-                .wrapping_sub(1) as isize),
-        );
+    let pInLoopLimit =
+        pInLimit.offset(-((::core::mem::size_of::<libc::size_t>()).wrapping_sub(1) as isize));
     if pIn < pInLoopLimit {
-        let diff = MEM_readST(pMatch as *const libc::c_void)
-            ^ MEM_readST(pIn as *const libc::c_void);
+        let diff =
+            MEM_readST(pMatch as *const libc::c_void) ^ MEM_readST(pIn as *const libc::c_void);
         if diff != 0 {
             return ZSTD_NbCommonBytes(diff) as libc::size_t;
         }
         pIn = pIn.offset(::core::mem::size_of::<libc::size_t>() as isize);
-        pMatch = pMatch
-            .offset(::core::mem::size_of::<libc::size_t>() as isize);
+        pMatch = pMatch.offset(::core::mem::size_of::<libc::size_t>() as isize);
         while pIn < pInLoopLimit {
-            let diff_0 = MEM_readST(pMatch as *const libc::c_void)
-                ^ MEM_readST(pIn as *const libc::c_void);
+            let diff_0 =
+                MEM_readST(pMatch as *const libc::c_void) ^ MEM_readST(pIn as *const libc::c_void);
             if diff_0 == 0 {
-                pIn = pIn
-                    .offset(::core::mem::size_of::<libc::size_t>() as isize);
-                pMatch = pMatch
-                    .offset(::core::mem::size_of::<libc::size_t>() as isize);
+                pIn = pIn.offset(::core::mem::size_of::<libc::size_t>() as isize);
+                pMatch = pMatch.offset(::core::mem::size_of::<libc::size_t>() as isize);
             } else {
                 pIn = pIn.offset(ZSTD_NbCommonBytes(diff_0) as isize);
                 return pIn.offset_from(pStart) as libc::c_long as libc::size_t;
             }
         }
     }
-    if MEM_64bits() != 0 && pIn < pInLimit.offset(-(3))
-        && MEM_read32(pMatch as *const libc::c_void)
-            == MEM_read32(pIn as *const libc::c_void)
+    if MEM_64bits() != 0
+        && pIn < pInLimit.offset(-(3))
+        && MEM_read32(pMatch as *const libc::c_void) == MEM_read32(pIn as *const libc::c_void)
     {
         pIn = pIn.offset(4);
         pMatch = pMatch.offset(4);
@@ -567,8 +557,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
     if match_0.offset(matchLength as isize) != mEnd {
         return matchLength;
     }
-    return matchLength
-        .wrapping_add(ZSTD_count(ip.offset(matchLength as isize), iStart, iEnd));
+    return matchLength.wrapping_add(ZSTD_count(ip.offset(matchLength as isize), iStart, iEnd));
 }
 #[inline]
 unsafe extern "C" fn ZSTD_getLowestMatchIndex(
@@ -583,9 +572,13 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     } else {
         lowestValid
     };
-    let isDictionary = ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint)
-        as libc::c_int as u32;
-    let matchLowest = if isDictionary != 0 { lowestValid } else { withinWindow };
+    let isDictionary =
+        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let matchLowest = if isDictionary != 0 {
+        lowestValid
+    } else {
+        withinWindow
+    };
     return matchLowest;
 }
 #[inline]
@@ -601,9 +594,13 @@ unsafe extern "C" fn ZSTD_getLowestPrefixIndex(
     } else {
         lowestValid
     };
-    let isDictionary = ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint)
-        as libc::c_int as u32;
-    let matchLowest = if isDictionary != 0 { lowestValid } else { withinWindow };
+    let isDictionary =
+        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let matchLowest = if isDictionary != 0 {
+        lowestValid
+    } else {
+        withinWindow
+    };
     return matchLowest;
 }
 #[inline]
@@ -627,9 +624,8 @@ unsafe extern "C" fn ZSTD_comparePackedTags(
     let tag2 = (packedTag2 & ZSTD_SHORT_CACHE_TAG_MASK as libc::c_ulong) as u32;
     return (tag1 == tag2) as libc::c_int;
 }
-pub const ZSTD_SHORT_CACHE_TAG_MASK: libc::c_uint = ((1)
-    << ZSTD_SHORT_CACHE_TAG_BITS)
-    .wrapping_sub(1);
+pub const ZSTD_SHORT_CACHE_TAG_MASK: libc::c_uint =
+    ((1) << ZSTD_SHORT_CACHE_TAG_BITS).wrapping_sub(1);
 unsafe extern "C" fn ZSTD_fillDoubleHashTableForCDict(
     mut ms: *mut ZSTD_matchState_t,
     mut end: *const libc::c_void,
@@ -637,28 +633,21 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCDict(
 ) {
     let cParams: *const ZSTD_compressionParameters = &mut (*ms).cParams;
     let hashLarge = (*ms).hashTable;
-    let hBitsL = ((*cParams).hashLog)
-        .wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
+    let hBitsL = ((*cParams).hashLog).wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
     let mls = (*cParams).minMatch;
     let hashSmall = (*ms).chainTable;
-    let hBitsS = ((*cParams).chainLog)
-        .wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
+    let hBitsS = ((*cParams).chainLog).wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
     let base = (*ms).window.base;
     let mut ip = base.offset((*ms).nextToUpdate as isize);
     let iend = (end as *const u8).offset(-(HASH_READ_SIZE as isize));
     let fastHashFillStep = 3 as libc::c_int as u32;
-    while ip.offset(fastHashFillStep as isize).offset(-(1))
-        <= iend
-    {
+    while ip.offset(fastHashFillStep as isize).offset(-(1)) <= iend {
         let curr = ip.offset_from(base) as libc::c_long as u32;
         let mut i: u32 = 0;
         i = 0 as libc::c_int as u32;
         while i < fastHashFillStep {
-            let smHashAndTag = ZSTD_hashPtr(
-                ip.offset(i as isize) as *const libc::c_void,
-                hBitsS,
-                mls,
-            );
+            let smHashAndTag =
+                ZSTD_hashPtr(ip.offset(i as isize) as *const libc::c_void, hBitsS, mls);
             let lgHashAndTag = ZSTD_hashPtr(
                 ip.offset(i as isize) as *const libc::c_void,
                 hBitsL,
@@ -668,9 +657,7 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCDict(
                 ZSTD_writeTaggedIndex(hashSmall, smHashAndTag, curr.wrapping_add(i));
             }
             if i == 0
-                || *hashLarge
-                    .offset((lgHashAndTag >> ZSTD_SHORT_CACHE_TAG_BITS) as isize)
-                    == 0
+                || *hashLarge.offset((lgHashAndTag >> ZSTD_SHORT_CACHE_TAG_BITS) as isize) == 0
             {
                 ZSTD_writeTaggedIndex(hashLarge, lgHashAndTag, curr.wrapping_add(i));
             }
@@ -697,18 +684,12 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCCtx(
     let mut ip = base.offset((*ms).nextToUpdate as isize);
     let iend = (end as *const u8).offset(-(HASH_READ_SIZE as isize));
     let fastHashFillStep = 3 as libc::c_int as u32;
-    while ip.offset(fastHashFillStep as isize).offset(-(1))
-        <= iend
-    {
+    while ip.offset(fastHashFillStep as isize).offset(-(1)) <= iend {
         let curr = ip.offset_from(base) as libc::c_long as u32;
         let mut i: u32 = 0;
         i = 0 as libc::c_int as u32;
         while i < fastHashFillStep {
-            let smHash = ZSTD_hashPtr(
-                ip.offset(i as isize) as *const libc::c_void,
-                hBitsS,
-                mls,
-            );
+            let smHash = ZSTD_hashPtr(ip.offset(i as isize) as *const libc::c_void, hBitsS, mls);
             let lgHash = ZSTD_hashPtr(
                 ip.offset(i as isize) as *const libc::c_void,
                 hBitsL,
@@ -717,9 +698,7 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCCtx(
             if i == 0 {
                 *hashSmall.offset(smHash as isize) = curr.wrapping_add(i);
             }
-            if i == 0
-                || *hashLarge.offset(lgHash as isize) == 0
-            {
+            if i == 0 || *hashLarge.offset(lgHash as isize) == 0 {
                 *hashLarge.offset(lgHash as isize) = curr.wrapping_add(i);
             }
             if dtlm as libc::c_uint == ZSTD_dtlm_fast as libc::c_int as libc::c_uint {
@@ -761,13 +740,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
     let base = (*ms).window.base;
     let istart = src as *const u8;
     let mut anchor = istart;
-    let endIndex = (istart.offset_from(base) as libc::c_long as libc::size_t)
-        .wrapping_add(srcSize) as u32;
-    let prefixLowestIndex = ZSTD_getLowestPrefixIndex(
-        ms,
-        endIndex,
-        (*cParams).windowLog,
-    );
+    let endIndex =
+        (istart.offset_from(base) as libc::c_long as libc::size_t).wrapping_add(srcSize) as u32;
+    let prefixLowestIndex = ZSTD_getLowestPrefixIndex(ms, endIndex, (*cParams).windowLog);
     let prefixLowest = base.offset(prefixLowestIndex as isize);
     let iend = istart.offset(srcSize as isize);
     let ilimit = iend.offset(-(HASH_READ_SIZE as isize));
@@ -790,11 +765,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
     let mut matchl1 = 0 as *const u8;
     let mut ip = istart;
     let mut ip1 = 0 as *const u8;
-    ip = ip
-        .offset(
-            (ip.offset_from(prefixLowest) as libc::c_long
-                == 0) as libc::c_int as isize,
-        );
+    ip = ip.offset((ip.offset_from(prefixLowest) as libc::c_long == 0) as libc::c_int as isize);
     let current = ip.offset_from(base) as libc::c_long as u32;
     let windowLow = ZSTD_getLowestPrefixIndex(ms, current, (*cParams).windowLog);
     let maxRep = current.wrapping_sub(windowLow);
@@ -811,11 +782,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
         nextStep = ip.offset(kStepIncr as isize);
         ip1 = ip.offset(step as isize);
         if !(ip1 > ilimit) {
-            hl0 = ZSTD_hashPtr(
-                ip as *const libc::c_void,
-                hBitsL,
-                8 as libc::c_int as u32,
-            );
+            hl0 = ZSTD_hashPtr(ip as *const libc::c_void, hBitsL, 8 as libc::c_int as u32);
             idxl0 = *hashLong.offset(hl0 as isize);
             matchl0 = base.offset(idxl0 as isize);
             loop {
@@ -827,25 +794,17 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                 *fresh2 = curr;
                 *hashLong.offset(hl0 as isize) = *fresh2;
                 if (offset_1 > 0) as libc::c_int
-                    & (MEM_read32(
-                        ip.offset(1).offset(-(offset_1 as isize))
-                            as *const libc::c_void,
-                    )
-                        == MEM_read32(
-                            ip.offset(1) as *const libc::c_void,
-                        )) as libc::c_int != 0
+                    & (MEM_read32(ip.offset(1).offset(-(offset_1 as isize)) as *const libc::c_void)
+                        == MEM_read32(ip.offset(1) as *const libc::c_void))
+                        as libc::c_int
+                    != 0
                 {
                     mLength = (ZSTD_count(
-                        ip
-                            .offset(1)
-                            .offset(4),
-                        ip
-                            .offset(1)
-                            .offset(4)
-                            .offset(-(offset_1 as isize)),
+                        ip.offset(1).offset(4),
+                        ip.offset(1).offset(4).offset(-(offset_1 as isize)),
                         iend,
                     ))
-                        .wrapping_add(4);
+                    .wrapping_add(4);
                     ip = ip.offset(1);
                     debug_assert!(1 as libc::c_int >= 1);
                     debug_assert!(1 as libc::c_int <= 3);
@@ -860,27 +819,19 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                     current_block = 7055686759104843839;
                     break;
                 } else {
-                    hl1 = ZSTD_hashPtr(
-                        ip1 as *const libc::c_void,
-                        hBitsL,
-                        8 as libc::c_int as u32,
-                    );
+                    hl1 = ZSTD_hashPtr(ip1 as *const libc::c_void, hBitsL, 8 as libc::c_int as u32);
                     if idxl0 > prefixLowestIndex {
                         if MEM_read64(matchl0 as *const libc::c_void)
                             == MEM_read64(ip as *const libc::c_void)
                         {
-                            mLength = (ZSTD_count(
-                                ip.offset(8),
-                                matchl0.offset(8),
-                                iend,
-                            ))
-                                .wrapping_add(8);
+                            mLength =
+                                (ZSTD_count(ip.offset(8), matchl0.offset(8), iend)).wrapping_add(8);
                             offset = ip.offset_from(matchl0) as libc::c_long as u32;
                             while (ip > anchor) as libc::c_int
-                                & (matchl0 > prefixLowest) as libc::c_int != 0
+                                & (matchl0 > prefixLowest) as libc::c_int
+                                != 0
                                 && *ip.offset(-(1) as isize) as libc::c_int
-                                    == *matchl0.offset(-(1) as isize)
-                                        as libc::c_int
+                                    == *matchl0.offset(-(1) as isize) as libc::c_int
                             {
                                 ip = ip.offset(-1);
                                 matchl0 = matchl0.offset(-1);
@@ -925,18 +876,14 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                     == MEM_read64(ip1 as *const libc::c_void)
                                 {
                                     ip = ip1;
-                                    mLength = (ZSTD_count(
-                                        ip.offset(8),
-                                        matchl1.offset(8),
-                                        iend,
-                                    ))
+                                    mLength = (ZSTD_count(ip.offset(8), matchl1.offset(8), iend))
                                         .wrapping_add(8);
                                     offset = ip.offset_from(matchl1) as libc::c_long as u32;
                                     while (ip > anchor) as libc::c_int
-                                        & (matchl1 > prefixLowest) as libc::c_int != 0
+                                        & (matchl1 > prefixLowest) as libc::c_int
+                                        != 0
                                         && *ip.offset(-(1) as isize) as libc::c_int
-                                            == *matchl1.offset(-(1) as isize)
-                                                as libc::c_int
+                                            == *matchl1.offset(-(1) as isize) as libc::c_int
                                     {
                                         ip = ip.offset(-1);
                                         matchl1 = matchl1.offset(-1);
@@ -952,18 +899,14 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                             match current_block {
                                 1549319127794666967 => {}
                                 _ => {
-                                    mLength = (ZSTD_count(
-                                        ip.offset(4),
-                                        matchs0.offset(4),
-                                        iend,
-                                    ))
+                                    mLength = (ZSTD_count(ip.offset(4), matchs0.offset(4), iend))
                                         .wrapping_add(4);
                                     offset = ip.offset_from(matchs0) as libc::c_long as u32;
                                     while (ip > anchor) as libc::c_int
-                                        & (matchs0 > prefixLowest) as libc::c_int != 0
+                                        & (matchs0 > prefixLowest) as libc::c_int
+                                        != 0
                                         && *ip.offset(-(1) as isize) as libc::c_int
-                                            == *matchs0.offset(-(1) as isize)
-                                                as libc::c_int
+                                            == *matchs0.offset(-(1) as isize) as libc::c_int
                                     {
                                         ip = ip.offset(-1);
                                         matchs0 = matchs0.offset(-1);
@@ -980,10 +923,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                             offset_2 = offset_1;
                             offset_1 = offset;
                             if step < 4 {
-                                *hashLong
-                                    .offset(
-                                        hl1 as isize,
-                                    ) = ip1.offset_from(base) as libc::c_long as u32;
+                                *hashLong.offset(hl1 as isize) =
+                                    ip1.offset_from(base) as libc::c_long as u32;
                             }
                             debug_assert!(offset > 0);
                             ZSTD_storeSeq(
@@ -1000,76 +941,52 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                     ip = ip.offset(mLength as isize);
                     anchor = ip;
                     if ip <= ilimit {
-                        let indexToInsert = curr
-                            .wrapping_add(2);
-                        *hashLong
-                            .offset(
-                                ZSTD_hashPtr(
-                                    base.offset(indexToInsert as isize) as *const libc::c_void,
-                                    hBitsL,
-                                    8 as libc::c_int as u32,
-                                ) as isize,
-                            ) = indexToInsert;
-                        *hashLong
-                            .offset(
-                                ZSTD_hashPtr(
-                                    ip.offset(-(2))
-                                        as *const libc::c_void,
-                                    hBitsL,
-                                    8 as libc::c_int as u32,
-                                ) as isize,
-                            ) = ip.offset(-(2)).offset_from(base)
-                            as libc::c_long as u32;
-                        *hashSmall
-                            .offset(
-                                ZSTD_hashPtr(
-                                    base.offset(indexToInsert as isize) as *const libc::c_void,
-                                    hBitsS,
-                                    mls,
-                                ) as isize,
-                            ) = indexToInsert;
-                        *hashSmall
-                            .offset(
-                                ZSTD_hashPtr(
-                                    ip.offset(-(1))
-                                        as *const libc::c_void,
-                                    hBitsS,
-                                    mls,
-                                ) as isize,
-                            ) = ip.offset(-(1)).offset_from(base)
-                            as libc::c_long as u32;
+                        let indexToInsert = curr.wrapping_add(2);
+                        *hashLong.offset(ZSTD_hashPtr(
+                            base.offset(indexToInsert as isize) as *const libc::c_void,
+                            hBitsL,
+                            8 as libc::c_int as u32,
+                        ) as isize) = indexToInsert;
+                        *hashLong.offset(ZSTD_hashPtr(
+                            ip.offset(-(2)) as *const libc::c_void,
+                            hBitsL,
+                            8 as libc::c_int as u32,
+                        ) as isize) = ip.offset(-(2)).offset_from(base) as libc::c_long as u32;
+                        *hashSmall.offset(ZSTD_hashPtr(
+                            base.offset(indexToInsert as isize) as *const libc::c_void,
+                            hBitsS,
+                            mls,
+                        ) as isize) = indexToInsert;
+                        *hashSmall.offset(ZSTD_hashPtr(
+                            ip.offset(-(1)) as *const libc::c_void,
+                            hBitsS,
+                            mls,
+                        ) as isize) = ip.offset(-(1)).offset_from(base) as libc::c_long as u32;
                         while ip <= ilimit
-                            && (offset_2 > 0)
-                                as libc::c_int
+                            && (offset_2 > 0) as libc::c_int
                                 & (MEM_read32(ip as *const libc::c_void)
                                     == MEM_read32(
-                                        ip.offset(-(offset_2 as isize)) as *const libc::c_void,
-                                    )) as libc::c_int != 0
+                                        ip.offset(-(offset_2 as isize)) as *const libc::c_void
+                                    )) as libc::c_int
+                                != 0
                         {
                             let rLength = (ZSTD_count(
                                 ip.offset(4),
-                                ip
-                                    .offset(4)
-                                    .offset(-(offset_2 as isize)),
+                                ip.offset(4).offset(-(offset_2 as isize)),
                                 iend,
                             ))
-                                .wrapping_add(4);
+                            .wrapping_add(4);
                             let tmpOff = offset_2;
                             offset_2 = offset_1;
                             offset_1 = tmpOff;
-                            *hashSmall
-                                .offset(
-                                    ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls)
-                                        as isize,
-                                ) = ip.offset_from(base) as libc::c_long as u32;
-                            *hashLong
-                                .offset(
-                                    ZSTD_hashPtr(
-                                        ip as *const libc::c_void,
-                                        hBitsL,
-                                        8 as libc::c_int as u32,
-                                    ) as isize,
-                                ) = ip.offset_from(base) as libc::c_long as u32;
+                            *hashSmall.offset(
+                                ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls) as isize,
+                            ) = ip.offset_from(base) as libc::c_long as u32;
+                            *hashLong.offset(ZSTD_hashPtr(
+                                ip as *const libc::c_void,
+                                hBitsL,
+                                8 as libc::c_int as u32,
+                            ) as isize) = ip.offset_from(base) as libc::c_long as u32;
                             debug_assert!(1 as libc::c_int >= 1);
                             debug_assert!(1 as libc::c_int <= 3);
                             ZSTD_storeSeq(
@@ -1095,16 +1012,18 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
         } else {
             offsetSaved2
         };
-        *rep
-            .offset(
-                0 as libc::c_int as isize,
-            ) = if offset_1 != 0 { offset_1 } else { offsetSaved1 };
-        *rep
-            .offset(
-                1 as libc::c_int as isize,
-            ) = if offset_2 != 0 { offset_2 } else { offsetSaved2 };
+        *rep.offset(0 as libc::c_int as isize) = if offset_1 != 0 {
+            offset_1
+        } else {
+            offsetSaved1
+        };
+        *rep.offset(1 as libc::c_int as isize) = if offset_2 != 0 {
+            offset_2
+        } else {
+            offsetSaved2
+        };
         return iend.offset_from(anchor) as libc::c_long as libc::size_t;
-    };
+    }
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
@@ -1125,13 +1044,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
     let istart = src as *const u8;
     let mut ip = istart;
     let mut anchor = istart;
-    let endIndex = (istart.offset_from(base) as libc::c_long as libc::size_t)
-        .wrapping_add(srcSize) as u32;
-    let prefixLowestIndex = ZSTD_getLowestPrefixIndex(
-        ms,
-        endIndex,
-        (*cParams).windowLog,
-    );
+    let endIndex =
+        (istart.offset_from(base) as libc::c_long as libc::size_t).wrapping_add(srcSize) as u32;
+    let prefixLowestIndex = ZSTD_getLowestPrefixIndex(ms, endIndex, (*cParams).windowLog);
     let prefixLowest = base.offset(prefixLowestIndex as isize);
     let iend = istart.offset(srcSize as isize);
     let ilimit = iend.offset(-(HASH_READ_SIZE as isize));
@@ -1145,53 +1060,42 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
     let dictBase = (*dms).window.base;
     let dictStart = dictBase.offset(dictStartIndex as isize);
     let dictEnd = (*dms).window.nextSrc;
-    let dictIndexDelta = prefixLowestIndex
-        .wrapping_sub(dictEnd.offset_from(dictBase) as libc::c_long as u32);
-    let dictHBitsL = ((*dictCParams).hashLog)
-        .wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
-    let dictHBitsS = ((*dictCParams).chainLog)
-        .wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
+    let dictIndexDelta =
+        prefixLowestIndex.wrapping_sub(dictEnd.offset_from(dictBase) as libc::c_long as u32);
+    let dictHBitsL =
+        ((*dictCParams).hashLog).wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
+    let dictHBitsS =
+        ((*dictCParams).chainLog).wrapping_add(ZSTD_SHORT_CACHE_TAG_BITS as libc::c_uint);
     let dictAndPrefixLength = (ip.offset_from(prefixLowest) as libc::c_long
         + dictEnd.offset_from(dictStart) as libc::c_long) as u32;
-    debug_assert!(((*ms).window.dictLimit).wrapping_add((1) << (*cParams).windowLog)
-        >= endIndex);
+    debug_assert!(((*ms).window.dictLimit).wrapping_add((1) << (*cParams).windowLog) >= endIndex);
     if (*ms).prefetchCDictTables != 0 {
-        let hashTableBytes = ((1) << (*dictCParams).hashLog)
-            .wrapping_mul(::core::mem::size_of::<u32>());
-        let chainTableBytes = ((1) << (*dictCParams).chainLog)
-            .wrapping_mul(::core::mem::size_of::<u32>());
+        let hashTableBytes =
+            ((1) << (*dictCParams).hashLog).wrapping_mul(::core::mem::size_of::<u32>());
+        let chainTableBytes =
+            ((1) << (*dictCParams).chainLog).wrapping_mul(::core::mem::size_of::<u32>());
         let _ptr = dictHashLong as *const libc::c_char;
         let _size = hashTableBytes;
         let mut _pos: libc::size_t = 0;
         _pos = 0 as libc::c_int as libc::size_t;
         while _pos < _size {
-            _pos = (_pos as libc::c_ulong).wrapping_add(CACHELINE_SIZE as libc::c_ulong)
-                ;
+            _pos = (_pos as libc::c_ulong).wrapping_add(CACHELINE_SIZE as libc::c_ulong);
         }
         let _ptr_0 = dictHashSmall as *const libc::c_char;
         let _size_0 = chainTableBytes;
         let mut _pos_0: libc::size_t = 0;
         _pos_0 = 0 as libc::c_int as libc::size_t;
         while _pos_0 < _size_0 {
-            _pos_0 = (_pos_0 as libc::c_ulong)
-                .wrapping_add(CACHELINE_SIZE as libc::c_ulong) ;
+            _pos_0 = (_pos_0 as libc::c_ulong).wrapping_add(CACHELINE_SIZE as libc::c_ulong);
         }
     }
-    ip = ip
-        .offset(
-            (dictAndPrefixLength == 0) as libc::c_int
-                as isize,
-        );
+    ip = ip.offset((dictAndPrefixLength == 0) as libc::c_int as isize);
     debug_assert!(offset_1 <= dictAndPrefixLength);
     debug_assert!(offset_2 <= dictAndPrefixLength);
     while ip < ilimit {
         let mut mLength: libc::size_t = 0;
         let mut offset: u32 = 0;
-        let h2 = ZSTD_hashPtr(
-            ip as *const libc::c_void,
-            hBitsL,
-            8 as libc::c_int as u32,
-        );
+        let h2 = ZSTD_hashPtr(ip as *const libc::c_void, hBitsL, 8 as libc::c_int as u32);
         let h = ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls);
         let dictHashAndTagL = ZSTD_hashPtr(
             ip as *const libc::c_void,
@@ -1199,26 +1103,20 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
             8 as libc::c_int as u32,
         );
         let dictHashAndTagS = ZSTD_hashPtr(ip as *const libc::c_void, dictHBitsS, mls);
-        let dictMatchIndexAndTagL = *dictHashLong
-            .offset((dictHashAndTagL >> ZSTD_SHORT_CACHE_TAG_BITS) as isize);
-        let dictMatchIndexAndTagS = *dictHashSmall
-            .offset((dictHashAndTagS >> ZSTD_SHORT_CACHE_TAG_BITS) as isize);
-        let dictTagsMatchL = ZSTD_comparePackedTags(
-            dictMatchIndexAndTagL as libc::size_t,
-            dictHashAndTagL,
-        );
-        let dictTagsMatchS = ZSTD_comparePackedTags(
-            dictMatchIndexAndTagS as libc::size_t,
-            dictHashAndTagS,
-        );
+        let dictMatchIndexAndTagL =
+            *dictHashLong.offset((dictHashAndTagL >> ZSTD_SHORT_CACHE_TAG_BITS) as isize);
+        let dictMatchIndexAndTagS =
+            *dictHashSmall.offset((dictHashAndTagS >> ZSTD_SHORT_CACHE_TAG_BITS) as isize);
+        let dictTagsMatchL =
+            ZSTD_comparePackedTags(dictMatchIndexAndTagL as libc::size_t, dictHashAndTagL);
+        let dictTagsMatchS =
+            ZSTD_comparePackedTags(dictMatchIndexAndTagS as libc::size_t, dictHashAndTagS);
         let curr = ip.offset_from(base) as libc::c_long as u32;
         let matchIndexL = *hashLong.offset(h2 as isize);
         let mut matchIndexS = *hashSmall.offset(h as isize);
         let mut matchLong = base.offset(matchIndexL as isize);
         let mut match_0 = base.offset(matchIndexS as isize);
-        let repIndex = curr
-            .wrapping_add(1)
-            .wrapping_sub(offset_1);
+        let repIndex = curr.wrapping_add(1).wrapping_sub(offset_1);
         let mut repMatch = if repIndex < prefixLowestIndex {
             dictBase.offset(repIndex.wrapping_sub(dictIndexDelta) as isize)
         } else {
@@ -1227,13 +1125,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
         let ref mut fresh3 = *hashSmall.offset(h as isize);
         *fresh3 = curr;
         *hashLong.offset(h2 as isize) = *fresh3;
-        if prefixLowestIndex
-            .wrapping_sub(1)
-            .wrapping_sub(repIndex) >= 3
+        if prefixLowestIndex.wrapping_sub(1).wrapping_sub(repIndex) >= 3
             && MEM_read32(repMatch as *const libc::c_void)
-                == MEM_read32(
-                    ip.offset(1) as *const libc::c_void,
-                )
+                == MEM_read32(ip.offset(1) as *const libc::c_void)
         {
             let mut repMatchEnd = if repIndex < prefixLowestIndex {
                 dictEnd
@@ -1247,7 +1141,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                 repMatchEnd,
                 prefixLowest,
             ))
-                .wrapping_add(4);
+            .wrapping_add(4);
             ip = ip.offset(1);
             debug_assert!(1 as libc::c_int >= 1);
             debug_assert!(1 as libc::c_int <= 3);
@@ -1264,18 +1158,12 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                 if MEM_read64(matchLong as *const libc::c_void)
                     == MEM_read64(ip as *const libc::c_void)
                 {
-                    mLength = (ZSTD_count(
-                        ip.offset(8),
-                        matchLong.offset(8),
-                        iend,
-                    ))
-                        .wrapping_add(8);
+                    mLength = (ZSTD_count(ip.offset(8), matchLong.offset(8), iend)).wrapping_add(8);
                     offset = ip.offset_from(matchLong) as libc::c_long as u32;
-                    while (ip > anchor) as libc::c_int
-                        & (matchLong > prefixLowest) as libc::c_int != 0
+                    while (ip > anchor) as libc::c_int & (matchLong > prefixLowest) as libc::c_int
+                        != 0
                         && *ip.offset(-(1) as isize) as libc::c_int
-                            == *matchLong.offset(-(1) as isize)
-                                as libc::c_int
+                            == *matchLong.offset(-(1) as isize) as libc::c_int
                     {
                         ip = ip.offset(-1);
                         matchLong = matchLong.offset(-1);
@@ -1300,15 +1188,14 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                         dictEnd,
                         prefixLowest,
                     ))
-                        .wrapping_add(8);
+                    .wrapping_add(8);
                     offset = curr
                         .wrapping_sub(dictMatchIndexL)
                         .wrapping_sub(dictIndexDelta);
-                    while (ip > anchor) as libc::c_int
-                        & (dictMatchL > dictStart) as libc::c_int != 0
+                    while (ip > anchor) as libc::c_int & (dictMatchL > dictStart) as libc::c_int
+                        != 0
                         && *ip.offset(-(1) as isize) as libc::c_int
-                            == *dictMatchL.offset(-(1) as isize)
-                                as libc::c_int
+                            == *dictMatchL.offset(-(1) as isize) as libc::c_int
                     {
                         ip = ip.offset(-1);
                         dictMatchL = dictMatchL.offset(-1);
@@ -1332,8 +1219,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                             current_block = 15594839951440953787;
                         }
                     } else if dictTagsMatchS != 0 {
-                        let dictMatchIndexS = dictMatchIndexAndTagS
-                            >> ZSTD_SHORT_CACHE_TAG_BITS;
+                        let dictMatchIndexS = dictMatchIndexAndTagS >> ZSTD_SHORT_CACHE_TAG_BITS;
                         match_0 = dictBase.offset(dictMatchIndexS as isize);
                         matchIndexS = dictMatchIndexS.wrapping_add(dictIndexDelta);
                         if match_0 > dictStart
@@ -1349,11 +1235,10 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                     }
                     match current_block {
                         15594839951440953787 => {
-                            ip = ip
-                                .offset(
-                                    ((ip.offset_from(anchor) as libc::c_long >> kSearchStrength)
-                                        + 1) as isize,
-                                );
+                            ip = ip.offset(
+                                ((ip.offset_from(anchor) as libc::c_long >> kSearchStrength) + 1)
+                                    as isize,
+                            );
                             continue;
                         }
                         _ => {
@@ -1369,37 +1254,26 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                             );
                             let matchIndexL3 = *hashLong.offset(hl3 as isize);
                             let dictMatchIndexAndTagL3 = *dictHashLong
-                                .offset(
-                                    (dictHashAndTagL3 >> ZSTD_SHORT_CACHE_TAG_BITS) as isize,
-                                );
+                                .offset((dictHashAndTagL3 >> ZSTD_SHORT_CACHE_TAG_BITS) as isize);
                             let dictTagsMatchL3 = ZSTD_comparePackedTags(
                                 dictMatchIndexAndTagL3 as libc::size_t,
                                 dictHashAndTagL3,
                             );
                             let mut matchL3 = base.offset(matchIndexL3 as isize);
-                            *hashLong
-                                .offset(
-                                    hl3 as isize,
-                                ) = curr.wrapping_add(1);
+                            *hashLong.offset(hl3 as isize) = curr.wrapping_add(1);
                             if matchIndexL3 > prefixLowestIndex {
                                 if MEM_read64(matchL3 as *const libc::c_void)
-                                    == MEM_read64(
-                                        ip.offset(1) as *const libc::c_void,
-                                    )
+                                    == MEM_read64(ip.offset(1) as *const libc::c_void)
                                 {
-                                    mLength = (ZSTD_count(
-                                        ip.offset(9),
-                                        matchL3.offset(8),
-                                        iend,
-                                    ))
+                                    mLength = (ZSTD_count(ip.offset(9), matchL3.offset(8), iend))
                                         .wrapping_add(8);
                                     ip = ip.offset(1);
                                     offset = ip.offset_from(matchL3) as libc::c_long as u32;
                                     while (ip > anchor) as libc::c_int
-                                        & (matchL3 > prefixLowest) as libc::c_int != 0
+                                        & (matchL3 > prefixLowest) as libc::c_int
+                                        != 0
                                         && *ip.offset(-(1) as isize) as libc::c_int
-                                            == *matchL3.offset(-(1) as isize)
-                                                as libc::c_int
+                                            == *matchL3.offset(-(1) as isize) as libc::c_int
                                     {
                                         ip = ip.offset(-1);
                                         matchL3 = matchL3.offset(-1);
@@ -1410,37 +1284,32 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                     current_block = 10859911333150192671;
                                 }
                             } else if dictTagsMatchL3 != 0 {
-                                let dictMatchIndexL3 = dictMatchIndexAndTagL3
-                                    >> ZSTD_SHORT_CACHE_TAG_BITS;
-                                let mut dictMatchL3 = dictBase
-                                    .offset(dictMatchIndexL3 as isize);
+                                let dictMatchIndexL3 =
+                                    dictMatchIndexAndTagL3 >> ZSTD_SHORT_CACHE_TAG_BITS;
+                                let mut dictMatchL3 = dictBase.offset(dictMatchIndexL3 as isize);
                                 debug_assert!(dictMatchL3 < dictEnd);
                                 if dictMatchL3 > dictStart
                                     && MEM_read64(dictMatchL3 as *const libc::c_void)
-                                        == MEM_read64(
-                                            ip.offset(1) as *const libc::c_void,
-                                        )
+                                        == MEM_read64(ip.offset(1) as *const libc::c_void)
                                 {
                                     mLength = (ZSTD_count_2segments(
-                                        ip
-                                            .offset(1)
-                                            .offset(8),
+                                        ip.offset(1).offset(8),
                                         dictMatchL3.offset(8),
                                         iend,
                                         dictEnd,
                                         prefixLowest,
                                     ))
-                                        .wrapping_add(8);
+                                    .wrapping_add(8);
                                     ip = ip.offset(1);
                                     offset = curr
                                         .wrapping_add(1)
                                         .wrapping_sub(dictMatchIndexL3)
                                         .wrapping_sub(dictIndexDelta);
                                     while (ip > anchor) as libc::c_int
-                                        & (dictMatchL3 > dictStart) as libc::c_int != 0
+                                        & (dictMatchL3 > dictStart) as libc::c_int
+                                        != 0
                                         && *ip.offset(-(1) as isize) as libc::c_int
-                                            == *dictMatchL3.offset(-(1) as isize)
-                                                as libc::c_int
+                                            == *dictMatchL3.offset(-(1) as isize) as libc::c_int
                                     {
                                         ip = ip.offset(-1);
                                         dictMatchL3 = dictMatchL3.offset(-1);
@@ -1464,31 +1333,28 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                             dictEnd,
                                             prefixLowest,
                                         ))
-                                            .wrapping_add(4);
+                                        .wrapping_add(4);
                                         offset = curr.wrapping_sub(matchIndexS);
                                         while (ip > anchor) as libc::c_int
-                                            & (match_0 > dictStart) as libc::c_int != 0
+                                            & (match_0 > dictStart) as libc::c_int
+                                            != 0
                                             && *ip.offset(-(1) as isize) as libc::c_int
-                                                == *match_0.offset(-(1) as isize)
-                                                    as libc::c_int
+                                                == *match_0.offset(-(1) as isize) as libc::c_int
                                         {
                                             ip = ip.offset(-1);
                                             match_0 = match_0.offset(-1);
                                             mLength = mLength.wrapping_add(1);
                                         }
                                     } else {
-                                        mLength = (ZSTD_count(
-                                            ip.offset(4),
-                                            match_0.offset(4),
-                                            iend,
-                                        ))
-                                            .wrapping_add(4);
+                                        mLength =
+                                            (ZSTD_count(ip.offset(4), match_0.offset(4), iend))
+                                                .wrapping_add(4);
                                         offset = ip.offset_from(match_0) as libc::c_long as u32;
                                         while (ip > anchor) as libc::c_int
-                                            & (match_0 > prefixLowest) as libc::c_int != 0
+                                            & (match_0 > prefixLowest) as libc::c_int
+                                            != 0
                                             && *ip.offset(-(1) as isize) as libc::c_int
-                                                == *match_0.offset(-(1) as isize)
-                                                    as libc::c_int
+                                                == *match_0.offset(-(1) as isize) as libc::c_int
                                         {
                                             ip = ip.offset(-1);
                                             match_0 = match_0.offset(-1);
@@ -1518,40 +1384,24 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
         anchor = ip;
         if ip <= ilimit {
             let indexToInsert = curr.wrapping_add(2);
-            *hashLong
-                .offset(
-                    ZSTD_hashPtr(
-                        base.offset(indexToInsert as isize) as *const libc::c_void,
-                        hBitsL,
-                        8 as libc::c_int as u32,
-                    ) as isize,
-                ) = indexToInsert;
-            *hashLong
-                .offset(
-                    ZSTD_hashPtr(
-                        ip.offset(-(2)) as *const libc::c_void,
-                        hBitsL,
-                        8 as libc::c_int as u32,
-                    ) as isize,
-                ) = ip.offset(-(2)).offset_from(base)
-                as libc::c_long as u32;
-            *hashSmall
-                .offset(
-                    ZSTD_hashPtr(
-                        base.offset(indexToInsert as isize) as *const libc::c_void,
-                        hBitsS,
-                        mls,
-                    ) as isize,
-                ) = indexToInsert;
-            *hashSmall
-                .offset(
-                    ZSTD_hashPtr(
-                        ip.offset(-(1)) as *const libc::c_void,
-                        hBitsS,
-                        mls,
-                    ) as isize,
-                ) = ip.offset(-(1)).offset_from(base)
-                as libc::c_long as u32;
+            *hashLong.offset(ZSTD_hashPtr(
+                base.offset(indexToInsert as isize) as *const libc::c_void,
+                hBitsL,
+                8 as libc::c_int as u32,
+            ) as isize) = indexToInsert;
+            *hashLong.offset(ZSTD_hashPtr(
+                ip.offset(-(2)) as *const libc::c_void,
+                hBitsL,
+                8 as libc::c_int as u32,
+            ) as isize) = ip.offset(-(2)).offset_from(base) as libc::c_long as u32;
+            *hashSmall.offset(ZSTD_hashPtr(
+                base.offset(indexToInsert as isize) as *const libc::c_void,
+                hBitsS,
+                mls,
+            ) as isize) = indexToInsert;
+            *hashSmall.offset(
+                ZSTD_hashPtr(ip.offset(-(1)) as *const libc::c_void, hBitsS, mls) as isize,
+            ) = ip.offset(-(1)).offset_from(base) as libc::c_long as u32;
             while ip <= ilimit {
                 let current2 = ip.offset_from(base) as libc::c_long as u32;
                 let repIndex2 = current2.wrapping_sub(offset_2);
@@ -1562,15 +1412,17 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                 } else {
                     base.offset(repIndex2 as isize)
                 };
-                if !(prefixLowestIndex
-                    .wrapping_sub(1)
-                    .wrapping_sub(repIndex2) >= 3
+                if !(prefixLowestIndex.wrapping_sub(1).wrapping_sub(repIndex2) >= 3
                     && MEM_read32(repMatch2 as *const libc::c_void)
                         == MEM_read32(ip as *const libc::c_void))
                 {
                     break;
                 }
-                let repEnd2 = if repIndex2 < prefixLowestIndex { dictEnd } else { iend };
+                let repEnd2 = if repIndex2 < prefixLowestIndex {
+                    dictEnd
+                } else {
+                    iend
+                };
                 let repLength2 = (ZSTD_count_2segments(
                     ip.offset(4),
                     repMatch2.offset(4),
@@ -1578,7 +1430,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                     repEnd2,
                     prefixLowest,
                 ))
-                    .wrapping_add(4);
+                .wrapping_add(4);
                 let mut tmpOffset = offset_2;
                 offset_2 = offset_1;
                 offset_1 = tmpOffset;
@@ -1592,18 +1444,13 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                     1 as libc::c_int as u32,
                     repLength2,
                 );
-                *hashSmall
-                    .offset(
-                        ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls) as isize,
-                    ) = current2;
-                *hashLong
-                    .offset(
-                        ZSTD_hashPtr(
-                            ip as *const libc::c_void,
-                            hBitsL,
-                            8 as libc::c_int as u32,
-                        ) as isize,
-                    ) = current2;
+                *hashSmall.offset(ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls) as isize) =
+                    current2;
+                *hashLong.offset(ZSTD_hashPtr(
+                    ip as *const libc::c_void,
+                    hBitsL,
+                    8 as libc::c_int as u32,
+                ) as isize) = current2;
                 ip = ip.offset(repLength2 as isize);
                 anchor = ip;
             }
@@ -1752,40 +1599,16 @@ pub unsafe extern "C" fn ZSTD_compressBlock_doubleFast(
     let mls = (*ms).cParams.minMatch;
     match mls {
         5 => {
-            return ZSTD_compressBlock_doubleFast_noDict_5(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_noDict_5(ms, seqStore, rep, src, srcSize);
         }
         6 => {
-            return ZSTD_compressBlock_doubleFast_noDict_6(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_noDict_6(ms, seqStore, rep, src, srcSize);
         }
         7 => {
-            return ZSTD_compressBlock_doubleFast_noDict_7(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_noDict_7(ms, seqStore, rep, src, srcSize);
         }
         4 | _ => {
-            return ZSTD_compressBlock_doubleFast_noDict_4(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_noDict_4(ms, seqStore, rep, src, srcSize);
         }
     };
 }
@@ -1800,40 +1623,16 @@ pub unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState(
     let mls = (*ms).cParams.minMatch;
     match mls {
         5 => {
-            return ZSTD_compressBlock_doubleFast_dictMatchState_5(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_dictMatchState_5(ms, seqStore, rep, src, srcSize);
         }
         6 => {
-            return ZSTD_compressBlock_doubleFast_dictMatchState_6(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_dictMatchState_6(ms, seqStore, rep, src, srcSize);
         }
         7 => {
-            return ZSTD_compressBlock_doubleFast_dictMatchState_7(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_dictMatchState_7(ms, seqStore, rep, src, srcSize);
         }
         4 | _ => {
-            return ZSTD_compressBlock_doubleFast_dictMatchState_4(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_dictMatchState_4(ms, seqStore, rep, src, srcSize);
         }
     };
 }
@@ -1856,12 +1655,16 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
     let iend = istart.offset(srcSize as isize);
     let ilimit = iend.offset(-(8));
     let base = (*ms).window.base;
-    let endIndex = (istart.offset_from(base) as libc::c_long as libc::size_t)
-        .wrapping_add(srcSize) as u32;
+    let endIndex =
+        (istart.offset_from(base) as libc::c_long as libc::size_t).wrapping_add(srcSize) as u32;
     let lowLimit = ZSTD_getLowestMatchIndex(ms, endIndex, (*cParams).windowLog);
     let dictStartIndex = lowLimit;
     let dictLimit = (*ms).window.dictLimit;
-    let prefixStartIndex = if dictLimit > lowLimit { dictLimit } else { lowLimit };
+    let prefixStartIndex = if dictLimit > lowLimit {
+        dictLimit
+    } else {
+        lowLimit
+    };
     let prefixStart = base.offset(prefixStartIndex as isize);
     let dictBase = (*ms).window.dictBase;
     let dictStart = dictBase.offset(dictStartIndex as isize);
@@ -1874,13 +1677,13 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
     while ip < ilimit {
         let hSmall = ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls);
         let matchIndex = *hashSmall.offset(hSmall as isize);
-        let matchBase = if matchIndex < prefixStartIndex { dictBase } else { base };
+        let matchBase = if matchIndex < prefixStartIndex {
+            dictBase
+        } else {
+            base
+        };
         let mut match_0 = matchBase.offset(matchIndex as isize);
-        let hLong = ZSTD_hashPtr(
-            ip as *const libc::c_void,
-            hBitsL,
-            8 as libc::c_int as u32,
-        );
+        let hLong = ZSTD_hashPtr(ip as *const libc::c_void, hBitsL, 8 as libc::c_int as u32);
         let matchLongIndex = *hashLong.offset(hLong as isize);
         let matchLongBase = if matchLongIndex < prefixStartIndex {
             dictBase
@@ -1889,26 +1692,22 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
         };
         let mut matchLong = matchLongBase.offset(matchLongIndex as isize);
         let curr = ip.offset_from(base) as libc::c_long as u32;
-        let repIndex = curr
-            .wrapping_add(1)
-            .wrapping_sub(offset_1);
-        let repBase = if repIndex < prefixStartIndex { dictBase } else { base };
+        let repIndex = curr.wrapping_add(1).wrapping_sub(offset_1);
+        let repBase = if repIndex < prefixStartIndex {
+            dictBase
+        } else {
+            base
+        };
         let repMatch = repBase.offset(repIndex as isize);
         let mut mLength: libc::size_t = 0;
         let ref mut fresh4 = *hashLong.offset(hLong as isize);
         *fresh4 = curr;
         *hashSmall.offset(hSmall as isize) = *fresh4;
-        if (prefixStartIndex
-            .wrapping_sub(1)
-            .wrapping_sub(repIndex) >= 3) as libc::c_int
-            & (offset_1
-                <= curr
-                    .wrapping_add(1)
-                    .wrapping_sub(dictStartIndex)) as libc::c_int != 0
+        if (prefixStartIndex.wrapping_sub(1).wrapping_sub(repIndex) >= 3) as libc::c_int
+            & (offset_1 <= curr.wrapping_add(1).wrapping_sub(dictStartIndex)) as libc::c_int
+            != 0
             && MEM_read32(repMatch as *const libc::c_void)
-                == MEM_read32(
-                    ip.offset(1) as *const libc::c_void,
-                )
+                == MEM_read32(ip.offset(1) as *const libc::c_void)
         {
             let mut repMatchEnd = if repIndex < prefixStartIndex {
                 dictEnd
@@ -1922,7 +1721,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 repMatchEnd,
                 prefixStart,
             ))
-                .wrapping_add(4);
+            .wrapping_add(4);
             ip = ip.offset(1);
             debug_assert!(1 as libc::c_int >= 1);
             debug_assert!(1 as libc::c_int <= 3);
@@ -1935,8 +1734,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 mLength,
             );
         } else if matchLongIndex > dictStartIndex
-            && MEM_read64(matchLong as *const libc::c_void)
-                == MEM_read64(ip as *const libc::c_void)
+            && MEM_read64(matchLong as *const libc::c_void) == MEM_read64(ip as *const libc::c_void)
         {
             let matchEnd = if matchLongIndex < prefixStartIndex {
                 dictEnd
@@ -1956,10 +1754,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 matchEnd,
                 prefixStart,
             ))
-                .wrapping_add(8);
+            .wrapping_add(8);
             offset = curr.wrapping_sub(matchLongIndex);
-            while (ip > anchor) as libc::c_int & (matchLong > lowMatchPtr) as libc::c_int
-                != 0
+            while (ip > anchor) as libc::c_int & (matchLong > lowMatchPtr) as libc::c_int != 0
                 && *ip.offset(-(1) as isize) as libc::c_int
                     == *matchLong.offset(-(1) as isize) as libc::c_int
             {
@@ -1979,8 +1776,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 mLength,
             );
         } else if matchIndex > dictStartIndex
-            && MEM_read32(match_0 as *const libc::c_void)
-                == MEM_read32(ip as *const libc::c_void)
+            && MEM_read32(match_0 as *const libc::c_void) == MEM_read32(ip as *const libc::c_void)
         {
             let h3 = ZSTD_hashPtr(
                 ip.offset(1) as *const libc::c_void,
@@ -1995,15 +1791,10 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
             };
             let mut match3 = match3Base.offset(matchIndex3 as isize);
             let mut offset_0: u32 = 0;
-            *hashLong
-                .offset(
-                    h3 as isize,
-                ) = curr.wrapping_add(1);
+            *hashLong.offset(h3 as isize) = curr.wrapping_add(1);
             if matchIndex3 > dictStartIndex
                 && MEM_read64(match3 as *const libc::c_void)
-                    == MEM_read64(
-                        ip.offset(1) as *const libc::c_void,
-                    )
+                    == MEM_read64(ip.offset(1) as *const libc::c_void)
             {
                 let matchEnd_0 = if matchIndex3 < prefixStartIndex {
                     dictEnd
@@ -2022,13 +1813,10 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                     matchEnd_0,
                     prefixStart,
                 ))
-                    .wrapping_add(8);
+                .wrapping_add(8);
                 ip = ip.offset(1);
-                offset_0 = curr
-                    .wrapping_add(1)
-                    .wrapping_sub(matchIndex3);
-                while (ip > anchor) as libc::c_int
-                    & (match3 > lowMatchPtr_0) as libc::c_int != 0
+                offset_0 = curr.wrapping_add(1).wrapping_sub(matchIndex3);
+                while (ip > anchor) as libc::c_int & (match3 > lowMatchPtr_0) as libc::c_int != 0
                     && *ip.offset(-(1) as isize) as libc::c_int
                         == *match3.offset(-(1) as isize) as libc::c_int
                 {
@@ -2054,10 +1842,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                     matchEnd_1,
                     prefixStart,
                 ))
-                    .wrapping_add(4);
+                .wrapping_add(4);
                 offset_0 = curr.wrapping_sub(matchIndex);
-                while (ip > anchor) as libc::c_int
-                    & (match_0 > lowMatchPtr_1) as libc::c_int != 0
+                while (ip > anchor) as libc::c_int & (match_0 > lowMatchPtr_1) as libc::c_int != 0
                     && *ip.offset(-(1) as isize) as libc::c_int
                         == *match_0.offset(-(1) as isize) as libc::c_int
                 {
@@ -2079,50 +1866,31 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
             );
         } else {
             ip = ip
-                .offset(
-                    ((ip.offset_from(anchor) as libc::c_long >> kSearchStrength)
-                        + 1) as isize,
-                );
+                .offset(((ip.offset_from(anchor) as libc::c_long >> kSearchStrength) + 1) as isize);
             continue;
         }
         ip = ip.offset(mLength as isize);
         anchor = ip;
         if ip <= ilimit {
             let indexToInsert = curr.wrapping_add(2);
-            *hashLong
-                .offset(
-                    ZSTD_hashPtr(
-                        base.offset(indexToInsert as isize) as *const libc::c_void,
-                        hBitsL,
-                        8 as libc::c_int as u32,
-                    ) as isize,
-                ) = indexToInsert;
-            *hashLong
-                .offset(
-                    ZSTD_hashPtr(
-                        ip.offset(-(2)) as *const libc::c_void,
-                        hBitsL,
-                        8 as libc::c_int as u32,
-                    ) as isize,
-                ) = ip.offset(-(2)).offset_from(base)
-                as libc::c_long as u32;
-            *hashSmall
-                .offset(
-                    ZSTD_hashPtr(
-                        base.offset(indexToInsert as isize) as *const libc::c_void,
-                        hBitsS,
-                        mls,
-                    ) as isize,
-                ) = indexToInsert;
-            *hashSmall
-                .offset(
-                    ZSTD_hashPtr(
-                        ip.offset(-(1)) as *const libc::c_void,
-                        hBitsS,
-                        mls,
-                    ) as isize,
-                ) = ip.offset(-(1)).offset_from(base)
-                as libc::c_long as u32;
+            *hashLong.offset(ZSTD_hashPtr(
+                base.offset(indexToInsert as isize) as *const libc::c_void,
+                hBitsL,
+                8 as libc::c_int as u32,
+            ) as isize) = indexToInsert;
+            *hashLong.offset(ZSTD_hashPtr(
+                ip.offset(-(2)) as *const libc::c_void,
+                hBitsL,
+                8 as libc::c_int as u32,
+            ) as isize) = ip.offset(-(2)).offset_from(base) as libc::c_long as u32;
+            *hashSmall.offset(ZSTD_hashPtr(
+                base.offset(indexToInsert as isize) as *const libc::c_void,
+                hBitsS,
+                mls,
+            ) as isize) = indexToInsert;
+            *hashSmall.offset(
+                ZSTD_hashPtr(ip.offset(-(1)) as *const libc::c_void, hBitsS, mls) as isize,
+            ) = ip.offset(-(1)).offset_from(base) as libc::c_long as u32;
             while ip <= ilimit {
                 let current2 = ip.offset_from(base) as libc::c_long as u32;
                 let repIndex2 = current2.wrapping_sub(offset_2);
@@ -2131,10 +1899,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 } else {
                     base.offset(repIndex2 as isize)
                 };
-                if !((prefixStartIndex
-                    .wrapping_sub(1)
-                    .wrapping_sub(repIndex2) >= 3)
-                    as libc::c_int
+                if !((prefixStartIndex.wrapping_sub(1).wrapping_sub(repIndex2) >= 3) as libc::c_int
                     & (offset_2 <= current2.wrapping_sub(dictStartIndex)) as libc::c_int
                     != 0
                     && MEM_read32(repMatch2 as *const libc::c_void)
@@ -2142,7 +1907,11 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 {
                     break;
                 }
-                let repEnd2 = if repIndex2 < prefixStartIndex { dictEnd } else { iend };
+                let repEnd2 = if repIndex2 < prefixStartIndex {
+                    dictEnd
+                } else {
+                    iend
+                };
                 let repLength2 = (ZSTD_count_2segments(
                     ip.offset(4),
                     repMatch2.offset(4),
@@ -2150,7 +1919,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                     repEnd2,
                     prefixStart,
                 ))
-                    .wrapping_add(4);
+                .wrapping_add(4);
                 let tmpOffset = offset_2;
                 offset_2 = offset_1;
                 offset_1 = tmpOffset;
@@ -2164,18 +1933,13 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                     1 as libc::c_int as u32,
                     repLength2,
                 );
-                *hashSmall
-                    .offset(
-                        ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls) as isize,
-                    ) = current2;
-                *hashLong
-                    .offset(
-                        ZSTD_hashPtr(
-                            ip as *const libc::c_void,
-                            hBitsL,
-                            8 as libc::c_int as u32,
-                        ) as isize,
-                    ) = current2;
+                *hashSmall.offset(ZSTD_hashPtr(ip as *const libc::c_void, hBitsS, mls) as isize) =
+                    current2;
+                *hashLong.offset(ZSTD_hashPtr(
+                    ip as *const libc::c_void,
+                    hBitsL,
+                    8 as libc::c_int as u32,
+                ) as isize) = current2;
                 ip = ip.offset(repLength2 as isize);
                 anchor = ip;
             }
@@ -2260,40 +2024,16 @@ pub unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict(
     let mls = (*ms).cParams.minMatch;
     match mls {
         5 => {
-            return ZSTD_compressBlock_doubleFast_extDict_5(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_extDict_5(ms, seqStore, rep, src, srcSize);
         }
         6 => {
-            return ZSTD_compressBlock_doubleFast_extDict_6(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_extDict_6(ms, seqStore, rep, src, srcSize);
         }
         7 => {
-            return ZSTD_compressBlock_doubleFast_extDict_7(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_extDict_7(ms, seqStore, rep, src, srcSize);
         }
         4 | _ => {
-            return ZSTD_compressBlock_doubleFast_extDict_4(
-                ms,
-                seqStore,
-                rep,
-                src,
-                srcSize,
-            );
+            return ZSTD_compressBlock_doubleFast_extDict_4(ms, seqStore, rep, src, srcSize);
         }
     };
 }

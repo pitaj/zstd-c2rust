@@ -10,16 +10,8 @@ extern "C" {
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn calloc(_: libc::c_ulong, _: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
-    fn memcpy(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
+    fn memcpy(_: *mut libc::c_void, _: *const libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
+    fn memset(_: *mut libc::c_void, _: libc::c_int, _: libc::c_ulong) -> *mut libc::c_void;
     fn clock() -> clock_t;
     fn POOL_create(numThreads: libc::size_t, queueSize: libc::size_t) -> *mut POOL_ctx;
     fn POOL_free(ctx: *mut POOL_ctx);
@@ -169,7 +161,7 @@ pub union pthread_cond_t {
 }
 pub type unalign64 = u64;
 pub type POOL_ctx = POOL_ctx_s;
-pub type POOL_function = Option::<unsafe extern "C" fn(*mut libc::c_void) -> ()>;
+pub type POOL_function = Option<unsafe extern "C" fn(*mut libc::c_void) -> ()>;
 pub type C2RustUnnamed_0 = libc::c_uint;
 pub const ZSTD_error_maxCode: C2RustUnnamed_0 = 120;
 pub const ZSTD_error_externalSequences_invalid: C2RustUnnamed_0 = 107;
@@ -315,9 +307,9 @@ unsafe extern "C" fn MEM_read64(mut ptr: *const libc::c_void) -> u64 {
 #[inline]
 unsafe extern "C" fn MEM_readLE64(mut memPtr: *const libc::c_void) -> u64 {
     if MEM_isLittleEndian() != 0 {
-        return MEM_read64(memPtr)
+        return MEM_read64(memPtr);
     } else {
-        return MEM_swap64(MEM_read64(memPtr))
+        return MEM_swap64(MEM_read64(memPtr));
     };
 }
 #[inline]
@@ -341,8 +333,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(mut p: *const libc::c_void, mut h: u32) -> li
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as libc::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> libc::size_t {
     debug_assert!(h <= 64);
-    return (u.wrapping_mul(prime8bytes) ^ s)
-        >> (64).wrapping_sub(h);
+    return (u.wrapping_mul(prime8bytes) ^ s) >> (64).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash8Ptr(mut p: *const libc::c_void, mut h: u32) -> libc::size_t {
     return ZSTD_hash8(MEM_readLE64(p), h, 0 as libc::c_int as u64);
@@ -354,8 +345,8 @@ pub const FASTCOVER_DEFAULT_SPLITPOINT: libc::c_double = 0.75f64;
 pub const DEFAULT_F: libc::c_int = 20 as libc::c_int;
 pub const DEFAULT_ACCEL: libc::c_int = 1 as libc::c_int;
 static mut g_displayLevel: libc::c_int = 0 as libc::c_int;
-static mut g_refreshRate: clock_t = CLOCKS_PER_SEC as __clock_t
-    * 15 / 100 as libc::c_int as libc::c_long;
+static mut g_refreshRate: clock_t =
+    CLOCKS_PER_SEC as __clock_t * 15 / 100 as libc::c_int as libc::c_long;
 static mut g_time: clock_t = 0 as libc::c_int as clock_t;
 unsafe extern "C" fn FASTCOVER_hashPtrToIndex(
     mut p: *const libc::c_void,
@@ -481,35 +472,25 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
             d,
         );
         if *segmentFreqs.offset(idx as isize) as libc::c_int == 0 {
-            activeSegment
-                .score = (activeSegment.score as libc::c_uint)
-                .wrapping_add(*freqs.offset(idx as isize)) ;
+            activeSegment.score =
+                (activeSegment.score as libc::c_uint).wrapping_add(*freqs.offset(idx as isize));
         }
-        activeSegment
-            .end = (activeSegment.end as libc::c_uint)
-            .wrapping_add(1) ;
+        activeSegment.end = (activeSegment.end as libc::c_uint).wrapping_add(1);
         let ref mut fresh0 = *segmentFreqs.offset(idx as isize);
         *fresh0 = (*fresh0 as libc::c_int + 1) as u16;
-        if (activeSegment.end).wrapping_sub(activeSegment.begin)
-            == dmersInK.wrapping_add(1)
-        {
+        if (activeSegment.end).wrapping_sub(activeSegment.begin) == dmersInK.wrapping_add(1) {
             let delIndex = FASTCOVER_hashPtrToIndex(
-                ((*ctx).samples).offset(activeSegment.begin as isize)
-                    as *const libc::c_void,
+                ((*ctx).samples).offset(activeSegment.begin as isize) as *const libc::c_void,
                 f,
                 d,
             );
             let ref mut fresh1 = *segmentFreqs.offset(delIndex as isize);
             *fresh1 = (*fresh1 as libc::c_int - 1 as libc::c_int) as u16;
-            if *segmentFreqs.offset(delIndex as isize) as libc::c_int == 0
-            {
-                activeSegment
-                    .score = (activeSegment.score as libc::c_uint)
-                    .wrapping_sub(*freqs.offset(delIndex as isize)) ;
+            if *segmentFreqs.offset(delIndex as isize) as libc::c_int == 0 {
+                activeSegment.score = (activeSegment.score as libc::c_uint)
+                    .wrapping_sub(*freqs.offset(delIndex as isize));
             }
-            activeSegment
-                .begin = (activeSegment.begin as libc::c_uint)
-                .wrapping_add(1) ;
+            activeSegment.begin = (activeSegment.begin as libc::c_uint).wrapping_add(1);
         }
         if activeSegment.score > bestSegment.score {
             bestSegment = activeSegment;
@@ -523,9 +504,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
         );
         let ref mut fresh2 = *segmentFreqs.offset(delIndex_0 as isize);
         *fresh2 = (*fresh2 as libc::c_int - 1 as libc::c_int) as u16;
-        activeSegment
-            .begin = (activeSegment.begin as libc::c_uint)
-            .wrapping_add(1) ;
+        activeSegment.begin = (activeSegment.begin as libc::c_uint).wrapping_add(1);
     }
     let mut pos: u32 = 0;
     pos = bestSegment.begin;
@@ -546,9 +525,7 @@ unsafe extern "C" fn FASTCOVER_checkParameters(
     mut f: libc::c_uint,
     mut accel: libc::c_uint,
 ) -> libc::c_int {
-    if parameters.d == 0
-        || parameters.k == 0
-    {
+    if parameters.d == 0 || parameters.k == 0 {
         return 0 as libc::c_int;
     }
     if parameters.d != 6 as libc::c_int as libc::c_uint
@@ -565,14 +542,10 @@ unsafe extern "C" fn FASTCOVER_checkParameters(
     if f > FASTCOVER_MAX_F as libc::c_uint || f == 0 {
         return 0 as libc::c_int;
     }
-    if parameters.splitPoint <= 0
-        || parameters.splitPoint > 1
-    {
+    if parameters.splitPoint <= 0 || parameters.splitPoint > 1 {
         return 0 as libc::c_int;
     }
-    if accel > 10
-        || accel == 0
-    {
+    if accel > 10 || accel == 0 {
         return 0 as libc::c_int;
     }
     return 1 as libc::c_int;
@@ -604,8 +577,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
     i = 0 as libc::c_int as libc::size_t;
     while i < (*ctx).nbTrainSamples {
         let mut start = *((*ctx).offsets).offset(i as isize);
-        let currSampleEnd = *((*ctx).offsets)
-            .offset(i.wrapping_add(1) as isize);
+        let currSampleEnd = *((*ctx).offsets).offset(i.wrapping_add(1) as isize);
         while start.wrapping_add(readLength as libc::c_ulong) <= currSampleEnd {
             let dmerIndex = FASTCOVER_hashPtrToIndex(
                 ((*ctx).samples).offset(start as isize) as *const libc::c_void,
@@ -614,9 +586,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
             );
             let ref mut fresh3 = *freqs.offset(dmerIndex as isize);
             *fresh3 = (*fresh3).wrapping_add(1);
-            start = start
-                .wrapping_add(skip as libc::c_ulong)
-                .wrapping_add(1);
+            start = start.wrapping_add(skip as libc::c_ulong).wrapping_add(1);
         }
         i = i.wrapping_add(1);
     }
@@ -660,28 +630,22 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             ::core::mem::size_of::<u64>()
         })
         || totalSamplesSize
-            >= (if ::core::mem::size_of::<libc::size_t>()
-                == 8
-            {
+            >= (if ::core::mem::size_of::<libc::size_t>() == 8 {
                 -(1) as libc::c_uint
             } else {
-                (1)
-                    .wrapping_mul((1) << 30 as libc::c_int)
+                (1).wrapping_mul((1) << 30 as libc::c_int)
             }) as libc::size_t
     {
         if g_displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"Total samples size is too large (%u MB), maximum size is %u MB\n\0"
-                    as *const u8 as *const libc::c_char,
+                b"Total samples size is too large (%u MB), maximum size is %u MB\n\0" as *const u8
+                    as *const libc::c_char,
                 (totalSamplesSize >> 20 as libc::c_int) as libc::c_uint,
-                (if ::core::mem::size_of::<libc::size_t>()
-                    == 8
-                {
+                (if ::core::mem::size_of::<libc::size_t>() == 8 {
                     -(1) as libc::c_uint
                 } else {
-                    (1)
-                        .wrapping_mul((1) << 30 as libc::c_int)
+                    (1).wrapping_mul((1) << 30 as libc::c_int)
                 }) >> 20 as libc::c_int,
             );
             fflush(stderr);
@@ -720,8 +684,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     if g_displayLevel >= 2 {
         fprintf(
             stderr,
-            b"Training on %u samples of total size %u\n\0" as *const u8
-                as *const libc::c_char,
+            b"Training on %u samples of total size %u\n\0" as *const u8 as *const libc::c_char,
             nbTrainSamples,
             trainingSamplesSize as libc::c_uint,
         );
@@ -730,8 +693,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     if g_displayLevel >= 2 {
         fprintf(
             stderr,
-            b"Testing on %u samples of total size %u\n\0" as *const u8
-                as *const libc::c_char,
+            b"Testing on %u samples of total size %u\n\0" as *const u8 as *const libc::c_char,
             nbTestSamples,
             testSamplesSize as libc::c_uint,
         );
@@ -742,8 +704,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     (*ctx).nbSamples = nbSamples as libc::size_t;
     (*ctx).nbTrainSamples = nbTrainSamples as libc::size_t;
     (*ctx).nbTestSamples = nbTestSamples as libc::size_t;
-    (*ctx)
-        .nbDmers = trainingSamplesSize
+    (*ctx).nbDmers = trainingSamplesSize
         .wrapping_sub(
             (if d as libc::c_ulong > ::core::mem::size_of::<u64>() {
                 d as libc::c_ulong
@@ -755,8 +716,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     (*ctx).d = d;
     (*ctx).f = f;
     (*ctx).accelParams = accelParams;
-    (*ctx)
-        .offsets = calloc(
+    (*ctx).offsets = calloc(
         nbSamples.wrapping_add(1) as libc::c_ulong,
         ::core::mem::size_of::<libc::size_t>(),
     ) as *mut libc::size_t;
@@ -764,8 +724,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         if g_displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"Failed to allocate scratch buffers \n\0" as *const u8
-                    as *const libc::c_char,
+                b"Failed to allocate scratch buffers \n\0" as *const u8 as *const libc::c_char,
             );
             fflush(stderr);
         }
@@ -777,28 +736,17 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     debug_assert!(nbSamples >= 5);
     i = 1 as libc::c_int as u32;
     while i <= nbSamples {
-        *((*ctx).offsets)
-            .offset(
-                i as isize,
-            ) = (*((*ctx).offsets)
+        *((*ctx).offsets).offset(i as isize) = (*((*ctx).offsets)
             .offset(i.wrapping_sub(1) as isize))
-            .wrapping_add(
-                *samplesSizes
-                    .offset(i.wrapping_sub(1) as isize),
-            );
+        .wrapping_add(*samplesSizes.offset(i.wrapping_sub(1) as isize));
         i = i.wrapping_add(1);
     }
-    (*ctx)
-        .freqs = calloc(
-        (1) << f,
-        ::core::mem::size_of::<u32>(),
-    ) as *mut u32;
+    (*ctx).freqs = calloc((1) << f, ::core::mem::size_of::<u32>()) as *mut u32;
     if ((*ctx).freqs).is_null() {
         if g_displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"Failed to allocate frequency table \n\0" as *const u8
-                    as *const libc::c_char,
+                b"Failed to allocate frequency table \n\0" as *const u8 as *const libc::c_char,
             );
             fflush(stderr);
         }
@@ -837,8 +785,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
     if g_displayLevel >= 2 {
         fprintf(
             stderr,
-            b"Breaking content into %u epochs of size %u\n\0" as *const u8
-                as *const libc::c_char,
+            b"Breaking content into %u epochs of size %u\n\0" as *const u8 as *const libc::c_char,
             epochs.num,
             epochs.size,
         );
@@ -849,14 +796,8 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
         let epochBegin = epoch.wrapping_mul(epochs.size as libc::c_ulong) as u32;
         let epochEnd = epochBegin.wrapping_add(epochs.size);
         let mut segmentSize: libc::size_t = 0;
-        let mut segment = FASTCOVER_selectSegment(
-            ctx,
-            freqs,
-            epochBegin,
-            epochEnd,
-            parameters,
-            segmentFreqs,
-        );
+        let mut segment =
+            FASTCOVER_selectSegment(ctx, freqs, epochBegin, epochEnd, parameters, segmentFreqs);
         if segment.score == 0 {
             zeroScoreRun = zeroScoreRun.wrapping_add(1);
             if zeroScoreRun >= maxZeroScoreRun {
@@ -867,7 +808,8 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
             segmentSize = if ((segment.end)
                 .wrapping_sub(segment.begin)
                 .wrapping_add(parameters.d)
-                .wrapping_sub(1) as libc::c_ulong) < tail
+                .wrapping_sub(1) as libc::c_ulong)
+                < tail
             {
                 (segment.end)
                     .wrapping_sub(segment.begin)
@@ -879,15 +821,14 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
             if segmentSize < parameters.d as libc::c_ulong {
                 break;
             }
-            tail = (tail as libc::c_ulong).wrapping_sub(segmentSize) ;
+            tail = (tail as libc::c_ulong).wrapping_sub(segmentSize);
             memcpy(
                 dict.offset(tail as isize) as *mut libc::c_void,
                 ((*ctx).samples).offset(segment.begin as isize) as *const libc::c_void,
                 segmentSize,
             );
             if g_displayLevel >= 2 {
-                if clock() - g_time > g_refreshRate || g_displayLevel >= 4
-                {
+                if clock() - g_time > g_refreshRate || g_displayLevel >= 4 {
                     g_time = clock();
                     fprintf(
                         stderr,
@@ -895,7 +836,8 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
                         dictBufferCapacity
                             .wrapping_sub(tail)
                             .wrapping_mul(100)
-                            .wrapping_div(dictBufferCapacity) as libc::c_uint,
+                            .wrapping_div(dictBufferCapacity)
+                            as libc::c_uint,
                     );
                     fflush(stderr);
                 }
@@ -921,18 +863,12 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut libc::c_void) {
     let parameters = (*data).parameters;
     let mut dictBufferCapacity = (*data).dictBufferCapacity;
     let mut totalCompressedSize = -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
-    let mut segmentFreqs = calloc(
-        (1) << (*ctx).f,
-        ::core::mem::size_of::<u16>(),
-    ) as *mut u16;
+    let mut segmentFreqs = calloc((1) << (*ctx).f, ::core::mem::size_of::<u16>()) as *mut u16;
     let dict = malloc(dictBufferCapacity) as *mut u8;
-    let mut selection = COVER_dictSelectionError(
-        -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t,
-    );
-    let mut freqs = malloc(
-        ((1) << (*ctx).f)
-            .wrapping_mul(::core::mem::size_of::<u32>()),
-    ) as *mut u32;
+    let mut selection =
+        COVER_dictSelectionError(-(ZSTD_error_GENERIC as libc::c_int) as libc::size_t);
+    let mut freqs =
+        malloc(((1) << (*ctx).f).wrapping_mul(::core::mem::size_of::<u32>())) as *mut u32;
     if segmentFreqs.is_null() || dict.is_null() || freqs.is_null() {
         if g_displayLevel >= 1 {
             fprintf(
@@ -946,8 +882,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut libc::c_void) {
         memcpy(
             freqs as *mut libc::c_void,
             (*ctx).freqs as *const libc::c_void,
-            ((1) << (*ctx).f)
-                .wrapping_mul(::core::mem::size_of::<u32>()),
+            ((1) << (*ctx).f).wrapping_mul(::core::mem::size_of::<u32>()),
         );
         let tail = FASTCOVER_buildDictionary(
             ctx,
@@ -977,8 +912,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut libc::c_void) {
             if g_displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"Failed to select dictionary\n\0" as *const u8
-                        as *const libc::c_char,
+                    b"Failed to select dictionary\n\0" as *const u8 as *const libc::c_char,
                 );
                 fflush(stderr);
             }
@@ -1065,14 +999,12 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
     };
     g_displayLevel = parameters.zParams.notificationLevel as libc::c_int;
     parameters.splitPoint = 1.0f64;
-    parameters
-        .f = if parameters.f == 0 {
+    parameters.f = if parameters.f == 0 {
         DEFAULT_F as libc::c_uint
     } else {
         parameters.f
     };
-    parameters
-        .accel = if parameters.accel == 0 {
+    parameters.accel = if parameters.accel == 0 {
         DEFAULT_ACCEL as libc::c_uint
     } else {
         parameters.accel
@@ -1114,8 +1046,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         if g_displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"dictBufferCapacity must be at least %u\n\0" as *const u8
-                    as *const libc::c_char,
+                b"dictBufferCapacity must be at least %u\n\0" as *const u8 as *const libc::c_char,
                 256 as libc::c_int,
             );
             fflush(stderr);
@@ -1145,13 +1076,13 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
     }
     COVER_warnOnSmallCorpus(dictBufferCapacity, ctx.nbDmers, g_displayLevel);
     if g_displayLevel >= 2 {
-        fprintf(stderr, b"Building dictionary\n\0" as *const u8 as *const libc::c_char);
+        fprintf(
+            stderr,
+            b"Building dictionary\n\0" as *const u8 as *const libc::c_char,
+        );
         fflush(stderr);
     }
-    let mut segmentFreqs = calloc(
-        (1) << parameters.f,
-        ::core::mem::size_of::<u16>(),
-    ) as *mut u16;
+    let mut segmentFreqs = calloc((1) << parameters.f, ::core::mem::size_of::<u16>()) as *mut u16;
     let tail = FASTCOVER_buildDictionary(
         &mut ctx,
         ctx.freqs,
@@ -1177,8 +1108,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         if g_displayLevel >= 2 {
             fprintf(
                 stderr,
-                b"Constructed dictionary of size %u\n\0" as *const u8
-                    as *const libc::c_char,
+                b"Constructed dictionary of size %u\n\0" as *const u8 as *const libc::c_char,
                 dictionarySize as libc::c_uint,
             );
             fflush(stderr);
@@ -1246,21 +1176,14 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     } else {
         (*parameters).steps
     };
-    let kStepSize = if kMaxK.wrapping_sub(kMinK).wrapping_div(kSteps)
-        > 1
-    {
+    let kStepSize = if kMaxK.wrapping_sub(kMinK).wrapping_div(kSteps) > 1 {
         kMaxK.wrapping_sub(kMinK).wrapping_div(kSteps)
     } else {
         1 as libc::c_int as libc::c_uint
     };
     let kIterations = (1)
-        .wrapping_add(
-            kMaxD.wrapping_sub(kMinD).wrapping_div(2),
-        )
-        .wrapping_mul(
-            (1)
-                .wrapping_add(kMaxK.wrapping_sub(kMinK).wrapping_div(kStepSize)),
-        );
+        .wrapping_add(kMaxD.wrapping_sub(kMinD).wrapping_div(2))
+        .wrapping_mul((1).wrapping_add(kMaxK.wrapping_sub(kMinK).wrapping_div(kStepSize)));
     let f = if (*parameters).f == 0 {
         DEFAULT_F as libc::c_uint
     } else {
@@ -1300,9 +1223,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     };
     let mut pool = NULL as *mut POOL_ctx;
     let mut warned = 0 as libc::c_int;
-    if splitPoint <= 0
-        || splitPoint > 1
-    {
+    if splitPoint <= 0 || splitPoint > 1 {
         if displayLevel >= 1 {
             fprintf(
                 stderr,
@@ -1312,18 +1233,22 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         }
         return -(ZSTD_error_parameter_outOfBound as libc::c_int) as libc::size_t;
     }
-    if accel == 0
-        || accel > FASTCOVER_MAX_ACCEL as libc::c_uint
-    {
+    if accel == 0 || accel > FASTCOVER_MAX_ACCEL as libc::c_uint {
         if displayLevel >= 1 {
-            fprintf(stderr, b"Incorrect accel\n\0" as *const u8 as *const libc::c_char);
+            fprintf(
+                stderr,
+                b"Incorrect accel\n\0" as *const u8 as *const libc::c_char,
+            );
             fflush(stderr);
         }
         return -(ZSTD_error_parameter_outOfBound as libc::c_int) as libc::size_t;
     }
     if kMinK < kMaxD || kMaxK < kMinK {
         if displayLevel >= 1 {
-            fprintf(stderr, b"Incorrect k\n\0" as *const u8 as *const libc::c_char);
+            fprintf(
+                stderr,
+                b"Incorrect k\n\0" as *const u8 as *const libc::c_char,
+            );
             fflush(stderr);
         }
         return -(ZSTD_error_parameter_outOfBound as libc::c_int) as libc::size_t;
@@ -1343,8 +1268,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         if displayLevel >= 1 {
             fprintf(
                 stderr,
-                b"dictBufferCapacity must be at least %u\n\0" as *const u8
-                    as *const libc::c_char,
+                b"dictBufferCapacity must be at least %u\n\0" as *const u8 as *const libc::c_char,
                 256 as libc::c_int,
             );
             fflush(stderr);
@@ -1373,8 +1297,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     if displayLevel >= 2 {
         fprintf(
             stderr,
-            b"Trying %u different sets of parameters\n\0" as *const u8
-                as *const libc::c_char,
+            b"Trying %u different sets of parameters\n\0" as *const u8 as *const libc::c_char,
             kIterations,
         );
         fflush(stderr);
@@ -1415,8 +1338,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             if displayLevel >= 1 {
                 fprintf(
                     stderr,
-                    b"Failed to initialize context\n\0" as *const u8
-                        as *const libc::c_char,
+                    b"Failed to initialize context\n\0" as *const u8 as *const libc::c_char,
                 );
                 fflush(stderr);
             }
@@ -1430,9 +1352,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         }
         k = kMinK;
         while k <= kMaxK {
-            let mut data = malloc(
-                ::core::mem::size_of::<FASTCOVER_tryParameters_data_t>(),
-            ) as *mut FASTCOVER_tryParameters_data_t;
+            let mut data = malloc(::core::mem::size_of::<FASTCOVER_tryParameters_data_t>())
+                as *mut FASTCOVER_tryParameters_data_t;
             if displayLevel >= 3 {
                 fprintf(stderr, b"k=%u\n\0" as *const u8 as *const libc::c_char, k);
                 fflush(stderr);
@@ -1441,8 +1362,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 if displayLevel >= 1 {
                     fprintf(
                         stderr,
-                        b"Failed to allocate parameters\n\0" as *const u8
-                            as *const libc::c_char,
+                        b"Failed to allocate parameters\n\0" as *const u8 as *const libc::c_char,
                     );
                     fflush(stderr);
                 }
@@ -1460,10 +1380,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             (*data).parameters.splitPoint = splitPoint;
             (*data).parameters.steps = kSteps;
             (*data).parameters.shrinkDict = shrinkDict;
-            (*data)
-                .parameters
-                .zParams
-                .notificationLevel = g_displayLevel as libc::c_uint;
+            (*data).parameters.zParams.notificationLevel = g_displayLevel as libc::c_uint;
             if FASTCOVER_checkParameters(
                 (*data).parameters,
                 dictBufferCapacity,
@@ -1474,8 +1391,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 if g_displayLevel >= 1 {
                     fprintf(
                         stderr,
-                        b"FASTCOVER parameters incorrect\n\0" as *const u8
-                            as *const libc::c_char,
+                        b"FASTCOVER parameters incorrect\n\0" as *const u8 as *const libc::c_char,
                     );
                     fflush(stderr);
                 }
@@ -1495,16 +1411,12 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                     FASTCOVER_tryParameters(data as *mut libc::c_void);
                 }
                 if displayLevel >= 2 {
-                    if clock() - g_time > g_refreshRate
-                        || displayLevel >= 4
-                    {
+                    if clock() - g_time > g_refreshRate || displayLevel >= 4 {
                         g_time = clock();
                         fprintf(
                             stderr,
                             b"\r%u%%       \0" as *const u8 as *const libc::c_char,
-                            iteration
-                                .wrapping_mul(100)
-                                .wrapping_div(kIterations),
+                            iteration.wrapping_mul(100).wrapping_div(kIterations),
                         );
                         fflush(stderr);
                     }

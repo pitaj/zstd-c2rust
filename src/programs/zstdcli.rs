@@ -11,17 +11,9 @@ extern "C" {
     fn getchar() -> libc::c_int;
     fn getenv(__name: *const libc::c_char) -> *mut libc::c_char;
     fn exit(_: libc::c_int) -> !;
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
+    fn memset(_: *mut libc::c_void, _: libc::c_int, _: libc::c_ulong) -> *mut libc::c_void;
     fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
-    fn strncmp(
-        _: *const libc::c_char,
-        _: *const libc::c_char,
-        _: libc::c_ulong,
-    ) -> libc::c_int;
+    fn strncmp(_: *const libc::c_char, _: *const libc::c_char, _: libc::c_ulong) -> libc::c_int;
     fn strrchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
     static mut g_utilDisplayLevel: libc::c_int;
@@ -62,10 +54,7 @@ extern "C" {
     fn FIO_freePreferences(prefs: *mut FIO_prefs_t);
     fn FIO_createContext() -> *mut FIO_ctx_t;
     fn FIO_freeContext(fCtx: *mut FIO_ctx_t);
-    fn FIO_setCompressionType(
-        prefs: *mut FIO_prefs_t,
-        compressionType: FIO_compressionType_t,
-    );
+    fn FIO_setCompressionType(prefs: *mut FIO_prefs_t, compressionType: FIO_compressionType_t);
     fn FIO_overwriteMode(prefs: *mut FIO_prefs_t);
     fn FIO_setAdaptiveMode(prefs: *mut FIO_prefs_t, adapt: libc::c_int);
     fn FIO_setAdaptMin(prefs: *mut FIO_prefs_t, minCLevel: libc::c_int);
@@ -85,10 +74,7 @@ extern "C" {
     fn FIO_setPassThroughFlag(prefs: *mut FIO_prefs_t, value: libc::c_int);
     fn FIO_setMMapDict(prefs: *mut FIO_prefs_t, value: ZSTD_paramSwitch_e);
     fn FIO_setNbFilesTotal(fCtx: *mut FIO_ctx_t, value: libc::c_int);
-    fn FIO_setExcludeCompressedFile(
-        prefs: *mut FIO_prefs_t,
-        excludeCompressedFiles: libc::c_int,
-    );
+    fn FIO_setExcludeCompressedFile(prefs: *mut FIO_prefs_t, excludeCompressedFiles: libc::c_int);
     fn FIO_setLdmHashLog(prefs: *mut FIO_prefs_t, ldmHashLog: libc::c_int);
     fn FIO_setLdmMinMatch(prefs: *mut FIO_prefs_t, ldmMinMatch: libc::c_int);
     fn FIO_setMemLimit(prefs: *mut FIO_prefs_t, memLimit: libc::c_uint);
@@ -104,10 +90,7 @@ extern "C" {
     fn FIO_setProgressSetting(progressSetting: FIO_progressSetting_e);
     fn FIO_setLiteralCompressionMode(prefs: *mut FIO_prefs_t, mode: ZSTD_paramSwitch_e);
     fn FIO_setTestMode(prefs: *mut FIO_prefs_t, testMode: libc::c_int);
-    fn FIO_determineHasStdinInput(
-        fCtx: *mut FIO_ctx_t,
-        filenames: *const FileNamesTable,
-    );
+    fn FIO_determineHasStdinInput(fCtx: *mut FIO_ctx_t, filenames: *const FileNamesTable);
     fn FIO_compressFilename(
         fCtx: *mut FIO_ctx_t,
         prefs: *mut FIO_prefs_t,
@@ -331,74 +314,53 @@ pub const ZSTDCLI_CLEVEL_DEFAULT: libc::c_int = 3 as libc::c_int;
 pub const ZSTDCLI_CLEVEL_MAX: libc::c_int = 19 as libc::c_int;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1);
-pub const ZSTD_EXTENSION: [libc::c_char; 5] = unsafe {
-    *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b".zst\0")
-};
-pub const stdoutmark: [libc::c_char; 11] = unsafe {
-    *::core::mem::transmute::<&[u8; 11], &[libc::c_char; 11]>(b"/*stdout*\\\0")
-};
-pub const stdinmark: [libc::c_char; 10] = unsafe {
-    *::core::mem::transmute::<&[u8; 10], &[libc::c_char; 10]>(b"/*stdin*\\\0")
-};
-pub const nulmark: [libc::c_char; 10] = unsafe {
-    *::core::mem::transmute::<&[u8; 10], &[libc::c_char; 10]>(b"/dev/null\0")
-};
-pub const LZ4_EXTENSION: [libc::c_char; 5] = unsafe {
-    *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b".lz4\0")
-};
-pub const XZ_EXTENSION: [libc::c_char; 4] = unsafe {
-    *::core::mem::transmute::<&[u8; 4], &[libc::c_char; 4]>(b".xz\0")
-};
-pub const LZMA_EXTENSION: [libc::c_char; 6] = unsafe {
-    *::core::mem::transmute::<&[u8; 6], &[libc::c_char; 6]>(b".lzma\0")
-};
-pub const GZ_EXTENSION: [libc::c_char; 4] = unsafe {
-    *::core::mem::transmute::<&[u8; 4], &[libc::c_char; 4]>(b".gz\0")
-};
-pub const ZSTD_ZSTDMT: [libc::c_char; 7] = unsafe {
-    *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"zstdmt\0")
-};
-pub const ZSTD_UNZSTD: [libc::c_char; 7] = unsafe {
-    *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"unzstd\0")
-};
-pub const ZSTD_CAT: [libc::c_char; 8] = unsafe {
-    *::core::mem::transmute::<&[u8; 8], &[libc::c_char; 8]>(b"zstdcat\0")
-};
-pub const ZSTD_ZCAT: [libc::c_char; 5] = unsafe {
-    *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"zcat\0")
-};
-pub const ZSTD_GZ: [libc::c_char; 5] = unsafe {
-    *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"gzip\0")
-};
-pub const ZSTD_GUNZIP: [libc::c_char; 7] = unsafe {
-    *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"gunzip\0")
-};
-pub const ZSTD_GZCAT: [libc::c_char; 6] = unsafe {
-    *::core::mem::transmute::<&[u8; 6], &[libc::c_char; 6]>(b"gzcat\0")
-};
-pub const ZSTD_LZMA: [libc::c_char; 5] = unsafe {
-    *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"lzma\0")
-};
-pub const ZSTD_UNLZMA: [libc::c_char; 7] = unsafe {
-    *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"unlzma\0")
-};
-pub const ZSTD_XZ: [libc::c_char; 3] = unsafe {
-    *::core::mem::transmute::<&[u8; 3], &[libc::c_char; 3]>(b"xz\0")
-};
-pub const ZSTD_UNXZ: [libc::c_char; 5] = unsafe {
-    *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"unxz\0")
-};
-pub const ZSTD_LZ4: [libc::c_char; 4] = unsafe {
-    *::core::mem::transmute::<&[u8; 4], &[libc::c_char; 4]>(b"lz4\0")
-};
-pub const ZSTD_UNLZ4: [libc::c_char; 6] = unsafe {
-    *::core::mem::transmute::<&[u8; 6], &[libc::c_char; 6]>(b"unlz4\0")
-};
+pub const ZSTD_EXTENSION: [libc::c_char; 5] =
+    unsafe { *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b".zst\0") };
+pub const stdoutmark: [libc::c_char; 11] =
+    unsafe { *::core::mem::transmute::<&[u8; 11], &[libc::c_char; 11]>(b"/*stdout*\\\0") };
+pub const stdinmark: [libc::c_char; 10] =
+    unsafe { *::core::mem::transmute::<&[u8; 10], &[libc::c_char; 10]>(b"/*stdin*\\\0") };
+pub const nulmark: [libc::c_char; 10] =
+    unsafe { *::core::mem::transmute::<&[u8; 10], &[libc::c_char; 10]>(b"/dev/null\0") };
+pub const LZ4_EXTENSION: [libc::c_char; 5] =
+    unsafe { *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b".lz4\0") };
+pub const XZ_EXTENSION: [libc::c_char; 4] =
+    unsafe { *::core::mem::transmute::<&[u8; 4], &[libc::c_char; 4]>(b".xz\0") };
+pub const LZMA_EXTENSION: [libc::c_char; 6] =
+    unsafe { *::core::mem::transmute::<&[u8; 6], &[libc::c_char; 6]>(b".lzma\0") };
+pub const GZ_EXTENSION: [libc::c_char; 4] =
+    unsafe { *::core::mem::transmute::<&[u8; 4], &[libc::c_char; 4]>(b".gz\0") };
+pub const ZSTD_ZSTDMT: [libc::c_char; 7] =
+    unsafe { *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"zstdmt\0") };
+pub const ZSTD_UNZSTD: [libc::c_char; 7] =
+    unsafe { *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"unzstd\0") };
+pub const ZSTD_CAT: [libc::c_char; 8] =
+    unsafe { *::core::mem::transmute::<&[u8; 8], &[libc::c_char; 8]>(b"zstdcat\0") };
+pub const ZSTD_ZCAT: [libc::c_char; 5] =
+    unsafe { *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"zcat\0") };
+pub const ZSTD_GZ: [libc::c_char; 5] =
+    unsafe { *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"gzip\0") };
+pub const ZSTD_GUNZIP: [libc::c_char; 7] =
+    unsafe { *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"gunzip\0") };
+pub const ZSTD_GZCAT: [libc::c_char; 6] =
+    unsafe { *::core::mem::transmute::<&[u8; 6], &[libc::c_char; 6]>(b"gzcat\0") };
+pub const ZSTD_LZMA: [libc::c_char; 5] =
+    unsafe { *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"lzma\0") };
+pub const ZSTD_UNLZMA: [libc::c_char; 7] =
+    unsafe { *::core::mem::transmute::<&[u8; 7], &[libc::c_char; 7]>(b"unlzma\0") };
+pub const ZSTD_XZ: [libc::c_char; 3] =
+    unsafe { *::core::mem::transmute::<&[u8; 3], &[libc::c_char; 3]>(b"xz\0") };
+pub const ZSTD_UNXZ: [libc::c_char; 5] =
+    unsafe { *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b"unxz\0") };
+pub const ZSTD_LZ4: [libc::c_char; 4] =
+    unsafe { *::core::mem::transmute::<&[u8; 4], &[libc::c_char; 4]>(b"lz4\0") };
+pub const ZSTD_UNLZ4: [libc::c_char; 6] =
+    unsafe { *::core::mem::transmute::<&[u8; 6], &[libc::c_char; 6]>(b"unlz4\0") };
 pub const DISPLAY_LEVEL_DEFAULT: libc::c_int = 2 as libc::c_int;
-static mut g_defaultDictName: *const libc::c_char = b"dictionary\0" as *const u8
-    as *const libc::c_char;
-static mut g_defaultMaxDictSize: libc::c_uint = (110 as libc::c_int
-    * ((1) << 10 as libc::c_int)) as libc::c_uint;
+static mut g_defaultDictName: *const libc::c_char =
+    b"dictionary\0" as *const u8 as *const libc::c_char;
+static mut g_defaultMaxDictSize: libc::c_uint =
+    (110 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::c_uint;
 static mut g_defaultDictCLevel: libc::c_int = 3 as libc::c_int;
 static mut g_defaultSelectivityLevel: libc::c_uint = 9 as libc::c_int as libc::c_uint;
 static mut g_defaultMaxWindowLog: libc::c_uint = 27 as libc::c_int as libc::c_uint;
@@ -411,7 +373,10 @@ static mut g_ldmHashRateLog: u32 = LDM_PARAM_DEFAULT as u32;
 static mut g_ldmBucketSizeLog: u32 = LDM_PARAM_DEFAULT as u32;
 static mut g_displayLevel: libc::c_int = DISPLAY_LEVEL_DEFAULT;
 unsafe extern "C" fn checkLibVersion() {
-    if strcmp(b"1.5.5\0" as *const u8 as *const libc::c_char, ZSTD_versionString()) != 0
+    if strcmp(
+        b"1.5.5\0" as *const u8 as *const libc::c_char,
+        ZSTD_versionString(),
+    ) != 0
     {
         if g_displayLevel >= 1 {
             fprintf(
@@ -457,13 +422,13 @@ unsafe extern "C" fn usage(mut f: *mut FILE, mut programName: *const libc::c_cha
     fprintf(f, b"Options:\n\0" as *const u8 as *const libc::c_char);
     fprintf(
         f,
-        b"  -o OUTPUT                     Write output to a single file, OUTPUT.\n\0"
-            as *const u8 as *const libc::c_char,
+        b"  -o OUTPUT                     Write output to a single file, OUTPUT.\n\0" as *const u8
+            as *const libc::c_char,
     );
     fprintf(
         f,
-        b"  -k, --keep                    Preserve INPUT file(s). [Default] \n\0"
-            as *const u8 as *const libc::c_char,
+        b"  -k, --keep                    Preserve INPUT file(s). [Default] \n\0" as *const u8
+            as *const libc::c_char,
     );
     fprintf(
         f,
@@ -515,8 +480,8 @@ unsafe extern "C" fn usage(mut f: *mut FILE, mut programName: *const libc::c_cha
     );
     fprintf(
         f,
-        b"                                passed-through through as-is.\n\n\0"
-            as *const u8 as *const libc::c_char,
+        b"                                passed-through through as-is.\n\n\0" as *const u8
+            as *const libc::c_char,
     );
     fprintf(
         f,
@@ -530,8 +495,8 @@ unsafe extern "C" fn usage(mut f: *mut FILE, mut programName: *const libc::c_cha
     );
     fprintf(
         f,
-        b"  -V, --version                 Display the program version and exit.\n\0"
-            as *const u8 as *const libc::c_char,
+        b"  -V, --version                 Display the program version and exit.\n\0" as *const u8
+            as *const libc::c_char,
     );
     fprintf(f, b"\n\0" as *const u8 as *const libc::c_char);
 }
@@ -540,14 +505,16 @@ unsafe extern "C" fn usage_advanced(mut programName: *const libc::c_char) {
         stdout,
         b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8 as *const libc::c_char,
         b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-        (::core::mem::size_of::<libc::size_t>())
-            .wrapping_mul(8) as libc::c_int,
+        (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8) as libc::c_int,
         b"v1.5.5\0" as *const u8 as *const libc::c_char,
         b"Yann Collet\0" as *const u8 as *const libc::c_char,
     );
     fprintf(stdout, b"\n\0" as *const u8 as *const libc::c_char);
     usage(stdout, programName);
-    fprintf(stdout, b"Advanced options:\n\0" as *const u8 as *const libc::c_char);
+    fprintf(
+        stdout,
+        b"Advanced options:\n\0" as *const u8 as *const libc::c_char,
+    );
     fprintf(
         stdout,
         b"  -c, --stdout                  Write to STDOUT (even if it is a console) and keep the INPUT file(s).\n\n\0"
@@ -576,8 +543,8 @@ unsafe extern "C" fn usage_advanced(mut programName: *const libc::c_char) {
     );
     fprintf(
         stdout,
-        b"  -r                            Operate recursively on directories.\n\0"
-            as *const u8 as *const libc::c_char,
+        b"  -r                            Operate recursively on directories.\n\0" as *const u8
+            as *const libc::c_char,
     );
     fprintf(
         stdout,
@@ -683,8 +650,8 @@ unsafe extern "C" fn usage_advanced(mut programName: *const libc::c_char) {
     );
     fprintf(
         stdout,
-        b"  --[no-]compress-literals      Force (un)compressed literals.\n\0"
-            as *const u8 as *const libc::c_char,
+        b"  --[no-]compress-literals      Force (un)compressed literals.\n\0" as *const u8
+            as *const libc::c_char,
     );
     fprintf(
         stdout,
@@ -719,8 +686,8 @@ unsafe extern "C" fn usage_advanced(mut programName: *const libc::c_char) {
     );
     fprintf(
         stdout,
-        b"  --test                        Test compressed file integrity.\n\0"
-            as *const u8 as *const libc::c_char,
+        b"  --test                        Test compressed file integrity.\n\0" as *const u8
+            as *const libc::c_char,
     );
     fprintf(
         stdout,
@@ -765,9 +732,7 @@ unsafe extern "C" fn waitEnter() {
     );
     unused = getchar();
 }
-unsafe extern "C" fn lastNameFromPath(
-    mut path: *const libc::c_char,
-) -> *const libc::c_char {
+unsafe extern "C" fn lastNameFromPath(mut path: *const libc::c_char) -> *const libc::c_char {
     let mut name = path;
     if !(strrchr(name, '/' as i32)).is_null() {
         name = (strrchr(name, '/' as i32)).offset(1);
@@ -788,26 +753,20 @@ unsafe extern "C" fn readU32FromCharChecked(
     mut value: *mut libc::c_uint,
 ) -> libc::c_int {
     let mut result = 0 as libc::c_int as libc::c_uint;
-    while **stringPtr as libc::c_int >= '0' as i32
-        && **stringPtr as libc::c_int <= '9' as i32
-    {
-        let max = (-(1) as libc::c_uint)
-            .wrapping_div(10);
+    while **stringPtr as libc::c_int >= '0' as i32 && **stringPtr as libc::c_int <= '9' as i32 {
+        let max = (-(1) as libc::c_uint).wrapping_div(10);
         let mut last = result;
         if result > max {
             return 1 as libc::c_int;
         }
         result = result.wrapping_mul(10);
-        result = result
-            .wrapping_add((**stringPtr as libc::c_int - '0' as i32) as libc::c_uint);
+        result = result.wrapping_add((**stringPtr as libc::c_int - '0' as i32) as libc::c_uint);
         if result < last {
             return 1 as libc::c_int;
         }
         *stringPtr = (*stringPtr).offset(1);
     }
-    if **stringPtr as libc::c_int == 'K' as i32
-        || **stringPtr as libc::c_int == 'M' as i32
-    {
+    if **stringPtr as libc::c_int == 'K' as i32 || **stringPtr as libc::c_int == 'M' as i32 {
         let maxK = -(1) as libc::c_uint >> 10 as libc::c_int;
         if result > maxK {
             return 1 as libc::c_int;
@@ -830,14 +789,11 @@ unsafe extern "C" fn readU32FromCharChecked(
     *value = result;
     return 0 as libc::c_int;
 }
-unsafe extern "C" fn readU32FromChar(
-    mut stringPtr: *mut *const libc::c_char,
-) -> libc::c_uint {
+unsafe extern "C" fn readU32FromChar(mut stringPtr: *mut *const libc::c_char) -> libc::c_uint {
     static mut errorMsg: [libc::c_char; 51] = unsafe {
-        *::core::mem::transmute::<
-            &[u8; 51],
-            &[libc::c_char; 51],
-        >(b"error: numeric value overflows 32-bit unsigned int\0")
+        *::core::mem::transmute::<&[u8; 51], &[libc::c_char; 51]>(
+            b"error: numeric value overflows 32-bit unsigned int\0",
+        )
     };
     let mut result: libc::c_uint = 0;
     if readU32FromCharChecked(stringPtr, &mut result) != 0 {
@@ -845,14 +801,11 @@ unsafe extern "C" fn readU32FromChar(
     }
     return result;
 }
-unsafe extern "C" fn readIntFromChar(
-    mut stringPtr: *mut *const libc::c_char,
-) -> libc::c_int {
+unsafe extern "C" fn readIntFromChar(mut stringPtr: *mut *const libc::c_char) -> libc::c_int {
     static mut errorMsg: [libc::c_char; 42] = unsafe {
-        *::core::mem::transmute::<
-            &[u8; 42],
-            &[libc::c_char; 42],
-        >(b"error: numeric value overflows 32-bit int\0")
+        *::core::mem::transmute::<&[u8; 42], &[libc::c_char; 42]>(
+            b"error: numeric value overflows 32-bit int\0",
+        )
     };
     let mut sign = 1 as libc::c_int;
     let mut result: libc::c_uint = 0;
@@ -870,28 +823,22 @@ unsafe extern "C" fn readSizeTFromCharChecked(
     mut value: *mut libc::size_t,
 ) -> libc::c_int {
     let mut result = 0 as libc::c_int as libc::size_t;
-    while **stringPtr as libc::c_int >= '0' as i32
-        && **stringPtr as libc::c_int <= '9' as i32
-    {
-        let max = (-(1) as libc::size_t)
-            .wrapping_div(10);
+    while **stringPtr as libc::c_int >= '0' as i32 && **stringPtr as libc::c_int <= '9' as i32 {
+        let max = (-(1) as libc::size_t).wrapping_div(10);
         let mut last = result;
         if result > max {
             return 1 as libc::c_int;
         }
+        result = (result as libc::c_ulong).wrapping_mul(10);
         result = (result as libc::c_ulong)
-            .wrapping_mul(10) ;
-        result = (result as libc::c_ulong)
-            .wrapping_add((**stringPtr as libc::c_int - '0' as i32) as libc::size_t) as libc::size_t
-            as libc::size_t;
+            .wrapping_add((**stringPtr as libc::c_int - '0' as i32) as libc::size_t)
+            as libc::size_t as libc::size_t;
         if result < last {
             return 1 as libc::c_int;
         }
         *stringPtr = (*stringPtr).offset(1);
     }
-    if **stringPtr as libc::c_int == 'K' as i32
-        || **stringPtr as libc::c_int == 'M' as i32
-    {
+    if **stringPtr as libc::c_int == 'K' as i32 || **stringPtr as libc::c_int == 'M' as i32 {
         let maxK = -(1) as libc::size_t >> 10 as libc::c_int;
         if result > maxK {
             return 1 as libc::c_int;
@@ -914,14 +861,11 @@ unsafe extern "C" fn readSizeTFromCharChecked(
     *value = result;
     return 0 as libc::c_int;
 }
-unsafe extern "C" fn readSizeTFromChar(
-    mut stringPtr: *mut *const libc::c_char,
-) -> libc::size_t {
+unsafe extern "C" fn readSizeTFromChar(mut stringPtr: *mut *const libc::c_char) -> libc::size_t {
     static mut errorMsg: [libc::c_char; 38] = unsafe {
-        *::core::mem::transmute::<
-            &[u8; 38],
-            &[libc::c_char; 38],
-        >(b"error: numeric value overflows libc::size_t\0")
+        *::core::mem::transmute::<&[u8; 38], &[libc::c_char; 38]>(
+            b"error: numeric value overflows libc::size_t\0",
+        )
     };
     let mut result: libc::size_t = 0;
     if readSizeTFromCharChecked(stringPtr, &mut result) != 0 {
@@ -946,13 +890,13 @@ unsafe extern "C" fn parseAdaptParameters(
     mut adaptMaxPtr: *mut libc::c_int,
 ) -> libc::c_uint {
     loop {
-        if longCommandWArg(&mut stringPtr, b"min=\0" as *const u8 as *const libc::c_char)
-            != 0
+        if longCommandWArg(
+            &mut stringPtr,
+            b"min=\0" as *const u8 as *const libc::c_char,
+        ) != 0
         {
             *adaptMinPtr = readIntFromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -962,9 +906,7 @@ unsafe extern "C" fn parseAdaptParameters(
         ) != 0
         {
             *adaptMaxPtr = readIntFromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -972,8 +914,7 @@ unsafe extern "C" fn parseAdaptParameters(
             if g_displayLevel >= 4 {
                 fprintf(
                     stderr,
-                    b"invalid compression parameter \n\0" as *const u8
-                        as *const libc::c_char,
+                    b"invalid compression parameter \n\0" as *const u8 as *const libc::c_char,
                 );
             }
             return 0 as libc::c_int as libc::c_uint;
@@ -1008,9 +949,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).windowLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1024,9 +963,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).chainLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1040,9 +977,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).hashLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1056,9 +991,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).searchLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1072,9 +1005,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).minMatch = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1088,9 +1019,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).targetLength = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1104,9 +1033,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).strategy = readU32FromChar(&mut stringPtr) as ZSTD_strategy;
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1120,9 +1047,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_overlapLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1136,9 +1061,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmHashLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1152,9 +1075,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmMinMatch = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1168,9 +1089,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmBucketSizeLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1184,9 +1103,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmHashRateLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0) as libc::c_int
-                == ',' as i32)
-            {
+            if !(*stringPtr.offset(0) as libc::c_int == ',' as i32) {
                 break;
             }
             stringPtr = stringPtr.offset(1);
@@ -1194,8 +1111,7 @@ unsafe extern "C" fn parseCompressionParameters(
             if g_displayLevel >= 4 {
                 fprintf(
                     stderr,
-                    b"invalid compression parameter \n\0" as *const u8
-                        as *const libc::c_char,
+                    b"invalid compression parameter \n\0" as *const u8 as *const libc::c_char,
                 );
             }
             return 0 as libc::c_int as libc::c_uint;
@@ -1215,8 +1131,7 @@ unsafe extern "C" fn parseCompressionParameters(
     if g_displayLevel >= 4 {
         fprintf(
             stderr,
-            b"minMatch=%d, targetLength=%d, strategy=%d \n\0" as *const u8
-                as *const libc::c_char,
+            b"minMatch=%d, targetLength=%d, strategy=%d \n\0" as *const u8 as *const libc::c_char,
             (*params).minMatch,
             (*params).targetLength,
             (*params).strategy as libc::c_uint,
@@ -1240,13 +1155,15 @@ unsafe extern "C" fn printVersion() {
         stdout,
         b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8 as *const libc::c_char,
         b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-        (::core::mem::size_of::<libc::size_t>())
-            .wrapping_mul(8) as libc::c_int,
+        (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8) as libc::c_int,
         b"v1.5.5\0" as *const u8 as *const libc::c_char,
         b"Yann Collet\0" as *const u8 as *const libc::c_char,
     );
     if g_displayLevel >= 3 {
-        fprintf(stdout, b"*** supports: zstd\0" as *const u8 as *const libc::c_char);
+        fprintf(
+            stdout,
+            b"*** supports: zstd\0" as *const u8 as *const libc::c_char,
+        );
         fprintf(
             stdout,
             b", zstd legacy v0.%d+\0" as *const u8 as *const libc::c_char,
@@ -1281,8 +1198,7 @@ unsafe extern "C" fn printVersion() {
             );
             fprintf(
                 stdout,
-                b"PLATFORM_POSIX_VERSION defined: %ldL\n\0" as *const u8
-                    as *const libc::c_char,
+                b"PLATFORM_POSIX_VERSION defined: %ldL\n\0" as *const u8 as *const libc::c_char,
                 200809 as libc::c_long,
             );
         }
@@ -1356,8 +1272,7 @@ unsafe extern "C" fn printDefaultCParams(
         b" - targetLength  : %u\n\0" as *const u8 as *const libc::c_char,
         cParams.targetLength,
     );
-    debug_assert!((cParams.strategy as libc::c_uint)
-        < (9 as libc::c_int + 1) as libc::c_uint);
+    debug_assert!((cParams.strategy as libc::c_uint) < (9 as libc::c_int + 1) as libc::c_uint);
     fprintf(
         stderr,
         b" - strategy      : %s (%u)\n\0" as *const u8 as *const libc::c_char,
@@ -1379,54 +1294,45 @@ unsafe extern "C" fn printActualCParams(
     };
     let mut actualCParams = ZSTD_getCParams(cLevel, fileSize, dictSize);
     debug_assert!(g_displayLevel >= 4);
-    actualCParams
-        .windowLog = if (*cParams).windowLog == 0 {
+    actualCParams.windowLog = if (*cParams).windowLog == 0 {
         actualCParams.windowLog
     } else {
         (*cParams).windowLog
     };
-    actualCParams
-        .chainLog = if (*cParams).chainLog == 0 {
+    actualCParams.chainLog = if (*cParams).chainLog == 0 {
         actualCParams.chainLog
     } else {
         (*cParams).chainLog
     };
-    actualCParams
-        .hashLog = if (*cParams).hashLog == 0 {
+    actualCParams.hashLog = if (*cParams).hashLog == 0 {
         actualCParams.hashLog
     } else {
         (*cParams).hashLog
     };
-    actualCParams
-        .searchLog = if (*cParams).searchLog == 0 {
+    actualCParams.searchLog = if (*cParams).searchLog == 0 {
         actualCParams.searchLog
     } else {
         (*cParams).searchLog
     };
-    actualCParams
-        .minMatch = if (*cParams).minMatch == 0 {
+    actualCParams.minMatch = if (*cParams).minMatch == 0 {
         actualCParams.minMatch
     } else {
         (*cParams).minMatch
     };
-    actualCParams
-        .targetLength = if (*cParams).targetLength == 0 {
+    actualCParams.targetLength = if (*cParams).targetLength == 0 {
         actualCParams.targetLength
     } else {
         (*cParams).targetLength
     };
-    actualCParams
-        .strategy = (if (*cParams).strategy as libc::c_uint
-        == 0
-    {
+    actualCParams.strategy = (if (*cParams).strategy as libc::c_uint == 0 {
         actualCParams.strategy as libc::c_uint
     } else {
         (*cParams).strategy as libc::c_uint
     }) as ZSTD_strategy;
     fprintf(
         stderr,
-        b"--zstd=wlog=%d,clog=%d,hlog=%d,slog=%d,mml=%d,tlen=%d,strat=%d\n\0"
-            as *const u8 as *const libc::c_char,
+        b"--zstd=wlog=%d,clog=%d,hlog=%d,slog=%d,mml=%d,tlen=%d,strat=%d\n\0" as *const u8
+            as *const libc::c_char,
         actualCParams.windowLog,
         actualCParams.chainLog,
         actualCParams.hashLog,
@@ -1436,9 +1342,8 @@ unsafe extern "C" fn printActualCParams(
         actualCParams.strategy as libc::c_uint,
     );
 }
-pub const ENV_CLEVEL: [libc::c_char; 12] = unsafe {
-    *::core::mem::transmute::<&[u8; 12], &[libc::c_char; 12]>(b"ZSTD_CLEVEL\0")
-};
+pub const ENV_CLEVEL: [libc::c_char; 12] =
+    unsafe { *::core::mem::transmute::<&[u8; 12], &[libc::c_char; 12]>(b"ZSTD_CLEVEL\0") };
 unsafe extern "C" fn init_cLevel() -> libc::c_int {
     let env: *const libc::c_char = getenv(ENV_CLEVEL.as_ptr());
     if !env.is_null() {
@@ -1481,10 +1386,7 @@ unsafe extern "C" fn init_cLevel() -> libc::c_int {
     }
     return ZSTDCLI_CLEVEL_DEFAULT;
 }
-unsafe fn main_0(
-    mut argCount: libc::c_int,
-    mut argv: *mut *const libc::c_char,
-) -> libc::c_int {
+unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) -> libc::c_int {
     let mut current_block: u64;
     let mut argNb: libc::c_int = 0;
     let mut followLinks = 0 as libc::c_int;
@@ -1653,20 +1555,12 @@ unsafe fn main_0(
                 UTIL_refFilename(filenames, argument);
             } else if strcmp(argument, b"-\0" as *const u8 as *const libc::c_char) == 0 {
                 UTIL_refFilename(filenames, stdinmark.as_ptr());
-            } else if *argument.offset(0) as libc::c_int
-                == '-' as i32
-            {
-                if *argument.offset(1) as libc::c_int
-                    == '-' as i32
-                {
-                    if strcmp(argument, b"--\0" as *const u8 as *const libc::c_char) == 0
-                    {
+            } else if *argument.offset(0) as libc::c_int == '-' as i32 {
+                if *argument.offset(1) as libc::c_int == '-' as i32 {
+                    if strcmp(argument, b"--\0" as *const u8 as *const libc::c_char) == 0 {
                         nextArgumentsAreFiles = 1 as libc::c_int;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--list\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--list\0" as *const u8 as *const libc::c_char) == 0
                     {
                         operation = zom_list;
                         current_block = 3229571381435211107;
@@ -1691,10 +1585,8 @@ unsafe fn main_0(
                     {
                         operation = zom_decompress;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--force\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--force\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         FIO_overwriteMode(prefs);
                         forceStdin = 1 as libc::c_int;
@@ -1702,58 +1594,43 @@ unsafe fn main_0(
                         followLinks = 1 as libc::c_int;
                         allowBlockDevices = 1 as libc::c_int;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--version\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--version\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         printVersion();
                         operationResult = 0 as libc::c_int;
                         current_block = 18342783468770781838;
                         break;
-                    } else if strcmp(
-                        argument,
-                        b"--help\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--help\0" as *const u8 as *const libc::c_char) == 0
                     {
                         usage_advanced(programName);
                         operationResult = 0 as libc::c_int;
                         current_block = 18342783468770781838;
                         break;
-                    } else if strcmp(
-                        argument,
-                        b"--verbose\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--verbose\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         g_displayLevel += 1;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--quiet\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--quiet\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         g_displayLevel -= 1;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--stdout\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--stdout\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         forceStdout = 1 as libc::c_int;
                         outFileName = stdoutmark.as_ptr();
                         removeSrcFile = 0 as libc::c_int;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--ultra\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--ultra\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         ultra = 1 as libc::c_int;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--check\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--check\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         FIO_setChecksumFlag(prefs, 2 as libc::c_int);
                         current_block = 3229571381435211107;
@@ -1764,10 +1641,8 @@ unsafe fn main_0(
                     {
                         FIO_setChecksumFlag(prefs, 0 as libc::c_int);
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--sparse\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--sparse\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         FIO_setSparseWrite(prefs, 2 as libc::c_int);
                         current_block = 3229571381435211107;
@@ -1792,17 +1667,12 @@ unsafe fn main_0(
                     {
                         FIO_setPassThroughFlag(prefs, 0 as libc::c_int);
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--test\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--test\0" as *const u8 as *const libc::c_char) == 0
                     {
                         operation = zom_test;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--asyncio\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--asyncio\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         FIO_setAsyncIOFlag(prefs, 1 as libc::c_int);
                         current_block = 3229571381435211107;
@@ -1813,10 +1683,8 @@ unsafe fn main_0(
                     {
                         FIO_setAsyncIOFlag(prefs, 0 as libc::c_int);
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--train\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--train\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         operation = zom_train;
                         if outFileName.is_null() {
@@ -1830,18 +1698,11 @@ unsafe fn main_0(
                     {
                         FIO_setDictIDFlag(prefs, 0 as libc::c_int);
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--keep\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--keep\0" as *const u8 as *const libc::c_char) == 0
                     {
                         removeSrcFile = 0 as libc::c_int;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--rm\0" as *const u8 as *const libc::c_char,
-                    ) == 0
-                    {
+                    } else if strcmp(argument, b"--rm\0" as *const u8 as *const libc::c_char) == 0 {
                         removeSrcFile = 1 as libc::c_int;
                         current_block = 3229571381435211107;
                     } else if strcmp(
@@ -1872,10 +1733,8 @@ unsafe fn main_0(
                     {
                         contentSize = 0 as libc::c_int;
                         current_block = 3229571381435211107;
-                    } else if strcmp(
-                        argument,
-                        b"--adapt\0" as *const u8 as *const libc::c_char,
-                    ) == 0
+                    } else if strcmp(argument, b"--adapt\0" as *const u8 as *const libc::c_char)
+                        == 0
                     {
                         adapt = 1 as libc::c_int;
                         current_block = 3229571381435211107;
@@ -1899,9 +1758,7 @@ unsafe fn main_0(
                     ) != 0
                     {
                         adapt = 1 as libc::c_int;
-                        if parseAdaptParameters(argument, &mut adaptMin, &mut adaptMax)
-                            == 0
-                        {
+                        if parseAdaptParameters(argument, &mut adaptMin, &mut adaptMax) == 0 {
                             badusage(programName);
                             operationResult = 1 as libc::c_int;
                             current_block = 18342783468770781838;
@@ -2035,9 +1892,7 @@ unsafe fn main_0(
                             } else {
                                 __nb = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb.is_null());
-                                if *__nb.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2085,9 +1940,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_0 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_0.is_null());
-                                if *__nb_0.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_0.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2135,9 +1988,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_1 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_1.is_null());
-                                if *__nb_1.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_1.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2185,9 +2036,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_2 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_2.is_null());
-                                if *__nb_2.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_2.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2235,9 +2084,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_3 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_3.is_null());
-                                if *__nb_3.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_3.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2285,9 +2132,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_4 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_4.is_null());
-                                if *__nb_4.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_4.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2335,9 +2180,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_5 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_5.is_null());
-                                if *__nb_5.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_5.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2364,9 +2207,7 @@ unsafe fn main_0(
                         b"--zstd=\0" as *const u8 as *const libc::c_char,
                     ) != 0
                     {
-                        if parseCompressionParameters(argument, &mut compressionParams)
-                            == 0
-                        {
+                        if parseCompressionParameters(argument, &mut compressionParams) == 0 {
                             badusage(programName);
                             operationResult = 1 as libc::c_int;
                             current_block = 18342783468770781838;
@@ -2401,9 +2242,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_6 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_6.is_null());
-                                if *__nb_6.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_6.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2427,8 +2266,7 @@ unsafe fn main_0(
                         current_block = 3229571381435211107;
                     } else if longCommandWArg(
                         &mut argument,
-                        b"--target-compressed-block-size\0" as *const u8
-                            as *const libc::c_char,
+                        b"--target-compressed-block-size\0" as *const u8 as *const libc::c_char,
                     ) != 0
                     {
                         let mut __nb_7 = 0 as *const libc::c_char;
@@ -2452,9 +2290,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_7 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_7.is_null());
-                                if *__nb_7.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_7.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2502,9 +2338,7 @@ unsafe fn main_0(
                             } else {
                                 __nb_8 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_8.is_null());
-                                if *__nb_8.offset(0) as libc::c_int
-                                    == '-' as i32
-                                {
+                                if *__nb_8.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2551,9 +2385,7 @@ unsafe fn main_0(
                             } else {
                                 outDirName = *argv.offset(argNb as isize);
                                 debug_assert!(!outDirName.is_null());
-                                if *outDirName.offset(0)
-                                    as libc::c_int == '-' as i32
-                                {
+                                if *outDirName.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2607,9 +2439,7 @@ unsafe fn main_0(
                             } else {
                                 threadDefault = *argv.offset(argNb as isize);
                                 debug_assert!(!threadDefault.is_null());
-                                if *threadDefault.offset(0)
-                                    as libc::c_int == '-' as i32
-                                {
+                                if *threadDefault.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2639,8 +2469,7 @@ unsafe fn main_0(
                         if *argument as libc::c_int == '=' as i32 {
                             argument = argument.offset(1);
                             outMirroredDirName = argument;
-                            argument = argument
-                                .offset(strlen(outMirroredDirName) as isize);
+                            argument = argument.offset(strlen(outMirroredDirName) as isize);
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
@@ -2657,9 +2486,7 @@ unsafe fn main_0(
                             } else {
                                 outMirroredDirName = *argv.offset(argNb as isize);
                                 debug_assert!(!outMirroredDirName.is_null());
-                                if *outMirroredDirName.offset(0)
-                                    as libc::c_int == '-' as i32
-                                {
+                                if *outMirroredDirName.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2673,9 +2500,7 @@ unsafe fn main_0(
                                 }
                             }
                         }
-                        if strlen(outMirroredDirName)
-                            == 0
-                        {
+                        if strlen(outMirroredDirName) == 0 {
                             if g_displayLevel >= 1 {
                                 fprintf(
                                     stderr,
@@ -2697,8 +2522,7 @@ unsafe fn main_0(
                         if *argument as libc::c_int == '=' as i32 {
                             argument = argument.offset(1);
                             patchFromDictFileName = argument;
-                            argument = argument
-                                .offset(strlen(patchFromDictFileName) as isize);
+                            argument = argument.offset(strlen(patchFromDictFileName) as isize);
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
@@ -2715,9 +2539,7 @@ unsafe fn main_0(
                             } else {
                                 patchFromDictFileName = *argv.offset(argNb as isize);
                                 debug_assert!(!patchFromDictFileName.is_null());
-                                if *patchFromDictFileName.offset(0)
-                                    as libc::c_int == '-' as i32
-                                {
+                                if *patchFromDictFileName.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2750,9 +2572,7 @@ unsafe fn main_0(
                         } else {
                             ldmWindowLog = g_defaultMaxWindowLog;
                         }
-                        if compressionParams.windowLog
-                            == 0
-                        {
+                        if compressionParams.windowLog == 0 {
                             compressionParams.windowLog = ldmWindowLog;
                         }
                         current_block = 3229571381435211107;
@@ -2813,9 +2633,7 @@ unsafe fn main_0(
                             } else {
                                 listName = *argv.offset(argNb as isize);
                                 debug_assert!(!listName.is_null());
-                                if *listName.offset(0)
-                                    as libc::c_int == '-' as i32
-                                {
+                                if *listName.offset(0) as libc::c_int == '-' as i32 {
                                     if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
@@ -2841,18 +2659,14 @@ unsafe fn main_0(
                     3229571381435211107 => {}
                     _ => {
                         argument = argument.offset(1);
-                        while *argument.offset(0) as libc::c_int
-                            != 0 as libc::c_int
-                        {
+                        while *argument.offset(0) as libc::c_int != 0 as libc::c_int {
                             if *argument as libc::c_int >= '0' as i32
                                 && *argument as libc::c_int <= '9' as i32
                             {
                                 cLevel = readU32FromChar(&mut argument) as libc::c_int;
                                 dictCLevel = cLevel;
                             } else {
-                                match *argument.offset(0)
-                                    as libc::c_int
-                                {
+                                match *argument.offset(0) as libc::c_int {
                                     86 => {
                                         printVersion();
                                         operationResult = 0 as libc::c_int;
@@ -2893,14 +2707,16 @@ unsafe fn main_0(
                                         if *argument as libc::c_int == '=' as i32 {
                                             argument = argument.offset(1);
                                             dictFileName = argument;
-                                            argument = argument.offset(strlen(dictFileName) as isize);
+                                            argument =
+                                                argument.offset(strlen(dictFileName) as isize);
                                         } else {
                                             argNb += 1;
                                             if argNb >= argCount {
                                                 if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
-                                                        b"error: missing command argument \n\0" as *const u8
+                                                        b"error: missing command argument \n\0"
+                                                            as *const u8
                                                             as *const libc::c_char,
                                                     );
                                                 }
@@ -2910,8 +2726,8 @@ unsafe fn main_0(
                                             } else {
                                                 dictFileName = *argv.offset(argNb as isize);
                                                 debug_assert!(!dictFileName.is_null());
-                                                if !(*dictFileName.offset(0)
-                                                    as libc::c_int == '-' as i32)
+                                                if !(*dictFileName.offset(0) as libc::c_int
+                                                    == '-' as i32)
                                                 {
                                                     continue;
                                                 }
@@ -2961,14 +2777,16 @@ unsafe fn main_0(
                                         if *argument as libc::c_int == '=' as i32 {
                                             argument = argument.offset(1);
                                             outFileName = argument;
-                                            argument = argument.offset(strlen(outFileName) as isize);
+                                            argument =
+                                                argument.offset(strlen(outFileName) as isize);
                                         } else {
                                             argNb += 1;
                                             if argNb >= argCount {
                                                 if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
-                                                        b"error: missing command argument \n\0" as *const u8
+                                                        b"error: missing command argument \n\0"
+                                                            as *const u8
                                                             as *const libc::c_char,
                                                     );
                                                 }
@@ -2978,8 +2796,8 @@ unsafe fn main_0(
                                             } else {
                                                 outFileName = *argv.offset(argNb as isize);
                                                 debug_assert!(!outFileName.is_null());
-                                                if !(*outFileName.offset(0)
-                                                    as libc::c_int == '-' as i32)
+                                                if !(*outFileName.offset(0) as libc::c_int
+                                                    == '-' as i32)
                                                 {
                                                     continue;
                                                 }
@@ -3023,7 +2841,8 @@ unsafe fn main_0(
                                     80 => {
                                         argument = argument.offset(1);
                                         compressibility = readU32FromChar(&mut argument)
-                                            as libc::c_double / 100 as libc::c_int as libc::c_double;
+                                            as libc::c_double
+                                            / 100 as libc::c_int as libc::c_double;
                                     }
                                     _ => {
                                         badusage(programName);
@@ -3047,11 +2866,9 @@ unsafe fn main_0(
             if g_displayLevel >= 3 {
                 fprintf(
                     stderr,
-                    b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8
-                        as *const libc::c_char,
+                    b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8 as *const libc::c_char,
                     b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-                    (::core::mem::size_of::<libc::size_t>())
-                        .wrapping_mul(8) as libc::c_int,
+                    (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8) as libc::c_int,
                     b"v1.5.5\0" as *const u8 as *const libc::c_char,
                     b"Yann Collet\0" as *const u8 as *const libc::c_char,
                 );
@@ -3070,23 +2887,20 @@ unsafe fn main_0(
                         if g_displayLevel >= 2 {
                             fprintf(
                                 stderr,
-                                b"Warning : %s is a symbolic link, ignoring \n\0"
-                                    as *const u8 as *const libc::c_char,
+                                b"Warning : %s is a symbolic link, ignoring \n\0" as *const u8
+                                    as *const libc::c_char,
                                 *((*filenames).fileNames).offset(u as isize),
                             );
                         }
                     } else {
                         let fresh0 = fileNamesNb;
                         fileNamesNb = fileNamesNb.wrapping_add(1);
-                        let ref mut fresh1 = *((*filenames).fileNames)
-                            .offset(fresh0 as isize);
+                        let ref mut fresh1 = *((*filenames).fileNames).offset(fresh0 as isize);
                         *fresh1 = *((*filenames).fileNames).offset(u as isize);
                     }
                     u = u.wrapping_add(1);
                 }
-                if fileNamesNb == 0
-                    && nbFilenames > 0
-                {
+                if fileNamesNb == 0 && nbFilenames > 0 {
                     operationResult = 1 as libc::c_int;
                     current_block = 18342783468770781838;
                 } else {
@@ -3138,8 +2952,7 @@ unsafe fn main_0(
                             if recursive != 0 {
                                 UTIL_expandFNT(&mut filenames, followLinks);
                             }
-                            if operation as libc::c_uint
-                                == zom_list as libc::c_int as libc::c_uint
+                            if operation as libc::c_uint == zom_list as libc::c_int as libc::c_uint
                             {
                                 let ret = FIO_listMultipleFiles(
                                     (*filenames).tableSize as libc::c_uint,
@@ -3169,9 +2982,7 @@ unsafe fn main_0(
                                         outFileName = nulmark.as_ptr();
                                         removeSrcFile = 0 as libc::c_int;
                                     }
-                                    if (*filenames).tableSize
-                                        == 0
-                                    {
+                                    if (*filenames).tableSize == 0 {
                                         if nbInputFileNames > 0 {
                                             if g_displayLevel >= 1 {
                                                 fprintf(
@@ -3192,23 +3003,27 @@ unsafe fn main_0(
                                     match current_block {
                                         18342783468770781838 => {}
                                         _ => {
-                                            if (*filenames).tableSize
-                                                == 1
+                                            if (*filenames).tableSize == 1
                                                 && strcmp(
                                                     *((*filenames).fileNames).offset(0),
                                                     stdinmark.as_ptr(),
-                                                ) == 0 && outFileName.is_null()
+                                                ) == 0
+                                                && outFileName.is_null()
                                             {
                                                 outFileName = stdoutmark.as_ptr();
                                             }
                                             if forceStdin == 0
-                                                && UTIL_searchFileNamesTable(filenames, stdinmark.as_ptr())
-                                                    != -(1) && UTIL_isConsole(stdin) != 0
+                                                && UTIL_searchFileNamesTable(
+                                                    filenames,
+                                                    stdinmark.as_ptr(),
+                                                ) != -(1)
+                                                && UTIL_isConsole(stdin) != 0
                                             {
                                                 if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
-                                                        b"stdin is a console, aborting\n\0" as *const u8
+                                                        b"stdin is a console, aborting\n\0"
+                                                            as *const u8
                                                             as *const libc::c_char,
                                                     );
                                                 }
@@ -3216,15 +3031,19 @@ unsafe fn main_0(
                                             } else if (outFileName.is_null()
                                                 || strcmp(outFileName, stdoutmark.as_ptr()) == 0)
                                                 && UTIL_isConsole(stdout) != 0
-                                                && UTIL_searchFileNamesTable(filenames, stdinmark.as_ptr())
-                                                    != -(1) && forceStdout == 0
+                                                && UTIL_searchFileNamesTable(
+                                                    filenames,
+                                                    stdinmark.as_ptr(),
+                                                ) != -(1)
+                                                && forceStdout == 0
                                                 && operation as libc::c_uint
                                                     != zom_decompress as libc::c_int as libc::c_uint
                                             {
                                                 if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
-                                                        b"stdout is a console, aborting\n\0" as *const u8
+                                                        b"stdout is a console, aborting\n\0"
+                                                            as *const u8
                                                             as *const libc::c_char,
                                                     );
                                                 }
@@ -3248,7 +3067,8 @@ unsafe fn main_0(
                                                 }
                                                 if showDefaultCParams != 0 {
                                                     if operation as libc::c_uint
-                                                        == zom_decompress as libc::c_int as libc::c_uint
+                                                        == zom_decompress as libc::c_int
+                                                            as libc::c_uint
                                                     {
                                                         if g_displayLevel >= 1 {
                                                             fprintf(
@@ -3280,8 +3100,7 @@ unsafe fn main_0(
                                                             }
                                                             operationResult = 1 as libc::c_int;
                                                         } else if !patchFromDictFileName.is_null()
-                                                            && (*filenames).tableSize
-                                                                > 1
+                                                            && (*filenames).tableSize > 1
                                                         {
                                                             if g_displayLevel >= 1 {
                                                                 fprintf(
@@ -3293,19 +3112,25 @@ unsafe fn main_0(
                                                             operationResult = 1 as libc::c_int;
                                                         } else {
                                                             hasStdout = (!outFileName.is_null()
-                                                                && strcmp(outFileName, stdoutmark.as_ptr()) == 0)
+                                                                && strcmp(
+                                                                    outFileName,
+                                                                    stdoutmark.as_ptr(),
+                                                                ) == 0)
                                                                 as libc::c_int;
-                                                            if hasStdout != 0 && g_displayLevel == 2 {
+                                                            if hasStdout != 0 && g_displayLevel == 2
+                                                            {
                                                                 g_displayLevel = 1 as libc::c_int;
                                                             }
                                                             if UTIL_isConsole(stderr) == 0
                                                                 && progress as libc::c_uint
-                                                                    != FIO_ps_always as libc::c_int as libc::c_uint
+                                                                    != FIO_ps_always as libc::c_int
+                                                                        as libc::c_uint
                                                             {
                                                                 progress = FIO_ps_never;
                                                             }
                                                             FIO_setProgressSetting(progress);
-                                                            if hasStdout != 0 && removeSrcFile != 0 {
+                                                            if hasStdout != 0 && removeSrcFile != 0
+                                                            {
                                                                 if g_displayLevel >= 3 {
                                                                     fprintf(
                                                                         stderr,
@@ -3315,94 +3140,164 @@ unsafe fn main_0(
                                                                 }
                                                                 removeSrcFile = 0 as libc::c_int;
                                                             }
-                                                            FIO_setRemoveSrcFile(prefs, removeSrcFile);
+                                                            FIO_setRemoveSrcFile(
+                                                                prefs,
+                                                                removeSrcFile,
+                                                            );
                                                             FIO_setHasStdoutOutput(fCtx, hasStdout);
                                                             FIO_setNbFilesTotal(
                                                                 fCtx,
-                                                                (*filenames).tableSize as libc::c_int,
+                                                                (*filenames).tableSize
+                                                                    as libc::c_int,
                                                             );
-                                                            FIO_determineHasStdinInput(fCtx, filenames);
-                                                            FIO_setNotificationLevel(g_displayLevel);
-                                                            FIO_setAllowBlockDevices(prefs, allowBlockDevices);
+                                                            FIO_determineHasStdinInput(
+                                                                fCtx, filenames,
+                                                            );
+                                                            FIO_setNotificationLevel(
+                                                                g_displayLevel,
+                                                            );
+                                                            FIO_setAllowBlockDevices(
+                                                                prefs,
+                                                                allowBlockDevices,
+                                                            );
                                                             FIO_setPatchFromMode(
                                                                 prefs,
-                                                                (patchFromDictFileName != NULL as *const libc::c_char)
+                                                                (patchFromDictFileName
+                                                                    != NULL as *const libc::c_char)
                                                                     as libc::c_int,
                                                             );
                                                             FIO_setMMapDict(prefs, mmapDict);
                                                             if memLimit == 0 {
-                                                                if compressionParams.windowLog
-                                                                    == 0
+                                                                if compressionParams.windowLog == 0
                                                                 {
                                                                     memLimit = (1)
                                                                         << g_defaultMaxWindowLog;
                                                                 } else {
                                                                     memLimit = (1)
-                                                                        << (compressionParams.windowLog
+                                                                        << (compressionParams
+                                                                            .windowLog
                                                                             & 31);
                                                                 }
                                                             }
                                                             if !patchFromDictFileName.is_null() {
-                                                                dictFileName = patchFromDictFileName;
+                                                                dictFileName =
+                                                                    patchFromDictFileName;
                                                             }
                                                             FIO_setMemLimit(prefs, memLimit);
                                                             if operation as libc::c_uint
-                                                                == zom_compress as libc::c_int as libc::c_uint
+                                                                == zom_compress as libc::c_int
+                                                                    as libc::c_uint
                                                             {
-                                                                FIO_setCompressionType(prefs, cType);
-                                                                FIO_setContentSize(prefs, contentSize);
-                                                                FIO_setNbWorkers(prefs, nbWorkers as libc::c_int);
-                                                                FIO_setBlockSize(prefs, blockSize as libc::c_int);
-                                                                if g_overlapLog != OVERLAP_LOG_DEFAULT as libc::c_uint {
-                                                                    FIO_setOverlapLog(prefs, g_overlapLog as libc::c_int);
-                                                                }
-                                                                FIO_setLdmFlag(prefs, ldmFlag as libc::c_uint);
-                                                                FIO_setLdmHashLog(prefs, g_ldmHashLog as libc::c_int);
-                                                                FIO_setLdmMinMatch(prefs, g_ldmMinMatch as libc::c_int);
-                                                                if g_ldmBucketSizeLog != LDM_PARAM_DEFAULT as libc::c_uint {
-                                                                    FIO_setLdmBucketSizeLog(
+                                                                FIO_setCompressionType(
+                                                                    prefs, cType,
+                                                                );
+                                                                FIO_setContentSize(
+                                                                    prefs,
+                                                                    contentSize,
+                                                                );
+                                                                FIO_setNbWorkers(
+                                                                    prefs,
+                                                                    nbWorkers as libc::c_int,
+                                                                );
+                                                                FIO_setBlockSize(
+                                                                    prefs,
+                                                                    blockSize as libc::c_int,
+                                                                );
+                                                                if g_overlapLog
+                                                                    != OVERLAP_LOG_DEFAULT
+                                                                        as libc::c_uint
+                                                                {
+                                                                    FIO_setOverlapLog(
                                                                         prefs,
-                                                                        g_ldmBucketSizeLog as libc::c_int,
+                                                                        g_overlapLog as libc::c_int,
                                                                     );
                                                                 }
-                                                                if g_ldmHashRateLog != LDM_PARAM_DEFAULT as libc::c_uint {
+                                                                FIO_setLdmFlag(
+                                                                    prefs,
+                                                                    ldmFlag as libc::c_uint,
+                                                                );
+                                                                FIO_setLdmHashLog(
+                                                                    prefs,
+                                                                    g_ldmHashLog as libc::c_int,
+                                                                );
+                                                                FIO_setLdmMinMatch(
+                                                                    prefs,
+                                                                    g_ldmMinMatch as libc::c_int,
+                                                                );
+                                                                if g_ldmBucketSizeLog
+                                                                    != LDM_PARAM_DEFAULT
+                                                                        as libc::c_uint
+                                                                {
+                                                                    FIO_setLdmBucketSizeLog(
+                                                                        prefs,
+                                                                        g_ldmBucketSizeLog
+                                                                            as libc::c_int,
+                                                                    );
+                                                                }
+                                                                if g_ldmHashRateLog
+                                                                    != LDM_PARAM_DEFAULT
+                                                                        as libc::c_uint
+                                                                {
                                                                     FIO_setLdmHashRateLog(
                                                                         prefs,
-                                                                        g_ldmHashRateLog as libc::c_int,
+                                                                        g_ldmHashRateLog
+                                                                            as libc::c_int,
                                                                     );
                                                                 }
                                                                 FIO_setAdaptiveMode(prefs, adapt);
                                                                 FIO_setUseRowMatchFinder(
                                                                     prefs,
-                                                                    useRowMatchFinder as libc::c_int,
+                                                                    useRowMatchFinder
+                                                                        as libc::c_int,
                                                                 );
                                                                 FIO_setAdaptMin(prefs, adaptMin);
                                                                 FIO_setAdaptMax(prefs, adaptMax);
                                                                 FIO_setRsyncable(prefs, rsyncable);
-                                                                FIO_setStreamSrcSize(prefs, streamSrcSize);
-                                                                FIO_setTargetCBlockSize(prefs, targetCBlockSize);
-                                                                FIO_setSrcSizeHint(prefs, srcSizeHint);
+                                                                FIO_setStreamSrcSize(
+                                                                    prefs,
+                                                                    streamSrcSize,
+                                                                );
+                                                                FIO_setTargetCBlockSize(
+                                                                    prefs,
+                                                                    targetCBlockSize,
+                                                                );
+                                                                FIO_setSrcSizeHint(
+                                                                    prefs,
+                                                                    srcSizeHint,
+                                                                );
                                                                 FIO_setLiteralCompressionMode(
                                                                     prefs,
                                                                     literalCompressionMode,
                                                                 );
-                                                                FIO_setSparseWrite(prefs, 0 as libc::c_int);
+                                                                FIO_setSparseWrite(
+                                                                    prefs,
+                                                                    0 as libc::c_int,
+                                                                );
                                                                 if adaptMin > cLevel {
                                                                     cLevel = adaptMin;
                                                                 }
                                                                 if adaptMax < cLevel {
                                                                     cLevel = adaptMax;
                                                                 }
-                                                                let mut strategyBounds = ZSTD_cParam_getBounds(
-                                                                    ZSTD_c_strategy,
+                                                                let mut strategyBounds =
+                                                                    ZSTD_cParam_getBounds(
+                                                                        ZSTD_c_strategy,
+                                                                    );
+                                                                debug_assert!(
+                                                                    9 as libc::c_int
+                                                                        == strategyBounds
+                                                                            .upperBound
                                                                 );
-                                                                debug_assert!(9 as libc::c_int == strategyBounds.upperBound);
                                                                 if showDefaultCParams != 0
                                                                     || g_displayLevel >= 4
                                                                 {
-                                                                    let mut fileNb: libc::size_t = 0;
-                                                                    fileNb = 0 as libc::c_int as libc::size_t;
-                                                                    while fileNb < (*filenames).tableSize {
+                                                                    let mut fileNb: libc::size_t =
+                                                                        0;
+                                                                    fileNb = 0 as libc::c_int
+                                                                        as libc::size_t;
+                                                                    while fileNb
+                                                                        < (*filenames).tableSize
+                                                                    {
                                                                         if showDefaultCParams != 0 {
                                                                             printDefaultCParams(
                                                                                 *((*filenames).fileNames).offset(fileNb as isize),
@@ -3418,25 +3313,28 @@ unsafe fn main_0(
                                                                                 &mut compressionParams,
                                                                             );
                                                                         }
-                                                                        fileNb = fileNb.wrapping_add(1);
+                                                                        fileNb =
+                                                                            fileNb.wrapping_add(1);
                                                                     }
                                                                 }
                                                                 if g_displayLevel >= 4 {
                                                                     FIO_displayCompressionParameters(prefs);
                                                                 }
-                                                                if (*filenames).tableSize
-                                                                    == 1
+                                                                if (*filenames).tableSize == 1
                                                                     && !outFileName.is_null()
                                                                 {
-                                                                    operationResult = FIO_compressFilename(
-                                                                        fCtx,
-                                                                        prefs,
-                                                                        outFileName,
-                                                                        *((*filenames).fileNames).offset(0),
-                                                                        dictFileName,
-                                                                        cLevel,
-                                                                        compressionParams,
-                                                                    );
+                                                                    operationResult =
+                                                                        FIO_compressFilename(
+                                                                            fCtx,
+                                                                            prefs,
+                                                                            outFileName,
+                                                                            *((*filenames)
+                                                                                .fileNames)
+                                                                                .offset(0),
+                                                                            dictFileName,
+                                                                            cLevel,
+                                                                            compressionParams,
+                                                                        );
                                                                 } else {
                                                                     operationResult = FIO_compressMultipleFilenames(
                                                                         fCtx,
@@ -3451,27 +3349,29 @@ unsafe fn main_0(
                                                                         compressionParams,
                                                                     );
                                                                 }
-                                                            } else if (*filenames).tableSize
-                                                                == 1
+                                                            } else if (*filenames).tableSize == 1
                                                                 && !outFileName.is_null()
                                                             {
-                                                                operationResult = FIO_decompressFilename(
-                                                                    fCtx,
-                                                                    prefs,
-                                                                    outFileName,
-                                                                    *((*filenames).fileNames).offset(0),
-                                                                    dictFileName,
-                                                                );
+                                                                operationResult =
+                                                                    FIO_decompressFilename(
+                                                                        fCtx,
+                                                                        prefs,
+                                                                        outFileName,
+                                                                        *((*filenames).fileNames)
+                                                                            .offset(0),
+                                                                        dictFileName,
+                                                                    );
                                                             } else {
-                                                                operationResult = FIO_decompressMultipleFilenames(
-                                                                    fCtx,
-                                                                    prefs,
-                                                                    (*filenames).fileNames,
-                                                                    outMirroredDirName,
-                                                                    outDirName,
-                                                                    outFileName,
-                                                                    dictFileName,
-                                                                );
+                                                                operationResult =
+                                                                    FIO_decompressMultipleFilenames(
+                                                                        fCtx,
+                                                                        prefs,
+                                                                        (*filenames).fileNames,
+                                                                        outMirroredDirName,
+                                                                        outDirName,
+                                                                        outFileName,
+                                                                        dictFileName,
+                                                                    );
                                                             }
                                                         }
                                                     }
@@ -3498,7 +3398,7 @@ unsafe fn main_0(
     return operationResult;
 }
 pub fn main() {
-    let mut args: Vec::<*mut libc::c_char> = Vec::new();
+    let mut args: Vec<*mut libc::c_char> = Vec::new();
     for arg in ::std::env::args() {
         args.push(
             (::std::ffi::CString::new(arg))
@@ -3508,11 +3408,9 @@ pub fn main() {
     }
     args.push(::core::ptr::null_mut());
     unsafe {
-        ::std::process::exit(
-            main_0(
-                (args.len() - 1) as libc::c_int,
-                args.as_mut_ptr() as *mut *const libc::c_char,
-            ) as i32,
-        )
+        ::std::process::exit(main_0(
+            (args.len() - 1) as libc::c_int,
+            args.as_mut_ptr() as *mut *const libc::c_char,
+        ) as i32)
     }
 }

@@ -38,8 +38,8 @@ pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
 pub type ERR_enum = ZSTD_ErrorCode;
 #[no_mangle]
 pub unsafe extern "C" fn ERR_getErrorString(mut code: ERR_enum) -> *const libc::c_char {
-    static mut notErrorCode: *const libc::c_char = b"Unspecified error code\0"
-        as *const u8 as *const libc::c_char;
+    static mut notErrorCode: *const libc::c_char =
+        b"Unspecified error code\0" as *const u8 as *const libc::c_char;
     match code as libc::c_uint {
         0 => return b"No error detected\0" as *const u8 as *const libc::c_char,
         1 => return b"Error (generic)\0" as *const u8 as *const libc::c_char,
@@ -52,29 +52,25 @@ pub unsafe extern "C" fn ERR_getErrorString(mut code: ERR_enum) -> *const libc::
         }
         20 => return b"Data corruption detected\0" as *const u8 as *const libc::c_char,
         22 => {
-            return b"Restored data doesn't match checksum\0" as *const u8
-                as *const libc::c_char;
+            return b"Restored data doesn't match checksum\0" as *const u8 as *const libc::c_char;
         }
         24 => {
-            return b"Header of Literals' block doesn't respect format specification\0"
-                as *const u8 as *const libc::c_char;
+            return b"Header of Literals' block doesn't respect format specification\0" as *const u8
+                as *const libc::c_char;
         }
         40 => return b"Unsupported parameter\0" as *const u8 as *const libc::c_char,
         41 => {
-            return b"Unsupported combination of parameters\0" as *const u8
-                as *const libc::c_char;
+            return b"Unsupported combination of parameters\0" as *const u8 as *const libc::c_char;
         }
         42 => return b"Parameter is out of bound\0" as *const u8 as *const libc::c_char,
         62 => {
             return b"Context should be init first\0" as *const u8 as *const libc::c_char;
         }
         64 => {
-            return b"Allocation error : not enough memory\0" as *const u8
-                as *const libc::c_char;
+            return b"Allocation error : not enough memory\0" as *const u8 as *const libc::c_char;
         }
         66 => {
-            return b"workSpace buffer is not large enough\0" as *const u8
-                as *const libc::c_char;
+            return b"workSpace buffer is not large enough\0" as *const u8 as *const libc::c_char;
         }
         60 => {
             return b"Operation not authorized at current processing stage\0" as *const u8
@@ -89,8 +85,7 @@ pub unsafe extern "C" fn ERR_getErrorString(mut code: ERR_enum) -> *const libc::
                 as *const libc::c_char;
         }
         48 => {
-            return b"Specified maxSymbolValue is too small\0" as *const u8
-                as *const libc::c_char;
+            return b"Specified maxSymbolValue is too small\0" as *const u8 as *const libc::c_char;
         }
         50 => {
             return b"pledged buffer stability condition is not respected\0" as *const u8
@@ -103,13 +98,11 @@ pub unsafe extern "C" fn ERR_getErrorString(mut code: ERR_enum) -> *const libc::
                 as *const libc::c_char;
         }
         70 => {
-            return b"Destination buffer is too small\0" as *const u8
-                as *const libc::c_char;
+            return b"Destination buffer is too small\0" as *const u8 as *const libc::c_char;
         }
         72 => return b"Src size is incorrect\0" as *const u8 as *const libc::c_char,
         74 => {
-            return b"Operation on NULL destination buffer\0" as *const u8
-                as *const libc::c_char;
+            return b"Operation on NULL destination buffer\0" as *const u8 as *const libc::c_char;
         }
         80 => {
             return b"Operation made no progress over multiple calls, due to output buffer being full\0"
@@ -129,12 +122,11 @@ pub unsafe extern "C" fn ERR_getErrorString(mut code: ERR_enum) -> *const libc::
         }
         105 => return b"Source buffer is wrong\0" as *const u8 as *const libc::c_char,
         106 => {
-            return b"Block-level external sequence producer returned an error code\0"
-                as *const u8 as *const libc::c_char;
+            return b"Block-level external sequence producer returned an error code\0" as *const u8
+                as *const libc::c_char;
         }
         107 => {
-            return b"External sequences are not valid\0" as *const u8
-                as *const libc::c_char;
+            return b"External sequences are not valid\0" as *const u8 as *const libc::c_char;
         }
         120 | _ => return notErrorCode,
     };
