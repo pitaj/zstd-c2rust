@@ -18,7 +18,7 @@ extern "C" {
         __stream: *mut FILE,
         __buf: *mut libc::c_char,
         __modes: libc::c_int,
-        __n: size_t,
+        __n: libc::size_t,
     ) -> libc::c_int;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn fread(
@@ -40,8 +40,8 @@ extern "C" {
     fn exit(_: libc::c_int) -> !;
     fn qsort(
         __base: *mut libc::c_void,
-        __nmemb: size_t,
-        __size: size_t,
+        __nmemb: libc::size_t,
+        __size: libc::size_t,
         __compar: __compar_fn_t,
     );
     fn calloc(_: libc::c_ulong, _: libc::c_ulong) -> *mut libc::c_void;
@@ -78,7 +78,7 @@ extern "C" {
     fn UTIL_isDirectoryStat(statbuf: *const stat_t) -> libc::c_int;
     fn UTIL_isFIFOStat(statbuf: *const stat_t) -> libc::c_int;
     fn UTIL_isBlockDevStat(statbuf: *const stat_t) -> libc::c_int;
-    fn UTIL_getFileSizeStat(statbuf: *const stat_t) -> U64;
+    fn UTIL_getFileSizeStat(statbuf: *const stat_t) -> u64;
     fn UTIL_isRegularFile(infilename: *const libc::c_char) -> libc::c_int;
     fn UTIL_isDirectory(infilename: *const libc::c_char) -> libc::c_int;
     fn UTIL_isSameFile(
@@ -96,8 +96,8 @@ extern "C" {
         extensionList: *mut *const libc::c_char,
     ) -> libc::c_int;
     fn UTIL_isConsole(file: *mut FILE) -> libc::c_int;
-    fn UTIL_getFileSize(infilename: *const libc::c_char) -> U64;
-    fn UTIL_makeHumanReadableSize(size: U64) -> UTIL_HumanReadableSize_t;
+    fn UTIL_getFileSize(infilename: *const libc::c_char) -> u64;
+    fn UTIL_makeHumanReadableSize(size: u64) -> UTIL_HumanReadableSize_t;
     fn UTIL_compareStr(p1: *const libc::c_void, p2: *const libc::c_void) -> libc::c_int;
     fn UTIL_mirrorSourceFilesDirectories(
         fileNamesTable: *mut *const libc::c_char,
@@ -118,10 +118,10 @@ extern "C" {
     fn UTIL_clockSpanMicro(clockStart: UTIL_time_t) -> PTime;
     fn ZSTD_getFrameContentSize(
         src: *const libc::c_void,
-        srcSize: size_t,
+        srcSize: libc::size_t,
     ) -> libc::c_ulonglong;
-    fn ZSTD_isError(code: size_t) -> libc::c_uint;
-    fn ZSTD_getErrorName(code: size_t) -> *const libc::c_char;
+    fn ZSTD_isError(code: libc::size_t) -> libc::c_uint;
+    fn ZSTD_getErrorName(code: libc::size_t) -> *const libc::c_char;
     fn ZSTD_minCLevel() -> libc::c_int;
     fn ZSTD_maxCLevel() -> libc::c_int;
     fn ZSTD_createCCtx() -> *mut ZSTD_CCtx;
@@ -129,75 +129,75 @@ extern "C" {
         cctx: *mut ZSTD_CCtx,
         param: ZSTD_cParameter,
         value: libc::c_int,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn ZSTD_CCtx_setPledgedSrcSize(
         cctx: *mut ZSTD_CCtx,
         pledgedSrcSize: libc::c_ulonglong,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn ZSTD_DCtx_setParameter(
         dctx: *mut ZSTD_DCtx,
         param: ZSTD_dParameter,
         value: libc::c_int,
-    ) -> size_t;
-    fn ZSTD_DCtx_reset(dctx: *mut ZSTD_DCtx, reset: ZSTD_ResetDirective) -> size_t;
-    fn ZSTD_freeCStream(zcs: *mut ZSTD_CStream) -> size_t;
+    ) -> libc::size_t;
+    fn ZSTD_DCtx_reset(dctx: *mut ZSTD_DCtx, reset: ZSTD_ResetDirective) -> libc::size_t;
+    fn ZSTD_freeCStream(zcs: *mut ZSTD_CStream) -> libc::size_t;
     fn ZSTD_compressStream2(
         cctx: *mut ZSTD_CCtx,
         output: *mut ZSTD_outBuffer,
         input: *mut ZSTD_inBuffer,
         endOp: ZSTD_EndDirective,
-    ) -> size_t;
-    fn ZSTD_CStreamInSize() -> size_t;
-    fn ZSTD_CStreamOutSize() -> size_t;
+    ) -> libc::size_t;
+    fn ZSTD_CStreamInSize() -> libc::size_t;
+    fn ZSTD_CStreamOutSize() -> libc::size_t;
     fn ZSTD_createDStream() -> *mut ZSTD_DStream;
-    fn ZSTD_freeDStream(zds: *mut ZSTD_DStream) -> size_t;
+    fn ZSTD_freeDStream(zds: *mut ZSTD_DStream) -> libc::size_t;
     fn ZSTD_decompressStream(
         zds: *mut ZSTD_DStream,
         output: *mut ZSTD_outBuffer,
         input: *mut ZSTD_inBuffer,
-    ) -> size_t;
-    fn ZSTD_DStreamInSize() -> size_t;
-    fn ZSTD_DStreamOutSize() -> size_t;
-    fn ZSTD_frameHeaderSize(src: *const libc::c_void, srcSize: size_t) -> size_t;
+    ) -> libc::size_t;
+    fn ZSTD_DStreamInSize() -> libc::size_t;
+    fn ZSTD_DStreamOutSize() -> libc::size_t;
+    fn ZSTD_frameHeaderSize(src: *const libc::c_void, srcSize: libc::size_t) -> libc::size_t;
     fn ZSTD_getFrameHeader(
         zfhPtr: *mut ZSTD_frameHeader,
         src: *const libc::c_void,
-        srcSize: size_t,
-    ) -> size_t;
+        srcSize: libc::size_t,
+    ) -> libc::size_t;
     fn ZSTD_getCParams(
         compressionLevel: libc::c_int,
         estimatedSrcSize: libc::c_ulonglong,
-        dictSize: size_t,
+        dictSize: libc::size_t,
     ) -> ZSTD_compressionParameters;
     fn ZSTD_CCtx_loadDictionary_byReference(
         cctx: *mut ZSTD_CCtx,
         dict: *const libc::c_void,
-        dictSize: size_t,
-    ) -> size_t;
+        dictSize: libc::size_t,
+    ) -> libc::size_t;
     fn ZSTD_CCtx_getParameter(
         cctx: *const ZSTD_CCtx,
         param: ZSTD_cParameter,
         value: *mut libc::c_int,
-    ) -> size_t;
-    fn ZSTD_isFrame(buffer: *const libc::c_void, size: size_t) -> libc::c_uint;
+    ) -> libc::size_t;
+    fn ZSTD_isFrame(buffer: *const libc::c_void, size: libc::size_t) -> libc::c_uint;
     fn ZSTD_DCtx_loadDictionary_byReference(
         dctx: *mut ZSTD_DCtx,
         dict: *const libc::c_void,
-        dictSize: size_t,
-    ) -> size_t;
-    fn ZSTD_DCtx_setMaxWindowSize(dctx: *mut ZSTD_DCtx, maxWindowSize: size_t) -> size_t;
+        dictSize: libc::size_t,
+    ) -> libc::size_t;
+    fn ZSTD_DCtx_setMaxWindowSize(dctx: *mut ZSTD_DCtx, maxWindowSize: libc::size_t) -> libc::size_t;
     fn ZSTD_getFrameProgression(cctx: *const ZSTD_CCtx) -> ZSTD_frameProgression;
-    fn ZSTD_toFlushNow(cctx: *mut ZSTD_CCtx) -> size_t;
+    fn ZSTD_toFlushNow(cctx: *mut ZSTD_CCtx) -> libc::size_t;
     fn ZSTD_DCtx_refPrefix(
         dctx: *mut ZSTD_DCtx,
         prefix: *const libc::c_void,
-        prefixSize: size_t,
-    ) -> size_t;
+        prefixSize: libc::size_t,
+    ) -> libc::size_t;
     fn ZSTD_CCtx_refPrefix(
         cctx: *mut ZSTD_CCtx,
         prefix: *const libc::c_void,
-        prefixSize: size_t,
-    ) -> size_t;
+        prefixSize: libc::size_t,
+    ) -> libc::size_t;
     fn AIO_supported() -> libc::c_int;
     fn AIO_WritePool_releaseIoJob(job: *mut IOJob_t);
     fn AIO_WritePool_acquireJob(ctx: *mut WritePoolCtx_t) -> *mut IOJob_t;
@@ -208,22 +208,22 @@ extern "C" {
     fn AIO_WritePool_closeFile(ctx: *mut WritePoolCtx_t) -> libc::c_int;
     fn AIO_WritePool_create(
         prefs: *const FIO_prefs_t,
-        bufferSize: size_t,
+        bufferSize: libc::size_t,
     ) -> *mut WritePoolCtx_t;
     fn AIO_WritePool_free(ctx: *mut WritePoolCtx_t);
     fn AIO_WritePool_setAsync(ctx: *mut WritePoolCtx_t, async_0: libc::c_int);
     fn AIO_ReadPool_create(
         prefs: *const FIO_prefs_t,
-        bufferSize: size_t,
+        bufferSize: libc::size_t,
     ) -> *mut ReadPoolCtx_t;
     fn AIO_ReadPool_free(ctx: *mut ReadPoolCtx_t);
     fn AIO_ReadPool_setAsync(ctx: *mut ReadPoolCtx_t, async_0: libc::c_int);
-    fn AIO_ReadPool_fillBuffer(ctx: *mut ReadPoolCtx_t, n: size_t) -> size_t;
-    fn AIO_ReadPool_consumeBytes(ctx: *mut ReadPoolCtx_t, n: size_t);
+    fn AIO_ReadPool_fillBuffer(ctx: *mut ReadPoolCtx_t, n: libc::size_t) -> libc::size_t;
+    fn AIO_ReadPool_consumeBytes(ctx: *mut ReadPoolCtx_t, n: libc::size_t);
     fn AIO_ReadPool_closeFile(ctx: *mut ReadPoolCtx_t) -> libc::c_int;
     fn AIO_ReadPool_setFile(ctx: *mut ReadPoolCtx_t, file: *mut FILE);
     fn AIO_ReadPool_getFile(ctx: *const ReadPoolCtx_t) -> *mut FILE;
-    fn ZSTD_getErrorCode(functionResult: size_t) -> ZSTD_ErrorCode;
+    fn ZSTD_getErrorCode(functionResult: libc::size_t) -> ZSTD_ErrorCode;
     fn backtrace(__array: *mut *mut libc::c_void, __size: libc::c_int) -> libc::c_int;
     fn backtrace_symbols(
         __array: *const *mut libc::c_void,
@@ -231,18 +231,14 @@ extern "C" {
     ) -> *mut *mut libc::c_char;
     fn mmap(
         __addr: *mut libc::c_void,
-        __len: size_t,
+        __len: libc::size_t,
         __prot: libc::c_int,
         __flags: libc::c_int,
         __fd: libc::c_int,
         __offset: __off_t,
     ) -> *mut libc::c_void;
-    fn munmap(__addr: *mut libc::c_void, __len: size_t) -> libc::c_int;
+    fn munmap(__addr: *mut libc::c_void, __len: libc::size_t) -> libc::c_int;
 }
-pub type __uint8_t = libc::c_uchar;
-pub type __uint16_t = libc::c_ushort;
-pub type __uint32_t = libc::c_uint;
-pub type __uint64_t = libc::c_ulong;
 pub type __dev_t = libc::c_ulong;
 pub type __uid_t = libc::c_uint;
 pub type __gid_t = libc::c_uint;
@@ -256,7 +252,6 @@ pub type __time_t = libc::c_long;
 pub type __blksize_t = libc::c_long;
 pub type __blkcnt_t = libc::c_long;
 pub type __syscall_slong_t = libc::c_long;
-pub type size_t = libc::c_ulong;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct _IO_FILE {
@@ -286,7 +281,7 @@ pub struct _IO_FILE {
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
     pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: size_t,
+    pub __pad5: libc::size_t,
     pub _mode: libc::c_int,
     pub _unused2: [libc::c_char; 20],
 }
@@ -321,17 +316,8 @@ pub struct stat {
 pub type __compar_fn_t = Option::<
     unsafe extern "C" fn(*const libc::c_void, *const libc::c_void) -> libc::c_int,
 >;
-pub type uint8_t = __uint8_t;
-pub type uint16_t = __uint16_t;
-pub type uint32_t = __uint32_t;
-pub type uint64_t = __uint64_t;
-pub type BYTE = uint8_t;
-pub type U8 = uint8_t;
-pub type U16 = uint16_t;
-pub type U32 = uint32_t;
-pub type U64 = uint64_t;
-pub type unalign16 = U16;
-pub type unalign32 = U32;
+pub type unalign16 = u16;
+pub type unalign32 = u32;
 pub type stat_t = stat;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -345,11 +331,11 @@ pub struct UTIL_HumanReadableSize_t {
 pub struct FileNamesTable {
     pub fileNames: *mut *const libc::c_char,
     pub buf: *mut libc::c_char,
-    pub tableSize: size_t,
-    pub tableCapacity: size_t,
+    pub tableSize: libc::size_t,
+    pub tableCapacity: libc::size_t,
 }
 pub type __sighandler_t = Option::<unsafe extern "C" fn(libc::c_int) -> ()>;
-pub type PTime = uint64_t;
+pub type PTime = u64;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct UTIL_time_t {
@@ -422,16 +408,16 @@ pub const ZSTD_d_windowLogMax: ZSTD_dParameter = 100;
 #[repr(C)]
 pub struct ZSTD_inBuffer_s {
     pub src: *const libc::c_void,
-    pub size: size_t,
-    pub pos: size_t,
+    pub size: libc::size_t,
+    pub pos: libc::size_t,
 }
 pub type ZSTD_inBuffer = ZSTD_inBuffer_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_outBuffer_s {
     pub dst: *mut libc::c_void,
-    pub size: size_t,
-    pub pos: size_t,
+    pub size: libc::size_t,
+    pub pos: libc::size_t,
 }
 pub type ZSTD_outBuffer = ZSTD_outBuffer_s;
 pub type ZSTD_CStream = ZSTD_CCtx;
@@ -520,8 +506,8 @@ pub struct FIO_prefs_s {
     pub ldmMinMatch: libc::c_int,
     pub ldmBucketSizeLog: libc::c_int,
     pub ldmHashRateLog: libc::c_int,
-    pub streamSrcSize: size_t,
-    pub targetCBlockSize: size_t,
+    pub streamSrcSize: libc::size_t,
+    pub targetCBlockSize: libc::size_t,
     pub srcSizeHint: libc::c_int,
     pub testMode: libc::c_int,
     pub literalCompressionMode: ZSTD_paramSwitch_e,
@@ -545,7 +531,7 @@ pub const FIO_mallocDict: FIO_dictBufferType_t = 0;
 #[repr(C)]
 pub struct FIO_Dict_t {
     pub dictBuffer: *mut libc::c_void,
-    pub dictBufferSize: size_t,
+    pub dictBufferSize: libc::size_t,
     pub dictBufferType: FIO_dictBufferType_t,
 }
 #[derive(Copy, Clone)]
@@ -556,8 +542,8 @@ pub struct FIO_ctx_s {
     pub hasStdoutOutput: libc::c_int,
     pub currFileIdx: libc::c_int,
     pub nbFilesProcessed: libc::c_int,
-    pub totalBytesInput: size_t,
-    pub totalBytesOutput: size_t,
+    pub totalBytesInput: libc::size_t,
+    pub totalBytesOutput: libc::size_t,
 }
 pub type FIO_ctx_t = FIO_ctx_s;
 #[derive(Copy, Clone)]
@@ -575,12 +561,12 @@ pub struct cRess_t {
 pub struct ReadPoolCtx_t {
     pub base: IOPoolCtx_t,
     pub reachedEof: libc::c_int,
-    pub nextReadOffset: U64,
-    pub waitingOnOffset: U64,
+    pub nextReadOffset: u64,
+    pub waitingOnOffset: u64,
     pub currentJobHeld: *mut libc::c_void,
-    pub coalesceBuffer: *mut U8,
-    pub srcBuffer: *mut U8,
-    pub srcBufferLoaded: size_t,
+    pub coalesceBuffer: *mut u8,
+    pub srcBuffer: *mut u8,
+    pub srcBufferLoaded: libc::size_t,
     pub completedJobs: [*mut libc::c_void; 10],
     pub completedJobsCount: libc::c_int,
     pub jobCompletedCond: ZSTD_pthread_cond_t,
@@ -598,7 +584,7 @@ pub struct IOPoolCtx_t {
     pub ioJobsMutex: ZSTD_pthread_mutex_t,
     pub availableJobs: [*mut libc::c_void; 10],
     pub availableJobsCount: libc::c_int,
-    pub jobBufferSize: size_t,
+    pub jobBufferSize: libc::size_t,
 }
 pub type ZSTD_pthread_mutex_t = libc::c_int;
 pub type POOL_function = Option::<unsafe extern "C" fn(*mut libc::c_void) -> ()>;
@@ -615,9 +601,9 @@ pub struct IOJob_t {
     pub ctx: *mut libc::c_void,
     pub file: *mut FILE,
     pub buffer: *mut libc::c_void,
-    pub bufferSize: size_t,
-    pub usedBufferSize: size_t,
-    pub offset: U64,
+    pub bufferSize: libc::size_t,
+    pub usedBufferSize: libc::size_t,
+    pub offset: u64,
 }
 pub type speedChange_e = libc::c_uint;
 pub const faster: speedChange_e = 2;
@@ -670,15 +656,15 @@ pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct fileInfo_t {
-    pub decompressedSize: U64,
-    pub compressedSize: U64,
-    pub windowSize: U64,
+    pub decompressedSize: u64,
+    pub compressedSize: u64,
+    pub windowSize: u64,
     pub numActualFrames: libc::c_int,
     pub numSkippableFrames: libc::c_int,
     pub decompUnavailable: libc::c_int,
     pub usesCheck: libc::c_int,
-    pub checksum: [BYTE; 4],
-    pub nbFiles: U32,
+    pub checksum: [u8; 4],
+    pub nbFiles: u32,
     pub dictID: libc::c_uint,
 }
 pub type InfoError = libc::c_uint;
@@ -696,34 +682,34 @@ unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
     return 1 as libc::c_int as libc::c_uint;
 }
 #[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const libc::c_void) -> U16 {
+unsafe extern "C" fn MEM_read16(mut ptr: *const libc::c_void) -> u16 {
     return *(ptr as *const unalign16);
 }
 #[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const libc::c_void) -> U32 {
+unsafe extern "C" fn MEM_read32(mut ptr: *const libc::c_void) -> u32 {
     return *(ptr as *const unalign32);
 }
 #[inline]
-unsafe extern "C" fn MEM_readLE16(mut memPtr: *const libc::c_void) -> U16 {
+unsafe extern "C" fn MEM_readLE16(mut memPtr: *const libc::c_void) -> u16 {
     if MEM_isLittleEndian() != 0 {
         return MEM_read16(memPtr)
     } else {
-        let mut p = memPtr as *const BYTE;
+        let mut p = memPtr as *const u8;
         return (*p.offset(0 as libc::c_int as isize) as libc::c_int
             + ((*p.offset(1 as libc::c_int as isize) as libc::c_int)
-                << 8 as libc::c_int)) as U16;
+                << 8 as libc::c_int)) as u16;
     };
 }
 #[inline]
-unsafe extern "C" fn MEM_readLE24(mut memPtr: *const libc::c_void) -> U32 {
-    return (MEM_readLE16(memPtr) as U32)
+unsafe extern "C" fn MEM_readLE24(mut memPtr: *const libc::c_void) -> u32 {
+    return (MEM_readLE16(memPtr) as u32)
         .wrapping_add(
-            (*(memPtr as *const BYTE).offset(2 as libc::c_int as isize) as U32)
+            (*(memPtr as *const u8).offset(2 as libc::c_int as isize) as u32)
                 << 16 as libc::c_int,
         );
 }
 #[inline]
-unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> U32 {
+unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> u32 {
     if MEM_isLittleEndian() != 0 {
         return MEM_read32(memPtr)
     } else {
@@ -731,7 +717,7 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> U32 {
     };
 }
 #[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: U32) -> U32 {
+unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
     return in_0.swap_bytes();
 }
 pub const PATH_SEP: libc::c_int = '/' as i32;
@@ -764,9 +750,9 @@ pub const ZSTD_MAGIC_SKIPPABLE_MASK: libc::c_uint = 0xfffffff0 as libc::c_uint;
 pub const ZSTD_BLOCKSIZELOG_MAX: libc::c_int = 17 as libc::c_int;
 pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1 as libc::c_int) << ZSTD_BLOCKSIZELOG_MAX;
 pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0 as libc::c_ulonglong)
-    .wrapping_sub(1 as libc::c_int as libc::c_ulonglong);
+    .wrapping_sub(1);
 pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0 as libc::c_ulonglong)
-    .wrapping_sub(2 as libc::c_int as libc::c_ulonglong);
+    .wrapping_sub(2);
 pub const ZSTD_WINDOWLOG_LIMIT_DEFAULT: libc::c_int = 27 as libc::c_int;
 pub const LZ4_EXTENSION: [libc::c_char; 5] = unsafe {
     *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b".lz4\0")
@@ -811,7 +797,7 @@ pub const TLZ4_EXTENSION: [libc::c_char; 6] = unsafe {
     *::core::mem::transmute::<&[u8; 6], &[libc::c_char; 6]>(b".tlz4\0")
 };
 pub const REFRESH_RATE: libc::c_ulong = (SEC_TO_MICRO as PTime)
-    .wrapping_div(6 as libc::c_int as libc::c_ulong);
+    .wrapping_div(6);
 pub const LONG_TELL: unsafe extern "C" fn(*mut FILE) -> libc::c_long = ftell;
 #[no_mangle]
 pub static mut g_display_prefs: FIO_display_prefs_t = {
@@ -1022,8 +1008,8 @@ pub unsafe extern "C" fn FIO_createPreferences() -> *mut FIO_prefs_t {
     (*ret).ldmMinMatch = 0 as libc::c_int;
     (*ret).ldmBucketSizeLog = FIO_LDM_PARAM_NOTSET;
     (*ret).ldmHashRateLog = FIO_LDM_PARAM_NOTSET;
-    (*ret).streamSrcSize = 0 as libc::c_int as size_t;
-    (*ret).targetCBlockSize = 0 as libc::c_int as size_t;
+    (*ret).streamSrcSize = 0 as libc::c_int as libc::size_t;
+    (*ret).targetCBlockSize = 0 as libc::c_int as libc::size_t;
     (*ret).srcSizeHint = 0 as libc::c_int;
     (*ret).testMode = 0 as libc::c_int;
     (*ret).literalCompressionMode = ZSTD_ps_auto;
@@ -1075,8 +1061,8 @@ pub unsafe extern "C" fn FIO_createContext() -> *mut FIO_ctx_t {
     (*ret).hasStdoutOutput = 0 as libc::c_int;
     (*ret).nbFilesTotal = 1 as libc::c_int;
     (*ret).nbFilesProcessed = 0 as libc::c_int;
-    (*ret).totalBytesInput = 0 as libc::c_int as size_t;
-    (*ret).totalBytesOutput = 0 as libc::c_int as size_t;
+    (*ret).totalBytesInput = 0 as libc::c_int as libc::size_t;
+    (*ret).totalBytesOutput = 0 as libc::c_int as libc::size_t;
     return ret;
 }
 #[no_mangle]
@@ -1293,25 +1279,25 @@ pub unsafe extern "C" fn FIO_setRsyncable(
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setStreamSrcSize(
     prefs: *mut FIO_prefs_t,
-    mut streamSrcSize: size_t,
+    mut streamSrcSize: libc::size_t,
 ) {
     (*prefs).streamSrcSize = streamSrcSize;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setTargetCBlockSize(
     prefs: *mut FIO_prefs_t,
-    mut targetCBlockSize: size_t,
+    mut targetCBlockSize: libc::size_t,
 ) {
     (*prefs).targetCBlockSize = targetCBlockSize;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setSrcSizeHint(
     prefs: *mut FIO_prefs_t,
-    mut srcSizeHint: size_t,
+    mut srcSizeHint: libc::size_t,
 ) {
     (*prefs)
-        .srcSizeHint = (if (2147483647 as libc::c_int as size_t) < srcSizeHint {
-        2147483647 as libc::c_int as size_t
+        .srcSizeHint = (if (2147483647 as libc::c_int as libc::size_t) < srcSizeHint {
+        2147483647 as libc::c_int as libc::size_t
     } else {
         srcSizeHint
     }) as libc::c_int;
@@ -1440,7 +1426,7 @@ pub unsafe extern "C" fn FIO_determineHasStdinInput(
     fCtx: *mut FIO_ctx_t,
     filenames: *const FileNamesTable,
 ) {
-    let mut i = 0 as libc::c_int as size_t;
+    let mut i = 0 as libc::c_int as libc::size_t;
     while i < (*filenames).tableSize {
         if strcmp(stdinmark.as_ptr(), *((*filenames).fileNames).offset(i as isize)) == 0
         {
@@ -1689,7 +1675,7 @@ unsafe extern "C" fn FIO_openDstFile(
         f,
         NULL as *mut libc::c_char,
         _IOFBF,
-        (1 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as size_t,
+        (1 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as libc::size_t,
     ) != 0
     {
         if g_display_prefs.displayLevel >= 2 as libc::c_int {
@@ -1786,15 +1772,15 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
     mut fileName: *const libc::c_char,
     prefs: *mut FIO_prefs_t,
     mut dictFileStat: *mut stat_t,
-) -> size_t {
+) -> libc::size_t {
     let mut fileHandle = 0 as *mut FILE;
-    let mut fileSize: U64 = 0;
+    let mut fileSize: u64 = 0;
     let mut bufferPtr: *mut *mut libc::c_void = &mut (*dict).dictBuffer;
     debug_assert!(!bufferPtr.is_null());
     debug_assert!(!dictFileStat.is_null());
     *bufferPtr = NULL as *mut libc::c_void;
     if fileName.is_null() {
-        return 0 as libc::c_int as size_t;
+        return 0 as libc::c_int as libc::size_t;
     }
     if g_display_prefs.displayLevel >= 4 as libc::c_int {
         fprintf(
@@ -1843,7 +1829,7 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
         (*prefs).memLimit
     } else {
         DICTSIZE_MAX as libc::c_uint
-    }) as size_t;
+    }) as libc::size_t;
     if fileSize > dictSizeMax {
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -1962,22 +1948,22 @@ pub const MAP_PRIVATE: libc::c_int = 0x2 as libc::c_int;
 unsafe extern "C" fn FIO_munmap(mut dict: *mut FIO_Dict_t) {
     munmap((*dict).dictBuffer, (*dict).dictBufferSize);
     (*dict).dictBuffer = NULL as *mut libc::c_void;
-    (*dict).dictBufferSize = 0 as libc::c_int as size_t;
+    (*dict).dictBufferSize = 0 as libc::c_int as libc::size_t;
 }
 unsafe extern "C" fn FIO_setDictBufferMMap(
     mut dict: *mut FIO_Dict_t,
     mut fileName: *const libc::c_char,
     prefs: *mut FIO_prefs_t,
     mut dictFileStat: *mut stat_t,
-) -> size_t {
+) -> libc::size_t {
     let mut fileHandle: libc::c_int = 0;
-    let mut fileSize: U64 = 0;
+    let mut fileSize: u64 = 0;
     let mut bufferPtr: *mut *mut libc::c_void = &mut (*dict).dictBuffer;
     debug_assert!(!bufferPtr.is_null());
     debug_assert!(!dictFileStat.is_null());
     *bufferPtr = NULL as *mut libc::c_void;
     if fileName.is_null() {
-        return 0 as libc::c_int as size_t;
+        return 0 as libc::c_int as libc::size_t;
     }
     if g_display_prefs.displayLevel >= 4 as libc::c_int {
         fprintf(
@@ -2026,7 +2012,7 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
         (*prefs).memLimit
     } else {
         DICTSIZE_MAX as libc::c_uint
-    }) as size_t;
+    }) as libc::size_t;
     if fileSize > dictSizeMax {
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -2112,7 +2098,7 @@ unsafe extern "C" fn FIO_freeDict(mut dict: *mut FIO_Dict_t) {
     {
         free((*dict).dictBuffer);
         (*dict).dictBuffer = NULL as *mut libc::c_void;
-        (*dict).dictBufferSize = 0 as libc::c_int as size_t;
+        (*dict).dictBufferSize = 0 as libc::c_int as libc::size_t;
     } else if (*dict).dictBufferType as libc::c_uint
         == FIO_mmapDict as libc::c_int as libc::c_uint
     {
@@ -2185,7 +2171,7 @@ pub unsafe extern "C" fn FIO_checkFilenameCollisions(
     }
     qsort(
         filenameTableSorted as *mut libc::c_void,
-        nbFiles as size_t,
+        nbFiles as libc::size_t,
         ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
         Some(
             UTIL_compareStr
@@ -2228,7 +2214,7 @@ unsafe extern "C" fn extractFilename(
 unsafe extern "C" fn FIO_createFilename_fromOutDir(
     mut path: *const libc::c_char,
     mut outDirName: *const libc::c_char,
-    suffixLen: size_t,
+    suffixLen: libc::size_t,
 ) -> *mut libc::c_char {
     let mut filenameStart = 0 as *const libc::c_char;
     let mut separator: libc::c_char = 0;
@@ -2238,10 +2224,10 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
     result = calloc(
         1 as libc::c_int as libc::c_ulong,
         (strlen(outDirName))
-            .wrapping_add(1 as libc::c_int as libc::c_ulong)
+            .wrapping_add(1)
             .wrapping_add(strlen(filenameStart))
             .wrapping_add(suffixLen)
-            .wrapping_add(1 as libc::c_int as libc::c_ulong),
+            .wrapping_add(1),
     ) as *mut libc::c_char;
     if result.is_null() {
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
@@ -2284,7 +2270,7 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
     );
     if *outDirName
         .offset(
-            (strlen(outDirName)).wrapping_sub(1 as libc::c_int as libc::c_ulong) as isize,
+            (strlen(outDirName)).wrapping_sub(1) as isize,
         ) as libc::c_int == separator as libc::c_int
     {
         memcpy(
@@ -2332,7 +2318,7 @@ unsafe extern "C" fn FIO_adjustMemLimitForPatchFromMode(
         maxSrcFileSize
     };
     let maxWindowSize = (1 as libc::c_uint)
-        << (if ::core::mem::size_of::<size_t>() as libc::c_ulong
+        << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
             == 4 as libc::c_int as libc::c_ulong
         {
             ZSTD_WINDOWLOG_MAX_32
@@ -2372,7 +2358,7 @@ unsafe extern "C" fn FIO_adjustMemLimitForPatchFromMode(
         }
         exit(42 as libc::c_int);
     }
-    debug_assert!(maxSize != -(1 as libc::c_int) as U64 as libc::c_ulonglong);
+    debug_assert!(maxSize != -(1 as libc::c_int) as u64 as libc::c_ulonglong);
     if maxSize > maxWindowSize as libc::c_ulonglong {
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -2558,8 +2544,8 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
 }
 unsafe extern "C" fn setInBuffer(
     mut buf: *const libc::c_void,
-    mut s: size_t,
-    mut pos: size_t,
+    mut s: libc::size_t,
+    mut pos: libc::size_t,
 ) -> ZSTD_inBuffer {
     let mut i = ZSTD_inBuffer {
         src: 0 as *const libc::c_void,
@@ -2573,8 +2559,8 @@ unsafe extern "C" fn setInBuffer(
 }
 unsafe extern "C" fn setOutBuffer(
     mut buf: *mut libc::c_void,
-    mut s: size_t,
-    mut pos: size_t,
+    mut s: libc::size_t,
+    mut pos: libc::size_t,
 ) -> ZSTD_outBuffer {
     let mut o = ZSTD_outBuffer {
         dst: 0 as *mut libc::c_void,
@@ -2586,9 +2572,9 @@ unsafe extern "C" fn setOutBuffer(
     o.pos = pos;
     return o;
 }
-unsafe extern "C" fn ZSTD_cycleLog(mut hashLog: U32, mut strat: ZSTD_strategy) -> U32 {
-    let btScale = (strat as U32 >= ZSTD_btlazy2 as libc::c_int as U32) as libc::c_int
-        as U32;
+unsafe extern "C" fn ZSTD_cycleLog(mut hashLog: u32, mut strat: ZSTD_strategy) -> u32 {
+    let btScale = (strat as u32 >= ZSTD_btlazy2 as libc::c_int as u32) as libc::c_int
+        as u32;
     debug_assert!(hashLog > 1 as libc::c_int as libc::c_uint);
     return hashLog.wrapping_sub(btScale);
 }
@@ -2600,15 +2586,15 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
     mut cLevel: libc::c_int,
 ) {
     let fileWindowLog = (FIO_highbit64(maxSrcFileSize))
-        .wrapping_add(1 as libc::c_int as libc::c_uint);
+        .wrapping_add(1);
     let cParams = ZSTD_getCParams(
         cLevel,
-        maxSrcFileSize as size_t as libc::c_ulonglong,
-        dictSize as size_t,
+        maxSrcFileSize as libc::size_t as libc::c_ulonglong,
+        dictSize as libc::size_t,
     );
     FIO_adjustMemLimitForPatchFromMode(prefs, dictSize, maxSrcFileSize);
     if fileWindowLog
-        > (if ::core::mem::size_of::<size_t>() as libc::c_ulong
+        > (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
             == 4 as libc::c_int as libc::c_ulong
         {
             ZSTD_WINDOWLOG_MAX_32
@@ -2626,7 +2612,7 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
     }
     (*comprParams)
         .windowLog = if 10 as libc::c_int as libc::c_uint
-        > (if ((if ::core::mem::size_of::<size_t>() as libc::c_ulong
+        > (if ((if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
             == 4 as libc::c_int as libc::c_ulong
         {
             30 as libc::c_int
@@ -2634,7 +2620,7 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
             31 as libc::c_int
         }) as libc::c_uint) < fileWindowLog
         {
-            (if ::core::mem::size_of::<size_t>() as libc::c_ulong
+            (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
                 == 4 as libc::c_int as libc::c_ulong
             {
                 30 as libc::c_int
@@ -2646,7 +2632,7 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
         })
     {
         10 as libc::c_int as libc::c_uint
-    } else if ((if ::core::mem::size_of::<size_t>() as libc::c_ulong
+    } else if ((if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
         == 4 as libc::c_int as libc::c_ulong
     {
         30 as libc::c_int
@@ -2654,7 +2640,7 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
         31 as libc::c_int
     }) as libc::c_uint) < fileWindowLog
     {
-        (if ::core::mem::size_of::<size_t>() as libc::c_ulong
+        (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
             == 4 as libc::c_int as libc::c_ulong
         {
             30 as libc::c_int
@@ -2703,7 +2689,7 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
                 stderr,
                 b"- Set a larger chainLog (e.g. --zstd=chainLog=%u)\n\0" as *const u8
                     as *const libc::c_char,
-                if ::core::mem::size_of::<size_t>() as libc::c_ulong
+                if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
                     == 4 as libc::c_int as libc::c_ulong
                 {
                     29 as libc::c_int
@@ -2876,7 +2862,7 @@ unsafe extern "C" fn FIO_createCResources(
     {
         comprParams.windowLog = ADAPT_WINDOWLOG_DEFAULT as libc::c_uint;
     }
-    let mut err: size_t = 0;
+    let mut err: libc::size_t = 0;
     err = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_contentSizeFlag,
@@ -2923,7 +2909,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_0: size_t = 0;
+    let mut err_0: libc::size_t = 0;
     err_0 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_dictIDFlag, (*prefs).dictIDFlag);
     if ZSTD_isError(err_0) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -2966,7 +2952,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_1: size_t = 0;
+    let mut err_1: libc::size_t = 0;
     err_1 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_checksumFlag,
@@ -3013,7 +2999,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_2: size_t = 0;
+    let mut err_2: libc::size_t = 0;
     err_2 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_compressionLevel, cLevel);
     if ZSTD_isError(err_2) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -3056,7 +3042,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_3: size_t = 0;
+    let mut err_3: libc::size_t = 0;
     err_3 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_experimentalParam6,
@@ -3103,7 +3089,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_4: size_t = 0;
+    let mut err_4: libc::size_t = 0;
     err_4 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_experimentalParam7,
@@ -3150,7 +3136,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_5: size_t = 0;
+    let mut err_5: libc::size_t = 0;
     err_5 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_enableLongDistanceMatching,
@@ -3197,7 +3183,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_6: size_t = 0;
+    let mut err_6: libc::size_t = 0;
     err_6 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_ldmHashLog, (*prefs).ldmHashLog);
     if ZSTD_isError(err_6) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -3240,7 +3226,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_7: size_t = 0;
+    let mut err_7: libc::size_t = 0;
     err_7 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_ldmMinMatch, (*prefs).ldmMinMatch);
     if ZSTD_isError(err_7) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -3284,7 +3270,7 @@ unsafe extern "C" fn FIO_createCResources(
         exit(11 as libc::c_int);
     }
     if (*prefs).ldmBucketSizeLog != FIO_LDM_PARAM_NOTSET {
-        let mut err_8: size_t = 0;
+        let mut err_8: libc::size_t = 0;
         err_8 = ZSTD_CCtx_setParameter(
             ress.cctx,
             ZSTD_c_ldmBucketSizeLog,
@@ -3333,7 +3319,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
     }
     if (*prefs).ldmHashRateLog != FIO_LDM_PARAM_NOTSET {
-        let mut err_9: size_t = 0;
+        let mut err_9: libc::size_t = 0;
         err_9 = ZSTD_CCtx_setParameter(
             ress.cctx,
             ZSTD_c_ldmHashRateLog,
@@ -3381,7 +3367,7 @@ unsafe extern "C" fn FIO_createCResources(
             exit(11 as libc::c_int);
         }
     }
-    let mut err_10: size_t = 0;
+    let mut err_10: libc::size_t = 0;
     err_10 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_experimentalParam14,
@@ -3428,7 +3414,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_11: size_t = 0;
+    let mut err_11: libc::size_t = 0;
     err_11 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_windowLog,
@@ -3475,7 +3461,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_12: size_t = 0;
+    let mut err_12: libc::size_t = 0;
     err_12 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_chainLog,
@@ -3522,7 +3508,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_13: size_t = 0;
+    let mut err_13: libc::size_t = 0;
     err_13 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_hashLog,
@@ -3569,7 +3555,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_14: size_t = 0;
+    let mut err_14: libc::size_t = 0;
     err_14 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_searchLog,
@@ -3616,7 +3602,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_15: size_t = 0;
+    let mut err_15: libc::size_t = 0;
     err_15 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_minMatch,
@@ -3663,7 +3649,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_16: size_t = 0;
+    let mut err_16: libc::size_t = 0;
     err_16 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_targetLength,
@@ -3710,7 +3696,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_17: size_t = 0;
+    let mut err_17: libc::size_t = 0;
     err_17 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_strategy,
@@ -3757,7 +3743,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_18: size_t = 0;
+    let mut err_18: libc::size_t = 0;
     err_18 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_experimentalParam5,
@@ -3804,7 +3790,7 @@ unsafe extern "C" fn FIO_createCResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_19: size_t = 0;
+    let mut err_19: libc::size_t = 0;
     err_19 = ZSTD_CCtx_setParameter(
         ress.cctx,
         ZSTD_c_experimentalParam8,
@@ -3852,7 +3838,7 @@ unsafe extern "C" fn FIO_createCResources(
         exit(11 as libc::c_int);
     }
     if (*prefs).patchFromMode != 0 {
-        let mut err_20: size_t = 0;
+        let mut err_20: libc::size_t = 0;
         err_20 = ZSTD_CCtx_refPrefix(
             ress.cctx,
             ress.dict.dictBuffer,
@@ -3900,7 +3886,7 @@ unsafe extern "C" fn FIO_createCResources(
             exit(11 as libc::c_int);
         }
     } else {
-        let mut err_21: size_t = 0;
+        let mut err_21: libc::size_t = 0;
         err_21 = ZSTD_CCtx_loadDictionary_byReference(
             ress.cctx,
             ress.dict.dictBuffer,
@@ -3961,15 +3947,15 @@ unsafe extern "C" fn FIO_compressZstdFrame(
     prefs: *mut FIO_prefs_t,
     mut ressPtr: *const cRess_t,
     mut srcFileName: *const libc::c_char,
-    mut fileSize: U64,
+    mut fileSize: u64,
     mut compressionLevel: libc::c_int,
-    mut readsize: *mut U64,
+    mut readsize: *mut u64,
 ) -> libc::c_ulonglong {
     let ress = *ressPtr;
     let mut writeJob = AIO_WritePool_acquireJob((*ressPtr).writeCtx);
-    let mut compressedfilesize = 0 as libc::c_int as U64;
+    let mut compressedfilesize = 0 as libc::c_int as u64;
     let mut directive = ZSTD_e_continue;
-    let mut pledgedSrcSize = ZSTD_CONTENTSIZE_UNKNOWN as U64;
+    let mut pledgedSrcSize = ZSTD_CONTENTSIZE_UNKNOWN as u64;
     let mut previous_zfp_update = {
         let mut init = ZSTD_frameProgression {
             ingested: 0 as libc::c_int as libc::c_ulonglong,
@@ -4006,9 +3992,9 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             b"compression using zstd format \n\0" as *const u8 as *const libc::c_char,
         );
     }
-    if fileSize != UTIL_FILESIZE_UNKNOWN as U64 {
+    if fileSize != UTIL_FILESIZE_UNKNOWN as u64 {
         pledgedSrcSize = fileSize;
-        let mut err: size_t = 0;
+        let mut err: libc::size_t = 0;
         err = ZSTD_CCtx_setPledgedSrcSize(ress.cctx, fileSize as libc::c_ulonglong);
         if ZSTD_isError(err) != 0 {
             if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -4053,7 +4039,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
         }
     } else if (*prefs).streamSrcSize > 0 as libc::c_int as libc::c_ulong {
         pledgedSrcSize = (*prefs).streamSrcSize;
-        let mut err_0: size_t = 0;
+        let mut err_0: libc::size_t = 0;
         err_0 = ZSTD_CCtx_setPledgedSrcSize(
             ress.cctx,
             (*prefs).streamSrcSize as libc::c_ulonglong,
@@ -4106,7 +4092,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
         precision: 0,
         suffix: 0 as *const libc::c_char,
     };
-    let mut err_1: size_t = 0;
+    let mut err_1: libc::size_t = 0;
     err_1 = ZSTD_CCtx_getParameter(ress.cctx, ZSTD_c_windowLog, &mut windowLog);
     if ZSTD_isError(err_1) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -4156,7 +4142,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             let cParams = ZSTD_getCParams(
                 compressionLevel,
                 fileSize as libc::c_ulonglong,
-                0 as libc::c_int as size_t,
+                0 as libc::c_int as libc::size_t,
             );
             windowLog = cParams.windowLog as libc::c_int;
         }
@@ -4178,7 +4164,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             (1 as libc::c_ulonglong) << windowLog
         } else {
             pledgedSrcSize as libc::c_ulonglong
-        }) as U64,
+        }) as u64,
     );
     if g_display_prefs.displayLevel >= 4 as libc::c_int {
         fprintf(
@@ -4191,12 +4177,12 @@ unsafe extern "C" fn FIO_compressZstdFrame(
         );
     }
     loop {
-        let mut stillToFlush: size_t = 0;
+        let mut stillToFlush: libc::size_t = 0;
         let inSize = AIO_ReadPool_fillBuffer(ress.readCtx, ZSTD_CStreamInSize());
         let mut inBuff = setInBuffer(
             (*ress.readCtx).srcBuffer as *const libc::c_void,
             (*ress.readCtx).srcBufferLoaded,
-            0 as libc::c_int as size_t,
+            0 as libc::c_int as libc::size_t,
         );
         if g_display_prefs.displayLevel >= 6 as libc::c_int {
             fprintf(
@@ -4205,13 +4191,13 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                 inSize as libc::c_uint,
             );
         }
-        *readsize = (*readsize as libc::c_ulong).wrapping_add(inSize) as U64 as U64;
+        *readsize = (*readsize as libc::c_ulong).wrapping_add(inSize) ;
         if (*ress.readCtx).srcBufferLoaded == 0 as libc::c_int as libc::c_ulong
             || *readsize == fileSize
         {
             directive = ZSTD_e_end;
         }
-        stillToFlush = 1 as libc::c_int as size_t;
+        stillToFlush = 1 as libc::c_int as libc::size_t;
         while inBuff.pos != inBuff.size
             || directive as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint
                 && stillToFlush != 0 as libc::c_int as libc::c_ulong
@@ -4220,7 +4206,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             let mut outBuff = setOutBuffer(
                 (*writeJob).buffer,
                 (*writeJob).bufferSize,
-                0 as libc::c_int as size_t,
+                0 as libc::c_int as libc::size_t,
             );
             let toFlushNow = ZSTD_toFlushNow(ress.cctx);
             stillToFlush = ZSTD_compressStream2(
@@ -4293,7 +4279,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                 (*writeJob).usedBufferSize = outBuff.pos;
                 AIO_WritePool_enqueueAndReacquireWriteJob(&mut writeJob);
                 compressedfilesize = (compressedfilesize as libc::c_ulong)
-                    .wrapping_add(outBuff.pos) as U64 as U64;
+                    .wrapping_add(outBuff.pos) ;
             }
             if (*prefs).adaptiveMode != 0
                 && UTIL_clockSpanMicro(lastAdaptTime) > adaptEveryMicro
@@ -4322,8 +4308,8 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     previous_zfp_update = zfp;
                     if newlyProduced
                         > newlyFlushed
-                            .wrapping_mul(9 as libc::c_int as libc::c_ulonglong)
-                            .wrapping_div(8 as libc::c_int as libc::c_ulonglong)
+                            .wrapping_mul(9)
+                            .wrapping_div(8)
                         && flushWaiting == 0 as libc::c_int as libc::c_uint
                     {
                         if g_display_prefs.displayLevel >= 6 as libc::c_int {
@@ -4390,14 +4376,14 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             }
                             if inputBlocked
                                 > inputPresented
-                                    .wrapping_div(8 as libc::c_int as libc::c_uint)
+                                    .wrapping_div(8)
                                 && newlyFlushed_0
-                                    .wrapping_mul(33 as libc::c_int as libc::c_ulonglong)
-                                    .wrapping_div(32 as libc::c_int as libc::c_ulonglong)
+                                    .wrapping_mul(33)
+                                    .wrapping_div(32)
                                     > newlyProduced_0
                                 && newlyIngested
-                                    .wrapping_mul(33 as libc::c_int as libc::c_ulonglong)
-                                    .wrapping_div(32 as libc::c_int as libc::c_ulonglong)
+                                    .wrapping_mul(33)
+                                    .wrapping_div(32)
                                     > newlyConsumed
                             {
                                 if g_display_prefs.displayLevel >= 6 as libc::c_int {
@@ -4483,10 +4469,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             (zfp_0.consumed == 0) as libc::c_int as libc::c_ulonglong,
                         ) as libc::c_double * 100 as libc::c_int as libc::c_double;
                 let buffered_hrs = UTIL_makeHumanReadableSize(
-                    (zfp_0.ingested).wrapping_sub(zfp_0.consumed) as U64,
+                    (zfp_0.ingested).wrapping_sub(zfp_0.consumed) as u64,
                 );
-                let consumed_hrs = UTIL_makeHumanReadableSize(zfp_0.consumed as U64);
-                let produced_hrs = UTIL_makeHumanReadableSize(zfp_0.produced as U64);
+                let consumed_hrs = UTIL_makeHumanReadableSize(zfp_0.consumed as u64);
+                let produced_hrs = UTIL_makeHumanReadableSize(zfp_0.produced as u64);
                 g_displayClock = UTIL_getTime();
                 if g_display_prefs.progressSetting as libc::c_uint
                     != FIO_ps_never as libc::c_int as libc::c_uint
@@ -4588,7 +4574,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             );
                         }
                     }
-                    if fileSize != UTIL_FILESIZE_UNKNOWN as U64 {
+                    if fileSize != UTIL_FILESIZE_UNKNOWN as u64 {
                         if g_display_prefs.progressSetting as libc::c_uint
                             != FIO_ps_never as libc::c_int as libc::c_uint
                             && (g_display_prefs.displayLevel >= 2 as libc::c_int
@@ -4627,7 +4613,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             break;
         }
     }
-    if fileSize != UTIL_FILESIZE_UNKNOWN as U64 && *readsize != fileSize {
+    if fileSize != UTIL_FILESIZE_UNKNOWN as u64 && *readsize != fileSize {
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
@@ -4676,8 +4662,8 @@ unsafe extern "C" fn FIO_compressFilename_internal(
 ) -> libc::c_int {
     let timeStart = UTIL_getTime();
     let cpuStart = clock();
-    let mut readsize = 0 as libc::c_int as U64;
-    let mut compressedfilesize = 0 as libc::c_int as U64;
+    let mut readsize = 0 as libc::c_int as u64;
+    let mut compressedfilesize = 0 as libc::c_int as u64;
     let fileSize = UTIL_getFileSize(srcFileName);
     if g_display_prefs.displayLevel >= 5 as libc::c_int {
         fprintf(
@@ -4799,15 +4785,15 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                 fileSize,
                 compressionLevel,
                 &mut readsize,
-            ) as U64;
+            ) as u64;
         }
     }
     (*fCtx)
         .totalBytesInput = ((*fCtx).totalBytesInput as libc::c_ulong)
-        .wrapping_add(readsize) as size_t as size_t;
+        .wrapping_add(readsize) ;
     (*fCtx)
         .totalBytesOutput = ((*fCtx).totalBytesOutput as libc::c_ulong)
-        .wrapping_add(compressedfilesize) as size_t as size_t;
+        .wrapping_add(compressedfilesize) ;
     if g_display_prefs.progressSetting as libc::c_uint
         != FIO_ps_never as libc::c_int as libc::c_uint
         && (g_display_prefs.displayLevel >= 2 as libc::c_int
@@ -5015,7 +5001,7 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
         st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
-    let mut fileSize = UTIL_FILESIZE_UNKNOWN as U64;
+    let mut fileSize = UTIL_FILESIZE_UNKNOWN as u64;
     if g_display_prefs.displayLevel >= 6 as libc::c_int {
         fprintf(
             stderr,
@@ -5076,7 +5062,7 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
     if strcmp(srcFileName, stdinmark.as_ptr()) != 0 {
         fileSize = UTIL_getFileSizeStat(&mut srcFileStat);
     }
-    if fileSize != UTIL_FILESIZE_UNKNOWN as U64
+    if fileSize != UTIL_FILESIZE_UNKNOWN as u64
         && fileSize < (ZSTD_BLOCKSIZE_MAX * 3 as libc::c_int) as libc::c_ulong
     {
         AIO_ReadPool_setAsync(ress.readCtx, 0 as libc::c_int);
@@ -5139,8 +5125,8 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
 }
 unsafe extern "C" fn checked_index(
     mut options: *mut *const libc::c_char,
-    mut length: size_t,
-    mut index: size_t,
+    mut length: libc::size_t,
+    mut index: libc::size_t,
 ) -> *const libc::c_char {
     debug_assert!(index < length);
     return *options.offset(index as isize);
@@ -5191,7 +5177,7 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
                 .wrapping_div(
                     ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
                 ),
-            (*prefs).sparseFileSupport as size_t,
+            (*prefs).sparseFileSupport as libc::size_t,
         ),
     );
     fprintf(
@@ -5212,7 +5198,7 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
                 .wrapping_div(
                     ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
                 ),
-            (*prefs).checksumFlag as size_t,
+            (*prefs).checksumFlag as libc::size_t,
         ),
     );
     fprintf(
@@ -5237,7 +5223,7 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
                 .wrapping_div(
                     ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
                 ),
-            (*prefs).useRowMatchFinder as size_t,
+            (*prefs).useRowMatchFinder as libc::size_t,
         ),
     );
     fprintf(
@@ -5279,7 +5265,7 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
                 .wrapping_div(
                     ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
                 ),
-            (*prefs).literalCompressionMode as size_t,
+            (*prefs).literalCompressionMode as libc::size_t,
         ),
     );
     fprintf(
@@ -5350,7 +5336,7 @@ unsafe extern "C" fn FIO_determineCompressedName(
     mut outDirName: *const libc::c_char,
     mut suffix: *const libc::c_char,
 ) -> *const libc::c_char {
-    static mut dfnbCapacity: size_t = 0 as libc::c_int as size_t;
+    static mut dfnbCapacity: libc::size_t = 0 as libc::c_int as libc::size_t;
     static mut dstFileNameBuffer: *mut libc::c_char = NULL as *mut libc::c_char;
     let mut outDirFilename = NULL as *mut libc::c_char;
     let mut sfnSize = strlen(srcFileName);
@@ -5370,12 +5356,12 @@ unsafe extern "C" fn FIO_determineCompressedName(
     if dfnbCapacity
         <= sfnSize
             .wrapping_add(srcSuffixLen)
-            .wrapping_add(1 as libc::c_int as libc::c_ulong)
+            .wrapping_add(1)
     {
         free(dstFileNameBuffer as *mut libc::c_void);
         dfnbCapacity = sfnSize
             .wrapping_add(srcSuffixLen)
-            .wrapping_add(30 as libc::c_int as libc::c_ulong);
+            .wrapping_add(30);
         dstFileNameBuffer = malloc(dfnbCapacity) as *mut libc::c_char;
         if dstFileNameBuffer.is_null() {
             if g_display_prefs.displayLevel >= 1 as libc::c_int {
@@ -5429,7 +5415,7 @@ unsafe extern "C" fn FIO_determineCompressedName(
     memcpy(
         dstFileNameBuffer.offset(sfnSize as isize) as *mut libc::c_void,
         suffix as *const libc::c_void,
-        srcSuffixLen.wrapping_add(1 as libc::c_int as libc::c_ulong),
+        srcSuffixLen.wrapping_add(1),
     );
     return dstFileNameBuffer;
 }
@@ -5437,10 +5423,10 @@ unsafe extern "C" fn FIO_getLargestFileSize(
     mut inFileNames: *mut *const libc::c_char,
     mut nbFiles: libc::c_uint,
 ) -> libc::c_ulonglong {
-    let mut i: size_t = 0;
+    let mut i: libc::size_t = 0;
     let mut fileSize: libc::c_ulonglong = 0;
     let mut maxFileSize = 0 as libc::c_int as libc::c_ulonglong;
-    i = 0 as libc::c_int as size_t;
+    i = 0 as libc::c_int as libc::size_t;
     while i < nbFiles as libc::c_ulong {
         fileSize = UTIL_getFileSize(*inFileNames.offset(i as isize))
             as libc::c_ulonglong;
@@ -5760,8 +5746,8 @@ unsafe extern "C" fn FIO_createDResources(
         }
         exit(60 as libc::c_int);
     }
-    let mut err: size_t = 0;
-    err = ZSTD_DCtx_setMaxWindowSize(ress.dctx, (*prefs).memLimit as size_t);
+    let mut err: libc::size_t = 0;
+    err = ZSTD_DCtx_setMaxWindowSize(ress.dctx, (*prefs).memLimit as libc::size_t);
     if ZSTD_isError(err) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
             fprintf(
@@ -5803,7 +5789,7 @@ unsafe extern "C" fn FIO_createDResources(
         }
         exit(11 as libc::c_int);
     }
-    let mut err_0: size_t = 0;
+    let mut err_0: libc::size_t = 0;
     err_0 = ZSTD_DCtx_setParameter(
         ress.dctx,
         ZSTD_d_experimentalParam3,
@@ -5856,7 +5842,7 @@ unsafe extern "C" fn FIO_createDResources(
         FIO_mallocDict as libc::c_int
     }) as FIO_dictBufferType_t;
     FIO_initDict(&mut ress.dict, dictFileName, prefs, &mut statbuf, dictBufferType);
-    let mut err_1: size_t = 0;
+    let mut err_1: libc::size_t = 0;
     err_1 = ZSTD_DCtx_reset(ress.dctx, ZSTD_reset_session_only);
     if ZSTD_isError(err_1) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -5900,7 +5886,7 @@ unsafe extern "C" fn FIO_createDResources(
         exit(11 as libc::c_int);
     }
     if (*prefs).patchFromMode != 0 {
-        let mut err_2: size_t = 0;
+        let mut err_2: libc::size_t = 0;
         err_2 = ZSTD_DCtx_refPrefix(
             ress.dctx,
             ress.dict.dictBuffer,
@@ -5948,7 +5934,7 @@ unsafe extern "C" fn FIO_createDResources(
             exit(11 as libc::c_int);
         }
     } else {
-        let mut err_3: size_t = 0;
+        let mut err_3: libc::size_t = 0;
         err_3 = ZSTD_DCtx_loadDictionary_byReference(
             ress.dctx,
             ress.dict.dictBuffer,
@@ -6002,7 +5988,7 @@ unsafe extern "C" fn FIO_createDResources(
 }
 unsafe extern "C" fn FIO_freeDResources(mut ress: dRess_t) {
     FIO_freeDict(&mut ress.dict);
-    let mut err: size_t = 0;
+    let mut err: libc::size_t = 0;
     err = ZSTD_freeDStream(ress.dctx);
     if ZSTD_isError(err) != 0 {
         if g_display_prefs.displayLevel >= 5 as libc::c_int {
@@ -6071,7 +6057,7 @@ unsafe extern "C" fn FIO_passThrough(mut ress: *mut dRess_t) -> libc::c_int {
     let mut writeJob = AIO_WritePool_acquireJob((*ress).writeCtx);
     AIO_ReadPool_fillBuffer((*ress).readCtx, blockSize);
     while (*(*ress).readCtx).srcBufferLoaded != 0 {
-        let mut writeSize: size_t = 0;
+        let mut writeSize: libc::size_t = 0;
         writeSize = if blockSize < (*(*ress).readCtx).srcBufferLoaded {
             blockSize
         } else {
@@ -6096,7 +6082,7 @@ unsafe extern "C" fn FIO_passThrough(mut ress: *mut dRess_t) -> libc::c_int {
 unsafe extern "C" fn FIO_zstdErrorHelp(
     prefs: *const FIO_prefs_t,
     mut ress: *const dRess_t,
-    mut err: size_t,
+    mut err: libc::size_t,
     mut srcFileName: *const libc::c_char,
 ) {
     let mut header = ZSTD_frameHeader {
@@ -6125,7 +6111,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
         let windowLog = (FIO_highbit64(windowSize))
             .wrapping_add(
                 (windowSize
-                    & windowSize.wrapping_sub(1 as libc::c_int as libc::c_ulonglong)
+                    & windowSize.wrapping_sub(1)
                     != 0 as libc::c_int as libc::c_ulonglong) as libc::c_int
                     as libc::c_uint,
             );
@@ -6141,7 +6127,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
             );
         }
         if windowLog
-            <= (if ::core::mem::size_of::<size_t>() as libc::c_ulong
+            <= (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
                 == 4 as libc::c_int as libc::c_ulong
             {
                 ZSTD_WINDOWLOG_MAX_32
@@ -6158,7 +6144,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
                         as libc::c_ulonglong,
                 ) as libc::c_uint;
             debug_assert!(windowSize
-                < ((1 as libc::c_ulonglong) << 52 as libc::c_int) as U64
+                < ((1 as libc::c_ulonglong) << 52 as libc::c_int) as u64
                     as libc::c_ulonglong);
             if g_display_prefs.displayLevel >= 1 as libc::c_int {
                 fprintf(
@@ -6179,7 +6165,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
             b"%s : Window log larger than ZSTD_WINDOWLOG_MAX=%u; not supported \n\0"
                 as *const u8 as *const libc::c_char,
             srcFileName,
-            if ::core::mem::size_of::<size_t>() as libc::c_ulong
+            if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
                 == 4 as libc::c_int as libc::c_ulong
             {
                 30 as libc::c_int
@@ -6195,29 +6181,29 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
     mut ress: *mut dRess_t,
     prefs: *const FIO_prefs_t,
     mut srcFileName: *const libc::c_char,
-    mut alreadyDecoded: U64,
+    mut alreadyDecoded: u64,
 ) -> libc::c_ulonglong {
-    let mut frameSize = 0 as libc::c_int as U64;
+    let mut frameSize = 0 as libc::c_int as u64;
     let mut writeJob = AIO_WritePool_acquireJob((*ress).writeCtx);
     let srcFileLength = strlen(srcFileName);
     if srcFileLength > 20 as libc::c_int as libc::c_ulong {
         srcFileName = srcFileName
             .offset(
-                srcFileLength.wrapping_sub(20 as libc::c_int as libc::c_ulong) as isize,
+                srcFileLength.wrapping_sub(20) as isize,
             );
     }
     ZSTD_DCtx_reset((*ress).dctx, ZSTD_reset_session_only);
-    AIO_ReadPool_fillBuffer((*ress).readCtx, ZSTD_FRAMEHEADERSIZE_MAX as size_t);
+    AIO_ReadPool_fillBuffer((*ress).readCtx, ZSTD_FRAMEHEADERSIZE_MAX as libc::size_t);
     loop {
         let mut inBuff = setInBuffer(
             (*(*ress).readCtx).srcBuffer as *const libc::c_void,
             (*(*ress).readCtx).srcBufferLoaded,
-            0 as libc::c_int as size_t,
+            0 as libc::c_int as libc::size_t,
         );
         let mut outBuff = setOutBuffer(
             (*writeJob).buffer,
             (*writeJob).bufferSize,
-            0 as libc::c_int as size_t,
+            0 as libc::c_int as libc::size_t,
         );
         let readSizeHint = ZSTD_decompressStream(
             (*ress).dctx,
@@ -6241,7 +6227,7 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
         }
         (*writeJob).usedBufferSize = outBuff.pos;
         AIO_WritePool_enqueueAndReacquireWriteJob(&mut writeJob);
-        frameSize = (frameSize as libc::c_ulong).wrapping_add(outBuff.pos) as U64 as U64;
+        frameSize = (frameSize as libc::c_ulong).wrapping_add(outBuff.pos) ;
         if (*fCtx).nbFilesTotal > 1 as libc::c_int {
             let mut srcFileNameSize = strlen(srcFileName);
             if srcFileNameSize > 18 as libc::c_int as libc::c_ulong {
@@ -6384,10 +6370,10 @@ unsafe extern "C" fn FIO_decompressFrames(
     }
     debug_assert!(passThrough == 0 as libc::c_int || passThrough == 1 as libc::c_int);
     loop {
-        let toRead = 4 as libc::c_int as size_t;
-        let mut buf = 0 as *const BYTE;
+        let toRead = 4 as libc::c_int as libc::size_t;
+        let mut buf = 0 as *const u8;
         AIO_ReadPool_fillBuffer(ress.readCtx, toRead);
-        buf = (*ress.readCtx).srcBuffer as *const BYTE;
+        buf = (*ress.readCtx).srcBuffer as *const u8;
         if (*ress.readCtx).srcBufferLoaded == 0 as libc::c_int as libc::c_ulong {
             if readSomething == 0 as libc::c_int as libc::c_uint {
                 if g_display_prefs.displayLevel >= 1 as libc::c_int {
@@ -6425,7 +6411,7 @@ unsafe extern "C" fn FIO_decompressFrames(
                     &mut ress,
                     prefs,
                     srcFileName,
-                    filesize as U64,
+                    filesize as u64,
                 );
                 if frameSize == FIO_ERROR_FRAME_DECODING as libc::c_ulonglong {
                     return 1 as libc::c_int;
@@ -6492,7 +6478,7 @@ unsafe extern "C" fn FIO_decompressFrames(
     }
     (*fCtx)
         .totalBytesOutput = ((*fCtx).totalBytesOutput as libc::c_ulong)
-        .wrapping_add(filesize as size_t) as size_t as size_t;
+        .wrapping_add(filesize as libc::size_t) ;
     if g_display_prefs.progressSetting as libc::c_uint
         != FIO_ps_never as libc::c_int as libc::c_uint
         && (g_display_prefs.displayLevel >= 2 as libc::c_int
@@ -6615,7 +6601,7 @@ unsafe extern "C" fn FIO_decompressSrcFile(
         __glibc_reserved: [0; 3],
     };
     let mut result: libc::c_int = 0;
-    let mut fileSize = UTIL_FILESIZE_UNKNOWN as U64;
+    let mut fileSize = UTIL_FILESIZE_UNKNOWN as u64;
     if UTIL_isDirectory(srcFileName) != 0 {
         if g_display_prefs.displayLevel >= 1 as libc::c_int {
             fprintf(
@@ -6634,7 +6620,7 @@ unsafe extern "C" fn FIO_decompressSrcFile(
     if strcmp(srcFileName, stdinmark.as_ptr()) != 0 {
         fileSize = UTIL_getFileSizeStat(&mut srcFileStat);
     }
-    if fileSize != UTIL_FILESIZE_UNKNOWN as U64
+    if fileSize != UTIL_FILESIZE_UNKNOWN as u64
         && fileSize < (ZSTD_BLOCKSIZE_MAX * 3 as libc::c_int) as libc::c_ulong
     {
         AIO_ReadPool_setAsync(ress.readCtx, 0 as libc::c_int);
@@ -6713,14 +6699,14 @@ unsafe extern "C" fn FIO_determineDstName(
     mut srcFileName: *const libc::c_char,
     mut outDirName: *const libc::c_char,
 ) -> *const libc::c_char {
-    static mut dfnbCapacity: size_t = 0 as libc::c_int as size_t;
+    static mut dfnbCapacity: libc::size_t = 0 as libc::c_int as libc::size_t;
     static mut dstFileNameBuffer: *mut libc::c_char = NULL as *mut libc::c_char;
-    let mut dstFileNameEndPos: size_t = 0;
+    let mut dstFileNameEndPos: libc::size_t = 0;
     let mut outDirFilename = NULL as *mut libc::c_char;
     let mut dstSuffix = b"\0" as *const u8 as *const libc::c_char;
-    let mut dstSuffixLen = 0 as libc::c_int as size_t;
+    let mut dstSuffixLen = 0 as libc::c_int as libc::size_t;
     let mut sfnSize = strlen(srcFileName);
-    let mut srcSuffixLen: size_t = 0;
+    let mut srcSuffixLen: libc::size_t = 0;
     let srcSuffix: *const libc::c_char = strrchr(srcFileName, '.' as i32);
     if strcmp(srcFileName, stdinmark.as_ptr()) == 0 {
         return stdoutmark.as_ptr();
@@ -6768,18 +6754,18 @@ unsafe extern "C" fn FIO_determineDstName(
         outDirFilename = FIO_createFilename_fromOutDir(
             srcFileName,
             outDirName,
-            0 as libc::c_int as size_t,
+            0 as libc::c_int as libc::size_t,
         );
         sfnSize = strlen(outDirFilename);
         debug_assert!(!outDirFilename.is_null());
     }
     if dfnbCapacity.wrapping_add(srcSuffixLen)
         <= sfnSize
-            .wrapping_add(1 as libc::c_int as libc::c_ulong)
+            .wrapping_add(1)
             .wrapping_add(dstSuffixLen)
     {
         free(dstFileNameBuffer as *mut libc::c_void);
-        dfnbCapacity = sfnSize.wrapping_add(20 as libc::c_int as libc::c_ulong);
+        dfnbCapacity = sfnSize.wrapping_add(20);
         dstFileNameBuffer = malloc(dfnbCapacity) as *mut libc::c_char;
         if dstFileNameBuffer.is_null() {
             if g_display_prefs.displayLevel >= 1 as libc::c_int {
@@ -7040,11 +7026,11 @@ unsafe extern "C" fn FIO_analyzeFrames(
     srcFile: *mut FILE,
 ) -> InfoError {
     loop {
-        let mut headerBuffer: [BYTE; 18] = [0; 18];
+        let mut headerBuffer: [u8; 18] = [0; 18];
         let numBytesRead = fread(
             headerBuffer.as_mut_ptr() as *mut libc::c_void,
             1 as libc::c_int as libc::c_ulong,
-            ::core::mem::size_of::<[BYTE; 18]>() as libc::c_ulong,
+            ::core::mem::size_of::<[u8; 18]>() as libc::c_ulong,
             srcFile,
         );
         if numBytesRead
@@ -7056,7 +7042,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
         {
             if feof(srcFile) != 0 && numBytesRead == 0 as libc::c_int as libc::c_ulong
                 && (*info).compressedSize > 0 as libc::c_int as libc::c_ulong
-                && (*info).compressedSize != UTIL_FILESIZE_UNKNOWN as U64
+                && (*info).compressedSize != UTIL_FILESIZE_UNKNOWN as u64
             {
                 let mut file_position = ftell(srcFile) as libc::c_ulonglong;
                 let mut file_size = (*info).compressedSize as libc::c_ulonglong;
@@ -7121,7 +7107,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 let frameContentSize = ZSTD_getFrameContentSize(
                     headerBuffer.as_mut_ptr() as *const libc::c_void,
                     numBytesRead,
-                ) as U64;
+                ) as u64;
                 if frameContentSize as libc::c_ulonglong == ZSTD_CONTENTSIZE_ERROR
                     || frameContentSize as libc::c_ulonglong == ZSTD_CONTENTSIZE_UNKNOWN
                 {
@@ -7129,7 +7115,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 } else {
                     (*info)
                         .decompressedSize = ((*info).decompressedSize as libc::c_ulong)
-                        .wrapping_add(frameContentSize) as U64 as U64;
+                        .wrapping_add(frameContentSize) ;
                 }
                 if ZSTD_getFrameHeader(
                     &mut header,
@@ -7161,7 +7147,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 } else {
                     (*info).dictID = header.dictID;
                 }
-                (*info).windowSize = header.windowSize as U64;
+                (*info).windowSize = header.windowSize as u64;
                 let headerSize = ZSTD_frameHeaderSize(
                     headerBuffer.as_mut_ptr() as *const libc::c_void,
                     numBytesRead,
@@ -7199,7 +7185,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 }
                 let mut lastBlock = 0 as libc::c_int;
                 loop {
-                    let mut blockHeaderBuffer: [BYTE; 3] = [0; 3];
+                    let mut blockHeaderBuffer: [u8; 3] = [0; 3];
                     if fread(
                         blockHeaderBuffer.as_mut_ptr() as *mut libc::c_void,
                         1 as libc::c_int as libc::c_ulong,
@@ -7228,9 +7214,9 @@ unsafe extern "C" fn FIO_analyzeFrames(
                     let blockTypeID = blockHeader >> 1 as libc::c_int
                         & 3 as libc::c_int as libc::c_uint;
                     let isRLE = (blockTypeID == 1 as libc::c_int as libc::c_uint)
-                        as libc::c_int as U32;
+                        as libc::c_int as u32;
                     let isWrongBlock = (blockTypeID == 3 as libc::c_int as libc::c_uint)
-                        as libc::c_int as U32;
+                        as libc::c_int as u32;
                     let blockSize = if isRLE != 0 {
                         1 as libc::c_int as libc::c_long
                     } else {
@@ -7378,7 +7364,7 @@ unsafe extern "C" fn getFileInfo_fileConfirmed(
     (*info).compressedSize = UTIL_getFileSizeStat(&mut srcFileStat);
     status = FIO_analyzeFrames(info, srcFile);
     fclose(srcFile);
-    (*info).nbFiles = 1 as libc::c_int as U32;
+    (*info).nbFiles = 1 as libc::c_int as u32;
     return status;
 }
 unsafe extern "C" fn getFileInfo(

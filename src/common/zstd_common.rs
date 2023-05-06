@@ -2,7 +2,6 @@ use ::libc;
 extern "C" {
     fn ERR_getErrorString(code: ERR_enum) -> *const libc::c_char;
 }
-pub type size_t = libc::c_ulong;
 pub type ZSTD_ErrorCode = libc::c_uint;
 pub const ZSTD_error_maxCode: ZSTD_ErrorCode = 120;
 pub const ZSTD_error_externalSequences_invalid: ZSTD_ErrorCode = 107;
@@ -40,17 +39,17 @@ pub const ZSTD_error_prefix_unknown: ZSTD_ErrorCode = 10;
 pub const ZSTD_error_GENERIC: ZSTD_ErrorCode = 1;
 pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
 pub type ERR_enum = ZSTD_ErrorCode;
-unsafe extern "C" fn ERR_isError(mut code: size_t) -> libc::c_uint {
-    return (code > -(ZSTD_error_maxCode as libc::c_int) as size_t) as libc::c_int
+unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
+    return (code > -(ZSTD_error_maxCode as libc::c_int) as libc::size_t) as libc::c_int
         as libc::c_uint;
 }
-unsafe extern "C" fn ERR_getErrorCode(mut code: size_t) -> ERR_enum {
+unsafe extern "C" fn ERR_getErrorCode(mut code: libc::size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
     return (0 as libc::c_int as libc::c_ulong).wrapping_sub(code) as ERR_enum;
 }
-unsafe extern "C" fn ERR_getErrorName(mut code: size_t) -> *const libc::c_char {
+unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
 }
 pub const ZSTD_VERSION_MAJOR: libc::c_int = 1 as libc::c_int;
@@ -68,15 +67,15 @@ pub unsafe extern "C" fn ZSTD_versionString() -> *const libc::c_char {
     return b"1.5.5\0" as *const u8 as *const libc::c_char;
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_isError(mut code: size_t) -> libc::c_uint {
+pub unsafe extern "C" fn ZSTD_isError(mut code: libc::size_t) -> libc::c_uint {
     return ERR_isError(code);
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_getErrorName(mut code: size_t) -> *const libc::c_char {
+pub unsafe extern "C" fn ZSTD_getErrorName(mut code: libc::size_t) -> *const libc::c_char {
     return ERR_getErrorName(code);
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_getErrorCode(mut code: size_t) -> ZSTD_ErrorCode {
+pub unsafe extern "C" fn ZSTD_getErrorCode(mut code: libc::size_t) -> ZSTD_ErrorCode {
     return ERR_getErrorCode(code);
 }
 #[no_mangle]

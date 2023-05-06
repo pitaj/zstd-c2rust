@@ -23,7 +23,7 @@ extern "C" {
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
     fn exit(_: libc::c_int) -> !;
-    fn UTIL_getFileSize(infilename: *const libc::c_char) -> U64;
+    fn UTIL_getFileSize(infilename: *const libc::c_char) -> u64;
     fn memset(
         _: *mut libc::c_void,
         _: libc::c_int,
@@ -35,53 +35,49 @@ extern "C" {
     fn UTIL_clockSpanMicro(clockStart: UTIL_time_t) -> PTime;
     fn ZDICT_trainFromBuffer_cover(
         dictBuffer: *mut libc::c_void,
-        dictBufferCapacity: size_t,
+        dictBufferCapacity: libc::size_t,
         samplesBuffer: *const libc::c_void,
-        samplesSizes: *const size_t,
+        samplesSizes: *const libc::size_t,
         nbSamples: libc::c_uint,
         parameters: ZDICT_cover_params_t,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn ZDICT_optimizeTrainFromBuffer_cover(
         dictBuffer: *mut libc::c_void,
-        dictBufferCapacity: size_t,
+        dictBufferCapacity: libc::size_t,
         samplesBuffer: *const libc::c_void,
-        samplesSizes: *const size_t,
+        samplesSizes: *const libc::size_t,
         nbSamples: libc::c_uint,
         parameters: *mut ZDICT_cover_params_t,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn ZDICT_trainFromBuffer_fastCover(
         dictBuffer: *mut libc::c_void,
-        dictBufferCapacity: size_t,
+        dictBufferCapacity: libc::size_t,
         samplesBuffer: *const libc::c_void,
-        samplesSizes: *const size_t,
+        samplesSizes: *const libc::size_t,
         nbSamples: libc::c_uint,
         parameters: ZDICT_fastCover_params_t,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn ZDICT_optimizeTrainFromBuffer_fastCover(
         dictBuffer: *mut libc::c_void,
-        dictBufferCapacity: size_t,
+        dictBufferCapacity: libc::size_t,
         samplesBuffer: *const libc::c_void,
-        samplesSizes: *const size_t,
+        samplesSizes: *const libc::size_t,
         nbSamples: libc::c_uint,
         parameters: *mut ZDICT_fastCover_params_t,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn ZDICT_trainFromBuffer_legacy(
         dictBuffer: *mut libc::c_void,
-        dictBufferCapacity: size_t,
+        dictBufferCapacity: libc::size_t,
         samplesBuffer: *const libc::c_void,
-        samplesSizes: *const size_t,
+        samplesSizes: *const libc::size_t,
         nbSamples: libc::c_uint,
         parameters: ZDICT_legacy_params_t,
-    ) -> size_t;
-    fn ZDICT_isError(errorCode: size_t) -> libc::c_uint;
-    fn ZDICT_getErrorName(errorCode: size_t) -> *const libc::c_char;
+    ) -> libc::size_t;
+    fn ZDICT_isError(errorCode: libc::size_t) -> libc::c_uint;
+    fn ZDICT_getErrorName(errorCode: libc::size_t) -> *const libc::c_char;
 }
-pub type __uint32_t = libc::c_uint;
-pub type __int64_t = libc::c_long;
-pub type __uint64_t = libc::c_ulong;
 pub type __off_t = libc::c_long;
 pub type __off64_t = libc::c_long;
-pub type size_t = libc::c_ulong;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct _IO_FILE {
@@ -111,19 +107,13 @@ pub struct _IO_FILE {
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
     pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: size_t,
+    pub __pad5: libc::size_t,
     pub _mode: libc::c_int,
     pub _unused2: [libc::c_char; 20],
 }
 pub type _IO_lock_t = ();
 pub type FILE = _IO_FILE;
-pub type int64_t = __int64_t;
-pub type uint32_t = __uint32_t;
-pub type uint64_t = __uint64_t;
-pub type U32 = uint32_t;
-pub type U64 = uint64_t;
-pub type S64 = int64_t;
-pub type PTime = uint64_t;
+pub type PTime = u64;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct UTIL_time_t {
@@ -207,7 +197,7 @@ pub struct ZDICT_legacy_params_t {
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct fileStats {
-    pub totalSizeToLoad: S64,
+    pub totalSizeToLoad: i64,
     pub nbSamples: libc::c_int,
     pub oneSampleTooLarge: libc::c_int,
 }
@@ -219,9 +209,9 @@ pub const SAMPLESIZE_MAX: libc::c_int = 128 as libc::c_int
 pub const MEMMULT: libc::c_int = 11 as libc::c_int;
 pub const COVER_MEMMULT: libc::c_int = 9 as libc::c_int;
 pub const FASTCOVER_MEMMULT: libc::c_int = 1 as libc::c_int;
-static mut g_maxMemory: size_t = 0;
+static mut g_maxMemory: libc::size_t = 0;
 pub const NOISELENGTH: libc::c_int = 32 as libc::c_int;
-static mut g_refreshRate: U64 = 0;
+static mut g_refreshRate: u64 = 0;
 static mut g_displayClock: UTIL_time_t = {
     let mut init = UTIL_time_t {
         t: 0 as libc::c_int as PTime,
@@ -229,26 +219,26 @@ static mut g_displayClock: UTIL_time_t = {
     init
 };
 pub const DEBUG: libc::c_int = 0 as libc::c_int;
-unsafe extern "C" fn DiB_getFileSize(mut fileName: *const libc::c_char) -> S64 {
+unsafe extern "C" fn DiB_getFileSize(mut fileName: *const libc::c_char) -> i64 {
     let fileSize = UTIL_getFileSize(fileName);
-    return if fileSize == UTIL_FILESIZE_UNKNOWN as U64 {
+    return if fileSize == UTIL_FILESIZE_UNKNOWN as u64 {
         -(1 as libc::c_int) as libc::c_long
     } else {
-        fileSize as S64
+        fileSize as i64
     };
 }
 unsafe extern "C" fn DiB_loadFiles(
     mut buffer: *mut libc::c_void,
-    mut bufferSizePtr: *mut size_t,
-    mut sampleSizes: *mut size_t,
+    mut bufferSizePtr: *mut libc::size_t,
+    mut sampleSizes: *mut libc::size_t,
     mut sstSize: libc::c_int,
     mut fileNamesTable: *mut *const libc::c_char,
     mut nbFiles: libc::c_int,
-    mut targetChunkSize: size_t,
+    mut targetChunkSize: libc::size_t,
     mut displayLevel: libc::c_int,
 ) -> libc::c_int {
     let buff = buffer as *mut libc::c_char;
-    let mut totalDataLoaded = 0 as libc::c_int as size_t;
+    let mut totalDataLoaded = 0 as libc::c_int as libc::size_t;
     let mut nbSamplesLoaded = 0 as libc::c_int;
     let mut fileIndex = 0 as libc::c_int;
     let mut f = NULL as *mut FILE;
@@ -256,7 +246,7 @@ unsafe extern "C" fn DiB_loadFiles(
         <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
             as libc::c_ulong);
     while nbSamplesLoaded < sstSize && fileIndex < nbFiles {
-        let mut fileDataLoaded: size_t = 0;
+        let mut fileDataLoaded: libc::size_t = 0;
         let fileSize = DiB_getFileSize(*fileNamesTable.offset(fileIndex as isize));
         if fileSize <= 0 as libc::c_int as libc::c_long {
             fileIndex += 1;
@@ -296,11 +286,11 @@ unsafe extern "C" fn DiB_loadFiles(
                 }
             }
             fileDataLoaded = if targetChunkSize > 0 as libc::c_int as libc::c_ulong {
-                (if fileSize < targetChunkSize as S64 {
+                (if fileSize < targetChunkSize as i64 {
                     fileSize
                 } else {
-                    targetChunkSize as S64
-                }) as size_t
+                    targetChunkSize as i64
+                }) as libc::size_t
             } else {
                 (if fileSize
                     < (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
@@ -310,7 +300,7 @@ unsafe extern "C" fn DiB_loadFiles(
                 } else {
                     (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
                         as libc::c_long
-                }) as size_t
+                }) as libc::size_t
             };
             if totalDataLoaded.wrapping_add(fileDataLoaded) > *bufferSizePtr {
                 break;
@@ -339,9 +329,9 @@ unsafe extern "C" fn DiB_loadFiles(
             nbSamplesLoaded = nbSamplesLoaded + 1;
             *sampleSizes.offset(fresh0 as isize) = fileDataLoaded;
             totalDataLoaded = (totalDataLoaded as libc::c_ulong)
-                .wrapping_add(fileDataLoaded) as size_t as size_t;
+                .wrapping_add(fileDataLoaded) ;
             if targetChunkSize > 0 as libc::c_int as libc::c_ulong {
-                while (fileDataLoaded as S64) < fileSize && nbSamplesLoaded < sstSize {
+                while (fileDataLoaded as i64) < fileSize && nbSamplesLoaded < sstSize {
                     let chunkSize = if (fileSize as libc::c_ulong)
                         .wrapping_sub(fileDataLoaded) < targetChunkSize
                     {
@@ -376,9 +366,9 @@ unsafe extern "C" fn DiB_loadFiles(
                     nbSamplesLoaded = nbSamplesLoaded + 1;
                     *sampleSizes.offset(fresh1 as isize) = chunkSize;
                     totalDataLoaded = (totalDataLoaded as libc::c_ulong)
-                        .wrapping_add(chunkSize) as size_t as size_t;
+                        .wrapping_add(chunkSize) ;
                     fileDataLoaded = (fileDataLoaded as libc::c_ulong)
-                        .wrapping_add(chunkSize) as size_t as size_t;
+                        .wrapping_add(chunkSize) ;
                 }
             }
             fileIndex += 1 as libc::c_int;
@@ -412,11 +402,11 @@ unsafe extern "C" fn DiB_loadFiles(
     *bufferSizePtr = totalDataLoaded;
     return nbSamplesLoaded;
 }
-unsafe extern "C" fn DiB_rand(mut src: *mut U32) -> U32 {
-    static mut prime1: U32 = 2654435761 as libc::c_uint;
-    static mut prime2: U32 = 2246822519 as libc::c_uint;
+unsafe extern "C" fn DiB_rand(mut src: *mut u32) -> u32 {
+    static mut prime1: u32 = 2654435761 as libc::c_uint;
+    static mut prime2: u32 = 2246822519 as libc::c_uint;
     let mut rand32 = *src;
-    rand32 = (rand32 as libc::c_uint).wrapping_mul(prime1) as U32 as U32;
+    rand32 = (rand32 as libc::c_uint).wrapping_mul(prime1) ;
     rand32 ^= prime2;
     rand32 = rand32 << 13 as libc::c_int
         | rand32 >> 32 as libc::c_int - 13 as libc::c_int;
@@ -432,10 +422,10 @@ unsafe extern "C" fn DiB_shuffle(
     if nbFiles == 0 as libc::c_int as libc::c_uint {
         return;
     }
-    i = nbFiles.wrapping_sub(1 as libc::c_int as libc::c_uint);
+    i = nbFiles.wrapping_sub(1);
     while i > 0 as libc::c_int as libc::c_uint {
         let j = (DiB_rand(&mut seed))
-            .wrapping_rem(i.wrapping_add(1 as libc::c_int as libc::c_uint));
+            .wrapping_rem(i.wrapping_add(1));
         let tmp = *fileNamesTable.offset(j as isize);
         let ref mut fresh2 = *fileNamesTable.offset(j as isize);
         *fresh2 = *fileNamesTable.offset(i as isize);
@@ -444,28 +434,28 @@ unsafe extern "C" fn DiB_shuffle(
         i = i.wrapping_sub(1);
     }
 }
-unsafe extern "C" fn DiB_findMaxMem(mut requiredMem: libc::c_ulonglong) -> size_t {
-    let step = (8 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as size_t;
+unsafe extern "C" fn DiB_findMaxMem(mut requiredMem: libc::c_ulonglong) -> libc::size_t {
+    let step = (8 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as libc::size_t;
     let mut testmem = NULL as *mut libc::c_void;
     requiredMem = (requiredMem >> 23 as libc::c_int)
-        .wrapping_add(1 as libc::c_int as libc::c_ulonglong) << 23 as libc::c_int;
+        .wrapping_add(1) << 23 as libc::c_int;
     requiredMem = requiredMem.wrapping_add(step as libc::c_ulonglong);
     if requiredMem > g_maxMemory as libc::c_ulonglong {
         requiredMem = g_maxMemory as libc::c_ulonglong;
     }
     while testmem.is_null() {
-        testmem = malloc(requiredMem as size_t);
+        testmem = malloc(requiredMem as libc::size_t);
         requiredMem = requiredMem.wrapping_sub(step as libc::c_ulonglong);
     }
     free(testmem);
-    return requiredMem as size_t;
+    return requiredMem as libc::size_t;
 }
-unsafe extern "C" fn DiB_fillNoise(mut buffer: *mut libc::c_void, mut length: size_t) {
+unsafe extern "C" fn DiB_fillNoise(mut buffer: *mut libc::c_void, mut length: libc::size_t) {
     let prime1 = 2654435761 as libc::c_uint;
     let prime2 = 2246822519 as libc::c_uint;
     let mut acc = prime1;
-    let mut p = 0 as libc::c_int as size_t;
-    p = 0 as libc::c_int as size_t;
+    let mut p = 0 as libc::c_int as libc::size_t;
+    p = 0 as libc::c_int as libc::size_t;
     while p < length {
         acc = acc.wrapping_mul(prime2);
         *(buffer as *mut libc::c_uchar)
@@ -476,7 +466,7 @@ unsafe extern "C" fn DiB_fillNoise(mut buffer: *mut libc::c_void, mut length: si
 unsafe extern "C" fn DiB_saveDict(
     mut dictFileName: *const libc::c_char,
     mut buff: *const libc::c_void,
-    mut buffSize: size_t,
+    mut buffSize: libc::size_t,
 ) {
     let f = fopen(dictFileName, b"wb\0" as *const u8 as *const libc::c_char);
     if f.is_null() {
@@ -508,7 +498,7 @@ unsafe extern "C" fn DiB_saveDict(
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
         exit(4 as libc::c_int);
     }
-    let n_0 = fclose(f) as size_t;
+    let n_0 = fclose(f) as libc::size_t;
     if n_0 != 0 as libc::c_int as libc::c_ulong {
         fprintf(
             stderr,
@@ -527,7 +517,7 @@ unsafe extern "C" fn DiB_saveDict(
 unsafe extern "C" fn DiB_fileStats(
     mut fileNamesTable: *mut *const libc::c_char,
     mut nbFiles: libc::c_int,
-    mut chunkSize: size_t,
+    mut chunkSize: libc::size_t,
     mut displayLevel: libc::c_int,
 ) -> fileStats {
     let mut fs = fileStats {
@@ -560,7 +550,7 @@ unsafe extern "C" fn DiB_fileStats(
             fs.nbSamples
                 += (fileSize as libc::c_ulong)
                     .wrapping_add(chunkSize)
-                    .wrapping_sub(1 as libc::c_int as libc::c_ulong)
+                    .wrapping_sub(1)
                     .wrapping_div(chunkSize) as libc::c_int;
             fs.totalSizeToLoad += fileSize;
         } else {
@@ -611,10 +601,10 @@ unsafe extern "C" fn DiB_fileStats(
 #[no_mangle]
 pub unsafe extern "C" fn DiB_trainFromFiles(
     mut dictFileName: *const libc::c_char,
-    mut maxDictSize: size_t,
+    mut maxDictSize: libc::size_t,
     mut fileNamesTable: *mut *const libc::c_char,
     mut nbFiles: libc::c_int,
-    mut chunkSize: size_t,
+    mut chunkSize: libc::size_t,
     mut params: *mut ZDICT_legacy_params_t,
     mut coverParams: *mut ZDICT_cover_params_t,
     mut fastCoverParams: *mut ZDICT_fastCover_params_t,
@@ -626,9 +616,9 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         nbSamples: 0,
         oneSampleTooLarge: 0,
     };
-    let mut sampleSizes = 0 as *mut size_t;
+    let mut sampleSizes = 0 as *mut libc::size_t;
     let mut nbSamplesLoaded: libc::c_int = 0;
-    let mut loadedSize: size_t = 0;
+    let mut loadedSize: libc::size_t = 0;
     let mut srcBuffer = 0 as *mut libc::c_void;
     let dictBuffer = malloc(maxDictSize);
     let mut result = 0 as libc::c_int;
@@ -660,23 +650,23 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         (fs.totalSizeToLoad * memMult as libc::c_long) as libc::c_ulonglong,
     ))
         .wrapping_div(memMult as libc::c_ulong);
-    loadedSize = (if (if (maxMem as S64) < fs.totalSizeToLoad {
-        maxMem as S64
+    loadedSize = (if (if (maxMem as i64) < fs.totalSizeToLoad {
+        maxMem as i64
     } else {
         fs.totalSizeToLoad
     })
         < (2 as libc::c_int as libc::c_uint)
             .wrapping_mul((1 as libc::c_uint) << 30 as libc::c_int) as libc::c_long
     {
-        if (maxMem as S64) < fs.totalSizeToLoad {
-            maxMem as S64
+        if (maxMem as i64) < fs.totalSizeToLoad {
+            maxMem as i64
         } else {
             fs.totalSizeToLoad
         }
     } else {
         (2 as libc::c_int as libc::c_uint)
             .wrapping_mul((1 as libc::c_uint) << 30 as libc::c_int) as libc::c_long
-    }) as size_t;
+    }) as libc::size_t;
     if memLimit != 0 as libc::c_int as libc::c_uint {
         if displayLevel >= 2 as libc::c_int {
             fprintf(
@@ -699,8 +689,8 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
     srcBuffer = malloc(loadedSize.wrapping_add(NOISELENGTH as libc::c_ulong));
     sampleSizes = malloc(
         (fs.nbSamples as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<size_t>() as libc::c_ulong),
-    ) as *mut size_t;
+            .wrapping_mul(::core::mem::size_of::<libc::size_t>() as libc::c_ulong),
+    ) as *mut libc::size_t;
     if fs.nbSamples != 0 && sampleSizes.is_null() || srcBuffer.is_null()
         || dictBuffer.is_null()
     {
@@ -771,7 +761,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
         exit(14 as libc::c_int);
     }
-    if fs.totalSizeToLoad < maxDictSize as S64 * 8 as libc::c_int as libc::c_long {
+    if fs.totalSizeToLoad < maxDictSize as i64 * 8 as libc::c_int as libc::c_long {
         if displayLevel >= 2 as libc::c_int {
             fprintf(
                 stderr,
@@ -787,7 +777,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
             );
         }
     }
-    if (loadedSize as S64) < fs.totalSizeToLoad {
+    if (loadedSize as i64) < fs.totalSizeToLoad {
         if displayLevel >= 1 as libc::c_int {
             fprintf(
                 stderr,
@@ -814,12 +804,12 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         chunkSize,
         displayLevel,
     );
-    let mut dictSize = ZSTD_error_GENERIC as libc::c_int as size_t;
+    let mut dictSize = ZSTD_error_GENERIC as libc::c_int as libc::size_t;
     if !params.is_null() {
         DiB_fillNoise(
             (srcBuffer as *mut libc::c_char).offset(loadedSize as isize)
                 as *mut libc::c_void,
-            NOISELENGTH as size_t,
+            NOISELENGTH as libc::size_t,
         );
         dictSize = ZDICT_trainFromBuffer_legacy(
             dictBuffer,
@@ -932,7 +922,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
     return result;
 }
 unsafe extern "C" fn run_static_initializers() {
-    g_maxMemory = if ::core::mem::size_of::<size_t>() as libc::c_ulong
+    g_maxMemory = if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
         == 4 as libc::c_int as libc::c_ulong
     {
         (2 as libc::c_int as libc::c_uint)
@@ -942,11 +932,11 @@ unsafe extern "C" fn run_static_initializers() {
                     as libc::c_uint,
             ) as libc::c_ulong
     } else {
-        ((512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as size_t)
-            << ::core::mem::size_of::<size_t>() as libc::c_ulong
+        ((512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as libc::size_t)
+            << ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
     };
     g_refreshRate = (SEC_TO_MICRO as PTime)
-        .wrapping_div(6 as libc::c_int as libc::c_ulong);
+        .wrapping_div(6);
 }
 #[used]
 #[cfg_attr(target_os = "linux", link_section = ".init_array")]

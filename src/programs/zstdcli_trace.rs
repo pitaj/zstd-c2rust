@@ -16,7 +16,7 @@ extern "C" {
         params: *const ZSTD_CCtx_params,
         param: ZSTD_cParameter,
         value: *mut libc::c_int,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn pthread_mutex_lock(__mutex: *mut pthread_mutex_t) -> libc::c_int;
     fn pthread_mutex_unlock(__mutex: *mut pthread_mutex_t) -> libc::c_int;
     fn ZSTD_pthread_mutex_init(
@@ -81,11 +81,10 @@ pub struct _IO_FILE {
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
     pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: size_t,
+    pub __pad5: libc::size_t,
     pub _mode: libc::c_int,
     pub _unused2: [libc::c_char; 20],
 }
-pub type size_t = libc::c_ulong;
 pub type __off64_t = libc::c_long;
 pub type _IO_lock_t = ();
 pub type __off_t = libc::c_long;
@@ -100,9 +99,7 @@ pub union pthread_mutexattr_t {
 pub struct UTIL_time_t {
     pub t: PTime,
 }
-pub type PTime = uint64_t;
-pub type uint64_t = __uint64_t;
-pub type __uint64_t = libc::c_ulong;
+pub type PTime = u64;
 pub type ZSTD_CCtx = ZSTD_CCtx_s;
 pub type ZSTD_DCtx = ZSTD_DCtx_s;
 pub type ZSTD_cParameter = libc::c_uint;
@@ -152,9 +149,9 @@ pub struct ZSTD_Trace {
     pub streaming: libc::c_uint,
     pub dictionaryID: libc::c_uint,
     pub dictionaryIsCold: libc::c_uint,
-    pub dictionarySize: size_t,
-    pub uncompressedSize: size_t,
-    pub compressedSize: size_t,
+    pub dictionarySize: libc::size_t,
+    pub uncompressedSize: libc::size_t,
+    pub compressedSize: libc::size_t,
     pub params: *const ZSTD_CCtx_params_s,
     pub cctx: *const ZSTD_CCtx_s,
     pub dctx: *const ZSTD_DCtx_s,

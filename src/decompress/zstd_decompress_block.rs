@@ -12,53 +12,46 @@ extern "C" {
         maxSymbolValuePtr: *mut libc::c_uint,
         tableLogPtr: *mut libc::c_uint,
         rBuffer: *const libc::c_void,
-        rBuffSize: size_t,
-    ) -> size_t;
+        rBuffSize: libc::size_t,
+    ) -> libc::size_t;
     fn HUF_decompress1X_usingDTable(
         dst: *mut libc::c_void,
-        maxDstSize: size_t,
+        maxDstSize: libc::size_t,
         cSrc: *const libc::c_void,
-        cSrcSize: size_t,
+        cSrcSize: libc::size_t,
         DTable: *const HUF_DTable,
         flags: libc::c_int,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn HUF_decompress1X1_DCtx_wksp(
         dctx: *mut HUF_DTable,
         dst: *mut libc::c_void,
-        dstSize: size_t,
+        dstSize: libc::size_t,
         cSrc: *const libc::c_void,
-        cSrcSize: size_t,
+        cSrcSize: libc::size_t,
         workSpace: *mut libc::c_void,
-        wkspSize: size_t,
+        wkspSize: libc::size_t,
         flags: libc::c_int,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn HUF_decompress4X_usingDTable(
         dst: *mut libc::c_void,
-        maxDstSize: size_t,
+        maxDstSize: libc::size_t,
         cSrc: *const libc::c_void,
-        cSrcSize: size_t,
+        cSrcSize: libc::size_t,
         DTable: *const HUF_DTable,
         flags: libc::c_int,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn HUF_decompress4X_hufOnly_wksp(
         dctx: *mut HUF_DTable,
         dst: *mut libc::c_void,
-        dstSize: size_t,
+        dstSize: libc::size_t,
         cSrc: *const libc::c_void,
-        cSrcSize: size_t,
+        cSrcSize: libc::size_t,
         workSpace: *mut libc::c_void,
-        wkspSize: size_t,
+        wkspSize: libc::size_t,
         flags: libc::c_int,
-    ) -> size_t;
+    ) -> libc::size_t;
 }
 pub type ptrdiff_t = libc::c_long;
-pub type size_t = libc::c_ulong;
-pub type __uint8_t = libc::c_uchar;
-pub type __int16_t = libc::c_short;
-pub type __uint16_t = libc::c_ushort;
-pub type __uint32_t = libc::c_uint;
-pub type __uint64_t = libc::c_ulong;
-pub type int16_t = __int16_t;
 #[derive(Copy, Clone)]
 #[repr(C, packed)]
 pub struct __loadu_si128 {
@@ -69,19 +62,9 @@ pub struct __loadu_si128 {
 pub struct __storeu_si128 {
     pub __v: __m128i_u,
 }
-pub type uint8_t = __uint8_t;
-pub type uint16_t = __uint16_t;
-pub type uint32_t = __uint32_t;
-pub type uint64_t = __uint64_t;
-pub type BYTE = uint8_t;
-pub type U8 = uint8_t;
-pub type U16 = uint16_t;
-pub type S16 = int16_t;
-pub type U32 = uint32_t;
-pub type U64 = uint64_t;
-pub type unalign16 = U16;
-pub type unalign32 = U32;
-pub type unalign64 = U64;
+pub type unalign16 = u16;
+pub type unalign32 = u32;
+pub type unalign64 = u64;
 pub type C2RustUnnamed = libc::c_uint;
 pub const ZSTD_error_maxCode: C2RustUnnamed = 120;
 pub const ZSTD_error_externalSequences_invalid: C2RustUnnamed = 107;
@@ -121,7 +104,7 @@ pub const ZSTD_error_no_error: C2RustUnnamed = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct BIT_DStream_t {
-    pub bitContainer: size_t,
+    pub bitContainer: libc::size_t,
     pub bitsConsumed: libc::c_uint,
     pub ptr: *const libc::c_char,
     pub start: *const libc::c_char,
@@ -132,7 +115,7 @@ pub const BIT_DStream_overflow: BIT_DStream_status = 3;
 pub const BIT_DStream_completed: BIT_DStream_status = 2;
 pub const BIT_DStream_endOfBuffer: BIT_DStream_status = 1;
 pub const BIT_DStream_unfinished: BIT_DStream_status = 0;
-pub type HUF_DTable = U32;
+pub type HUF_DTable = u32;
 pub type C2RustUnnamed_0 = libc::c_uint;
 pub const HUF_flags_disableFast: C2RustUnnamed_0 = 32;
 pub const HUF_flags_disableAsm: C2RustUnnamed_0 = 16;
@@ -148,34 +131,34 @@ pub struct ZSTD_DCtx_s {
     pub OFTptr: *const ZSTD_seqSymbol,
     pub HUFptr: *const HUF_DTable,
     pub entropy: ZSTD_entropyDTables_t,
-    pub workspace: [U32; 640],
+    pub workspace: [u32; 640],
     pub previousDstEnd: *const libc::c_void,
     pub prefixStart: *const libc::c_void,
     pub virtualStart: *const libc::c_void,
     pub dictEnd: *const libc::c_void,
-    pub expected: size_t,
+    pub expected: libc::size_t,
     pub fParams: ZSTD_frameHeader,
-    pub processedCSize: U64,
-    pub decodedSize: U64,
+    pub processedCSize: u64,
+    pub decodedSize: u64,
     pub bType: blockType_e,
     pub stage: ZSTD_dStage,
-    pub litEntropy: U32,
-    pub fseEntropy: U32,
+    pub litEntropy: u32,
+    pub fseEntropy: u32,
     pub xxhState: XXH64_state_t,
-    pub headerSize: size_t,
+    pub headerSize: libc::size_t,
     pub format: ZSTD_format_e,
     pub forceIgnoreChecksum: ZSTD_forceIgnoreChecksum_e,
-    pub validateChecksum: U32,
-    pub litPtr: *const BYTE,
+    pub validateChecksum: u32,
+    pub litPtr: *const u8,
     pub customMem: ZSTD_customMem,
-    pub litSize: size_t,
-    pub rleSize: size_t,
-    pub staticSize: size_t,
+    pub litSize: libc::size_t,
+    pub rleSize: libc::size_t,
+    pub staticSize: libc::size_t,
     pub isFrameDecompression: libc::c_int,
     pub bmi2: libc::c_int,
     pub ddictLocal: *mut ZSTD_DDict,
     pub ddict: *const ZSTD_DDict,
-    pub dictID: U32,
+    pub dictID: u32,
     pub ddictIsCold: libc::c_int,
     pub dictUses: ZSTD_dictUses_e,
     pub ddictSet: *mut ZSTD_DDictHashSet,
@@ -184,27 +167,27 @@ pub struct ZSTD_DCtx_s {
     pub maxBlockSizeParam: libc::c_int,
     pub streamStage: ZSTD_dStreamStage,
     pub inBuff: *mut libc::c_char,
-    pub inBuffSize: size_t,
-    pub inPos: size_t,
-    pub maxWindowSize: size_t,
+    pub inBuffSize: libc::size_t,
+    pub inPos: libc::size_t,
+    pub maxWindowSize: libc::size_t,
     pub outBuff: *mut libc::c_char,
-    pub outBuffSize: size_t,
-    pub outStart: size_t,
-    pub outEnd: size_t,
-    pub lhSize: size_t,
+    pub outBuffSize: libc::size_t,
+    pub outStart: libc::size_t,
+    pub outEnd: libc::size_t,
+    pub lhSize: libc::size_t,
     pub legacyContext: *mut libc::c_void,
-    pub previousLegacyVersion: U32,
-    pub legacyVersion: U32,
-    pub hostageByte: U32,
+    pub previousLegacyVersion: u32,
+    pub legacyVersion: u32,
+    pub hostageByte: u32,
     pub noForwardProgress: libc::c_int,
     pub outBufferMode: ZSTD_bufferMode_e,
     pub expectedOutBuffer: ZSTD_outBuffer,
-    pub litBuffer: *mut BYTE,
-    pub litBufferEnd: *const BYTE,
+    pub litBuffer: *mut u8,
+    pub litBufferEnd: *const u8,
     pub litBufferLocation: ZSTD_litLocation_e,
-    pub litExtraBuffer: [BYTE; 65568],
-    pub headerBuffer: [BYTE; 18],
-    pub oversizedDuration: size_t,
+    pub litExtraBuffer: [u8; 65568],
+    pub headerBuffer: [u8; 18],
+    pub oversizedDuration: libc::size_t,
     pub traceCtx: ZSTD_TraceCtx,
 }
 pub type ZSTD_TraceCtx = libc::c_ulonglong;
@@ -217,8 +200,8 @@ pub type ZSTD_outBuffer = ZSTD_outBuffer_s;
 #[repr(C)]
 pub struct ZSTD_outBuffer_s {
     pub dst: *mut libc::c_void,
-    pub size: size_t,
-    pub pos: size_t,
+    pub size: libc::size_t,
+    pub pos: libc::size_t,
 }
 pub type ZSTD_bufferMode_e = libc::c_uint;
 pub const ZSTD_bm_stable: ZSTD_bufferMode_e = 1;
@@ -236,8 +219,8 @@ pub const ZSTD_rmd_refSingleDDict: ZSTD_refMultipleDDicts_e = 0;
 #[repr(C)]
 pub struct ZSTD_DDictHashSet {
     pub ddictPtrTable: *mut *const ZSTD_DDict,
-    pub ddictPtrTableSize: size_t,
-    pub ddictPtrCount: size_t,
+    pub ddictPtrTableSize: libc::size_t,
+    pub ddictPtrCount: libc::size_t,
 }
 pub type ZSTD_DDict = ZSTD_DDict_s;
 pub type ZSTD_dictUses_e = libc::c_int;
@@ -255,7 +238,7 @@ pub type ZSTD_freeFunction = Option::<
     unsafe extern "C" fn(*mut libc::c_void, *mut libc::c_void) -> (),
 >;
 pub type ZSTD_allocFunction = Option::<
-    unsafe extern "C" fn(*mut libc::c_void, size_t) -> *mut libc::c_void,
+    unsafe extern "C" fn(*mut libc::c_void, libc::size_t) -> *mut libc::c_void,
 >;
 pub type ZSTD_forceIgnoreChecksum_e = libc::c_uint;
 pub const ZSTD_d_ignoreChecksum: ZSTD_forceIgnoreChecksum_e = 1;
@@ -274,8 +257,8 @@ pub struct XXH64_state_s {
     pub reserved32: XXH32_hash_t,
     pub reserved64: XXH64_hash_t,
 }
-pub type XXH64_hash_t = uint64_t;
-pub type XXH32_hash_t = uint32_t;
+pub type XXH64_hash_t = u64;
+pub type XXH32_hash_t = u32;
 pub type ZSTD_dStage = libc::c_uint;
 pub const ZSTDds_skipFrame: ZSTD_dStage = 7;
 pub const ZSTDds_decodeSkippableHeader: ZSTD_dStage = 6;
@@ -313,16 +296,16 @@ pub struct ZSTD_entropyDTables_t {
     pub OFTable: [ZSTD_seqSymbol; 257],
     pub MLTable: [ZSTD_seqSymbol; 513],
     pub hufTable: [HUF_DTable; 4097],
-    pub rep: [U32; 3],
-    pub workspace: [U32; 157],
+    pub rep: [u32; 3],
+    pub workspace: [u32; 157],
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_seqSymbol {
-    pub nextState: U16,
-    pub nbAdditionalBits: BYTE,
-    pub nbBits: BYTE,
-    pub baseValue: U32,
+    pub nextState: u16,
+    pub nbAdditionalBits: u8,
+    pub nbBits: u8,
+    pub baseValue: u32,
 }
 pub type ZSTD_DCtx = ZSTD_DCtx_s;
 pub type streaming_operation = libc::c_uint;
@@ -338,20 +321,20 @@ pub struct seqState_t {
     pub stateLL: ZSTD_fseState,
     pub stateOffb: ZSTD_fseState,
     pub stateML: ZSTD_fseState,
-    pub prevOffset: [size_t; 3],
+    pub prevOffset: [libc::size_t; 3],
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_fseState {
-    pub state: size_t,
+    pub state: libc::size_t,
     pub table: *const ZSTD_seqSymbol,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct seq_t {
-    pub litLength: size_t,
-    pub matchLength: size_t,
-    pub offset: size_t,
+    pub litLength: libc::size_t,
+    pub matchLength: libc::size_t,
+    pub offset: libc::size_t,
 }
 pub type ZSTD_overlap_e = libc::c_uint;
 pub const ZSTD_overlap_src_before_dst: ZSTD_overlap_e = 1;
@@ -359,8 +342,8 @@ pub const ZSTD_no_overlap: ZSTD_overlap_e = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_seqSymbol_header {
-    pub fastMode: U32,
-    pub tableLog: U32,
+    pub fastMode: u32,
+    pub tableLog: u32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -377,19 +360,19 @@ pub const set_basic: symbolEncodingType_e = 0;
 #[repr(C)]
 pub struct blockProperties_t {
     pub blockType: blockType_e,
-    pub lastBlock: U32,
-    pub origSize: U32,
+    pub lastBlock: u32,
+    pub origSize: u32,
 }
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const CACHELINE_SIZE: libc::c_int = 64 as libc::c_int;
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> libc::c_uint {
-    return (::core::mem::size_of::<size_t>() as libc::c_ulong
+    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
         == 4 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> libc::c_uint {
-    return (::core::mem::size_of::<size_t>() as libc::c_ulong
+    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
         == 8 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
 }
 #[inline]
@@ -397,42 +380,42 @@ unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
     return 1 as libc::c_int as libc::c_uint;
 }
 #[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const libc::c_void) -> U16 {
+unsafe extern "C" fn MEM_read16(mut ptr: *const libc::c_void) -> u16 {
     return *(ptr as *const unalign16);
 }
 #[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const libc::c_void) -> U32 {
+unsafe extern "C" fn MEM_read32(mut ptr: *const libc::c_void) -> u32 {
     return *(ptr as *const unalign32);
 }
 #[inline]
-unsafe extern "C" fn MEM_read64(mut ptr: *const libc::c_void) -> U64 {
+unsafe extern "C" fn MEM_read64(mut ptr: *const libc::c_void) -> u64 {
     return *(ptr as *const unalign64);
 }
 #[inline]
-unsafe extern "C" fn MEM_write64(mut memPtr: *mut libc::c_void, mut value: U64) {
+unsafe extern "C" fn MEM_write64(mut memPtr: *mut libc::c_void, mut value: u64) {
     *(memPtr as *mut unalign64) = value;
 }
 #[inline]
-unsafe extern "C" fn MEM_readLE16(mut memPtr: *const libc::c_void) -> U16 {
+unsafe extern "C" fn MEM_readLE16(mut memPtr: *const libc::c_void) -> u16 {
     if MEM_isLittleEndian() != 0 {
         return MEM_read16(memPtr)
     } else {
-        let mut p = memPtr as *const BYTE;
+        let mut p = memPtr as *const u8;
         return (*p.offset(0 as libc::c_int as isize) as libc::c_int
             + ((*p.offset(1 as libc::c_int as isize) as libc::c_int)
-                << 8 as libc::c_int)) as U16;
+                << 8 as libc::c_int)) as u16;
     };
 }
 #[inline]
-unsafe extern "C" fn MEM_readLE24(mut memPtr: *const libc::c_void) -> U32 {
-    return (MEM_readLE16(memPtr) as U32)
+unsafe extern "C" fn MEM_readLE24(mut memPtr: *const libc::c_void) -> u32 {
+    return (MEM_readLE16(memPtr) as u32)
         .wrapping_add(
-            (*(memPtr as *const BYTE).offset(2 as libc::c_int as isize) as U32)
+            (*(memPtr as *const u8).offset(2 as libc::c_int as isize) as u32)
                 << 16 as libc::c_int,
         );
 }
 #[inline]
-unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> U32 {
+unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> u32 {
     if MEM_isLittleEndian() != 0 {
         return MEM_read32(memPtr)
     } else {
@@ -440,11 +423,11 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const libc::c_void) -> U32 {
     };
 }
 #[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: U32) -> U32 {
+unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
     return in_0.swap_bytes();
 }
 #[inline]
-unsafe extern "C" fn MEM_readLE64(mut memPtr: *const libc::c_void) -> U64 {
+unsafe extern "C" fn MEM_readLE64(mut memPtr: *const libc::c_void) -> u64 {
     if MEM_isLittleEndian() != 0 {
         return MEM_read64(memPtr)
     } else {
@@ -452,24 +435,24 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const libc::c_void) -> U64 {
     };
 }
 #[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: U64) -> U64 {
+unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
     return in_0.swap_bytes();
 }
 #[inline]
-unsafe extern "C" fn MEM_readLEST(mut memPtr: *const libc::c_void) -> size_t {
+unsafe extern "C" fn MEM_readLEST(mut memPtr: *const libc::c_void) -> libc::size_t {
     if MEM_32bits() != 0 {
-        return MEM_readLE32(memPtr) as size_t
+        return MEM_readLE32(memPtr) as libc::size_t
     } else {
         return MEM_readLE64(memPtr)
     };
 }
 #[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: U32) -> libc::c_uint {
+unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: U32) -> libc::c_uint {
+unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return (31 as libc::c_int as libc::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
@@ -512,53 +495,53 @@ static mut BIT_mask: [libc::c_uint; 32] = [
 unsafe extern "C" fn BIT_initDStream(
     mut bitD: *mut BIT_DStream_t,
     mut srcBuffer: *const libc::c_void,
-    mut srcSize: size_t,
-) -> size_t {
+    mut srcSize: libc::size_t,
+) -> libc::size_t {
     if srcSize < 1 as libc::c_int as libc::c_ulong {
         libc::memset(
             bitD as *mut libc::c_void,
             0 as libc::c_int,
             ::core::mem::size_of::<BIT_DStream_t>() as libc::c_ulong as libc::size_t,
         );
-        return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+        return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     (*bitD).start = srcBuffer as *const libc::c_char;
     (*bitD)
         .limitPtr = ((*bitD).start)
-        .offset(::core::mem::size_of::<size_t>() as libc::c_ulong as isize);
-    if srcSize >= ::core::mem::size_of::<size_t>() as libc::c_ulong {
+        .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+    if srcSize >= ::core::mem::size_of::<libc::size_t>() as libc::c_ulong {
         (*bitD)
             .ptr = (srcBuffer as *const libc::c_char)
             .offset(srcSize as isize)
-            .offset(-(::core::mem::size_of::<size_t>() as libc::c_ulong as isize));
+            .offset(-(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize));
         (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const libc::c_void);
-        let lastByte = *(srcBuffer as *const BYTE)
-            .offset(srcSize.wrapping_sub(1 as libc::c_int as libc::c_ulong) as isize);
+        let lastByte = *(srcBuffer as *const u8)
+            .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
             .bitsConsumed = if lastByte as libc::c_int != 0 {
             (8 as libc::c_int as libc::c_uint)
-                .wrapping_sub(ZSTD_highbit32(lastByte as U32))
+                .wrapping_sub(ZSTD_highbit32(lastByte as u32))
         } else {
             0 as libc::c_int as libc::c_uint
         };
         if lastByte as libc::c_int == 0 as libc::c_int {
-            return -(ZSTD_error_GENERIC as libc::c_int) as size_t;
+            return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
         }
     } else {
         (*bitD).ptr = (*bitD).start;
-        (*bitD).bitContainer = *((*bitD).start as *const BYTE) as size_t;
+        (*bitD).bitContainer = *((*bitD).start as *const u8) as libc::size_t;
         let mut current_block_32: u64;
         match srcSize {
             7 => {
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const BYTE).offset(6 as libc::c_int as isize)
-                            as size_t)
-                            << (::core::mem::size_of::<size_t>() as libc::c_ulong)
-                                .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-                                .wrapping_sub(16 as libc::c_int as libc::c_ulong),
-                    ) as size_t as size_t;
+                        (*(srcBuffer as *const u8).offset(6 as libc::c_int as isize)
+                            as libc::size_t)
+                            << (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                                .wrapping_mul(8)
+                                .wrapping_sub(16),
+                    ) ;
                 current_block_32 = 16663583946819950022;
             }
             6 => {
@@ -585,12 +568,12 @@ unsafe extern "C" fn BIT_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const BYTE).offset(5 as libc::c_int as isize)
-                            as size_t)
-                            << (::core::mem::size_of::<size_t>() as libc::c_ulong)
-                                .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-                                .wrapping_sub(24 as libc::c_int as libc::c_ulong),
-                    ) as size_t as size_t;
+                        (*(srcBuffer as *const u8).offset(5 as libc::c_int as isize)
+                            as libc::size_t)
+                            << (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                                .wrapping_mul(8)
+                                .wrapping_sub(24),
+                    ) ;
                 current_block_32 = 5467347503347430154;
             }
             _ => {}
@@ -600,12 +583,12 @@ unsafe extern "C" fn BIT_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const BYTE).offset(4 as libc::c_int as isize)
-                            as size_t)
-                            << (::core::mem::size_of::<size_t>() as libc::c_ulong)
-                                .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-                                .wrapping_sub(32 as libc::c_int as libc::c_ulong),
-                    ) as size_t as size_t;
+                        (*(srcBuffer as *const u8).offset(4 as libc::c_int as isize)
+                            as libc::size_t)
+                            << (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                                .wrapping_mul(8)
+                                .wrapping_sub(32),
+                    ) ;
                 current_block_32 = 15935546777885233963;
             }
             _ => {}
@@ -615,9 +598,9 @@ unsafe extern "C" fn BIT_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const BYTE).offset(3 as libc::c_int as isize)
-                            as size_t) << 24 as libc::c_int,
-                    ) as size_t as size_t;
+                        (*(srcBuffer as *const u8).offset(3 as libc::c_int as isize)
+                            as libc::size_t) << 24 as libc::c_int,
+                    ) ;
                 current_block_32 = 15098265657425327076;
             }
             _ => {}
@@ -627,9 +610,9 @@ unsafe extern "C" fn BIT_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const BYTE).offset(2 as libc::c_int as isize)
-                            as size_t) << 16 as libc::c_int,
-                    ) as size_t as size_t;
+                        (*(srcBuffer as *const u8).offset(2 as libc::c_int as isize)
+                            as libc::size_t) << 16 as libc::c_int,
+                    ) ;
                 current_block_32 = 18096294377129956667;
             }
             _ => {}
@@ -639,30 +622,30 @@ unsafe extern "C" fn BIT_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const BYTE).offset(1 as libc::c_int as isize)
-                            as size_t) << 8 as libc::c_int,
-                    ) as size_t as size_t;
+                        (*(srcBuffer as *const u8).offset(1 as libc::c_int as isize)
+                            as libc::size_t) << 8 as libc::c_int,
+                    ) ;
             }
             _ => {}
         }
-        let lastByte_0 = *(srcBuffer as *const BYTE)
-            .offset(srcSize.wrapping_sub(1 as libc::c_int as libc::c_ulong) as isize);
+        let lastByte_0 = *(srcBuffer as *const u8)
+            .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
             .bitsConsumed = if lastByte_0 as libc::c_int != 0 {
             (8 as libc::c_int as libc::c_uint)
-                .wrapping_sub(ZSTD_highbit32(lastByte_0 as U32))
+                .wrapping_sub(ZSTD_highbit32(lastByte_0 as u32))
         } else {
             0 as libc::c_int as libc::c_uint
         };
         if lastByte_0 as libc::c_int == 0 as libc::c_int {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
-                ((::core::mem::size_of::<size_t>() as libc::c_ulong)
-                    .wrapping_sub(srcSize) as U32)
-                    .wrapping_mul(8 as libc::c_int as libc::c_uint),
+                ((::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                    .wrapping_sub(srcSize) as u32)
+                    .wrapping_mul(8),
             );
     }
     return srcSize;
@@ -671,7 +654,7 @@ unsafe extern "C" fn BIT_initDStream(
 unsafe extern "C" fn BIT_readBits(
     mut bitD: *mut BIT_DStream_t,
     mut nbBits: libc::c_uint,
-) -> size_t {
+) -> libc::size_t {
     let value = BIT_lookBits(bitD, nbBits);
     BIT_skipBits(bitD, nbBits);
     return value;
@@ -679,35 +662,35 @@ unsafe extern "C" fn BIT_readBits(
 #[inline(always)]
 unsafe extern "C" fn BIT_lookBits(
     mut bitD: *const BIT_DStream_t,
-    mut nbBits: U32,
-) -> size_t {
+    mut nbBits: u32,
+) -> libc::size_t {
     return BIT_getMiddleBits(
         (*bitD).bitContainer,
-        (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
+        (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            .wrapping_mul(8)
             .wrapping_sub((*bitD).bitsConsumed as libc::c_ulong)
-            .wrapping_sub(nbBits as libc::c_ulong) as U32,
+            .wrapping_sub(nbBits as libc::c_ulong) as u32,
         nbBits,
     );
 }
 #[inline(always)]
 unsafe extern "C" fn BIT_getMiddleBits(
-    mut bitContainer: size_t,
-    start: U32,
-    nbBits: U32,
-) -> size_t {
-    let regMask = (::core::mem::size_of::<size_t>() as libc::c_ulong)
-        .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-        .wrapping_sub(1 as libc::c_int as libc::c_ulong) as U32;
+    mut bitContainer: libc::size_t,
+    start: u32,
+    nbBits: u32,
+) -> libc::size_t {
+    let regMask = (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        .wrapping_mul(8)
+        .wrapping_sub(1) as u32;
     debug_assert!((nbBits as libc::c_ulong)
         < (::core::mem::size_of::<[libc::c_uint; 32]>() as libc::c_ulong)
             .wrapping_div(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong));
     return bitContainer >> (start & regMask)
-        & ((1 as libc::c_int as U64) << nbBits)
-            .wrapping_sub(1 as libc::c_int as libc::c_ulong);
+        & ((1 as libc::c_int as u64) << nbBits)
+            .wrapping_sub(1);
 }
 #[inline(always)]
-unsafe extern "C" fn BIT_skipBits(mut bitD: *mut BIT_DStream_t, mut nbBits: U32) {
+unsafe extern "C" fn BIT_skipBits(mut bitD: *mut BIT_DStream_t, mut nbBits: u32) {
     (*bitD).bitsConsumed = ((*bitD).bitsConsumed).wrapping_add(nbBits);
 }
 #[inline(always)]
@@ -715,8 +698,8 @@ unsafe extern "C" fn BIT_reloadDStream(
     mut bitD: *mut BIT_DStream_t,
 ) -> BIT_DStream_status {
     if (*bitD).bitsConsumed as libc::c_ulong
-        > (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong)
+        > (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            .wrapping_mul(8)
     {
         return BIT_DStream_overflow;
     }
@@ -725,8 +708,8 @@ unsafe extern "C" fn BIT_reloadDStream(
     }
     if (*bitD).ptr == (*bitD).start {
         if ((*bitD).bitsConsumed as libc::c_ulong)
-            < (::core::mem::size_of::<size_t>() as libc::c_ulong)
-                .wrapping_mul(8 as libc::c_int as libc::c_ulong)
+            < (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                .wrapping_mul(8)
         {
             return BIT_DStream_endOfBuffer;
         }
@@ -735,13 +718,13 @@ unsafe extern "C" fn BIT_reloadDStream(
     let mut nbBytes = (*bitD).bitsConsumed >> 3 as libc::c_int;
     let mut result = BIT_DStream_unfinished;
     if ((*bitD).ptr).offset(-(nbBytes as isize)) < (*bitD).start {
-        nbBytes = ((*bitD).ptr).offset_from((*bitD).start) as libc::c_long as U32;
+        nbBytes = ((*bitD).ptr).offset_from((*bitD).start) as libc::c_long as u32;
         result = BIT_DStream_endOfBuffer;
     }
     (*bitD).ptr = ((*bitD).ptr).offset(-(nbBytes as isize));
     (*bitD)
         .bitsConsumed = ((*bitD).bitsConsumed)
-        .wrapping_sub(nbBytes.wrapping_mul(8 as libc::c_int as libc::c_uint));
+        .wrapping_sub(nbBytes.wrapping_mul(8));
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const libc::c_void);
     return result;
 }
@@ -753,8 +736,8 @@ unsafe extern "C" fn BIT_reloadDStreamFast(
         return BIT_DStream_overflow;
     }
     debug_assert!((*bitD).bitsConsumed as libc::c_ulong
-        <= (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong));
+        <= (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            .wrapping_mul(8));
     (*bitD)
         .ptr = ((*bitD).ptr)
         .offset(-(((*bitD).bitsConsumed >> 3 as libc::c_int) as isize));
@@ -766,7 +749,7 @@ unsafe extern "C" fn BIT_reloadDStreamFast(
 unsafe extern "C" fn BIT_readBitsFast(
     mut bitD: *mut BIT_DStream_t,
     mut nbBits: libc::c_uint,
-) -> size_t {
+) -> libc::size_t {
     let value = BIT_lookBitsFast(bitD, nbBits);
     debug_assert!(nbBits >= 1 as libc::c_int as libc::c_uint);
     BIT_skipBits(bitD, nbBits);
@@ -775,19 +758,19 @@ unsafe extern "C" fn BIT_readBitsFast(
 #[inline]
 unsafe extern "C" fn BIT_lookBitsFast(
     mut bitD: *const BIT_DStream_t,
-    mut nbBits: U32,
-) -> size_t {
-    let regMask = (::core::mem::size_of::<size_t>() as libc::c_ulong)
-        .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-        .wrapping_sub(1 as libc::c_int as libc::c_ulong) as U32;
+    mut nbBits: u32,
+) -> libc::size_t {
+    let regMask = (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        .wrapping_mul(8)
+        .wrapping_sub(1) as u32;
     debug_assert!(nbBits >= 1 as libc::c_int as libc::c_uint);
     return (*bitD).bitContainer << ((*bitD).bitsConsumed & regMask)
-        >> (regMask.wrapping_add(1 as libc::c_int as libc::c_uint).wrapping_sub(nbBits)
+        >> (regMask.wrapping_add(1).wrapping_sub(nbBits)
             & regMask);
 }
 pub const STREAM_ACCUMULATOR_MIN_64: libc::c_int = 57 as libc::c_int;
-unsafe extern "C" fn ERR_isError(mut code: size_t) -> libc::c_uint {
-    return (code > -(ZSTD_error_maxCode as libc::c_int) as size_t) as libc::c_int
+unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
+    return (code > -(ZSTD_error_maxCode as libc::c_int) as libc::size_t) as libc::c_int
         as libc::c_uint;
 }
 pub const STREAM_ACCUMULATOR_MIN_32: libc::c_int = 25 as libc::c_int;
@@ -801,7 +784,7 @@ pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1 as libc::c_int) << ZSTD_BLOCKSIZE
 pub const ZSTD_WINDOWLOG_MAX_32: libc::c_int = 30 as libc::c_int;
 pub const ZSTD_REP_NUM: libc::c_int = 3 as libc::c_int;
 pub const ZSTD_BLOCKHEADERSIZE: libc::c_int = 3 as libc::c_int;
-static mut ZSTD_blockHeaderSize: size_t = ZSTD_BLOCKHEADERSIZE as size_t;
+static mut ZSTD_blockHeaderSize: libc::size_t = ZSTD_BLOCKHEADERSIZE as libc::size_t;
 #[inline(always)]
 unsafe extern "C" fn ZSTD_wildcopy(
     mut dst: *mut libc::c_void,
@@ -809,9 +792,9 @@ unsafe extern "C" fn ZSTD_wildcopy(
     mut length: ptrdiff_t,
     ovtype: ZSTD_overlap_e,
 ) {
-    let mut diff = (dst as *mut BYTE).offset_from(src as *const BYTE) as libc::c_long;
-    let mut ip = src as *const BYTE;
-    let mut op = dst as *mut BYTE;
+    let mut diff = (dst as *mut u8).offset_from(src as *const u8) as libc::c_long;
+    let mut ip = src as *const u8;
+    let mut op = dst as *mut u8;
     let oend = op.offset(length as isize);
     if ovtype as libc::c_uint
         == ZSTD_overlap_src_before_dst as libc::c_int as libc::c_uint
@@ -861,270 +844,270 @@ unsafe extern "C" fn ZSTD_copy8(
 }
 pub const WILDCOPY_VECLEN: libc::c_int = 16 as libc::c_int;
 pub const WILDCOPY_OVERLENGTH: libc::c_int = 32 as libc::c_int;
-pub const ZSTD_isError: unsafe extern "C" fn(size_t) -> libc::c_uint = ERR_isError;
+pub const ZSTD_isError: unsafe extern "C" fn(libc::size_t) -> libc::c_uint = ERR_isError;
 pub const OffFSELog: libc::c_int = 8 as libc::c_int;
 pub const LONGNBSEQ: libc::c_int = 0x7f00 as libc::c_int;
 pub const ML_DEFAULTNORMLOG: libc::c_int = 6 as libc::c_int;
-static mut ML_bits: [U8; 53] = [
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    2 as libc::c_int as U8,
-    2 as libc::c_int as U8,
-    3 as libc::c_int as U8,
-    3 as libc::c_int as U8,
-    4 as libc::c_int as U8,
-    4 as libc::c_int as U8,
-    5 as libc::c_int as U8,
-    7 as libc::c_int as U8,
-    8 as libc::c_int as U8,
-    9 as libc::c_int as U8,
-    10 as libc::c_int as U8,
-    11 as libc::c_int as U8,
-    12 as libc::c_int as U8,
-    13 as libc::c_int as U8,
-    14 as libc::c_int as U8,
-    15 as libc::c_int as U8,
-    16 as libc::c_int as U8,
+static mut ML_bits: [u8; 53] = [
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    2 as libc::c_int as u8,
+    2 as libc::c_int as u8,
+    3 as libc::c_int as u8,
+    3 as libc::c_int as u8,
+    4 as libc::c_int as u8,
+    4 as libc::c_int as u8,
+    5 as libc::c_int as u8,
+    7 as libc::c_int as u8,
+    8 as libc::c_int as u8,
+    9 as libc::c_int as u8,
+    10 as libc::c_int as u8,
+    11 as libc::c_int as u8,
+    12 as libc::c_int as u8,
+    13 as libc::c_int as u8,
+    14 as libc::c_int as u8,
+    15 as libc::c_int as u8,
+    16 as libc::c_int as u8,
 ];
 pub const MaxLL: libc::c_int = 35 as libc::c_int;
 pub const MLFSELog: libc::c_int = 9 as libc::c_int;
 pub const MaxML: libc::c_int = 52 as libc::c_int;
 pub const LLFSELog: libc::c_int = 9 as libc::c_int;
-static mut LL_bits: [U8; 36] = [
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    0 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    2 as libc::c_int as U8,
-    2 as libc::c_int as U8,
-    3 as libc::c_int as U8,
-    3 as libc::c_int as U8,
-    4 as libc::c_int as U8,
-    6 as libc::c_int as U8,
-    7 as libc::c_int as U8,
-    8 as libc::c_int as U8,
-    9 as libc::c_int as U8,
-    10 as libc::c_int as U8,
-    11 as libc::c_int as U8,
-    12 as libc::c_int as U8,
-    13 as libc::c_int as U8,
-    14 as libc::c_int as U8,
-    15 as libc::c_int as U8,
-    16 as libc::c_int as U8,
+static mut LL_bits: [u8; 36] = [
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    0 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    2 as libc::c_int as u8,
+    2 as libc::c_int as u8,
+    3 as libc::c_int as u8,
+    3 as libc::c_int as u8,
+    4 as libc::c_int as u8,
+    6 as libc::c_int as u8,
+    7 as libc::c_int as u8,
+    8 as libc::c_int as u8,
+    9 as libc::c_int as u8,
+    10 as libc::c_int as u8,
+    11 as libc::c_int as u8,
+    12 as libc::c_int as u8,
+    13 as libc::c_int as u8,
+    14 as libc::c_int as u8,
+    15 as libc::c_int as u8,
+    16 as libc::c_int as u8,
 ];
 pub const LL_DEFAULTNORMLOG: libc::c_int = 6 as libc::c_int;
 pub const MaxOff: libc::c_int = 31 as libc::c_int;
 pub const OF_DEFAULTNORMLOG: libc::c_int = 5 as libc::c_int;
-static mut LL_base: [U32; 36] = [
-    0 as libc::c_int as U32,
-    1 as libc::c_int as U32,
-    2 as libc::c_int as U32,
-    3 as libc::c_int as U32,
-    4 as libc::c_int as U32,
-    5 as libc::c_int as U32,
-    6 as libc::c_int as U32,
-    7 as libc::c_int as U32,
-    8 as libc::c_int as U32,
-    9 as libc::c_int as U32,
-    10 as libc::c_int as U32,
-    11 as libc::c_int as U32,
-    12 as libc::c_int as U32,
-    13 as libc::c_int as U32,
-    14 as libc::c_int as U32,
-    15 as libc::c_int as U32,
-    16 as libc::c_int as U32,
-    18 as libc::c_int as U32,
-    20 as libc::c_int as U32,
-    22 as libc::c_int as U32,
-    24 as libc::c_int as U32,
-    28 as libc::c_int as U32,
-    32 as libc::c_int as U32,
-    40 as libc::c_int as U32,
-    48 as libc::c_int as U32,
-    64 as libc::c_int as U32,
-    0x80 as libc::c_int as U32,
-    0x100 as libc::c_int as U32,
-    0x200 as libc::c_int as U32,
-    0x400 as libc::c_int as U32,
-    0x800 as libc::c_int as U32,
-    0x1000 as libc::c_int as U32,
-    0x2000 as libc::c_int as U32,
-    0x4000 as libc::c_int as U32,
-    0x8000 as libc::c_int as U32,
-    0x10000 as libc::c_int as U32,
+static mut LL_base: [u32; 36] = [
+    0 as libc::c_int as u32,
+    1 as libc::c_int as u32,
+    2 as libc::c_int as u32,
+    3 as libc::c_int as u32,
+    4 as libc::c_int as u32,
+    5 as libc::c_int as u32,
+    6 as libc::c_int as u32,
+    7 as libc::c_int as u32,
+    8 as libc::c_int as u32,
+    9 as libc::c_int as u32,
+    10 as libc::c_int as u32,
+    11 as libc::c_int as u32,
+    12 as libc::c_int as u32,
+    13 as libc::c_int as u32,
+    14 as libc::c_int as u32,
+    15 as libc::c_int as u32,
+    16 as libc::c_int as u32,
+    18 as libc::c_int as u32,
+    20 as libc::c_int as u32,
+    22 as libc::c_int as u32,
+    24 as libc::c_int as u32,
+    28 as libc::c_int as u32,
+    32 as libc::c_int as u32,
+    40 as libc::c_int as u32,
+    48 as libc::c_int as u32,
+    64 as libc::c_int as u32,
+    0x80 as libc::c_int as u32,
+    0x100 as libc::c_int as u32,
+    0x200 as libc::c_int as u32,
+    0x400 as libc::c_int as u32,
+    0x800 as libc::c_int as u32,
+    0x1000 as libc::c_int as u32,
+    0x2000 as libc::c_int as u32,
+    0x4000 as libc::c_int as u32,
+    0x8000 as libc::c_int as u32,
+    0x10000 as libc::c_int as u32,
 ];
-static mut OF_base: [U32; 32] = [
-    0 as libc::c_int as U32,
-    1 as libc::c_int as U32,
-    1 as libc::c_int as U32,
-    5 as libc::c_int as U32,
-    0xd as libc::c_int as U32,
-    0x1d as libc::c_int as U32,
-    0x3d as libc::c_int as U32,
-    0x7d as libc::c_int as U32,
-    0xfd as libc::c_int as U32,
-    0x1fd as libc::c_int as U32,
-    0x3fd as libc::c_int as U32,
-    0x7fd as libc::c_int as U32,
-    0xffd as libc::c_int as U32,
-    0x1ffd as libc::c_int as U32,
-    0x3ffd as libc::c_int as U32,
-    0x7ffd as libc::c_int as U32,
-    0xfffd as libc::c_int as U32,
-    0x1fffd as libc::c_int as U32,
-    0x3fffd as libc::c_int as U32,
-    0x7fffd as libc::c_int as U32,
-    0xffffd as libc::c_int as U32,
-    0x1ffffd as libc::c_int as U32,
-    0x3ffffd as libc::c_int as U32,
-    0x7ffffd as libc::c_int as U32,
-    0xfffffd as libc::c_int as U32,
-    0x1fffffd as libc::c_int as U32,
-    0x3fffffd as libc::c_int as U32,
-    0x7fffffd as libc::c_int as U32,
-    0xffffffd as libc::c_int as U32,
-    0x1ffffffd as libc::c_int as U32,
-    0x3ffffffd as libc::c_int as U32,
-    0x7ffffffd as libc::c_int as U32,
+static mut OF_base: [u32; 32] = [
+    0 as libc::c_int as u32,
+    1 as libc::c_int as u32,
+    1 as libc::c_int as u32,
+    5 as libc::c_int as u32,
+    0xd as libc::c_int as u32,
+    0x1d as libc::c_int as u32,
+    0x3d as libc::c_int as u32,
+    0x7d as libc::c_int as u32,
+    0xfd as libc::c_int as u32,
+    0x1fd as libc::c_int as u32,
+    0x3fd as libc::c_int as u32,
+    0x7fd as libc::c_int as u32,
+    0xffd as libc::c_int as u32,
+    0x1ffd as libc::c_int as u32,
+    0x3ffd as libc::c_int as u32,
+    0x7ffd as libc::c_int as u32,
+    0xfffd as libc::c_int as u32,
+    0x1fffd as libc::c_int as u32,
+    0x3fffd as libc::c_int as u32,
+    0x7fffd as libc::c_int as u32,
+    0xffffd as libc::c_int as u32,
+    0x1ffffd as libc::c_int as u32,
+    0x3ffffd as libc::c_int as u32,
+    0x7ffffd as libc::c_int as u32,
+    0xfffffd as libc::c_int as u32,
+    0x1fffffd as libc::c_int as u32,
+    0x3fffffd as libc::c_int as u32,
+    0x7fffffd as libc::c_int as u32,
+    0xffffffd as libc::c_int as u32,
+    0x1ffffffd as libc::c_int as u32,
+    0x3ffffffd as libc::c_int as u32,
+    0x7ffffffd as libc::c_int as u32,
 ];
-static mut OF_bits: [U8; 32] = [
-    0 as libc::c_int as U8,
-    1 as libc::c_int as U8,
-    2 as libc::c_int as U8,
-    3 as libc::c_int as U8,
-    4 as libc::c_int as U8,
-    5 as libc::c_int as U8,
-    6 as libc::c_int as U8,
-    7 as libc::c_int as U8,
-    8 as libc::c_int as U8,
-    9 as libc::c_int as U8,
-    10 as libc::c_int as U8,
-    11 as libc::c_int as U8,
-    12 as libc::c_int as U8,
-    13 as libc::c_int as U8,
-    14 as libc::c_int as U8,
-    15 as libc::c_int as U8,
-    16 as libc::c_int as U8,
-    17 as libc::c_int as U8,
-    18 as libc::c_int as U8,
-    19 as libc::c_int as U8,
-    20 as libc::c_int as U8,
-    21 as libc::c_int as U8,
-    22 as libc::c_int as U8,
-    23 as libc::c_int as U8,
-    24 as libc::c_int as U8,
-    25 as libc::c_int as U8,
-    26 as libc::c_int as U8,
-    27 as libc::c_int as U8,
-    28 as libc::c_int as U8,
-    29 as libc::c_int as U8,
-    30 as libc::c_int as U8,
-    31 as libc::c_int as U8,
+static mut OF_bits: [u8; 32] = [
+    0 as libc::c_int as u8,
+    1 as libc::c_int as u8,
+    2 as libc::c_int as u8,
+    3 as libc::c_int as u8,
+    4 as libc::c_int as u8,
+    5 as libc::c_int as u8,
+    6 as libc::c_int as u8,
+    7 as libc::c_int as u8,
+    8 as libc::c_int as u8,
+    9 as libc::c_int as u8,
+    10 as libc::c_int as u8,
+    11 as libc::c_int as u8,
+    12 as libc::c_int as u8,
+    13 as libc::c_int as u8,
+    14 as libc::c_int as u8,
+    15 as libc::c_int as u8,
+    16 as libc::c_int as u8,
+    17 as libc::c_int as u8,
+    18 as libc::c_int as u8,
+    19 as libc::c_int as u8,
+    20 as libc::c_int as u8,
+    21 as libc::c_int as u8,
+    22 as libc::c_int as u8,
+    23 as libc::c_int as u8,
+    24 as libc::c_int as u8,
+    25 as libc::c_int as u8,
+    26 as libc::c_int as u8,
+    27 as libc::c_int as u8,
+    28 as libc::c_int as u8,
+    29 as libc::c_int as u8,
+    30 as libc::c_int as u8,
+    31 as libc::c_int as u8,
 ];
-static mut ML_base: [U32; 53] = [
-    3 as libc::c_int as U32,
-    4 as libc::c_int as U32,
-    5 as libc::c_int as U32,
-    6 as libc::c_int as U32,
-    7 as libc::c_int as U32,
-    8 as libc::c_int as U32,
-    9 as libc::c_int as U32,
-    10 as libc::c_int as U32,
-    11 as libc::c_int as U32,
-    12 as libc::c_int as U32,
-    13 as libc::c_int as U32,
-    14 as libc::c_int as U32,
-    15 as libc::c_int as U32,
-    16 as libc::c_int as U32,
-    17 as libc::c_int as U32,
-    18 as libc::c_int as U32,
-    19 as libc::c_int as U32,
-    20 as libc::c_int as U32,
-    21 as libc::c_int as U32,
-    22 as libc::c_int as U32,
-    23 as libc::c_int as U32,
-    24 as libc::c_int as U32,
-    25 as libc::c_int as U32,
-    26 as libc::c_int as U32,
-    27 as libc::c_int as U32,
-    28 as libc::c_int as U32,
-    29 as libc::c_int as U32,
-    30 as libc::c_int as U32,
-    31 as libc::c_int as U32,
-    32 as libc::c_int as U32,
-    33 as libc::c_int as U32,
-    34 as libc::c_int as U32,
-    35 as libc::c_int as U32,
-    37 as libc::c_int as U32,
-    39 as libc::c_int as U32,
-    41 as libc::c_int as U32,
-    43 as libc::c_int as U32,
-    47 as libc::c_int as U32,
-    51 as libc::c_int as U32,
-    59 as libc::c_int as U32,
-    67 as libc::c_int as U32,
-    83 as libc::c_int as U32,
-    99 as libc::c_int as U32,
-    0x83 as libc::c_int as U32,
-    0x103 as libc::c_int as U32,
-    0x203 as libc::c_int as U32,
-    0x403 as libc::c_int as U32,
-    0x803 as libc::c_int as U32,
-    0x1003 as libc::c_int as U32,
-    0x2003 as libc::c_int as U32,
-    0x4003 as libc::c_int as U32,
-    0x8003 as libc::c_int as U32,
-    0x10003 as libc::c_int as U32,
+static mut ML_base: [u32; 53] = [
+    3 as libc::c_int as u32,
+    4 as libc::c_int as u32,
+    5 as libc::c_int as u32,
+    6 as libc::c_int as u32,
+    7 as libc::c_int as u32,
+    8 as libc::c_int as u32,
+    9 as libc::c_int as u32,
+    10 as libc::c_int as u32,
+    11 as libc::c_int as u32,
+    12 as libc::c_int as u32,
+    13 as libc::c_int as u32,
+    14 as libc::c_int as u32,
+    15 as libc::c_int as u32,
+    16 as libc::c_int as u32,
+    17 as libc::c_int as u32,
+    18 as libc::c_int as u32,
+    19 as libc::c_int as u32,
+    20 as libc::c_int as u32,
+    21 as libc::c_int as u32,
+    22 as libc::c_int as u32,
+    23 as libc::c_int as u32,
+    24 as libc::c_int as u32,
+    25 as libc::c_int as u32,
+    26 as libc::c_int as u32,
+    27 as libc::c_int as u32,
+    28 as libc::c_int as u32,
+    29 as libc::c_int as u32,
+    30 as libc::c_int as u32,
+    31 as libc::c_int as u32,
+    32 as libc::c_int as u32,
+    33 as libc::c_int as u32,
+    34 as libc::c_int as u32,
+    35 as libc::c_int as u32,
+    37 as libc::c_int as u32,
+    39 as libc::c_int as u32,
+    41 as libc::c_int as u32,
+    43 as libc::c_int as u32,
+    47 as libc::c_int as u32,
+    51 as libc::c_int as u32,
+    59 as libc::c_int as u32,
+    67 as libc::c_int as u32,
+    83 as libc::c_int as u32,
+    99 as libc::c_int as u32,
+    0x83 as libc::c_int as u32,
+    0x103 as libc::c_int as u32,
+    0x203 as libc::c_int as u32,
+    0x403 as libc::c_int as u32,
+    0x803 as libc::c_int as u32,
+    0x1003 as libc::c_int as u32,
+    0x2003 as libc::c_int as u32,
+    0x4003 as libc::c_int as u32,
+    0x8003 as libc::c_int as u32,
+    0x10003 as libc::c_int as u32,
 ];
 #[inline]
 unsafe extern "C" fn ZSTD_DCtx_get_bmi2(mut dctx: *const ZSTD_DCtx_s) -> libc::c_int {
@@ -1136,23 +1119,23 @@ unsafe extern "C" fn ZSTD_copy4(
 ) {
     libc::memcpy(dst, src, 4 as libc::c_int as libc::c_ulong as libc::size_t);
 }
-unsafe extern "C" fn ZSTD_blockSizeMax(mut dctx: *const ZSTD_DCtx) -> size_t {
+unsafe extern "C" fn ZSTD_blockSizeMax(mut dctx: *const ZSTD_DCtx) -> libc::size_t {
     let blockSizeMax = (if (*dctx).isFrameDecompression != 0 {
         (*dctx).fParams.blockSizeMax
     } else {
         ZSTD_BLOCKSIZE_MAX as libc::c_uint
-    }) as size_t;
+    }) as libc::size_t;
     debug_assert!(blockSizeMax <= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
     return blockSizeMax;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_getcBlockSize(
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
+    mut srcSize: libc::size_t,
     mut bpPtr: *mut blockProperties_t,
-) -> size_t {
+) -> libc::size_t {
     if srcSize < ZSTD_blockHeaderSize {
-        return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+        return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     let cBlockHeader = MEM_readLE24(src);
     let cSize = cBlockHeader >> 3 as libc::c_int;
@@ -1162,20 +1145,20 @@ pub unsafe extern "C" fn ZSTD_getcBlockSize(
         & 3 as libc::c_int as libc::c_uint) as blockType_e;
     (*bpPtr).origSize = cSize;
     if (*bpPtr).blockType as libc::c_uint == bt_rle as libc::c_int as libc::c_uint {
-        return 1 as libc::c_int as size_t;
+        return 1 as libc::c_int as libc::size_t;
     }
     if (*bpPtr).blockType as libc::c_uint == bt_reserved as libc::c_int as libc::c_uint {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
-    return cSize as size_t;
+    return cSize as libc::size_t;
 }
 unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
     mut dctx: *mut ZSTD_DCtx,
     dst: *mut libc::c_void,
-    dstCapacity: size_t,
-    litSize: size_t,
+    dstCapacity: libc::size_t,
+    litSize: libc::size_t,
     streaming: streaming_operation,
-    expectedWriteSize: size_t,
+    expectedWriteSize: libc::size_t,
     splitImmediately: libc::c_uint,
 ) {
     let blockSizeMax = ZSTD_blockSizeMax(dctx);
@@ -1191,7 +1174,7 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
                 .wrapping_add(WILDCOPY_OVERLENGTH as libc::c_ulong)
     {
         (*dctx)
-            .litBuffer = (dst as *mut BYTE)
+            .litBuffer = (dst as *mut u8)
             .offset(blockSizeMax as isize)
             .offset(WILDCOPY_OVERLENGTH as isize);
         (*dctx).litBufferEnd = ((*dctx).litBuffer).offset(litSize as isize);
@@ -1243,7 +1226,7 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
             }) as libc::c_ulong);
         if splitImmediately != 0 {
             (*dctx)
-                .litBuffer = (dst as *mut BYTE)
+                .litBuffer = (dst as *mut u8)
                 .offset(expectedWriteSize as isize)
                 .offset(-(litSize as isize))
                 .offset(
@@ -1294,43 +1277,43 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
                 );
         } else {
             (*dctx)
-                .litBuffer = (dst as *mut BYTE)
+                .litBuffer = (dst as *mut u8)
                 .offset(expectedWriteSize as isize)
                 .offset(-(litSize as isize));
-            (*dctx).litBufferEnd = (dst as *mut BYTE).offset(expectedWriteSize as isize);
+            (*dctx).litBufferEnd = (dst as *mut u8).offset(expectedWriteSize as isize);
         }
         (*dctx).litBufferLocation = ZSTD_split;
         debug_assert!((*dctx).litBufferEnd
-            <= (dst as *mut BYTE).offset(expectedWriteSize as isize) as *const BYTE);
+            <= (dst as *mut u8).offset(expectedWriteSize as isize) as *const u8);
     };
 }
 unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     mut dctx: *mut ZSTD_DCtx,
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
+    mut srcSize: libc::size_t,
     mut dst: *mut libc::c_void,
-    mut dstCapacity: size_t,
+    mut dstCapacity: libc::size_t,
     streaming: streaming_operation,
-) -> size_t {
+) -> libc::size_t {
     if srcSize < (1 as libc::c_int + 1 as libc::c_int) as libc::c_ulong {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
-    let istart = src as *const BYTE;
+    let istart = src as *const u8;
     let litEncType = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
         & 3 as libc::c_int) as symbolEncodingType_e;
     let blockSizeMax = ZSTD_blockSizeMax(dctx);
     match litEncType as libc::c_uint {
         3 => {
             if (*dctx).litEntropy == 0 as libc::c_int as libc::c_uint {
-                return -(ZSTD_error_dictionary_corrupted as libc::c_int) as size_t;
+                return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
             }
         }
         2 => {}
         0 => {
-            let mut litSize_0: size_t = 0;
-            let mut lhSize_0: size_t = 0;
+            let mut litSize_0: libc::size_t = 0;
+            let mut lhSize_0: libc::size_t = 0;
             let lhlCode_0 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                >> 2 as libc::c_int & 3 as libc::c_int) as U32;
+                >> 2 as libc::c_int & 3 as libc::c_int) as u32;
             let mut expectedWriteSize_0 = if blockSizeMax < dstCapacity {
                 blockSizeMax
             } else {
@@ -1338,33 +1321,33 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             };
             match lhlCode_0 {
                 1 => {
-                    lhSize_0 = 2 as libc::c_int as size_t;
+                    lhSize_0 = 2 as libc::c_int as libc::size_t;
                     litSize_0 = (MEM_readLE16(istart as *const libc::c_void)
-                        as libc::c_int >> 4 as libc::c_int) as size_t;
+                        as libc::c_int >> 4 as libc::c_int) as libc::size_t;
                 }
                 3 => {
-                    lhSize_0 = 3 as libc::c_int as size_t;
+                    lhSize_0 = 3 as libc::c_int as libc::size_t;
                     if srcSize < 3 as libc::c_int as libc::c_ulong {
                         return -(ZSTD_error_corruption_detected as libc::c_int)
-                            as size_t;
+                            as libc::size_t;
                     }
                     litSize_0 = (MEM_readLE24(istart as *const libc::c_void)
-                        >> 4 as libc::c_int) as size_t;
+                        >> 4 as libc::c_int) as libc::size_t;
                 }
                 0 | 2 | _ => {
-                    lhSize_0 = 1 as libc::c_int as size_t;
+                    lhSize_0 = 1 as libc::c_int as libc::size_t;
                     litSize_0 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                        >> 3 as libc::c_int) as size_t;
+                        >> 3 as libc::c_int) as libc::size_t;
                 }
             }
             if litSize_0 > 0 as libc::c_int as libc::c_ulong && dst.is_null() {
-                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
             }
             if litSize_0 > blockSizeMax {
-                return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+                return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
             if expectedWriteSize_0 < litSize_0 {
-                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
             }
             ZSTD_allocateLiteralsBuffer(
                 dctx,
@@ -1380,7 +1363,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 .wrapping_add(WILDCOPY_OVERLENGTH as libc::c_ulong) > srcSize
             {
                 if litSize_0.wrapping_add(lhSize_0) > srcSize {
-                    return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+                    return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
                 }
                 if (*dctx).litBufferLocation as libc::c_uint
                     == ZSTD_split as libc::c_int as libc::c_uint
@@ -1474,9 +1457,9 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
         }
         1 => {
             let lhlCode_1 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                >> 2 as libc::c_int & 3 as libc::c_int) as U32;
-            let mut litSize_1: size_t = 0;
-            let mut lhSize_1: size_t = 0;
+                >> 2 as libc::c_int & 3 as libc::c_int) as u32;
+            let mut litSize_1: libc::size_t = 0;
+            let mut lhSize_1: libc::size_t = 0;
             let mut expectedWriteSize_1 = if blockSizeMax < dstCapacity {
                 blockSizeMax
             } else {
@@ -1484,37 +1467,37 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             };
             match lhlCode_1 {
                 1 => {
-                    lhSize_1 = 2 as libc::c_int as size_t;
+                    lhSize_1 = 2 as libc::c_int as libc::size_t;
                     if srcSize < 3 as libc::c_int as libc::c_ulong {
                         return -(ZSTD_error_corruption_detected as libc::c_int)
-                            as size_t;
+                            as libc::size_t;
                     }
                     litSize_1 = (MEM_readLE16(istart as *const libc::c_void)
-                        as libc::c_int >> 4 as libc::c_int) as size_t;
+                        as libc::c_int >> 4 as libc::c_int) as libc::size_t;
                 }
                 3 => {
-                    lhSize_1 = 3 as libc::c_int as size_t;
+                    lhSize_1 = 3 as libc::c_int as libc::size_t;
                     if srcSize < 4 as libc::c_int as libc::c_ulong {
                         return -(ZSTD_error_corruption_detected as libc::c_int)
-                            as size_t;
+                            as libc::size_t;
                     }
                     litSize_1 = (MEM_readLE24(istart as *const libc::c_void)
-                        >> 4 as libc::c_int) as size_t;
+                        >> 4 as libc::c_int) as libc::size_t;
                 }
                 0 | 2 | _ => {
-                    lhSize_1 = 1 as libc::c_int as size_t;
+                    lhSize_1 = 1 as libc::c_int as libc::size_t;
                     litSize_1 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                        >> 3 as libc::c_int) as size_t;
+                        >> 3 as libc::c_int) as libc::size_t;
                 }
             }
             if litSize_1 > 0 as libc::c_int as libc::c_ulong && dst.is_null() {
-                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
             }
             if litSize_1 > blockSizeMax {
-                return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+                return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
             if expectedWriteSize_1 < litSize_1 {
-                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+                return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
             }
             ZSTD_allocateLiteralsBuffer(
                 dctx,
@@ -1584,21 +1567,21 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             }
             (*dctx).litPtr = (*dctx).litBuffer;
             (*dctx).litSize = litSize_1;
-            return lhSize_1.wrapping_add(1 as libc::c_int as libc::c_ulong);
+            return lhSize_1.wrapping_add(1);
         }
-        _ => return -(ZSTD_error_corruption_detected as libc::c_int) as size_t,
+        _ => return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t,
     }
     if srcSize < 5 as libc::c_int as libc::c_ulong {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
-    let mut lhSize: size_t = 0;
-    let mut litSize: size_t = 0;
-    let mut litCSize: size_t = 0;
-    let mut singleStream = 0 as libc::c_int as U32;
+    let mut lhSize: libc::size_t = 0;
+    let mut litSize: libc::size_t = 0;
+    let mut litCSize: libc::size_t = 0;
+    let mut singleStream = 0 as libc::c_int as u32;
     let lhlCode = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-        >> 2 as libc::c_int & 3 as libc::c_int) as U32;
+        >> 2 as libc::c_int & 3 as libc::c_int) as u32;
     let lhc = MEM_readLE32(istart as *const libc::c_void);
-    let mut hufSuccess: size_t = 0;
+    let mut hufSuccess: libc::size_t = 0;
     let mut expectedWriteSize = if blockSizeMax < dstCapacity {
         blockSizeMax
     } else {
@@ -1617,46 +1600,46 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
         });
     match lhlCode {
         2 => {
-            lhSize = 4 as libc::c_int as size_t;
+            lhSize = 4 as libc::c_int as libc::size_t;
             litSize = (lhc >> 4 as libc::c_int & 0x3fff as libc::c_int as libc::c_uint)
-                as size_t;
-            litCSize = (lhc >> 18 as libc::c_int) as size_t;
+                as libc::size_t;
+            litCSize = (lhc >> 18 as libc::c_int) as libc::size_t;
         }
         3 => {
-            lhSize = 5 as libc::c_int as size_t;
+            lhSize = 5 as libc::c_int as libc::size_t;
             litSize = (lhc >> 4 as libc::c_int & 0x3ffff as libc::c_int as libc::c_uint)
-                as size_t;
+                as libc::size_t;
             litCSize = ((lhc >> 22 as libc::c_int) as libc::c_ulong)
                 .wrapping_add(
-                    (*istart.offset(4 as libc::c_int as isize) as size_t)
+                    (*istart.offset(4 as libc::c_int as isize) as libc::size_t)
                         << 10 as libc::c_int,
                 );
         }
         0 | 1 | _ => {
-            singleStream = (lhlCode == 0) as libc::c_int as U32;
-            lhSize = 3 as libc::c_int as size_t;
+            singleStream = (lhlCode == 0) as libc::c_int as u32;
+            lhSize = 3 as libc::c_int as libc::size_t;
             litSize = (lhc >> 4 as libc::c_int & 0x3ff as libc::c_int as libc::c_uint)
-                as size_t;
+                as libc::size_t;
             litCSize = (lhc >> 14 as libc::c_int & 0x3ff as libc::c_int as libc::c_uint)
-                as size_t;
+                as libc::size_t;
         }
     }
     if litSize > 0 as libc::c_int as libc::c_ulong && dst.is_null() {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if litSize > blockSizeMax {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     if singleStream == 0 {
         if litSize < 6 as libc::c_int as libc::c_ulong {
-            return -(ZSTD_error_literals_headerWrong as libc::c_int) as size_t;
+            return -(ZSTD_error_literals_headerWrong as libc::c_int) as libc::size_t;
         }
     }
     if litCSize.wrapping_add(lhSize) > srcSize {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     if expectedWriteSize < litSize {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     ZSTD_allocateLiteralsBuffer(
         dctx,
@@ -1670,11 +1653,11 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     if (*dctx).ddictIsCold != 0 && litSize > 768 as libc::c_int as libc::c_ulong {
         let _ptr = (*dctx).HUFptr as *const libc::c_char;
         let _size = ::core::mem::size_of::<[HUF_DTable; 4097]>() as libc::c_ulong;
-        let mut _pos: size_t = 0;
-        _pos = 0 as libc::c_int as size_t;
+        let mut _pos: libc::size_t = 0;
+        _pos = 0 as libc::c_int as libc::size_t;
         while _pos < _size {
             _pos = (_pos as libc::c_ulong).wrapping_add(CACHELINE_SIZE as libc::c_ulong)
-                as size_t as size_t;
+                ;
         }
     }
     if litEncType as libc::c_uint == set_repeat as libc::c_int as libc::c_uint {
@@ -1706,7 +1689,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             istart.offset(lhSize as isize) as *const libc::c_void,
             litCSize,
             ((*dctx).workspace).as_mut_ptr() as *mut libc::c_void,
-            ::core::mem::size_of::<[U32; 640]>() as libc::c_ulong,
+            ::core::mem::size_of::<[u32; 640]>() as libc::c_ulong,
             flags,
         );
     } else {
@@ -1717,7 +1700,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             istart.offset(lhSize as isize) as *const libc::c_void,
             litCSize,
             ((*dctx).workspace).as_mut_ptr() as *mut libc::c_void,
-            ::core::mem::size_of::<[U32; 640]>() as libc::c_ulong,
+            ::core::mem::size_of::<[u32; 640]>() as libc::c_ulong,
             flags,
         );
     }
@@ -1861,14 +1844,14 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             .litBufferEnd = ((*dctx).litBufferEnd)
             .offset(-(WILDCOPY_OVERLENGTH as isize));
         debug_assert!((*dctx).litBufferEnd
-            <= (dst as *mut BYTE).offset(blockSizeMax as isize) as *const BYTE);
+            <= (dst as *mut u8).offset(blockSizeMax as isize) as *const u8);
     }
     if ERR_isError(hufSuccess) != 0 {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     (*dctx).litPtr = (*dctx).litBuffer;
     (*dctx).litSize = litSize;
-    (*dctx).litEntropy = 1 as libc::c_int as U32;
+    (*dctx).litEntropy = 1 as libc::c_int as u32;
     if litEncType as libc::c_uint == set_compressed as libc::c_int as libc::c_uint {
         (*dctx).HUFptr = ((*dctx).entropy.hufTable).as_mut_ptr();
     }
@@ -1878,596 +1861,596 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
 pub unsafe extern "C" fn ZSTD_decodeLiteralsBlock_wrapper(
     mut dctx: *mut ZSTD_DCtx,
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
+    mut srcSize: libc::size_t,
     mut dst: *mut libc::c_void,
-    mut dstCapacity: size_t,
-) -> size_t {
+    mut dstCapacity: libc::size_t,
+) -> libc::size_t {
     (*dctx).isFrameDecompression = 0 as libc::c_int;
     return ZSTD_decodeLiteralsBlock(dctx, src, srcSize, dst, dstCapacity, not_streaming);
 }
 static mut LL_defaultDTable: [ZSTD_seqSymbol; 65] = [
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 1 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 1 as libc::c_int as BYTE,
-            baseValue: LL_DEFAULTNORMLOG as U32,
+            nextState: 1 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 1 as libc::c_int as u8,
+            baseValue: LL_DEFAULTNORMLOG as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 0 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 0 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 0 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 0 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 1 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 1 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 3 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 3 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 4 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 4 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 6 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 6 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 7 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 7 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 9 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 9 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 10 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 10 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 12 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 12 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 14 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 14 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 16 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 16 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 20 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 20 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 22 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 22 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 2 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 28 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 2 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 28 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 3 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 32 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 3 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 32 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 4 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 48 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 4 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 48 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 6 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 64 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 6 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 64 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 7 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 128 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 7 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 128 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 8 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 256 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 8 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 256 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 10 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 1024 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 10 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 1024 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 12 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 4096 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 12 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 4096 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 0 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 0 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 1 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 1 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 2 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 2 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 4 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 4 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 5 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 5 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 7 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 7 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 8 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 8 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 10 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 10 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 11 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 11 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 13 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 13 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 16 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 16 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 18 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 18 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 22 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 22 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 2 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 24 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 2 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 24 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 3 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 32 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 3 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 32 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 3 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 40 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 3 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 40 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 6 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 64 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 6 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 64 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 6 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 64 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 6 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 64 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 7 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 128 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 7 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 128 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 9 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 512 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 9 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 512 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 11 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 2048 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 11 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 2048 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 48 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 0 as libc::c_int as U32,
+            nextState: 48 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 0 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 1 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 1 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 2 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 2 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 3 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 3 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 5 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 5 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 6 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 6 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 8 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 8 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 9 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 9 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 11 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 11 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 12 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 12 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 15 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 15 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 18 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 18 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 20 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 20 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 2 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 24 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 2 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 24 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 2 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 28 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 2 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 28 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 3 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 40 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 3 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 40 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 4 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 48 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 4 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 48 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 16 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 65536 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 16 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 65536 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 15 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 32768 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 15 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 32768 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 14 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 16384 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 14 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 16384 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 13 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 8192 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 13 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 8192 as libc::c_int as u32,
         };
         init
     },
@@ -2475,298 +2458,298 @@ static mut LL_defaultDTable: [ZSTD_seqSymbol; 65] = [
 static mut OF_defaultDTable: [ZSTD_seqSymbol; 33] = [
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 1 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 1 as libc::c_int as BYTE,
-            baseValue: OF_DEFAULTNORMLOG as U32,
+            nextState: 1 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 1 as libc::c_int as u8,
+            baseValue: OF_DEFAULTNORMLOG as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 0 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 0 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 6 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 61 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 6 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 61 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 9 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 509 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 9 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 509 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 15 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 32765 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 15 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 32765 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 21 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 2097149 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 21 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 2097149 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 3 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 5 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 3 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 5 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 7 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 125 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 7 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 125 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 12 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 4093 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 12 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 4093 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 18 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 262141 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 18 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 262141 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 23 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 8388605 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 23 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 8388605 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 5 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 29 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 5 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 29 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 8 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 253 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 8 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 253 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 14 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 16381 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 14 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 16381 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 20 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 1048573 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 20 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 1048573 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 2 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 1 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 2 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 1 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 7 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 125 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 7 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 125 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 11 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 2045 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 11 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 2045 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 17 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 131069 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 17 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 131069 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 22 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 4194301 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 22 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 4194301 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 4 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 13 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 4 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 13 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 8 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 253 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 8 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 253 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 13 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 8189 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 13 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 8189 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 19 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 524285 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 19 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 524285 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 1 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 1 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 6 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 61 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 6 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 61 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 10 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 1021 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 10 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 1021 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 16 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 65533 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 16 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 65533 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 28 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 268435453 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 28 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 268435453 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 27 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 134217725 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 27 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 134217725 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 26 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 67108861 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 26 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 67108861 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 25 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 33554429 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 25 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 33554429 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 24 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 16777213 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 24 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 16777213 as libc::c_int as u32,
         };
         init
     },
@@ -2774,602 +2757,602 @@ static mut OF_defaultDTable: [ZSTD_seqSymbol; 33] = [
 static mut ML_defaultDTable: [ZSTD_seqSymbol; 65] = [
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 1 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 1 as libc::c_int as BYTE,
-            baseValue: ML_DEFAULTNORMLOG as U32,
+            nextState: 1 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 1 as libc::c_int as u8,
+            baseValue: ML_DEFAULTNORMLOG as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 3 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 3 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 4 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 4 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 5 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 5 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 6 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 6 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 8 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 8 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 9 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 9 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 11 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 11 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 13 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 13 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 16 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 16 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 19 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 19 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 22 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 22 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 25 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 25 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 28 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 28 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 31 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 31 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 34 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 34 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 37 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 37 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 41 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 41 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 2 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 47 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 2 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 47 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 3 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 59 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 3 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 59 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 4 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 83 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 4 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 83 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 7 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 131 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 7 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 131 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 9 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 515 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 9 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 515 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 4 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 4 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 5 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 5 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 6 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 6 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 7 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 7 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 9 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 9 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 10 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 10 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 12 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 12 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 15 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 15 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 18 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 18 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 21 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 21 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 24 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 24 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 27 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 27 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 30 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 30 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 33 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 33 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 35 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 35 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 1 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 39 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 1 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 39 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 2 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 43 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 2 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 43 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 3 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 51 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 3 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 51 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 4 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 67 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 4 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 67 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 5 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 99 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 5 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 99 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 8 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 259 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 8 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 259 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 4 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 4 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 48 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 4 as libc::c_int as U32,
+            nextState: 48 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 4 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 4 as libc::c_int as BYTE,
-            baseValue: 5 as libc::c_int as U32,
+            nextState: 16 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 4 as libc::c_int as u8,
+            baseValue: 5 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 7 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 7 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 8 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 8 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 10 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 10 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 5 as libc::c_int as BYTE,
-            baseValue: 11 as libc::c_int as U32,
+            nextState: 32 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 5 as libc::c_int as u8,
+            baseValue: 11 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 14 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 14 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 17 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 17 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 20 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 20 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 23 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 23 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 26 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 26 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 29 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 29 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 0 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 32 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 0 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 32 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 16 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 65539 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 16 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 65539 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 15 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 32771 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 15 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 32771 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 14 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 16387 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 14 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 16387 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 13 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 8195 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 13 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 8195 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 12 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 4099 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 12 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 4099 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 11 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 2051 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 11 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 2051 as libc::c_int as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as libc::c_int as U16,
-            nbAdditionalBits: 10 as libc::c_int as BYTE,
-            nbBits: 6 as libc::c_int as BYTE,
-            baseValue: 1027 as libc::c_int as U32,
+            nextState: 0 as libc::c_int as u16,
+            nbAdditionalBits: 10 as libc::c_int as u8,
+            nbBits: 6 as libc::c_int as u8,
+            baseValue: 1027 as libc::c_int as u32,
         };
         init
     },
 ];
 unsafe extern "C" fn ZSTD_buildSeqTable_rle(
     mut dt: *mut ZSTD_seqSymbol,
-    mut baseValue: U32,
-    mut nbAddBits: U8,
+    mut baseValue: u32,
+    mut nbAddBits: u8,
 ) {
     let mut ptr = dt as *mut libc::c_void;
     let DTableH = ptr as *mut ZSTD_seqSymbol_header;
     let cell = dt.offset(1 as libc::c_int as isize);
-    (*DTableH).tableLog = 0 as libc::c_int as U32;
-    (*DTableH).fastMode = 0 as libc::c_int as U32;
-    (*cell).nbBits = 0 as libc::c_int as BYTE;
-    (*cell).nextState = 0 as libc::c_int as U16;
+    (*DTableH).tableLog = 0 as libc::c_int as u32;
+    (*DTableH).fastMode = 0 as libc::c_int as u32;
+    (*cell).nbBits = 0 as libc::c_int as u8;
+    (*cell).nextState = 0 as libc::c_int as u16;
     debug_assert!((nbAddBits as libc::c_int) < 255 as libc::c_int);
     (*cell).nbAdditionalBits = nbAddBits;
     (*cell).baseValue = baseValue;
@@ -3379,16 +3362,16 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
     mut dt: *mut ZSTD_seqSymbol,
     mut normalizedCounter: *const libc::c_short,
     mut maxSymbolValue: libc::c_uint,
-    mut baseValue: *const U32,
-    mut nbAdditionalBits: *const U8,
+    mut baseValue: *const u32,
+    mut nbAdditionalBits: *const u8,
     mut tableLog: libc::c_uint,
     mut wksp: *mut libc::c_void,
-    mut wkspSize: size_t,
+    mut wkspSize: libc::size_t,
 ) {
     let tableDecode = dt.offset(1 as libc::c_int as isize);
-    let maxSV1 = maxSymbolValue.wrapping_add(1 as libc::c_int as libc::c_uint);
-    let tableSize = ((1 as libc::c_int) << tableLog) as U32;
-    let mut symbolNext = wksp as *mut U16;
+    let maxSV1 = maxSymbolValue.wrapping_add(1);
+    let tableSize = ((1 as libc::c_int) << tableLog) as u32;
+    let mut symbolNext = wksp as *mut u16;
     let mut spread = symbolNext
         .offset(
             (if 35 as libc::c_int > 52 as libc::c_int {
@@ -3397,8 +3380,8 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
                 52 as libc::c_int
             }) as isize,
         )
-        .offset(1 as libc::c_int as isize) as *mut BYTE;
-    let mut highThreshold = tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint);
+        .offset(1 as libc::c_int as isize) as *mut u8;
+    let mut highThreshold = tableSize.wrapping_sub(1);
     debug_assert!(maxSymbolValue
         <= (if 35 as libc::c_int > 52 as libc::c_int {
             35 as libc::c_int
@@ -3421,7 +3404,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             8 as libc::c_int
         }) as libc::c_uint);
     debug_assert!(wkspSize
-        >= (::core::mem::size_of::<S16>() as libc::c_ulong)
+        >= (::core::mem::size_of::<i16>() as libc::c_ulong)
             .wrapping_mul(
                 ((if 35 as libc::c_int > 52 as libc::c_int {
                     35 as libc::c_int
@@ -3446,32 +3429,32 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
                         8 as libc::c_int
                     })) as libc::c_ulong,
             )
-            .wrapping_add(::core::mem::size_of::<U64>() as libc::c_ulong));
+            .wrapping_add(::core::mem::size_of::<u64>() as libc::c_ulong));
     let mut DTableH = ZSTD_seqSymbol_header {
         fastMode: 0,
         tableLog: 0,
     };
     DTableH.tableLog = tableLog;
-    DTableH.fastMode = 1 as libc::c_int as U32;
+    DTableH.fastMode = 1 as libc::c_int as u32;
     let largeLimit = ((1 as libc::c_int)
-        << tableLog.wrapping_sub(1 as libc::c_int as libc::c_uint)) as S16;
-    let mut s: U32 = 0;
-    s = 0 as libc::c_int as U32;
+        << tableLog.wrapping_sub(1)) as i16;
+    let mut s: u32 = 0;
+    s = 0 as libc::c_int as u32;
     while s < maxSV1 {
         if *normalizedCounter.offset(s as isize) as libc::c_int == -(1 as libc::c_int) {
             let fresh0 = highThreshold;
             highThreshold = highThreshold.wrapping_sub(1);
             (*tableDecode.offset(fresh0 as isize)).baseValue = s;
-            *symbolNext.offset(s as isize) = 1 as libc::c_int as U16;
+            *symbolNext.offset(s as isize) = 1 as libc::c_int as u16;
         } else {
             if *normalizedCounter.offset(s as isize) as libc::c_int
                 >= largeLimit as libc::c_int
             {
-                DTableH.fastMode = 0 as libc::c_int as U32;
+                DTableH.fastMode = 0 as libc::c_int as u32;
             }
             debug_assert!(*normalizedCounter.offset(s as isize) as libc::c_int >= 0 as libc::c_int);
             *symbolNext
-                .offset(s as isize) = *normalizedCounter.offset(s as isize) as U16;
+                .offset(s as isize) = *normalizedCounter.offset(s as isize) as u16;
         }
         s = s.wrapping_add(1);
     }
@@ -3481,17 +3464,17 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
         ::core::mem::size_of::<ZSTD_seqSymbol_header>() as libc::c_ulong as libc::size_t,
     );
     debug_assert!(tableSize <= 512 as libc::c_int as libc::c_uint);
-    if highThreshold == tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint) {
-        let tableMask = tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint)
-            as size_t;
+    if highThreshold == tableSize.wrapping_sub(1) {
+        let tableMask = tableSize.wrapping_sub(1)
+            as libc::size_t;
         let step = (tableSize >> 1 as libc::c_int)
             .wrapping_add(tableSize >> 3 as libc::c_int)
-            .wrapping_add(3 as libc::c_int as libc::c_uint) as size_t;
-        let add = 0x101010101010101 as libc::c_ulonglong as U64;
-        let mut pos = 0 as libc::c_int as size_t;
-        let mut sv = 0 as libc::c_int as U64;
-        let mut s_0: U32 = 0;
-        s_0 = 0 as libc::c_int as U32;
+            .wrapping_add(3) as libc::size_t;
+        let add = 0x101010101010101 as libc::c_ulonglong as u64;
+        let mut pos = 0 as libc::c_int as libc::size_t;
+        let mut sv = 0 as libc::c_int as u64;
+        let mut s_0: u32 = 0;
+        s_0 = 0 as libc::c_int as u32;
         while s_0 < maxSV1 {
             let mut i: libc::c_int = 0;
             let n = *normalizedCounter.offset(s_0 as isize) as libc::c_int;
@@ -3505,37 +3488,37 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
                 i += 8 as libc::c_int;
             }
             debug_assert!(n >= 0 as libc::c_int);
-            pos = (pos as libc::c_ulong).wrapping_add(n as size_t) as size_t as size_t;
+            pos = (pos as libc::c_ulong).wrapping_add(n as libc::size_t) ;
             s_0 = s_0.wrapping_add(1);
-            sv = (sv as libc::c_ulong).wrapping_add(add) as U64 as U64;
+            sv = (sv as libc::c_ulong).wrapping_add(add) ;
         }
-        let mut position = 0 as libc::c_int as size_t;
-        let mut s_1: size_t = 0;
-        let unroll = 2 as libc::c_int as size_t;
+        let mut position = 0 as libc::c_int as libc::size_t;
+        let mut s_1: libc::size_t = 0;
+        let unroll = 2 as libc::c_int as libc::size_t;
         debug_assert!((tableSize as libc::c_ulong).wrapping_rem(unroll)
             == 0 as libc::c_int as libc::c_ulong);
-        s_1 = 0 as libc::c_int as size_t;
-        while s_1 < tableSize as size_t {
-            let mut u: size_t = 0;
-            u = 0 as libc::c_int as size_t;
+        s_1 = 0 as libc::c_int as libc::size_t;
+        while s_1 < tableSize as libc::size_t {
+            let mut u: libc::size_t = 0;
+            u = 0 as libc::c_int as libc::size_t;
             while u < unroll {
                 let uPosition = position.wrapping_add(u.wrapping_mul(step)) & tableMask;
                 (*tableDecode.offset(uPosition as isize))
-                    .baseValue = *spread.offset(s_1.wrapping_add(u) as isize) as U32;
+                    .baseValue = *spread.offset(s_1.wrapping_add(u) as isize) as u32;
                 u = u.wrapping_add(1);
             }
             position = position.wrapping_add(unroll.wrapping_mul(step)) & tableMask;
-            s_1 = (s_1 as libc::c_ulong).wrapping_add(unroll) as size_t as size_t;
+            s_1 = (s_1 as libc::c_ulong).wrapping_add(unroll) ;
         }
         debug_assert!(position == 0 as libc::c_int as libc::c_ulong);
     } else {
-        let tableMask_0 = tableSize.wrapping_sub(1 as libc::c_int as libc::c_uint);
+        let tableMask_0 = tableSize.wrapping_sub(1);
         let step_0 = (tableSize >> 1 as libc::c_int)
             .wrapping_add(tableSize >> 3 as libc::c_int)
-            .wrapping_add(3 as libc::c_int as libc::c_uint);
-        let mut s_2: U32 = 0;
-        let mut position_0 = 0 as libc::c_int as U32;
-        s_2 = 0 as libc::c_int as U32;
+            .wrapping_add(3);
+        let mut s_2: u32 = 0;
+        let mut position_0 = 0 as libc::c_int as u32;
+        s_2 = 0 as libc::c_int as u32;
         while s_2 < maxSV1 {
             let mut i_0: libc::c_int = 0;
             let n_0 = *normalizedCounter.offset(s_2 as isize) as libc::c_int;
@@ -3552,20 +3535,20 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
         }
         debug_assert!(position_0 == 0 as libc::c_int as libc::c_uint);
     }
-    let mut u_0: U32 = 0;
-    u_0 = 0 as libc::c_int as U32;
+    let mut u_0: u32 = 0;
+    u_0 = 0 as libc::c_int as u32;
     while u_0 < tableSize {
         let symbol = (*tableDecode.offset(u_0 as isize)).baseValue;
         let ref mut fresh1 = *symbolNext.offset(symbol as isize);
         let fresh2 = *fresh1;
         *fresh1 = (*fresh1).wrapping_add(1);
-        let nextState = fresh2 as U32;
+        let nextState = fresh2 as u32;
         (*tableDecode.offset(u_0 as isize))
-            .nbBits = tableLog.wrapping_sub(ZSTD_highbit32(nextState)) as BYTE;
+            .nbBits = tableLog.wrapping_sub(ZSTD_highbit32(nextState)) as u8;
         (*tableDecode.offset(u_0 as isize))
             .nextState = (nextState
             << (*tableDecode.offset(u_0 as isize)).nbBits as libc::c_int)
-            .wrapping_sub(tableSize) as U16;
+            .wrapping_sub(tableSize) as u16;
         debug_assert!((*nbAdditionalBits.offset(symbol as isize) as libc::c_int)
             < 255 as libc::c_int);
         (*tableDecode.offset(u_0 as isize))
@@ -3579,11 +3562,11 @@ unsafe extern "C" fn ZSTD_buildFSETable_body_default(
     mut dt: *mut ZSTD_seqSymbol,
     mut normalizedCounter: *const libc::c_short,
     mut maxSymbolValue: libc::c_uint,
-    mut baseValue: *const U32,
-    mut nbAdditionalBits: *const U8,
+    mut baseValue: *const u32,
+    mut nbAdditionalBits: *const u8,
     mut tableLog: libc::c_uint,
     mut wksp: *mut libc::c_void,
-    mut wkspSize: size_t,
+    mut wkspSize: libc::size_t,
 ) {
     ZSTD_buildFSETable_body(
         dt,
@@ -3600,11 +3583,11 @@ unsafe extern "C" fn ZSTD_buildFSETable_body_bmi2(
     mut dt: *mut ZSTD_seqSymbol,
     mut normalizedCounter: *const libc::c_short,
     mut maxSymbolValue: libc::c_uint,
-    mut baseValue: *const U32,
-    mut nbAdditionalBits: *const U8,
+    mut baseValue: *const u32,
+    mut nbAdditionalBits: *const u8,
     mut tableLog: libc::c_uint,
     mut wksp: *mut libc::c_void,
-    mut wkspSize: size_t,
+    mut wkspSize: libc::size_t,
 ) {
     ZSTD_buildFSETable_body(
         dt,
@@ -3622,11 +3605,11 @@ pub unsafe extern "C" fn ZSTD_buildFSETable(
     mut dt: *mut ZSTD_seqSymbol,
     mut normalizedCounter: *const libc::c_short,
     mut maxSymbolValue: libc::c_uint,
-    mut baseValue: *const U32,
-    mut nbAdditionalBits: *const U8,
+    mut baseValue: *const u32,
+    mut nbAdditionalBits: *const u8,
     mut tableLog: libc::c_uint,
     mut wksp: *mut libc::c_void,
-    mut wkspSize: size_t,
+    mut wkspSize: libc::size_t,
     mut bmi2: libc::c_int,
 ) {
     if bmi2 != 0 {
@@ -3658,41 +3641,41 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
     mut DTablePtr: *mut *const ZSTD_seqSymbol,
     mut type_0: symbolEncodingType_e,
     mut max: libc::c_uint,
-    mut maxLog: U32,
+    mut maxLog: u32,
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
-    mut baseValue: *const U32,
-    mut nbAdditionalBits: *const U8,
+    mut srcSize: libc::size_t,
+    mut baseValue: *const u32,
+    mut nbAdditionalBits: *const u8,
     mut defaultTable: *const ZSTD_seqSymbol,
-    mut flagRepeatTable: U32,
+    mut flagRepeatTable: u32,
     mut ddictIsCold: libc::c_int,
     mut nbSeq: libc::c_int,
-    mut wksp: *mut U32,
-    mut wkspSize: size_t,
+    mut wksp: *mut u32,
+    mut wkspSize: libc::size_t,
     mut bmi2: libc::c_int,
-) -> size_t {
+) -> libc::size_t {
     match type_0 as libc::c_uint {
         1 => {
             if srcSize == 0 {
-                return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+                return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
             }
-            if *(src as *const BYTE) as libc::c_uint > max {
-                return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            if *(src as *const u8) as libc::c_uint > max {
+                return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
-            let symbol = *(src as *const BYTE) as U32;
+            let symbol = *(src as *const u8) as u32;
             let baseline = *baseValue.offset(symbol as isize);
             let nbBits = *nbAdditionalBits.offset(symbol as isize);
             ZSTD_buildSeqTable_rle(DTableSpace, baseline, nbBits);
             *DTablePtr = DTableSpace;
-            return 1 as libc::c_int as size_t;
+            return 1 as libc::c_int as libc::size_t;
         }
         0 => {
             *DTablePtr = defaultTable;
-            return 0 as libc::c_int as size_t;
+            return 0 as libc::c_int as libc::size_t;
         }
         3 => {
             if flagRepeatTable == 0 {
-                return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+                return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
             if ddictIsCold != 0 && nbSeq > 24 as libc::c_int {
                 let pStart = *DTablePtr as *const libc::c_void;
@@ -3703,19 +3686,19 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
                     );
                 let _ptr = pStart as *const libc::c_char;
                 let _size = pSize;
-                let mut _pos: size_t = 0;
-                _pos = 0 as libc::c_int as size_t;
+                let mut _pos: libc::size_t = 0;
+                _pos = 0 as libc::c_int as libc::size_t;
                 while _pos < _size {
                     _pos = (_pos as libc::c_ulong)
-                        .wrapping_add(CACHELINE_SIZE as libc::c_ulong) as size_t
-                        as size_t;
+                        .wrapping_add(CACHELINE_SIZE as libc::c_ulong) as libc::size_t
+                        as libc::size_t;
                 }
             }
-            return 0 as libc::c_int as size_t;
+            return 0 as libc::c_int as libc::size_t;
         }
         2 => {
             let mut tableLog: libc::c_uint = 0;
-            let mut norm: [S16; 53] = [0; 53];
+            let mut norm: [i16; 53] = [0; 53];
             let headerSize = FSE_readNCount(
                 norm.as_mut_ptr(),
                 &mut max,
@@ -3724,10 +3707,10 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
                 srcSize,
             );
             if ERR_isError(headerSize) != 0 {
-                return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+                return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
             if tableLog > maxLog {
-                return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+                return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
             ZSTD_buildFSETable(
                 DTableSpace,
@@ -3745,7 +3728,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
         }
         _ => {
             debug_assert!(false);
-            return -(ZSTD_error_GENERIC as libc::c_int) as size_t;
+            return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
         }
     };
 }
@@ -3754,14 +3737,14 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
     mut dctx: *mut ZSTD_DCtx,
     mut nbSeqPtr: *mut libc::c_int,
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
-) -> size_t {
-    let istart = src as *const BYTE;
+    mut srcSize: libc::size_t,
+) -> libc::size_t {
+    let istart = src as *const u8;
     let iend = istart.offset(srcSize as isize);
     let mut ip = istart;
     let mut nbSeq: libc::c_int = 0;
     if srcSize < 1 as libc::c_int as libc::c_ulong {
-        return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+        return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     let fresh3 = ip;
     ip = ip.offset(1);
@@ -3769,20 +3752,20 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
     if nbSeq == 0 {
         *nbSeqPtr = 0 as libc::c_int;
         if srcSize != 1 as libc::c_int as libc::c_ulong {
-            return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+            return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
         }
-        return 1 as libc::c_int as size_t;
+        return 1 as libc::c_int as libc::size_t;
     }
     if nbSeq > 0x7f as libc::c_int {
         if nbSeq == 0xff as libc::c_int {
             if ip.offset(2 as libc::c_int as isize) > iend {
-                return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+                return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
             }
             nbSeq = MEM_readLE16(ip as *const libc::c_void) as libc::c_int + LONGNBSEQ;
             ip = ip.offset(2 as libc::c_int as isize);
         } else {
             if ip >= iend {
-                return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+                return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
             }
             let fresh4 = ip;
             ip = ip.offset(1);
@@ -3792,7 +3775,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
     }
     *nbSeqPtr = nbSeq;
     if ip.offset(1 as libc::c_int as isize) > iend {
-        return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+        return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     let LLtype = (*ip as libc::c_int >> 6 as libc::c_int) as symbolEncodingType_e;
     let OFtype = (*ip as libc::c_int >> 4 as libc::c_int & 3 as libc::c_int)
@@ -3805,9 +3788,9 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         &mut (*dctx).LLTptr,
         LLtype,
         MaxLL as libc::c_uint,
-        LLFSELog as U32,
+        LLFSELog as u32,
         ip as *const libc::c_void,
-        iend.offset_from(ip) as libc::c_long as size_t,
+        iend.offset_from(ip) as libc::c_long as libc::size_t,
         LL_base.as_ptr(),
         LL_bits.as_ptr(),
         LL_defaultDTable.as_ptr(),
@@ -3815,11 +3798,11 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         (*dctx).ddictIsCold,
         nbSeq,
         ((*dctx).workspace).as_mut_ptr(),
-        ::core::mem::size_of::<[U32; 640]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 640]>() as libc::c_ulong,
         ZSTD_DCtx_get_bmi2(dctx),
     );
     if ERR_isError(llhSize) != 0 {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     ip = ip.offset(llhSize as isize);
     let ofhSize = ZSTD_buildSeqTable(
@@ -3827,9 +3810,9 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         &mut (*dctx).OFTptr,
         OFtype,
         MaxOff as libc::c_uint,
-        OffFSELog as U32,
+        OffFSELog as u32,
         ip as *const libc::c_void,
-        iend.offset_from(ip) as libc::c_long as size_t,
+        iend.offset_from(ip) as libc::c_long as libc::size_t,
         OF_base.as_ptr(),
         OF_bits.as_ptr(),
         OF_defaultDTable.as_ptr(),
@@ -3837,11 +3820,11 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         (*dctx).ddictIsCold,
         nbSeq,
         ((*dctx).workspace).as_mut_ptr(),
-        ::core::mem::size_of::<[U32; 640]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 640]>() as libc::c_ulong,
         ZSTD_DCtx_get_bmi2(dctx),
     );
     if ERR_isError(ofhSize) != 0 {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     ip = ip.offset(ofhSize as isize);
     let mlhSize = ZSTD_buildSeqTable(
@@ -3849,9 +3832,9 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         &mut (*dctx).MLTptr,
         MLtype,
         MaxML as libc::c_uint,
-        MLFSELog as U32,
+        MLFSELog as u32,
         ip as *const libc::c_void,
-        iend.offset_from(ip) as libc::c_long as size_t,
+        iend.offset_from(ip) as libc::c_long as libc::size_t,
         ML_base.as_ptr(),
         ML_bits.as_ptr(),
         ML_defaultDTable.as_ptr(),
@@ -3859,32 +3842,32 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         (*dctx).ddictIsCold,
         nbSeq,
         ((*dctx).workspace).as_mut_ptr(),
-        ::core::mem::size_of::<[U32; 640]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 640]>() as libc::c_ulong,
         ZSTD_DCtx_get_bmi2(dctx),
     );
     if ERR_isError(mlhSize) != 0 {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     ip = ip.offset(mlhSize as isize);
-    return ip.offset_from(istart) as libc::c_long as size_t;
+    return ip.offset_from(istart) as libc::c_long as libc::size_t;
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_overlapCopy8(
-    mut op: *mut *mut BYTE,
-    mut ip: *mut *const BYTE,
-    mut offset: size_t,
+    mut op: *mut *mut u8,
+    mut ip: *mut *const u8,
+    mut offset: libc::size_t,
 ) {
-    debug_assert!(*ip <= *op as *const BYTE);
+    debug_assert!(*ip <= *op as *const u8);
     if offset < 8 as libc::c_int as libc::c_ulong {
-        static mut dec32table: [U32; 8] = [
-            0 as libc::c_int as U32,
-            1 as libc::c_int as U32,
-            2 as libc::c_int as U32,
-            1 as libc::c_int as U32,
-            4 as libc::c_int as U32,
-            4 as libc::c_int as U32,
-            4 as libc::c_int as U32,
-            4 as libc::c_int as U32,
+        static mut dec32table: [u32; 8] = [
+            0 as libc::c_int as u32,
+            1 as libc::c_int as u32,
+            2 as libc::c_int as u32,
+            1 as libc::c_int as u32,
+            4 as libc::c_int as u32,
+            4 as libc::c_int as u32,
+            4 as libc::c_int as u32,
+            4 as libc::c_int as u32,
         ];
         static mut dec64table: [libc::c_int; 8] = [
             8 as libc::c_int,
@@ -3927,9 +3910,9 @@ unsafe extern "C" fn ZSTD_overlapCopy8(
     debug_assert!((*op).offset_from(*ip) as libc::c_long >= 8 as libc::c_int as libc::c_long);;
 }
 unsafe extern "C" fn ZSTD_safecopy(
-    mut op: *mut BYTE,
-    oend_w: *const BYTE,
-    mut ip: *const BYTE,
+    mut op: *mut u8,
+    oend_w: *const u8,
+    mut ip: *const u8,
     mut length: ptrdiff_t,
     mut ovtype: ZSTD_overlap_e,
 ) {
@@ -3937,7 +3920,7 @@ unsafe extern "C" fn ZSTD_safecopy(
     let oend = op.offset(length as isize);
     debug_assert!(ovtype as libc::c_uint == ZSTD_no_overlap as libc::c_int as libc::c_uint
         && (diff <= -(8 as libc::c_int) as libc::c_long
-            || diff >= 8 as libc::c_int as libc::c_long || op >= oend_w as *mut BYTE)
+            || diff >= 8 as libc::c_int as libc::c_long || op >= oend_w as *mut u8)
         || ovtype as libc::c_uint
             == ZSTD_overlap_src_before_dst as libc::c_int as libc::c_uint
             && diff >= 0 as libc::c_int as libc::c_long);
@@ -3955,12 +3938,12 @@ unsafe extern "C" fn ZSTD_safecopy(
         == ZSTD_overlap_src_before_dst as libc::c_int as libc::c_uint
     {
         debug_assert!(length >= 8 as libc::c_int as libc::c_long);
-        ZSTD_overlapCopy8(&mut op, &mut ip, diff as size_t);
+        ZSTD_overlapCopy8(&mut op, &mut ip, diff as libc::size_t);
         length -= 8 as libc::c_int as libc::c_long;
         debug_assert!(op.offset_from(ip) as libc::c_long >= 8 as libc::c_int as libc::c_long);
         debug_assert!(op <= oend);
     }
-    if oend <= oend_w as *mut BYTE {
+    if oend <= oend_w as *mut u8 {
         ZSTD_wildcopy(
             op as *mut libc::c_void,
             ip as *const libc::c_void,
@@ -3969,8 +3952,8 @@ unsafe extern "C" fn ZSTD_safecopy(
         );
         return;
     }
-    if op <= oend_w as *mut BYTE {
-        debug_assert!(oend > oend_w as *mut BYTE);
+    if op <= oend_w as *mut u8 {
+        debug_assert!(oend > oend_w as *mut u8);
         ZSTD_wildcopy(
             op as *mut libc::c_void,
             ip as *const libc::c_void,
@@ -3989,8 +3972,8 @@ unsafe extern "C" fn ZSTD_safecopy(
     }
 }
 unsafe extern "C" fn ZSTD_safecopyDstBeforeSrc(
-    mut op: *mut BYTE,
-    mut ip: *const BYTE,
+    mut op: *mut u8,
+    mut ip: *const u8,
     mut length: ptrdiff_t,
 ) {
     let diff = op.offset_from(ip) as libc::c_long;
@@ -4037,35 +4020,35 @@ unsafe extern "C" fn ZSTD_safecopyDstBeforeSrc(
 }
 #[inline(never)]
 unsafe extern "C" fn ZSTD_execSequenceEnd(
-    mut op: *mut BYTE,
-    oend: *mut BYTE,
+    mut op: *mut u8,
+    oend: *mut u8,
     mut sequence: seq_t,
-    mut litPtr: *mut *const BYTE,
-    litLimit: *const BYTE,
-    prefixStart: *const BYTE,
-    virtualStart: *const BYTE,
-    dictEnd: *const BYTE,
-) -> size_t {
+    mut litPtr: *mut *const u8,
+    litLimit: *const u8,
+    prefixStart: *const u8,
+    virtualStart: *const u8,
+    dictEnd: *const u8,
+) -> libc::size_t {
     let oLitEnd = op.offset(sequence.litLength as isize);
     let sequenceLength = (sequence.litLength).wrapping_add(sequence.matchLength);
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
-    let mut match_0: *const BYTE = oLitEnd.offset(-(sequence.offset as isize));
+    let mut match_0: *const u8 = oLitEnd.offset(-(sequence.offset as isize));
     let oend_w = oend.offset(-(WILDCOPY_OVERLENGTH as isize));
-    if sequenceLength > oend.offset_from(op) as libc::c_long as size_t {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+    if sequenceLength > oend.offset_from(op) as libc::c_long as libc::size_t {
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    if sequence.litLength > litLimit.offset_from(*litPtr) as libc::c_long as size_t {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+    if sequence.litLength > litLimit.offset_from(*litPtr) as libc::c_long as libc::size_t {
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     debug_assert!(op < op.offset(sequenceLength as isize));
     debug_assert!(oLitEnd < op.offset(sequenceLength as isize));
     ZSTD_safecopy(op, oend_w, *litPtr, sequence.litLength as ptrdiff_t, ZSTD_no_overlap);
     op = oLitEnd;
     *litPtr = iLitEnd;
-    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as size_t {
-        if sequence.offset > oLitEnd.offset_from(virtualStart) as libc::c_long as size_t
+    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as libc::size_t {
+        if sequence.offset > oLitEnd.offset_from(virtualStart) as libc::c_long as libc::size_t
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         match_0 = dictEnd
             .offset(-(prefixStart.offset_from(match_0) as libc::c_long as isize));
@@ -4077,7 +4060,7 @@ unsafe extern "C" fn ZSTD_execSequenceEnd(
             );
             return sequenceLength;
         }
-        let length1 = dictEnd.offset_from(match_0) as libc::c_long as size_t;
+        let length1 = dictEnd.offset_from(match_0) as libc::c_long as libc::size_t;
         libc::memmove(
             oLitEnd as *mut libc::c_void,
             match_0 as *const libc::c_void,
@@ -4086,7 +4069,7 @@ unsafe extern "C" fn ZSTD_execSequenceEnd(
         op = oLitEnd.offset(length1 as isize);
         sequence
             .matchLength = (sequence.matchLength as libc::c_ulong).wrapping_sub(length1)
-            as size_t as size_t;
+            ;
         match_0 = prefixStart;
     }
     ZSTD_safecopy(
@@ -4100,40 +4083,40 @@ unsafe extern "C" fn ZSTD_execSequenceEnd(
 }
 #[inline(never)]
 unsafe extern "C" fn ZSTD_execSequenceEndSplitLitBuffer(
-    mut op: *mut BYTE,
-    oend: *mut BYTE,
-    oend_w: *const BYTE,
+    mut op: *mut u8,
+    oend: *mut u8,
+    oend_w: *const u8,
     mut sequence: seq_t,
-    mut litPtr: *mut *const BYTE,
-    litLimit: *const BYTE,
-    prefixStart: *const BYTE,
-    virtualStart: *const BYTE,
-    dictEnd: *const BYTE,
-) -> size_t {
+    mut litPtr: *mut *const u8,
+    litLimit: *const u8,
+    prefixStart: *const u8,
+    virtualStart: *const u8,
+    dictEnd: *const u8,
+) -> libc::size_t {
     let oLitEnd = op.offset(sequence.litLength as isize);
     let sequenceLength = (sequence.litLength).wrapping_add(sequence.matchLength);
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
-    let mut match_0: *const BYTE = oLitEnd.offset(-(sequence.offset as isize));
-    if sequenceLength > oend.offset_from(op) as libc::c_long as size_t {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+    let mut match_0: *const u8 = oLitEnd.offset(-(sequence.offset as isize));
+    if sequenceLength > oend.offset_from(op) as libc::c_long as libc::size_t {
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    if sequence.litLength > litLimit.offset_from(*litPtr) as libc::c_long as size_t {
-        return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+    if sequence.litLength > litLimit.offset_from(*litPtr) as libc::c_long as libc::size_t {
+        return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     debug_assert!(op < op.offset(sequenceLength as isize));
     debug_assert!(oLitEnd < op.offset(sequenceLength as isize));
-    if op > *litPtr as *mut BYTE
-        && op < (*litPtr).offset(sequence.litLength as isize) as *mut BYTE
+    if op > *litPtr as *mut u8
+        && op < (*litPtr).offset(sequence.litLength as isize) as *mut u8
     {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     ZSTD_safecopyDstBeforeSrc(op, *litPtr, sequence.litLength as ptrdiff_t);
     op = oLitEnd;
     *litPtr = iLitEnd;
-    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as size_t {
-        if sequence.offset > oLitEnd.offset_from(virtualStart) as libc::c_long as size_t
+    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as libc::size_t {
+        if sequence.offset > oLitEnd.offset_from(virtualStart) as libc::c_long as libc::size_t
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         match_0 = dictEnd
             .offset(-(prefixStart.offset_from(match_0) as libc::c_long as isize));
@@ -4145,7 +4128,7 @@ unsafe extern "C" fn ZSTD_execSequenceEndSplitLitBuffer(
             );
             return sequenceLength;
         }
-        let length1 = dictEnd.offset_from(match_0) as libc::c_long as size_t;
+        let length1 = dictEnd.offset_from(match_0) as libc::c_long as libc::size_t;
         libc::memmove(
             oLitEnd as *mut libc::c_void,
             match_0 as *const libc::c_void,
@@ -4154,7 +4137,7 @@ unsafe extern "C" fn ZSTD_execSequenceEndSplitLitBuffer(
         op = oLitEnd.offset(length1 as isize);
         sequence
             .matchLength = (sequence.matchLength as libc::c_ulong).wrapping_sub(length1)
-            as size_t as size_t;
+            ;
         match_0 = prefixStart;
     }
     ZSTD_safecopy(
@@ -4168,27 +4151,27 @@ unsafe extern "C" fn ZSTD_execSequenceEndSplitLitBuffer(
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_execSequence(
-    mut op: *mut BYTE,
-    oend: *mut BYTE,
+    mut op: *mut u8,
+    oend: *mut u8,
     mut sequence: seq_t,
-    mut litPtr: *mut *const BYTE,
-    litLimit: *const BYTE,
-    prefixStart: *const BYTE,
-    virtualStart: *const BYTE,
-    dictEnd: *const BYTE,
-) -> size_t {
+    mut litPtr: *mut *const u8,
+    litLimit: *const u8,
+    prefixStart: *const u8,
+    virtualStart: *const u8,
+    dictEnd: *const u8,
+) -> libc::size_t {
     let oLitEnd = op.offset(sequence.litLength as isize);
     let sequenceLength = (sequence.litLength).wrapping_add(sequence.matchLength);
     let oMatchEnd = op.offset(sequenceLength as isize);
     let oend_w = oend.offset(-(WILDCOPY_OVERLENGTH as isize));
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
-    let mut match_0: *const BYTE = oLitEnd.offset(-(sequence.offset as isize));
+    let mut match_0: *const u8 = oLitEnd.offset(-(sequence.offset as isize));
     debug_assert!(!op.is_null());
     debug_assert!(oend_w < oend);
     if (iLitEnd > litLimit || oMatchEnd > oend_w
         || MEM_32bits() != 0
-            && (oend.offset_from(op) as libc::c_long as size_t)
-                < sequenceLength.wrapping_add(32 as libc::c_int as libc::c_ulong))
+            && (oend.offset_from(op) as libc::c_long as libc::size_t)
+                < sequenceLength.wrapping_add(32))
         as libc::c_int as libc::c_long != 0
     {
         return ZSTD_execSequenceEnd(
@@ -4216,19 +4199,19 @@ unsafe extern "C" fn ZSTD_execSequence(
         ZSTD_wildcopy(
             op.offset(16 as libc::c_int as isize) as *mut libc::c_void,
             (*litPtr).offset(16 as libc::c_int as isize) as *const libc::c_void,
-            (sequence.litLength).wrapping_sub(16 as libc::c_int as libc::c_ulong)
+            (sequence.litLength).wrapping_sub(16)
                 as ptrdiff_t,
             ZSTD_no_overlap,
         );
     }
     op = oLitEnd;
     *litPtr = iLitEnd;
-    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as size_t {
+    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as libc::size_t {
         if (sequence.offset
-            > oLitEnd.offset_from(virtualStart) as libc::c_long as size_t) as libc::c_int
+            > oLitEnd.offset_from(virtualStart) as libc::c_long as libc::size_t) as libc::c_int
             as libc::c_long != 0
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         match_0 = dictEnd
             .offset(match_0.offset_from(prefixStart) as libc::c_long as isize);
@@ -4240,7 +4223,7 @@ unsafe extern "C" fn ZSTD_execSequence(
             );
             return sequenceLength;
         }
-        let length1 = dictEnd.offset_from(match_0) as libc::c_long as size_t;
+        let length1 = dictEnd.offset_from(match_0) as libc::c_long as libc::size_t;
         libc::memmove(
             oLitEnd as *mut libc::c_void,
             match_0 as *const libc::c_void,
@@ -4249,7 +4232,7 @@ unsafe extern "C" fn ZSTD_execSequence(
         op = oLitEnd.offset(length1 as isize);
         sequence
             .matchLength = (sequence.matchLength as libc::c_ulong).wrapping_sub(length1)
-            as size_t as size_t;
+            ;
         match_0 = prefixStart;
     }
     debug_assert!(op <= oMatchEnd);
@@ -4282,27 +4265,27 @@ unsafe extern "C" fn ZSTD_execSequence(
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
-    mut op: *mut BYTE,
-    oend: *mut BYTE,
-    oend_w: *const BYTE,
+    mut op: *mut u8,
+    oend: *mut u8,
+    oend_w: *const u8,
     mut sequence: seq_t,
-    mut litPtr: *mut *const BYTE,
-    litLimit: *const BYTE,
-    prefixStart: *const BYTE,
-    virtualStart: *const BYTE,
-    dictEnd: *const BYTE,
-) -> size_t {
+    mut litPtr: *mut *const u8,
+    litLimit: *const u8,
+    prefixStart: *const u8,
+    virtualStart: *const u8,
+    dictEnd: *const u8,
+) -> libc::size_t {
     let oLitEnd = op.offset(sequence.litLength as isize);
     let sequenceLength = (sequence.litLength).wrapping_add(sequence.matchLength);
     let oMatchEnd = op.offset(sequenceLength as isize);
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
-    let mut match_0: *const BYTE = oLitEnd.offset(-(sequence.offset as isize));
+    let mut match_0: *const u8 = oLitEnd.offset(-(sequence.offset as isize));
     debug_assert!(!op.is_null());
-    debug_assert!(oend_w < oend as *const BYTE);
-    if (iLitEnd > litLimit || oMatchEnd > oend_w as *mut BYTE
+    debug_assert!(oend_w < oend as *const u8);
+    if (iLitEnd > litLimit || oMatchEnd > oend_w as *mut u8
         || MEM_32bits() != 0
-            && (oend.offset_from(op) as libc::c_long as size_t)
-                < sequenceLength.wrapping_add(32 as libc::c_int as libc::c_ulong))
+            && (oend.offset_from(op) as libc::c_long as libc::size_t)
+                < sequenceLength.wrapping_add(32))
         as libc::c_int as libc::c_long != 0
     {
         return ZSTD_execSequenceEndSplitLitBuffer(
@@ -4321,8 +4304,8 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
     debug_assert!(oLitEnd < oMatchEnd);
     debug_assert!(oMatchEnd <= oend);
     debug_assert!(iLitEnd <= litLimit);
-    debug_assert!(oLitEnd <= oend_w as *mut BYTE);
-    debug_assert!(oMatchEnd <= oend_w as *mut BYTE);
+    debug_assert!(oLitEnd <= oend_w as *mut u8);
+    debug_assert!(oMatchEnd <= oend_w as *mut u8);
     debug_assert!(32 as libc::c_int >= 16 as libc::c_int);
     ZSTD_copy16(op as *mut libc::c_void, *litPtr as *const libc::c_void);
     if (sequence.litLength > 16 as libc::c_int as libc::c_ulong) as libc::c_int
@@ -4331,19 +4314,19 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
         ZSTD_wildcopy(
             op.offset(16 as libc::c_int as isize) as *mut libc::c_void,
             (*litPtr).offset(16 as libc::c_int as isize) as *const libc::c_void,
-            (sequence.litLength).wrapping_sub(16 as libc::c_int as libc::c_ulong)
+            (sequence.litLength).wrapping_sub(16)
                 as ptrdiff_t,
             ZSTD_no_overlap,
         );
     }
     op = oLitEnd;
     *litPtr = iLitEnd;
-    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as size_t {
+    if sequence.offset > oLitEnd.offset_from(prefixStart) as libc::c_long as libc::size_t {
         if (sequence.offset
-            > oLitEnd.offset_from(virtualStart) as libc::c_long as size_t) as libc::c_int
+            > oLitEnd.offset_from(virtualStart) as libc::c_long as libc::size_t) as libc::c_int
             as libc::c_long != 0
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         match_0 = dictEnd
             .offset(match_0.offset_from(prefixStart) as libc::c_long as isize);
@@ -4355,7 +4338,7 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
             );
             return sequenceLength;
         }
-        let length1 = dictEnd.offset_from(match_0) as libc::c_long as size_t;
+        let length1 = dictEnd.offset_from(match_0) as libc::c_long as libc::size_t;
         libc::memmove(
             oLitEnd as *mut libc::c_void,
             match_0 as *const libc::c_void,
@@ -4364,11 +4347,11 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
         op = oLitEnd.offset(length1 as isize);
         sequence
             .matchLength = (sequence.matchLength as libc::c_ulong).wrapping_sub(length1)
-            as size_t as size_t;
+            ;
         match_0 = prefixStart;
     }
     debug_assert!(op <= oMatchEnd);
-    debug_assert!(oMatchEnd <= oend_w as *mut BYTE);
+    debug_assert!(oMatchEnd <= oend_w as *mut u8);
     debug_assert!(match_0 >= prefixStart);
     debug_assert!(sequence.matchLength >= 1 as libc::c_int as libc::c_ulong);
     if (sequence.offset >= 16 as libc::c_int as libc::c_ulong) as libc::c_int
@@ -4410,8 +4393,8 @@ unsafe extern "C" fn ZSTD_initFseState(
 unsafe extern "C" fn ZSTD_updateFseStateWithDInfo(
     mut DStatePtr: *mut ZSTD_fseState,
     mut bitD: *mut BIT_DStream_t,
-    mut nextState: U16,
-    mut nbBits: U32,
+    mut nextState: u16,
+    mut nbBits: u32,
 ) {
     let lowBits = BIT_readBits(bitD, nbBits);
     (*DStatePtr).state = (nextState as libc::c_ulong).wrapping_add(lowBits);
@@ -4430,24 +4413,24 @@ unsafe extern "C" fn ZSTD_decodeSequence(
     let mlDInfo = ((*seqState).stateML.table).offset((*seqState).stateML.state as isize);
     let ofDInfo = ((*seqState).stateOffb.table)
         .offset((*seqState).stateOffb.state as isize);
-    seq.matchLength = (*mlDInfo).baseValue as size_t;
-    seq.litLength = (*llDInfo).baseValue as size_t;
+    seq.matchLength = (*mlDInfo).baseValue as libc::size_t;
+    seq.litLength = (*llDInfo).baseValue as libc::size_t;
     let ofBase = (*ofDInfo).baseValue;
     let llBits = (*llDInfo).nbAdditionalBits;
     let mlBits = (*mlDInfo).nbAdditionalBits;
     let ofBits = (*ofDInfo).nbAdditionalBits;
     let totalBits = (llBits as libc::c_int + mlBits as libc::c_int
-        + ofBits as libc::c_int) as BYTE;
+        + ofBits as libc::c_int) as u8;
     let llNext = (*llDInfo).nextState;
     let mlNext = (*mlDInfo).nextState;
     let ofNext = (*ofDInfo).nextState;
-    let llnbBits = (*llDInfo).nbBits as U32;
-    let mlnbBits = (*mlDInfo).nbBits as U32;
-    let ofnbBits = (*ofDInfo).nbBits as U32;
+    let llnbBits = (*llDInfo).nbBits as u32;
+    let mlnbBits = (*mlDInfo).nbBits as u32;
+    let ofnbBits = (*ofDInfo).nbBits as u32;
     debug_assert!(llBits as libc::c_int <= 16 as libc::c_int);
     debug_assert!(mlBits as libc::c_int <= 16 as libc::c_int);
     debug_assert!(ofBits as libc::c_int <= 31 as libc::c_int);
-    let mut offset: size_t = 0;
+    let mut offset: libc::size_t = 0;
     if ofBits as libc::c_int > 1 as libc::c_int {
         if MEM_32bits() != 0 && longOffsets as libc::c_uint != 0
             && ofBits as libc::c_int >= STREAM_ACCUMULATOR_MIN_32
@@ -4456,7 +4439,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                 ZSTD_WINDOWLOG_MAX_32 - STREAM_ACCUMULATOR_MIN_32
             } else {
                 0 as libc::c_int
-            }) as U32;
+            }) as u32;
             offset = (ofBase as libc::c_ulong)
                 .wrapping_add(
                     BIT_readBitsFast(
@@ -4467,7 +4450,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
             BIT_reloadDStream(&mut (*seqState).DStream);
             offset = (offset as libc::c_ulong)
                 .wrapping_add(BIT_readBitsFast(&mut (*seqState).DStream, extraBits))
-                as size_t as size_t;
+                ;
         } else {
             offset = (ofBase as libc::c_ulong)
                 .wrapping_add(
@@ -4486,7 +4469,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
         (*seqState).prevOffset[0 as libc::c_int as usize] = offset;
     } else {
         let ll0 = ((*llDInfo).baseValue == 0 as libc::c_int as libc::c_uint)
-            as libc::c_int as U32;
+            as libc::c_int as u32;
         if (ofBits as libc::c_int == 0 as libc::c_int) as libc::c_int as libc::c_long
             != 0
         {
@@ -4505,13 +4488,13 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                 );
             let mut temp = if offset == 3 as libc::c_int as libc::c_ulong {
                 ((*seqState).prevOffset[0 as libc::c_int as usize])
-                    .wrapping_sub(1 as libc::c_int as libc::c_ulong)
+                    .wrapping_sub(1)
             } else {
                 (*seqState).prevOffset[offset as usize]
             };
             temp = (temp as libc::c_ulong)
-                .wrapping_add((temp == 0) as libc::c_int as libc::c_ulong) as size_t
-                as size_t;
+                .wrapping_add((temp == 0) as libc::c_int as libc::c_ulong) as libc::size_t
+                as libc::size_t;
             if offset != 1 as libc::c_int as libc::c_ulong {
                 (*seqState)
                     .prevOffset[2 as libc::c_int
@@ -4530,7 +4513,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
             .matchLength = (seq.matchLength as libc::c_ulong)
             .wrapping_add(
                 BIT_readBitsFast(&mut (*seqState).DStream, mlBits as libc::c_uint),
-            ) as size_t as size_t;
+            ) ;
     }
     if MEM_32bits() != 0
         && mlBits as libc::c_int + llBits as libc::c_int
@@ -4556,7 +4539,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
             .litLength = (seq.litLength as libc::c_ulong)
             .wrapping_add(
                 BIT_readBitsFast(&mut (*seqState).DStream, llBits as libc::c_uint),
-            ) as size_t as size_t;
+            ) ;
     }
     if MEM_32bits() != 0 {
         BIT_reloadDStream(&mut (*seqState).DStream);
@@ -4588,22 +4571,22 @@ unsafe extern "C" fn ZSTD_decodeSequence(
 unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
-    let mut ip = seqStart as *const BYTE;
+) -> libc::size_t {
+    let mut ip = seqStart as *const u8;
     let iend = ip.offset(seqSize as isize);
-    let ostart = dst as *mut BYTE;
+    let ostart = dst as *mut u8;
     let oend = ostart.offset(maxDstSize as isize);
     let mut op = ostart;
     let mut litPtr = (*dctx).litPtr;
     let mut litBufferEnd = (*dctx).litBufferEnd;
-    let prefixStart = (*dctx).prefixStart as *const BYTE;
-    let vBase = (*dctx).virtualStart as *const BYTE;
-    let dictEnd = (*dctx).dictEnd as *const BYTE;
+    let prefixStart = (*dctx).prefixStart as *const u8;
+    let vBase = (*dctx).virtualStart as *const u8;
+    let dictEnd = (*dctx).dictEnd as *const u8;
     if nbSeq != 0 {
         let mut seqState = seqState_t {
             DStream: BIT_DStream_t {
@@ -4627,22 +4610,22 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             },
             prevOffset: [0; 3],
         };
-        (*dctx).fseEntropy = 1 as libc::c_int as U32;
-        let mut i: U32 = 0;
-        i = 0 as libc::c_int as U32;
+        (*dctx).fseEntropy = 1 as libc::c_int as u32;
+        let mut i: u32 = 0;
+        i = 0 as libc::c_int as u32;
         while i < ZSTD_REP_NUM as libc::c_uint {
-            seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as size_t;
+            seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as libc::size_t;
             i = i.wrapping_add(1);
         }
         if ERR_isError(
             BIT_initDStream(
                 &mut seqState.DStream,
                 ip as *const libc::c_void,
-                iend.offset_from(ip) as libc::c_long as size_t,
+                iend.offset_from(ip) as libc::c_long as libc::size_t,
             ),
         ) != 0
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         ZSTD_initFseState(&mut seqState.stateLL, &mut seqState.DStream, (*dctx).LLTptr);
         ZSTD_initFseState(
@@ -4681,15 +4664,15 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
         }
         if nbSeq > 0 as libc::c_int {
             let leftoverLit = ((*dctx).litBufferEnd).offset_from(litPtr) as libc::c_long
-                as size_t;
+                as libc::size_t;
             if leftoverLit != 0 {
-                if leftoverLit > oend.offset_from(op) as libc::c_long as size_t {
-                    return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+                if leftoverLit > oend.offset_from(op) as libc::c_long as libc::size_t {
+                    return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
                 }
                 ZSTD_safecopyDstBeforeSrc(op, litPtr, leftoverLit as ptrdiff_t);
                 sequence
                     .litLength = (sequence.litLength as libc::c_ulong)
-                    .wrapping_sub(leftoverLit) as size_t as size_t;
+                    .wrapping_sub(leftoverLit) ;
                 op = op.offset(leftoverLit as isize);
             }
             litPtr = ((*dctx).litExtraBuffer).as_mut_ptr();
@@ -4766,26 +4749,26 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             }
         }
         if nbSeq != 0 {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         if (BIT_reloadDStream(&mut seqState.DStream) as libc::c_uint)
             < BIT_DStream_completed as libc::c_int as libc::c_uint
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
-        let mut i_0: U32 = 0;
-        i_0 = 0 as libc::c_int as U32;
+        let mut i_0: u32 = 0;
+        i_0 = 0 as libc::c_int as u32;
         while i_0 < ZSTD_REP_NUM as libc::c_uint {
-            (*dctx).entropy.rep[i_0 as usize] = seqState.prevOffset[i_0 as usize] as U32;
+            (*dctx).entropy.rep[i_0 as usize] = seqState.prevOffset[i_0 as usize] as u32;
             i_0 = i_0.wrapping_add(1);
         }
     }
     if (*dctx).litBufferLocation as libc::c_uint
         == ZSTD_split as libc::c_int as libc::c_uint
     {
-        let lastLLSize = litBufferEnd.offset_from(litPtr) as libc::c_long as size_t;
-        if lastLLSize > oend.offset_from(op) as libc::c_long as size_t {
-            return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+        let lastLLSize = litBufferEnd.offset_from(litPtr) as libc::c_long as libc::size_t;
+        if lastLLSize > oend.offset_from(op) as libc::c_long as libc::size_t {
+            return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         if !op.is_null() {
             libc::memmove(
@@ -4821,9 +4804,9 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             );
         (*dctx).litBufferLocation = ZSTD_not_in_dst;
     }
-    let lastLLSize_0 = litBufferEnd.offset_from(litPtr) as libc::c_long as size_t;
-    if lastLLSize_0 > oend.offset_from(op) as libc::c_long as size_t {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+    let lastLLSize_0 = litBufferEnd.offset_from(litPtr) as libc::c_long as libc::size_t;
+    if lastLLSize_0 > oend.offset_from(op) as libc::c_long as libc::size_t {
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if !op.is_null() {
         libc::memcpy(
@@ -4833,21 +4816,21 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
         );
         op = op.offset(lastLLSize_0 as isize);
     }
-    return op.offset_from(ostart) as libc::c_long as size_t;
+    return op.offset_from(ostart) as libc::c_long as libc::size_t;
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_decompressSequences_body(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
-    let mut ip = seqStart as *const BYTE;
+) -> libc::size_t {
+    let mut ip = seqStart as *const u8;
     let iend = ip.offset(seqSize as isize);
-    let ostart = dst as *mut BYTE;
+    let ostart = dst as *mut u8;
     let oend = if (*dctx).litBufferLocation as libc::c_uint
         == ZSTD_not_in_dst as libc::c_int as libc::c_uint
     {
@@ -4858,9 +4841,9 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
     let mut op = ostart;
     let mut litPtr = (*dctx).litPtr;
     let litEnd = litPtr.offset((*dctx).litSize as isize);
-    let prefixStart = (*dctx).prefixStart as *const BYTE;
-    let vBase = (*dctx).virtualStart as *const BYTE;
-    let dictEnd = (*dctx).dictEnd as *const BYTE;
+    let prefixStart = (*dctx).prefixStart as *const u8;
+    let vBase = (*dctx).virtualStart as *const u8;
+    let dictEnd = (*dctx).dictEnd as *const u8;
     if nbSeq != 0 {
         let mut seqState = seqState_t {
             DStream: BIT_DStream_t {
@@ -4884,22 +4867,22 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
             },
             prevOffset: [0; 3],
         };
-        (*dctx).fseEntropy = 1 as libc::c_int as U32;
-        let mut i: U32 = 0;
-        i = 0 as libc::c_int as U32;
+        (*dctx).fseEntropy = 1 as libc::c_int as u32;
+        let mut i: u32 = 0;
+        i = 0 as libc::c_int as u32;
         while i < ZSTD_REP_NUM as libc::c_uint {
-            seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as size_t;
+            seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as libc::size_t;
             i = i.wrapping_add(1);
         }
         if ERR_isError(
             BIT_initDStream(
                 &mut seqState.DStream,
                 ip as *const libc::c_void,
-                iend.offset_from(ip) as libc::c_long as size_t,
+                iend.offset_from(ip) as libc::c_long as libc::size_t,
             ),
         ) != 0
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         ZSTD_initFseState(&mut seqState.stateLL, &mut seqState.DStream, (*dctx).LLTptr);
         ZSTD_initFseState(
@@ -4937,23 +4920,23 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
             BIT_reloadDStream(&mut seqState.DStream);
         }
         if nbSeq != 0 {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         if (BIT_reloadDStream(&mut seqState.DStream) as libc::c_uint)
             < BIT_DStream_completed as libc::c_int as libc::c_uint
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
-        let mut i_0: U32 = 0;
-        i_0 = 0 as libc::c_int as U32;
+        let mut i_0: u32 = 0;
+        i_0 = 0 as libc::c_int as u32;
         while i_0 < ZSTD_REP_NUM as libc::c_uint {
-            (*dctx).entropy.rep[i_0 as usize] = seqState.prevOffset[i_0 as usize] as U32;
+            (*dctx).entropy.rep[i_0 as usize] = seqState.prevOffset[i_0 as usize] as u32;
             i_0 = i_0.wrapping_add(1);
         }
     }
-    let lastLLSize = litEnd.offset_from(litPtr) as libc::c_long as size_t;
-    if lastLLSize > oend.offset_from(op) as libc::c_long as size_t {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+    let lastLLSize = litEnd.offset_from(litPtr) as libc::c_long as libc::size_t;
+    if lastLLSize > oend.offset_from(op) as libc::c_long as libc::size_t {
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if !op.is_null() {
         libc::memcpy(
@@ -4963,17 +4946,17 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
         );
         op = op.offset(lastLLSize as isize);
     }
-    return op.offset_from(ostart) as libc::c_long as size_t;
+    return op.offset_from(ostart) as libc::c_long as libc::size_t;
 }
 unsafe extern "C" fn ZSTD_decompressSequences_default(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     return ZSTD_decompressSequences_body(
         dctx,
         dst,
@@ -4987,12 +4970,12 @@ unsafe extern "C" fn ZSTD_decompressSequences_default(
 unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer_default(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     return ZSTD_decompressSequences_bodySplitLitBuffer(
         dctx,
         dst,
@@ -5005,13 +4988,13 @@ unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer_default(
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_prefetchMatch(
-    mut prefetchPos: size_t,
+    mut prefetchPos: libc::size_t,
     sequence: seq_t,
-    prefixStart: *const BYTE,
-    dictEnd: *const BYTE,
-) -> size_t {
+    prefixStart: *const u8,
+    dictEnd: *const u8,
+) -> libc::size_t {
     prefetchPos = (prefetchPos as libc::c_ulong).wrapping_add(sequence.litLength)
-        as size_t as size_t;
+        ;
     let matchBase = if sequence.offset > prefetchPos { dictEnd } else { prefixStart };
     let match_0 = matchBase
         .offset(prefetchPos as isize)
@@ -5022,15 +5005,15 @@ unsafe extern "C" fn ZSTD_prefetchMatch(
 unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
-    let mut ip = seqStart as *const BYTE;
+) -> libc::size_t {
+    let mut ip = seqStart as *const u8;
     let iend = ip.offset(seqSize as isize);
-    let ostart = dst as *mut BYTE;
+    let ostart = dst as *mut u8;
     let oend = if (*dctx).litBufferLocation as libc::c_uint
         == ZSTD_in_dst as libc::c_int as libc::c_uint
     {
@@ -5041,9 +5024,9 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
     let mut op = ostart;
     let mut litPtr = (*dctx).litPtr;
     let mut litBufferEnd = (*dctx).litBufferEnd;
-    let prefixStart = (*dctx).prefixStart as *const BYTE;
-    let dictStart = (*dctx).virtualStart as *const BYTE;
-    let dictEnd = (*dctx).dictEnd as *const BYTE;
+    let prefixStart = (*dctx).prefixStart as *const u8;
+    let dictStart = (*dctx).virtualStart as *const u8;
+    let dictEnd = (*dctx).dictEnd as *const u8;
     if nbSeq != 0 {
         let mut sequences: [seq_t; 8] = [seq_t {
             litLength: 0,
@@ -5074,12 +5057,12 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             prevOffset: [0; 3],
         };
         let mut seqNb: libc::c_int = 0;
-        let mut prefetchPos = op.offset_from(prefixStart) as libc::c_long as size_t;
-        (*dctx).fseEntropy = 1 as libc::c_int as U32;
+        let mut prefetchPos = op.offset_from(prefixStart) as libc::c_long as libc::size_t;
+        (*dctx).fseEntropy = 1 as libc::c_int as u32;
         let mut i: libc::c_int = 0;
         i = 0 as libc::c_int;
         while i < ZSTD_REP_NUM {
-            seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as size_t;
+            seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as libc::size_t;
             i += 1;
         }
         debug_assert!(!dst.is_null());
@@ -5088,11 +5071,11 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             BIT_initDStream(
                 &mut seqState.DStream,
                 ip as *const libc::c_void,
-                iend.offset_from(ip) as libc::c_long as size_t,
+                iend.offset_from(ip) as libc::c_long as libc::size_t,
             ),
         ) != 0
         {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         ZSTD_initFseState(&mut seqState.stateLL, &mut seqState.DStream, (*dctx).LLTptr);
         ZSTD_initFseState(
@@ -5116,13 +5099,13 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             seqNb += 1;
         }
         if seqNb < seqAdvance {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         while BIT_reloadDStream(&mut seqState.DStream) as libc::c_uint
             <= BIT_DStream_completed as libc::c_int as libc::c_uint && seqNb < nbSeq
         {
             let mut sequence_0 = ZSTD_decodeSequence(&mut seqState, isLongOffset);
-            let mut oneSeqSize: size_t = 0;
+            let mut oneSeqSize: libc::size_t = 0;
             if (*dctx).litBufferLocation as libc::c_uint
                 == ZSTD_split as libc::c_int as libc::c_uint
                 && litPtr
@@ -5132,17 +5115,17 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                     ) > (*dctx).litBufferEnd
             {
                 let leftoverLit = ((*dctx).litBufferEnd).offset_from(litPtr)
-                    as libc::c_long as size_t;
+                    as libc::c_long as libc::size_t;
                 if leftoverLit != 0 {
-                    if leftoverLit > oend.offset_from(op) as libc::c_long as size_t {
-                        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+                    if leftoverLit > oend.offset_from(op) as libc::c_long as libc::size_t {
+                        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
                     }
                     ZSTD_safecopyDstBeforeSrc(op, litPtr, leftoverLit as ptrdiff_t);
                     sequences[(seqNb - ADVANCED_SEQS & STORED_SEQS_MASK) as usize]
                         .litLength = (sequences[(seqNb - ADVANCED_SEQS
                             & STORED_SEQS_MASK) as usize]
                         .litLength as libc::c_ulong)
-                        .wrapping_sub(leftoverLit) as size_t as size_t;
+                        .wrapping_sub(leftoverLit) ;
                     op = op.offset(leftoverLit as isize);
                 }
                 litPtr = ((*dctx).litExtraBuffer).as_mut_ptr();
@@ -5239,7 +5222,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             seqNb += 1;
         }
         if seqNb < nbSeq {
-            return -(ZSTD_error_corruption_detected as libc::c_int) as size_t;
+            return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
         seqNb -= seqAdvance;
         while seqNb < nbSeq {
@@ -5251,15 +5234,15 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                 && litPtr.offset((*sequence_1).litLength as isize) > (*dctx).litBufferEnd
             {
                 let leftoverLit_0 = ((*dctx).litBufferEnd).offset_from(litPtr)
-                    as libc::c_long as size_t;
+                    as libc::c_long as libc::size_t;
                 if leftoverLit_0 != 0 {
-                    if leftoverLit_0 > oend.offset_from(op) as libc::c_long as size_t {
-                        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+                    if leftoverLit_0 > oend.offset_from(op) as libc::c_long as libc::size_t {
+                        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
                     }
                     ZSTD_safecopyDstBeforeSrc(op, litPtr, leftoverLit_0 as ptrdiff_t);
                     (*sequence_1)
                         .litLength = ((*sequence_1).litLength as libc::c_ulong)
-                        .wrapping_sub(leftoverLit_0) as size_t as size_t;
+                        .wrapping_sub(leftoverLit_0) ;
                     op = op.offset(leftoverLit_0 as isize);
                 }
                 litPtr = ((*dctx).litExtraBuffer).as_mut_ptr();
@@ -5337,19 +5320,19 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             }
             seqNb += 1;
         }
-        let mut i_0: U32 = 0;
-        i_0 = 0 as libc::c_int as U32;
+        let mut i_0: u32 = 0;
+        i_0 = 0 as libc::c_int as u32;
         while i_0 < ZSTD_REP_NUM as libc::c_uint {
-            (*dctx).entropy.rep[i_0 as usize] = seqState.prevOffset[i_0 as usize] as U32;
+            (*dctx).entropy.rep[i_0 as usize] = seqState.prevOffset[i_0 as usize] as u32;
             i_0 = i_0.wrapping_add(1);
         }
     }
     if (*dctx).litBufferLocation as libc::c_uint
         == ZSTD_split as libc::c_int as libc::c_uint
     {
-        let lastLLSize = litBufferEnd.offset_from(litPtr) as libc::c_long as size_t;
-        if lastLLSize > oend.offset_from(op) as libc::c_long as size_t {
-            return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+        let lastLLSize = litBufferEnd.offset_from(litPtr) as libc::c_long as libc::size_t;
+        if lastLLSize > oend.offset_from(op) as libc::c_long as libc::size_t {
+            return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         if !op.is_null() {
             libc::memmove(
@@ -5384,9 +5367,9 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                 }) as isize,
             );
     }
-    let lastLLSize_0 = litBufferEnd.offset_from(litPtr) as libc::c_long as size_t;
-    if lastLLSize_0 > oend.offset_from(op) as libc::c_long as size_t {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+    let lastLLSize_0 = litBufferEnd.offset_from(litPtr) as libc::c_long as libc::size_t;
+    if lastLLSize_0 > oend.offset_from(op) as libc::c_long as libc::size_t {
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if !op.is_null() {
         libc::memmove(
@@ -5396,7 +5379,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
         );
         op = op.offset(lastLLSize_0 as isize);
     }
-    return op.offset_from(ostart) as libc::c_long as size_t;
+    return op.offset_from(ostart) as libc::c_long as libc::size_t;
 }
 pub const STORED_SEQS: libc::c_int = 8 as libc::c_int;
 pub const STORED_SEQS_MASK: libc::c_int = STORED_SEQS - 1 as libc::c_int;
@@ -5404,12 +5387,12 @@ pub const ADVANCED_SEQS: libc::c_int = STORED_SEQS;
 unsafe extern "C" fn ZSTD_decompressSequencesLong_default(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     return ZSTD_decompressSequencesLong_body(
         dctx,
         dst,
@@ -5423,12 +5406,12 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_default(
 unsafe extern "C" fn ZSTD_decompressSequences_bmi2(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     return ZSTD_decompressSequences_body(
         dctx,
         dst,
@@ -5442,12 +5425,12 @@ unsafe extern "C" fn ZSTD_decompressSequences_bmi2(
 unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer_bmi2(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     return ZSTD_decompressSequences_bodySplitLitBuffer(
         dctx,
         dst,
@@ -5461,12 +5444,12 @@ unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer_bmi2(
 unsafe extern "C" fn ZSTD_decompressSequencesLong_bmi2(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     return ZSTD_decompressSequencesLong_body(
         dctx,
         dst,
@@ -5480,12 +5463,12 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_bmi2(
 unsafe extern "C" fn ZSTD_decompressSequences(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     if ZSTD_DCtx_get_bmi2(dctx) != 0 {
         return ZSTD_decompressSequences_bmi2(
             dctx,
@@ -5510,12 +5493,12 @@ unsafe extern "C" fn ZSTD_decompressSequences(
 unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     if ZSTD_DCtx_get_bmi2(dctx) != 0 {
         return ZSTD_decompressSequencesSplitLitBuffer_bmi2(
             dctx,
@@ -5540,12 +5523,12 @@ unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer(
 unsafe extern "C" fn ZSTD_decompressSequencesLong(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut maxDstSize: size_t,
+    mut maxDstSize: libc::size_t,
     mut seqStart: *const libc::c_void,
-    mut seqSize: size_t,
+    mut seqSize: libc::size_t,
     mut nbSeq: libc::c_int,
     isLongOffset: ZSTD_longOffset_e,
-) -> size_t {
+) -> libc::size_t {
     if ZSTD_DCtx_get_bmi2(dctx) != 0 {
         return ZSTD_decompressSequencesLong_bmi2(
             dctx,
@@ -5568,10 +5551,10 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong(
     );
 }
 unsafe extern "C" fn ZSTD_totalHistorySize(
-    mut op: *mut BYTE,
-    mut virtualStart: *const BYTE,
-) -> size_t {
-    return op.offset_from(virtualStart) as libc::c_long as size_t;
+    mut op: *mut u8,
+    mut virtualStart: *const u8,
+) -> libc::size_t {
+    return op.offset_from(virtualStart) as libc::c_long as libc::size_t;
 }
 unsafe extern "C" fn ZSTD_getOffsetInfo(
     mut offTable: *const ZSTD_seqSymbol,
@@ -5590,10 +5573,10 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
             .offset(0 as libc::c_int as isize))
             .tableLog;
         let mut table = offTable.offset(1 as libc::c_int as isize);
-        let max = ((1 as libc::c_int) << tableLog) as U32;
-        let mut u: U32 = 0;
+        let max = ((1 as libc::c_int) << tableLog) as u32;
+        let mut u: u32 = 0;
         debug_assert!(max <= ((1 as libc::c_int) << 8 as libc::c_int) as libc::c_uint);
-        u = 0 as libc::c_int as U32;
+        u = 0 as libc::c_int as u32;
         while u < max {
             info
                 .maxNbAdditionalBits = if info.maxNbAdditionalBits
@@ -5608,7 +5591,7 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
             {
                 info
                     .longOffsetShare = (info.longOffsetShare)
-                    .wrapping_add(1 as libc::c_int as libc::c_uint);
+                    .wrapping_add(1);
             }
             u = u.wrapping_add(1);
         }
@@ -5617,22 +5600,22 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
     }
     return info;
 }
-unsafe extern "C" fn ZSTD_maxShortOffset() -> size_t {
+unsafe extern "C" fn ZSTD_maxShortOffset() -> libc::size_t {
     if MEM_64bits() != 0 {
-        return -(1 as libc::c_int) as size_t
+        return -(1 as libc::c_int) as libc::size_t
     } else {
-        let maxOffbase = ((1 as libc::c_int as size_t)
+        let maxOffbase = ((1 as libc::c_int as libc::size_t)
             << ((if MEM_32bits() != 0 {
                 STREAM_ACCUMULATOR_MIN_32
             } else {
                 STREAM_ACCUMULATOR_MIN_64
-            }) as U32)
-                .wrapping_add(1 as libc::c_int as libc::c_uint))
-            .wrapping_sub(1 as libc::c_int as libc::c_ulong);
+            }) as u32)
+                .wrapping_add(1))
+            .wrapping_sub(1);
         let maxOffset = maxOffbase.wrapping_sub(ZSTD_REP_NUM as libc::c_ulong);
-        debug_assert!(ZSTD_highbit32(maxOffbase as U32)
+        debug_assert!(ZSTD_highbit32(maxOffbase as u32)
             == (if MEM_32bits() != 0 { 25 as libc::c_int } else { 57 as libc::c_int })
-                as U32);
+                as u32);
         return maxOffset;
     };
 }
@@ -5640,14 +5623,14 @@ unsafe extern "C" fn ZSTD_maxShortOffset() -> size_t {
 pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut dstCapacity: size_t,
+    mut dstCapacity: libc::size_t,
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
+    mut srcSize: libc::size_t,
     streaming: streaming_operation,
-) -> size_t {
-    let mut ip = src as *const BYTE;
+) -> libc::size_t {
+    let mut ip = src as *const u8;
     if srcSize > ZSTD_blockSizeMax(dctx) {
-        return -(ZSTD_error_srcSize_wrong as libc::c_int) as size_t;
+        return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     let litCSize = ZSTD_decodeLiteralsBlock(
         dctx,
@@ -5661,15 +5644,15 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         return litCSize;
     }
     ip = ip.offset(litCSize as isize);
-    srcSize = (srcSize as libc::c_ulong).wrapping_sub(litCSize) as size_t as size_t;
+    srcSize = (srcSize as libc::c_ulong).wrapping_sub(litCSize) ;
     let blockSizeMax = if dstCapacity < ZSTD_blockSizeMax(dctx) {
         dstCapacity
     } else {
         ZSTD_blockSizeMax(dctx)
     };
     let totalHistorySize = ZSTD_totalHistorySize(
-        (dst as *mut BYTE).offset(blockSizeMax as isize),
-        (*dctx).virtualStart as *const BYTE,
+        (dst as *mut u8).offset(blockSizeMax as isize),
+        (*dctx).virtualStart as *const u8,
     );
     let mut isLongOffset = (MEM_32bits() != 0
         && totalHistorySize > ZSTD_maxShortOffset()) as libc::c_int as ZSTD_longOffset_e;
@@ -5685,19 +5668,19 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         return seqHSize;
     }
     ip = ip.offset(seqHSize as isize);
-    srcSize = (srcSize as libc::c_ulong).wrapping_sub(seqHSize) as size_t as size_t;
+    srcSize = (srcSize as libc::c_ulong).wrapping_sub(seqHSize) ;
     if (dst.is_null() || dstCapacity == 0 as libc::c_int as libc::c_ulong)
         && nbSeq > 0 as libc::c_int
     {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if MEM_64bits() != 0
-        && ::core::mem::size_of::<size_t>() as libc::c_ulong
+        && ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
             == ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong
-        && (-(1 as libc::c_int) as size_t).wrapping_sub(dst as size_t)
-            < ((1 as libc::c_int) << 20 as libc::c_int) as size_t
+        && (-(1 as libc::c_int) as libc::size_t).wrapping_sub(dst as libc::size_t)
+            < ((1 as libc::c_int) << 20 as libc::c_int) as libc::size_t
     {
-        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+        return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if isLongOffset as libc::c_uint != 0
         || usePrefetchDecoder == 0
@@ -5712,7 +5695,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
                     STREAM_ACCUMULATOR_MIN_32
                 } else {
                     STREAM_ACCUMULATOR_MIN_64
-                }) as U32
+                }) as u32
         {
             isLongOffset = ZSTD_lo_isRegularOffset;
         }
@@ -5721,7 +5704,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
                 7 as libc::c_int
             } else {
                 20 as libc::c_int
-            }) as U32;
+            }) as u32;
             usePrefetchDecoder = (info.longOffsetShare >= minShare) as libc::c_int;
         }
     }
@@ -5765,7 +5748,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
 pub unsafe extern "C" fn ZSTD_checkContinuity(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *const libc::c_void,
-    mut dstSize: size_t,
+    mut dstSize: libc::size_t,
 ) {
     if dst != (*dctx).previousDstEnd && dstSize > 0 as libc::c_int as libc::c_ulong {
         (*dctx).dictEnd = (*dctx).previousDstEnd;
@@ -5784,11 +5767,11 @@ pub unsafe extern "C" fn ZSTD_checkContinuity(
 pub unsafe extern "C" fn ZSTD_decompressBlock_deprecated(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut dstCapacity: size_t,
+    mut dstCapacity: libc::size_t,
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
-) -> size_t {
-    let mut dSize: size_t = 0;
+    mut srcSize: libc::size_t,
+) -> libc::size_t {
+    let mut dSize: libc::size_t = 0;
     (*dctx).isFrameDecompression = 0 as libc::c_int;
     ZSTD_checkContinuity(dctx, dst, dstCapacity);
     dSize = ZSTD_decompressBlock_internal(
@@ -5808,9 +5791,9 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_deprecated(
 pub unsafe extern "C" fn ZSTD_decompressBlock(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut libc::c_void,
-    mut dstCapacity: size_t,
+    mut dstCapacity: libc::size_t,
     mut src: *const libc::c_void,
-    mut srcSize: size_t,
-) -> size_t {
+    mut srcSize: libc::size_t,
+) -> libc::size_t {
     return ZSTD_decompressBlock_deprecated(dctx, dst, dstCapacity, src, srcSize);
 }

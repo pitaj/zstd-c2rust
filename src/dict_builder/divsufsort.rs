@@ -3,7 +3,6 @@ extern "C" {
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
 }
-pub type size_t = libc::c_ulong;
 pub type trbudget_t = _trbudget_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -4255,7 +4254,7 @@ pub unsafe extern "C" fn divbwt(
     B = A;
     if B.is_null() {
         B = malloc(
-            ((n + 1 as libc::c_int) as size_t)
+            ((n + 1 as libc::c_int) as libc::size_t)
                 .wrapping_mul(::core::mem::size_of::<libc::c_int>() as libc::c_ulong),
         ) as *mut libc::c_int;
     }

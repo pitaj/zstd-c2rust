@@ -40,8 +40,8 @@ extern "C" {
     fn exit(_: libc::c_int) -> !;
     fn qsort(
         __base: *mut libc::c_void,
-        __nmemb: size_t,
-        __size: size_t,
+        __nmemb: libc::size_t,
+        __size: libc::size_t,
         __compar: __compar_fn_t,
     );
     fn isatty(__fd: libc::c_int) -> libc::c_int;
@@ -74,7 +74,6 @@ extern "C" {
     fn opendir(__name: *const libc::c_char) -> *mut DIR;
     fn readdir(__dirp: *mut DIR) -> *mut dirent;
 }
-pub type __uint64_t = libc::c_ulong;
 pub type __dev_t = libc::c_ulong;
 pub type __uid_t = libc::c_uint;
 pub type __gid_t = libc::c_uint;
@@ -87,7 +86,6 @@ pub type __time_t = libc::c_long;
 pub type __blksize_t = libc::c_long;
 pub type __blkcnt_t = libc::c_long;
 pub type __syscall_slong_t = libc::c_long;
-pub type size_t = libc::c_ulong;
 pub type C2RustUnnamed = libc::c_uint;
 pub const _SC_SIGSTKSZ: C2RustUnnamed = 250;
 pub const _SC_MINSIGSTKSZ: C2RustUnnamed = 249;
@@ -335,7 +333,7 @@ pub struct _IO_FILE {
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
     pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: size_t,
+    pub __pad5: libc::size_t,
     pub _mode: libc::c_int,
     pub _unused2: [libc::c_char; 20],
 }
@@ -371,8 +369,6 @@ pub struct stat {
 pub type __compar_fn_t = Option::<
     unsafe extern "C" fn(*const libc::c_void, *const libc::c_void) -> libc::c_int,
 >;
-pub type uint64_t = __uint64_t;
-pub type U64 = uint64_t;
 pub type stat_t = stat;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -392,8 +388,8 @@ pub union charunion {
 pub struct FileNamesTable {
     pub fileNames: *mut *const libc::c_char,
     pub buf: *mut libc::c_char,
-    pub tableSize: size_t,
-    pub tableCapacity: size_t,
+    pub tableSize: libc::size_t,
+    pub tableCapacity: libc::size_t,
 }
 pub type DIR = __dirstream;
 #[derive(Copy, Clone)]
@@ -421,7 +417,7 @@ static mut g_traceDepth: libc::c_int = 0 as libc::c_int;
 pub static mut g_traceFileStat: libc::c_int = 0 as libc::c_int;
 unsafe extern "C" fn UTIL_realloc(
     mut ptr: *mut libc::c_void,
-    mut size: size_t,
+    mut size: libc::size_t,
 ) -> *mut libc::c_void {
     let mut newptr = realloc(ptr, size);
     if !newptr.is_null() {
@@ -1268,7 +1264,7 @@ pub unsafe extern "C" fn UTIL_fakeStderrIsConsole() {
     g_fakeStderrIsConsole = 1 as libc::c_int;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_getFileSize(mut infilename: *const libc::c_char) -> U64 {
+pub unsafe extern "C" fn UTIL_getFileSize(mut infilename: *const libc::c_char) -> u64 {
     let mut statbuf = stat_t {
         st_dev: 0,
         st_ino: 0,
@@ -1312,7 +1308,7 @@ pub unsafe extern "C" fn UTIL_getFileSize(mut infilename: *const libc::c_char) -
                 -(1 as libc::c_int),
             );
         }
-        return UTIL_FILESIZE_UNKNOWN as U64;
+        return UTIL_FILESIZE_UNKNOWN as u64;
     }
     let size = UTIL_getFileSizeStat(&mut statbuf);
     if g_traceFileStat != 0 {
@@ -1328,20 +1324,20 @@ pub unsafe extern "C" fn UTIL_getFileSize(mut infilename: *const libc::c_char) -
     return size;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_getFileSizeStat(mut statbuf: *const stat_t) -> U64 {
+pub unsafe extern "C" fn UTIL_getFileSizeStat(mut statbuf: *const stat_t) -> u64 {
     if UTIL_isRegularFileStat(statbuf) == 0 {
-        return UTIL_FILESIZE_UNKNOWN as U64;
+        return UTIL_FILESIZE_UNKNOWN as u64;
     }
     if !((*statbuf).st_mode & __S_IFMT as libc::c_uint
         == 0o100000 as libc::c_int as libc::c_uint)
     {
-        return UTIL_FILESIZE_UNKNOWN as U64;
+        return UTIL_FILESIZE_UNKNOWN as u64;
     }
-    return (*statbuf).st_size as U64;
+    return (*statbuf).st_size as u64;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_makeHumanReadableSize(
-    mut size: U64,
+    mut size: u64,
 ) -> UTIL_HumanReadableSize_t {
     let mut hrs = UTIL_HumanReadableSize_t {
         value: 0.,
@@ -1405,7 +1401,7 @@ pub unsafe extern "C" fn UTIL_makeHumanReadableSize(
             hrs.value = size as libc::c_double;
             hrs.suffix = b" B\0" as *const u8 as *const libc::c_char;
         }
-        if hrs.value >= 100 as libc::c_int as libc::c_double || hrs.value as U64 == size
+        if hrs.value >= 100 as libc::c_int as libc::c_double || hrs.value as u64 == size
         {
             hrs.precision = 0 as libc::c_int;
         } else if hrs.value >= 10 as libc::c_int as libc::c_double {
@@ -1422,8 +1418,8 @@ pub unsafe extern "C" fn UTIL_makeHumanReadableSize(
 pub unsafe extern "C" fn UTIL_getTotalFileSize(
     mut fileNamesTable: *const *const libc::c_char,
     mut nbFiles: libc::c_uint,
-) -> U64 {
-    let mut total = 0 as libc::c_int as U64;
+) -> u64 {
+    let mut total = 0 as libc::c_int as u64;
     let mut n: libc::c_uint = 0;
     if g_traceFileStat != 0 {
         fprintf(
@@ -1443,7 +1439,7 @@ pub unsafe extern "C" fn UTIL_getTotalFileSize(
     n = 0 as libc::c_int as libc::c_uint;
     while n < nbFiles {
         let size = UTIL_getFileSize(*fileNamesTable.offset(n as isize));
-        if size == UTIL_FILESIZE_UNKNOWN as U64 {
+        if size == UTIL_FILESIZE_UNKNOWN as u64 {
             if g_traceFileStat != 0 {
                 g_traceDepth -= 1;
                 fprintf(
@@ -1454,9 +1450,9 @@ pub unsafe extern "C" fn UTIL_getTotalFileSize(
                     -(1 as libc::c_int),
                 );
             }
-            return UTIL_FILESIZE_UNKNOWN as U64;
+            return UTIL_FILESIZE_UNKNOWN as u64;
         }
-        total = (total as libc::c_ulong).wrapping_add(size) as U64 as U64;
+        total = (total as libc::c_ulong).wrapping_add(size) ;
         n = n.wrapping_add(1);
     }
     if g_traceFileStat != 0 {
@@ -1473,32 +1469,32 @@ pub unsafe extern "C" fn UTIL_getTotalFileSize(
 }
 unsafe extern "C" fn readLineFromFile(
     mut buf: *mut libc::c_char,
-    mut len: size_t,
+    mut len: libc::size_t,
     mut file: *mut FILE,
-) -> size_t {
+) -> libc::size_t {
     debug_assert!(feof(file) == 0);
     if (fgets(buf, len as libc::c_int, file)).is_null() {
-        return 0 as libc::c_int as size_t;
+        return 0 as libc::c_int as libc::size_t;
     }
     let mut linelen = strlen(buf);
     if strlen(buf) == 0 as libc::c_int as libc::c_ulong {
-        return 0 as libc::c_int as size_t;
+        return 0 as libc::c_int as libc::size_t;
     }
-    if *buf.offset(linelen.wrapping_sub(1 as libc::c_int as libc::c_ulong) as isize)
+    if *buf.offset(linelen.wrapping_sub(1) as isize)
         as libc::c_int == '\n' as i32
     {
         linelen = linelen.wrapping_sub(1);
     }
     *buf.offset(linelen as isize) = '\0' as i32 as libc::c_char;
-    return linelen.wrapping_add(1 as libc::c_int as libc::c_ulong);
+    return linelen.wrapping_add(1);
 }
 unsafe extern "C" fn readLinesFromFile(
     mut dst: *mut libc::c_void,
-    mut dstCapacity: size_t,
+    mut dstCapacity: libc::size_t,
     mut inputFileName: *const libc::c_char,
 ) -> libc::c_int {
     let mut nbFiles = 0 as libc::c_int;
-    let mut pos = 0 as libc::c_int as size_t;
+    let mut pos = 0 as libc::c_int as libc::size_t;
     let buf = dst as *mut libc::c_char;
     let inputFile = fopen(inputFileName, b"r\0" as *const u8 as *const libc::c_char);
     debug_assert!(!dst.is_null());
@@ -1518,7 +1514,7 @@ unsafe extern "C" fn readLinesFromFile(
             break;
         }
         debug_assert!(pos.wrapping_add(lineLength) <= dstCapacity);
-        pos = (pos as libc::c_ulong).wrapping_add(lineLength) as size_t as size_t;
+        pos = (pos as libc::c_ulong).wrapping_add(lineLength) ;
         nbFiles += 1;
     }
     if !(fclose(inputFile) == 0 as libc::c_int) {
@@ -1540,10 +1536,10 @@ unsafe extern "C" fn readLinesFromFile(
 pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
     mut inputFileName: *const libc::c_char,
 ) -> *mut FileNamesTable {
-    let mut nbFiles = 0 as libc::c_int as size_t;
+    let mut nbFiles = 0 as libc::c_int as libc::size_t;
     let mut buf = 0 as *mut libc::c_char;
-    let mut bufSize: size_t = 0;
-    let mut pos = 0 as libc::c_int as size_t;
+    let mut bufSize: libc::size_t = 0;
+    let mut pos = 0 as libc::c_int as libc::size_t;
     let mut statbuf = stat_t {
         st_dev: 0,
         st_ino: 0,
@@ -1570,7 +1566,7 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
     if inputFileSize > MAX_FILE_OF_FILE_NAMES_SIZE as libc::c_ulong {
         return NULL as *mut FileNamesTable;
     }
-    bufSize = inputFileSize.wrapping_add(1 as libc::c_int as libc::c_ulong);
+    bufSize = inputFileSize.wrapping_add(1);
     buf = malloc(bufSize) as *mut libc::c_char;
     if buf.is_null() {
         if g_utilDisplayLevel >= 1 as libc::c_int {
@@ -1594,7 +1590,7 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
         free(buf as *mut libc::c_void);
         return NULL as *mut FileNamesTable;
     }
-    nbFiles = ret_nbFiles as size_t;
+    nbFiles = ret_nbFiles as libc::size_t;
     let mut filenamesTable = malloc(
         nbFiles
             .wrapping_mul(::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong),
@@ -1612,17 +1608,17 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
         }
         exit(1 as libc::c_int);
     }
-    let mut fnb: size_t = 0;
-    fnb = 0 as libc::c_int as size_t;
-    pos = 0 as libc::c_int as size_t;
+    let mut fnb: libc::size_t = 0;
+    fnb = 0 as libc::c_int as libc::size_t;
+    pos = 0 as libc::c_int as libc::size_t;
     while fnb < nbFiles {
         let ref mut fresh0 = *filenamesTable.offset(fnb as isize);
         *fresh0 = buf.offset(pos as isize);
         pos = (pos as libc::c_ulong)
             .wrapping_add(
                 (strlen(buf.offset(pos as isize)))
-                    .wrapping_add(1 as libc::c_int as libc::c_ulong),
-            ) as size_t as size_t;
+                    .wrapping_add(1),
+            ) ;
         fnb = fnb.wrapping_add(1);
     }
     debug_assert!(pos <= bufSize);
@@ -1630,8 +1626,8 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
 }
 unsafe extern "C" fn UTIL_assembleFileNamesTable2(
     mut filenames: *mut *const libc::c_char,
-    mut tableSize: size_t,
-    mut tableCapacity: size_t,
+    mut tableSize: libc::size_t,
+    mut tableCapacity: libc::size_t,
     mut buf: *mut libc::c_char,
 ) -> *mut FileNamesTable {
     let table = malloc(::core::mem::size_of::<FileNamesTable>() as libc::c_ulong)
@@ -1658,7 +1654,7 @@ unsafe extern "C" fn UTIL_assembleFileNamesTable2(
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_assembleFileNamesTable(
     mut filenames: *mut *const libc::c_char,
-    mut tableSize: size_t,
+    mut tableSize: libc::size_t,
     mut buf: *mut libc::c_char,
 ) -> *mut FileNamesTable {
     return UTIL_assembleFileNamesTable2(filenames, tableSize, tableSize, buf);
@@ -1674,7 +1670,7 @@ pub unsafe extern "C" fn UTIL_freeFileNamesTable(mut table: *mut FileNamesTable)
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_allocateFileNamesTable(
-    mut tableSize: size_t,
+    mut tableSize: libc::size_t,
 ) -> *mut FileNamesTable {
     let fnTable = malloc(
         tableSize
@@ -1685,7 +1681,7 @@ pub unsafe extern "C" fn UTIL_allocateFileNamesTable(
         return NULL as *mut FileNamesTable;
     }
     fnt = UTIL_assembleFileNamesTable(fnTable, tableSize, NULL as *mut libc::c_char);
-    (*fnt).tableSize = 0 as libc::c_int as size_t;
+    (*fnt).tableSize = 0 as libc::c_int as libc::size_t;
     return fnt;
 }
 #[no_mangle]
@@ -1693,8 +1689,8 @@ pub unsafe extern "C" fn UTIL_searchFileNamesTable(
     mut table: *mut FileNamesTable,
     mut name: *const libc::c_char,
 ) -> libc::c_int {
-    let mut i: size_t = 0;
-    i = 0 as libc::c_int as size_t;
+    let mut i: libc::size_t = 0;
+    i = 0 as libc::c_int as libc::size_t;
     while i < (*table).tableSize {
         if strcmp(*((*table).fileNames).offset(i as isize), name) == 0 {
             return i as libc::c_int;
@@ -1713,18 +1709,18 @@ pub unsafe extern "C" fn UTIL_refFilename(
     *fresh1 = filename;
     (*fnt).tableSize = ((*fnt).tableSize).wrapping_add(1);
 }
-unsafe extern "C" fn getTotalTableSize(mut table: *mut FileNamesTable) -> size_t {
-    let mut fnb = 0 as libc::c_int as size_t;
-    let mut totalSize = 0 as libc::c_int as size_t;
-    fnb = 0 as libc::c_int as size_t;
+unsafe extern "C" fn getTotalTableSize(mut table: *mut FileNamesTable) -> libc::size_t {
+    let mut fnb = 0 as libc::c_int as libc::size_t;
+    let mut totalSize = 0 as libc::c_int as libc::size_t;
+    fnb = 0 as libc::c_int as libc::size_t;
     while fnb < (*table).tableSize
         && !(*((*table).fileNames).offset(fnb as isize)).is_null()
     {
         totalSize = (totalSize as libc::c_ulong)
             .wrapping_add(
                 (strlen(*((*table).fileNames).offset(fnb as isize)))
-                    .wrapping_add(1 as libc::c_int as libc::c_ulong),
-            ) as size_t as size_t;
+                    .wrapping_add(1),
+            ) ;
         fnb = fnb.wrapping_add(1);
     }
     return totalSize;
@@ -1735,12 +1731,12 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
     mut table2: *mut FileNamesTable,
 ) -> *mut FileNamesTable {
     let mut newTableIdx = 0 as libc::c_int as libc::c_uint;
-    let mut pos = 0 as libc::c_int as size_t;
-    let mut newTotalTableSize: size_t = 0;
+    let mut pos = 0 as libc::c_int as libc::size_t;
+    let mut newTotalTableSize: libc::size_t = 0;
     let mut buf = 0 as *mut libc::c_char;
     let newTable = UTIL_assembleFileNamesTable(
         NULL as *mut *const libc::c_char,
-        0 as libc::c_int as size_t,
+        0 as libc::c_int as libc::size_t,
         NULL as *mut libc::c_char,
     );
     if newTable.is_null() {
@@ -1811,8 +1807,8 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
         let ref mut fresh2 = *((*newTable).fileNames).offset(newTableIdx as isize);
         *fresh2 = buf.offset(pos as isize);
         pos = (pos as libc::c_ulong)
-            .wrapping_add(curLen.wrapping_add(1 as libc::c_int as libc::c_ulong))
-            as size_t as size_t;
+            .wrapping_add(curLen.wrapping_add(1))
+            ;
         idx1 = idx1.wrapping_add(1);
         newTableIdx = newTableIdx.wrapping_add(1);
     }
@@ -1832,13 +1828,13 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
         let ref mut fresh3 = *((*newTable).fileNames).offset(newTableIdx as isize);
         *fresh3 = buf.offset(pos as isize);
         pos = (pos as libc::c_ulong)
-            .wrapping_add(curLen_0.wrapping_add(1 as libc::c_int as libc::c_ulong))
-            as size_t as size_t;
+            .wrapping_add(curLen_0.wrapping_add(1))
+            ;
         idx2 = idx2.wrapping_add(1);
         newTableIdx = newTableIdx.wrapping_add(1);
     }
     debug_assert!(pos <= newTotalTableSize);
-    (*newTable).tableSize = newTableIdx as size_t;
+    (*newTable).tableSize = newTableIdx as libc::size_t;
     UTIL_freeFileNamesTable(table1);
     UTIL_freeFileNamesTable(table2);
     return newTable;
@@ -1846,13 +1842,13 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
 unsafe extern "C" fn UTIL_prepareFileList(
     mut dirName: *const libc::c_char,
     mut bufStart: *mut *mut libc::c_char,
-    mut pos: *mut size_t,
+    mut pos: *mut libc::size_t,
     mut bufEnd: *mut *mut libc::c_char,
     mut followLinks: libc::c_int,
 ) -> libc::c_int {
     let mut dir = 0 as *mut DIR;
     let mut entry = 0 as *mut dirent;
-    let mut dirLength: size_t = 0;
+    let mut dirLength: libc::size_t = 0;
     let mut nbFiles = 0 as libc::c_int;
     dir = opendir(dirName);
     if dir.is_null() {
@@ -1875,8 +1871,8 @@ unsafe extern "C" fn UTIL_prepareFileList(
             break;
         }
         let mut path = 0 as *mut libc::c_char;
-        let mut fnameLength: size_t = 0;
-        let mut pathLength: size_t = 0;
+        let mut fnameLength: libc::size_t = 0;
+        let mut pathLength: libc::size_t = 0;
         if strcmp(
             ((*entry).d_name).as_mut_ptr(),
             b"..\0" as *const u8 as *const libc::c_char,
@@ -1892,7 +1888,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
         path = malloc(
             dirLength
                 .wrapping_add(fnameLength)
-                .wrapping_add(2 as libc::c_int as libc::c_ulong),
+                .wrapping_add(2),
         ) as *mut libc::c_char;
         if path.is_null() {
             closedir(dir);
@@ -1907,7 +1903,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
             fnameLength,
         );
         pathLength = dirLength
-            .wrapping_add(1 as libc::c_int as libc::c_ulong)
+            .wrapping_add(1)
             .wrapping_add(fnameLength);
         *path.offset(pathLength as isize) = 0 as libc::c_int as libc::c_char;
         if followLinks == 0 && UTIL_isLink(path) != 0 {
@@ -1938,7 +1934,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
                     debug_assert!(newListSize >= 0 as libc::c_int as libc::c_long);
                     *bufStart = UTIL_realloc(
                         *bufStart as *mut libc::c_void,
-                        newListSize as size_t,
+                        newListSize as libc::size_t,
                     ) as *mut libc::c_char;
                     if !(*bufStart).is_null() {
                         *bufEnd = (*bufStart).offset(newListSize as isize);
@@ -1954,12 +1950,12 @@ unsafe extern "C" fn UTIL_prepareFileList(
                     memcpy(
                         (*bufStart).offset(*pos as isize) as *mut libc::c_void,
                         path as *const libc::c_void,
-                        pathLength.wrapping_add(1 as libc::c_int as libc::c_ulong),
+                        pathLength.wrapping_add(1),
                     );
                     *pos = (*pos as libc::c_ulong)
                         .wrapping_add(
-                            pathLength.wrapping_add(1 as libc::c_int as libc::c_ulong),
-                        ) as size_t as size_t;
+                            pathLength.wrapping_add(1),
+                        ) ;
                     nbFiles += 1;
                 }
             }
@@ -2087,7 +2083,7 @@ unsafe extern "C" fn makeDir(
     return ret;
 }
 unsafe extern "C" fn convertPathnameToDirName(mut pathname: *mut libc::c_char) {
-    let mut len = 0 as libc::c_int as size_t;
+    let mut len = 0 as libc::c_int as libc::size_t;
     let mut pos = NULL as *mut libc::c_char;
     debug_assert!(!pathname.is_null());
     len = strlen(pathname);
@@ -2149,7 +2145,7 @@ unsafe extern "C" fn mallocAndJoin2Dir(
     let mut outDirBuffer = 0 as *mut libc::c_char;
     let mut buffer = 0 as *mut libc::c_char;
     outDirBuffer = malloc(
-        dir1Size.wrapping_add(dir2Size).wrapping_add(2 as libc::c_int as libc::c_ulong),
+        dir1Size.wrapping_add(dir2Size).wrapping_add(2),
     ) as *mut libc::c_char;
     if outDirBuffer.is_null() {
         if g_utilDisplayLevel >= 1 as libc::c_int {
@@ -2294,7 +2290,7 @@ unsafe extern "C" fn makeUniqueMirroredDestDirs(
     }
     qsort(
         srcDirNames as *mut libc::c_void,
-        nbFile as size_t,
+        nbFile as libc::size_t,
         ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
         Some(
             compareDir
@@ -2306,12 +2302,12 @@ unsafe extern "C" fn makeUniqueMirroredDestDirs(
     );
     uniqueDirNr = 1 as libc::c_int as libc::c_uint;
     let ref mut fresh4 = *uniqueDirNames
-        .offset(uniqueDirNr.wrapping_sub(1 as libc::c_int as libc::c_uint) as isize);
+        .offset(uniqueDirNr.wrapping_sub(1) as isize);
     *fresh4 = *srcDirNames.offset(0 as libc::c_int as isize);
     i = 1 as libc::c_int as libc::c_uint;
     while i < nbFile {
         let mut prevDirName = *srcDirNames
-            .offset(i.wrapping_sub(1 as libc::c_int as libc::c_uint) as isize);
+            .offset(i.wrapping_sub(1) as isize);
         let mut currDirName = *srcDirNames.offset(i as isize);
         if firstIsParentOrSameDirOfSecond(trimPath(prevDirName), trimPath(currDirName))
             == 0
@@ -2319,7 +2315,7 @@ unsafe extern "C" fn makeUniqueMirroredDestDirs(
             uniqueDirNr = uniqueDirNr.wrapping_add(1);
         }
         let ref mut fresh5 = *uniqueDirNames
-            .offset(uniqueDirNr.wrapping_sub(1 as libc::c_int as libc::c_uint) as isize);
+            .offset(uniqueDirNr.wrapping_sub(1) as isize);
         *fresh5 = currDirName;
         i = i.wrapping_add(1);
     }
@@ -2402,7 +2398,7 @@ pub unsafe extern "C" fn UTIL_mirrorSourceFilesDirectories(
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_createExpandedFNT(
     mut inputNames: *const *const libc::c_char,
-    mut nbIfns: size_t,
+    mut nbIfns: libc::size_t,
     mut followLinks: libc::c_int,
 ) -> *mut FileNamesTable {
     let mut nbFiles: libc::c_uint = 0;
@@ -2411,10 +2407,10 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
     if buf.is_null() {
         return NULL as *mut FileNamesTable;
     }
-    let mut ifnNb: size_t = 0;
-    let mut pos: size_t = 0;
-    ifnNb = 0 as libc::c_int as size_t;
-    pos = 0 as libc::c_int as size_t;
+    let mut ifnNb: libc::size_t = 0;
+    let mut pos: libc::size_t = 0;
+    ifnNb = 0 as libc::c_int as libc::size_t;
+    pos = 0 as libc::c_int as libc::size_t;
     nbFiles = 0 as libc::c_int as libc::c_uint;
     while ifnNb < nbIfns {
         if UTIL_isDirectory(*inputNames.offset(ifnNb as isize)) == 0 {
@@ -2423,7 +2419,7 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
                 let mut newListSize = bufend.offset_from(buf) as libc::c_long
                     + LIST_SIZE_INCREASE as libc::c_long;
                 debug_assert!(newListSize >= 0 as libc::c_int as libc::c_long);
-                buf = UTIL_realloc(buf as *mut libc::c_void, newListSize as size_t)
+                buf = UTIL_realloc(buf as *mut libc::c_void, newListSize as libc::size_t)
                     as *mut libc::c_char;
                 if buf.is_null() {
                     return NULL as *mut FileNamesTable;
@@ -2434,11 +2430,11 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
                 memcpy(
                     buf.offset(pos as isize) as *mut libc::c_void,
                     *inputNames.offset(ifnNb as isize) as *const libc::c_void,
-                    len.wrapping_add(1 as libc::c_int as libc::c_ulong),
+                    len.wrapping_add(1),
                 );
                 pos = (pos as libc::c_ulong)
-                    .wrapping_add(len.wrapping_add(1 as libc::c_int as libc::c_ulong))
-                    as size_t as size_t;
+                    .wrapping_add(len.wrapping_add(1))
+                    ;
                 nbFiles = nbFiles.wrapping_add(1);
             }
         } else {
@@ -2458,9 +2454,9 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
         }
         ifnNb = ifnNb.wrapping_add(1);
     }
-    let mut ifnNb_0: size_t = 0;
-    let mut pos_0: size_t = 0;
-    let fntCapacity = nbFiles.wrapping_add(1 as libc::c_int as libc::c_uint) as size_t;
+    let mut ifnNb_0: libc::size_t = 0;
+    let mut pos_0: libc::size_t = 0;
+    let fntCapacity = nbFiles.wrapping_add(1) as libc::size_t;
     let fileNamesTable = malloc(
         fntCapacity
             .wrapping_mul(::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong),
@@ -2469,8 +2465,8 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
         free(buf as *mut libc::c_void);
         return NULL as *mut FileNamesTable;
     }
-    ifnNb_0 = 0 as libc::c_int as size_t;
-    pos_0 = 0 as libc::c_int as size_t;
+    ifnNb_0 = 0 as libc::c_int as libc::size_t;
+    pos_0 = 0 as libc::c_int as libc::size_t;
     while ifnNb_0 < nbFiles as libc::c_ulong {
         let ref mut fresh8 = *fileNamesTable.offset(ifnNb_0 as isize);
         *fresh8 = buf.offset(pos_0 as isize);
@@ -2482,13 +2478,13 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
         pos_0 = (pos_0 as libc::c_ulong)
             .wrapping_add(
                 (strlen(*fileNamesTable.offset(ifnNb_0 as isize)))
-                    .wrapping_add(1 as libc::c_int as libc::c_ulong),
-            ) as size_t as size_t;
+                    .wrapping_add(1),
+            ) ;
         ifnNb_0 = ifnNb_0.wrapping_add(1);
     }
     return UTIL_assembleFileNamesTable2(
         fileNamesTable,
-        nbFiles as size_t,
+        nbFiles as libc::size_t,
         fntCapacity,
         buf,
     );
@@ -2522,7 +2518,7 @@ pub unsafe extern "C" fn UTIL_expandFNT(
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_createFNT_fromROTable(
     mut filenames: *mut *const libc::c_char,
-    mut nbFilenames: size_t,
+    mut nbFilenames: libc::size_t,
 ) -> *mut FileNamesTable {
     let sizeof_FNTable = nbFilenames
         .wrapping_mul(::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong);

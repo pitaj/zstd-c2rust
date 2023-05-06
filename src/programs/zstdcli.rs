@@ -32,7 +32,7 @@ extern "C" {
     fn UTIL_fakeStdoutIsConsole();
     fn UTIL_fakeStderrIsConsole();
     fn UTIL_traceFileStat();
-    fn UTIL_getFileSize(infilename: *const libc::c_char) -> U64;
+    fn UTIL_getFileSize(infilename: *const libc::c_char) -> u64;
     fn UTIL_createFileNamesTable_fromFileName(
         inputFileName: *const libc::c_char,
     ) -> *mut FileNamesTable;
@@ -42,7 +42,7 @@ extern "C" {
         table2: *mut FileNamesTable,
     ) -> *mut FileNamesTable;
     fn UTIL_expandFNT(fnt: *mut *mut FileNamesTable, followLinks: libc::c_int);
-    fn UTIL_allocateFileNamesTable(tableSize: size_t) -> *mut FileNamesTable;
+    fn UTIL_allocateFileNamesTable(tableSize: libc::size_t) -> *mut FileNamesTable;
     fn UTIL_searchFileNamesTable(
         table: *mut FileNamesTable,
         name: *const libc::c_char,
@@ -55,7 +55,7 @@ extern "C" {
     fn ZSTD_getCParams(
         compressionLevel: libc::c_int,
         estimatedSrcSize: libc::c_ulonglong,
-        dictSize: size_t,
+        dictSize: libc::size_t,
     ) -> ZSTD_compressionParameters;
     fn FIO_setLdmHashRateLog(prefs: *mut FIO_prefs_t, ldmHashRateLog: libc::c_int);
     fn FIO_createPreferences() -> *mut FIO_prefs_t;
@@ -97,9 +97,9 @@ extern "C" {
     fn FIO_setRemoveSrcFile(prefs: *mut FIO_prefs_t, flag: libc::c_int);
     fn FIO_setSparseWrite(prefs: *mut FIO_prefs_t, sparse: libc::c_int);
     fn FIO_setRsyncable(prefs: *mut FIO_prefs_t, rsyncable: libc::c_int);
-    fn FIO_setStreamSrcSize(prefs: *mut FIO_prefs_t, streamSrcSize: size_t);
-    fn FIO_setTargetCBlockSize(prefs: *mut FIO_prefs_t, targetCBlockSize: size_t);
-    fn FIO_setSrcSizeHint(prefs: *mut FIO_prefs_t, srcSizeHint: size_t);
+    fn FIO_setStreamSrcSize(prefs: *mut FIO_prefs_t, streamSrcSize: libc::size_t);
+    fn FIO_setTargetCBlockSize(prefs: *mut FIO_prefs_t, targetCBlockSize: libc::size_t);
+    fn FIO_setSrcSizeHint(prefs: *mut FIO_prefs_t, srcSizeHint: libc::size_t);
     fn FIO_setNotificationLevel(level: libc::c_int);
     fn FIO_setProgressSetting(progressSetting: FIO_progressSetting_e);
     fn FIO_setLiteralCompressionMode(prefs: *mut FIO_prefs_t, mode: ZSTD_paramSwitch_e);
@@ -156,11 +156,8 @@ extern "C" {
     fn FIO_lzmaVersion() -> *const libc::c_char;
     fn AIO_supported() -> libc::c_int;
 }
-pub type __uint32_t = libc::c_uint;
-pub type __uint64_t = libc::c_ulong;
 pub type __off_t = libc::c_long;
 pub type __off64_t = libc::c_long;
-pub type size_t = libc::c_ulong;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct _IO_FILE {
@@ -190,23 +187,19 @@ pub struct _IO_FILE {
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
     pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: size_t,
+    pub __pad5: libc::size_t,
     pub _mode: libc::c_int,
     pub _unused2: [libc::c_char; 20],
 }
 pub type _IO_lock_t = ();
 pub type FILE = _IO_FILE;
-pub type uint32_t = __uint32_t;
-pub type uint64_t = __uint64_t;
-pub type U32 = uint32_t;
-pub type U64 = uint64_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct FileNamesTable {
     pub fileNames: *mut *const libc::c_char,
     pub buf: *mut libc::c_char,
-    pub tableSize: size_t,
-    pub tableCapacity: size_t,
+    pub tableSize: libc::size_t,
+    pub tableCapacity: libc::size_t,
 }
 pub type ZSTD_strategy = libc::c_uint;
 pub const ZSTD_btultra2: ZSTD_strategy = 9;
@@ -260,7 +253,7 @@ pub const ZSTD_c_compressionLevel: ZSTD_cParameter = 100;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_bounds {
-    pub error: size_t,
+    pub error: libc::size_t,
     pub lowerBound: libc::c_int,
     pub upperBound: libc::c_int,
 }
@@ -308,8 +301,8 @@ pub struct FIO_prefs_s {
     pub ldmMinMatch: libc::c_int,
     pub ldmBucketSizeLog: libc::c_int,
     pub ldmHashRateLog: libc::c_int,
-    pub streamSrcSize: size_t,
-    pub targetCBlockSize: size_t,
+    pub streamSrcSize: libc::size_t,
+    pub targetCBlockSize: libc::size_t,
     pub srcSizeHint: libc::c_int,
     pub testMode: libc::c_int,
     pub literalCompressionMode: ZSTD_paramSwitch_e,
@@ -411,11 +404,11 @@ static mut g_defaultSelectivityLevel: libc::c_uint = 9 as libc::c_int as libc::c
 static mut g_defaultMaxWindowLog: libc::c_uint = 27 as libc::c_int as libc::c_uint;
 pub const OVERLAP_LOG_DEFAULT: libc::c_int = 9999 as libc::c_int;
 pub const LDM_PARAM_DEFAULT: libc::c_int = 9999 as libc::c_int;
-static mut g_overlapLog: U32 = OVERLAP_LOG_DEFAULT as U32;
-static mut g_ldmHashLog: U32 = 0 as libc::c_int as U32;
-static mut g_ldmMinMatch: U32 = 0 as libc::c_int as U32;
-static mut g_ldmHashRateLog: U32 = LDM_PARAM_DEFAULT as U32;
-static mut g_ldmBucketSizeLog: U32 = LDM_PARAM_DEFAULT as U32;
+static mut g_overlapLog: u32 = OVERLAP_LOG_DEFAULT as u32;
+static mut g_ldmHashLog: u32 = 0 as libc::c_int as u32;
+static mut g_ldmMinMatch: u32 = 0 as libc::c_int as u32;
+static mut g_ldmHashRateLog: u32 = LDM_PARAM_DEFAULT as u32;
+static mut g_ldmBucketSizeLog: u32 = LDM_PARAM_DEFAULT as u32;
 static mut g_displayLevel: libc::c_int = DISPLAY_LEVEL_DEFAULT;
 unsafe extern "C" fn checkLibVersion() {
     if strcmp(b"1.5.5\0" as *const u8 as *const libc::c_char, ZSTD_versionString()) != 0
@@ -547,8 +540,8 @@ unsafe extern "C" fn usage_advanced(mut programName: *const libc::c_char) {
         stdout,
         b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8 as *const libc::c_char,
         b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-        (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong) as libc::c_int,
+        (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            .wrapping_mul(8) as libc::c_int,
         b"v1.5.5\0" as *const u8 as *const libc::c_char,
         b"Yann Collet\0" as *const u8 as *const libc::c_char,
     );
@@ -799,12 +792,12 @@ unsafe extern "C" fn readU32FromCharChecked(
         && **stringPtr as libc::c_int <= '9' as i32
     {
         let max = (-(1 as libc::c_int) as libc::c_uint)
-            .wrapping_div(10 as libc::c_int as libc::c_uint);
+            .wrapping_div(10);
         let mut last = result;
         if result > max {
             return 1 as libc::c_int;
         }
-        result = result.wrapping_mul(10 as libc::c_int as libc::c_uint);
+        result = result.wrapping_mul(10);
         result = result
             .wrapping_add((**stringPtr as libc::c_int - '0' as i32) as libc::c_uint);
         if result < last {
@@ -874,23 +867,23 @@ unsafe extern "C" fn readIntFromChar(
 }
 unsafe extern "C" fn readSizeTFromCharChecked(
     mut stringPtr: *mut *const libc::c_char,
-    mut value: *mut size_t,
+    mut value: *mut libc::size_t,
 ) -> libc::c_int {
-    let mut result = 0 as libc::c_int as size_t;
+    let mut result = 0 as libc::c_int as libc::size_t;
     while **stringPtr as libc::c_int >= '0' as i32
         && **stringPtr as libc::c_int <= '9' as i32
     {
-        let max = (-(1 as libc::c_int) as size_t)
-            .wrapping_div(10 as libc::c_int as libc::c_ulong);
+        let max = (-(1 as libc::c_int) as libc::size_t)
+            .wrapping_div(10);
         let mut last = result;
         if result > max {
             return 1 as libc::c_int;
         }
         result = (result as libc::c_ulong)
-            .wrapping_mul(10 as libc::c_int as libc::c_ulong) as size_t as size_t;
+            .wrapping_mul(10) ;
         result = (result as libc::c_ulong)
-            .wrapping_add((**stringPtr as libc::c_int - '0' as i32) as size_t) as size_t
-            as size_t;
+            .wrapping_add((**stringPtr as libc::c_int - '0' as i32) as libc::size_t) as libc::size_t
+            as libc::size_t;
         if result < last {
             return 1 as libc::c_int;
         }
@@ -899,7 +892,7 @@ unsafe extern "C" fn readSizeTFromCharChecked(
     if **stringPtr as libc::c_int == 'K' as i32
         || **stringPtr as libc::c_int == 'M' as i32
     {
-        let maxK = -(1 as libc::c_int) as size_t >> 10 as libc::c_int;
+        let maxK = -(1 as libc::c_int) as libc::size_t >> 10 as libc::c_int;
         if result > maxK {
             return 1 as libc::c_int;
         }
@@ -923,14 +916,14 @@ unsafe extern "C" fn readSizeTFromCharChecked(
 }
 unsafe extern "C" fn readSizeTFromChar(
     mut stringPtr: *mut *const libc::c_char,
-) -> size_t {
+) -> libc::size_t {
     static mut errorMsg: [libc::c_char; 38] = unsafe {
         *::core::mem::transmute::<
             &[u8; 38],
             &[libc::c_char; 38],
-        >(b"error: numeric value overflows size_t\0")
+        >(b"error: numeric value overflows libc::size_t\0")
     };
-    let mut result: size_t = 0;
+    let mut result: libc::size_t = 0;
     if readSizeTFromCharChecked(stringPtr, &mut result) != 0 {
         errorOut(errorMsg.as_ptr());
     }
@@ -1247,8 +1240,8 @@ unsafe extern "C" fn printVersion() {
         stdout,
         b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8 as *const libc::c_char,
         b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-        (::core::mem::size_of::<size_t>() as libc::c_ulong)
-            .wrapping_mul(8 as libc::c_int as libc::c_ulong) as libc::c_int,
+        (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            .wrapping_mul(8) as libc::c_int,
         b"v1.5.5\0" as *const u8 as *const libc::c_char,
         b"Yann Collet\0" as *const u8 as *const libc::c_char,
     );
@@ -1521,7 +1514,7 @@ unsafe fn main_0(
     let mut nbWorkers = 0 as libc::c_int as libc::c_uint;
     let mut compressibility = 0.5f64;
     let mut bench_nbSeconds = 3 as libc::c_int as libc::c_uint;
-    let mut blockSize = 0 as libc::c_int as size_t;
+    let mut blockSize = 0 as libc::c_int as libc::size_t;
     let prefs = FIO_createPreferences();
     let fCtx = FIO_createContext();
     let mut progress = FIO_ps_auto;
@@ -1539,8 +1532,8 @@ unsafe fn main_0(
     let mut cLevelLast = ZSTD_minCLevel() /* MINCLEVEL */ - 1 as libc::c_int;
     let mut recursive = 0 as libc::c_int as libc::c_uint;
     let mut memLimit = 0 as libc::c_int as libc::c_uint;
-    let mut filenames = UTIL_allocateFileNamesTable(argCount as size_t);
-    let mut file_of_names = UTIL_allocateFileNamesTable(argCount as size_t);
+    let mut filenames = UTIL_allocateFileNamesTable(argCount as libc::size_t);
+    let mut file_of_names = UTIL_allocateFileNamesTable(argCount as libc::size_t);
     let mut programName = *argv.offset(0 as libc::c_int as isize);
     let mut outFileName = NULL as *const libc::c_char;
     let mut outDirName = NULL as *const libc::c_char;
@@ -1550,10 +1543,10 @@ unsafe fn main_0(
     let mut suffix = ZSTD_EXTENSION.as_ptr();
     let mut maxDictSize = g_defaultMaxDictSize;
     let mut dictID = 0 as libc::c_int as libc::c_uint;
-    let mut streamSrcSize = 0 as libc::c_int as size_t;
-    let mut targetCBlockSize = 0 as libc::c_int as size_t;
-    let mut srcSizeHint = 0 as libc::c_int as size_t;
-    let mut nbInputFileNames = 0 as libc::c_int as size_t;
+    let mut streamSrcSize = 0 as libc::c_int as libc::size_t;
+    let mut targetCBlockSize = 0 as libc::c_int as libc::size_t;
+    let mut srcSizeHint = 0 as libc::c_int as libc::size_t;
+    let mut nbInputFileNames = 0 as libc::c_int as libc::size_t;
     let mut dictCLevel = g_defaultDictCLevel;
     let mut dictSelect = g_defaultSelectivityLevel;
     let mut literalCompressionMode = ZSTD_ps_auto;
@@ -2769,8 +2762,8 @@ unsafe fn main_0(
                     ) != 0
                     {
                         if *argument as libc::c_int == '=' as i32 {
-                            let maxFast = -ZSTD_minCLevel() as U32;
-                            let mut fastLevel: U32 = 0;
+                            let maxFast = -ZSTD_minCLevel() as u32;
+                            let mut fastLevel: u32 = 0;
                             argument = argument.offset(1);
                             fastLevel = readU32FromChar(&mut argument);
                             if fastLevel > maxFast {
@@ -3057,8 +3050,8 @@ unsafe fn main_0(
                     b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8
                         as *const libc::c_char,
                     b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-                    (::core::mem::size_of::<size_t>() as libc::c_ulong)
-                        .wrapping_mul(8 as libc::c_int as libc::c_ulong) as libc::c_int,
+                    (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                        .wrapping_mul(8) as libc::c_int,
                     b"v1.5.5\0" as *const u8 as *const libc::c_char,
                     b"Yann Collet\0" as *const u8 as *const libc::c_char,
                 );
@@ -3097,7 +3090,7 @@ unsafe fn main_0(
                     operationResult = 1 as libc::c_int;
                     current_block = 18342783468770781838;
                 } else {
-                    (*filenames).tableSize = fileNamesNb as size_t;
+                    (*filenames).tableSize = fileNamesNb as libc::size_t;
                     current_block = 4526666330231775022;
                 }
             } else {
@@ -3108,8 +3101,8 @@ unsafe fn main_0(
                 _ => {
                     if (*file_of_names).tableSize != 0 {
                         let nbFileLists = (*file_of_names).tableSize;
-                        let mut flNb: size_t = 0;
-                        flNb = 0 as libc::c_int as size_t;
+                        let mut flNb: libc::size_t = 0;
+                        flNb = 0 as libc::c_int as libc::size_t;
                         loop {
                             if !(flNb < nbFileLists) {
                                 current_block = 3266459246600429215;
@@ -3341,10 +3334,10 @@ unsafe fn main_0(
                                                                 if compressionParams.windowLog
                                                                     == 0 as libc::c_int as libc::c_uint
                                                                 {
-                                                                    memLimit = (1 as libc::c_int as U32)
+                                                                    memLimit = (1 as libc::c_int as u32)
                                                                         << g_defaultMaxWindowLog;
                                                                 } else {
-                                                                    memLimit = (1 as libc::c_int as U32)
+                                                                    memLimit = (1 as libc::c_int as u32)
                                                                         << (compressionParams.windowLog
                                                                             & 31 as libc::c_int as libc::c_uint);
                                                                 }
@@ -3407,8 +3400,8 @@ unsafe fn main_0(
                                                                 if showDefaultCParams != 0
                                                                     || g_displayLevel >= 4 as libc::c_int
                                                                 {
-                                                                    let mut fileNb: size_t = 0;
-                                                                    fileNb = 0 as libc::c_int as size_t;
+                                                                    let mut fileNb: libc::size_t = 0;
+                                                                    fileNb = 0 as libc::c_int as libc::size_t;
                                                                     while fileNb < (*filenames).tableSize {
                                                                         if showDefaultCParams != 0 {
                                                                             printDefaultCParams(

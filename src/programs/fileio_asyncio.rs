@@ -36,17 +36,14 @@ extern "C" {
         _: libc::c_ulong,
     ) -> *mut libc::c_void;
     fn strerror(_: libc::c_int) -> *mut libc::c_char;
-    fn POOL_create(numThreads: size_t, queueSize: size_t) -> *mut POOL_ctx;
+    fn POOL_create(numThreads: libc::size_t, queueSize: libc::size_t) -> *mut POOL_ctx;
     fn POOL_free(ctx: *mut POOL_ctx);
     fn POOL_joinJobs(ctx: *mut POOL_ctx);
     fn POOL_add(ctx: *mut POOL_ctx, function: POOL_function, opaque: *mut libc::c_void);
     static mut g_display_prefs: FIO_display_prefs_t;
 }
-pub type __uint8_t = libc::c_uchar;
-pub type __uint64_t = libc::c_ulong;
 pub type __off_t = libc::c_long;
 pub type __off64_t = libc::c_long;
-pub type size_t = libc::c_ulong;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct _IO_FILE {
@@ -76,16 +73,12 @@ pub struct _IO_FILE {
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
     pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: size_t,
+    pub __pad5: libc::size_t,
     pub _mode: libc::c_int,
     pub _unused2: [libc::c_char; 20],
 }
 pub type _IO_lock_t = ();
 pub type FILE = _IO_FILE;
-pub type uint8_t = __uint8_t;
-pub type uint64_t = __uint64_t;
-pub type U8 = uint8_t;
-pub type U64 = uint64_t;
 pub type ZSTD_paramSwitch_e = libc::c_uint;
 pub const ZSTD_ps_disable: ZSTD_paramSwitch_e = 2;
 pub const ZSTD_ps_enable: ZSTD_paramSwitch_e = 1;
@@ -126,8 +119,8 @@ pub struct FIO_prefs_s {
     pub ldmMinMatch: libc::c_int,
     pub ldmBucketSizeLog: libc::c_int,
     pub ldmHashRateLog: libc::c_int,
-    pub streamSrcSize: size_t,
-    pub targetCBlockSize: size_t,
+    pub streamSrcSize: libc::size_t,
+    pub targetCBlockSize: libc::size_t,
     pub srcSizeHint: libc::c_int,
     pub testMode: libc::c_int,
     pub literalCompressionMode: ZSTD_paramSwitch_e,
@@ -160,19 +153,19 @@ pub struct IOPoolCtx_t {
     pub ioJobsMutex: ZSTD_pthread_mutex_t,
     pub availableJobs: [*mut libc::c_void; 10],
     pub availableJobsCount: libc::c_int,
-    pub jobBufferSize: size_t,
+    pub jobBufferSize: libc::size_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ReadPoolCtx_t {
     pub base: IOPoolCtx_t,
     pub reachedEof: libc::c_int,
-    pub nextReadOffset: U64,
-    pub waitingOnOffset: U64,
+    pub nextReadOffset: u64,
+    pub waitingOnOffset: u64,
     pub currentJobHeld: *mut libc::c_void,
-    pub coalesceBuffer: *mut U8,
-    pub srcBuffer: *mut U8,
-    pub srcBufferLoaded: size_t,
+    pub coalesceBuffer: *mut u8,
+    pub srcBuffer: *mut u8,
+    pub srcBufferLoaded: libc::size_t,
     pub completedJobs: [*mut libc::c_void; 10],
     pub completedJobsCount: libc::c_int,
     pub jobCompletedCond: ZSTD_pthread_cond_t,
@@ -189,9 +182,9 @@ pub struct IOJob_t {
     pub ctx: *mut libc::c_void,
     pub file: *mut FILE,
     pub buffer: *mut libc::c_void,
-    pub bufferSize: size_t,
-    pub usedBufferSize: size_t,
-    pub offset: U64,
+    pub bufferSize: libc::size_t,
+    pub usedBufferSize: libc::size_t,
+    pub offset: u64,
 }
 pub const SEEK_CUR: libc::c_int = 1 as libc::c_int;
 pub const NULL: libc::c_int = 0 as libc::c_int;
@@ -201,18 +194,18 @@ pub const LONG_SEEK: unsafe extern "C" fn(
     libc::c_long,
     libc::c_int,
 ) -> libc::c_int = fseek;
-static mut segmentSizeT: size_t = 0;
-static mut maskT: size_t = 0;
+static mut segmentSizeT: libc::size_t = 0;
+static mut maskT: libc::size_t = 0;
 unsafe extern "C" fn AIO_fwriteSparse(
     mut file: *mut FILE,
     mut buffer: *const libc::c_void,
-    mut bufferSize: size_t,
+    mut bufferSize: libc::size_t,
     prefs: *const FIO_prefs_t,
     mut storedSkips: libc::c_uint,
 ) -> libc::c_uint {
-    let bufferT = buffer as *const size_t;
+    let bufferT = buffer as *const libc::size_t;
     let mut bufferSizeT = bufferSize
-        .wrapping_div(::core::mem::size_of::<size_t>() as libc::c_ulong);
+        .wrapping_div(::core::mem::size_of::<libc::size_t>() as libc::c_ulong);
     let bufferTEnd = bufferT.offset(bufferSizeT as isize);
     let mut ptrT = bufferT;
     if (*prefs).testMode != 0 {
@@ -311,14 +304,14 @@ unsafe extern "C" fn AIO_fwriteSparse(
             );
     }
     while ptrT < bufferTEnd {
-        let mut nb0T: size_t = 0;
+        let mut nb0T: libc::size_t = 0;
         let mut seg0SizeT = segmentSizeT;
         if seg0SizeT > bufferSizeT {
             seg0SizeT = bufferSizeT;
         }
-        bufferSizeT = (bufferSizeT as libc::c_ulong).wrapping_sub(seg0SizeT) as size_t
-            as size_t;
-        nb0T = 0 as libc::c_int as size_t;
+        bufferSizeT = (bufferSizeT as libc::c_ulong).wrapping_sub(seg0SizeT) as libc::size_t
+            as libc::size_t;
+        nb0T = 0 as libc::c_int as libc::size_t;
         while nb0T < seg0SizeT
             && *ptrT.offset(nb0T as isize) == 0 as libc::c_int as libc::c_ulong
         {
@@ -326,7 +319,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
         }
         storedSkips = storedSkips
             .wrapping_add(
-                nb0T.wrapping_mul(::core::mem::size_of::<size_t>() as libc::c_ulong)
+                nb0T.wrapping_mul(::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
                     as libc::c_uint,
             );
         if nb0T != seg0SizeT {
@@ -367,7 +360,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
             storedSkips = 0 as libc::c_int as libc::c_uint;
             if fwrite(
                 ptrT.offset(nb0T as isize) as *const libc::c_void,
-                ::core::mem::size_of::<size_t>() as libc::c_ulong,
+                ::core::mem::size_of::<libc::size_t>() as libc::c_ulong,
                 nbNon0ST,
                 file,
             ) != nbNon0ST
@@ -415,7 +408,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
         debug_assert!(restEnd > restStart
             && restEnd
                 < restStart
-                    .offset(::core::mem::size_of::<size_t>() as libc::c_ulong as isize));
+                    .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize));
         while restPtr < restEnd && *restPtr as libc::c_int == 0 as libc::c_int {
             restPtr = restPtr.offset(1);
         }
@@ -424,7 +417,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
                 restPtr.offset_from(restStart) as libc::c_long as libc::c_uint,
             );
         if restPtr != restEnd {
-            let restSize = restEnd.offset_from(restPtr) as libc::c_long as size_t;
+            let restSize = restEnd.offset_from(restPtr) as libc::c_long as libc::size_t;
             if fseek(file, storedSkips as libc::c_long, SEEK_CUR) != 0 as libc::c_int {
                 if g_display_prefs.displayLevel >= 1 as libc::c_int {
                     fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -515,7 +508,7 @@ unsafe extern "C" fn AIO_fwriteSparseEnd(
         debug_assert!((*prefs).sparseFileSupport > 0 as libc::c_int);
         if fseek(
             file,
-            storedSkips.wrapping_sub(1 as libc::c_int as libc::c_uint) as libc::c_long,
+            storedSkips.wrapping_sub(1) as libc::c_long,
             SEEK_CUR,
         ) != 0 as libc::c_int
         {
@@ -600,7 +593,7 @@ pub unsafe extern "C" fn AIO_supported() -> libc::c_int {
 }
 unsafe extern "C" fn AIO_IOPool_createIoJob(
     mut ctx: *mut IOPoolCtx_t,
-    mut bufferSize: size_t,
+    mut bufferSize: libc::size_t,
 ) -> *mut IOJob_t {
     let job = malloc(::core::mem::size_of::<IOJob_t>() as libc::c_ulong) as *mut IOJob_t;
     let buffer = malloc(bufferSize);
@@ -639,10 +632,10 @@ unsafe extern "C" fn AIO_IOPool_createIoJob(
     }
     (*job).buffer = buffer;
     (*job).bufferSize = bufferSize;
-    (*job).usedBufferSize = 0 as libc::c_int as size_t;
+    (*job).usedBufferSize = 0 as libc::c_int as libc::size_t;
     (*job).file = NULL as *mut FILE;
     (*job).ctx = ctx as *mut libc::c_void;
-    (*job).offset = 0 as libc::c_int as U64;
+    (*job).offset = 0 as libc::c_int as u64;
     return job;
 }
 unsafe extern "C" fn AIO_IOPool_createThreadPool(
@@ -688,8 +681,8 @@ unsafe extern "C" fn AIO_IOPool_createThreadPool(
         debug_assert!(10 as libc::c_int >= 2 as libc::c_int);
         (*ctx)
             .threadPool = POOL_create(
-            1 as libc::c_int as size_t,
-            (MAX_IO_JOBS - 2 as libc::c_int) as size_t,
+            1 as libc::c_int as libc::size_t,
+            (MAX_IO_JOBS - 2 as libc::c_int) as libc::size_t,
         );
         (*ctx).threadPoolActive = 1 as libc::c_int;
         if ((*ctx).threadPool).is_null() {
@@ -731,7 +724,7 @@ unsafe extern "C" fn AIO_IOPool_init(
     mut ctx: *mut IOPoolCtx_t,
     mut prefs: *const FIO_prefs_t,
     mut poolFunction: POOL_function,
-    mut bufferSize: size_t,
+    mut bufferSize: libc::size_t,
 ) {
     let mut i: libc::c_int = 0;
     AIO_IOPool_createThreadPool(ctx, prefs);
@@ -815,9 +808,9 @@ unsafe extern "C" fn AIO_IOPool_acquireJob(mut ctx: *mut IOPoolCtx_t) -> *mut IO
     (*ctx).availableJobsCount -= 1;
     job = (*ctx).availableJobs[(*ctx).availableJobsCount as usize] as *mut IOJob_t;
     AIO_IOPool_unlockJobsMutex(ctx);
-    (*job).usedBufferSize = 0 as libc::c_int as size_t;
+    (*job).usedBufferSize = 0 as libc::c_int as libc::size_t;
     (*job).file = (*ctx).file;
-    (*job).offset = 0 as libc::c_int as U64;
+    (*job).offset = 0 as libc::c_int as u64;
     return job;
 }
 unsafe extern "C" fn AIO_IOPool_setFile(mut ctx: *mut IOPoolCtx_t, mut file: *mut FILE) {
@@ -902,7 +895,7 @@ unsafe extern "C" fn AIO_WritePool_executeWriteJob(mut opaque: *mut libc::c_void
 #[no_mangle]
 pub unsafe extern "C" fn AIO_WritePool_create(
     mut prefs: *const FIO_prefs_t,
-    mut bufferSize: size_t,
+    mut bufferSize: libc::size_t,
 ) -> *mut WritePoolCtx_t {
     let ctx = malloc(::core::mem::size_of::<WritePoolCtx_t>() as libc::c_ulong)
         as *mut WritePoolCtx_t;
@@ -1008,12 +1001,12 @@ unsafe extern "C" fn AIO_ReadPool_findNextWaitingOffsetCompletedJob_locked(
 }
 unsafe extern "C" fn AIO_ReadPool_numReadsInFlight(
     mut ctx: *mut ReadPoolCtx_t,
-) -> size_t {
+) -> libc::size_t {
     let jobsHeld = (if ((*ctx).currentJobHeld).is_null() {
         0 as libc::c_int
     } else {
         1 as libc::c_int
-    }) as size_t;
+    }) as libc::size_t;
     return ((*ctx).base.totalIoJobs as libc::c_ulong)
         .wrapping_sub(
             (((*ctx).base.availableJobsCount + (*ctx).completedJobsCount)
@@ -1037,7 +1030,7 @@ unsafe extern "C" fn AIO_ReadPool_getNextCompletedJob(
         debug_assert!((*job).offset == (*ctx).waitingOnOffset);
         (*ctx)
             .waitingOnOffset = ((*ctx).waitingOnOffset as libc::c_ulong)
-            .wrapping_add((*job).usedBufferSize) as U64 as U64;
+            .wrapping_add((*job).usedBufferSize) ;
     }
     AIO_IOPool_unlockJobsMutex(&mut (*ctx).base);
     return job;
@@ -1046,7 +1039,7 @@ unsafe extern "C" fn AIO_ReadPool_executeReadJob(mut opaque: *mut libc::c_void) 
     let job = opaque as *mut IOJob_t;
     let ctx = (*job).ctx as *mut ReadPoolCtx_t;
     if (*ctx).reachedEof != 0 {
-        (*job).usedBufferSize = 0 as libc::c_int as size_t;
+        (*job).usedBufferSize = 0 as libc::c_int as libc::size_t;
         AIO_ReadPool_addJobToCompleted(job);
         return;
     }
@@ -1130,7 +1123,7 @@ unsafe extern "C" fn AIO_ReadPool_enqueueRead(mut ctx: *mut ReadPoolCtx_t) {
     (*job).offset = (*ctx).nextReadOffset;
     (*ctx)
         .nextReadOffset = ((*ctx).nextReadOffset as libc::c_ulong)
-        .wrapping_add((*job).bufferSize) as U64 as U64;
+        .wrapping_add((*job).bufferSize) ;
     AIO_IOPool_enqueueJob(job);
 }
 unsafe extern "C" fn AIO_ReadPool_startReading(mut ctx: *mut ReadPoolCtx_t) {
@@ -1154,10 +1147,10 @@ pub unsafe extern "C" fn AIO_ReadPool_setFile(
         (*ctx).currentJobHeld = NULL as *mut libc::c_void;
     }
     AIO_IOPool_setFile(&mut (*ctx).base, file);
-    (*ctx).nextReadOffset = 0 as libc::c_int as U64;
-    (*ctx).waitingOnOffset = 0 as libc::c_int as U64;
+    (*ctx).nextReadOffset = 0 as libc::c_int as u64;
+    (*ctx).waitingOnOffset = 0 as libc::c_int as u64;
     (*ctx).srcBuffer = (*ctx).coalesceBuffer;
-    (*ctx).srcBufferLoaded = 0 as libc::c_int as size_t;
+    (*ctx).srcBufferLoaded = 0 as libc::c_int as libc::size_t;
     (*ctx).reachedEof = 0 as libc::c_int;
     if !file.is_null() {
         AIO_ReadPool_startReading(ctx);
@@ -1166,7 +1159,7 @@ pub unsafe extern "C" fn AIO_ReadPool_setFile(
 #[no_mangle]
 pub unsafe extern "C" fn AIO_ReadPool_create(
     mut prefs: *const FIO_prefs_t,
-    mut bufferSize: size_t,
+    mut bufferSize: libc::size_t,
 ) -> *mut ReadPoolCtx_t {
     let ctx = malloc(::core::mem::size_of::<ReadPoolCtx_t>() as libc::c_ulong)
         as *mut ReadPoolCtx_t;
@@ -1213,10 +1206,10 @@ pub unsafe extern "C" fn AIO_ReadPool_create(
     );
     (*ctx)
         .coalesceBuffer = malloc(
-        bufferSize.wrapping_mul(2 as libc::c_int as libc::c_ulong),
-    ) as *mut U8;
+        bufferSize.wrapping_mul(2),
+    ) as *mut u8;
     (*ctx).srcBuffer = (*ctx).coalesceBuffer;
-    (*ctx).srcBufferLoaded = 0 as libc::c_int as size_t;
+    (*ctx).srcBufferLoaded = 0 as libc::c_int as libc::size_t;
     (*ctx).completedJobsCount = 0 as libc::c_int;
     (*ctx).currentJobHeld = NULL as *mut libc::c_void;
     if !((*ctx).base.threadPool).is_null() {
@@ -1269,12 +1262,12 @@ pub unsafe extern "C" fn AIO_ReadPool_free(mut ctx: *mut ReadPoolCtx_t) {
 #[no_mangle]
 pub unsafe extern "C" fn AIO_ReadPool_consumeBytes(
     mut ctx: *mut ReadPoolCtx_t,
-    mut n: size_t,
+    mut n: libc::size_t,
 ) {
     debug_assert!(n <= (*ctx).srcBufferLoaded);
     (*ctx)
         .srcBufferLoaded = ((*ctx).srcBufferLoaded as libc::c_ulong).wrapping_sub(n)
-        as size_t as size_t;
+        ;
     (*ctx).srcBuffer = ((*ctx).srcBuffer).offset(n as isize);
 }
 unsafe extern "C" fn AIO_ReadPool_releaseCurrentHeldAndGetNext(
@@ -1291,15 +1284,15 @@ unsafe extern "C" fn AIO_ReadPool_releaseCurrentHeldAndGetNext(
 #[no_mangle]
 pub unsafe extern "C" fn AIO_ReadPool_fillBuffer(
     mut ctx: *mut ReadPoolCtx_t,
-    mut n: size_t,
-) -> size_t {
+    mut n: libc::size_t,
+) -> libc::size_t {
     let mut job = 0 as *mut IOJob_t;
     let mut useCoalesce = 0 as libc::c_int;
     if n > (*ctx).base.jobBufferSize {
         n = (*ctx).base.jobBufferSize;
     }
     if (*ctx).srcBufferLoaded >= n {
-        return 0 as libc::c_int as size_t;
+        return 0 as libc::c_int as libc::size_t;
     }
     if (*ctx).srcBufferLoaded > 0 as libc::c_int as libc::c_ulong {
         useCoalesce = 1 as libc::c_int;
@@ -1312,7 +1305,7 @@ pub unsafe extern "C" fn AIO_ReadPool_fillBuffer(
     }
     job = AIO_ReadPool_releaseCurrentHeldAndGetNext(ctx);
     if job.is_null() {
-        return 0 as libc::c_int as size_t;
+        return 0 as libc::c_int as libc::size_t;
     }
     if useCoalesce != 0 {
         debug_assert!(((*ctx).srcBufferLoaded).wrapping_add((*job).usedBufferSize)
@@ -1326,9 +1319,9 @@ pub unsafe extern "C" fn AIO_ReadPool_fillBuffer(
         );
         (*ctx)
             .srcBufferLoaded = ((*ctx).srcBufferLoaded as libc::c_ulong)
-            .wrapping_add((*job).usedBufferSize) as size_t as size_t;
+            .wrapping_add((*job).usedBufferSize) ;
     } else {
-        (*ctx).srcBuffer = (*job).buffer as *mut U8;
+        (*ctx).srcBuffer = (*job).buffer as *mut u8;
         (*ctx).srcBufferLoaded = (*job).usedBufferSize;
     }
     return (*job).usedBufferSize;
@@ -1336,7 +1329,7 @@ pub unsafe extern "C" fn AIO_ReadPool_fillBuffer(
 #[no_mangle]
 pub unsafe extern "C" fn AIO_ReadPool_consumeAndRefill(
     mut ctx: *mut ReadPoolCtx_t,
-) -> size_t {
+) -> libc::size_t {
     AIO_ReadPool_consumeBytes(ctx, (*ctx).srcBufferLoaded);
     return AIO_ReadPool_fillBuffer(ctx, (*ctx).base.jobBufferSize);
 }
@@ -1364,9 +1357,9 @@ pub unsafe extern "C" fn AIO_ReadPool_setAsync(
 unsafe extern "C" fn run_static_initializers() {
     segmentSizeT = ((32 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
         as libc::c_ulong)
-        .wrapping_div(::core::mem::size_of::<size_t>() as libc::c_ulong);
-    maskT = (::core::mem::size_of::<size_t>() as libc::c_ulong)
-        .wrapping_sub(1 as libc::c_int as libc::c_ulong);
+        .wrapping_div(::core::mem::size_of::<libc::size_t>() as libc::c_ulong);
+    maskT = (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        .wrapping_sub(1);
 }
 #[used]
 #[cfg_attr(target_os = "linux", link_section = ".init_array")]

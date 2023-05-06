@@ -11,10 +11,7 @@ extern "C" {
     fn UTIL_getTime() -> UTIL_time_t;
     fn UTIL_clockSpanNano(clockStart: UTIL_time_t) -> PTime;
 }
-pub type size_t = libc::c_ulong;
-pub type __uint64_t = libc::c_ulong;
-pub type uint64_t = __uint64_t;
-pub type PTime = uint64_t;
+pub type PTime = u64;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct UTIL_time_t {
@@ -24,26 +21,26 @@ pub struct UTIL_time_t {
 #[repr(C)]
 pub struct BMK_runTime_t {
     pub nanoSecPerRun: libc::c_double,
-    pub sumOfReturn: size_t,
+    pub sumOfReturn: libc::size_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct BMK_runOutcome_t {
     pub internal_never_ever_use_directly: BMK_runTime_t,
-    pub error_result_never_ever_use_directly: size_t,
+    pub error_result_never_ever_use_directly: libc::size_t,
     pub error_tag_never_ever_use_directly: libc::c_int,
 }
 pub type BMK_benchFn_t = Option::<
     unsafe extern "C" fn(
         *const libc::c_void,
-        size_t,
+        libc::size_t,
         *mut libc::c_void,
-        size_t,
+        libc::size_t,
         *mut libc::c_void,
-    ) -> size_t,
+    ) -> libc::size_t,
 >;
-pub type BMK_initFn_t = Option::<unsafe extern "C" fn(*mut libc::c_void) -> size_t>;
-pub type BMK_errorFn_t = Option::<unsafe extern "C" fn(size_t) -> libc::c_uint>;
+pub type BMK_initFn_t = Option::<unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t>;
+pub type BMK_errorFn_t = Option::<unsafe extern "C" fn(libc::size_t) -> libc::c_uint>;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct BMK_benchParams_t {
@@ -52,12 +49,12 @@ pub struct BMK_benchParams_t {
     pub initFn: BMK_initFn_t,
     pub initPayload: *mut libc::c_void,
     pub errorFn: BMK_errorFn_t,
-    pub blockCount: size_t,
+    pub blockCount: libc::size_t,
     pub srcBuffers: *const *const libc::c_void,
-    pub srcSizes: *const size_t,
+    pub srcSizes: *const libc::size_t,
     pub dstBuffers: *const *mut libc::c_void,
-    pub dstCapacities: *const size_t,
-    pub blockResults: *mut size_t,
+    pub dstCapacities: *const libc::size_t,
+    pub blockResults: *mut libc::size_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -85,7 +82,7 @@ pub const __ASSERT_FUNCTION: [libc::c_char; 75] = unsafe {
     >(b"BMK_runOutcome_t BMK_benchTimedFn(BMK_timedFnState_t *, BMK_benchParams_t)\0")
 };
 pub const TIMELOOP_NANOSEC: libc::c_ulonglong = (1 as libc::c_int as libc::c_ulonglong)
-    .wrapping_mul(1000000000 as libc::c_ulonglong);
+    .wrapping_mul(1000000000);
 #[no_mangle]
 pub unsafe extern "C" fn BMK_isSuccessful_runOutcome(
     mut outcome: BMK_runOutcome_t,
@@ -105,13 +102,13 @@ pub unsafe extern "C" fn BMK_extract_runTime(
 #[no_mangle]
 pub unsafe extern "C" fn BMK_extract_errorResult(
     mut outcome: BMK_runOutcome_t,
-) -> size_t {
+) -> libc::size_t {
     if !(outcome.error_tag_never_ever_use_directly != 0 as libc::c_int) {
         abort();
     }
     return outcome.error_result_never_ever_use_directly;
 }
-unsafe extern "C" fn BMK_runOutcome_error(mut errorResult: size_t) -> BMK_runOutcome_t {
+unsafe extern "C" fn BMK_runOutcome_error(mut errorResult: libc::size_t) -> BMK_runOutcome_t {
     let mut b = BMK_runOutcome_t {
         internal_never_ever_use_directly: BMK_runTime_t {
             nanoSecPerRun: 0.,
@@ -149,10 +146,10 @@ pub unsafe extern "C" fn BMK_benchFunction(
     mut p: BMK_benchParams_t,
     mut nbLoops: libc::c_uint,
 ) -> BMK_runOutcome_t {
-    let mut dstSize = 0 as libc::c_int as size_t;
+    let mut dstSize = 0 as libc::c_int as libc::size_t;
     nbLoops = nbLoops.wrapping_add((nbLoops == 0) as libc::c_int as libc::c_uint);
-    let mut i: size_t = 0;
-    i = 0 as libc::c_int as size_t;
+    let mut i: libc::size_t = 0;
+    i = 0 as libc::c_int as libc::size_t;
     while i < p.blockCount {
         memset(
             *(p.dstBuffers).offset(i as isize),
@@ -190,8 +187,8 @@ pub unsafe extern "C" fn BMK_benchFunction(
                 {
                     return BMK_runOutcome_error(res);
                 }
-                dstSize = (dstSize as libc::c_ulong).wrapping_add(res) as size_t
-                    as size_t;
+                dstSize = (dstSize as libc::c_ulong).wrapping_add(res) as libc::size_t
+                    as libc::size_t;
             }
             blockNb = blockNb.wrapping_add(1);
         }
@@ -226,7 +223,7 @@ pub unsafe extern "C" fn BMK_freeTimedFnState(mut state: *mut BMK_timedFnState_t
 #[no_mangle]
 pub unsafe extern "C" fn BMK_initStatic_timedFnState(
     mut buffer: *mut libc::c_void,
-    mut size: size_t,
+    mut size: libc::size_t,
     mut total_ms: libc::c_uint,
     mut run_ms: libc::c_uint,
 ) -> *mut BMK_timedFnState_t {
@@ -238,7 +235,7 @@ pub unsafe extern "C" fn BMK_initStatic_timedFnState(
     if size < ::core::mem::size_of::<BMK_timedFnState_s>() as libc::c_ulong {
         return NULL as *mut BMK_timedFnState_t;
     }
-    if (buffer as size_t).wrapping_rem(tfs_alignment) != 0 {
+    if (buffer as libc::size_t).wrapping_rem(tfs_alignment) != 0 {
         return NULL as *mut BMK_timedFnState_t;
     }
     BMK_resetTimedFnState(r, total_ms, run_ms);
@@ -263,16 +260,16 @@ pub unsafe extern "C" fn BMK_resetTimedFnState(
     (*timedFnState)
         .timeBudget_ns = (total_ms as PTime as libc::c_ulonglong)
         .wrapping_mul(TIMELOOP_NANOSEC)
-        .wrapping_div(1000 as libc::c_int as libc::c_ulonglong) as PTime;
+        .wrapping_div(1000) as PTime;
     (*timedFnState)
         .runBudget_ns = (run_ms as PTime as libc::c_ulonglong)
         .wrapping_mul(TIMELOOP_NANOSEC)
-        .wrapping_div(1000 as libc::c_int as libc::c_ulonglong) as PTime;
+        .wrapping_div(1000) as PTime;
     (*timedFnState)
         .fastestRun
         .nanoSecPerRun = TIMELOOP_NANOSEC as libc::c_double
         * 2000000000 as libc::c_int as libc::c_double;
-    (*timedFnState).fastestRun.sumOfReturn = -(1 as libc::c_longlong) as size_t;
+    (*timedFnState).fastestRun.sumOfReturn = -(1 as libc::c_longlong) as libc::size_t;
     (*timedFnState).nbLoops = 1 as libc::c_int as libc::c_uint;
     (*timedFnState).coolTime = UTIL_getTime();
 }
@@ -289,7 +286,7 @@ pub unsafe extern "C" fn BMK_benchTimedFn(
     mut p: BMK_benchParams_t,
 ) -> BMK_runOutcome_t {
     let runBudget_ns = (*cont).runBudget_ns;
-    let runTimeMin_ns = runBudget_ns.wrapping_div(2 as libc::c_int as libc::c_ulong);
+    let runTimeMin_ns = runBudget_ns.wrapping_div(2);
     let mut completed = 0 as libc::c_int;
     let mut bestRunTime = (*cont).fastestRun;
     while completed == 0 {
@@ -302,7 +299,7 @@ pub unsafe extern "C" fn BMK_benchTimedFn(
             * (*cont).nbLoops as libc::c_double;
         (*cont)
             .timeSpent_ns = ((*cont).timeSpent_ns as libc::c_ulonglong)
-            .wrapping_add(loopDuration_ns as libc::c_ulonglong) as PTime as PTime;
+            .wrapping_add(loopDuration_ns as libc::c_ulonglong) ;
         if loopDuration_ns
             > runBudget_ns as libc::c_double / 50 as libc::c_int as libc::c_double
         {
@@ -314,7 +311,7 @@ pub unsafe extern "C" fn BMK_benchTimedFn(
             (*cont)
                 .nbLoops = ((runBudget_ns as libc::c_double / fastestRun_ns)
                 as libc::c_uint)
-                .wrapping_add(1 as libc::c_int as libc::c_uint);
+                .wrapping_add(1);
         } else {
             let multiplier = 10 as libc::c_int as libc::c_uint;
             debug_assert!((*cont).nbLoops

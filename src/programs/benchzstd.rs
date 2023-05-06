@@ -41,8 +41,8 @@ extern "C" {
     fn UTIL_getTotalFileSize(
         fileNamesTable: *const *const libc::c_char,
         nbFiles: libc::c_uint,
-    ) -> U64;
-    fn UTIL_getFileSize(infilename: *const libc::c_char) -> U64;
+    ) -> u64;
+    fn UTIL_getFileSize(infilename: *const libc::c_char) -> u64;
     fn UTIL_isDirectory(infilename: *const libc::c_char) -> libc::c_int;
     fn setpriority(
         __which: __priority_which_t,
@@ -66,63 +66,59 @@ extern "C" {
         run_ms: libc::c_uint,
     ) -> *mut BMK_timedFnState_t;
     fn BMK_freeTimedFnState(state: *mut BMK_timedFnState_t);
-    fn ZSTD_compressBound(srcSize: size_t) -> size_t;
-    fn ZSTD_isError(code: size_t) -> libc::c_uint;
-    fn ZSTD_getErrorName(code: size_t) -> *const libc::c_char;
+    fn ZSTD_compressBound(srcSize: libc::size_t) -> libc::size_t;
+    fn ZSTD_isError(code: libc::size_t) -> libc::c_uint;
+    fn ZSTD_getErrorName(code: libc::size_t) -> *const libc::c_char;
     fn ZSTD_maxCLevel() -> libc::c_int;
     fn ZSTD_createCCtx() -> *mut ZSTD_CCtx;
-    fn ZSTD_freeCCtx(cctx: *mut ZSTD_CCtx) -> size_t;
+    fn ZSTD_freeCCtx(cctx: *mut ZSTD_CCtx) -> libc::size_t;
     fn ZSTD_createDCtx() -> *mut ZSTD_DCtx;
-    fn ZSTD_freeDCtx(dctx: *mut ZSTD_DCtx) -> size_t;
+    fn ZSTD_freeDCtx(dctx: *mut ZSTD_DCtx) -> libc::size_t;
     fn ZSTD_CCtx_setParameter(
         cctx: *mut ZSTD_CCtx,
         param: ZSTD_cParameter,
         value: libc::c_int,
-    ) -> size_t;
-    fn ZSTD_CCtx_reset(cctx: *mut ZSTD_CCtx, reset: ZSTD_ResetDirective) -> size_t;
+    ) -> libc::size_t;
+    fn ZSTD_CCtx_reset(cctx: *mut ZSTD_CCtx, reset: ZSTD_ResetDirective) -> libc::size_t;
     fn ZSTD_compress2(
         cctx: *mut ZSTD_CCtx,
         dst: *mut libc::c_void,
-        dstCapacity: size_t,
+        dstCapacity: libc::size_t,
         src: *const libc::c_void,
-        srcSize: size_t,
-    ) -> size_t;
-    fn ZSTD_DCtx_reset(dctx: *mut ZSTD_DCtx, reset: ZSTD_ResetDirective) -> size_t;
+        srcSize: libc::size_t,
+    ) -> libc::size_t;
+    fn ZSTD_DCtx_reset(dctx: *mut ZSTD_DCtx, reset: ZSTD_ResetDirective) -> libc::size_t;
     fn ZSTD_decompressStream(
         zds: *mut ZSTD_DStream,
         output: *mut ZSTD_outBuffer,
         input: *mut ZSTD_inBuffer,
-    ) -> size_t;
+    ) -> libc::size_t;
     fn ZSTD_CCtx_loadDictionary(
         cctx: *mut ZSTD_CCtx,
         dict: *const libc::c_void,
-        dictSize: size_t,
-    ) -> size_t;
+        dictSize: libc::size_t,
+    ) -> libc::size_t;
     fn ZSTD_DCtx_loadDictionary(
         dctx: *mut ZSTD_DCtx,
         dict: *const libc::c_void,
-        dictSize: size_t,
-    ) -> size_t;
-    fn ZSTD_sizeof_CCtx(cctx: *const ZSTD_CCtx) -> size_t;
+        dictSize: libc::size_t,
+    ) -> libc::size_t;
+    fn ZSTD_sizeof_CCtx(cctx: *const ZSTD_CCtx) -> libc::size_t;
     fn ZSTD_findDecompressedSize(
         src: *const libc::c_void,
-        srcSize: size_t,
+        srcSize: libc::size_t,
     ) -> libc::c_ulonglong;
     fn RDG_genBuffer(
         buffer: *mut libc::c_void,
-        size: size_t,
+        size: libc::size_t,
         matchProba: libc::c_double,
         litProba: libc::c_double,
         seed: libc::c_uint,
     );
 }
-pub type __uint8_t = libc::c_uchar;
-pub type __uint32_t = libc::c_uint;
-pub type __uint64_t = libc::c_ulong;
 pub type __off_t = libc::c_long;
 pub type __off64_t = libc::c_long;
 pub type __id_t = libc::c_uint;
-pub type size_t = libc::c_ulong;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct _IO_FILE {
@@ -152,19 +148,13 @@ pub struct _IO_FILE {
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
     pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: size_t,
+    pub __pad5: libc::size_t,
     pub _mode: libc::c_int,
     pub _unused2: [libc::c_char; 20],
 }
 pub type _IO_lock_t = ();
 pub type FILE = _IO_FILE;
 pub type id_t = __id_t;
-pub type uint8_t = __uint8_t;
-pub type uint32_t = __uint32_t;
-pub type uint64_t = __uint64_t;
-pub type BYTE = uint8_t;
-pub type U32 = uint32_t;
-pub type U64 = uint64_t;
 pub type __priority_which = libc::c_uint;
 pub const PRIO_USER: __priority_which = 2;
 pub const PRIO_PGRP: __priority_which = 1;
@@ -174,26 +164,26 @@ pub type __priority_which_t = libc::c_int;
 #[repr(C)]
 pub struct BMK_runTime_t {
     pub nanoSecPerRun: libc::c_double,
-    pub sumOfReturn: size_t,
+    pub sumOfReturn: libc::size_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct BMK_runOutcome_t {
     pub internal_never_ever_use_directly: BMK_runTime_t,
-    pub error_result_never_ever_use_directly: size_t,
+    pub error_result_never_ever_use_directly: libc::size_t,
     pub error_tag_never_ever_use_directly: libc::c_int,
 }
 pub type BMK_benchFn_t = Option::<
     unsafe extern "C" fn(
         *const libc::c_void,
-        size_t,
+        libc::size_t,
         *mut libc::c_void,
-        size_t,
+        libc::size_t,
         *mut libc::c_void,
-    ) -> size_t,
+    ) -> libc::size_t,
 >;
-pub type BMK_initFn_t = Option::<unsafe extern "C" fn(*mut libc::c_void) -> size_t>;
-pub type BMK_errorFn_t = Option::<unsafe extern "C" fn(size_t) -> libc::c_uint>;
+pub type BMK_initFn_t = Option::<unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t>;
+pub type BMK_errorFn_t = Option::<unsafe extern "C" fn(libc::size_t) -> libc::c_uint>;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct BMK_benchParams_t {
@@ -202,12 +192,12 @@ pub struct BMK_benchParams_t {
     pub initFn: BMK_initFn_t,
     pub initPayload: *mut libc::c_void,
     pub errorFn: BMK_errorFn_t,
-    pub blockCount: size_t,
+    pub blockCount: libc::size_t,
     pub srcBuffers: *const *const libc::c_void,
-    pub srcSizes: *const size_t,
+    pub srcSizes: *const libc::size_t,
     pub dstBuffers: *const *mut libc::c_void,
-    pub dstCapacities: *const size_t,
-    pub blockResults: *mut size_t,
+    pub dstCapacities: *const libc::size_t,
+    pub blockResults: *mut libc::size_t,
 }
 pub type BMK_timedFnState_t = BMK_timedFnState_s;
 pub type ZSTD_CCtx = ZSTD_CCtx_s;
@@ -269,16 +259,16 @@ pub const ZSTD_reset_session_only: ZSTD_ResetDirective = 1;
 #[repr(C)]
 pub struct ZSTD_inBuffer_s {
     pub src: *const libc::c_void,
-    pub size: size_t,
-    pub pos: size_t,
+    pub size: libc::size_t,
+    pub pos: libc::size_t,
 }
 pub type ZSTD_inBuffer = ZSTD_inBuffer_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_outBuffer_s {
     pub dst: *mut libc::c_void,
-    pub size: size_t,
-    pub pos: size_t,
+    pub size: libc::size_t,
+    pub pos: libc::size_t,
 }
 pub type ZSTD_outBuffer = ZSTD_outBuffer_s;
 pub type ZSTD_DStream = ZSTD_DCtx;
@@ -297,21 +287,21 @@ pub type ZSTD_paramSwitch_e = libc::c_uint;
 pub const ZSTD_ps_disable: ZSTD_paramSwitch_e = 2;
 pub const ZSTD_ps_enable: ZSTD_paramSwitch_e = 1;
 pub const ZSTD_ps_auto: ZSTD_paramSwitch_e = 0;
-pub type XXH32_hash_t = uint32_t;
+pub type XXH32_hash_t = u32;
 pub type xxh_u32 = XXH32_hash_t;
 pub type XXH_alignment = libc::c_uint;
 pub const XXH_unaligned: XXH_alignment = 1;
 pub const XXH_aligned: XXH_alignment = 0;
-pub type xxh_u8 = uint8_t;
-pub type XXH64_hash_t = uint64_t;
+pub type xxh_u8 = u8;
+pub type XXH64_hash_t = u64;
 pub type xxh_u64 = XXH64_hash_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct BMK_benchResult_t {
-    pub cSize: size_t,
+    pub cSize: libc::size_t,
     pub cSpeed: libc::c_ulonglong,
     pub dSpeed: libc::c_ulonglong,
-    pub cMem: size_t,
+    pub cMem: libc::size_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -324,7 +314,7 @@ pub struct BMK_benchOutcome_t {
 pub struct BMK_advancedParams_t {
     pub mode: BMK_mode_t,
     pub nbSeconds: libc::c_uint,
-    pub blockSize: size_t,
+    pub blockSize: libc::size_t,
     pub nbWorkers: libc::c_int,
     pub realTime: libc::c_uint,
     pub additionalParam: libc::c_int,
@@ -345,7 +335,7 @@ pub const BMK_both: BMK_mode_t = 0;
 pub struct BMK_initDCtxArgs {
     pub dctx: *mut ZSTD_DCtx,
     pub dictBuffer: *const libc::c_void,
-    pub dictBufferSize: size_t,
+    pub dictBufferSize: libc::size_t,
 }
 pub const ZSTD_error_dstSize_tooSmall: C2RustUnnamed = 70;
 #[derive(Copy, Clone)]
@@ -353,7 +343,7 @@ pub const ZSTD_error_dstSize_tooSmall: C2RustUnnamed = 70;
 pub struct BMK_initCCtxArgs {
     pub cctx: *mut ZSTD_CCtx,
     pub dictBuffer: *const libc::c_void,
-    pub dictBufferSize: size_t,
+    pub dictBufferSize: libc::size_t,
     pub cLevel: libc::c_int,
     pub comprParams: *const ZSTD_compressionParameters,
     pub adv: *const BMK_advancedParams_t,
@@ -398,14 +388,14 @@ pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1 as libc::c_int);
 pub const PRIO_PROCESS_0: libc::c_int = PRIO_PROCESS as libc::c_int;
 pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0 as libc::c_ulonglong)
-    .wrapping_sub(1 as libc::c_int as libc::c_ulonglong);
+    .wrapping_sub(1);
 pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0 as libc::c_ulonglong)
-    .wrapping_sub(2 as libc::c_int as libc::c_ulonglong);
+    .wrapping_sub(2);
 pub const XXH_FORCE_ALIGN_CHECK: libc::c_int = 0 as libc::c_int;
 unsafe extern "C" fn XXH_memcpy(
     mut dest: *mut libc::c_void,
     mut src: *const libc::c_void,
-    mut size: size_t,
+    mut size: libc::size_t,
 ) -> *mut libc::c_void {
     return libc::memcpy(dest, src, size as libc::size_t);
 }
@@ -499,9 +489,9 @@ pub const XXH_PRIME64_5: libc::c_ulonglong = 0x27d4eb2f165667c5 as libc::c_ulong
 unsafe extern "C" fn XXH64_round(mut acc: xxh_u64, mut input: xxh_u64) -> xxh_u64 {
     acc = (acc as libc::c_ulonglong)
         .wrapping_add((input as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_2))
-        as xxh_u64 as xxh_u64;
+        ;
     acc = ::core::intrinsics::rotate_left(acc, 31 as libc::c_int as libc::c_ulong);
-    acc = (acc as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_1) as xxh_u64 as xxh_u64;
+    acc = (acc as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_1) ;
     return acc;
 }
 unsafe extern "C" fn XXH64_mergeRound(mut acc: xxh_u64, mut val: xxh_u64) -> xxh_u64 {
@@ -514,16 +504,16 @@ unsafe extern "C" fn XXH64_mergeRound(mut acc: xxh_u64, mut val: xxh_u64) -> xxh
 }
 unsafe extern "C" fn XXH64_avalanche(mut h64: xxh_u64) -> xxh_u64 {
     h64 ^= h64 >> 33 as libc::c_int;
-    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_2) as xxh_u64 as xxh_u64;
+    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_2) ;
     h64 ^= h64 >> 29 as libc::c_int;
-    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_3) as xxh_u64 as xxh_u64;
+    h64 = (h64 as libc::c_ulonglong).wrapping_mul(XXH_PRIME64_3) ;
     h64 ^= h64 >> 32 as libc::c_int;
     return h64;
 }
 unsafe extern "C" fn XXH64_finalize(
     mut h64: xxh_u64,
     mut ptr: *const xxh_u8,
-    mut len: size_t,
+    mut len: libc::size_t,
     mut align: XXH_alignment,
 ) -> xxh_u64 {
     if ptr.is_null() {
@@ -541,8 +531,8 @@ unsafe extern "C" fn XXH64_finalize(
             as libc::c_ulonglong)
             .wrapping_mul(XXH_PRIME64_1)
             .wrapping_add(XXH_PRIME64_4) as xxh_u64;
-        len = (len as libc::c_ulong).wrapping_sub(8 as libc::c_int as libc::c_ulong)
-            as size_t as size_t;
+        len = (len as libc::c_ulong).wrapping_sub(8)
+            ;
     }
     if len >= 4 as libc::c_int as libc::c_ulong {
         h64 = (h64 as libc::c_ulonglong
@@ -554,8 +544,8 @@ unsafe extern "C" fn XXH64_finalize(
             as libc::c_ulonglong)
             .wrapping_mul(XXH_PRIME64_2)
             .wrapping_add(XXH_PRIME64_3) as xxh_u64;
-        len = (len as libc::c_ulong).wrapping_sub(4 as libc::c_int as libc::c_ulong)
-            as size_t as size_t;
+        len = (len as libc::c_ulong).wrapping_sub(4)
+            ;
     }
     while len > 0 as libc::c_int as libc::c_ulong {
         let fresh0 = ptr;
@@ -571,7 +561,7 @@ unsafe extern "C" fn XXH64_finalize(
 }
 unsafe extern "C" fn XXH64_endian_align(
     mut input: *const xxh_u8,
-    mut len: size_t,
+    mut len: libc::size_t,
     mut seed: xxh_u64,
     mut align: XXH_alignment,
 ) -> xxh_u64 {
@@ -586,7 +576,7 @@ unsafe extern "C" fn XXH64_endian_align(
             .wrapping_add(XXH_PRIME64_1)
             .wrapping_add(XXH_PRIME64_2) as xxh_u64;
         let mut v2 = (seed as libc::c_ulonglong).wrapping_add(XXH_PRIME64_2) as xxh_u64;
-        let mut v3 = seed.wrapping_add(0 as libc::c_int as libc::c_ulong);
+        let mut v3 = seed.wrapping_add(0);
         let mut v4 = (seed as libc::c_ulonglong).wrapping_sub(XXH_PRIME64_1) as xxh_u64;
         loop {
             v1 = XXH64_round(
@@ -630,22 +620,22 @@ unsafe extern "C" fn XXH64_endian_align(
     } else {
         h64 = (seed as libc::c_ulonglong).wrapping_add(XXH_PRIME64_5) as xxh_u64;
     }
-    h64 = (h64 as libc::c_ulong).wrapping_add(len) as xxh_u64 as xxh_u64;
+    h64 = (h64 as libc::c_ulong).wrapping_add(len) ;
     return XXH64_finalize(h64, input, len, align);
 }
 #[inline]
 unsafe extern "C" fn XXH_INLINE_XXH64(
     mut input: *const libc::c_void,
-    mut len: size_t,
+    mut len: libc::size_t,
     mut seed: XXH64_hash_t,
 ) -> XXH64_hash_t {
     return XXH64_endian_align(input as *const xxh_u8, len, seed, XXH_unaligned);
 }
 pub const MB_UNIT: libc::c_int = 1000000 as libc::c_int;
 pub const TIMELOOP_NANOSEC: libc::c_ulonglong = (1 as libc::c_int as libc::c_ulonglong)
-    .wrapping_mul(1000000000 as libc::c_ulonglong);
+    .wrapping_mul(1000000000);
 pub const BMK_RUNTEST_DEFAULT_MS: libc::c_int = 1000 as libc::c_int;
-static mut maxMemory: size_t = 0;
+static mut maxMemory: libc::size_t = 0;
 pub const DEBUG: libc::c_int = 0 as libc::c_int;
 #[no_mangle]
 pub unsafe extern "C" fn BMK_initAdvancedParams() -> BMK_advancedParams_t {
@@ -653,7 +643,7 @@ pub unsafe extern "C" fn BMK_initAdvancedParams() -> BMK_advancedParams_t {
         let mut init = BMK_advancedParams_t {
             mode: BMK_both,
             nbSeconds: BMK_TIMETEST_DEFAULT_S as libc::c_uint,
-            blockSize: 0 as libc::c_int as size_t,
+            blockSize: 0 as libc::c_int as libc::size_t,
             nbWorkers: 0 as libc::c_int,
             realTime: 0 as libc::c_int as libc::c_uint,
             additionalParam: 0 as libc::c_int,
@@ -672,7 +662,7 @@ pub unsafe extern "C" fn BMK_initAdvancedParams() -> BMK_advancedParams_t {
 unsafe extern "C" fn BMK_initCCtx(
     mut ctx: *mut ZSTD_CCtx,
     mut dictBuffer: *const libc::c_void,
-    mut dictBufferSize: size_t,
+    mut dictBufferSize: libc::size_t,
     mut cLevel: libc::c_int,
     mut comprParams: *const ZSTD_compressionParameters,
     mut adv: *const BMK_advancedParams_t,
@@ -1021,7 +1011,7 @@ unsafe extern "C" fn BMK_initCCtx(
 unsafe extern "C" fn BMK_initDCtx(
     mut dctx: *mut ZSTD_DCtx,
     mut dictBuffer: *const libc::c_void,
-    mut dictBufferSize: size_t,
+    mut dictBufferSize: libc::size_t,
 ) {
     let zerr = ZSTD_DCtx_reset(dctx, ZSTD_reset_session_and_parameters);
     if ZSTD_isError(zerr) != 0 {
@@ -1056,7 +1046,7 @@ unsafe extern "C" fn BMK_initDCtx(
         exit(1 as libc::c_int);
     }
 }
-unsafe extern "C" fn local_initCCtx(mut payload: *mut libc::c_void) -> size_t {
+unsafe extern "C" fn local_initCCtx(mut payload: *mut libc::c_void) -> libc::size_t {
     let mut ag = payload as *mut BMK_initCCtxArgs;
     BMK_initCCtx(
         (*ag).cctx,
@@ -1066,31 +1056,31 @@ unsafe extern "C" fn local_initCCtx(mut payload: *mut libc::c_void) -> size_t {
         (*ag).comprParams,
         (*ag).adv,
     );
-    return 0 as libc::c_int as size_t;
+    return 0 as libc::c_int as libc::size_t;
 }
-unsafe extern "C" fn local_initDCtx(mut payload: *mut libc::c_void) -> size_t {
+unsafe extern "C" fn local_initDCtx(mut payload: *mut libc::c_void) -> libc::size_t {
     let mut ag = payload as *mut BMK_initDCtxArgs;
     BMK_initDCtx((*ag).dctx, (*ag).dictBuffer, (*ag).dictBufferSize);
-    return 0 as libc::c_int as size_t;
+    return 0 as libc::c_int as libc::size_t;
 }
 unsafe extern "C" fn local_defaultCompress(
     mut srcBuffer: *const libc::c_void,
-    mut srcSize: size_t,
+    mut srcSize: libc::size_t,
     mut dstBuffer: *mut libc::c_void,
-    mut dstSize: size_t,
+    mut dstSize: libc::size_t,
     mut addArgs: *mut libc::c_void,
-) -> size_t {
+) -> libc::size_t {
     let cctx = addArgs as *mut ZSTD_CCtx;
     return ZSTD_compress2(cctx, dstBuffer, dstSize, srcBuffer, srcSize);
 }
 unsafe extern "C" fn local_defaultDecompress(
     mut srcBuffer: *const libc::c_void,
-    mut srcSize: size_t,
+    mut srcSize: libc::size_t,
     mut dstBuffer: *mut libc::c_void,
-    mut dstCapacity: size_t,
+    mut dstCapacity: libc::size_t,
     mut addArgs: *mut libc::c_void,
-) -> size_t {
-    let mut moreToFlush = 1 as libc::c_int as size_t;
+) -> libc::size_t {
+    let mut moreToFlush = 1 as libc::c_int as libc::size_t;
     let dctx = addArgs as *mut ZSTD_DCtx;
     let mut in_0 = ZSTD_inBuffer {
         src: 0 as *const libc::c_void,
@@ -1104,13 +1094,13 @@ unsafe extern "C" fn local_defaultDecompress(
     };
     in_0.src = srcBuffer;
     in_0.size = srcSize;
-    in_0.pos = 0 as libc::c_int as size_t;
+    in_0.pos = 0 as libc::c_int as libc::size_t;
     out.dst = dstBuffer;
     out.size = dstCapacity;
-    out.pos = 0 as libc::c_int as size_t;
+    out.pos = 0 as libc::c_int as libc::size_t;
     while moreToFlush != 0 {
         if out.pos == out.size {
-            return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as size_t;
+            return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         moreToFlush = ZSTD_decompressStream(dctx, &mut out, &mut in_0);
         if ZSTD_isError(moreToFlush) != 0 {
@@ -1168,25 +1158,25 @@ unsafe extern "C" fn BMK_benchOutcome_setValidResult(
 }
 unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     mut srcPtrs: *mut *const libc::c_void,
-    mut srcSizes: *mut size_t,
+    mut srcSizes: *mut libc::size_t,
     mut cPtrs: *mut *mut libc::c_void,
-    mut cCapacities: *mut size_t,
-    mut cSizes: *mut size_t,
+    mut cCapacities: *mut libc::size_t,
+    mut cSizes: *mut libc::size_t,
     mut resPtrs: *mut *mut libc::c_void,
-    mut resSizes: *mut size_t,
+    mut resSizes: *mut libc::size_t,
     mut resultBufferPtr: *mut *mut libc::c_void,
     mut compressedBuffer: *mut libc::c_void,
-    mut maxCompressedSize: size_t,
+    mut maxCompressedSize: libc::size_t,
     mut timeStateCompress: *mut BMK_timedFnState_t,
     mut timeStateDecompress: *mut BMK_timedFnState_t,
     mut srcBuffer: *const libc::c_void,
-    mut srcSize: size_t,
-    mut fileSizes: *const size_t,
+    mut srcSize: libc::size_t,
+    mut fileSizes: *const libc::size_t,
     mut nbFiles: libc::c_uint,
     cLevel: libc::c_int,
     mut comprParams: *const ZSTD_compressionParameters,
     mut dictBuffer: *const libc::c_void,
-    mut dictBufferSize: size_t,
+    mut dictBufferSize: libc::size_t,
     mut cctx: *mut ZSTD_CCtx,
     mut dctx: *mut ZSTD_DCtx,
     mut displayLevel: libc::c_int,
@@ -1208,9 +1198,9 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         cMem: 0,
     };
     let loadedCompressedSize = srcSize;
-    let mut cSize = 0 as libc::c_int as size_t;
+    let mut cSize = 0 as libc::c_int as libc::size_t;
     let mut ratio = 0.0f64;
-    let mut nbBlocks: U32 = 0;
+    let mut nbBlocks: u32 = 0;
     debug_assert!(!cctx.is_null());
     debug_assert!(!dctx.is_null());
     memset(
@@ -1221,20 +1211,20 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     if strlen(displayName) > 17 as libc::c_int as libc::c_ulong {
         displayName = displayName
             .offset(
-                (strlen(displayName)).wrapping_sub(17 as libc::c_int as libc::c_ulong)
+                (strlen(displayName)).wrapping_sub(17)
                     as isize,
             );
     }
     if (*adv).mode as libc::c_uint == BMK_decodeOnly as libc::c_int as libc::c_uint {
         let mut srcPtr = srcBuffer as *const libc::c_char;
-        let mut totalDSize64 = 0 as libc::c_int as U64;
-        let mut fileNb: U32 = 0;
-        fileNb = 0 as libc::c_int as U32;
+        let mut totalDSize64 = 0 as libc::c_int as u64;
+        let mut fileNb: u32 = 0;
+        fileNb = 0 as libc::c_int as u32;
         while fileNb < nbFiles {
             let fSize64 = ZSTD_findDecompressedSize(
                 srcPtr as *const libc::c_void,
                 *fileSizes.offset(fileNb as isize),
-            ) as U64;
+            ) as u64;
             if fSize64 as libc::c_ulonglong == ZSTD_CONTENTSIZE_UNKNOWN {
                 let mut r = BMK_benchOutcome_t {
                     internal_never_use_directly: BMK_benchResult_t {
@@ -1311,8 +1301,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 r_0.tag = 32 as libc::c_int;
                 return r_0;
             }
-            totalDSize64 = (totalDSize64 as libc::c_ulong).wrapping_add(fSize64) as U64
-                as U64;
+            totalDSize64 = (totalDSize64 as libc::c_ulong).wrapping_add(fSize64) as u64
+                as u64;
             srcPtr = srcPtr.offset(*fileSizes.offset(fileNb as isize) as isize);
             fileNb = fileNb.wrapping_add(1);
         }
@@ -1403,9 +1393,9 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     let mut srcPtr_0 = srcBuffer as *const libc::c_char;
     let mut cPtr = compressedBuffer as *mut libc::c_char;
     let mut resPtr = *resultBufferPtr as *mut libc::c_char;
-    let mut fileNb_0: U32 = 0;
-    nbBlocks = 0 as libc::c_int as U32;
-    fileNb_0 = 0 as libc::c_int as U32;
+    let mut fileNb_0: u32 = 0;
+    nbBlocks = 0 as libc::c_int as u32;
+    fileNb_0 = 0 as libc::c_int as u32;
     while fileNb_0 < nbFiles {
         let mut remaining = *fileSizes.offset(fileNb_0 as isize);
         let nbBlocksforThisFile = if (*adv).mode as libc::c_uint
@@ -1414,8 +1404,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             1 as libc::c_int as libc::c_uint
         } else {
             remaining
-                .wrapping_add(blockSize.wrapping_sub(1 as libc::c_int as libc::c_ulong))
-                .wrapping_div(blockSize) as U32
+                .wrapping_add(blockSize.wrapping_sub(1))
+                .wrapping_div(blockSize) as u32
         };
         let blockEnd = nbBlocks.wrapping_add(nbBlocksforThisFile);
         while nbBlocks < blockEnd {
@@ -1448,7 +1438,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 == BMK_decodeOnly as libc::c_int as libc::c_uint
             {
                 ZSTD_findDecompressedSize(srcPtr_0 as *const libc::c_void, thisBlockSize)
-                    as size_t
+                    as libc::size_t
             } else {
                 thisBlockSize
             };
@@ -1456,7 +1446,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             cPtr = cPtr.offset(*cCapacities.offset(nbBlocks as isize) as isize);
             resPtr = resPtr.offset(thisBlockSize as isize);
             remaining = (remaining as libc::c_ulong).wrapping_sub(thisBlockSize)
-                as size_t as size_t;
+                ;
             if (*adv).mode as libc::c_uint
                 == BMK_decodeOnly as libc::c_int as libc::c_uint
             {
@@ -1501,7 +1491,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         b" =\0" as *const u8 as *const libc::c_char,
         b" \\\0" as *const u8 as *const libc::c_char,
     ];
-    let mut markNb = 0 as libc::c_int as U32;
+    let mut markNb = 0 as libc::c_int as u32;
     let mut compressionCompleted = ((*adv).mode as libc::c_uint
         == BMK_decodeOnly as libc::c_int as libc::c_uint) as libc::c_int;
     let mut decompressionCompleted = ((*adv).mode as libc::c_uint
@@ -1514,10 +1504,10 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         errorFn: None,
         blockCount: 0,
         srcBuffers: 0 as *const *const libc::c_void,
-        srcSizes: 0 as *const size_t,
+        srcSizes: 0 as *const libc::size_t,
         dstBuffers: 0 as *const *mut libc::c_void,
-        dstCapacities: 0 as *const size_t,
-        blockResults: 0 as *mut size_t,
+        dstCapacities: 0 as *const libc::size_t,
+        blockResults: 0 as *mut libc::size_t,
     };
     let mut dbp = BMK_benchParams_t {
         benchFn: None,
@@ -1527,10 +1517,10 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         errorFn: None,
         blockCount: 0,
         srcBuffers: 0 as *const *const libc::c_void,
-        srcSizes: 0 as *const size_t,
+        srcSizes: 0 as *const libc::size_t,
         dstBuffers: 0 as *const *mut libc::c_void,
-        dstCapacities: 0 as *const size_t,
-        blockResults: 0 as *mut size_t,
+        dstCapacities: 0 as *const libc::size_t,
+        blockResults: 0 as *mut libc::size_t,
     };
     let mut cctxprep = BMK_initCCtxArgs {
         cctx: 0 as *mut ZSTD_CCtx,
@@ -1550,20 +1540,20 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         local_defaultCompress
             as unsafe extern "C" fn(
                 *const libc::c_void,
-                size_t,
+                libc::size_t,
                 *mut libc::c_void,
-                size_t,
+                libc::size_t,
                 *mut libc::c_void,
-            ) -> size_t,
+            ) -> libc::size_t,
     );
     cbp.benchPayload = cctx as *mut libc::c_void;
     cbp
         .initFn = Some(
-        local_initCCtx as unsafe extern "C" fn(*mut libc::c_void) -> size_t,
+        local_initCCtx as unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t,
     );
     cbp.initPayload = &mut cctxprep as *mut BMK_initCCtxArgs as *mut libc::c_void;
-    cbp.errorFn = Some(ZSTD_isError as unsafe extern "C" fn(size_t) -> libc::c_uint);
-    cbp.blockCount = nbBlocks as size_t;
+    cbp.errorFn = Some(ZSTD_isError as unsafe extern "C" fn(libc::size_t) -> libc::c_uint);
+    cbp.blockCount = nbBlocks as libc::size_t;
     cbp.srcBuffers = srcPtrs;
     cbp.srcSizes = srcSizes;
     cbp.dstBuffers = cPtrs;
@@ -1580,25 +1570,25 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
         local_defaultDecompress
             as unsafe extern "C" fn(
                 *const libc::c_void,
-                size_t,
+                libc::size_t,
                 *mut libc::c_void,
-                size_t,
+                libc::size_t,
                 *mut libc::c_void,
-            ) -> size_t,
+            ) -> libc::size_t,
     );
     dbp.benchPayload = dctx as *mut libc::c_void;
     dbp
         .initFn = Some(
-        local_initDCtx as unsafe extern "C" fn(*mut libc::c_void) -> size_t,
+        local_initDCtx as unsafe extern "C" fn(*mut libc::c_void) -> libc::size_t,
     );
     dbp.initPayload = &mut dctxprep as *mut BMK_initDCtxArgs as *mut libc::c_void;
-    dbp.errorFn = Some(ZSTD_isError as unsafe extern "C" fn(size_t) -> libc::c_uint);
-    dbp.blockCount = nbBlocks as size_t;
+    dbp.errorFn = Some(ZSTD_isError as unsafe extern "C" fn(libc::size_t) -> libc::c_uint);
+    dbp.blockCount = nbBlocks as libc::size_t;
     dbp.srcBuffers = cPtrs as *const *const libc::c_void;
     dbp.srcSizes = cSizes;
     dbp.dstBuffers = resPtrs;
     dbp.dstCapacities = resSizes;
-    dbp.blockResults = NULL as *mut size_t;
+    dbp.blockResults = NULL as *mut libc::size_t;
     dctxprep.dctx = dctx;
     dctxprep.dictBuffer = dictBuffer;
     dctxprep.dictBufferSize = dictBufferSize;
@@ -1612,8 +1602,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     }
     debug_assert!(srcSize
         < (2147483647 as libc::c_int as libc::c_uint)
-            .wrapping_mul(2 as libc::c_uint)
-            .wrapping_add(1 as libc::c_uint) as libc::c_ulong);
+            .wrapping_mul(2)
+            .wrapping_add(1) as libc::c_ulong);
     if displayLevel >= 2 as libc::c_int {
         fprintf(
             stdout,
@@ -1675,7 +1665,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             };
             newResult
                 .cSpeed = (srcSize as libc::c_double * TIMELOOP_NANOSEC as libc::c_double
-                / cResult.nanoSecPerRun) as U64 as libc::c_ulonglong;
+                / cResult.nanoSecPerRun) as u64 as libc::c_ulonglong;
             benchResult.cSize = cSize;
             if newResult.cSpeed > benchResult.cSpeed {
                 benchResult.cSpeed = newResult.cSpeed;
@@ -1687,8 +1677,8 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             };
             debug_assert!(cSize
                 < (2147483647 as libc::c_int as libc::c_uint)
-                    .wrapping_mul(2 as libc::c_uint)
-                    .wrapping_add(1 as libc::c_uint) as libc::c_ulong);
+                    .wrapping_mul(2)
+                    .wrapping_add(1) as libc::c_ulong);
             if displayLevel >= 2 as libc::c_int {
                 fprintf(
                     stdout,
@@ -1756,7 +1746,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             }
             let dResult = BMK_extract_runTime(dOutcome);
             let newDSpeed = (srcSize as libc::c_double
-                * TIMELOOP_NANOSEC as libc::c_double / dResult.nanoSecPerRun) as U64;
+                * TIMELOOP_NANOSEC as libc::c_double / dResult.nanoSecPerRun) as u64;
             if newDSpeed as libc::c_ulonglong > benchResult.dSpeed {
                 benchResult.dSpeed = newDSpeed as libc::c_ulonglong;
             }
@@ -1794,10 +1784,10 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             decompressionCompleted = BMK_isCompleted_TimedFn(timeStateDecompress);
         }
         markNb = markNb
-            .wrapping_add(1 as libc::c_int as libc::c_uint)
+            .wrapping_add(1)
             .wrapping_rem(NB_MARKS as libc::c_uint);
     }
-    let mut resultBuffer = *resultBufferPtr as *const BYTE;
+    let mut resultBuffer = *resultBufferPtr as *const u8;
     let crcCheck = XXH_INLINE_XXH64(
         resultBuffer as *const libc::c_void,
         srcSize,
@@ -1806,7 +1796,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     if (*adv).mode as libc::c_uint == BMK_both as libc::c_int as libc::c_uint
         && crcOrig != crcCheck
     {
-        let mut u: size_t = 0;
+        let mut u: libc::size_t = 0;
         fprintf(
             stderr,
             b"!!! WARNING !!! %14s : Invalid Checksum : %x != %x   \n\0" as *const u8
@@ -1816,15 +1806,15 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
             crcCheck as libc::c_uint,
         );
         fflush(NULL as *mut FILE);
-        u = 0 as libc::c_int as size_t;
+        u = 0 as libc::c_int as libc::size_t;
         while u < srcSize {
-            if *(srcBuffer as *const BYTE).offset(u as isize) as libc::c_int
+            if *(srcBuffer as *const u8).offset(u as isize) as libc::c_int
                 != *resultBuffer.offset(u as isize) as libc::c_int
             {
                 let mut segNb: libc::c_uint = 0;
                 let mut bNb: libc::c_uint = 0;
                 let mut pos: libc::c_uint = 0;
-                let mut bacc = 0 as libc::c_int as size_t;
+                let mut bacc = 0 as libc::c_int as libc::size_t;
                 fprintf(
                     stderr,
                     b"Decoding error at pos %u \0" as *const u8 as *const libc::c_char,
@@ -1837,11 +1827,11 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                         break;
                     }
                     bacc = (bacc as libc::c_ulong)
-                        .wrapping_add(*srcSizes.offset(segNb as isize)) as size_t
-                        as size_t;
+                        .wrapping_add(*srcSizes.offset(segNb as isize)) as libc::size_t
+                        as libc::size_t;
                     segNb = segNb.wrapping_add(1);
                 }
-                pos = u.wrapping_sub(bacc) as U32;
+                pos = u.wrapping_sub(bacc) as u32;
                 bNb = pos
                     .wrapping_div(
                         (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
@@ -1861,7 +1851,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 } else {
                     u
                 };
-                let mut n: size_t = 0;
+                let mut n: libc::size_t = 0;
                 fprintf(stderr, b"origin: \0" as *const u8 as *const libc::c_char);
                 fflush(NULL as *mut FILE);
                 n = lowest;
@@ -1869,7 +1859,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                     fprintf(
                         stderr,
                         b"%02X \0" as *const u8 as *const libc::c_char,
-                        *(srcBuffer as *const BYTE).offset(u.wrapping_sub(n) as isize)
+                        *(srcBuffer as *const u8).offset(u.wrapping_sub(n) as isize)
                             as libc::c_int,
                     );
                     fflush(NULL as *mut FILE);
@@ -1878,15 +1868,15 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 fprintf(
                     stderr,
                     b" :%02X:  \0" as *const u8 as *const libc::c_char,
-                    *(srcBuffer as *const BYTE).offset(u as isize) as libc::c_int,
+                    *(srcBuffer as *const u8).offset(u as isize) as libc::c_int,
                 );
                 fflush(NULL as *mut FILE);
-                n = 1 as libc::c_int as size_t;
+                n = 1 as libc::c_int as libc::size_t;
                 while n < 3 as libc::c_int as libc::c_ulong {
                     fprintf(
                         stderr,
                         b"%02X \0" as *const u8 as *const libc::c_char,
-                        *(srcBuffer as *const BYTE).offset(u.wrapping_add(n) as isize)
+                        *(srcBuffer as *const u8).offset(u.wrapping_add(n) as isize)
                             as libc::c_int,
                     );
                     fflush(NULL as *mut FILE);
@@ -1912,7 +1902,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                     *resultBuffer.offset(u as isize) as libc::c_int,
                 );
                 fflush(NULL as *mut FILE);
-                n = 1 as libc::c_int as size_t;
+                n = 1 as libc::c_int as libc::size_t;
                 while n < 3 as libc::c_int as libc::c_ulong {
                     fprintf(
                         stderr,
@@ -1926,7 +1916,7 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
                 fflush(NULL as *mut FILE);
                 break;
             } else {
-                if u == srcSize.wrapping_sub(1 as libc::c_int as libc::c_ulong) {
+                if u == srcSize.wrapping_sub(1) {
                     fprintf(
                         stderr,
                         b"no difference detected\n\0" as *const u8 as *const libc::c_char,
@@ -1975,22 +1965,22 @@ unsafe extern "C" fn BMK_benchMemAdvancedNoAlloc(
     }
     benchResult
         .cMem = ((1 as libc::c_ulonglong) << (*comprParams).windowLog)
-        .wrapping_add(ZSTD_sizeof_CCtx(cctx) as libc::c_ulonglong) as size_t;
+        .wrapping_add(ZSTD_sizeof_CCtx(cctx) as libc::c_ulonglong) as libc::size_t;
     return BMK_benchOutcome_setValidResult(benchResult);
 }
 pub const NB_MARKS: libc::c_int = 4 as libc::c_int;
 #[no_mangle]
 pub unsafe extern "C" fn BMK_benchMemAdvanced(
     mut srcBuffer: *const libc::c_void,
-    mut srcSize: size_t,
+    mut srcSize: libc::size_t,
     mut dstBuffer: *mut libc::c_void,
-    mut dstCapacity: size_t,
-    mut fileSizes: *const size_t,
+    mut dstCapacity: libc::size_t,
+    mut fileSizes: *const libc::size_t,
     mut nbFiles: libc::c_uint,
     mut cLevel: libc::c_int,
     mut comprParams: *const ZSTD_compressionParameters,
     mut dictBuffer: *const libc::c_void,
-    mut dictBufferSize: size_t,
+    mut dictBufferSize: libc::size_t,
     mut displayLevel: libc::c_int,
     mut displayName: *const libc::c_char,
     mut adv: *const BMK_advancedParams_t,
@@ -2006,8 +1996,8 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
     })
         .wrapping_add((srcSize == 0) as libc::c_int as libc::c_ulong);
     let maxNbBlocks = (srcSize
-        .wrapping_add(blockSize.wrapping_sub(1 as libc::c_int as libc::c_ulong))
-        .wrapping_div(blockSize) as U32)
+        .wrapping_add(blockSize.wrapping_sub(1))
+        .wrapping_div(blockSize) as u32)
         .wrapping_add(nbFiles);
     let srcPtrs = malloc(
         (maxNbBlocks as libc::c_ulong)
@@ -2015,34 +2005,34 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
     ) as *mut *const libc::c_void;
     let srcSizes = malloc(
         (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<size_t>() as libc::c_ulong),
-    ) as *mut size_t;
+            .wrapping_mul(::core::mem::size_of::<libc::size_t>() as libc::c_ulong),
+    ) as *mut libc::size_t;
     let cPtrs = malloc(
         (maxNbBlocks as libc::c_ulong)
             .wrapping_mul(::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong),
     ) as *mut *mut libc::c_void;
     let cSizes = malloc(
         (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<size_t>() as libc::c_ulong),
-    ) as *mut size_t;
+            .wrapping_mul(::core::mem::size_of::<libc::size_t>() as libc::c_ulong),
+    ) as *mut libc::size_t;
     let cCapacities = malloc(
         (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<size_t>() as libc::c_ulong),
-    ) as *mut size_t;
+            .wrapping_mul(::core::mem::size_of::<libc::size_t>() as libc::c_ulong),
+    ) as *mut libc::size_t;
     let resPtrs = malloc(
         (maxNbBlocks as libc::c_ulong)
             .wrapping_mul(::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong),
     ) as *mut *mut libc::c_void;
     let resSizes = malloc(
         (maxNbBlocks as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<size_t>() as libc::c_ulong),
-    ) as *mut size_t;
+            .wrapping_mul(::core::mem::size_of::<libc::size_t>() as libc::c_ulong),
+    ) as *mut libc::size_t;
     let mut timeStateCompress = BMK_createTimedFnState(
-        ((*adv).nbSeconds).wrapping_mul(1000 as libc::c_int as libc::c_uint),
+        ((*adv).nbSeconds).wrapping_mul(1000),
         BMK_RUNTEST_DEFAULT_MS as libc::c_uint,
     );
     let mut timeStateDecompress = BMK_createTimedFnState(
-        ((*adv).nbSeconds).wrapping_mul(1000 as libc::c_int as libc::c_uint),
+        ((*adv).nbSeconds).wrapping_mul(1000),
         BMK_RUNTEST_DEFAULT_MS as libc::c_uint,
     );
     let cctx = ZSTD_createCCtx();
@@ -2052,7 +2042,7 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
     } else {
         (ZSTD_compressBound(srcSize))
             .wrapping_add(
-                maxNbBlocks.wrapping_mul(1024 as libc::c_int as libc::c_uint)
+                maxNbBlocks.wrapping_mul(1024)
                     as libc::c_ulong,
             )
     };
@@ -2199,13 +2189,13 @@ pub unsafe extern "C" fn BMK_benchMemAdvanced(
 #[no_mangle]
 pub unsafe extern "C" fn BMK_benchMem(
     mut srcBuffer: *const libc::c_void,
-    mut srcSize: size_t,
-    mut fileSizes: *const size_t,
+    mut srcSize: libc::size_t,
+    mut fileSizes: *const libc::size_t,
     mut nbFiles: libc::c_uint,
     mut cLevel: libc::c_int,
     mut comprParams: *const ZSTD_compressionParameters,
     mut dictBuffer: *const libc::c_void,
-    mut dictBufferSize: size_t,
+    mut dictBufferSize: libc::size_t,
     mut displayLevel: libc::c_int,
     mut displayName: *const libc::c_char,
 ) -> BMK_benchOutcome_t {
@@ -2214,7 +2204,7 @@ pub unsafe extern "C" fn BMK_benchMem(
         srcBuffer,
         srcSize,
         NULL as *mut libc::c_void,
-        0 as libc::c_int as size_t,
+        0 as libc::c_int as libc::size_t,
         fileSizes,
         nbFiles,
         cLevel,
@@ -2228,13 +2218,13 @@ pub unsafe extern "C" fn BMK_benchMem(
 }
 unsafe extern "C" fn BMK_benchCLevel(
     mut srcBuffer: *const libc::c_void,
-    mut benchedSize: size_t,
-    mut fileSizes: *const size_t,
+    mut benchedSize: libc::size_t,
+    mut fileSizes: *const libc::size_t,
     mut nbFiles: libc::c_uint,
     mut cLevel: libc::c_int,
     mut comprParams: *const ZSTD_compressionParameters,
     mut dictBuffer: *const libc::c_void,
-    mut dictBufferSize: size_t,
+    mut dictBufferSize: libc::size_t,
     mut displayLevel: libc::c_int,
     mut displayName: *const libc::c_char,
     adv: *const BMK_advancedParams_t,
@@ -2274,7 +2264,7 @@ unsafe extern "C" fn BMK_benchCLevel(
         srcBuffer,
         benchedSize,
         NULL as *mut libc::c_void,
-        0 as libc::c_int as size_t,
+        0 as libc::c_int as libc::size_t,
         fileSizes,
         nbFiles,
         cLevel,
@@ -2316,7 +2306,7 @@ pub unsafe extern "C" fn BMK_syntheticTest(
         0,
         0,
     ];
-    let benchedSize = 10000000 as libc::c_int as size_t;
+    let benchedSize = 10000000 as libc::c_int as libc::size_t;
     let mut srcBuffer = 0 as *mut libc::c_void;
     let mut res = BMK_benchOutcome_t {
         internal_never_use_directly: BMK_benchResult_t {
@@ -2370,7 +2360,7 @@ pub unsafe extern "C" fn BMK_syntheticTest(
         cLevel,
         compressionParams,
         NULL as *const libc::c_void,
-        0 as libc::c_int as size_t,
+        0 as libc::c_int as libc::size_t,
         displayLevel,
         name.as_mut_ptr(),
         adv,
@@ -2378,18 +2368,18 @@ pub unsafe extern "C" fn BMK_syntheticTest(
     free(srcBuffer);
     return (BMK_isSuccessful_benchOutcome(res) == 0) as libc::c_int;
 }
-unsafe extern "C" fn BMK_findMaxMem(mut requiredMem: U64) -> size_t {
-    let step = (64 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as size_t;
-    let mut testmem = NULL as *mut BYTE;
+unsafe extern "C" fn BMK_findMaxMem(mut requiredMem: u64) -> libc::size_t {
+    let step = (64 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as libc::size_t;
+    let mut testmem = NULL as *mut u8;
     requiredMem = (requiredMem >> 26 as libc::c_int)
-        .wrapping_add(1 as libc::c_int as libc::c_ulong) << 26 as libc::c_int;
-    requiredMem = (requiredMem as libc::c_ulong).wrapping_add(step) as U64 as U64;
+        .wrapping_add(1) << 26 as libc::c_int;
+    requiredMem = (requiredMem as libc::c_ulong).wrapping_add(step) ;
     if requiredMem > maxMemory {
         requiredMem = maxMemory;
     }
     loop {
-        testmem = malloc(requiredMem) as *mut BYTE;
-        requiredMem = (requiredMem as libc::c_ulong).wrapping_sub(step) as U64 as U64;
+        testmem = malloc(requiredMem) as *mut u8;
+        requiredMem = (requiredMem as libc::c_ulong).wrapping_sub(step) ;
         if !(testmem.is_null() && requiredMem > 0 as libc::c_int as libc::c_ulong) {
             break;
         }
@@ -2399,14 +2389,14 @@ unsafe extern "C" fn BMK_findMaxMem(mut requiredMem: U64) -> size_t {
 }
 unsafe extern "C" fn BMK_loadFiles(
     mut buffer: *mut libc::c_void,
-    mut bufferSize: size_t,
-    mut fileSizes: *mut size_t,
+    mut bufferSize: libc::size_t,
+    mut fileSizes: *mut libc::size_t,
     mut fileNamesTable: *const *const libc::c_char,
     mut nbFiles: libc::c_uint,
     mut displayLevel: libc::c_int,
 ) -> libc::c_int {
-    let mut pos = 0 as libc::c_int as size_t;
-    let mut totalSize = 0 as libc::c_int as size_t;
+    let mut pos = 0 as libc::c_int as libc::size_t;
+    let mut totalSize = 0 as libc::c_int as libc::size_t;
     let mut n: libc::c_uint = 0;
     n = 0 as libc::c_int as libc::c_uint;
     while n < nbFiles {
@@ -2421,8 +2411,8 @@ unsafe extern "C" fn BMK_loadFiles(
                 );
                 fflush(NULL as *mut FILE);
             }
-            *fileSizes.offset(n as isize) = 0 as libc::c_int as size_t;
-        } else if fileSize == UTIL_FILESIZE_UNKNOWN as U64 {
+            *fileSizes.offset(n as isize) = 0 as libc::c_int as libc::size_t;
+        } else if fileSize == UTIL_FILESIZE_UNKNOWN as u64 {
             if displayLevel >= 2 as libc::c_int {
                 fprintf(
                     stderr,
@@ -2432,7 +2422,7 @@ unsafe extern "C" fn BMK_loadFiles(
                 );
                 fflush(NULL as *mut FILE);
             }
-            *fileSizes.offset(n as isize) = 0 as libc::c_int as size_t;
+            *fileSizes.offset(n as isize) = 0 as libc::c_int as libc::size_t;
         } else {
             let f = fopen(
                 *fileNamesTable.offset(n as isize),
@@ -2503,10 +2493,10 @@ unsafe extern "C" fn BMK_loadFiles(
                 }
                 return 11 as libc::c_int;
             }
-            pos = (pos as libc::c_ulong).wrapping_add(readSize) as size_t as size_t;
+            pos = (pos as libc::c_ulong).wrapping_add(readSize) ;
             *fileSizes.offset(n as isize) = fileSize;
-            totalSize = (totalSize as libc::c_ulong).wrapping_add(fileSize) as size_t
-                as size_t;
+            totalSize = (totalSize as libc::c_ulong).wrapping_add(fileSize) as libc::size_t
+                as libc::size_t;
             fclose(f);
         }
         n = n.wrapping_add(1);
@@ -2544,10 +2534,10 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mut srcBuffer = NULL as *mut libc::c_void;
-    let mut benchedSize: size_t = 0;
+    let mut benchedSize: libc::size_t = 0;
     let mut dictBuffer = NULL as *mut libc::c_void;
-    let mut dictBufferSize = 0 as libc::c_int as size_t;
-    let mut fileSizes = NULL as *mut size_t;
+    let mut dictBufferSize = 0 as libc::c_int as libc::size_t;
+    let mut fileSizes = NULL as *mut libc::size_t;
     let mut res = BMK_benchOutcome_t {
         internal_never_use_directly: BMK_benchResult_t {
             cSize: 0,
@@ -2578,7 +2568,7 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
         }
         return 14 as libc::c_int;
     }
-    if totalSizeToLoad == UTIL_FILESIZE_UNKNOWN as U64 {
+    if totalSizeToLoad == UTIL_FILESIZE_UNKNOWN as u64 {
         if displayLevel >= 1 as libc::c_int {
             fprintf(
                 stderr,
@@ -2590,8 +2580,8 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
     }
     fileSizes = calloc(
         nbFiles as libc::c_ulong,
-        ::core::mem::size_of::<size_t>() as libc::c_ulong,
-    ) as *mut size_t;
+        ::core::mem::size_of::<libc::size_t>() as libc::c_ulong,
+    ) as *mut libc::size_t;
     if fileSizes.is_null() {
         if displayLevel >= 1 as libc::c_int {
             fprintf(
@@ -2604,7 +2594,7 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
     }
     if !dictFileName.is_null() {
         let dictFileSize = UTIL_getFileSize(dictFileName);
-        if dictFileSize == UTIL_FILESIZE_UNKNOWN as U64 {
+        if dictFileSize == UTIL_FILESIZE_UNKNOWN as u64 {
             if displayLevel >= 1 as libc::c_int {
                 fprintf(
                     stderr,
@@ -2675,9 +2665,9 @@ pub unsafe extern "C" fn BMK_benchFilesAdvanced(
     match current_block {
         13707613154239713890 => {
             benchedSize = (BMK_findMaxMem(
-                totalSizeToLoad.wrapping_mul(3 as libc::c_int as libc::c_ulong),
+                totalSizeToLoad.wrapping_mul(3),
             ))
-                .wrapping_div(3 as libc::c_int as libc::c_ulong);
+                .wrapping_div(3);
             if benchedSize > totalSizeToLoad {
                 benchedSize = totalSizeToLoad;
             }
@@ -2795,7 +2785,7 @@ pub unsafe extern "C" fn BMK_benchFiles(
     );
 }
 unsafe extern "C" fn run_static_initializers() {
-    maxMemory = if ::core::mem::size_of::<size_t>() as libc::c_ulong
+    maxMemory = if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
         == 4 as libc::c_int as libc::c_ulong
     {
         (2 as libc::c_int as libc::c_uint)
@@ -2806,9 +2796,9 @@ unsafe extern "C" fn run_static_initializers() {
             ) as libc::c_ulong
     } else {
         ((1 as libc::c_ulonglong)
-            << (::core::mem::size_of::<size_t>() as libc::c_ulong)
-                .wrapping_mul(8 as libc::c_int as libc::c_ulong)
-                .wrapping_sub(31 as libc::c_int as libc::c_ulong)) as size_t
+            << (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                .wrapping_mul(8)
+                .wrapping_sub(31)) as libc::size_t
     };
 }
 #[used]

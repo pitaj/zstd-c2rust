@@ -4,12 +4,10 @@ extern "C" {
     fn clock_gettime(__clock_id: clockid_t, __tp: *mut timespec) -> libc::c_int;
     fn abort() -> !;
 }
-pub type __uint64_t = libc::c_ulong;
 pub type __time_t = libc::c_long;
 pub type __clockid_t = libc::c_int;
 pub type __syscall_slong_t = libc::c_long;
-pub type uint64_t = __uint64_t;
-pub type PTime = uint64_t;
+pub type PTime = u64;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct UTIL_time_t {
@@ -42,7 +40,7 @@ pub unsafe extern "C" fn UTIL_getTime() -> UTIL_time_t {
     let mut r = UTIL_time_t { t: 0 };
     r
         .t = (time.tv_sec as PTime as libc::c_ulonglong)
-        .wrapping_mul(1000000000 as libc::c_ulonglong)
+        .wrapping_mul(1000000000)
         .wrapping_add(time.tv_nsec as PTime as libc::c_ulonglong) as PTime;
     return r;
 }
@@ -59,7 +57,7 @@ pub unsafe extern "C" fn UTIL_getSpanTimeMicro(
     mut end: UTIL_time_t,
 ) -> PTime {
     return (UTIL_getSpanTimeNano(begin, end) as libc::c_ulonglong)
-        .wrapping_div(1000 as libc::c_ulonglong) as PTime;
+        .wrapping_div(1000) as PTime;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_clockSpanMicro(mut clockStart: UTIL_time_t) -> PTime {
