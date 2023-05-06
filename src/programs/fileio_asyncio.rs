@@ -240,7 +240,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
             file,
             (1).wrapping_mul((1) << 30 as libc::c_int) as libc::c_long,
             SEEK_CUR,
-        ) != 0 as libc::c_int
+        ) != 0
         {
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -292,7 +292,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
             );
         if nb0T != seg0SizeT {
             let nbNon0ST = seg0SizeT.wrapping_sub(nb0T);
-            if fseek(file, storedSkips as libc::c_long, SEEK_CUR) != 0 as libc::c_int {
+            if fseek(file, storedSkips as libc::c_long, SEEK_CUR) != 0 {
                 if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
                 }
@@ -382,7 +382,7 @@ unsafe extern "C" fn AIO_fwriteSparse(
             .wrapping_add(restPtr.offset_from(restStart) as libc::c_long as libc::c_uint);
         if restPtr != restEnd {
             let restSize = restEnd.offset_from(restPtr) as libc::c_long as libc::size_t;
-            if fseek(file, storedSkips as libc::c_long, SEEK_CUR) != 0 as libc::c_int {
+            if fseek(file, storedSkips as libc::c_long, SEEK_CUR) != 0 {
                 if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
                 }
@@ -468,7 +468,7 @@ unsafe extern "C" fn AIO_fwriteSparseEnd(
     }
     if storedSkips > 0 {
         debug_assert!((*prefs).sparseFileSupport > 0);
-        if fseek(file, storedSkips.wrapping_sub(1) as libc::c_long, SEEK_CUR) != 0 as libc::c_int {
+        if fseek(file, storedSkips.wrapping_sub(1) as libc::c_long, SEEK_CUR) != 0 {
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
@@ -505,7 +505,7 @@ unsafe extern "C" fn AIO_fwriteSparseEnd(
             1 as libc::c_int as libc::c_ulong,
             1 as libc::c_int as libc::c_ulong,
             file,
-        ) != 1 as libc::c_int as libc::c_ulong
+        ) != 1
         {
             if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
@@ -805,7 +805,7 @@ pub unsafe extern "C" fn AIO_WritePool_releaseIoJob(mut job: *mut IOJob_t) {
 #[no_mangle]
 pub unsafe extern "C" fn AIO_WritePool_closeFile(mut ctx: *mut WritePoolCtx_t) -> libc::c_int {
     let dstFile = (*ctx).base.file;
-    debug_assert!(!dstFile.is_null() || (*(*ctx).base.prefs).testMode != 0 as libc::c_int);
+    debug_assert!(!dstFile.is_null() || (*(*ctx).base.prefs).testMode != 0);
     AIO_WritePool_sparseWriteEnd(ctx);
     AIO_IOPool_setFile(&mut (*ctx).base, NULL as *mut FILE);
     return fclose(dstFile);

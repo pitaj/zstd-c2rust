@@ -339,12 +339,12 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 pub const ZSTD_isError: unsafe extern "C" fn(libc::size_t) -> libc::c_uint = ERR_isError;
@@ -517,7 +517,7 @@ unsafe extern "C" fn COVER_lower_bound(
     mut value: libc::size_t,
 ) -> *const libc::size_t {
     let mut count = last.offset_from(first) as libc::c_long as libc::size_t;
-    while count != 0 as libc::c_int as libc::c_ulong {
+    while count != 0 {
         let mut step = count.wrapping_div(2);
         let mut ptr = first;
         ptr = ptr.offset(step as isize);
@@ -655,7 +655,7 @@ unsafe extern "C" fn COVER_selectSegment(
     pos = bestSegment.begin;
     while pos != bestSegment.end {
         let mut freq = *freqs.offset(*((*ctx).dmerAt).offset(pos as isize) as isize);
-        if freq != 0 as libc::c_int as libc::c_uint {
+        if freq != 0 {
             newBegin = if newBegin < pos { newBegin } else { pos };
             newEnd = pos.wrapping_add(1);
         }
@@ -1319,7 +1319,7 @@ pub unsafe extern "C" fn COVER_best_wait(mut best: *mut COVER_best_t) {
         return;
     }
     pthread_mutex_lock((*best).mutex);
-    while (*best).liveJobs != 0 as libc::c_int as libc::c_ulong {
+    while (*best).liveJobs != 0 {
         pthread_cond_wait((*best).cond, (*best).mutex);
     }
     pthread_mutex_unlock((*best).mutex);

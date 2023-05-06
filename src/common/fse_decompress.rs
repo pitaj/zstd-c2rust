@@ -356,12 +356,12 @@ static mut BIT_mask: [libc::c_uint; 32] = [
 ];
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
@@ -583,7 +583,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
             }
             s_2 = s_2.wrapping_add(1);
         }
-        if position_0 != 0 as libc::c_int as libc::c_uint {
+        if position_0 != 0 {
             return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
         }
     }
@@ -661,7 +661,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         & (op < olimit) as libc::c_int
         != 0
     {
-        *op.offset(0 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(0) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state1, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state1, &mut bitD) as libc::c_int
@@ -671,7 +671,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         {
             BIT_reloadDStream(&mut bitD);
         }
-        *op.offset(1 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(1) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state2, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state2, &mut bitD) as libc::c_int
@@ -686,7 +686,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
                 break;
             }
         }
-        *op.offset(2 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(2) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state1, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state1, &mut bitD) as libc::c_int
@@ -696,7 +696,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         {
             BIT_reloadDStream(&mut bitD);
         }
-        *op.offset(3 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(3) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state2, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state2, &mut bitD) as libc::c_int

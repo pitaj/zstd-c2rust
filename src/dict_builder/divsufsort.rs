@@ -1445,7 +1445,7 @@ unsafe extern "C" fn ss_inplacemerge(
             }
         }
         last = last.offset(-1);
-        if x != 0 as libc::c_int {
+        if x != 0 {
             loop {
                 last = last.offset(-1);
                 if !(*last < 0) {
@@ -2066,7 +2066,7 @@ unsafe extern "C" fn sssort(
     let mut curbufsize: libc::c_int = 0;
     let mut limit: libc::c_int = 0;
     let mut i: libc::c_int = 0;
-    if lastsuffix != 0 as libc::c_int {
+    if lastsuffix != 0 {
         first = first.offset(1);
     }
     if bufsize < SS_BLOCKSIZE
@@ -2120,7 +2120,7 @@ unsafe extern "C" fn sssort(
     }
     ss_mintrosort(T, PA, a, middle, depth);
     k = SS_BLOCKSIZE;
-    while i != 0 as libc::c_int {
+    while i != 0 {
         if i & 1 != 0 {
             ss_swapmerge(
                 T,
@@ -2137,11 +2137,11 @@ unsafe extern "C" fn sssort(
         k <<= 1 as libc::c_int;
         i >>= 1 as libc::c_int;
     }
-    if limit != 0 as libc::c_int {
+    if limit != 0 {
         ss_mintrosort(T, PA, middle, last, depth);
         ss_inplacemerge(T, PA, first, middle, last, depth);
     }
-    if lastsuffix != 0 as libc::c_int {
+    if lastsuffix != 0 {
         let mut PAi: [libc::c_int; 2] = [0; 2];
         PAi[0 as libc::c_int as usize] = *PA.offset(*first.offset(-(1)) as isize);
         PAi[1 as libc::c_int as usize] = n - 2 as libc::c_int;
@@ -3319,7 +3319,7 @@ unsafe extern "C" fn trsort(
                 first = first.offset(-(t as isize));
                 skip += t;
             } else {
-                if skip != 0 as libc::c_int {
+                if skip != 0 {
                     *first.offset(skip as isize) = skip;
                     skip = 0 as libc::c_int;
                 }
@@ -3327,7 +3327,7 @@ unsafe extern "C" fn trsort(
                 if (1) < last.offset_from(first) as libc::c_long {
                     budget.count = 0 as libc::c_int;
                     tr_introsort(ISA, ISAd, SA, first, last, &mut budget);
-                    if budget.count != 0 as libc::c_int {
+                    if budget.count != 0 {
                         unsorted += budget.count;
                     } else {
                         skip = first.offset_from(last) as libc::c_long as libc::c_int;
@@ -3341,7 +3341,7 @@ unsafe extern "C" fn trsort(
                 break;
             }
         }
-        if skip != 0 as libc::c_int {
+        if skip != 0 {
             *first.offset(skip as isize) = skip;
         }
         if unsorted == 0 {
@@ -3728,7 +3728,7 @@ unsafe extern "C" fn construct_BWT(
                     let fresh89 = k;
                     k = k.offset(-1);
                     *fresh89 = s;
-                } else if s != 0 as libc::c_int {
+                } else if s != 0 {
                     *j = !s;
                 } else {
                     debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
@@ -3772,7 +3772,7 @@ unsafe extern "C" fn construct_BWT(
             let fresh91 = k;
             k = k.offset(1);
             *fresh91 = s;
-        } else if s != 0 as libc::c_int {
+        } else if s != 0 {
             *i = !s;
         } else {
             orig = i;
@@ -3854,7 +3854,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                     let fresh92 = k;
                     k = k.offset(-1);
                     *fresh92 = s;
-                } else if s != 0 as libc::c_int {
+                } else if s != 0 {
                     *j = !s;
                 } else {
                     debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
@@ -3915,7 +3915,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                 k = k.offset(1);
                 *fresh96 = s;
             }
-        } else if s != 0 as libc::c_int {
+        } else if s != 0 {
             *i = !s;
         } else {
             orig = i;
@@ -3992,7 +3992,7 @@ pub unsafe extern "C" fn divbwt(
     } else {
         if n <= 1 {
             if n == 1 {
-                *U.offset(0 as libc::c_int as isize) = *T.offset(0);
+                *U.offset(0) = *T.offset(0);
             }
             return n;
         }
@@ -4015,7 +4015,7 @@ pub unsafe extern "C" fn divbwt(
         } else {
             pidx = construct_BWT_indexes(T, B, bucket_A, bucket_B, n, m, num_indexes, indexes);
         }
-        *U.offset(0 as libc::c_int as isize) = *T.offset((n - 1 as libc::c_int) as isize);
+        *U.offset(0) = *T.offset((n - 1 as libc::c_int) as isize);
         i = 0 as libc::c_int;
         while i < pidx {
             *U.offset((i + 1) as isize) = *B.offset(i as isize) as libc::c_uchar;

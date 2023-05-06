@@ -791,22 +791,22 @@ unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut libc::c_void, mut val32: u32
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -825,7 +825,7 @@ unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: libc::size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -1702,7 +1702,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             bufferSize as libc::c_int,
             0 as libc::c_int,
         );
-        if divSuftSortResult != 0 as libc::c_int {
+        if divSuftSortResult != 0 {
             result = -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
         } else {
             *suffix.offset(bufferSize as isize) = bufferSize as libc::c_int;

@@ -252,22 +252,22 @@ unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -572,8 +572,7 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     } else {
         lowestValid
     };
-    let isDictionary =
-        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let isDictionary = ((*ms).loadedDictEnd != 0) as libc::c_int as u32;
     let matchLowest = if isDictionary != 0 {
         lowestValid
     } else {
@@ -594,8 +593,7 @@ unsafe extern "C" fn ZSTD_getLowestPrefixIndex(
     } else {
         lowestValid
     };
-    let isDictionary =
-        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let isDictionary = ((*ms).loadedDictEnd != 0) as libc::c_int as u32;
     let matchLowest = if isDictionary != 0 {
         lowestValid
     } else {
@@ -929,19 +927,17 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
             }
         }
     }
-    offsetSaved2 = if offsetSaved1 != 0 as libc::c_int as libc::c_uint
-        && rep_offset1 != 0 as libc::c_int as libc::c_uint
-    {
+    offsetSaved2 = if offsetSaved1 != 0 && rep_offset1 != 0 {
         offsetSaved1
     } else {
         offsetSaved2
     };
-    *rep.offset(0 as libc::c_int as isize) = if rep_offset1 != 0 {
+    *rep.offset(0) = if rep_offset1 != 0 {
         rep_offset1
     } else {
         offsetSaved1
     };
-    *rep.offset(1 as libc::c_int as isize) = if rep_offset2 != 0 {
+    *rep.offset(1) = if rep_offset2 != 0 {
         rep_offset2
     } else {
         offsetSaved2
@@ -1785,19 +1781,17 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
             }
         }
     }
-    offsetSaved2 = if offsetSaved1 != 0 as libc::c_int as libc::c_uint
-        && offset_1 != 0 as libc::c_int as libc::c_uint
-    {
+    offsetSaved2 = if offsetSaved1 != 0 && offset_1 != 0 {
         offsetSaved1
     } else {
         offsetSaved2
     };
-    *rep.offset(0 as libc::c_int as isize) = if offset_1 != 0 {
+    *rep.offset(0) = if offset_1 != 0 {
         offset_1
     } else {
         offsetSaved1
     };
-    *rep.offset(1 as libc::c_int as isize) = if offset_2 != 0 {
+    *rep.offset(1) = if offset_2 != 0 {
         offset_2
     } else {
         offsetSaved2

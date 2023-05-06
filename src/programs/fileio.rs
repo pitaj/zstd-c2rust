@@ -1077,7 +1077,7 @@ pub unsafe extern "C" fn FIO_setChecksumFlag(
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setRemoveSrcFile(prefs: *mut FIO_prefs_t, mut flag: libc::c_int) {
-    (*prefs).removeSrcFile = (flag != 0 as libc::c_int) as libc::c_int;
+    (*prefs).removeSrcFile = (flag != 0) as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setMemLimit(prefs: *mut FIO_prefs_t, mut memLimit: libc::c_uint) {
@@ -1241,7 +1241,7 @@ pub unsafe extern "C" fn FIO_setSrcSizeHint(
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setTestMode(prefs: *mut FIO_prefs_t, mut testMode: libc::c_int) {
-    (*prefs).testMode = (testMode != 0 as libc::c_int) as libc::c_int;
+    (*prefs).testMode = (testMode != 0) as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setLiteralCompressionMode(
@@ -1287,11 +1287,11 @@ pub unsafe extern "C" fn FIO_setLdmHashRateLog(
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setPatchFromMode(prefs: *mut FIO_prefs_t, mut value: libc::c_int) {
-    (*prefs).patchFromMode = (value != 0 as libc::c_int) as libc::c_int;
+    (*prefs).patchFromMode = (value != 0) as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setContentSize(prefs: *mut FIO_prefs_t, mut value: libc::c_int) {
-    (*prefs).contentSize = (value != 0 as libc::c_int) as libc::c_int;
+    (*prefs).contentSize = (value != 0) as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setAsyncIOFlag(prefs: *mut FIO_prefs_t, mut value: libc::c_int) {
@@ -1305,7 +1305,7 @@ pub unsafe extern "C" fn FIO_setAsyncIOFlag(prefs: *mut FIO_prefs_t, mut value: 
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setPassThroughFlag(prefs: *mut FIO_prefs_t, mut value: libc::c_int) {
-    (*prefs).passThrough = (value != 0 as libc::c_int) as libc::c_int;
+    (*prefs).passThrough = (value != 0) as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setMMapDict(prefs: *mut FIO_prefs_t, mut value: ZSTD_paramSwitch_e) {
@@ -2168,7 +2168,7 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
 }
 unsafe extern "C" fn FIO_highbit64(mut v: libc::c_ulonglong) -> libc::c_uint {
     let mut count = 0 as libc::c_int as libc::c_uint;
-    debug_assert!(v != 0 as libc::c_int as libc::c_ulonglong);
+    debug_assert!(v != 0);
     v >>= 1 as libc::c_int;
     while v != 0 {
         v >>= 1 as libc::c_int;
@@ -3995,7 +3995,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
         stillToFlush = 1 as libc::c_int as libc::size_t;
         while inBuff.pos != inBuff.size
             || directive as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint
-                && stillToFlush != 0 as libc::c_int as libc::c_ulong
+                && stillToFlush != 0
         {
             let oldIPos = inBuff.pos;
             let mut outBuff = setOutBuffer(
@@ -4713,7 +4713,7 @@ unsafe extern "C" fn FIO_compressFilename_dstFile(
         if transferStat != 0 {
             UTIL_utime(dstFileName, srcFileStat);
         }
-        if result != 0 as libc::c_int && strcmp(dstFileName, stdoutmark.as_ptr()) != 0 {
+        if result != 0 && strcmp(dstFileName, stdoutmark.as_ptr()) != 0 {
             FIO_removeFile(dstFileName);
         }
     }
@@ -5841,8 +5841,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
     if err == 0 {
         let windowSize = header.windowSize;
         let windowLog = (FIO_highbit64(windowSize)).wrapping_add(
-            (windowSize & windowSize.wrapping_sub(1) != 0 as libc::c_int as libc::c_ulonglong)
-                as libc::c_int as libc::c_uint,
+            (windowSize & windowSize.wrapping_sub(1) != 0) as libc::c_int as libc::c_uint,
         );
         debug_assert!((*prefs).memLimit > 0);
         if g_display_prefs.displayLevel >= 1 {
@@ -5866,8 +5865,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
                 (windowSize
                     & (1 as libc::c_int * ((1) << 20 as libc::c_int) - 1 as libc::c_int)
                         as libc::c_ulonglong
-                    != 0 as libc::c_int as libc::c_ulonglong) as libc::c_int
-                    as libc::c_ulonglong,
+                    != 0) as libc::c_int as libc::c_ulonglong,
             ) as libc::c_uint;
             debug_assert!(windowSize < ((1) << 52 as libc::c_int) as u64 as libc::c_ulonglong);
             if g_display_prefs.displayLevel >= 1 {
@@ -6253,7 +6251,7 @@ unsafe extern "C" fn FIO_decompressDstFile(
         if transferStat != 0 {
             UTIL_utime(dstFileName, srcFileStat);
         }
-        if result != 0 as libc::c_int && strcmp(dstFileName, stdoutmark.as_ptr()) != 0 {
+        if result != 0 && strcmp(dstFileName, stdoutmark.as_ptr()) != 0 {
             FIO_removeFile(dstFileName);
         }
     }
@@ -6779,7 +6777,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                     &mut header,
                     headerBuffer.as_mut_ptr() as *const libc::c_void,
                     numBytesRead,
-                ) != 0 as libc::c_int as libc::c_ulong
+                ) != 0
                 {
                     if g_display_prefs.displayLevel >= 1 {
                         fprintf(
@@ -6793,9 +6791,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                     }
                     return info_frame_error;
                 }
-                if (*info).dictID != 0 as libc::c_int as libc::c_uint
-                    && (*info).dictID != header.dictID
-                {
+                if (*info).dictID != 0 && (*info).dictID != header.dictID {
                     fprintf(
                         stderr,
                         b"WARNING: File contains multiple frames with different dictionary IDs. Showing dictID 0 instead\0"
@@ -6827,7 +6823,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                     srcFile,
                     headerSize as libc::c_long - numBytesRead as libc::c_long,
                     1 as libc::c_int,
-                ) != 0 as libc::c_int
+                ) != 0
                 {
                     if g_display_prefs.displayLevel >= 1 {
                         fprintf(
@@ -6849,7 +6845,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                         1 as libc::c_int as libc::c_ulong,
                         3 as libc::c_int as libc::c_ulong,
                         srcFile,
-                    ) != 3 as libc::c_int as libc::c_ulong
+                    ) != 3
                     {
                         if g_display_prefs.displayLevel >= 1 {
                             fprintf(
@@ -6887,7 +6883,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                         return info_frame_error;
                     }
                     lastBlock = (blockHeader & 1) as libc::c_int;
-                    if fseek(srcFile, blockSize, 1 as libc::c_int) != 0 as libc::c_int {
+                    if fseek(srcFile, blockSize, 1 as libc::c_int) != 0 {
                         if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
@@ -6900,7 +6896,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                         }
                         return info_frame_error;
                     }
-                    if !(lastBlock != 1 as libc::c_int) {
+                    if !(lastBlock != 1) {
                         break;
                     }
                 }
@@ -6915,7 +6911,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                         1 as libc::c_int as libc::c_ulong,
                         4 as libc::c_int as libc::c_ulong,
                         srcFile,
-                    ) != 4 as libc::c_int as libc::c_ulong
+                    ) != 4
                     {
                         if g_display_prefs.displayLevel >= 1 {
                             fprintf(
@@ -6938,7 +6934,7 @@ unsafe extern "C" fn FIO_analyzeFrames(mut info: *mut fileInfo_t, srcFile: *mut 
                     MEM_readLE32(headerBuffer.as_mut_ptr().offset(4) as *const libc::c_void);
                 let seek = ((8).wrapping_add(frameSize) as libc::c_ulong).wrapping_sub(numBytesRead)
                     as libc::c_long;
-                if fseek(srcFile, seek, 1 as libc::c_int) != 0 as libc::c_int {
+                if fseek(srcFile, seek, 1 as libc::c_int) != 0 {
                     if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,

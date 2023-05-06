@@ -92,7 +92,7 @@ unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 pub const FSE_VERSION_NUMBER: libc::c_int =
@@ -100,12 +100,12 @@ pub const FSE_VERSION_NUMBER: libc::c_int =
 pub const FSE_VERSION_MAJOR: libc::c_int = 0 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 pub const FSE_VERSION_MINOR: libc::c_int = 9 as libc::c_int;
@@ -285,7 +285,7 @@ unsafe extern "C" fn FSE_readNCount_body(
         }
         bitStream = MEM_readLE32(ip as *const libc::c_void) >> bitCount;
     }
-    if remaining != 1 as libc::c_int {
+    if remaining != 1 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     if charnum > maxSV1 {

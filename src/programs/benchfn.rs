@@ -90,7 +90,7 @@ pub unsafe extern "C" fn BMK_extract_runTime(mut outcome: BMK_runOutcome_t) -> B
 }
 #[no_mangle]
 pub unsafe extern "C" fn BMK_extract_errorResult(mut outcome: BMK_runOutcome_t) -> libc::size_t {
-    if !(outcome.error_tag_never_ever_use_directly != 0 as libc::c_int) {
+    if !(outcome.error_tag_never_ever_use_directly != 0) {
         abort();
     }
     return outcome.error_result_never_ever_use_directly;

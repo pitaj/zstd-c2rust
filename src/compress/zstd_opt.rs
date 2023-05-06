@@ -256,7 +256,7 @@ pub const base_1guaranteed: base_directive_e = 1;
 pub const base_0possible: base_directive_e = 0;
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 pub const MaxLit: libc::c_int = ((1) << Litbits) - 1 as libc::c_int;
@@ -332,8 +332,7 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     } else {
         lowestValid
     };
-    let isDictionary =
-        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let isDictionary = ((*ms).loadedDictEnd != 0) as libc::c_int as u32;
     let matchLowest = if isDictionary != 0 {
         lowestValid
     } else {
@@ -343,17 +342,17 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -372,7 +371,7 @@ unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: libc::size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -870,7 +869,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
         *rep.offset(2) = *rep.offset(1);
         *rep.offset(1) = *rep.offset(0);
         debug_assert!(offBase > 3);
-        *rep.offset(0 as libc::c_int as isize) = offBase.wrapping_sub(ZSTD_REP_NUM as libc::c_uint);
+        *rep.offset(0) = offBase.wrapping_sub(ZSTD_REP_NUM as libc::c_uint);
     } else {
         debug_assert!(1 as libc::c_int as libc::c_uint <= offBase && offBase <= 3);
         let repCode = offBase.wrapping_sub(1).wrapping_add(ll0);
@@ -880,12 +879,12 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
             } else {
                 *rep.offset(repCode as isize)
             };
-            *rep.offset(2 as libc::c_int as isize) = if repCode >= 2 {
+            *rep.offset(2) = if repCode >= 2 {
                 *rep.offset(1)
             } else {
                 *rep.offset(2)
             };
-            *rep.offset(1 as libc::c_int as isize) = *rep.offset(0);
+            *rep.offset(1) = *rep.offset(0);
             *rep.offset(0) = currentOffset;
         }
     };
@@ -3001,7 +3000,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                         (*opt.offset(cur as isize)).price = price;
                     }
                     debug_assert!(cur >= (*opt.offset(cur as isize)).mlen);
-                    if (*opt.offset(cur as isize)).mlen != 0 as libc::c_int as libc::c_uint {
+                    if (*opt.offset(cur as isize)).mlen != 0 {
                         let prev = cur.wrapping_sub((*opt.offset(cur as isize)).mlen);
                         let newReps = ZSTD_newRep(
                             ((*opt.offset(prev as isize)).rep).as_mut_ptr() as *const u32,
@@ -3032,9 +3031,8 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                                     + BITCOST_MULTIPLIER / 2 as libc::c_int)
                         {
                             debug_assert!((*opt.offset(cur as isize)).price >= 0);
-                            let ll0_0 = ((*opt.offset(cur as isize)).mlen
-                                != 0 as libc::c_int as libc::c_uint)
-                                as libc::c_int as u32;
+                            let ll0_0 =
+                                ((*opt.offset(cur as isize)).mlen != 0) as libc::c_int as u32;
                             let litlen_1 = if (*opt.offset(cur as isize)).mlen == 0 {
                                 (*opt.offset(cur as isize)).litlen
                             } else {
@@ -3152,7 +3150,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                 }
             }
             debug_assert!((*opt.offset(0)).mlen == 0);
-            if lastSequence.mlen != 0 as libc::c_int as libc::c_uint {
+            if lastSequence.mlen != 0 {
                 let reps = ZSTD_newRep(
                     ((*opt.offset(cur as isize)).rep).as_mut_ptr() as *const u32,
                     lastSequence.off,

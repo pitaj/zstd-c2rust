@@ -30,7 +30,7 @@ pub unsafe extern "C" fn UTIL_getTime() -> UTIL_time_t {
         };
         init
     };
-    if clock_gettime(CLOCK_MONOTONIC, &mut time) != 0 as libc::c_int {
+    if clock_gettime(CLOCK_MONOTONIC, &mut time) != 0 {
         perror(b"timefn::clock_gettime(CLOCK_MONOTONIC)\0" as *const u8 as *const libc::c_char);
         abort();
     }

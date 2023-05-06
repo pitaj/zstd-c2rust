@@ -568,22 +568,22 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
 pub const NULL: libc::c_int = 0 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -1643,10 +1643,9 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
     let istart = src as *const u8;
     let iend = istart.offset(srcSize as isize);
     let kMaxChunkSize = ((1) << 20 as libc::c_int) as libc::size_t;
-    let nbChunks = srcSize.wrapping_div(kMaxChunkSize).wrapping_add(
-        (srcSize.wrapping_rem(kMaxChunkSize) != 0 as libc::c_int as libc::c_ulong) as libc::c_int
-            as libc::c_ulong,
-    );
+    let nbChunks = srcSize
+        .wrapping_div(kMaxChunkSize)
+        .wrapping_add((srcSize.wrapping_rem(kMaxChunkSize) != 0) as libc::c_int as libc::c_ulong);
     let mut chunk: libc::size_t = 0;
     let mut leftoverSize = 0 as libc::c_int as libc::size_t;
     debug_assert!(

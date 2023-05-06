@@ -267,22 +267,22 @@ unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
 pub const NULL: libc::c_int = 0 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -301,7 +301,7 @@ unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: libc::size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -662,8 +662,7 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     } else {
         lowestValid
     };
-    let isDictionary =
-        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let isDictionary = ((*ms).loadedDictEnd != 0) as libc::c_int as u32;
     let matchLowest = if isDictionary != 0 {
         lowestValid
     } else {
@@ -684,8 +683,7 @@ unsafe extern "C" fn ZSTD_getLowestPrefixIndex(
     } else {
         lowestValid
     };
-    let isDictionary =
-        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let isDictionary = ((*ms).loadedDictEnd != 0) as libc::c_int as u32;
     let matchLowest = if isDictionary != 0 {
         lowestValid
     } else {
@@ -1185,7 +1183,7 @@ pub unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_loadDictionary(
     let mut hashIdx: u32 = 0;
     debug_assert!((*ms).cParams.chainLog <= 24);
     debug_assert!((*ms).cParams.hashLog > (*ms).cParams.chainLog);
-    debug_assert!(idx != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(idx != 0);
     debug_assert!(tmpMinChain <= minChain);
     while idx < target {
         let h = ZSTD_hashPtr(
@@ -1472,8 +1470,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch(
     } else {
         lowestValid
     };
-    let isDictionary =
-        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let isDictionary = ((*ms).loadedDictEnd != 0) as libc::c_int as u32;
     let lowLimit = if isDictionary != 0 {
         lowestValid
     } else {
@@ -1930,8 +1927,7 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
     } else {
         lowestValid
     };
-    let isDictionary =
-        ((*ms).loadedDictEnd != 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+    let isDictionary = ((*ms).loadedDictEnd != 0) as libc::c_int as u32;
     let lowLimit = if isDictionary != 0 {
         lowestValid
     } else {
@@ -4189,19 +4185,17 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
             }
         }
     }
-    offsetSaved2 = if offsetSaved1 != 0 as libc::c_int as libc::c_uint
-        && offset_1 != 0 as libc::c_int as libc::c_uint
-    {
+    offsetSaved2 = if offsetSaved1 != 0 && offset_1 != 0 {
         offsetSaved1
     } else {
         offsetSaved2
     };
-    *rep.offset(0 as libc::c_int as isize) = if offset_1 != 0 {
+    *rep.offset(0) = if offset_1 != 0 {
         offset_1
     } else {
         offsetSaved1
     };
-    *rep.offset(1 as libc::c_int as isize) = if offset_2 != 0 {
+    *rep.offset(1) = if offset_2 != 0 {
         offset_2
     } else {
         offsetSaved2

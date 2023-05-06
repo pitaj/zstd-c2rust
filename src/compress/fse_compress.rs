@@ -122,12 +122,12 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -577,7 +577,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                     return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
                 }
                 *out.offset(0) = bitStream as u8;
-                *out.offset(1 as libc::c_int as isize) = (bitStream >> 8 as libc::c_int) as u8;
+                *out.offset(1) = (bitStream >> 8 as libc::c_int) as u8;
                 out = out.offset(2);
                 bitStream >>= 16 as libc::c_int;
             }
@@ -595,7 +595,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                     return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
                 }
                 *out.offset(0) = bitStream as u8;
-                *out.offset(1 as libc::c_int as isize) = (bitStream >> 8 as libc::c_int) as u8;
+                *out.offset(1) = (bitStream >> 8 as libc::c_int) as u8;
                 out = out.offset(2);
                 bitStream >>= 16 as libc::c_int;
                 bitCount -= 16 as libc::c_int;
@@ -626,13 +626,13 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                 return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
             }
             *out.offset(0) = bitStream as u8;
-            *out.offset(1 as libc::c_int as isize) = (bitStream >> 8 as libc::c_int) as u8;
+            *out.offset(1) = (bitStream >> 8 as libc::c_int) as u8;
             out = out.offset(2);
             bitStream >>= 16 as libc::c_int;
             bitCount -= 16 as libc::c_int;
         }
     }
-    if remaining != 1 as libc::c_int {
+    if remaining != 1 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     debug_assert!(symbol <= alphabetSize);

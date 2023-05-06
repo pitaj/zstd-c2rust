@@ -151,17 +151,17 @@ pub struct HUF_DecompressFastArgs {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(val != 0);
     return (val as libc::c_ulonglong).trailing_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -1299,7 +1299,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
         }
         i += 1;
     }
-    debug_assert!(dstSize != 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(dstSize != 0);
     return dstSize;
 }
 unsafe extern "C" fn HUF_decompress1X1_usingDTable_internal(
@@ -1381,7 +1381,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal(
         let ret = HUF_decompress4X1_usingDTable_internal_fast(
             dst, dstSize, cSrc, cSrcSize, DTable, loopFn,
         );
-        if ret != 0 as libc::c_int as libc::c_ulong {
+        if ret != 0 {
             return ret;
         }
     }
@@ -2496,7 +2496,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal(
         let ret = HUF_decompress4X2_usingDTable_internal_fast(
             dst, dstSize, cSrc, cSrcSize, DTable, loopFn,
         );
-        if ret != 0 as libc::c_int as libc::c_ulong {
+        if ret != 0 {
             return ret;
         }
     }

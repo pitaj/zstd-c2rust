@@ -683,12 +683,12 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
 unsafe extern "C" fn _force_has_format_string(mut format: *const libc::c_char, mut args: ...) {}
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
@@ -731,13 +731,11 @@ unsafe extern "C" fn ZSTD_cpuid() -> ZSTD_cpuid_t {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cpuid_bmi1(cpuid: ZSTD_cpuid_t) -> libc::c_int {
-    return (cpuid.f7b & (1) << 3 as libc::c_int != 0 as libc::c_int as libc::c_uint)
-        as libc::c_int;
+    return (cpuid.f7b & (1) << 3 as libc::c_int != 0) as libc::c_int;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cpuid_bmi2(cpuid: ZSTD_cpuid_t) -> libc::c_int {
-    return (cpuid.f7b & (1) << 8 as libc::c_int != 0 as libc::c_int as libc::c_uint)
-        as libc::c_int;
+    return (cpuid.f7b & (1) << 8 as libc::c_int != 0) as libc::c_int;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_limitCopy(
@@ -1269,7 +1267,7 @@ unsafe extern "C" fn ZSTD_getDecompressedSize_legacy(
             strategy: ZSTDv05_fast,
         };
         let frResult = ZSTDv05_getFrameParams(&mut fParams, src, srcSize);
-        if frResult != 0 as libc::c_int as libc::c_ulong {
+        if frResult != 0 {
             return 0 as libc::c_int as libc::c_ulonglong;
         }
         return fParams.srcSize as libc::c_ulonglong;
@@ -1280,7 +1278,7 @@ unsafe extern "C" fn ZSTD_getDecompressedSize_legacy(
             windowLog: 0,
         };
         let frResult_0 = ZSTDv06_getFrameParams(&mut fParams_0, src, srcSize);
-        if frResult_0 != 0 as libc::c_int as libc::c_ulong {
+        if frResult_0 != 0 {
             return 0 as libc::c_int as libc::c_ulonglong;
         }
         return fParams_0.frameContentSize;
@@ -1293,7 +1291,7 @@ unsafe extern "C" fn ZSTD_getDecompressedSize_legacy(
             checksumFlag: 0,
         };
         let frResult_1 = ZSTDv07_getFrameParams(&mut fParams_1, src, srcSize);
-        if frResult_1 != 0 as libc::c_int as libc::c_ulong {
+        if frResult_1 != 0 {
             return 0 as libc::c_int as libc::c_ulonglong;
         }
         return fParams_1.frameContentSize;
@@ -1515,7 +1513,7 @@ unsafe extern "C" fn ZSTD_DDictHashSet_addDDict(
         .wrapping_mul(DDICT_HASHSET_MAX_LOAD_FACTOR_COUNT_MULT as libc::c_ulong)
         .wrapping_div((*hashSet).ddictPtrTableSize)
         .wrapping_mul(DDICT_HASHSET_MAX_LOAD_FACTOR_SIZE_MULT as libc::c_ulong)
-        != 0 as libc::c_int as libc::c_ulong
+        != 0
     {
         let err_code = ZSTD_DDictHashSet_expand(hashSet, customMem);
         if ERR_isError(err_code) != 0 {
@@ -1828,7 +1826,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
     let mut windowSize = 0 as libc::c_int as u64;
     let mut dictID = 0 as libc::c_int as u32;
     let mut frameContentSize = ZSTD_CONTENTSIZE_UNKNOWN as u64;
-    if fhdByte as libc::c_int & 0x8 as libc::c_int != 0 as libc::c_int {
+    if fhdByte as libc::c_int & 0x8 as libc::c_int != 0 {
         return -(ZSTD_error_frameParameter_unsupported as libc::c_int) as libc::size_t;
     }
     if singleSegment == 0 {
@@ -1949,7 +1947,7 @@ pub unsafe extern "C" fn ZSTD_getFrameContentSize(
         _reserved1: 0,
         _reserved2: 0,
     };
-    if ZSTD_getFrameHeader(&mut zfh, src, srcSize) != 0 as libc::c_int as libc::c_ulong {
+    if ZSTD_getFrameHeader(&mut zfh, src, srcSize) != 0 {
         return ZSTD_CONTENTSIZE_ERROR;
     }
     if zfh.frameType as libc::c_uint == ZSTD_skippableFrame as libc::c_int as libc::c_uint {
@@ -2401,7 +2399,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
     let istart = *srcPtr as *const u8;
     let mut ip = istart;
     let ostart = dst as *mut u8;
-    let oend = if dstCapacity != 0 as libc::c_int as libc::c_ulong {
+    let oend = if dstCapacity != 0 {
         ostart.offset(dstCapacity as isize)
     } else {
         ostart
@@ -2439,7 +2437,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
     }
     ip = ip.offset(frameHeaderSize as isize);
     remainingSrcSize = (remainingSrcSize as libc::c_ulong).wrapping_sub(frameHeaderSize);
-    if (*dctx).maxBlockSizeParam != 0 as libc::c_int {
+    if (*dctx).maxBlockSizeParam != 0 {
         (*dctx).fParams.blockSizeMax =
             if (*dctx).fParams.blockSizeMax < (*dctx).maxBlockSizeParam as libc::c_uint {
                 (*dctx).fParams.blockSizeMax
@@ -2511,7 +2509,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
                 decodedSize,
             );
         }
-        if decodedSize != 0 as libc::c_int as libc::c_ulong {
+        if decodedSize != 0 {
             op = op.offset(decodedSize as isize);
         }
         debug_assert!(!ip.is_null());
@@ -2630,7 +2628,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
                 return res;
             }
             debug_assert!(res <= dstCapacity);
-            if res != 0 as libc::c_int as libc::c_ulong {
+            if res != 0 {
                 dst = (dst as *mut u8).offset(res as isize) as *mut libc::c_void;
             }
             dstCapacity =
@@ -3015,7 +3013,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
     debug_assert!(MEM_readLE32(dict) == 0xec30a437 as libc::c_uint);
     dictPtr = dictPtr.offset(8);
     let workspace = &mut (*entropy).LLTable as *mut [ZSTD_seqSymbol; 513] as *mut libc::c_void;
-    let workspaceSize = (::core::mem::size_of::<[ZSTD_seqSymbol; 513]>() as libc::c_ulong)
+    let workspaceSize = (::core::mem::size_of::<[ZSTD_seqSymbol; 513]>())
         .wrapping_add(::core::mem::size_of::<[ZSTD_seqSymbol; 257]>())
         .wrapping_add(::core::mem::size_of::<[ZSTD_seqSymbol; 513]>());
     let hSize = HUF_readDTableX2_wksp(
@@ -3342,7 +3340,7 @@ pub unsafe extern "C" fn ZSTD_DCtx_loadDictionary_advanced(
         return -(ZSTD_error_stage_wrong as libc::c_int) as libc::size_t;
     }
     ZSTD_clearDict(dctx);
-    if !dict.is_null() && dictSize != 0 as libc::c_int as libc::c_ulong {
+    if !dict.is_null() && dictSize != 0 {
         (*dctx).ddictLocal = ZSTD_createDDict_advanced(
             dict,
             dictSize,
@@ -3669,7 +3667,7 @@ pub unsafe extern "C" fn ZSTD_DCtx_setParameter(
             if ZSTD_dParam_withinBounds(ZSTD_d_experimentalParam4, value) == 0 {
                 return -(ZSTD_error_parameter_outOfBound as libc::c_int) as libc::size_t;
             }
-            if (*dctx).staticSize != 0 as libc::c_int as libc::c_ulong {
+            if (*dctx).staticSize != 0 {
                 return -(ZSTD_error_parameter_unsupported as libc::c_int) as libc::size_t;
             }
             (*dctx).refMultipleDDicts = value as ZSTD_refMultipleDDicts_e;
@@ -3679,11 +3677,11 @@ pub unsafe extern "C" fn ZSTD_DCtx_setParameter(
             if ZSTD_dParam_withinBounds(ZSTD_d_experimentalParam5, value) == 0 {
                 return -(ZSTD_error_parameter_outOfBound as libc::c_int) as libc::size_t;
             }
-            (*dctx).disableHufAsm = (value != 0 as libc::c_int) as libc::c_int;
+            (*dctx).disableHufAsm = (value != 0) as libc::c_int;
             return 0 as libc::c_int as libc::size_t;
         }
         1005 => {
-            if value != 0 as libc::c_int {
+            if value != 0 {
                 if ZSTD_dParam_withinBounds(ZSTD_d_experimentalParam6, value) == 0 {
                     return -(ZSTD_error_parameter_outOfBound as libc::c_int) as libc::size_t;
                 }
@@ -3916,24 +3914,24 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
     mut input: *mut ZSTD_inBuffer,
 ) -> libc::size_t {
     let src = (*input).src as *const libc::c_char;
-    let istart = if (*input).pos != 0 as libc::c_int as libc::c_ulong {
+    let istart = if (*input).pos != 0 {
         src.offset((*input).pos as isize)
     } else {
         src
     };
-    let iend = if (*input).size != 0 as libc::c_int as libc::c_ulong {
+    let iend = if (*input).size != 0 {
         src.offset((*input).size as isize)
     } else {
         src
     };
     let mut ip = istart;
     let dst = (*output).dst as *mut libc::c_char;
-    let ostart = if (*output).pos != 0 as libc::c_int as libc::c_ulong {
+    let ostart = if (*output).pos != 0 {
         dst.offset((*output).pos as isize)
     } else {
         dst
     };
-    let oend = if (*output).size != 0 as libc::c_int as libc::c_ulong {
+    let oend = if (*output).size != 0 {
         dst.offset((*output).size as isize)
     } else {
         dst
@@ -4078,7 +4076,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                     }
                     return hSize;
                 }
-                if hSize != 0 as libc::c_int as libc::c_ulong {
+                if hSize != 0 {
                     let toLoad = hSize.wrapping_sub((*zds).lhSize);
                     let remainingInput = iend.offset_from(ip) as libc::c_long as libc::size_t;
                     debug_assert!(iend >= ip);
@@ -4235,7 +4233,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 return -(ZSTD_error_frameParameter_windowTooLarge as libc::c_int)
                                     as libc::size_t;
                             }
-                            if (*zds).maxBlockSizeParam != 0 as libc::c_int {
+                            if (*zds).maxBlockSizeParam != 0 {
                                 (*zds).fParams.blockSizeMax = if (*zds).fParams.blockSizeMax
                                     < (*zds).maxBlockSizeParam as libc::c_uint
                                 {
@@ -4373,7 +4371,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                         iend.offset_from(ip) as libc::c_long as libc::size_t,
                     );
                 }
-                if loadedSize != 0 as libc::c_int as libc::c_ulong {
+                if loadedSize != 0 {
                     ip = ip.offset(loadedSize as isize);
                     (*zds).inPos = ((*zds).inPos as libc::c_ulong).wrapping_add(loadedSize);
                 }

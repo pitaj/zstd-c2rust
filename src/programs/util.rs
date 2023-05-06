@@ -557,7 +557,7 @@ pub unsafe extern "C" fn UTIL_isRegularFile(mut infilename: *const libc::c_char)
 pub unsafe extern "C" fn UTIL_isRegularFileStat(mut statbuf: *const stat_t) -> libc::c_int {
     return (((*statbuf).st_mode & __S_IFMT as libc::c_uint
         == 0o100000 as libc::c_int as libc::c_uint) as libc::c_int
-        != 0 as libc::c_int) as libc::c_int;
+        != 0) as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_chmod(
@@ -948,7 +948,7 @@ pub unsafe extern "C" fn UTIL_isDirectoryStat(mut statbuf: *const stat_t) -> lib
     }
     ret = (((*statbuf).st_mode & __S_IFMT as libc::c_uint == 0o40000 as libc::c_int as libc::c_uint)
         as libc::c_int
-        != 0 as libc::c_int) as libc::c_int;
+        != 0) as libc::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
         fprintf(
@@ -1965,7 +1965,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
             (*__errno_location()/* errno */) = 0 as libc::c_int;
         }
     }
-    if (*__errno_location()/* errno */) != 0 as libc::c_int {
+    if (*__errno_location()/* errno */) != 0 {
         if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
@@ -2075,7 +2075,7 @@ unsafe extern "C" fn getDirMode(mut dirName: *const libc::c_char) -> mode_t {
 }
 unsafe extern "C" fn makeDir(mut dir: *const libc::c_char, mut mode: mode_t) -> libc::c_int {
     let mut ret = mkdir(dir, mode);
-    if ret != 0 as libc::c_int {
+    if ret != 0 {
         if (*__errno_location()/* errno */) == EEXIST {
             return 0 as libc::c_int;
         }
@@ -2225,7 +2225,7 @@ unsafe extern "C" fn mirrorSrcDirRecursive(
         if sp != pp {
             *sp = '\0' as i32 as libc::c_char;
             status = mirrorSrcDir(srcDirName, outDirName);
-            if status != 0 as libc::c_int {
+            if status != 0 {
                 return status;
             }
             *sp = PATH_SEP as libc::c_char;
@@ -2515,7 +2515,7 @@ pub unsafe extern "C" fn UTIL_createFNT_fromROTable(
 pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_int {
     let mut current_block: u64;
     static mut numCores: libc::c_int = 0 as libc::c_int;
-    if numCores != 0 as libc::c_int {
+    if numCores != 0 {
         return numCores;
     }
     numCores = sysconf(_SC_NPROCESSORS_ONLN_0) as libc::c_int;

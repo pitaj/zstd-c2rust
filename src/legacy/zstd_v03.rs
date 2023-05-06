@@ -235,7 +235,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut libc::c_void, mut val: u16) 
     } else {
         let mut p = memPtr as *mut u8;
         *p.offset(0) = val as u8;
-        *p.offset(1 as libc::c_int as isize) = (val as libc::c_int >> 8 as libc::c_int) as u8;
+        *p.offset(1) = (val as libc::c_int >> 8 as libc::c_int) as u8;
     };
 }
 unsafe extern "C" fn MEM_readLE24(mut memPtr: *const libc::c_void) -> u32 {
@@ -582,7 +582,7 @@ unsafe extern "C" fn FSE_buildDTable(
         }
         s = s.wrapping_add(1);
     }
-    if position != 0 as libc::c_int as libc::c_uint {
+    if position != 0 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     let mut i_0: u32 = 0;
@@ -726,7 +726,7 @@ unsafe extern "C" fn FSE_readNCount(
         }
         bitStream = MEM_readLE32(ip as *const libc::c_void) >> (bitCount & 31);
     }
-    if remaining != 1 as libc::c_int {
+    if remaining != 1 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     *maxSVPtr = charnum.wrapping_sub(1);
@@ -813,7 +813,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         == BIT_DStream_unfinished as libc::c_int as libc::c_uint
         && op < olimit
     {
-        *op.offset(0 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(0) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state1, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state1, &mut bitD) as libc::c_int
@@ -823,7 +823,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         {
             BIT_reloadDStream(&mut bitD);
         }
-        *op.offset(1 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(1) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state2, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state2, &mut bitD) as libc::c_int
@@ -838,7 +838,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
                 break;
             }
         }
-        *op.offset(2 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(2) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state1, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state1, &mut bitD) as libc::c_int
@@ -848,7 +848,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         {
             BIT_reloadDStream(&mut bitD);
         }
-        *op.offset(3 as libc::c_int as isize) = (if fast != 0 {
+        *op.offset(3) = (if fast != 0 {
             FSE_decodeSymbolFast(&mut state2, &mut bitD) as libc::c_int
         } else {
             FSE_decodeSymbol(&mut state2, &mut bitD) as libc::c_int
@@ -11156,10 +11156,10 @@ unsafe extern "C" fn ZSTD_execSequence(
     }
     if sequence.offset < 8 {
         let dec64 = dec64table[sequence.offset as usize];
-        *op.offset(0 as libc::c_int as isize) = *match_0.offset(0);
-        *op.offset(1 as libc::c_int as isize) = *match_0.offset(1);
-        *op.offset(2 as libc::c_int as isize) = *match_0.offset(2);
-        *op.offset(3 as libc::c_int as isize) = *match_0.offset(3);
+        *op.offset(0) = *match_0.offset(0);
+        *op.offset(1) = *match_0.offset(1);
+        *op.offset(2) = *match_0.offset(2);
+        *op.offset(3) = *match_0.offset(3);
         match_0 = match_0.offset(dec32table[sequence.offset as usize] as isize);
         ZSTD_copy4(
             op.offset(4) as *mut libc::c_void,

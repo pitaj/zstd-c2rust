@@ -528,9 +528,7 @@ unsafe extern "C" fn FASTCOVER_checkParameters(
     if parameters.d == 0 || parameters.k == 0 {
         return 0 as libc::c_int;
     }
-    if parameters.d != 6 as libc::c_int as libc::c_uint
-        && parameters.d != 8 as libc::c_int as libc::c_uint
-    {
+    if parameters.d != 6 && parameters.d != 8 {
         return 0 as libc::c_int;
     }
     if parameters.k as libc::c_ulong > maxDictSize {

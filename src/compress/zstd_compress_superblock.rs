@@ -916,7 +916,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut libc::c_void, mut val: u16) 
     } else {
         let mut p = memPtr as *mut u8;
         *p.offset(0) = val as u8;
-        *p.offset(1 as libc::c_int as isize) = (val as libc::c_int >> 8 as libc::c_int) as u8;
+        *p.offset(1) = (val as libc::c_int >> 8 as libc::c_int) as u8;
     };
 }
 #[inline]
@@ -986,7 +986,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
         *rep.offset(2) = *rep.offset(1);
         *rep.offset(1) = *rep.offset(0);
         debug_assert!(offBase > 3);
-        *rep.offset(0 as libc::c_int as isize) = offBase.wrapping_sub(ZSTD_REP_NUM as libc::c_uint);
+        *rep.offset(0) = offBase.wrapping_sub(ZSTD_REP_NUM as libc::c_uint);
     } else {
         debug_assert!(1 as libc::c_int as libc::c_uint <= offBase && offBase <= 3);
         let repCode = offBase.wrapping_sub(1).wrapping_add(ll0);
@@ -996,12 +996,12 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
             } else {
                 *rep.offset(repCode as isize)
             };
-            *rep.offset(2 as libc::c_int as isize) = if repCode >= 2 {
+            *rep.offset(2) = if repCode >= 2 {
                 *rep.offset(1)
             } else {
                 *rep.offset(2)
             };
-            *rep.offset(1 as libc::c_int as isize) = *rep.offset(0);
+            *rep.offset(1) = *rep.offset(0);
             *rep.offset(0) = currentOffset;
         }
     };
@@ -1135,7 +1135,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
                 .wrapping_add((litSize as u32) << 4 as libc::c_int)
                 .wrapping_add((cLitSize as u32) << 22 as libc::c_int);
             MEM_writeLE32(ostart as *mut libc::c_void, lhc_1);
-            *ostart.offset(4 as libc::c_int as isize) = (cLitSize >> 10 as libc::c_int) as u8;
+            *ostart.offset(4) = (cLitSize >> 10 as libc::c_int) as u8;
         }
         _ => {
             debug_assert!(false);
@@ -1204,7 +1204,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
         op = op.offset(1);
         *fresh0 = nbSeq as u8;
     } else if nbSeq < LONGNBSEQ as libc::c_ulong {
-        *op.offset(0 as libc::c_int as isize) =
+        *op.offset(0) =
             (nbSeq >> 8 as libc::c_int).wrapping_add(0x80 as libc::c_int as libc::c_ulong) as u8;
         *op.offset(1) = nbSeq as u8;
         op = op.offset(2);
@@ -1715,7 +1715,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
         if ERR_isError(err_code_0) != 0 {
             return err_code_0;
         }
-        debug_assert!(cSize_0 != 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(cSize_0 != 0);
         op = op.offset(cSize_0 as isize);
         if sp < send {
             let mut seq = 0 as *const seqDef;

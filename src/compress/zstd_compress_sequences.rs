@@ -804,7 +804,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
     while s <= max {
         let mut norm = ((256).wrapping_mul(*count.offset(s as isize)) as libc::c_ulong)
             .wrapping_div(total) as libc::c_uint;
-        if *count.offset(s as isize) != 0 as libc::c_int as libc::c_uint && norm == 0 {
+        if *count.offset(s as isize) != 0 && norm == 0 {
             norm = 1 as libc::c_int as libc::c_uint;
         }
         debug_assert!((*count.offset(s as isize) as libc::c_ulong) < total);

@@ -440,12 +440,12 @@ unsafe extern "C" fn MEM_readLEST(mut memPtr: *const libc::c_void) -> libc::size
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 static mut BIT_mask: [libc::c_uint; 32] = [
@@ -3591,7 +3591,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
     nbSeq = *fresh3 as libc::c_int;
     if nbSeq == 0 {
         *nbSeqPtr = 0 as libc::c_int;
-        if srcSize != 1 as libc::c_int as libc::c_ulong {
+        if srcSize != 1 {
             return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
         }
         return 1 as libc::c_int as libc::size_t;
@@ -3717,10 +3717,10 @@ unsafe extern "C" fn ZSTD_overlapCopy8(
             11 as libc::c_int,
         ];
         let sub2 = dec64table[offset as usize];
-        *(*op).offset(0 as libc::c_int as isize) = *(*ip).offset(0);
-        *(*op).offset(1 as libc::c_int as isize) = *(*ip).offset(1);
-        *(*op).offset(2 as libc::c_int as isize) = *(*ip).offset(2);
-        *(*op).offset(3 as libc::c_int as isize) = *(*ip).offset(3);
+        *(*op).offset(0) = *(*ip).offset(0);
+        *(*op).offset(1) = *(*ip).offset(1);
+        *(*op).offset(2) = *(*ip).offset(2);
+        *(*op).offset(3) = *(*ip).offset(3);
         *ip = (*ip).offset(dec32table[offset as usize] as isize);
         ZSTD_copy4(
             (*op).offset(4) as *mut libc::c_void,
@@ -4279,7 +4279,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
             };
             temp = (temp as libc::c_ulong).wrapping_add((temp == 0) as libc::c_int as libc::c_ulong)
                 as libc::size_t as libc::size_t;
-            if offset != 1 as libc::c_int as libc::c_ulong {
+            if offset != 1 {
                 (*seqState).prevOffset[2 as libc::c_int as usize] =
                     (*seqState).prevOffset[1 as libc::c_int as usize];
             }
@@ -5292,7 +5292,7 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
         };
         init
     };
-    if nbSeq != 0 as libc::c_int {
+    if nbSeq != 0 {
         let mut ptr = offTable as *const libc::c_void;
         let tableLog = (*(ptr as *const ZSTD_seqSymbol_header).offset(0)).tableLog;
         let mut table = offTable.offset(1);

@@ -480,7 +480,7 @@ unsafe extern "C" fn DiB_saveDict(
         exit(4);
     }
     let n_0 = fclose(f) as libc::size_t;
-    if n_0 != 0 as libc::c_int as libc::c_ulong {
+    if n_0 != 0 {
         fprintf(
             stderr,
             b"Error %i : \0" as *const u8 as *const libc::c_char,
@@ -634,7 +634,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
     } else {
         (2).wrapping_mul((1) << 30 as libc::c_int) as libc::c_long
     }) as libc::size_t;
-    if memLimit != 0 as libc::c_int as libc::c_uint {
+    if memLimit != 0 {
         if displayLevel >= 2 {
             fprintf(
                 stderr,

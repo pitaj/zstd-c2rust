@@ -998,12 +998,12 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
 unsafe extern "C" fn _force_has_format_string(mut format: *const libc::c_char, mut args: ...) {}
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return val.leading_zeros() as i32 as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
-    debug_assert!(val != 0 as libc::c_int as libc::c_uint);
+    debug_assert!(val != 0);
     return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 static mut ZSTD_blockHeaderSize: libc::size_t = ZSTD_BLOCKHEADERSIZE as libc::size_t;
@@ -1706,7 +1706,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                     (*job).cSize = -(ZSTD_error_memory_allocation as libc::c_int) as libc::size_t;
                     pthread_mutex_unlock((*job).job_mutex);
                 } else {
-                    if (*job).jobID != 0 as libc::c_int as libc::c_uint {
+                    if (*job).jobID != 0 {
                         jobParams.fParams.checksumFlag = 0 as libc::c_int;
                     }
                     jobParams.ldmParams.enableLdm = ZSTD_ps_disable;
@@ -2027,7 +2027,7 @@ unsafe extern "C" fn ZSTDMT_createJobsTable(
         );
         jobNb = jobNb.wrapping_add(1);
     }
-    if initError != 0 as libc::c_int {
+    if initError != 0 {
         ZSTDMT_freeJobsTable(jobTable, nbJobs, cMem);
         return NULL_0 as *mut ZSTDMT_jobDescription;
     }
@@ -2049,9 +2049,7 @@ unsafe extern "C" fn ZSTDMT_expandJobsTable(
         if ((*mtctx).jobs).is_null() {
             return -(ZSTD_error_memory_allocation as libc::c_int) as libc::size_t;
         }
-        debug_assert!(
-            nbJobs != 0 as libc::c_int as libc::c_uint && nbJobs & nbJobs.wrapping_sub(1) == 0
-        );
+        debug_assert!(nbJobs != 0 && nbJobs & nbJobs.wrapping_sub(1) == 0);
         (*mtctx).jobIDMask = nbJobs.wrapping_sub(1);
     }
     return 0 as libc::c_int as libc::size_t;
@@ -2470,9 +2468,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
             return err_code;
         }
     }
-    if params.jobSize != 0 as libc::c_int as libc::c_ulong
-        && params.jobSize < ZSTDMT_JOBSIZE_MIN as libc::c_ulong
-    {
+    if params.jobSize != 0 && params.jobSize < ZSTDMT_JOBSIZE_MIN as libc::c_ulong {
         params.jobSize = ZSTDMT_JOBSIZE_MIN as libc::size_t;
     }
     if params.jobSize

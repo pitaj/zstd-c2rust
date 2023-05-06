@@ -920,7 +920,7 @@ unsafe extern "C" fn parseAdaptParameters(
             return 0 as libc::c_int as libc::c_uint;
         }
     }
-    if *stringPtr.offset(0) as libc::c_int != 0 as libc::c_int {
+    if *stringPtr.offset(0) as libc::c_int != 0 {
         return 0 as libc::c_int as libc::c_uint;
     }
     if *adaptMinPtr > *adaptMaxPtr {
@@ -1137,7 +1137,7 @@ unsafe extern "C" fn parseCompressionParameters(
             (*params).strategy as libc::c_uint,
         );
     }
-    if *stringPtr.offset(0) as libc::c_int != 0 as libc::c_int {
+    if *stringPtr.offset(0) as libc::c_int != 0 {
         return 0 as libc::c_int as libc::c_uint;
     }
     return 1 as libc::c_int as libc::c_uint;
@@ -1907,7 +1907,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         nbWorkers = readU32FromChar(&mut __nb);
-                        if *__nb as libc::c_int != 0 as libc::c_int {
+                        if *__nb as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -1955,7 +1955,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         memLimit = readU32FromChar(&mut __nb_0);
-                        if *__nb_0 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_0 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2003,7 +2003,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         memLimit = readU32FromChar(&mut __nb_1);
-                        if *__nb_1 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_1 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2051,7 +2051,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         memLimit = readU32FromChar(&mut __nb_2);
-                        if *__nb_2 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_2 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2099,7 +2099,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         blockSize = readSizeTFromChar(&mut __nb_3);
-                        if *__nb_3 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_3 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2147,7 +2147,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         maxDictSize = readU32FromChar(&mut __nb_4);
-                        if *__nb_4 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_4 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2195,7 +2195,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         dictID = readU32FromChar(&mut __nb_5);
-                        if *__nb_5 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_5 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2257,7 +2257,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         streamSrcSize = readSizeTFromChar(&mut __nb_6);
-                        if *__nb_6 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_6 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2305,7 +2305,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         targetCBlockSize = readSizeTFromChar(&mut __nb_7);
-                        if *__nb_7 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_7 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2353,7 +2353,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                             }
                         }
                         srcSizeHint = readSizeTFromChar(&mut __nb_8);
-                        if *__nb_8 as libc::c_int != 0 as libc::c_int {
+                        if *__nb_8 as libc::c_int != 0 {
                             errorOut(
                                 b"error: only numeric values with optional suffixes K, KB, KiB, M, MB, MiB are allowed\0"
                                     as *const u8 as *const libc::c_char,
@@ -2564,7 +2564,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                         if *argument as libc::c_int == '=' as i32 {
                             argument = argument.offset(1);
                             ldmWindowLog = readU32FromChar(&mut argument);
-                        } else if *argument as libc::c_int != 0 as libc::c_int {
+                        } else if *argument as libc::c_int != 0 {
                             badusage(programName);
                             operationResult = 1 as libc::c_int;
                             current_block = 18342783468770781838;
@@ -2598,7 +2598,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                                 current_block = 18342783468770781838;
                                 break;
                             }
-                        } else if *argument as libc::c_int != 0 as libc::c_int {
+                        } else if *argument as libc::c_int != 0 {
                             badusage(programName);
                             operationResult = 1 as libc::c_int;
                             current_block = 18342783468770781838;
@@ -2659,7 +2659,7 @@ unsafe fn main_0(mut argCount: libc::c_int, mut argv: *mut *const libc::c_char) 
                     3229571381435211107 => {}
                     _ => {
                         argument = argument.offset(1);
-                        while *argument.offset(0) as libc::c_int != 0 as libc::c_int {
+                        while *argument.offset(0) as libc::c_int != 0 {
                             if *argument as libc::c_int >= '0' as i32
                                 && *argument as libc::c_int <= '9' as i32
                             {
