@@ -111,6 +111,15 @@ case $1 in
 
     ;;
 
+  casts)
+    # Fix casting size_of from usize to c_ulong
+    perl -i -p0e 's/(::core::mem::size_of::<[^>]*>\(\)) as libc::c_ulong/$1/gm' src/*/*.rs
+    # Remove unnecessary casts where type can be inferred
+    perl -i -p0e 's/( (?:>=|<=|>|<|==|&|&=|\*|\+|\|) \d+)( as [^\s\);,]+)+/$1/gm' src/*/*.rs
+    perl -i -p0e 's/\((\d+)(?: as [^\s\);,]+?)+\)/($1)/gm' src/*/*.rs
+
+    ;;
+
   *)
     echo "Unknown stage `$1`. Available stages:"
     echo "  transpile, missing-imports, asserts, integers"

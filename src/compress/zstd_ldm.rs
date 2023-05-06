@@ -355,14 +355,14 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
     mut maxDist: u32,
     mut src: *const libc::c_void,
 ) -> u32 {
-    let cycleSize = (1 as libc::c_uint) << cycleLog;
+    let cycleSize = (1) << cycleLog;
     let cycleMask = cycleSize.wrapping_sub(1);
     let curr = (src as *const u8).offset_from((*window).base) as libc::c_long as u32;
     let currentCycle = curr & cycleMask;
     let currentCycleCorrection = if currentCycle
         < ZSTD_WINDOW_START_INDEX as libc::c_uint
     {
-        if cycleSize > 2 as libc::c_int as libc::c_uint {
+        if cycleSize > 2 {
             cycleSize
         } else {
             2 as libc::c_int as libc::c_uint
@@ -375,11 +375,11 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
         .wrapping_add((if maxDist > cycleSize { maxDist } else { cycleSize }));
     let correction = curr.wrapping_sub(newCurrent);
     debug_assert!(maxDist & maxDist.wrapping_sub(1)
-        == 0 as libc::c_int as libc::c_uint);
+        == 0);
     debug_assert!(curr & cycleMask == newCurrent & cycleMask);
     debug_assert!(curr > newCurrent);
     if ZSTD_WINDOW_OVERFLOW_CORRECT_FREQUENTLY == 0 {
-        debug_assert!(correction > ((1 as libc::c_int) << 28 as libc::c_int) as libc::c_uint);
+        debug_assert!(correction > ((1) << 28 as libc::c_int) as libc::c_uint);
     }
     (*window).base = ((*window).base).offset(correction as isize);
     (*window).dictBase = ((*window).dictBase).offset(correction as isize);
@@ -402,7 +402,7 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
             ;
     }
     debug_assert!(newCurrent >= maxDist);
-    debug_assert!(newCurrent.wrapping_sub(maxDist) >= 2 as libc::c_int as libc::c_uint);
+    debug_assert!(newCurrent.wrapping_sub(maxDist) >= 2);
     debug_assert!((*window).lowLimit <= newCurrent);
     debug_assert!((*window).dictLimit <= newCurrent);
     (*window).nbOverflowCorrections = ((*window).nbOverflowCorrections).wrapping_add(1);
@@ -422,11 +422,11 @@ unsafe extern "C" fn ZSTD_window_needOverflowCorrection(
 ) -> u32 {
     let curr = (srcEnd as *const u8).offset_from(window.base) as libc::c_long as u32;
     return (curr
-        > ((3 as libc::c_uint) << 29 as libc::c_int)
+        > ((3) << 29 as libc::c_int)
             .wrapping_add(
-                (1 as libc::c_uint)
-                    << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                        == 4 as libc::c_int as libc::c_ulong
+                (1)
+                    << (if ::core::mem::size_of::<libc::size_t>()
+                        == 4
                     {
                         ZSTD_WINDOWLOG_MAX_32
                     } else {
@@ -442,7 +442,7 @@ unsafe extern "C" fn ZSTD_window_canOverflowCorrect(
     mut loadedDictEnd: u32,
     mut src: *const libc::c_void,
 ) -> u32 {
-    let cycleSize = (1 as libc::c_uint) << cycleLog;
+    let cycleSize = (1) << cycleLog;
     let curr = (src as *const u8).offset_from(window.base) as libc::c_long as u32;
     let minIndexToOverflowCorrect = cycleSize
         .wrapping_add((if maxDist > cycleSize { maxDist } else { cycleSize }))
@@ -511,7 +511,7 @@ unsafe extern "C" fn ZSTD_count(
     let pStart = pIn;
     let pInLoopLimit = pInLimit
         .offset(
-            -((::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            -((::core::mem::size_of::<libc::size_t>())
                 .wrapping_sub(1) as isize),
         );
     if pIn < pInLoopLimit {
@@ -520,36 +520,36 @@ unsafe extern "C" fn ZSTD_count(
         if diff != 0 {
             return ZSTD_NbCommonBytes(diff) as libc::size_t;
         }
-        pIn = pIn.offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+        pIn = pIn.offset(::core::mem::size_of::<libc::size_t>() as isize);
         pMatch = pMatch
-            .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+            .offset(::core::mem::size_of::<libc::size_t>() as isize);
         while pIn < pInLoopLimit {
             let diff_0 = MEM_readST(pMatch as *const libc::c_void)
                 ^ MEM_readST(pIn as *const libc::c_void);
             if diff_0 == 0 {
                 pIn = pIn
-                    .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+                    .offset(::core::mem::size_of::<libc::size_t>() as isize);
                 pMatch = pMatch
-                    .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+                    .offset(::core::mem::size_of::<libc::size_t>() as isize);
             } else {
                 pIn = pIn.offset(ZSTD_NbCommonBytes(diff_0) as isize);
                 return pIn.offset_from(pStart) as libc::c_long as libc::size_t;
             }
         }
     }
-    if MEM_64bits() != 0 && pIn < pInLimit.offset(-(3 as libc::c_int as isize))
+    if MEM_64bits() != 0 && pIn < pInLimit.offset(-(3))
         && MEM_read32(pMatch as *const libc::c_void)
             == MEM_read32(pIn as *const libc::c_void)
     {
-        pIn = pIn.offset(4 as libc::c_int as isize);
-        pMatch = pMatch.offset(4 as libc::c_int as isize);
+        pIn = pIn.offset(4);
+        pMatch = pMatch.offset(4);
     }
-    if pIn < pInLimit.offset(-(1 as libc::c_int as isize))
+    if pIn < pInLimit.offset(-(1))
         && MEM_read16(pMatch as *const libc::c_void) as libc::c_int
             == MEM_read16(pIn as *const libc::c_void) as libc::c_int
     {
-        pIn = pIn.offset(2 as libc::c_int as isize);
-        pMatch = pMatch.offset(2 as libc::c_int as isize);
+        pIn = pIn.offset(2);
+        pMatch = pMatch.offset(2);
     }
     if pIn < pInLimit && *pMatch as libc::c_int == *pIn as libc::c_int {
         pIn = pIn.offset(1);
@@ -559,8 +559,8 @@ unsafe extern "C" fn ZSTD_count(
 pub const ZSTD_REP_NUM: libc::c_int = 3 as libc::c_int;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 8 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>()
+        == 8) as libc::c_int as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
@@ -646,28 +646,28 @@ unsafe extern "C" fn ZSTD_wildcopy(
     {
         loop {
             ZSTD_copy8(op as *mut libc::c_void, ip as *const libc::c_void);
-            op = op.offset(8 as libc::c_int as isize);
-            ip = ip.offset(8 as libc::c_int as isize);
+            op = op.offset(8);
+            ip = ip.offset(8);
             if !(op < oend) {
                 break;
             }
         }
     } else {
-        debug_assert!(diff >= 16 as libc::c_int as libc::c_long
-            || diff <= -(16 as libc::c_int) as libc::c_long);
+        debug_assert!(diff >= 16
+            || diff <= -(16) as libc::c_long);
         ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
         if 16 as libc::c_int as libc::c_long >= length {
             return;
         }
-        op = op.offset(16 as libc::c_int as isize);
-        ip = ip.offset(16 as libc::c_int as isize);
+        op = op.offset(16);
+        ip = ip.offset(16);
         loop {
             ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
-            op = op.offset(16 as libc::c_int as isize);
-            ip = ip.offset(16 as libc::c_int as isize);
+            op = op.offset(16);
+            ip = ip.offset(16);
             ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
-            op = op.offset(16 as libc::c_int as isize);
-            ip = ip.offset(16 as libc::c_int as isize);
+            op = op.offset(16);
+            ip = ip.offset(16);
             if !(op < oend) {
                 break;
             }
@@ -678,7 +678,7 @@ pub const WILDCOPY_VECLEN: libc::c_int = 16 as libc::c_int;
 pub const MINMATCH: libc::c_int = 3 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_cwksp_alloc_size(mut size: libc::size_t) -> libc::size_t {
-    if size == 0 as libc::c_int as libc::c_ulong {
+    if size == 0 {
         return 0 as libc::c_int as libc::size_t;
     }
     return size;
@@ -723,7 +723,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
     debug_assert!((((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart)
         as libc::c_long as libc::size_t) < (*seqStorePtr).maxNbSeq);
     debug_assert!((*seqStorePtr).maxNbLit
-        <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        <= (128 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulong);
     debug_assert!(((*seqStorePtr).lit).offset(litLength as isize)
         <= ((*seqStorePtr).litStart).offset((*seqStorePtr).maxNbLit as isize));
@@ -733,11 +733,11 @@ unsafe extern "C" fn ZSTD_storeSeq(
             (*seqStorePtr).lit as *mut libc::c_void,
             literals as *const libc::c_void,
         );
-        if litLength > 16 as libc::c_int as libc::c_ulong {
+        if litLength > 16 {
             ZSTD_wildcopy(
-                ((*seqStorePtr).lit).offset(16 as libc::c_int as isize)
+                ((*seqStorePtr).lit).offset(16)
                     as *mut libc::c_void,
-                literals.offset(16 as libc::c_int as isize) as *const libc::c_void,
+                literals.offset(16) as *const libc::c_void,
                 litLength as ptrdiff_t - 16 as libc::c_int as libc::c_long,
                 ZSTD_no_overlap,
             );
@@ -754,10 +754,10 @@ unsafe extern "C" fn ZSTD_storeSeq(
             .longLengthPos = ((*seqStorePtr).sequences)
             .offset_from((*seqStorePtr).sequencesStart) as libc::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize))
+    (*((*seqStorePtr).sequences).offset(0))
         .litLength = litLength as u16;
-    (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize)).offBase = offBase;
-    debug_assert!(matchLength >= 3 as libc::c_int as libc::c_ulong);
+    (*((*seqStorePtr).sequences).offset(0)).offBase = offBase;
+    debug_assert!(matchLength >= 3);
     let mlBase = matchLength.wrapping_sub(MINMATCH as libc::c_ulong);
     if mlBase > 0xffff as libc::c_int as libc::c_ulong {
         debug_assert!((*seqStorePtr).longLengthType as libc::c_uint
@@ -767,7 +767,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
             .longLengthPos = ((*seqStorePtr).sequences)
             .offset_from((*seqStorePtr).sequencesStart) as libc::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize))
+    (*((*seqStorePtr).sequences).offset(0))
         .mlBase = mlBase as u16;
     (*seqStorePtr).sequences = ((*seqStorePtr).sequences).offset(1);
 }
@@ -1037,22 +1037,22 @@ unsafe extern "C" fn ZSTD_ldm_gear_init(
     mut params: *const ldmParams_t,
 ) {
     let mut maxBitsInMask = if (*params).minMatchLength
-        < 64 as libc::c_int as libc::c_uint
+        < 64
     {
         (*params).minMatchLength
     } else {
         64 as libc::c_int as libc::c_uint
     };
     let mut hashRateLog = (*params).hashRateLog;
-    (*state).rolling = !(0 as libc::c_int as u32) as u64;
-    if hashRateLog > 0 as libc::c_int as libc::c_uint && hashRateLog <= maxBitsInMask {
+    (*state).rolling = !(0) as u64;
+    if hashRateLog > 0 && hashRateLog <= maxBitsInMask {
         (*state)
-            .stopMask = ((1 as libc::c_int as u64) << hashRateLog)
+            .stopMask = ((1) << hashRateLog)
             .wrapping_sub(1)
             << maxBitsInMask.wrapping_sub(hashRateLog);
     } else {
         (*state)
-            .stopMask = ((1 as libc::c_int as u64) << hashRateLog)
+            .stopMask = ((1) << hashRateLog)
             .wrapping_sub(1);
     };
 }
@@ -1129,7 +1129,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
             );
         n = (n as libc::c_ulong).wrapping_add(1)
             ;
-        if (hash & mask == 0 as libc::c_int as libc::c_ulong) as libc::c_int
+        if (hash & mask == 0) as libc::c_int
             as libc::c_long != 0
         {
             *splits.offset(*numSplits as isize) = n;
@@ -1146,7 +1146,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
             );
         n = (n as libc::c_ulong).wrapping_add(1)
             ;
-        if (hash & mask == 0 as libc::c_int as libc::c_ulong) as libc::c_int
+        if (hash & mask == 0) as libc::c_int
             as libc::c_long != 0
         {
             *splits.offset(*numSplits as isize) = n;
@@ -1163,7 +1163,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
             );
         n = (n as libc::c_ulong).wrapping_add(1)
             ;
-        if (hash & mask == 0 as libc::c_int as libc::c_ulong) as libc::c_int
+        if (hash & mask == 0) as libc::c_int
             as libc::c_long != 0
         {
             *splits.offset(*numSplits as isize) = n;
@@ -1180,7 +1180,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
             );
         n = (n as libc::c_ulong).wrapping_add(1)
             ;
-        if !((hash & mask == 0 as libc::c_int as libc::c_ulong) as libc::c_int
+        if !((hash & mask == 0) as libc::c_int
             as libc::c_long != 0)
         {
             continue;
@@ -1210,7 +1210,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
                     );
                 n = (n as libc::c_ulong).wrapping_add(1)
                     ;
-                if !((hash & mask == 0 as libc::c_int as libc::c_ulong) as libc::c_int
+                if !((hash & mask == 0) as libc::c_int
                     as libc::c_long != 0)
                 {
                     current_block = 5689316957504528238;
@@ -1240,7 +1240,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
     if (*params).minMatchLength == 0 {
         (*params).minMatchLength = LDM_MIN_MATCH_LENGTH as u32;
     }
-    if (*params).hashLog == 0 as libc::c_int as libc::c_uint {
+    if (*params).hashLog == 0 {
         (*params)
             .hashLog = if 6 as libc::c_int as libc::c_uint
             > ((*params).windowLog).wrapping_sub(7)
@@ -1250,16 +1250,16 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
             ((*params).windowLog).wrapping_sub(7)
         };
         debug_assert!((*params).hashLog
-            <= (if (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+            <= (if (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 30 as libc::c_int
             } else {
                 31 as libc::c_int
-            }) < 30 as libc::c_int
+            }) < 30
             {
-                (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                    == 4 as libc::c_int as libc::c_ulong
+                (if ::core::mem::size_of::<libc::size_t>()
+                    == 4
                 {
                     30 as libc::c_int
                 } else {
@@ -1269,7 +1269,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
                 30 as libc::c_int
             }) as libc::c_uint);
     }
-    if (*params).hashRateLog == 0 as libc::c_int as libc::c_uint {
+    if (*params).hashRateLog == 0 {
         (*params)
             .hashRateLog = if (*params).windowLog < (*params).hashLog {
             0 as libc::c_int as libc::c_uint
@@ -1286,19 +1286,19 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_ldm_getTableSize(mut params: ldmParams_t) -> libc::size_t {
-    let ldmHSize = (1 as libc::c_int as libc::size_t) << params.hashLog;
+    let ldmHSize = (1) << params.hashLog;
     let ldmBucketSizeLog = (if params.bucketSizeLog < params.hashLog {
         params.bucketSizeLog
     } else {
         params.hashLog
     }) as libc::size_t;
-    let ldmBucketSize = (1 as libc::c_int as libc::size_t)
+    let ldmBucketSize = (1)
         << (params.hashLog as libc::c_ulong).wrapping_sub(ldmBucketSizeLog);
     let totalSize = (ZSTD_cwksp_alloc_size(ldmBucketSize))
         .wrapping_add(
             ZSTD_cwksp_alloc_size(
                 ldmHSize
-                    .wrapping_mul(::core::mem::size_of::<ldmEntry_t>() as libc::c_ulong),
+                    .wrapping_mul(::core::mem::size_of::<ldmEntry_t>()),
             ),
         );
     return if params.enableLdm as libc::c_uint
@@ -1339,7 +1339,7 @@ unsafe extern "C" fn ZSTD_ldm_insertEntry(
     let offset = *pOffset as libc::c_uint;
     *(ZSTD_ldm_getBucket(ldmState, hash, ldmParams)).offset(offset as isize) = entry;
     *pOffset = (offset.wrapping_add(1)
-        & ((1 as libc::c_uint) << ldmParams.bucketSizeLog)
+        & ((1) << ldmParams.bucketSizeLog)
             .wrapping_sub(1)) as u8;
 }
 unsafe extern "C" fn ZSTD_ldm_countBackwardsMatch(
@@ -1350,8 +1350,8 @@ unsafe extern "C" fn ZSTD_ldm_countBackwardsMatch(
 ) -> libc::size_t {
     let mut matchLength = 0 as libc::c_int as libc::size_t;
     while pIn > pAnchor && pMatch > pMatchBase
-        && *pIn.offset(-(1 as libc::c_int) as isize) as libc::c_int
-            == *pMatch.offset(-(1 as libc::c_int) as isize) as libc::c_int
+        && *pIn.offset(-(1) as isize) as libc::c_int
+            == *pMatch.offset(-(1) as isize) as libc::c_int
     {
         pIn = pIn.offset(-1);
         pMatch = pMatch.offset(-1);
@@ -1456,7 +1456,7 @@ pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
                     0 as libc::c_int as XXH64_hash_t,
                 );
                 let hash = (xxhash
-                    & ((1 as libc::c_int as u32) << hBits)
+                    & ((1) << hBits)
                         .wrapping_sub(1) as libc::c_ulong)
                     as u32;
                 let mut entry = ldmEntry_t {
@@ -1481,7 +1481,7 @@ unsafe extern "C" fn ZSTD_ldm_limitTableUpdate(
         (*ms)
             .nextToUpdate = curr
             .wrapping_sub(
-                (if (512 as libc::c_int as libc::c_uint)
+                (if (512)
                     < curr
                         .wrapping_sub((*ms).nextToUpdate)
                         .wrapping_sub(1024)
@@ -1503,7 +1503,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
 ) -> libc::size_t {
     let extDict = ZSTD_window_hasExtDict((*ldmState).window) as libc::c_int;
     let minMatchLength = (*params).minMatchLength;
-    let entsPerBucket = (1 as libc::c_uint) << (*params).bucketSizeLog;
+    let entsPerBucket = (1) << (*params).bucketSizeLog;
     let hBits = ((*params).hashLog).wrapping_sub((*params).bucketSizeLog);
     let dictLimit = (*ldmState).window.dictLimit;
     let lowestIndex = if extDict != 0 { (*ldmState).window.lowLimit } else { dictLimit };
@@ -1564,7 +1564,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
                 0 as libc::c_int as XXH64_hash_t,
             );
             let hash = (xxhash
-                & ((1 as libc::c_int as u32) << hBits)
+                & ((1) << hBits)
                     .wrapping_sub(1) as libc::c_ulong)
                 as u32;
             let ref mut fresh2 = (*candidates.offset(n as isize)).split;
@@ -1734,10 +1734,10 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
     mut src: *const libc::c_void,
     mut srcSize: libc::size_t,
 ) -> libc::size_t {
-    let maxDist = (1 as libc::c_uint) << (*params).windowLog;
+    let maxDist = (1) << (*params).windowLog;
     let istart = src as *const u8;
     let iend = istart.offset(srcSize as isize);
-    let kMaxChunkSize = ((1 as libc::c_int) << 20 as libc::c_int) as libc::size_t;
+    let kMaxChunkSize = ((1) << 20 as libc::c_int) as libc::size_t;
     let nbChunks = srcSize
         .wrapping_div(kMaxChunkSize)
         .wrapping_add(
@@ -1746,13 +1746,13 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
         );
     let mut chunk: libc::size_t = 0;
     let mut leftoverSize = 0 as libc::c_int as libc::size_t;
-    debug_assert!((-(1 as libc::c_int) as u32)
+    debug_assert!((-(1) as u32)
         .wrapping_sub(
-            ((3 as libc::c_uint) << 29 as libc::c_int)
+            ((3) << 29 as libc::c_int)
                 .wrapping_add(
-                    (1 as libc::c_uint)
-                        << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                            == 4 as libc::c_int as libc::c_ulong
+                    (1)
+                        << (if ::core::mem::size_of::<libc::size_t>()
+                            == 4
                         {
                             30 as libc::c_int
                         } else {
@@ -1785,7 +1785,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
             chunkEnd as *const libc::c_void,
         ) != 0
         {
-            let ldmHSize = (1 as libc::c_uint) << (*params).hashLog;
+            let ldmHSize = (1) << (*params).hashLog;
             let correction = ZSTD_window_correctOverflow(
                 &mut (*ldmState).window,
                 0 as libc::c_int as u32,
@@ -1833,7 +1833,7 @@ pub unsafe extern "C" fn ZSTD_ldm_skipSequences(
     mut srcSize: libc::size_t,
     minMatch: u32,
 ) {
-    while srcSize > 0 as libc::c_int as libc::c_ulong
+    while srcSize > 0
         && (*rawSeqStore).pos < (*rawSeqStore).size
     {
         let mut seq = ((*rawSeqStore).seq).offset((*rawSeqStore).pos as isize);
@@ -1854,11 +1854,11 @@ pub unsafe extern "C" fn ZSTD_ldm_skipSequences(
                 if ((*rawSeqStore).pos).wrapping_add(1)
                     < (*rawSeqStore).size
                 {
-                    let ref mut fresh6 = (*seq.offset(1 as libc::c_int as isize))
+                    let ref mut fresh6 = (*seq.offset(1))
                         .litLength;
                     *fresh6 = (*fresh6 as libc::c_uint)
                         .wrapping_add(
-                            (*seq.offset(0 as libc::c_int as isize)).matchLength,
+                            (*seq.offset(0)).matchLength,
                         ) ;
                 }
                 (*rawSeqStore).pos = ((*rawSeqStore).pos).wrapping_add(1);
@@ -1877,7 +1877,7 @@ unsafe extern "C" fn maybeSplitSequence(
     minMatch: u32,
 ) -> rawSeq {
     let mut sequence = *((*rawSeqStore).seq).offset((*rawSeqStore).pos as isize);
-    debug_assert!(sequence.offset > 0 as libc::c_int as libc::c_uint);
+    debug_assert!(sequence.offset > 0);
     if remaining >= (sequence.litLength).wrapping_add(sequence.matchLength) {
         (*rawSeqStore).pos = ((*rawSeqStore).pos).wrapping_add(1);
         return sequence;
@@ -1911,7 +1911,7 @@ pub unsafe extern "C" fn ZSTD_ldm_skipRawSeqStoreBytes(
             break;
         }
     }
-    if currPos == 0 as libc::c_int as libc::c_uint
+    if currPos == 0
         || (*rawSeqStore).pos == (*rawSeqStore).size
     {
         (*rawSeqStore).posInSequence = 0 as libc::c_int as libc::size_t;
@@ -1954,7 +1954,7 @@ pub unsafe extern "C" fn ZSTD_ldm_blockCompress(
             minMatch,
         );
         let mut i: libc::c_int = 0;
-        if sequence.offset == 0 as libc::c_int as libc::c_uint {
+        if sequence.offset == 0 {
             break;
         }
         debug_assert!(ip.offset(sequence.litLength as isize).offset(sequence.matchLength as isize)
@@ -1973,12 +1973,12 @@ pub unsafe extern "C" fn ZSTD_ldm_blockCompress(
         );
         ip = ip.offset(sequence.litLength as isize);
         i = ZSTD_REP_NUM - 1 as libc::c_int;
-        while i > 0 as libc::c_int {
+        while i > 0 {
             *rep.offset(i as isize) = *rep.offset((i - 1 as libc::c_int) as isize);
             i -= 1;
         }
-        *rep.offset(0 as libc::c_int as isize) = sequence.offset;
-        debug_assert!(sequence.offset > 0 as libc::c_int as libc::c_uint);
+        *rep.offset(0) = sequence.offset;
+        debug_assert!(sequence.offset > 0);
         ZSTD_storeSeq(
             seqStore,
             newLitLength,

@@ -65,7 +65,7 @@ pub type __off_t = libc::c_long;
 pub type fixedPoint_24_8 = u32;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const LTLOG: libc::c_int = 13 as libc::c_int;
-pub const LTSIZE: libc::c_int = (1 as libc::c_int) << LTLOG;
+pub const LTSIZE: libc::c_int = (1) << LTLOG;
 pub const LTMASK: libc::c_int = LTSIZE - 1 as libc::c_int;
 unsafe extern "C" fn RDG_rand(mut src: *mut u32) -> u32 {
     static mut prime1: u32 = 2654435761 as libc::c_uint;
@@ -98,7 +98,7 @@ unsafe extern "C" fn RDG_fillLiteralDistrib(
         '0' as i32
     }) as u8;
     let mut u: u32 = 0;
-    if ld <= 0 as libc::c_int as libc::c_uint {
+    if ld <= 0 {
         ld = 0 as libc::c_int as fixedPoint_24_8;
     }
     u = 0 as libc::c_int as u32;
@@ -107,11 +107,11 @@ unsafe extern "C" fn RDG_fillLiteralDistrib(
             >> 8 as libc::c_int)
             .wrapping_add(1);
         let end = if u.wrapping_add(weight)
-            < ((1 as libc::c_int) << 13 as libc::c_int) as libc::c_uint
+            < ((1) << 13 as libc::c_int) as libc::c_uint
         {
             u.wrapping_add(weight)
         } else {
-            ((1 as libc::c_int) << 13 as libc::c_int) as libc::c_uint
+            ((1) << 13 as libc::c_int) as libc::c_uint
         };
         while u < end {
             let fresh0 = u;
@@ -132,7 +132,7 @@ unsafe extern "C" fn RDG_rand15Bits(mut seedPtr: *mut u32) -> u32 {
     return RDG_rand(seedPtr) & 0x7fff as libc::c_int as libc::c_uint;
 }
 unsafe extern "C" fn RDG_randLength(mut seedPtr: *mut u32) -> u32 {
-    if RDG_rand(seedPtr) & 7 as libc::c_int as libc::c_uint != 0 {
+    if RDG_rand(seedPtr) & 7 != 0 {
         return RDG_rand(seedPtr) & 0xf as libc::c_int as libc::c_uint;
     }
     return (RDG_rand(seedPtr) & 0x1ff as libc::c_int as libc::c_uint)
@@ -151,9 +151,9 @@ unsafe extern "C" fn RDG_genBlock(
     let mut pos = prefixSize;
     let mut prevOffset = 1 as libc::c_int as u32;
     while matchProba >= 1.0f64 {
-        let mut size0 = (RDG_rand(seedPtr) & 3 as libc::c_int as libc::c_uint) as libc::size_t;
-        size0 = (1 as libc::c_int as libc::size_t)
-            << (16 as libc::c_int as libc::c_ulong)
+        let mut size0 = (RDG_rand(seedPtr) & 3) as libc::size_t;
+        size0 = (1)
+            << (16)
                 .wrapping_add(size0.wrapping_mul(2));
         size0 = (size0 as libc::c_ulong)
             .wrapping_add(
@@ -179,8 +179,8 @@ unsafe extern "C" fn RDG_genBlock(
                 pos.wrapping_sub(1) as isize,
             ) = RDG_genChar(seedPtr, ldt);
     }
-    if pos == 0 as libc::c_int as libc::c_ulong {
-        *buffPtr.offset(0 as libc::c_int as isize) = RDG_genChar(seedPtr, ldt);
+    if pos == 0 {
+        *buffPtr.offset(0) = RDG_genChar(seedPtr, ldt);
         pos = 1 as libc::c_int as libc::size_t;
     }
     while pos < buffSize {
@@ -192,8 +192,8 @@ unsafe extern "C" fn RDG_genBlock(
             } else {
                 buffSize
             }) as u32;
-            let repeatOffset = (RDG_rand(seedPtr) & 15 as libc::c_int as libc::c_uint
-                == 2 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+            let repeatOffset = (RDG_rand(seedPtr) & 15
+                == 2) as libc::c_int as u32;
             let randOffset = (RDG_rand15Bits(seedPtr))
                 .wrapping_add(1);
             let offset = if repeatOffset != 0 {
@@ -242,14 +242,14 @@ pub unsafe extern "C" fn RDG_genBuffer(
     memset(
         ldt.as_mut_ptr() as *mut libc::c_void,
         '0' as i32,
-        ::core::mem::size_of::<[u8; 8192]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u8; 8192]>(),
     );
     if litProba <= 0.0f64 {
         litProba = matchProba / 4.5f64;
     }
     RDG_fillLiteralDistrib(
         ldt.as_mut_ptr(),
-        (litProba * 256 as libc::c_int as libc::c_double + 0.001f64) as fixedPoint_24_8,
+        (litProba * 256 + 0.001f64) as fixedPoint_24_8,
     );
     RDG_genBlock(
         buffer,
@@ -268,16 +268,16 @@ pub unsafe extern "C" fn RDG_genStdout(
     mut seed: libc::c_uint,
 ) {
     let mut seed32 = seed;
-    let stdBlockSize = (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+    let stdBlockSize = (128 as libc::c_int * ((1) << 10 as libc::c_int))
         as libc::size_t;
-    let stdDictSize = (32 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+    let stdDictSize = (32 as libc::c_int * ((1) << 10 as libc::c_int))
         as libc::size_t;
     let buff = malloc(stdDictSize.wrapping_add(stdBlockSize)) as *mut u8;
     let mut total = 0 as libc::c_int as u64;
     let mut ldt: [u8; 8192] = [0; 8192];
     if buff.is_null() {
         perror(b"datagen\0" as *const u8 as *const libc::c_char);
-        exit(1 as libc::c_int);
+        exit(1);
     }
     if litProba <= 0.0f64 {
         litProba = matchProba / 4.5f64;
@@ -285,11 +285,11 @@ pub unsafe extern "C" fn RDG_genStdout(
     memset(
         ldt.as_mut_ptr() as *mut libc::c_void,
         '0' as i32,
-        ::core::mem::size_of::<[u8; 8192]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u8; 8192]>(),
     );
     RDG_fillLiteralDistrib(
         ldt.as_mut_ptr(),
-        (litProba * 256 as libc::c_int as libc::c_double + 0.001f64) as fixedPoint_24_8,
+        (litProba * 256 + 0.001f64) as fixedPoint_24_8,
     );
     RDG_genBlock(
         buff as *mut libc::c_void,

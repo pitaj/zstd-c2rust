@@ -750,15 +750,15 @@ pub struct dictItem {
 }
 pub const DEBUGLEVEL: libc::c_int = 1 as libc::c_int;
 pub const MINRATIO: libc::c_int = 4 as libc::c_int;
-pub const ZDICT_MAX_SAMPLES_SIZE: libc::c_uint = (2000 as libc::c_uint)
+pub const ZDICT_MAX_SAMPLES_SIZE: libc::c_uint = (2000)
     << 20 as libc::c_int;
 pub const ZDICT_MIN_SAMPLES_SIZE: libc::c_int = ZDICT_CONTENTSIZE_MIN * MINRATIO;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const CLOCKS_PER_SEC: libc::c_int = 1000000 as libc::c_int;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 8 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>()
+        == 8) as libc::c_int as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
@@ -841,7 +841,7 @@ unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: libc::size_t) -> libc::c_uint {
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
-    return (31 as libc::c_int as libc::c_uint)
+    return (31)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -853,19 +853,19 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
     return (code > -(ZSTD_error_maxCode as libc::c_int) as libc::size_t) as libc::c_int
         as libc::c_uint;
 }
-pub const HUF_WORKSPACE_SIZE: libc::c_int = ((8 as libc::c_int) << 10 as libc::c_int)
-    + 512 as libc::c_int;
+pub const HUF_WORKSPACE_SIZE: libc::c_int = ((8) << 10 as libc::c_int)
+    + 512;
 unsafe extern "C" fn ERR_getErrorCode(mut code: libc::size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0 as libc::c_int as libc::c_ulong).wrapping_sub(code) as ERR_enum;
+    return (0).wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
 }
 pub const ZSTD_MAGIC_DICTIONARY: libc::c_uint = 0xec30a437 as libc::c_uint;
-pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1 as libc::c_int) << ZSTD_BLOCKSIZELOG_MAX;
+pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1) << ZSTD_BLOCKSIZELOG_MAX;
 pub const ZSTD_BLOCKSIZELOG_MAX: libc::c_int = 17 as libc::c_int;
 pub const HUF_isError: unsafe extern "C" fn(libc::size_t) -> libc::c_uint = ERR_isError;
 pub const OffFSELog: libc::c_int = 8 as libc::c_int;
@@ -911,8 +911,8 @@ unsafe extern "C" fn ZDICT_printHex(mut ptr: *const libc::c_void, mut length: li
     u = 0 as libc::c_int as libc::size_t;
     while u < length {
         let mut c = *b.offset(u as isize);
-        if (c as libc::c_int) < 32 as libc::c_int
-            || c as libc::c_int > 126 as libc::c_int
+        if (c as libc::c_int) < 32
+            || c as libc::c_int > 126
         {
             c = '.' as i32 as u8;
         }
@@ -936,14 +936,14 @@ pub unsafe extern "C" fn ZDICT_getDictID(
     mut dictBuffer: *const libc::c_void,
     mut dictSize: libc::size_t,
 ) -> libc::c_uint {
-    if dictSize < 8 as libc::c_int as libc::c_ulong {
+    if dictSize < 8 {
         return 0 as libc::c_int as libc::c_uint;
     }
     if MEM_readLE32(dictBuffer) != ZSTD_MAGIC_DICTIONARY {
         return 0 as libc::c_int as libc::c_uint;
     }
     return MEM_readLE32(
-        (dictBuffer as *const libc::c_char).offset(4 as libc::c_int as isize)
+        (dictBuffer as *const libc::c_char).offset(4)
             as *const libc::c_void,
     );
 }
@@ -953,13 +953,13 @@ pub unsafe extern "C" fn ZDICT_getDictHeaderSize(
     mut dictSize: libc::size_t,
 ) -> libc::size_t {
     let mut headerSize: libc::size_t = 0;
-    if dictSize <= 8 as libc::c_int as libc::c_ulong
+    if dictSize <= 8
         || MEM_readLE32(dictBuffer) != ZSTD_MAGIC_DICTIONARY
     {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     let mut bs = malloc(
-        ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
     ) as *mut ZSTD_compressedBlockState_t;
     let mut wksp = malloc(HUF_WORKSPACE_SIZE as libc::c_ulong) as *mut u32;
     if bs.is_null() || wksp.is_null() {
@@ -986,10 +986,10 @@ unsafe extern "C" fn ZDICT_count(
         let diff = MEM_readST(pMatch) ^ MEM_readST(pIn);
         if diff == 0 {
             pIn = (pIn as *const libc::c_char)
-                .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize)
+                .offset(::core::mem::size_of::<libc::size_t>() as isize)
                 as *const libc::c_void;
             pMatch = (pMatch as *const libc::c_char)
-                .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize)
+                .offset(::core::mem::size_of::<libc::size_t>() as isize)
                 as *const libc::c_void;
         } else {
             pIn = (pIn as *const libc::c_char).offset(ZSTD_NbCommonBytes(diff) as isize)
@@ -1002,7 +1002,7 @@ unsafe extern "C" fn ZDICT_count(
 unsafe extern "C" fn ZDICT_initDictItem(mut d: *mut dictItem) {
     (*d).pos = 1 as libc::c_int as u32;
     (*d).length = 0 as libc::c_int as u32;
-    (*d).savings = -(1 as libc::c_int) as u32;
+    (*d).savings = -(1) as u32;
 }
 pub const LLIMIT: libc::c_int = 64 as libc::c_int;
 pub const MINMATCHLENGTH: libc::c_int = 7 as libc::c_int;
@@ -1224,35 +1224,35 @@ unsafe extern "C" fn ZDICT_analyzePos(
     memset(
         &mut solution as *mut dictItem as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<dictItem>() as libc::c_ulong,
+        ::core::mem::size_of::<dictItem>(),
     );
     *doneMarks.offset(pos as isize) = 1 as libc::c_int as u8;
     if MEM_read16(
-        b.offset(pos as isize).offset(0 as libc::c_int as isize) as *const libc::c_void,
+        b.offset(pos as isize).offset(0) as *const libc::c_void,
     ) as libc::c_int
         == MEM_read16(
-            b.offset(pos as isize).offset(2 as libc::c_int as isize)
+            b.offset(pos as isize).offset(2)
                 as *const libc::c_void,
         ) as libc::c_int
         || MEM_read16(
-            b.offset(pos as isize).offset(1 as libc::c_int as isize)
+            b.offset(pos as isize).offset(1)
                 as *const libc::c_void,
         ) as libc::c_int
             == MEM_read16(
-                b.offset(pos as isize).offset(3 as libc::c_int as isize)
+                b.offset(pos as isize).offset(3)
                     as *const libc::c_void,
             ) as libc::c_int
         || MEM_read16(
-            b.offset(pos as isize).offset(2 as libc::c_int as isize)
+            b.offset(pos as isize).offset(2)
                 as *const libc::c_void,
         ) as libc::c_int
             == MEM_read16(
-                b.offset(pos as isize).offset(4 as libc::c_int as isize)
+                b.offset(pos as isize).offset(4)
                     as *const libc::c_void,
             ) as libc::c_int
     {
         let pattern16 = MEM_read16(
-            b.offset(pos as isize).offset(4 as libc::c_int as isize)
+            b.offset(pos as isize).offset(4)
                 as *const libc::c_void,
         );
         let mut u: u32 = 0;
@@ -1302,7 +1302,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
             b.offset(pos as isize) as *const libc::c_void,
             b
                 .offset(
-                    *suffix.offset(start as isize).offset(-(1 as libc::c_int as isize))
+                    *suffix.offset(start as isize).offset(-(1))
                         as isize,
                 ) as *const libc::c_void,
         );
@@ -1329,11 +1329,11 @@ unsafe extern "C" fn ZDICT_analyzePos(
     let mut mml: u32 = 0;
     let mut refinedStart = start;
     let mut refinedEnd = end;
-    if notificationLevel >= 4 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 4 {
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
         fflush(stderr);
     }
-    if notificationLevel >= 4 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 4 {
         fprintf(
             stderr,
             b"found %3u matches of length >= %i at pos %7u  \0" as *const u8
@@ -1344,7 +1344,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
         );
         fflush(stderr);
     }
-    if notificationLevel >= 4 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 4 {
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
         fflush(stderr);
     }
@@ -1396,7 +1396,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
     memset(
         lengthList.as_mut_ptr() as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<[u32; 64]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 64]>(),
     );
     let mut length_1: libc::size_t = 0;
     loop {
@@ -1415,7 +1415,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
     }
     let mut length_2 = MINMATCHLENGTH as libc::size_t;
     while (length_2 >= MINMATCHLENGTH as libc::c_ulong) as libc::c_int
-        & (start > 0 as libc::c_int as libc::c_uint) as libc::c_int != 0
+        & (start > 0) as libc::c_int != 0
     {
         length_2 = ZDICT_count(
             b.offset(pos as isize) as *const libc::c_void,
@@ -1438,15 +1438,15 @@ unsafe extern "C" fn ZDICT_analyzePos(
     memset(
         cumulLength.as_mut_ptr() as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<[u32; 64]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 64]>(),
     );
     cumulLength[maxLength.wrapping_sub(1)
         as usize] = lengthList[maxLength.wrapping_sub(1)
         as usize];
     i = maxLength.wrapping_sub(2) as libc::c_int;
-    while i >= 0 as libc::c_int {
+    while i >= 0 {
         cumulLength[i
-            as usize] = (cumulLength[(i + 1 as libc::c_int) as usize])
+            as usize] = (cumulLength[(i + 1) as usize])
             .wrapping_add(lengthList[i as usize]);
         i -= 1;
     }
@@ -1488,7 +1488,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
             );
         i += 1;
     }
-    if notificationLevel >= 4 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 4 {
         fprintf(
             stderr,
             b"Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n\0"
@@ -1583,7 +1583,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                         (elt.length).wrapping_div(8),
                     ) ;
                 elt = *table.offset(u as isize);
-                while u > 1 as libc::c_int as libc::c_uint
+                while u > 1
                     && (*table
                         .offset(
                             u.wrapping_sub(1) as isize,
@@ -1620,7 +1620,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                     .wrapping_add(
                         (elt.length).wrapping_div(8),
                     ) ;
-                if addedLength_0 > 0 as libc::c_int {
+                if addedLength_0 > 0 {
                     let ref mut fresh4 = (*table.offset(u as isize)).length;
                     *fresh4 = (*fresh4 as libc::c_uint)
                         .wrapping_add(addedLength_0 as libc::c_uint) ;
@@ -1633,7 +1633,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                         ) ;
                 }
                 elt = *table.offset(u as isize);
-                while u > 1 as libc::c_int as libc::c_uint
+                while u > 1
                     && (*table
                         .offset(
                             u.wrapping_sub(1) as isize,
@@ -1657,21 +1657,21 @@ unsafe extern "C" fn ZDICT_tryMerge(
                     as *const libc::c_void,
             )
                 == MEM_read64(
-                    buf.offset(elt.pos as isize).offset(1 as libc::c_int as isize)
+                    buf.offset(elt.pos as isize).offset(1)
                         as *const libc::c_void,
                 )
             {
                 if isIncluded(
                     buf.offset((*table.offset(u as isize)).pos as isize)
                         as *const libc::c_void,
-                    buf.offset(elt.pos as isize).offset(1 as libc::c_int as isize)
+                    buf.offset(elt.pos as isize).offset(1)
                         as *const libc::c_void,
                     (*table.offset(u as isize)).length as libc::size_t,
                 ) != 0
                 {
                     let addedLength_1 = (if elt.length as libc::c_int
                         - (*table.offset(u as isize)).length as libc::c_int
-                        > 1 as libc::c_int
+                        > 1
                     {
                         elt.length as libc::c_int
                             - (*table.offset(u as isize)).length as libc::c_int
@@ -1705,7 +1705,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
     return 0 as libc::c_int as u32;
 }
 unsafe extern "C" fn ZDICT_removeDictItem(mut table: *mut dictItem, mut id: u32) {
-    let max = (*table.offset(0 as libc::c_int as isize)).pos;
+    let max = (*table.offset(0)).pos;
     let mut u: u32 = 0;
     if id == 0 {
         return;
@@ -1763,7 +1763,7 @@ unsafe extern "C" fn ZDICT_dictSize(mut dictList: *const dictItem) -> u32 {
     let mut u: u32 = 0;
     let mut dictSize = 0 as libc::c_int as u32;
     u = 1 as libc::c_int as u32;
-    while u < (*dictList.offset(0 as libc::c_int as isize)).pos {
+    while u < (*dictList.offset(0)).pos {
         dictSize = (dictSize as libc::c_uint)
             .wrapping_add((*dictList.offset(u as isize)).length) ;
         u = u.wrapping_add(1);
@@ -1783,26 +1783,26 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
     let suffix0 = malloc(
         bufferSize
             .wrapping_add(2)
-            .wrapping_mul(::core::mem::size_of::<libc::c_int>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<libc::c_int>()),
     ) as *mut libc::c_int;
-    let suffix = suffix0.offset(1 as libc::c_int as isize);
+    let suffix = suffix0.offset(1);
     let mut reverseSuffix = malloc(
-        bufferSize.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+        bufferSize.wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     let mut doneMarks = malloc(
         bufferSize
             .wrapping_add(16)
-            .wrapping_mul(::core::mem::size_of::<u8>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<u8>()),
     ) as *mut u8;
     let mut filePos = malloc(
         (nbFiles as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     let mut result = 0 as libc::c_int as libc::size_t;
     let mut displayClock = 0 as libc::c_int as clock_t;
-    let refreshRate = CLOCKS_PER_SEC as __clock_t * 3 as libc::c_int as libc::c_long
+    let refreshRate = CLOCKS_PER_SEC as __clock_t * 3
         / 10 as libc::c_int as libc::c_long;
-    if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 2 {
         fprintf(
             stderr,
             b"\r%70s\r\0" as *const u8 as *const libc::c_char,
@@ -1824,12 +1824,12 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             bufferSize.wrapping_add(16),
         );
         if bufferSize > ZDICT_MAX_SAMPLES_SIZE as libc::c_ulong {
-            if notificationLevel >= 3 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 3 {
                 fprintf(
                     stderr,
                     b"sample set too large : reduced to %u MB ...\n\0" as *const u8
                         as *const libc::c_char,
-                    (2000 as libc::c_uint) << 20 as libc::c_int >> 20 as libc::c_int,
+                    (2000) << 20 as libc::c_int >> 20 as libc::c_int,
                 );
                 fflush(stderr);
             }
@@ -1839,7 +1839,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             bufferSize = (bufferSize as libc::c_ulong)
                 .wrapping_sub(*fileSizes.offset(nbFiles as isize)) ;
         }
-        if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"sorting %u files of total size %u MB ...\n\0" as *const u8
@@ -1859,7 +1859,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             result = -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
         } else {
             *suffix.offset(bufferSize as isize) = bufferSize as libc::c_int;
-            *suffix0.offset(0 as libc::c_int as isize) = bufferSize as libc::c_int;
+            *suffix0.offset(0) = bufferSize as libc::c_int;
             let mut pos: libc::size_t = 0;
             pos = 0 as libc::c_int as libc::size_t;
             while pos < bufferSize {
@@ -1867,7 +1867,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                     .offset(*suffix.offset(pos as isize) as isize) = pos as u32;
                 pos = pos.wrapping_add(1);
             }
-            *filePos.offset(0 as libc::c_int as isize) = 0 as libc::c_int as u32;
+            *filePos.offset(0) = 0 as libc::c_int as u32;
             pos = 1 as libc::c_int as libc::size_t;
             while pos < nbFiles as libc::c_ulong {
                 *filePos
@@ -1884,14 +1884,14 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                     ) as u32;
                 pos = pos.wrapping_add(1);
             }
-            if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"finding patterns ... \n\0" as *const u8 as *const libc::c_char,
                 );
                 fflush(stderr);
             }
-            if notificationLevel >= 3 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 3 {
                 fprintf(
                     stderr,
                     b"minimum ratio : %u \n\0" as *const u8 as *const libc::c_char,
@@ -1918,13 +1918,13 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                         minRatio,
                         notificationLevel,
                     );
-                    if solution.length == 0 as libc::c_int as libc::c_uint {
+                    if solution.length == 0 {
                         cursor = cursor.wrapping_add(1);
                     } else {
                         ZDICT_insertDictItem(dictList, dictListSize, solution, buffer);
                         cursor = (cursor as libc::c_uint).wrapping_add(solution.length)
                             ;
-                        if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+                        if notificationLevel >= 2 {
                             if ZDICT_clockSpan(displayClock) > refreshRate {
                                 displayClock = clock();
                                 fprintf(
@@ -1934,7 +1934,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                                         * 100.0f64,
                                 );
                                 fflush(stderr);
-                                if notificationLevel >= 4 as libc::c_int as libc::c_uint {
+                                if notificationLevel >= 4 {
                                     fflush(stderr);
                                 }
                             }
@@ -1976,12 +1976,12 @@ unsafe extern "C" fn ZDICT_countEStats(
     mut srcSize: libc::size_t,
     mut notificationLevel: u32,
 ) {
-    let blockSizeMax = (if ((1 as libc::c_int) << 17 as libc::c_int)
-        < (1 as libc::c_int) << (*params).cParams.windowLog
+    let blockSizeMax = (if ((1) << 17 as libc::c_int)
+        < (1) << (*params).cParams.windowLog
     {
-        (1 as libc::c_int) << 17 as libc::c_int
+        (1) << 17 as libc::c_int
     } else {
-        (1 as libc::c_int) << (*params).cParams.windowLog
+        (1) << (*params).cParams.windowLog
     }) as libc::size_t;
     let mut cSize: libc::size_t = 0;
     if srcSize > blockSizeMax {
@@ -1989,7 +1989,7 @@ unsafe extern "C" fn ZDICT_countEStats(
     }
     let errorCode = ZSTD_compressBegin_usingCDict_deprecated(esr.zc, esr.dict);
     if ERR_isError(errorCode) != 0 {
-        if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 1 {
             fprintf(
                 stderr,
                 b"warning : ZSTD_compressBegin_usingCDict failed \n\0" as *const u8
@@ -2007,7 +2007,7 @@ unsafe extern "C" fn ZDICT_countEStats(
         srcSize,
     );
     if ERR_isError(cSize) != 0 {
-        if notificationLevel >= 3 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 3 {
             fprintf(
                 stderr,
                 b"warning : could not compress sample size %u \n\0" as *const u8
@@ -2057,11 +2057,11 @@ unsafe extern "C" fn ZDICT_countEStats(
             *fresh10 = (*fresh10).wrapping_add(1);
             u_1 = u_1.wrapping_add(1);
         }
-        if nbSeq >= 2 as libc::c_int as libc::c_uint {
+        if nbSeq >= 2 {
             let seq: *const seqDef = (*seqStorePtr).sequencesStart;
-            let mut offset1 = ((*seq.offset(0 as libc::c_int as isize)).offBase)
+            let mut offset1 = ((*seq.offset(0)).offBase)
                 .wrapping_sub(ZSTD_REP_NUM as libc::c_uint);
-            let mut offset2 = ((*seq.offset(1 as libc::c_int as isize)).offBase)
+            let mut offset2 = ((*seq.offset(1)).offBase)
                 .wrapping_sub(ZSTD_REP_NUM as libc::c_uint);
             if offset1 >= MAXREPOFFSET as libc::c_uint {
                 offset1 = 0 as libc::c_int as u32;
@@ -2101,7 +2101,7 @@ unsafe extern "C" fn ZDICT_insertSortCount(
     (*table.offset(ZSTD_REP_NUM as isize)).offset = val;
     (*table.offset(ZSTD_REP_NUM as isize)).count = count;
     u = ZSTD_REP_NUM as u32;
-    while u > 0 as libc::c_int as libc::c_uint {
+    while u > 0 {
         let mut tmp = offsetCount_t {
             offset: 0,
             count: 0,
@@ -2123,13 +2123,13 @@ unsafe extern "C" fn ZDICT_insertSortCount(
 unsafe extern "C" fn ZDICT_flatLit(mut countLit: *mut libc::c_uint) {
     let mut u: libc::c_int = 0;
     u = 1 as libc::c_int;
-    while u < 256 as libc::c_int {
+    while u < 256 {
         *countLit.offset(u as isize) = 2 as libc::c_int as libc::c_uint;
         u += 1;
     }
-    *countLit.offset(0 as libc::c_int as isize) = 4 as libc::c_int as libc::c_uint;
-    *countLit.offset(253 as libc::c_int as isize) = 1 as libc::c_int as libc::c_uint;
-    *countLit.offset(254 as libc::c_int as isize) = 1 as libc::c_int as libc::c_uint;
+    *countLit.offset(0) = 4 as libc::c_int as libc::c_uint;
+    *countLit.offset(253) = 1 as libc::c_int as libc::c_uint;
+    *countLit.offset(254) = 1 as libc::c_int as libc::c_uint;
 }
 pub const OFFCODE_MAX: libc::c_int = 30 as libc::c_int;
 unsafe extern "C" fn ZDICT_analyzeEntropy(
@@ -2150,7 +2150,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
     let mut offcodeMax = ZSTD_highbit32(
         dictBufferSize
             .wrapping_add(
-                (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                (128 as libc::c_int * ((1) << 10 as libc::c_int))
                     as libc::c_ulong,
             ) as u32,
     );
@@ -2208,7 +2208,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         eSize = -(ZSTD_error_dictionaryCreation_failed as libc::c_int) as libc::size_t;
     } else {
         u = 0 as libc::c_int as u32;
-        while u < 256 as libc::c_int as libc::c_uint {
+        while u < 256 {
             countLit[u as usize] = 1 as libc::c_int as libc::c_uint;
             u = u.wrapping_add(1);
         }
@@ -2230,7 +2230,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         memset(
             repOffset.as_mut_ptr() as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<[u32; 1024]>() as libc::c_ulong,
+            ::core::mem::size_of::<[u32; 1024]>(),
         );
         repOffset[8 as libc::c_int as usize] = 1 as libc::c_int as u32;
         repOffset[4 as libc::c_int as usize] = repOffset[8 as libc::c_int as usize];
@@ -2238,9 +2238,9 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         memset(
             bestRepOffset.as_mut_ptr() as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<[offsetCount_t; 4]>() as libc::c_ulong,
+            ::core::mem::size_of::<[offsetCount_t; 4]>(),
         );
-        if compressionLevel == 0 as libc::c_int {
+        if compressionLevel == 0 {
             compressionLevel = ZSTD_CLEVEL_DEFAULT;
         }
         params = ZSTD_getParams(
@@ -2261,7 +2261,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         esr.workPlace = malloc(ZSTD_BLOCKSIZE_MAX as libc::c_ulong);
         if (esr.dict).is_null() || (esr.zc).is_null() || (esr.workPlace).is_null() {
             eSize = -(ZSTD_error_memory_allocation as libc::c_int) as libc::size_t;
-            if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 1 {
                 fprintf(
                     stderr,
                     b"Not enough memory \n\0" as *const u8 as *const libc::c_char,
@@ -2288,8 +2288,8 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     ;
                 u = u.wrapping_add(1);
             }
-            if notificationLevel >= 4 as libc::c_int as libc::c_uint {
-                if notificationLevel >= 4 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 4 {
+                if notificationLevel >= 4 {
                     fprintf(
                         stderr,
                         b"Offset Code Frequencies : \n\0" as *const u8
@@ -2299,7 +2299,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 }
                 u = 0 as libc::c_int as u32;
                 while u <= offcodeMax {
-                    if notificationLevel >= 4 as libc::c_int as libc::c_uint {
+                    if notificationLevel >= 4 {
                         fprintf(
                             stderr,
                             b"%2u :%7u \n\0" as *const u8 as *const libc::c_char,
@@ -2317,11 +2317,11 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 255 as libc::c_int as u32,
                 huffLog,
                 wksp.as_mut_ptr() as *mut libc::c_void,
-                ::core::mem::size_of::<[u32; 1216]>() as libc::c_ulong,
+                ::core::mem::size_of::<[u32; 1216]>(),
             );
             if ERR_isError(maxNbBits) != 0 {
                 eSize = maxNbBits;
-                if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                if notificationLevel >= 1 {
                     fprintf(
                         stderr,
                         b" HUF_buildCTable error \n\0" as *const u8
@@ -2330,8 +2330,8 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     fflush(stderr);
                 }
             } else {
-                if maxNbBits == 8 as libc::c_int as libc::c_ulong {
-                    if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+                if maxNbBits == 8 {
+                    if notificationLevel >= 2 {
                         fprintf(
                             stderr,
                             b"warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n\0"
@@ -2346,9 +2346,9 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         255 as libc::c_int as u32,
                         huffLog,
                         wksp.as_mut_ptr() as *mut libc::c_void,
-                        ::core::mem::size_of::<[u32; 1216]>() as libc::c_ulong,
+                        ::core::mem::size_of::<[u32; 1216]>(),
                     );
-                    debug_assert!(maxNbBits == 9 as libc::c_int as libc::c_ulong);
+                    debug_assert!(maxNbBits == 9);
                 }
                 huffLog = maxNbBits as u32;
                 let mut offset: u32 = 0;
@@ -2378,7 +2378,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 );
                 if ERR_isError(errorCode) != 0 {
                     eSize = errorCode;
-                    if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                    if notificationLevel >= 1 {
                         fprintf(
                             stderr,
                             b"FSE_normalizeCount error with offcodeCount \n\0"
@@ -2405,7 +2405,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     );
                     if ERR_isError(errorCode) != 0 {
                         eSize = errorCode;
-                        if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                        if notificationLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b"FSE_normalizeCount error with matchLengthCount \n\0"
@@ -2432,7 +2432,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         );
                         if ERR_isError(errorCode) != 0 {
                             eSize = errorCode;
-                            if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                            if notificationLevel >= 1 {
                                 fprintf(
                                     stderr,
                                     b"FSE_normalizeCount error with litLengthCount \n\0"
@@ -2449,11 +2449,11 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                 255 as libc::c_int as libc::c_uint,
                                 huffLog,
                                 wksp.as_mut_ptr() as *mut libc::c_void,
-                                ::core::mem::size_of::<[u32; 1216]>() as libc::c_ulong,
+                                ::core::mem::size_of::<[u32; 1216]>(),
                             );
                             if ERR_isError(hhSize) != 0 {
                                 eSize = hhSize;
-                                if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                                if notificationLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"HUF_writeCTable error \n\0" as *const u8
@@ -2476,7 +2476,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                 );
                                 if ERR_isError(ohSize) != 0 {
                                     eSize = ohSize;
-                                    if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                                    if notificationLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"FSE_writeNCount error with offcodeNCount \n\0"
@@ -2499,7 +2499,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                     );
                                     if ERR_isError(mhSize) != 0 {
                                         eSize = mhSize;
-                                        if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                                        if notificationLevel >= 1 {
                                             fprintf(
                                                 stderr,
                                                 b"FSE_writeNCount error with matchLengthNCount \n\0"
@@ -2522,7 +2522,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                         );
                                         if ERR_isError(lhSize) != 0 {
                                             eSize = lhSize;
-                                            if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                                            if notificationLevel >= 1 {
                                                 fprintf(
                                                     stderr,
                                                     b"FSE_writeNCount error with litlengthNCount \n\0"
@@ -2536,10 +2536,10 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                                 .wrapping_sub(lhSize) ;
                                             eSize = (eSize as libc::c_ulong).wrapping_add(lhSize)
                                                 ;
-                                            if maxDstSize < 12 as libc::c_int as libc::c_ulong {
+                                            if maxDstSize < 12 {
                                                 eSize = -(ZSTD_error_dstSize_tooSmall as libc::c_int)
                                                     as libc::size_t;
-                                                if notificationLevel >= 1 as libc::c_int as libc::c_uint {
+                                                if notificationLevel >= 1 {
                                                     fprintf(
                                                         stderr,
                                                         b"not enough space to write RepOffsets \n\0" as *const u8
@@ -2549,17 +2549,17 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                                 }
                                             } else {
                                                 MEM_writeLE32(
-                                                    dstPtr.offset(0 as libc::c_int as isize)
+                                                    dstPtr.offset(0)
                                                         as *mut libc::c_void,
                                                     repStartValue[0 as libc::c_int as usize],
                                                 );
                                                 MEM_writeLE32(
-                                                    dstPtr.offset(4 as libc::c_int as isize)
+                                                    dstPtr.offset(4)
                                                         as *mut libc::c_void,
                                                     repStartValue[1 as libc::c_int as usize],
                                                 );
                                                 MEM_writeLE32(
-                                                    dstPtr.offset(8 as libc::c_int as isize)
+                                                    dstPtr.offset(8)
                                                         as *mut libc::c_void,
                                                     repStartValue[2 as libc::c_int as usize],
                                                 );
@@ -2583,7 +2583,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
     return eSize;
 }
 unsafe extern "C" fn ZDICT_maxRep(mut reps: *const u32) -> u32 {
-    let mut maxRep = *reps.offset(0 as libc::c_int as isize);
+    let mut maxRep = *reps.offset(0);
     let mut r: libc::c_int = 0;
     r = 1 as libc::c_int;
     while r < ZSTD_REP_NUM {
@@ -2609,7 +2609,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
 ) -> libc::size_t {
     let mut hSize: libc::size_t = 0;
     let mut header: [u8; 256] = [0; 256];
-    let compressionLevel = if params.compressionLevel == 0 as libc::c_int {
+    let compressionLevel = if params.compressionLevel == 0 {
         ZSTD_CLEVEL_DEFAULT
     } else {
         params.compressionLevel
@@ -2631,17 +2631,17 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
     );
     let compliantID = randomID
         .wrapping_rem(
-            ((1 as libc::c_uint) << 31 as libc::c_int)
+            ((1) << 31 as libc::c_int)
                 .wrapping_sub(32768) as libc::c_ulong,
         )
         .wrapping_add(32768) as u32;
     let dictID = if params.dictID != 0 { params.dictID } else { compliantID };
     MEM_writeLE32(
-        header.as_mut_ptr().offset(4 as libc::c_int as isize) as *mut libc::c_void,
+        header.as_mut_ptr().offset(4) as *mut libc::c_void,
         dictID,
     );
     hSize = 8 as libc::c_int as libc::size_t;
-    if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 2 {
         fprintf(
             stderr,
             b"\r%70s\r\0" as *const u8 as *const libc::c_char,
@@ -2649,7 +2649,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
         );
         fflush(stderr);
     }
-    if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 2 {
         fprintf(stderr, b"statistics ... \n\0" as *const u8 as *const libc::c_char);
         fflush(stderr);
     }
@@ -2705,14 +2705,14 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
     mut nbSamples: libc::c_uint,
     mut params: ZDICT_params_t,
 ) -> libc::size_t {
-    let compressionLevel = if params.compressionLevel == 0 as libc::c_int {
+    let compressionLevel = if params.compressionLevel == 0 {
         ZSTD_CLEVEL_DEFAULT
     } else {
         params.compressionLevel
     };
     let notificationLevel = params.notificationLevel;
     let mut hSize = 8 as libc::c_int as libc::size_t;
-    if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 2 {
         fprintf(
             stderr,
             b"\r%70s\r\0" as *const u8 as *const libc::c_char,
@@ -2720,7 +2720,7 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
         );
         fflush(stderr);
     }
-    if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+    if notificationLevel >= 2 {
         fprintf(stderr, b"statistics ... \n\0" as *const u8 as *const libc::c_char);
         fflush(stderr);
     }
@@ -2751,13 +2751,13 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
     );
     let compliantID = randomID
         .wrapping_rem(
-            ((1 as libc::c_uint) << 31 as libc::c_int)
+            ((1) << 31 as libc::c_int)
                 .wrapping_sub(32768) as libc::c_ulong,
         )
         .wrapping_add(32768) as u32;
     let dictID = if params.dictID != 0 { params.dictID } else { compliantID };
     MEM_writeLE32(
-        (dictBuffer as *mut libc::c_char).offset(4 as libc::c_int as isize)
+        (dictBuffer as *mut libc::c_char).offset(4)
             as *mut libc::c_void,
         dictID,
     );
@@ -2801,14 +2801,14 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     };
     let dictList = malloc(
         (dictListSize as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<dictItem>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<dictItem>()),
     ) as *mut dictItem;
-    let selectivity = if params.selectivityLevel == 0 as libc::c_int as libc::c_uint {
+    let selectivity = if params.selectivityLevel == 0 {
         g_selectivity_default
     } else {
         params.selectivityLevel
     };
-    let minRep = if selectivity > 30 as libc::c_int as libc::c_uint {
+    let minRep = if selectivity > 30 {
         MINRATIO as libc::c_uint
     } else {
         nbSamples >> selectivity
@@ -2839,28 +2839,28 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         minRep,
         notificationLevel,
     );
-    if params.zParams.notificationLevel >= 3 as libc::c_int as libc::c_uint {
-        let nb = if (25 as libc::c_int as libc::c_uint)
-            < (*dictList.offset(0 as libc::c_int as isize)).pos
+    if params.zParams.notificationLevel >= 3 {
+        let nb = if (25)
+            < (*dictList.offset(0)).pos
         {
             25 as libc::c_int as libc::c_uint
         } else {
-            (*dictList.offset(0 as libc::c_int as isize)).pos
+            (*dictList.offset(0)).pos
         };
         let dictContentSize = ZDICT_dictSize(dictList);
         let mut u: libc::c_uint = 0;
-        if notificationLevel >= 3 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 3 {
             fprintf(
                 stderr,
                 b"\n %u segments found, of total size %u \n\0" as *const u8
                     as *const libc::c_char,
-                ((*dictList.offset(0 as libc::c_int as isize)).pos)
+                ((*dictList.offset(0)).pos)
                     .wrapping_sub(1),
                 dictContentSize,
             );
             fflush(stderr);
         }
-        if notificationLevel >= 3 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 3 {
             fprintf(
                 stderr,
                 b"list %u best segments \n\0" as *const u8 as *const libc::c_char,
@@ -2872,7 +2872,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         while u < nb {
             let pos = (*dictList.offset(u as isize)).pos;
             let length = (*dictList.offset(u as isize)).length;
-            let printedLength = if (40 as libc::c_int as libc::c_uint) < length {
+            let printedLength = if (40) < length {
                 40 as libc::c_int as libc::c_uint
             } else {
                 length
@@ -2883,7 +2883,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                 free(dictList as *mut libc::c_void);
                 return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
             }
-            if notificationLevel >= 3 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 3 {
                 fprintf(
                     stderr,
                     b"%3u:%3u bytes at pos %8u, savings %7u bytes |\0" as *const u8
@@ -2900,7 +2900,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                     as *const libc::c_void,
                 printedLength as libc::size_t,
             );
-            if notificationLevel >= 3 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 3 {
                 fprintf(stderr, b"| \n\0" as *const u8 as *const libc::c_char);
                 fflush(stderr);
             }
@@ -2915,7 +2915,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     if (dictContentSize_0 as libc::c_ulong)
         < targetDictSize.wrapping_div(4)
     {
-        if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  warning : selected content significantly smaller than requested (%u < %u) \n\0"
@@ -2926,9 +2926,9 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             fflush(stderr);
         }
         if samplesBuffSize
-            < (10 as libc::c_int as libc::c_ulong).wrapping_mul(targetDictSize)
+            < (10).wrapping_mul(targetDictSize)
         {
-            if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"!  consider increasing the number of samples (total size : %u MB)\n\0"
@@ -2939,7 +2939,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             }
         }
         if minRep > MINRATIO as libc::c_uint {
-            if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"!  consider increasing selectivity to produce larger dictionary (-s%u) \n\0"
@@ -2948,7 +2948,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                 );
                 fflush(stderr);
             }
-            if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n\0"
@@ -2961,14 +2961,14 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     if dictContentSize_0 as libc::c_ulong
         > targetDictSize.wrapping_mul(3)
         && nbSamples > (2 as libc::c_int * MINRATIO) as libc::c_uint
-        && selectivity > 1 as libc::c_int as libc::c_uint
+        && selectivity > 1
     {
         let mut proposedSelectivity = selectivity
             .wrapping_sub(1);
         while nbSamples >> proposedSelectivity <= MINRATIO as libc::c_uint {
             proposedSelectivity = proposedSelectivity.wrapping_sub(1);
         }
-        if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  note : calculated dictionary significantly larger than requested (%u > %u) \n\0"
@@ -2978,7 +2978,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             );
             fflush(stderr);
         }
-        if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n\0"
@@ -2987,7 +2987,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             );
             fflush(stderr);
         }
-        if notificationLevel >= 2 as libc::c_int as libc::c_uint {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  always test dictionary efficiency on real samples \n\0" as *const u8
@@ -3106,7 +3106,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer(
     memset(
         &mut params as *mut ZDICT_fastCover_params_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZDICT_fastCover_params_t>() as libc::c_ulong,
+        ::core::mem::size_of::<ZDICT_fastCover_params_t>(),
     );
     params.d = 8 as libc::c_int as libc::c_uint;
     params.steps = 4 as libc::c_int as libc::c_uint;
@@ -3138,7 +3138,7 @@ pub unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer(
     memset(
         &mut params as *mut ZDICT_params_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZDICT_params_t>() as libc::c_ulong,
+        ::core::mem::size_of::<ZDICT_params_t>(),
     );
     return ZDICT_addEntropyTablesFromBuffer_advanced(
         dictBuffer,

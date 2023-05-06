@@ -933,18 +933,18 @@ pub const ZSTD_cpm_unknown: ZSTD_cParamMode_e = 3;
 pub const ZSTD_cpm_createCDict: ZSTD_cParamMode_e = 2;
 pub const ZSTD_cpm_attachDict: ZSTD_cParamMode_e = 1;
 pub const ZSTD_cpm_noAttachDict: ZSTD_cParamMode_e = 0;
-pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0 as libc::c_ulonglong)
+pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0)
     .wrapping_sub(1);
 pub const ZSTD_c_forceMaxWindow: libc::c_int = ZSTD_c_experimentalParam3 as libc::c_int;
 pub const ZSTD_c_deterministicRefPrefix: libc::c_int = ZSTD_c_experimentalParam15
     as libc::c_int;
-pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1 as libc::c_int) << ZSTD_BLOCKSIZELOG_MAX;
+pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1) << ZSTD_BLOCKSIZELOG_MAX;
 pub const ZSTD_BLOCKSIZELOG_MAX: libc::c_int = 17 as libc::c_int;
 pub const NULL_0: libc::c_int = 0 as libc::c_int;
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 4 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>()
+        == 4) as libc::c_int as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
@@ -1022,7 +1022,7 @@ unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
-    return (31 as libc::c_int as libc::c_uint)
+    return (31)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 static mut ZSTD_blockHeaderSize: libc::size_t = ZSTD_BLOCKHEADERSIZE as libc::size_t;
@@ -1037,7 +1037,7 @@ unsafe extern "C" fn ZSTD_window_update(
 ) -> u32 {
     let ip = src as *const u8;
     let mut contiguous = 1 as libc::c_int as u32;
-    if srcSize == 0 as libc::c_int as libc::c_ulong {
+    if srcSize == 0 {
         return contiguous;
     }
     debug_assert!(!((*window).base).is_null());
@@ -1080,7 +1080,7 @@ unsafe extern "C" fn ZSTD_window_init(mut window: *mut ZSTD_window_t) {
     libc::memset(
         window as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_window_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_window_t>() as libc::size_t,
     );
     (*window).base = b" \0" as *const u8 as *const libc::c_char as *const u8;
     (*window).dictBase = b" \0" as *const u8 as *const libc::c_char as *const u8;
@@ -1101,7 +1101,7 @@ static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as libc::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_ipow(mut base: u64, mut exponent: u64) -> u64 {
     let mut power = 1 as libc::c_int as u64;
     while exponent != 0 {
-        if exponent & 1 as libc::c_int as libc::c_ulong != 0 {
+        if exponent & 1 != 0 {
             power = (power as libc::c_ulong).wrapping_mul(base) ;
         }
         exponent >>= 1 as libc::c_int;
@@ -1110,7 +1110,7 @@ unsafe extern "C" fn ZSTD_ipow(mut base: u64, mut exponent: u64) -> u64 {
     return power;
 }
 pub const ZSTDMT_JOBSIZE_MIN: libc::c_int = 512 as libc::c_int
-    * ((1 as libc::c_int) << 10 as libc::c_int);
+    * ((1) << 10 as libc::c_int);
 #[inline]
 unsafe extern "C" fn ZSTD_rollingHash_rotate(
     mut hash: u64,
@@ -1190,11 +1190,11 @@ unsafe extern "C" fn ZSTDMT_createBufferPool(
     mut cMem: ZSTD_customMem,
 ) -> *mut ZSTDMT_bufferPool {
     let bufPool = ZSTD_customCalloc(
-        (::core::mem::size_of::<ZSTDMT_bufferPool>() as libc::c_ulong)
+        (::core::mem::size_of::<ZSTDMT_bufferPool>())
             .wrapping_add(
                 (maxNbBuffers.wrapping_sub(1)
                     as libc::c_ulong)
-                    .wrapping_mul(::core::mem::size_of::<buffer_t>() as libc::c_ulong),
+                    .wrapping_mul(::core::mem::size_of::<buffer_t>()),
             ),
         cMem,
     ) as *mut ZSTDMT_bufferPool;
@@ -1210,7 +1210,7 @@ unsafe extern "C" fn ZSTDMT_createBufferPool(
         return NULL_0 as *mut ZSTDMT_bufferPool;
     }
     (*bufPool)
-        .bufferSize = (64 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        .bufferSize = (64 as libc::c_int * ((1) << 10 as libc::c_int))
         as libc::size_t;
     (*bufPool).totalBuffers = maxNbBuffers;
     (*bufPool).nbBuffers = 0 as libc::c_int as libc::c_uint;
@@ -1236,11 +1236,11 @@ unsafe extern "C" fn ZSTDMT_freeBufferPool(mut bufPool: *mut ZSTDMT_bufferPool) 
 unsafe extern "C" fn ZSTDMT_sizeof_bufferPool(
     mut bufPool: *mut ZSTDMT_bufferPool,
 ) -> libc::size_t {
-    let poolSize = (::core::mem::size_of::<ZSTDMT_bufferPool>() as libc::c_ulong)
+    let poolSize = (::core::mem::size_of::<ZSTDMT_bufferPool>())
         .wrapping_add(
             (((*bufPool).totalBuffers).wrapping_sub(1)
                 as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<buffer_t>() as libc::c_ulong),
+                .wrapping_mul(::core::mem::size_of::<buffer_t>()),
         );
     let mut u: libc::c_uint = 0;
     let mut totalBufferSize = 0 as libc::c_int as libc::size_t;
@@ -1347,7 +1347,7 @@ unsafe extern "C" fn bufferToSeq(mut buffer: buffer_t) -> rawSeqStore_t {
     seq.seq = buffer.start as *mut rawSeq;
     seq
         .capacity = (buffer.capacity)
-        .wrapping_div(::core::mem::size_of::<rawSeq>() as libc::c_ulong);
+        .wrapping_div(::core::mem::size_of::<rawSeq>());
     return seq;
 }
 unsafe extern "C" fn seqToBuffer(mut seq: rawSeqStore_t) -> buffer_t {
@@ -1358,11 +1358,11 @@ unsafe extern "C" fn seqToBuffer(mut seq: rawSeqStore_t) -> buffer_t {
     buffer.start = seq.seq as *mut libc::c_void;
     buffer
         .capacity = (seq.capacity)
-        .wrapping_mul(::core::mem::size_of::<rawSeq>() as libc::c_ulong);
+        .wrapping_mul(::core::mem::size_of::<rawSeq>());
     return buffer;
 }
 unsafe extern "C" fn ZSTDMT_getSeq(mut seqPool: *mut ZSTDMT_seqPool) -> rawSeqStore_t {
-    if (*seqPool).bufferSize == 0 as libc::c_int as libc::c_ulong {
+    if (*seqPool).bufferSize == 0 {
         return kNullRawSeqStore;
     }
     return bufferToSeq(ZSTDMT_getBuffer(seqPool));
@@ -1376,7 +1376,7 @@ unsafe extern "C" fn ZSTDMT_releaseSeq(
 unsafe extern "C" fn ZSTDMT_setNbSeq(seqPool: *mut ZSTDMT_seqPool, nbSeq: libc::size_t) {
     ZSTDMT_setBufferSize(
         seqPool,
-        nbSeq.wrapping_mul(::core::mem::size_of::<rawSeq>() as libc::c_ulong),
+        nbSeq.wrapping_mul(::core::mem::size_of::<rawSeq>()),
     );
 }
 unsafe extern "C" fn ZSTDMT_createSeqPool(
@@ -1414,16 +1414,16 @@ unsafe extern "C" fn ZSTDMT_createCCtxPool(
     mut cMem: ZSTD_customMem,
 ) -> *mut ZSTDMT_CCtxPool {
     let cctxPool = ZSTD_customCalloc(
-        (::core::mem::size_of::<ZSTDMT_CCtxPool>() as libc::c_ulong)
+        (::core::mem::size_of::<ZSTDMT_CCtxPool>())
             .wrapping_add(
                 ((nbWorkers - 1 as libc::c_int) as libc::c_ulong)
                     .wrapping_mul(
-                        ::core::mem::size_of::<*mut ZSTD_CCtx>() as libc::c_ulong,
+                        ::core::mem::size_of::<*mut ZSTD_CCtx>(),
                     ),
             ),
         cMem,
     ) as *mut ZSTDMT_CCtxPool;
-    debug_assert!(nbWorkers > 0 as libc::c_int);
+    debug_assert!(nbWorkers > 0);
     if cctxPool.is_null() {
         return NULL_0 as *mut ZSTDMT_CCtxPool;
     }
@@ -1440,9 +1440,9 @@ unsafe extern "C" fn ZSTDMT_createCCtxPool(
     (*cctxPool).availCCtx = 1 as libc::c_int;
     let ref mut fresh1 = *((*cctxPool).cctx)
         .as_mut_ptr()
-        .offset(0 as libc::c_int as isize);
+        .offset(0);
     *fresh1 = ZSTD_createCCtx_advanced(cMem);
-    if (*((*cctxPool).cctx).as_mut_ptr().offset(0 as libc::c_int as isize)).is_null() {
+    if (*((*cctxPool).cctx).as_mut_ptr().offset(0)).is_null() {
         ZSTDMT_freeCCtxPool(cctxPool);
         return NULL_0 as *mut ZSTDMT_CCtxPool;
     }
@@ -1467,10 +1467,10 @@ unsafe extern "C" fn ZSTDMT_sizeof_CCtxPool(
 ) -> libc::size_t {
     pthread_mutex_lock((*cctxPool).poolMutex);
     let nbWorkers = (*cctxPool).totalCCtx as libc::c_uint;
-    let poolSize = (::core::mem::size_of::<ZSTDMT_CCtxPool>() as libc::c_ulong)
+    let poolSize = (::core::mem::size_of::<ZSTDMT_CCtxPool>())
         .wrapping_add(
             (nbWorkers.wrapping_sub(1) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<*mut ZSTD_CCtx>() as libc::c_ulong),
+                .wrapping_mul(::core::mem::size_of::<*mut ZSTD_CCtx>()),
         );
     let mut u: libc::c_uint = 0;
     let mut totalCCtxSize = 0 as libc::c_int as libc::size_t;
@@ -1483,7 +1483,7 @@ unsafe extern "C" fn ZSTDMT_sizeof_CCtxPool(
         u = u.wrapping_add(1);
     }
     pthread_mutex_unlock((*cctxPool).poolMutex);
-    debug_assert!(nbWorkers > 0 as libc::c_int as libc::c_uint);
+    debug_assert!(nbWorkers > 0);
     return poolSize.wrapping_add(totalCCtxSize);
 }
 unsafe extern "C" fn ZSTDMT_getCCtx(
@@ -1533,12 +1533,12 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
     {
         ZSTD_ldm_adjustParameters(&mut params.ldmParams, &mut params.cParams);
         debug_assert!(params.ldmParams.hashLog >= params.ldmParams.bucketSizeLog);
-        debug_assert!(params.ldmParams.hashRateLog < 32 as libc::c_int as libc::c_uint);
+        debug_assert!(params.ldmParams.hashRateLog < 32);
     } else {
         libc::memset(
             &mut params.ldmParams as *mut ldmParams_t as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<ldmParams_t>() as libc::c_ulong as libc::size_t,
+            ::core::mem::size_of::<ldmParams_t>() as libc::size_t,
         );
     }
     (*serialState).nextJobID = 0 as libc::c_int as libc::c_uint;
@@ -1550,13 +1550,13 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
     {
         let mut cMem = params.customMem;
         let hashLog = params.ldmParams.hashLog;
-        let hashSize = ((1 as libc::c_int as libc::size_t) << hashLog)
-            .wrapping_mul(::core::mem::size_of::<ldmEntry_t>() as libc::c_ulong);
+        let hashSize = ((1) << hashLog)
+            .wrapping_mul(::core::mem::size_of::<ldmEntry_t>());
         let bucketLog = (params.ldmParams.hashLog)
             .wrapping_sub(params.ldmParams.bucketSizeLog);
         let prevBucketLog = ((*serialState).params.ldmParams.hashLog)
             .wrapping_sub((*serialState).params.ldmParams.bucketSizeLog);
-        let numBuckets = (1 as libc::c_int as libc::size_t) << bucketLog;
+        let numBuckets = (1) << bucketLog;
         ZSTDMT_setNbSeq(seqPool, ZSTD_ldm_getMaxNbSeq(params.ldmParams, jobSize));
         ZSTD_window_init(&mut (*serialState).ldmState.window);
         if ((*serialState).ldmState.hashTable).is_null()
@@ -1596,7 +1596,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
             numBuckets as libc::size_t,
         );
         (*serialState).ldmState.loadedDictEnd = 0 as libc::c_int as u32;
-        if dictSize > 0 as libc::c_int as libc::c_ulong {
+        if dictSize > 0 {
             if dictContentType as libc::c_uint
                 == ZSTD_dct_rawContent as libc::c_int as libc::c_uint
             {
@@ -1636,7 +1636,7 @@ unsafe extern "C" fn ZSTDMT_serialState_init(
     libc::memset(
         serialState as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<serialState_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<serialState_t>() as libc::size_t,
     );
     initError
         |= ZSTD_pthread_mutex_init(
@@ -1686,9 +1686,9 @@ unsafe extern "C" fn ZSTDMT_serialState_update(
         {
             let mut error: libc::size_t = 0;
             debug_assert!(!(seqStore.seq).is_null()
-                && seqStore.pos == 0 as libc::c_int as libc::c_ulong
-                && seqStore.size == 0 as libc::c_int as libc::c_ulong
-                && seqStore.capacity > 0 as libc::c_int as libc::c_ulong);
+                && seqStore.pos == 0
+                && seqStore.size == 0
+                && seqStore.capacity > 0);
             debug_assert!(src.size <= (*serialState).params.jobSize);
             ZSTD_window_update(
                 &mut (*serialState).ldmState.window,
@@ -1710,7 +1710,7 @@ unsafe extern "C" fn ZSTDMT_serialState_update(
             pthread_mutex_unlock((*serialState).ldmWindowMutex);
         }
         if (*serialState).params.fParams.checksumFlag != 0
-            && src.size > 0 as libc::c_int as libc::c_ulong
+            && src.size > 0
         {
             ZSTD_XXH64_update(&mut (*serialState).xxhState, src.start, src.size);
         }
@@ -1718,7 +1718,7 @@ unsafe extern "C" fn ZSTDMT_serialState_update(
     (*serialState).nextJobID = ((*serialState).nextJobID).wrapping_add(1);
     pthread_cond_broadcast((*serialState).cond);
     pthread_mutex_unlock((*serialState).mutex);
-    if seqStore.size > 0 as libc::c_int as libc::c_ulong {
+    if seqStore.size > 0 {
         let err = ZSTD_referenceExternalSequences(jobCCtx, seqStore.seq, seqStore.size);
         debug_assert!((*serialState).params.ldmParams.enableLdm as libc::c_uint
             == ZSTD_ps_enable as libc::c_int as libc::c_uint);
@@ -1918,14 +1918,14 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                                     let mut op = ostart;
                                     let mut oend = op.offset(dstBuff.capacity as isize);
                                     let mut chunkNb: libc::c_int = 0;
-                                    if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                                        > ::core::mem::size_of::<libc::c_int>() as libc::c_ulong
+                                    if ::core::mem::size_of::<libc::size_t>()
+                                        > ::core::mem::size_of::<libc::c_int>()
                                     {
                                         debug_assert!((*job).src.size
-                                            < (2147483647 as libc::c_int as libc::size_t)
+                                            < (2147483647)
                                                 .wrapping_mul(chunkSize));
                                     }
-                                    debug_assert!((*job).cSize == 0 as libc::c_int as libc::c_ulong);
+                                    debug_assert!((*job).cSize == 0);
                                     chunkNb = 1 as libc::c_int;
                                     loop {
                                         if !(chunkNb < nbChunks) {
@@ -1964,17 +1964,17 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
                                     match current_block {
                                         15223880703280672966 => {}
                                         _ => {
-                                            debug_assert!(chunkSize > 0 as libc::c_int as libc::c_ulong);
+                                            debug_assert!(chunkSize > 0);
                                             debug_assert!(chunkSize
                                                 & chunkSize.wrapping_sub(1)
-                                                == 0 as libc::c_int as libc::c_ulong);
-                                            if (nbChunks > 0 as libc::c_int) as libc::c_int
+                                                == 0);
+                                            if (nbChunks > 0) as libc::c_int
                                                 as libc::c_uint | (*job).lastJob != 0
                                             {
                                                 let lastBlockSize1 = (*job).src.size
                                                     & chunkSize.wrapping_sub(1);
                                                 let lastBlockSize = if (lastBlockSize1
-                                                    == 0 as libc::c_int as libc::c_ulong) as libc::c_int
+                                                    == 0) as libc::c_int
                                                     & ((*job).src.size >= chunkSize) as libc::c_int != 0
                                                 {
                                                     chunkSize
@@ -2032,12 +2032,12 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut libc::c_void
         }
     }
     ZSTDMT_serialState_ensureFinished((*job).serial, (*job).jobID, (*job).cSize);
-    (*job).prefix.size > 0 as libc::c_int as libc::c_ulong;
+    (*job).prefix.size > 0;
     ZSTDMT_releaseSeq((*job).seqPool, rawSeqStore);
     ZSTDMT_releaseCCtx((*job).cctxPool, cctx);
     pthread_mutex_lock((*job).job_mutex);
     if ERR_isError((*job).cSize) != 0 {
-        debug_assert!(lastCBlockSize == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(lastCBlockSize == 0);
     }
     (*job)
         .cSize = ((*job).cSize as libc::c_ulong).wrapping_add(lastCBlockSize) as libc::size_t
@@ -2056,7 +2056,7 @@ static mut kNullRoundBuff: roundBuff_t = {
 };
 pub const RSYNC_LENGTH: libc::c_int = 32 as libc::c_int;
 pub const RSYNC_MIN_BLOCK_LOG: libc::c_int = ZSTD_BLOCKSIZELOG_MAX;
-pub const RSYNC_MIN_BLOCK_SIZE: libc::c_int = (1 as libc::c_int) << RSYNC_MIN_BLOCK_LOG;
+pub const RSYNC_MIN_BLOCK_SIZE: libc::c_int = (1) << RSYNC_MIN_BLOCK_LOG;
 unsafe extern "C" fn ZSTDMT_freeJobsTable(
     mut jobTable: *mut ZSTDMT_jobDescription,
     mut nbJobs: u32,
@@ -2080,12 +2080,12 @@ unsafe extern "C" fn ZSTDMT_createJobsTable(
 ) -> *mut ZSTDMT_jobDescription {
     let nbJobsLog2 = (ZSTD_highbit32(*nbJobsPtr))
         .wrapping_add(1);
-    let nbJobs = ((1 as libc::c_int) << nbJobsLog2) as u32;
+    let nbJobs = ((1) << nbJobsLog2) as u32;
     let mut jobNb: u32 = 0;
     let jobTable = ZSTD_customCalloc(
         (nbJobs as libc::c_ulong)
             .wrapping_mul(
-                ::core::mem::size_of::<ZSTDMT_jobDescription>() as libc::c_ulong,
+                ::core::mem::size_of::<ZSTDMT_jobDescription>(),
             ),
         cMem,
     ) as *mut ZSTDMT_jobDescription;
@@ -2132,7 +2132,7 @@ unsafe extern "C" fn ZSTDMT_expandJobsTable(
         }
         debug_assert!(nbJobs != 0 as libc::c_int as libc::c_uint
             && nbJobs & nbJobs.wrapping_sub(1)
-                == 0 as libc::c_int as libc::c_uint);
+                == 0);
         (*mtctx).jobIDMask = nbJobs.wrapping_sub(1);
     }
     return 0 as libc::c_int as libc::size_t;
@@ -2156,12 +2156,12 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
     let mut mtctx = 0 as *mut ZSTDMT_CCtx;
     let mut nbJobs = nbWorkers.wrapping_add(2);
     let mut initError: libc::c_int = 0;
-    if nbWorkers < 1 as libc::c_int as libc::c_uint {
+    if nbWorkers < 1 {
         return NULL_0 as *mut ZSTDMT_CCtx;
     }
     nbWorkers = if nbWorkers
-        < (if ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        < (if ::core::mem::size_of::<*mut libc::c_void>()
+            == 4
         {
             64 as libc::c_int
         } else {
@@ -2170,8 +2170,8 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
     {
         nbWorkers
     } else {
-        (if ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        (if ::core::mem::size_of::<*mut libc::c_void>()
+            == 4
         {
             64 as libc::c_int
         } else {
@@ -2184,7 +2184,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
         return NULL_0 as *mut ZSTDMT_CCtx;
     }
     mtctx = ZSTD_customCalloc(
-        ::core::mem::size_of::<ZSTDMT_CCtx>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTDMT_CCtx>(),
         cMem,
     ) as *mut ZSTDMT_CCtx;
     if mtctx.is_null() {
@@ -2195,7 +2195,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
     (*mtctx).allJobsCompleted = 1 as libc::c_int as libc::c_uint;
     if !pool.is_null() {
         (*mtctx).factory = pool;
-        (*mtctx).set_providedFactory(1 as libc::c_int as libc::c_uint);
+        (*mtctx).set_providedFactory(1);
     } else {
         (*mtctx)
             .factory = POOL_create_advanced(
@@ -2203,16 +2203,16 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
             0 as libc::c_int as libc::size_t,
             cMem,
         );
-        (*mtctx).set_providedFactory(0 as libc::c_int as libc::c_uint);
+        (*mtctx).set_providedFactory(0);
     }
     (*mtctx).jobs = ZSTDMT_createJobsTable(&mut nbJobs, cMem);
-    debug_assert!(nbJobs > 0 as libc::c_int as libc::c_uint);
+    debug_assert!(nbJobs > 0);
     debug_assert!(nbJobs & nbJobs.wrapping_sub(1)
-        == 0 as libc::c_int as libc::c_uint);
+        == 0);
     (*mtctx).jobIDMask = nbJobs.wrapping_sub(1);
     (*mtctx)
         .bufPool = ZSTDMT_createBufferPool(
-        (2 as libc::c_int as libc::c_uint)
+        (2)
             .wrapping_mul(nbWorkers)
             .wrapping_add(3),
         cMem,
@@ -2254,7 +2254,7 @@ unsafe extern "C" fn ZSTDMT_releaseAllJobResources(mut mtctx: *mut ZSTDMT_CCtx) 
             &mut *((*mtctx).jobs).offset(jobID as isize) as *mut ZSTDMT_jobDescription
                 as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<ZSTDMT_jobDescription>() as libc::c_ulong
+            ::core::mem::size_of::<ZSTDMT_jobDescription>()
                 as libc::size_t,
         );
         let ref mut fresh4 = (*((*mtctx).jobs).offset(jobID as isize)).job_mutex;
@@ -2313,14 +2313,14 @@ pub unsafe extern "C" fn ZSTDMT_sizeof_CCtx(mut mtctx: *mut ZSTDMT_CCtx) -> libc
     if mtctx.is_null() {
         return 0 as libc::c_int as libc::size_t;
     }
-    return (::core::mem::size_of::<ZSTDMT_CCtx>() as libc::c_ulong)
+    return (::core::mem::size_of::<ZSTDMT_CCtx>())
         .wrapping_add(POOL_sizeof((*mtctx).factory))
         .wrapping_add(ZSTDMT_sizeof_bufferPool((*mtctx).bufPool))
         .wrapping_add(
             (((*mtctx).jobIDMask).wrapping_add(1)
                 as libc::c_ulong)
                 .wrapping_mul(
-                    ::core::mem::size_of::<ZSTDMT_jobDescription>() as libc::c_ulong,
+                    ::core::mem::size_of::<ZSTDMT_jobDescription>(),
                 ),
         )
         .wrapping_add(ZSTDMT_sizeof_CCtxPool((*mtctx).cctxPool))
@@ -2342,7 +2342,7 @@ unsafe extern "C" fn ZSTDMT_resize(
     (*mtctx)
         .bufPool = ZSTDMT_expandBufferPool(
         (*mtctx).bufPool,
-        (2 as libc::c_int as libc::c_uint)
+        (2)
             .wrapping_mul(nbWorkers)
             .wrapping_add(3),
     );
@@ -2401,7 +2401,7 @@ pub unsafe extern "C" fn ZSTDMT_getFrameProgression(
     let mut jobNb: libc::c_uint = 0;
     let mut lastJobNb = ((*mtctx).nextJobID)
         .wrapping_add((*mtctx).jobReady as libc::c_uint);
-    debug_assert!((*mtctx).jobReady <= 1 as libc::c_int);
+    debug_assert!((*mtctx).jobReady <= 1);
     jobNb = (*mtctx).doneJobID;
     while jobNb < lastJobNb {
         let wJobID = jobNb & (*mtctx).jobIDMask;
@@ -2464,7 +2464,7 @@ pub unsafe extern "C" fn ZSTDMT_toFlushNow(mut mtctx: *mut ZSTDMT_CCtx) -> libc:
     debug_assert!(flushed <= produced);
     debug_assert!((*jobPtr).consumed <= (*jobPtr).src.size);
     toFlush = produced.wrapping_sub(flushed);
-    if toFlush == 0 as libc::c_int as libc::c_ulong {
+    if toFlush == 0 {
         debug_assert!((*jobPtr).consumed < (*jobPtr).src.size);
     }
     pthread_mutex_unlock((*((*mtctx).jobs).offset(wJobID as isize)).job_mutex);
@@ -2519,8 +2519,8 @@ unsafe extern "C" fn ZSTDMT_overlapLog(
     mut ovlog: libc::c_int,
     mut strat: ZSTD_strategy,
 ) -> libc::c_int {
-    debug_assert!(0 as libc::c_int <= ovlog && ovlog <= 9 as libc::c_int);
-    if ovlog == 0 as libc::c_int {
+    debug_assert!(0 as libc::c_int <= ovlog && ovlog <= 9);
+    if ovlog == 0 {
         return ZSTDMT_overlapLog_default(strat);
     }
     return ovlog;
@@ -2530,12 +2530,12 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
 ) -> libc::size_t {
     let overlapRLog = 9 as libc::c_int
         - ZSTDMT_overlapLog((*params).overlapLog, (*params).cParams.strategy);
-    let mut ovLog = (if overlapRLog >= 8 as libc::c_int {
+    let mut ovLog = (if overlapRLog >= 8 {
         0 as libc::c_int as libc::c_uint
     } else {
         ((*params).cParams.windowLog).wrapping_sub(overlapRLog as libc::c_uint)
     }) as libc::c_int;
-    debug_assert!(0 as libc::c_int <= overlapRLog && overlapRLog <= 8 as libc::c_int);
+    debug_assert!(0 as libc::c_int <= overlapRLog && overlapRLog <= 8);
     if (*params).ldmParams.enableLdm as libc::c_uint
         == ZSTD_ps_enable as libc::c_int as libc::c_uint
     {
@@ -2552,17 +2552,17 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
     }
     debug_assert!(0 as libc::c_int <= ovLog
         && ovLog
-            <= (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+            <= (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 30 as libc::c_int
             } else {
                 31 as libc::c_int
             }));
-    return if ovLog == 0 as libc::c_int {
+    return if ovLog == 0 {
         0 as libc::c_int as libc::c_ulong
     } else {
-        (1 as libc::c_int as libc::size_t) << ovLog
+        (1) << ovLog
     };
 }
 #[no_mangle]
@@ -2590,19 +2590,19 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     }
     if params.jobSize
         > (if MEM_32bits() != 0 {
-            512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+            512 as libc::c_int * ((1) << 20 as libc::c_int)
         } else {
-            1024 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+            1024 as libc::c_int * ((1) << 20 as libc::c_int)
         }) as libc::size_t
     {
         params
             .jobSize = (if MEM_32bits() != 0 {
-            512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+            512 as libc::c_int * ((1) << 20 as libc::c_int)
         } else {
-            1024 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+            1024 as libc::c_int * ((1) << 20 as libc::c_int)
         }) as libc::size_t;
     }
-    if (*mtctx).allJobsCompleted == 0 as libc::c_int as libc::c_uint {
+    if (*mtctx).allJobsCompleted == 0 {
         ZSTDMT_waitForAllJobsCompleted(mtctx);
         ZSTDMT_releaseAllJobResources(mtctx);
         (*mtctx).allJobsCompleted = 1 as libc::c_int as libc::c_uint;
@@ -2631,27 +2631,27 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     }
     (*mtctx).targetPrefixSize = ZSTDMT_computeOverlapSize(&mut params);
     (*mtctx).targetSectionSize = params.jobSize;
-    if (*mtctx).targetSectionSize == 0 as libc::c_int as libc::c_ulong {
+    if (*mtctx).targetSectionSize == 0 {
         (*mtctx)
-            .targetSectionSize = ((1 as libc::c_ulonglong)
+            .targetSectionSize = ((1)
             << ZSTDMT_computeTargetJobLog(&mut params)) as libc::size_t;
     }
     debug_assert!((*mtctx).targetSectionSize
         <= (if MEM_32bits() != 0 {
-            512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+            512 as libc::c_int * ((1) << 20 as libc::c_int)
         } else {
-            1024 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+            1024 as libc::c_int * ((1) << 20 as libc::c_int)
         }) as libc::size_t);
     if params.rsyncable != 0 {
         let jobSizeKB = ((*mtctx).targetSectionSize >> 10 as libc::c_int) as u32;
-        debug_assert!(jobSizeKB >= 1 as libc::c_int as libc::c_uint);
+        debug_assert!(jobSizeKB >= 1);
         let rsyncBits = (ZSTD_highbit32(jobSizeKB))
             .wrapping_add(10);
-        debug_assert!(rsyncBits >= (17 as libc::c_int + 2 as libc::c_int) as libc::c_uint);
+        debug_assert!(rsyncBits >= (17 as libc::c_int + 2) as libc::c_uint);
         (*mtctx).rsync.hash = 0 as libc::c_int as u64;
         (*mtctx)
             .rsync
-            .hitMask = ((1 as libc::c_ulonglong) << rsyncBits)
+            .hitMask = ((1) << rsyncBits)
             .wrapping_sub(1) as u64;
         (*mtctx).rsync.primePower = ZSTD_rollingHash_primePower(RSYNC_LENGTH as u32);
     }
@@ -2665,15 +2665,15 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     let windowSize = (if (*mtctx).params.ldmParams.enableLdm as libc::c_uint
         == ZSTD_ps_enable as libc::c_int as libc::c_uint
     {
-        (1 as libc::c_uint) << (*mtctx).params.cParams.windowLog
+        (1) << (*mtctx).params.cParams.windowLog
     } else {
         0 as libc::c_int as libc::c_uint
     }) as libc::size_t;
     let nbSlackBuffers = (2 as libc::c_int
-        + ((*mtctx).targetPrefixSize > 0 as libc::c_int as libc::c_ulong) as libc::c_int)
+        + ((*mtctx).targetPrefixSize > 0) as libc::c_int)
         as libc::size_t;
     let slackSize = ((*mtctx).targetSectionSize).wrapping_mul(nbSlackBuffers);
-    let nbWorkers = (if (*mtctx).params.nbWorkers > 1 as libc::c_int {
+    let nbWorkers = (if (*mtctx).params.nbWorkers > 1 {
         (*mtctx).params.nbWorkers
     } else {
         1 as libc::c_int
@@ -2722,9 +2722,9 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     return 0 as libc::c_int as libc::size_t;
 }
 unsafe extern "C" fn ZSTDMT_writeLastEmptyBlock(mut job: *mut ZSTDMT_jobDescription) {
-    debug_assert!((*job).lastJob == 1 as libc::c_int as libc::c_uint);
-    debug_assert!((*job).src.size == 0 as libc::c_int as libc::c_ulong);
-    debug_assert!((*job).firstJob == 0 as libc::c_int as libc::c_uint);
+    debug_assert!((*job).lastJob == 1);
+    debug_assert!((*job).src.size == 0);
+    debug_assert!((*job).firstJob == 0);
     debug_assert!(((*job).dstBuff.start).is_null());
     (*job).dstBuff = ZSTDMT_getBuffer((*job).bufPool);
     if ((*job).dstBuff.start).is_null() {
@@ -2736,7 +2736,7 @@ unsafe extern "C" fn ZSTDMT_writeLastEmptyBlock(mut job: *mut ZSTDMT_jobDescript
     (*job)
         .cSize = ZSTD_writeLastEmptyBlock((*job).dstBuff.start, (*job).dstBuff.capacity);
     debug_assert!(ERR_isError((*job).cSize) == 0);
-    debug_assert!((*job).consumed == 0 as libc::c_int as libc::c_ulong);;
+    debug_assert!((*job).consumed == 0);;
 }
 unsafe extern "C" fn ZSTDMT_createCompressionJob(
     mut mtctx: *mut ZSTDMT_CCtx,
@@ -2762,7 +2762,7 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
         (*((*mtctx).jobs).offset(jobID as isize)).cSize = 0 as libc::c_int as libc::size_t;
         (*((*mtctx).jobs).offset(jobID as isize)).params = (*mtctx).params;
         let ref mut fresh7 = (*((*mtctx).jobs).offset(jobID as isize)).cdict;
-        *fresh7 = if (*mtctx).nextJobID == 0 as libc::c_int as libc::c_uint {
+        *fresh7 = if (*mtctx).nextJobID == 0 {
             (*mtctx).cdict
         } else {
             NULL_0 as *const ZSTD_CDict
@@ -2780,12 +2780,12 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
         *fresh11 = &mut (*mtctx).serial;
         (*((*mtctx).jobs).offset(jobID as isize)).jobID = (*mtctx).nextJobID;
         (*((*mtctx).jobs).offset(jobID as isize))
-            .firstJob = ((*mtctx).nextJobID == 0 as libc::c_int as libc::c_uint)
+            .firstJob = ((*mtctx).nextJobID == 0)
             as libc::c_int as libc::c_uint;
         (*((*mtctx).jobs).offset(jobID as isize)).lastJob = endFrame as libc::c_uint;
         (*((*mtctx).jobs).offset(jobID as isize))
             .frameChecksumNeeded = ((*mtctx).params.fParams.checksumFlag != 0
-            && endFrame != 0 && (*mtctx).nextJobID > 0 as libc::c_int as libc::c_uint)
+            && endFrame != 0 && (*mtctx).nextJobID > 0)
             as libc::c_int as libc::c_uint;
         (*((*mtctx).jobs).offset(jobID as isize))
             .dstFlushed = 0 as libc::c_int as libc::size_t;
@@ -2810,12 +2810,12 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
         } else {
             (*mtctx).inBuff.prefix = kNullRange;
             (*mtctx).frameEnded = endFrame as libc::c_uint;
-            if (*mtctx).nextJobID == 0 as libc::c_int as libc::c_uint {
+            if (*mtctx).nextJobID == 0 {
                 (*mtctx).params.fParams.checksumFlag = 0 as libc::c_int;
             }
         }
-        if srcSize == 0 as libc::c_int as libc::c_ulong
-            && (*mtctx).nextJobID > 0 as libc::c_int as libc::c_uint
+        if srcSize == 0
+            && (*mtctx).nextJobID > 0
         {
             debug_assert!(endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint);
             ZSTDMT_writeLastEmptyBlock(((*mtctx).jobs).offset(jobID as isize));
@@ -2892,7 +2892,7 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
         (*((*mtctx).jobs).offset(wJobID as isize))
             .frameChecksumNeeded = 0 as libc::c_int as libc::c_uint;
     }
-    if cSize > 0 as libc::c_int as libc::c_ulong {
+    if cSize > 0 {
         let toFlush = if cSize
             .wrapping_sub((*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed)
             < ((*output).size).wrapping_sub((*output).pos)
@@ -2904,7 +2904,7 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
         debug_assert!((*mtctx).doneJobID < (*mtctx).nextJobID);
         debug_assert!(cSize >= (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed);
         debug_assert!(!((*((*mtctx).jobs).offset(wJobID as isize)).dstBuff.start).is_null());
-        if toFlush > 0 as libc::c_int as libc::c_ulong {
+        if toFlush > 0 {
             libc::memcpy(
                 ((*output).dst as *mut libc::c_char).offset((*output).pos as isize)
                     as *mut libc::c_void,
@@ -2951,7 +2951,7 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
     if (*mtctx).jobReady != 0 {
         return 1 as libc::c_int as libc::size_t;
     }
-    if (*mtctx).inBuff.filled > 0 as libc::c_int as libc::c_ulong {
+    if (*mtctx).inBuff.filled > 0 {
         return 1 as libc::c_int as libc::size_t;
     }
     (*mtctx).allJobsCompleted = (*mtctx).frameEnded;
@@ -2973,7 +2973,7 @@ unsafe extern "C" fn ZSTDMT_getInputDataInUse(mut mtctx: *mut ZSTDMT_CCtx) -> ra
         pthread_mutex_unlock((*((*mtctx).jobs).offset(wJobID as isize)).job_mutex);
         if consumed < (*((*mtctx).jobs).offset(wJobID as isize)).src.size {
             let mut range = (*((*mtctx).jobs).offset(wJobID as isize)).prefix;
-            if range.size == 0 as libc::c_int as libc::c_ulong {
+            if range.size == 0 {
                 range = (*((*mtctx).jobs).offset(wJobID as isize)).src;
             }
             debug_assert!(range.start <= (*((*mtctx).jobs).offset(wJobID as isize)).src.start);
@@ -3126,7 +3126,7 @@ unsafe extern "C" fn findSynchronizationPoint(
                 RSYNC_LENGTH as libc::size_t,
             );
         } else {
-            debug_assert!((*mtctx).inBuff.filled >= 32 as libc::c_int as libc::c_ulong);
+            debug_assert!((*mtctx).inBuff.filled >= 32);
             prev = ((*mtctx).inBuff.buffer.start as *const u8)
                 .offset((*mtctx).inBuff.filled as isize)
                 .offset(-(RSYNC_LENGTH as isize));
@@ -3138,8 +3138,8 @@ unsafe extern "C" fn findSynchronizationPoint(
         }
     } else {
         debug_assert!((*mtctx).inBuff.filled
-            >= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
-        debug_assert!((1 as libc::c_int) << 17 as libc::c_int >= 32 as libc::c_int);
+            >= ((1) << 17 as libc::c_int) as libc::c_ulong);
+        debug_assert!((1) << 17 as libc::c_int >= 32);
         pos = 0 as libc::c_int as libc::size_t;
         prev = ((*mtctx).inBuff.buffer.start as *const u8)
             .offset((*mtctx).inBuff.filled as isize)
@@ -3154,9 +3154,9 @@ unsafe extern "C" fn findSynchronizationPoint(
             return syncPoint;
         }
     }
-    debug_assert!(pos < 32 as libc::c_int as libc::c_ulong
+    debug_assert!(pos < 32
         || ZSTD_rollingHash_compute(
-            istart.offset(pos as isize).offset(-(32 as libc::c_int as isize))
+            istart.offset(pos as isize).offset(-(32))
                 as *const libc::c_void,
             32 as libc::c_int as libc::size_t,
         ) == hash);
@@ -3174,7 +3174,7 @@ unsafe extern "C" fn findSynchronizationPoint(
             primePower,
         );
         debug_assert!(((*mtctx).inBuff.filled).wrapping_add(pos)
-            >= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
+            >= ((1) << 17 as libc::c_int) as libc::c_ulong);
         if hash & hitMask == hitMask {
             syncPoint.toLoad = pos.wrapping_add(1);
             syncPoint.flush = 1 as libc::c_int;
@@ -3184,9 +3184,9 @@ unsafe extern "C" fn findSynchronizationPoint(
             pos = pos.wrapping_add(1);
         }
     }
-    debug_assert!(pos < 32 as libc::c_int as libc::c_ulong
+    debug_assert!(pos < 32
         || ZSTD_rollingHash_compute(
-            istart.offset(pos as isize).offset(-(32 as libc::c_int as isize))
+            istart.offset(pos as isize).offset(-(32))
                 as *const libc::c_void,
             32 as libc::c_int as libc::size_t,
         ) == hash);
@@ -3198,7 +3198,7 @@ pub unsafe extern "C" fn ZSTDMT_nextInputSizeHint(
 ) -> libc::size_t {
     let mut hintInSize = ((*mtctx).targetSectionSize)
         .wrapping_sub((*mtctx).inBuff.filled);
-    if hintInSize == 0 as libc::c_int as libc::c_ulong {
+    if hintInSize == 0 {
         hintInSize = (*mtctx).targetSectionSize;
     }
     return hintInSize;
@@ -3220,7 +3220,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
     }
     if (*mtctx).jobReady == 0 && (*input).size > (*input).pos {
         if ((*mtctx).inBuff.buffer.start).is_null() {
-            debug_assert!((*mtctx).inBuff.filled == 0 as libc::c_int as libc::c_ulong);
+            debug_assert!((*mtctx).inBuff.filled == 0);
             if ZSTDMT_tryGetInputRange(mtctx) == 0 {
                 debug_assert!((*mtctx).doneJobID != (*mtctx).nextJobID);
             }
@@ -3248,21 +3248,21 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
                 .inBuff
                 .filled = ((*mtctx).inBuff.filled as libc::c_ulong)
                 .wrapping_add(syncPoint.toLoad) ;
-            forwardInputProgress = (syncPoint.toLoad > 0 as libc::c_int as libc::c_ulong)
+            forwardInputProgress = (syncPoint.toLoad > 0)
                 as libc::c_int as libc::c_uint;
         }
     }
     if (*input).pos < (*input).size
         && endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint
     {
-        debug_assert!((*mtctx).inBuff.filled == 0 as libc::c_int as libc::c_ulong
+        debug_assert!((*mtctx).inBuff.filled == 0
             || (*mtctx).inBuff.filled == (*mtctx).targetSectionSize
             || (*mtctx).params.rsyncable != 0);
         endOp = ZSTD_e_flush;
     }
     if (*mtctx).jobReady != 0 || (*mtctx).inBuff.filled >= (*mtctx).targetSectionSize
         || endOp as libc::c_uint != ZSTD_e_continue as libc::c_int as libc::c_uint
-            && (*mtctx).inBuff.filled > 0 as libc::c_int as libc::c_ulong
+            && (*mtctx).inBuff.filled > 0
         || endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint
             && (*mtctx).frameEnded == 0
     {
@@ -3280,7 +3280,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
         endOp,
     );
     if (*input).pos < (*input).size {
-        return if remainingToFlush > 1 as libc::c_int as libc::c_ulong {
+        return if remainingToFlush > 1 {
             remainingToFlush
         } else {
             1 as libc::c_int as libc::c_ulong

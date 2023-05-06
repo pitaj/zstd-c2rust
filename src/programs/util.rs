@@ -401,17 +401,17 @@ pub struct dirent {
     pub d_type: libc::c_uchar,
     pub d_name: [libc::c_char; 256],
 }
-pub const EOF: libc::c_int = -(1 as libc::c_int);
+pub const EOF: libc::c_int = -(1);
 pub const __S_IFMT: libc::c_int = 0o170000 as libc::c_int;
-pub const UTIME_NOW: libc::c_long = ((1 as libc::c_long) << 30 as libc::c_int)
+pub const UTIME_NOW: libc::c_long = ((1) << 30 as libc::c_int)
     - 1 as libc::c_long;
-pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1 as libc::c_int);
+pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1);
 pub const _SC_NPROCESSORS_ONLN_0: libc::c_int = _SC_NPROCESSORS_ONLN as libc::c_int;
 pub const PATH_SEP: libc::c_int = '/' as i32;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const EEXIST: libc::c_int = 17 as libc::c_int;
 pub const ENOMEM: libc::c_int = 12 as libc::c_int;
-pub const AT_FDCWD: libc::c_int = -(100 as libc::c_int);
+pub const AT_FDCWD: libc::c_int = -(100);
 static mut g_traceDepth: libc::c_int = 0 as libc::c_int;
 #[no_mangle]
 pub static mut g_traceFileStat: libc::c_int = 0 as libc::c_int;
@@ -457,9 +457,9 @@ pub unsafe extern "C" fn UTIL_requireUserConfirmation(
     }
     return result;
 }
-pub const LIST_SIZE_INCREASE: libc::c_int = 8 as libc::c_int * 1024 as libc::c_int;
-pub const MAX_FILE_OF_FILE_NAMES_SIZE: libc::c_int = ((1 as libc::c_int)
-    << 20 as libc::c_int) * 50 as libc::c_int;
+pub const LIST_SIZE_INCREASE: libc::c_int = 8 as libc::c_int * 1024;
+pub const MAX_FILE_OF_FILE_NAMES_SIZE: libc::c_int = ((1)
+    << 20 as libc::c_int) * 50;
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_traceFileStat() {
     g_traceFileStat = 1 as libc::c_int;
@@ -487,7 +487,7 @@ pub unsafe extern "C" fn UTIL_fstat(
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
         g_traceDepth += 1;
     }
-    if fd >= 0 as libc::c_int {
+    if fd >= 0 {
         ret = (fstat(fd, statbuf) == 0) as libc::c_int;
     } else {
         ret = (stat(filename, statbuf) == 0) as libc::c_int;
@@ -509,7 +509,7 @@ pub unsafe extern "C" fn UTIL_stat(
     mut filename: *const libc::c_char,
     mut statbuf: *mut stat_t,
 ) -> libc::c_int {
-    return UTIL_fstat(-(1 as libc::c_int), filename, statbuf);
+    return UTIL_fstat(-(1), filename, statbuf);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_isRegularFile(
@@ -576,7 +576,7 @@ pub unsafe extern "C" fn UTIL_chmod(
     mut statbuf: *const stat_t,
     mut permissions: mode_t,
 ) -> libc::c_int {
-    return UTIL_fchmod(-(1 as libc::c_int), filename, statbuf, permissions);
+    return UTIL_fchmod(-(1), filename, statbuf, permissions);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_fchmod(
@@ -647,7 +647,7 @@ pub unsafe extern "C" fn UTIL_fchmod(
         }
         return 0 as libc::c_int;
     }
-    if fd >= 0 as libc::c_int {
+    if fd >= 0 {
         let mut ret: libc::c_int = 0;
         if g_traceFileStat != 0 {
             fprintf(
@@ -775,7 +775,7 @@ pub unsafe extern "C" fn UTIL_setFileStat(
     mut filename: *const libc::c_char,
     mut statbuf: *const stat_t,
 ) -> libc::c_int {
-    return UTIL_setFDStat(-(1 as libc::c_int), filename, statbuf);
+    return UTIL_setFDStat(-(1), filename, statbuf);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_setFDStat(
@@ -827,15 +827,15 @@ pub unsafe extern "C" fn UTIL_setFDStat(
                 b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
                 g_traceDepth,
                 b"\0" as *const u8 as *const libc::c_char,
-                -(1 as libc::c_int),
+                -(1),
             );
         }
-        return -(1 as libc::c_int);
+        return -(1);
     }
-    if fd >= 0 as libc::c_int {
-        res += fchown(fd, -(1 as libc::c_int) as __uid_t, (*statbuf).st_gid);
+    if fd >= 0 {
+        res += fchown(fd, -(1) as __uid_t, (*statbuf).st_gid);
     } else {
-        res += chown(filename, -(1 as libc::c_int) as __uid_t, (*statbuf).st_gid);
+        res += chown(filename, -(1) as __uid_t, (*statbuf).st_gid);
     }
     res
         += UTIL_fchmod(
@@ -844,10 +844,10 @@ pub unsafe extern "C" fn UTIL_setFDStat(
             &mut curStatBuf,
             (*statbuf).st_mode & 0o777 as libc::c_int as libc::c_uint,
         );
-    if fd >= 0 as libc::c_int {
-        res += fchown(fd, (*statbuf).st_uid, -(1 as libc::c_int) as __gid_t);
+    if fd >= 0 {
+        res += fchown(fd, (*statbuf).st_uid, -(1) as __gid_t);
     } else {
-        res += chown(filename, (*statbuf).st_uid, -(1 as libc::c_int) as __gid_t);
+        res += chown(filename, (*statbuf).st_uid, -(1) as __gid_t);
     }
     (*__errno_location() /* errno */) = 0 as libc::c_int;
     if g_traceFileStat != 0 {
@@ -1305,7 +1305,7 @@ pub unsafe extern "C" fn UTIL_getFileSize(mut infilename: *const libc::c_char) -
                 b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
                 g_traceDepth,
                 b"\0" as *const u8 as *const libc::c_char,
-                -(1 as libc::c_int),
+                -(1),
             );
         }
         return UTIL_FILESIZE_UNKNOWN as u64;
@@ -1344,11 +1344,11 @@ pub unsafe extern "C" fn UTIL_makeHumanReadableSize(
         precision: 0,
         suffix: 0 as *const libc::c_char,
     };
-    if g_utilDisplayLevel > 3 as libc::c_int {
-        if size as libc::c_ulonglong >= (1 as libc::c_ulonglong) << 53 as libc::c_int {
+    if g_utilDisplayLevel > 3 {
+        if size as libc::c_ulonglong >= (1) << 53 as libc::c_int {
             hrs
                 .value = size as libc::c_double
-                / ((1 as libc::c_ulonglong) << 20 as libc::c_int) as libc::c_double;
+                / ((1) << 20 as libc::c_int) as libc::c_double;
             hrs.suffix = b" MiB\0" as *const u8 as *const libc::c_char;
             hrs.precision = 2 as libc::c_int;
         } else {
@@ -1357,56 +1357,56 @@ pub unsafe extern "C" fn UTIL_makeHumanReadableSize(
             hrs.precision = 0 as libc::c_int;
         }
     } else {
-        if size as libc::c_ulonglong >= (1 as libc::c_ulonglong) << 60 as libc::c_int {
+        if size as libc::c_ulonglong >= (1) << 60 as libc::c_int {
             hrs
                 .value = size as libc::c_double
-                / ((1 as libc::c_ulonglong) << 60 as libc::c_int) as libc::c_double;
+                / ((1) << 60 as libc::c_int) as libc::c_double;
             hrs.suffix = b" EiB\0" as *const u8 as *const libc::c_char;
         } else if size as libc::c_ulonglong
-            >= (1 as libc::c_ulonglong) << 50 as libc::c_int
+            >= (1) << 50 as libc::c_int
         {
             hrs
                 .value = size as libc::c_double
-                / ((1 as libc::c_ulonglong) << 50 as libc::c_int) as libc::c_double;
+                / ((1) << 50 as libc::c_int) as libc::c_double;
             hrs.suffix = b" PiB\0" as *const u8 as *const libc::c_char;
         } else if size as libc::c_ulonglong
-            >= (1 as libc::c_ulonglong) << 40 as libc::c_int
+            >= (1) << 40 as libc::c_int
         {
             hrs
                 .value = size as libc::c_double
-                / ((1 as libc::c_ulonglong) << 40 as libc::c_int) as libc::c_double;
+                / ((1) << 40 as libc::c_int) as libc::c_double;
             hrs.suffix = b" TiB\0" as *const u8 as *const libc::c_char;
         } else if size as libc::c_ulonglong
-            >= (1 as libc::c_ulonglong) << 30 as libc::c_int
+            >= (1) << 30 as libc::c_int
         {
             hrs
                 .value = size as libc::c_double
-                / ((1 as libc::c_ulonglong) << 30 as libc::c_int) as libc::c_double;
+                / ((1) << 30 as libc::c_int) as libc::c_double;
             hrs.suffix = b" GiB\0" as *const u8 as *const libc::c_char;
         } else if size as libc::c_ulonglong
-            >= (1 as libc::c_ulonglong) << 20 as libc::c_int
+            >= (1) << 20 as libc::c_int
         {
             hrs
                 .value = size as libc::c_double
-                / ((1 as libc::c_ulonglong) << 20 as libc::c_int) as libc::c_double;
+                / ((1) << 20 as libc::c_int) as libc::c_double;
             hrs.suffix = b" MiB\0" as *const u8 as *const libc::c_char;
         } else if size as libc::c_ulonglong
-            >= (1 as libc::c_ulonglong) << 10 as libc::c_int
+            >= (1) << 10 as libc::c_int
         {
             hrs
                 .value = size as libc::c_double
-                / ((1 as libc::c_ulonglong) << 10 as libc::c_int) as libc::c_double;
+                / ((1) << 10 as libc::c_int) as libc::c_double;
             hrs.suffix = b" KiB\0" as *const u8 as *const libc::c_char;
         } else {
             hrs.value = size as libc::c_double;
             hrs.suffix = b" B\0" as *const u8 as *const libc::c_char;
         }
-        if hrs.value >= 100 as libc::c_int as libc::c_double || hrs.value as u64 == size
+        if hrs.value >= 100 || hrs.value as u64 == size
         {
             hrs.precision = 0 as libc::c_int;
-        } else if hrs.value >= 10 as libc::c_int as libc::c_double {
+        } else if hrs.value >= 10 {
             hrs.precision = 1 as libc::c_int;
-        } else if hrs.value > 1 as libc::c_int as libc::c_double {
+        } else if hrs.value > 1 {
             hrs.precision = 2 as libc::c_int;
         } else {
             hrs.precision = 3 as libc::c_int;
@@ -1447,7 +1447,7 @@ pub unsafe extern "C" fn UTIL_getTotalFileSize(
                     b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
                     g_traceDepth,
                     b"\0" as *const u8 as *const libc::c_char,
-                    -(1 as libc::c_int),
+                    -(1),
                 );
             }
             return UTIL_FILESIZE_UNKNOWN as u64;
@@ -1477,7 +1477,7 @@ unsafe extern "C" fn readLineFromFile(
         return 0 as libc::c_int as libc::size_t;
     }
     let mut linelen = strlen(buf);
-    if strlen(buf) == 0 as libc::c_int as libc::c_ulong {
+    if strlen(buf) == 0 {
         return 0 as libc::c_int as libc::size_t;
     }
     if *buf.offset(linelen.wrapping_sub(1) as isize)
@@ -1499,10 +1499,10 @@ unsafe extern "C" fn readLinesFromFile(
     let inputFile = fopen(inputFileName, b"r\0" as *const u8 as *const libc::c_char);
     debug_assert!(!dst.is_null());
     if inputFile.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             perror(b"zstd:util:readLinesFromFile\0" as *const u8 as *const libc::c_char);
         }
-        return -(1 as libc::c_int);
+        return -(1);
     }
     while feof(inputFile) == 0 {
         let lineLength = readLineFromFile(
@@ -1510,15 +1510,15 @@ unsafe extern "C" fn readLinesFromFile(
             dstCapacity.wrapping_sub(pos),
             inputFile,
         );
-        if lineLength == 0 as libc::c_int as libc::c_ulong {
+        if lineLength == 0 {
             break;
         }
         debug_assert!(pos.wrapping_add(lineLength) <= dstCapacity);
         pos = (pos as libc::c_ulong).wrapping_add(lineLength) ;
         nbFiles += 1;
     }
-    if !(fclose(inputFile) == 0 as libc::c_int) {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+    if !(fclose(inputFile) == 0) {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -1528,7 +1528,7 @@ unsafe extern "C" fn readLinesFromFile(
                 b"fclose(inputFile) == 0\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     return nbFiles;
 }
@@ -1569,7 +1569,7 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
     bufSize = inputFileSize.wrapping_add(1);
     buf = malloc(bufSize) as *mut libc::c_char;
     if buf.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -1579,24 +1579,24 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
                 b"buf != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     let ret_nbFiles = readLinesFromFile(
         buf as *mut libc::c_void,
         bufSize,
         inputFileName,
     );
-    if ret_nbFiles <= 0 as libc::c_int {
+    if ret_nbFiles <= 0 {
         free(buf as *mut libc::c_void);
         return NULL as *mut FileNamesTable;
     }
     nbFiles = ret_nbFiles as libc::size_t;
     let mut filenamesTable = malloc(
         nbFiles
-            .wrapping_mul(::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<*const libc::c_char>()),
     ) as *mut *const libc::c_char;
     if filenamesTable.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -1606,7 +1606,7 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
                 b"filenamesTable != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     let mut fnb: libc::size_t = 0;
     fnb = 0 as libc::c_int as libc::size_t;
@@ -1630,10 +1630,10 @@ unsafe extern "C" fn UTIL_assembleFileNamesTable2(
     mut tableCapacity: libc::size_t,
     mut buf: *mut libc::c_char,
 ) -> *mut FileNamesTable {
-    let table = malloc(::core::mem::size_of::<FileNamesTable>() as libc::c_ulong)
+    let table = malloc(::core::mem::size_of::<FileNamesTable>())
         as *mut FileNamesTable;
     if table.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -1643,7 +1643,7 @@ unsafe extern "C" fn UTIL_assembleFileNamesTable2(
                 b"table != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     (*table).fileNames = filenames;
     (*table).buf = buf;
@@ -1674,7 +1674,7 @@ pub unsafe extern "C" fn UTIL_allocateFileNamesTable(
 ) -> *mut FileNamesTable {
     let fnTable = malloc(
         tableSize
-            .wrapping_mul(::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<*const libc::c_char>()),
     ) as *mut *const libc::c_char;
     let mut fnt = 0 as *mut FileNamesTable;
     if fnTable.is_null() {
@@ -1697,7 +1697,7 @@ pub unsafe extern "C" fn UTIL_searchFileNamesTable(
         }
         i = i.wrapping_add(1);
     }
-    return -(1 as libc::c_int);
+    return -(1);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_refFilename(
@@ -1740,7 +1740,7 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
         NULL as *mut libc::c_char,
     );
     if newTable.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -1750,16 +1750,16 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
                 b"newTable != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     newTotalTableSize = (getTotalTableSize(table1))
         .wrapping_add(getTotalTableSize(table2));
     buf = calloc(
         newTotalTableSize,
-        ::core::mem::size_of::<libc::c_char>() as libc::c_ulong,
+        ::core::mem::size_of::<libc::c_char>(),
     ) as *mut libc::c_char;
     if buf.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -1769,17 +1769,17 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
                 b"buf != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     (*newTable).buf = buf;
     (*newTable).tableSize = ((*table1).tableSize).wrapping_add((*table2).tableSize);
     (*newTable)
         .fileNames = calloc(
         (*newTable).tableSize,
-        ::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong,
+        ::core::mem::size_of::<*const libc::c_char>(),
     ) as *mut *const libc::c_char;
     if ((*newTable).fileNames).is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -1789,7 +1789,7 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
                 b"newTable->fileNames != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     let mut idx1: libc::c_uint = 0;
     idx1 = 0 as libc::c_int as libc::c_uint;
@@ -1852,7 +1852,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
     let mut nbFiles = 0 as libc::c_int;
     dir = opendir(dirName);
     if dir.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Cannot open directory '%s': %s\n\0" as *const u8
@@ -1876,11 +1876,11 @@ unsafe extern "C" fn UTIL_prepareFileList(
         if strcmp(
             ((*entry).d_name).as_mut_ptr(),
             b"..\0" as *const u8 as *const libc::c_char,
-        ) == 0 as libc::c_int
+        ) == 0
             || strcmp(
                 ((*entry).d_name).as_mut_ptr(),
                 b".\0" as *const u8 as *const libc::c_char,
-            ) == 0 as libc::c_int
+            ) == 0
         {
             continue;
         }
@@ -1897,7 +1897,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
         memcpy(path as *mut libc::c_void, dirName as *const libc::c_void, dirLength);
         *path.offset(dirLength as isize) = '/' as i32 as libc::c_char;
         memcpy(
-            path.offset(dirLength as isize).offset(1 as libc::c_int as isize)
+            path.offset(dirLength as isize).offset(1)
                 as *mut libc::c_void,
             ((*entry).d_name).as_mut_ptr() as *const libc::c_void,
             fnameLength,
@@ -1907,7 +1907,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
             .wrapping_add(fnameLength);
         *path.offset(pathLength as isize) = 0 as libc::c_int as libc::c_char;
         if followLinks == 0 && UTIL_isLink(path) != 0 {
-            if g_utilDisplayLevel >= 2 as libc::c_int {
+            if g_utilDisplayLevel >= 2 {
                 fprintf(
                     stderr,
                     b"Warning : %s is a symbolic link, ignoring\n\0" as *const u8
@@ -1931,7 +1931,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
                 {
                     let mut newListSize = (*bufEnd).offset_from(*bufStart)
                         as libc::c_long + LIST_SIZE_INCREASE as libc::c_long;
-                    debug_assert!(newListSize >= 0 as libc::c_int as libc::c_long);
+                    debug_assert!(newListSize >= 0);
                     *bufStart = UTIL_realloc(
                         *bufStart as *mut libc::c_void,
                         newListSize as libc::size_t,
@@ -1964,7 +1964,7 @@ unsafe extern "C" fn UTIL_prepareFileList(
         }
     }
     if (*__errno_location() /* errno */) != 0 as libc::c_int {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"readdir(%s) error: %s \n\0" as *const u8 as *const libc::c_char,
@@ -1986,7 +1986,7 @@ pub unsafe extern "C" fn UTIL_isCompressedFile(
     let mut ext = UTIL_getFileExtension(inputName);
     while !(*extensionList).is_null() {
         let isCompressedExtension = strcmp(ext, *extensionList);
-        if isCompressedExtension == 0 as libc::c_int {
+        if isCompressedExtension == 0 {
             return 1 as libc::c_int;
         }
         extensionList = extensionList.offset(1);
@@ -2011,9 +2011,9 @@ unsafe extern "C" fn pathnameHas2Dots(mut pathname: *const libc::c_char) -> libc
             return 0 as libc::c_int;
         }
         if (needle == pathname
-            || *needle.offset(-(1 as libc::c_int) as isize) as libc::c_int == PATH_SEP)
-            && (*needle.offset(2 as libc::c_int as isize) as libc::c_int == '\0' as i32
-                || *needle.offset(2 as libc::c_int as isize) as libc::c_int == PATH_SEP)
+            || *needle.offset(-(1) as isize) as libc::c_int == PATH_SEP)
+            && (*needle.offset(2) as libc::c_int == '\0' as i32
+                || *needle.offset(2) as libc::c_int == PATH_SEP)
         {
             return 1 as libc::c_int;
         }
@@ -2087,18 +2087,18 @@ unsafe extern "C" fn convertPathnameToDirName(mut pathname: *mut libc::c_char) {
     let mut pos = NULL as *mut libc::c_char;
     debug_assert!(!pathname.is_null());
     len = strlen(pathname);
-    debug_assert!(len > 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(len > 0);
     while *pathname.offset(len as isize) as libc::c_int == PATH_SEP {
         *pathname.offset(len as isize) = '\0' as i32 as libc::c_char;
         len = len.wrapping_sub(1);
     }
-    if len == 0 as libc::c_int as libc::c_ulong {
+    if len == 0 {
         return;
     }
     pos = strrchr(pathname, PATH_SEP);
     if pos.is_null() {
-        *pathname.offset(0 as libc::c_int as isize) = '.' as i32 as libc::c_char;
-        *pathname.offset(1 as libc::c_int as isize) = '\0' as i32 as libc::c_char;
+        *pathname.offset(0) = '.' as i32 as libc::c_char;
+        *pathname.offset(1) = '\0' as i32 as libc::c_char;
     } else {
         *pos = '\0' as i32 as libc::c_char;
     };
@@ -2107,8 +2107,8 @@ unsafe extern "C" fn trimLeadingRootChar(
     mut pathname: *const libc::c_char,
 ) -> *const libc::c_char {
     debug_assert!(!pathname.is_null());
-    if *pathname.offset(0 as libc::c_int as isize) as libc::c_int == PATH_SEP {
-        return pathname.offset(1 as libc::c_int as isize);
+    if *pathname.offset(0) as libc::c_int == PATH_SEP {
+        return pathname.offset(1);
     }
     return pathname;
 }
@@ -2116,10 +2116,10 @@ unsafe extern "C" fn trimLeadingCurrentDirConst(
     mut pathname: *const libc::c_char,
 ) -> *const libc::c_char {
     debug_assert!(!pathname.is_null());
-    if *pathname.offset(0 as libc::c_int as isize) as libc::c_int == '.' as i32
-        && *pathname.offset(1 as libc::c_int as isize) as libc::c_int == PATH_SEP
+    if *pathname.offset(0) as libc::c_int == '.' as i32
+        && *pathname.offset(1) as libc::c_int == PATH_SEP
     {
-        return pathname.offset(2 as libc::c_int as isize);
+        return pathname.offset(2);
     }
     return pathname;
 }
@@ -2148,7 +2148,7 @@ unsafe extern "C" fn mallocAndJoin2Dir(
         dir1Size.wrapping_add(dir2Size).wrapping_add(2),
     ) as *mut libc::c_char;
     if outDirBuffer.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -2158,16 +2158,16 @@ unsafe extern "C" fn mallocAndJoin2Dir(
                 b"outDirBuffer != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     memcpy(outDirBuffer as *mut libc::c_void, dir1 as *const libc::c_void, dir1Size);
     *outDirBuffer.offset(dir1Size as isize) = '\0' as i32 as libc::c_char;
-    if *dir2.offset(0 as libc::c_int as isize) as libc::c_int == '.' as i32 {
+    if *dir2.offset(0) as libc::c_int == '.' as i32 {
         return outDirBuffer;
     }
     buffer = outDirBuffer.offset(dir1Size as isize);
-    if dir1Size > 0 as libc::c_int as libc::c_ulong
-        && *buffer.offset(-(1 as libc::c_int as isize)) as libc::c_int != PATH_SEP
+    if dir1Size > 0
+        && *buffer.offset(-(1)) as libc::c_int != PATH_SEP
     {
         *buffer = PATH_SEP as libc::c_char;
         buffer = buffer.offset(1);
@@ -2224,7 +2224,7 @@ unsafe extern "C" fn mirrorSrcDirRecursive(
             }
             *sp = PATH_SEP as libc::c_char;
         }
-        pp = sp.offset(1 as libc::c_int as isize);
+        pp = sp.offset(1);
     }
     status = mirrorSrcDir(srcDirName, outDirName);
     return status;
@@ -2268,15 +2268,15 @@ unsafe extern "C" fn makeUniqueMirroredDestDirs(
     let mut i = 0 as libc::c_int as libc::c_uint;
     let mut uniqueDirNr = 0 as libc::c_int as libc::c_uint;
     let mut uniqueDirNames = NULL as *mut *mut libc::c_char;
-    if nbFile == 0 as libc::c_int as libc::c_uint {
+    if nbFile == 0 {
         return;
     }
     uniqueDirNames = malloc(
         (nbFile as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<*mut libc::c_char>()),
     ) as *mut *mut libc::c_char;
     if uniqueDirNames.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -2286,12 +2286,12 @@ unsafe extern "C" fn makeUniqueMirroredDestDirs(
                 b"uniqueDirNames != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     qsort(
         srcDirNames as *mut libc::c_void,
         nbFile as libc::size_t,
-        ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
+        ::core::mem::size_of::<*mut libc::c_char>(),
         Some(
             compareDir
                 as unsafe extern "C" fn(
@@ -2303,7 +2303,7 @@ unsafe extern "C" fn makeUniqueMirroredDestDirs(
     uniqueDirNr = 1 as libc::c_int as libc::c_uint;
     let ref mut fresh4 = *uniqueDirNames
         .offset(uniqueDirNr.wrapping_sub(1) as isize);
-    *fresh4 = *srcDirNames.offset(0 as libc::c_int as isize);
+    *fresh4 = *srcDirNames.offset(0);
     i = 1 as libc::c_int as libc::c_uint;
     while i < nbFile {
         let mut prevDirName = *srcDirNames
@@ -2345,10 +2345,10 @@ pub unsafe extern "C" fn UTIL_mirrorSourceFilesDirectories(
     let mut validFilenamesNr = 0 as libc::c_int as libc::c_uint;
     let mut srcFileNames = malloc(
         (nbFile as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<*mut libc::c_char>()),
     ) as *mut *mut libc::c_char;
     if srcFileNames.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -2358,14 +2358,14 @@ pub unsafe extern "C" fn UTIL_mirrorSourceFilesDirectories(
                 b"srcFileNames != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     i = 0 as libc::c_int as libc::c_uint;
     while i < nbFile {
         if isFileNameValidForMirroredOutput(*inFileNames.offset(i as isize)) != 0 {
             let mut fname = strdup(*inFileNames.offset(i as isize));
             if fname.is_null() {
-                if g_utilDisplayLevel >= 1 as libc::c_int {
+                if g_utilDisplayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -2375,7 +2375,7 @@ pub unsafe extern "C" fn UTIL_mirrorSourceFilesDirectories(
                         b"fname != NULL\0" as *const u8 as *const libc::c_char,
                     );
                 }
-                exit(1 as libc::c_int);
+                exit(1);
             }
             let fresh6 = validFilenamesNr;
             validFilenamesNr = validFilenamesNr.wrapping_add(1);
@@ -2384,7 +2384,7 @@ pub unsafe extern "C" fn UTIL_mirrorSourceFilesDirectories(
         }
         i = i.wrapping_add(1);
     }
-    if validFilenamesNr > 0 as libc::c_int as libc::c_uint {
+    if validFilenamesNr > 0 {
         makeDir(outDirName, DIR_DEFAULT_MODE as mode_t);
         makeMirroredDestDirs(srcFileNames, validFilenamesNr, outDirName);
     }
@@ -2418,7 +2418,7 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
             if buf.offset(pos as isize).offset(len as isize) >= bufend {
                 let mut newListSize = bufend.offset_from(buf) as libc::c_long
                     + LIST_SIZE_INCREASE as libc::c_long;
-                debug_assert!(newListSize >= 0 as libc::c_int as libc::c_long);
+                debug_assert!(newListSize >= 0);
                 buf = UTIL_realloc(buf as *mut libc::c_void, newListSize as libc::size_t)
                     as *mut libc::c_char;
                 if buf.is_null() {
@@ -2459,7 +2459,7 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
     let fntCapacity = nbFiles.wrapping_add(1) as libc::size_t;
     let fileNamesTable = malloc(
         fntCapacity
-            .wrapping_mul(::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<*const libc::c_char>()),
     ) as *mut *const libc::c_char;
     if fileNamesTable.is_null() {
         free(buf as *mut libc::c_void);
@@ -2500,7 +2500,7 @@ pub unsafe extern "C" fn UTIL_expandFNT(
         followLinks,
     );
     if newFNT.is_null() {
-        if g_utilDisplayLevel >= 1 as libc::c_int {
+        if g_utilDisplayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
@@ -2510,7 +2510,7 @@ pub unsafe extern "C" fn UTIL_expandFNT(
                 b"newFNT != NULL\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     UTIL_freeFileNamesTable(*fnt);
     *fnt = newFNT;
@@ -2521,7 +2521,7 @@ pub unsafe extern "C" fn UTIL_createFNT_fromROTable(
     mut nbFilenames: libc::size_t,
 ) -> *mut FileNamesTable {
     let sizeof_FNTable = nbFilenames
-        .wrapping_mul(::core::mem::size_of::<*const libc::c_char>() as libc::c_ulong);
+        .wrapping_mul(::core::mem::size_of::<*const libc::c_char>());
     let newFNTable = malloc(sizeof_FNTable) as *mut *const libc::c_char;
     if newFNTable.is_null() {
         return NULL as *mut FileNamesTable;
@@ -2545,7 +2545,7 @@ pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_in
         return numCores;
     }
     numCores = sysconf(_SC_NPROCESSORS_ONLN_0) as libc::c_int;
-    if numCores == -(1 as libc::c_int) {
+    if numCores == -(1) {
         numCores = 1 as libc::c_int;
         return numCores;
     }
@@ -2570,21 +2570,21 @@ pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_in
                 buff.as_mut_ptr(),
                 b"siblings\0" as *const u8 as *const libc::c_char,
                 8 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
+            ) == 0
             {
                 let sep: *const libc::c_char = strchr(buff.as_mut_ptr(), ':' as i32);
                 if sep.is_null() || *sep as libc::c_int == '\0' as i32 {
                     current_block = 16443617707930808077;
                     break;
                 } else {
-                    siblings = atoi(sep.offset(1 as libc::c_int as isize));
+                    siblings = atoi(sep.offset(1));
                 }
             }
             if !(strncmp(
                 buff.as_mut_ptr(),
                 b"cpu cores\0" as *const u8 as *const libc::c_char,
                 9 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int)
+            ) == 0)
             {
                 continue;
             }
@@ -2593,7 +2593,7 @@ pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_in
                 current_block = 16443617707930808077;
                 break;
             } else {
-                cpu_cores = atoi(sep_0.offset(1 as libc::c_int as isize));
+                cpu_cores = atoi(sep_0.offset(1));
             }
         } else if ferror(cpuinfo) != 0 {
             current_block = 16443617707930808077;
@@ -2617,9 +2617,9 @@ pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_in
 pub const BUF_SIZE: libc::c_int = 80 as libc::c_int;
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_countPhysicalCores() -> libc::c_int {
-    return UTIL_countCores(0 as libc::c_int);
+    return UTIL_countCores(0);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_countLogicalCores() -> libc::c_int {
-    return UTIL_countCores(1 as libc::c_int);
+    return UTIL_countCores(1);
 }

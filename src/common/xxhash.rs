@@ -57,8 +57,8 @@ unsafe extern "C" fn XXH_malloc(mut s: libc::size_t) -> *mut libc::c_void {
 pub const XXH32_ENDJMP: libc::c_int = 0 as libc::c_int;
 pub const NULL: libc::c_int = 0 as libc::c_int;
 pub const XXH_FORCE_ALIGN_CHECK: libc::c_int = 0 as libc::c_int;
-pub const XXH_VERSION_NUMBER: libc::c_int = XXH_VERSION_MAJOR * 100 as libc::c_int
-    * 100 as libc::c_int + XXH_VERSION_MINOR * 100 as libc::c_int + XXH_VERSION_RELEASE;
+pub const XXH_VERSION_NUMBER: libc::c_int = XXH_VERSION_MAJOR * 100
+    * 100 + XXH_VERSION_MINOR * 100 + XXH_VERSION_RELEASE;
 pub const XXH_VERSION_MAJOR: libc::c_int = 0 as libc::c_int;
 pub const XXH_VERSION_MINOR: libc::c_int = 8 as libc::c_int;
 pub const XXH_VERSION_RELEASE: libc::c_int = 1 as libc::c_int;
@@ -107,7 +107,7 @@ unsafe extern "C" fn XXH_read32(mut memPtr: *const libc::c_void) -> xxh_u32 {
     XXH_memcpy(
         &mut val as *mut xxh_u32 as *mut libc::c_void,
         memPtr,
-        ::core::mem::size_of::<xxh_u32>() as libc::c_ulong,
+        ::core::mem::size_of::<xxh_u32>(),
     );
     return val;
 }
@@ -184,11 +184,11 @@ unsafe extern "C" fn XXH32_endian_align(
 ) -> xxh_u32 {
     let mut h32: xxh_u32 = 0;
     if input.is_null() {
-        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(len == 0);
     }
-    if len >= 16 as libc::c_int as libc::c_ulong {
+    if len >= 16 {
         let bEnd = input.offset(len as isize);
-        let limit = bEnd.offset(-(15 as libc::c_int as isize));
+        let limit = bEnd.offset(-(15));
         let mut v1 = seed.wrapping_add(XXH_PRIME32_1).wrapping_add(XXH_PRIME32_2);
         let mut v2 = seed.wrapping_add(XXH_PRIME32_2);
         let mut v3 = seed.wrapping_add(0);
@@ -198,22 +198,22 @@ unsafe extern "C" fn XXH32_endian_align(
                 v1,
                 XXH_readLE32_align(input as *const libc::c_void, align),
             );
-            input = input.offset(4 as libc::c_int as isize);
+            input = input.offset(4);
             v2 = XXH32_round(
                 v2,
                 XXH_readLE32_align(input as *const libc::c_void, align),
             );
-            input = input.offset(4 as libc::c_int as isize);
+            input = input.offset(4);
             v3 = XXH32_round(
                 v3,
                 XXH_readLE32_align(input as *const libc::c_void, align),
             );
-            input = input.offset(4 as libc::c_int as isize);
+            input = input.offset(4);
             v4 = XXH32_round(
                 v4,
                 XXH_readLE32_align(input as *const libc::c_void, align),
             );
-            input = input.offset(4 as libc::c_int as isize);
+            input = input.offset(4);
             if !(input < limit) {
                 break;
             }
@@ -232,7 +232,7 @@ unsafe extern "C" fn XXH32_endian_align(
         h32 = seed.wrapping_add(XXH_PRIME32_5);
     }
     h32 = (h32 as libc::c_uint).wrapping_add(len as xxh_u32) ;
-    return XXH32_finalize(h32, input, len & 15 as libc::c_int as libc::c_ulong, align);
+    return XXH32_finalize(h32, input, len & 15, align);
 }
 unsafe extern "C" fn XXH32_finalize(
     mut h32: xxh_u32,
@@ -241,17 +241,17 @@ unsafe extern "C" fn XXH32_finalize(
     mut align: XXH_alignment,
 ) -> xxh_u32 {
     if ptr.is_null() {
-        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(len == 0);
     }
     if XXH32_ENDJMP == 0 {
-        len &= 15 as libc::c_int as libc::c_ulong;
-        while len >= 4 as libc::c_int as libc::c_ulong {
+        len &= 15;
+        while len >= 4 {
             h32 = (h32 as libc::c_uint)
                 .wrapping_add(
                     (XXH_readLE32_align(ptr as *const libc::c_void, align))
                         .wrapping_mul(XXH_PRIME32_3),
                 ) ;
-            ptr = ptr.offset(4 as libc::c_int as isize);
+            ptr = ptr.offset(4);
             h32 = (::core::intrinsics::rotate_left(
                 h32,
                 17 as libc::c_int as libc::c_uint,
@@ -260,7 +260,7 @@ unsafe extern "C" fn XXH32_finalize(
             len = (len as libc::c_ulong).wrapping_sub(4)
                 ;
         }
-        while len > 0 as libc::c_int as libc::c_ulong {
+        while len > 0 {
             let fresh0 = ptr;
             ptr = ptr.offset(1);
             h32 = (h32 as libc::c_uint)
@@ -277,14 +277,14 @@ unsafe extern "C" fn XXH32_finalize(
     } else {
         's_489: {
             let mut current_block_119: u64;
-            match len & 15 as libc::c_int as libc::c_ulong {
+            match len & 15 {
                 12 => {
                     h32 = (h32 as libc::c_uint)
                         .wrapping_add(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -304,7 +304,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -324,7 +324,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -344,7 +344,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -381,7 +381,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -395,7 +395,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -409,7 +409,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -423,7 +423,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -440,7 +440,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -476,7 +476,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -501,7 +501,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -515,7 +515,7 @@ unsafe extern "C" fn XXH32_finalize(
                             (XXH_readLE32_align(ptr as *const libc::c_void, align))
                                 .wrapping_mul(XXH_PRIME32_3),
                         ) ;
-                    ptr = ptr.offset(4 as libc::c_int as isize);
+                    ptr = ptr.offset(4);
                     h32 = (::core::intrinsics::rotate_left(
                         h32,
                         17 as libc::c_int as libc::c_uint,
@@ -642,7 +642,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
     mut len: libc::size_t,
 ) -> XXH_errorcode {
     if input.is_null() {
-        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(len == 0);
         return XXH_OK;
     }
     let mut p = input as *const xxh_u8;
@@ -651,11 +651,11 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
         .total_len_32 = ((*state).total_len_32 as libc::c_uint)
         .wrapping_add(len as XXH32_hash_t) ;
     (*state).large_len
-        |= ((len >= 16 as libc::c_int as libc::c_ulong) as libc::c_int
-            | ((*state).total_len_32 >= 16 as libc::c_int as libc::c_uint)
+        |= ((len >= 16) as libc::c_int
+            | ((*state).total_len_32 >= 16)
                 as libc::c_int) as XXH32_hash_t;
     if ((*state).memsize as libc::c_ulong).wrapping_add(len)
-        < 16 as libc::c_int as libc::c_ulong
+        < 16
     {
         XXH_memcpy(
             (((*state).mem32).as_mut_ptr() as *mut xxh_u8)
@@ -673,7 +673,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
             (((*state).mem32).as_mut_ptr() as *mut xxh_u8)
                 .offset((*state).memsize as isize) as *mut libc::c_void,
             input,
-            (16 as libc::c_int as libc::c_uint).wrapping_sub((*state).memsize) as libc::size_t,
+            (16).wrapping_sub((*state).memsize) as libc::size_t,
         );
         let mut p32: *const xxh_u32 = ((*state).mem32).as_mut_ptr();
         (*state)
@@ -705,13 +705,13 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
         );
         p = p
             .offset(
-                (16 as libc::c_int as libc::c_uint).wrapping_sub((*state).memsize)
+                (16).wrapping_sub((*state).memsize)
                     as isize,
             );
         (*state).memsize = 0 as libc::c_int as XXH32_hash_t;
     }
-    if p <= bEnd.offset(-(16 as libc::c_int as isize)) {
-        let limit = bEnd.offset(-(16 as libc::c_int as isize));
+    if p <= bEnd.offset(-(16)) {
+        let limit = bEnd.offset(-(16));
         loop {
             (*state)
                 .v[0 as libc::c_int
@@ -719,28 +719,28 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
                 (*state).v[0 as libc::c_int as usize],
                 XXH_readLE32(p as *const libc::c_void),
             );
-            p = p.offset(4 as libc::c_int as isize);
+            p = p.offset(4);
             (*state)
                 .v[1 as libc::c_int
                 as usize] = XXH32_round(
                 (*state).v[1 as libc::c_int as usize],
                 XXH_readLE32(p as *const libc::c_void),
             );
-            p = p.offset(4 as libc::c_int as isize);
+            p = p.offset(4);
             (*state)
                 .v[2 as libc::c_int
                 as usize] = XXH32_round(
                 (*state).v[2 as libc::c_int as usize],
                 XXH_readLE32(p as *const libc::c_void),
             );
-            p = p.offset(4 as libc::c_int as isize);
+            p = p.offset(4);
             (*state)
                 .v[3 as libc::c_int
                 as usize] = XXH32_round(
                 (*state).v[3 as libc::c_int as usize],
                 XXH_readLE32(p as *const libc::c_void),
             );
-            p = p.offset(4 as libc::c_int as isize);
+            p = p.offset(4);
             if !(p <= limit) {
                 break;
             }
@@ -765,7 +765,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_reset(
     memset(
         statePtr as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<XXH32_state_t>() as libc::c_ulong,
+        ::core::mem::size_of::<XXH32_state_t>(),
     );
     (*statePtr)
         .v[0 as libc::c_int
@@ -785,7 +785,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_copyState(
     XXH_memcpy(
         dstState as *mut libc::c_void,
         srcState as *const libc::c_void,
-        ::core::mem::size_of::<XXH32_state_t>() as libc::c_ulong,
+        ::core::mem::size_of::<XXH32_state_t>(),
     );
 }
 unsafe extern "C" fn XXH_read64(mut memPtr: *const libc::c_void) -> xxh_u64 {
@@ -793,7 +793,7 @@ unsafe extern "C" fn XXH_read64(mut memPtr: *const libc::c_void) -> xxh_u64 {
     XXH_memcpy(
         &mut val as *mut xxh_u64 as *mut libc::c_void,
         memPtr,
-        ::core::mem::size_of::<xxh_u64>() as libc::c_ulong,
+        ::core::mem::size_of::<xxh_u64>(),
     );
     return val;
 }
@@ -806,7 +806,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_freeState(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_XXH32_createState() -> *mut XXH32_state_t {
-    return XXH_malloc(::core::mem::size_of::<XXH32_state_t>() as libc::c_ulong)
+    return XXH_malloc(::core::mem::size_of::<XXH32_state_t>())
         as *mut XXH32_state_t;
 }
 #[no_mangle]
@@ -818,7 +818,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_canonicalFromHash(
     XXH_memcpy(
         dst as *mut libc::c_void,
         &mut hash as *mut XXH32_hash_t as *const libc::c_void,
-        ::core::mem::size_of::<XXH32_canonical_t>() as libc::c_ulong,
+        ::core::mem::size_of::<XXH32_canonical_t>(),
     );
 }
 unsafe extern "C" fn XXH_readLE64(mut ptr: *const libc::c_void) -> xxh_u64 {
@@ -836,11 +836,11 @@ unsafe extern "C" fn XXH64_endian_align(
 ) -> xxh_u64 {
     let mut h64: xxh_u64 = 0;
     if input.is_null() {
-        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(len == 0);
     }
-    if len >= 32 as libc::c_int as libc::c_ulong {
+    if len >= 32 {
         let bEnd = input.offset(len as isize);
-        let limit = bEnd.offset(-(31 as libc::c_int as isize));
+        let limit = bEnd.offset(-(31));
         let mut v1 = (seed as libc::c_ulonglong)
             .wrapping_add(XXH_PRIME64_1)
             .wrapping_add(XXH_PRIME64_2) as xxh_u64;
@@ -852,22 +852,22 @@ unsafe extern "C" fn XXH64_endian_align(
                 v1,
                 XXH_readLE64_align(input as *const libc::c_void, align),
             );
-            input = input.offset(8 as libc::c_int as isize);
+            input = input.offset(8);
             v2 = XXH64_round(
                 v2,
                 XXH_readLE64_align(input as *const libc::c_void, align),
             );
-            input = input.offset(8 as libc::c_int as isize);
+            input = input.offset(8);
             v3 = XXH64_round(
                 v3,
                 XXH_readLE64_align(input as *const libc::c_void, align),
             );
-            input = input.offset(8 as libc::c_int as isize);
+            input = input.offset(8);
             v4 = XXH64_round(
                 v4,
                 XXH_readLE64_align(input as *const libc::c_void, align),
             );
-            input = input.offset(8 as libc::c_int as isize);
+            input = input.offset(8);
             if !(input < limit) {
                 break;
             }
@@ -926,15 +926,15 @@ unsafe extern "C" fn XXH64_finalize(
     mut align: XXH_alignment,
 ) -> xxh_u64 {
     if ptr.is_null() {
-        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(len == 0);
     }
-    len &= 31 as libc::c_int as libc::c_ulong;
-    while len >= 8 as libc::c_int as libc::c_ulong {
+    len &= 31;
+    while len >= 8 {
         let k1 = XXH64_round(
             0 as libc::c_int as xxh_u64,
             XXH_readLE64_align(ptr as *const libc::c_void, align),
         );
-        ptr = ptr.offset(8 as libc::c_int as isize);
+        ptr = ptr.offset(8);
         h64 ^= k1;
         h64 = (::core::intrinsics::rotate_left(h64, 27 as libc::c_int as libc::c_ulong)
             as libc::c_ulonglong)
@@ -943,12 +943,12 @@ unsafe extern "C" fn XXH64_finalize(
         len = (len as libc::c_ulong).wrapping_sub(8)
             ;
     }
-    if len >= 4 as libc::c_int as libc::c_ulong {
+    if len >= 4 {
         h64 = (h64 as libc::c_ulonglong
             ^ (XXH_readLE32_align(ptr as *const libc::c_void, align) as xxh_u64
                 as libc::c_ulonglong)
                 .wrapping_mul(XXH_PRIME64_1)) as xxh_u64;
-        ptr = ptr.offset(4 as libc::c_int as isize);
+        ptr = ptr.offset(4);
         h64 = (::core::intrinsics::rotate_left(h64, 23 as libc::c_int as libc::c_ulong)
             as libc::c_ulonglong)
             .wrapping_mul(XXH_PRIME64_2)
@@ -956,7 +956,7 @@ unsafe extern "C" fn XXH64_finalize(
         len = (len as libc::c_ulong).wrapping_sub(4)
             ;
     }
-    while len > 0 as libc::c_int as libc::c_ulong {
+    while len > 0 {
         let fresh7 = ptr;
         ptr = ptr.offset(1);
         h64 = (h64 as libc::c_ulonglong
@@ -980,7 +980,7 @@ pub unsafe extern "C" fn ZSTD_XXH64(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_XXH64_createState() -> *mut XXH64_state_t {
-    return XXH_malloc(::core::mem::size_of::<XXH64_state_t>() as libc::c_ulong)
+    return XXH_malloc(::core::mem::size_of::<XXH64_state_t>())
         as *mut XXH64_state_t;
 }
 #[no_mangle]
@@ -998,7 +998,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_copyState(
     XXH_memcpy(
         dstState as *mut libc::c_void,
         srcState as *const libc::c_void,
-        ::core::mem::size_of::<XXH64_state_t>() as libc::c_ulong,
+        ::core::mem::size_of::<XXH64_state_t>(),
     );
 }
 #[no_mangle]
@@ -1010,7 +1010,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_reset(
     memset(
         statePtr as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<XXH64_state_t>() as libc::c_ulong,
+        ::core::mem::size_of::<XXH64_state_t>(),
     );
     (*statePtr)
         .v[0 as libc::c_int
@@ -1037,7 +1037,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
     mut len: libc::size_t,
 ) -> XXH_errorcode {
     if input.is_null() {
-        debug_assert!(len == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!(len == 0);
         return XXH_OK;
     }
     let mut p = input as *const xxh_u8;
@@ -1046,7 +1046,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
         .total_len = ((*state).total_len as libc::c_ulong).wrapping_add(len)
         ;
     if ((*state).memsize as libc::c_ulong).wrapping_add(len)
-        < 32 as libc::c_int as libc::c_ulong
+        < 32
     {
         XXH_memcpy(
             (((*state).mem64).as_mut_ptr() as *mut xxh_u8)
@@ -1064,14 +1064,14 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
             (((*state).mem64).as_mut_ptr() as *mut xxh_u8)
                 .offset((*state).memsize as isize) as *mut libc::c_void,
             input,
-            (32 as libc::c_int as libc::c_uint).wrapping_sub((*state).memsize) as libc::size_t,
+            (32).wrapping_sub((*state).memsize) as libc::size_t,
         );
         (*state)
             .v[0 as libc::c_int
             as usize] = XXH64_round(
             (*state).v[0 as libc::c_int as usize],
             XXH_readLE64(
-                ((*state).mem64).as_mut_ptr().offset(0 as libc::c_int as isize)
+                ((*state).mem64).as_mut_ptr().offset(0)
                     as *const libc::c_void,
             ),
         );
@@ -1080,7 +1080,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
             as usize] = XXH64_round(
             (*state).v[1 as libc::c_int as usize],
             XXH_readLE64(
-                ((*state).mem64).as_mut_ptr().offset(1 as libc::c_int as isize)
+                ((*state).mem64).as_mut_ptr().offset(1)
                     as *const libc::c_void,
             ),
         );
@@ -1089,7 +1089,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
             as usize] = XXH64_round(
             (*state).v[2 as libc::c_int as usize],
             XXH_readLE64(
-                ((*state).mem64).as_mut_ptr().offset(2 as libc::c_int as isize)
+                ((*state).mem64).as_mut_ptr().offset(2)
                     as *const libc::c_void,
             ),
         );
@@ -1098,19 +1098,19 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
             as usize] = XXH64_round(
             (*state).v[3 as libc::c_int as usize],
             XXH_readLE64(
-                ((*state).mem64).as_mut_ptr().offset(3 as libc::c_int as isize)
+                ((*state).mem64).as_mut_ptr().offset(3)
                     as *const libc::c_void,
             ),
         );
         p = p
             .offset(
-                (32 as libc::c_int as libc::c_uint).wrapping_sub((*state).memsize)
+                (32).wrapping_sub((*state).memsize)
                     as isize,
             );
         (*state).memsize = 0 as libc::c_int as XXH32_hash_t;
     }
-    if p.offset(32 as libc::c_int as isize) <= bEnd {
-        let limit = bEnd.offset(-(32 as libc::c_int as isize));
+    if p.offset(32) <= bEnd {
+        let limit = bEnd.offset(-(32));
         loop {
             (*state)
                 .v[0 as libc::c_int
@@ -1118,28 +1118,28 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
                 (*state).v[0 as libc::c_int as usize],
                 XXH_readLE64(p as *const libc::c_void),
             );
-            p = p.offset(8 as libc::c_int as isize);
+            p = p.offset(8);
             (*state)
                 .v[1 as libc::c_int
                 as usize] = XXH64_round(
                 (*state).v[1 as libc::c_int as usize],
                 XXH_readLE64(p as *const libc::c_void),
             );
-            p = p.offset(8 as libc::c_int as isize);
+            p = p.offset(8);
             (*state)
                 .v[2 as libc::c_int
                 as usize] = XXH64_round(
                 (*state).v[2 as libc::c_int as usize],
                 XXH_readLE64(p as *const libc::c_void),
             );
-            p = p.offset(8 as libc::c_int as isize);
+            p = p.offset(8);
             (*state)
                 .v[3 as libc::c_int
                 as usize] = XXH64_round(
                 (*state).v[3 as libc::c_int as usize],
                 XXH_readLE64(p as *const libc::c_void),
             );
-            p = p.offset(8 as libc::c_int as isize);
+            p = p.offset(8);
             if !(p <= limit) {
                 break;
             }
@@ -1160,7 +1160,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_digest(
     mut state: *const XXH64_state_t,
 ) -> XXH64_hash_t {
     let mut h64: xxh_u64 = 0;
-    if (*state).total_len >= 32 as libc::c_int as libc::c_ulong {
+    if (*state).total_len >= 32 {
         h64 = (::core::intrinsics::rotate_left(
             (*state).v[0 as libc::c_int as usize],
             1 as libc::c_int as libc::c_ulong,
@@ -1208,7 +1208,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_canonicalFromHash(
     XXH_memcpy(
         dst as *mut libc::c_void,
         &mut hash as *mut XXH64_hash_t as *const libc::c_void,
-        ::core::mem::size_of::<XXH64_canonical_t>() as libc::c_ulong,
+        ::core::mem::size_of::<XXH64_canonical_t>(),
     );
 }
 #[no_mangle]

@@ -45,7 +45,7 @@ pub const SS_INSERTIONSORT_THRESHOLD: libc::c_int = 8 as libc::c_int;
 pub const SS_BLOCKSIZE: libc::c_int = 1024 as libc::c_int;
 pub const TR_INSERTIONSORT_THRESHOLD: libc::c_int = 8 as libc::c_int;
 static mut lg_table: [libc::c_int; 256] = [
-    -(1 as libc::c_int),
+    -(1),
     0 as libc::c_int,
     1 as libc::c_int,
     1 as libc::c_int,
@@ -592,16 +592,16 @@ unsafe extern "C" fn ss_isqrt(mut x: libc::c_int) -> libc::c_int {
         0 as libc::c_int
             + lg_table[(x >> 0 as libc::c_int & 0xff as libc::c_int) as usize]
     };
-    if e >= 16 as libc::c_int {
-        y = sqq_table[(x >> e - 6 as libc::c_int - (e & 1 as libc::c_int)) as usize]
+    if e >= 16 {
+        y = sqq_table[(x >> e - 6 as libc::c_int - (e & 1)) as usize]
             << (e >> 1 as libc::c_int) - 7 as libc::c_int;
-        if e >= 24 as libc::c_int {
-            y = y + 1 as libc::c_int + x / y >> 1 as libc::c_int;
+        if e >= 24 {
+            y = y + 1 + x / y >> 1 as libc::c_int;
         }
-        y = y + 1 as libc::c_int + x / y >> 1 as libc::c_int;
-    } else if e >= 8 as libc::c_int {
-        y = (sqq_table[(x >> e - 6 as libc::c_int - (e & 1 as libc::c_int)) as usize]
-            >> 7 as libc::c_int - (e >> 1 as libc::c_int)) + 1 as libc::c_int;
+        y = y + 1 + x / y >> 1 as libc::c_int;
+    } else if e >= 8 {
+        y = (sqq_table[(x >> e - 6 as libc::c_int - (e & 1)) as usize]
+            >> 7 as libc::c_int - (e >> 1 as libc::c_int)) + 1;
     } else {
         return sqq_table[x as usize] >> 4 as libc::c_int
     }
@@ -621,11 +621,11 @@ unsafe extern "C" fn ss_compare(
     U1 = T.offset(depth as isize).offset(*p1 as isize);
     U2 = T.offset(depth as isize).offset(*p2 as isize);
     U1n = T
-        .offset(*p1.offset(1 as libc::c_int as isize) as isize)
-        .offset(2 as libc::c_int as isize);
+        .offset(*p1.offset(1) as isize)
+        .offset(2);
     U2n = T
-        .offset(*p2.offset(1 as libc::c_int as isize) as isize)
-        .offset(2 as libc::c_int as isize);
+        .offset(*p2.offset(1) as isize)
+        .offset(2);
     while U1 < U1n && U2 < U2n && *U1 as libc::c_int == *U2 as libc::c_int {
         U1 = U1.offset(1);
         U2 = U2.offset(1);
@@ -633,7 +633,7 @@ unsafe extern "C" fn ss_compare(
     return if U1 < U1n {
         if U2 < U2n { *U1 as libc::c_int - *U2 as libc::c_int } else { 1 as libc::c_int }
     } else if U2 < U2n {
-        -(1 as libc::c_int)
+        -(1)
     } else {
         0 as libc::c_int
     };
@@ -649,19 +649,19 @@ unsafe extern "C" fn ss_insertionsort(
     let mut j = 0 as *mut libc::c_int;
     let mut t: libc::c_int = 0;
     let mut r: libc::c_int = 0;
-    i = last.offset(-(2 as libc::c_int as isize));
+    i = last.offset(-(2));
     while first <= i {
         t = *i;
-        j = i.offset(1 as libc::c_int as isize);
+        j = i.offset(1);
         loop {
             r = ss_compare(T, PA.offset(t as isize), PA.offset(*j as isize), depth);
-            if !((0 as libc::c_int) < r) {
+            if !((0) < r) {
                 break;
             }
             loop {
-                *j.offset(-(1 as libc::c_int as isize)) = *j;
+                *j.offset(-(1)) = *j;
                 j = j.offset(1);
-                if !(j < last && *j < 0 as libc::c_int) {
+                if !(j < last && *j < 0) {
                     break;
                 }
             }
@@ -669,10 +669,10 @@ unsafe extern "C" fn ss_insertionsort(
                 break;
             }
         }
-        if r == 0 as libc::c_int {
+        if r == 0 {
             *j = !*j;
         }
-        *j.offset(-(1 as libc::c_int as isize)) = t;
+        *j.offset(-(1)) = t;
         i = i.offset(-1);
     }
 }
@@ -693,7 +693,7 @@ unsafe extern "C" fn ss_fixdown(
     v = *SA.offset(i as isize);
     c = *Td.offset(*PA.offset(v as isize) as isize) as libc::c_int;
     loop {
-        j = 2 as libc::c_int * i + 1 as libc::c_int;
+        j = 2 as libc::c_int * i + 1;
         if !(j < size) {
             break;
         }
@@ -726,7 +726,7 @@ unsafe extern "C" fn ss_heapsort(
     let mut m: libc::c_int = 0;
     let mut t: libc::c_int = 0;
     m = size;
-    if size % 2 as libc::c_int == 0 as libc::c_int {
+    if size % 2 as libc::c_int == 0 {
         m -= 1;
         if (*Td
             .offset(
@@ -745,16 +745,16 @@ unsafe extern "C" fn ss_heapsort(
         ss_fixdown(Td, PA, SA, i, m);
         i -= 1;
     }
-    if size % 2 as libc::c_int == 0 as libc::c_int {
-        t = *SA.offset(0 as libc::c_int as isize);
-        *SA.offset(0 as libc::c_int as isize) = *SA.offset(m as isize);
+    if size % 2 as libc::c_int == 0 {
+        t = *SA.offset(0);
+        *SA.offset(0) = *SA.offset(m as isize);
         *SA.offset(m as isize) = t;
         ss_fixdown(Td, PA, SA, 0 as libc::c_int, m);
     }
     i = m - 1 as libc::c_int;
-    while (0 as libc::c_int) < i {
-        t = *SA.offset(0 as libc::c_int as isize);
-        *SA.offset(0 as libc::c_int as isize) = *SA.offset(i as isize);
+    while (0) < i {
+        t = *SA.offset(0);
+        *SA.offset(0) = *SA.offset(i as isize);
         ss_fixdown(Td, PA, SA, 0 as libc::c_int, i);
         *SA.offset(i as isize) = t;
         i -= 1;
@@ -859,14 +859,14 @@ unsafe extern "C" fn ss_pivot(
     let mut t: libc::c_int = 0;
     t = last.offset_from(first) as libc::c_long as libc::c_int;
     middle = first.offset((t / 2 as libc::c_int) as isize);
-    if t <= 512 as libc::c_int {
-        if t <= 32 as libc::c_int {
+    if t <= 512 {
+        if t <= 32 {
             return ss_median3(
                 Td,
                 PA,
                 first,
                 middle,
-                last.offset(-(1 as libc::c_int as isize)),
+                last.offset(-(1)),
             )
         } else {
             t >>= 2 as libc::c_int;
@@ -876,8 +876,8 @@ unsafe extern "C" fn ss_pivot(
                 first,
                 first.offset(t as isize),
                 middle,
-                last.offset(-(1 as libc::c_int as isize)).offset(-(t as isize)),
-                last.offset(-(1 as libc::c_int as isize)),
+                last.offset(-(1)).offset(-(t as isize)),
+                last.offset(-(1)),
             );
         }
     }
@@ -900,10 +900,10 @@ unsafe extern "C" fn ss_pivot(
         Td,
         PA,
         last
-            .offset(-(1 as libc::c_int as isize))
+            .offset(-(1))
             .offset(-((t << 1 as libc::c_int) as isize)),
-        last.offset(-(1 as libc::c_int as isize)).offset(-(t as isize)),
-        last.offset(-(1 as libc::c_int as isize)),
+        last.offset(-(1)).offset(-(t as isize)),
+        last.offset(-(1)),
     );
     return ss_median3(Td, PA, first, middle, last);
 }
@@ -917,14 +917,14 @@ unsafe extern "C" fn ss_partition(
     let mut a = 0 as *mut libc::c_int;
     let mut b = 0 as *mut libc::c_int;
     let mut t: libc::c_int = 0;
-    a = first.offset(-(1 as libc::c_int as isize));
+    a = first.offset(-(1));
     b = last;
     loop {
         loop {
             a = a.offset(1);
             if !(a < b
                 && *PA.offset(*a as isize) + depth
-                    >= *PA.offset((*a + 1 as libc::c_int) as isize) + 1 as libc::c_int)
+                    >= *PA.offset((*a + 1) as isize) + 1)
             {
                 break;
             }
@@ -934,7 +934,7 @@ unsafe extern "C" fn ss_partition(
             b = b.offset(-1);
             if !(a < b
                 && *PA.offset(*b as isize) + depth
-                    < *PA.offset((*b + 1 as libc::c_int) as isize) + 1 as libc::c_int)
+                    < *PA.offset((*b + 1) as isize) + 1)
             {
                 break;
             }
@@ -983,13 +983,13 @@ unsafe extern "C" fn ss_mintrosort(
         if last.offset_from(first) as libc::c_long
             <= SS_INSERTIONSORT_THRESHOLD as libc::c_long
         {
-            if (1 as libc::c_int as libc::c_long)
+            if (1)
                 < last.offset_from(first) as libc::c_long
             {
                 ss_insertionsort(T, PA, first, last, depth);
             }
             debug_assert!(0 as libc::c_int <= ssize);
-            if ssize == 0 as libc::c_int {
+            if ssize == 0 {
                 return;
             }
             ssize -= 1;
@@ -1001,7 +1001,7 @@ unsafe extern "C" fn ss_mintrosort(
             Td = T.offset(depth as isize);
             let fresh1 = limit;
             limit = limit - 1;
-            if fresh1 == 0 as libc::c_int {
+            if fresh1 == 0 {
                 ss_heapsort(
                     Td,
                     PA,
@@ -1009,13 +1009,13 @@ unsafe extern "C" fn ss_mintrosort(
                     last.offset_from(first) as libc::c_long as libc::c_int,
                 );
             }
-            if limit < 0 as libc::c_int {
-                a = first.offset(1 as libc::c_int as isize);
+            if limit < 0 {
+                a = first.offset(1);
                 v = *Td.offset(*PA.offset(*first as isize) as isize) as libc::c_int;
                 while a < last {
                     x = *Td.offset(*PA.offset(*a as isize) as isize) as libc::c_int;
                     if x != v {
-                        if (1 as libc::c_int as libc::c_long)
+                        if (1)
                             < a.offset_from(first) as libc::c_long
                         {
                             break;
@@ -1033,16 +1033,16 @@ unsafe extern "C" fn ss_mintrosort(
                 if a.offset_from(first) as libc::c_long
                     <= last.offset_from(a) as libc::c_long
                 {
-                    if (1 as libc::c_int as libc::c_long)
+                    if (1)
                         < a.offset_from(first) as libc::c_long
                     {
-                        debug_assert!(ssize < 16 as libc::c_int);
+                        debug_assert!(ssize < 16);
                         stack[ssize as usize].a = a;
                         stack[ssize as usize].b = last;
                         stack[ssize as usize].c = depth;
                         let fresh2 = ssize;
                         ssize = ssize + 1;
-                        stack[fresh2 as usize].d = -(1 as libc::c_int);
+                        stack[fresh2 as usize].d = -(1);
                         last = a;
                         depth += 1 as libc::c_int;
                         limit = ss_ilg(
@@ -1050,21 +1050,21 @@ unsafe extern "C" fn ss_mintrosort(
                         );
                     } else {
                         first = a;
-                        limit = -(1 as libc::c_int);
+                        limit = -(1);
                     }
-                } else if (1 as libc::c_int as libc::c_long)
+                } else if (1)
                     < last.offset_from(a) as libc::c_long
                 {
-                    debug_assert!(ssize < 16 as libc::c_int);
+                    debug_assert!(ssize < 16);
                     stack[ssize as usize].a = first;
                     stack[ssize as usize].b = a;
-                    stack[ssize as usize].c = depth + 1 as libc::c_int;
+                    stack[ssize as usize].c = depth + 1;
                     let fresh3 = ssize;
                     ssize = ssize + 1;
                     stack[fresh3 as usize]
                         .d = ss_ilg(a.offset_from(first) as libc::c_long as libc::c_int);
                     first = a;
-                    limit = -(1 as libc::c_int);
+                    limit = -(1);
                 } else {
                     last = a;
                     depth += 1 as libc::c_int;
@@ -1186,7 +1186,7 @@ unsafe extern "C" fn ss_mintrosort(
                     }
                 }
                 if a <= d {
-                    c = b.offset(-(1 as libc::c_int as isize));
+                    c = b.offset(-(1));
                     s = a.offset_from(first) as libc::c_long as libc::c_int;
                     t = b.offset_from(a) as libc::c_long as libc::c_int;
                     if s > t {
@@ -1194,7 +1194,7 @@ unsafe extern "C" fn ss_mintrosort(
                     }
                     e = first;
                     f = b.offset(-(s as isize));
-                    while (0 as libc::c_int) < s {
+                    while (0) < s {
                         t = *e;
                         *e = *f;
                         *f = t;
@@ -1210,7 +1210,7 @@ unsafe extern "C" fn ss_mintrosort(
                     }
                     e = b;
                     f = last.offset(-(s as isize));
-                    while (0 as libc::c_int) < s {
+                    while (0) < s {
                         t = *e;
                         *e = *f;
                         *f = t;
@@ -1236,17 +1236,17 @@ unsafe extern "C" fn ss_mintrosort(
                         if last.offset_from(c) as libc::c_long
                             <= c.offset_from(b) as libc::c_long
                         {
-                            debug_assert!(ssize < 16 as libc::c_int);
+                            debug_assert!(ssize < 16);
                             stack[ssize as usize].a = b;
                             stack[ssize as usize].b = c;
-                            stack[ssize as usize].c = depth + 1 as libc::c_int;
+                            stack[ssize as usize].c = depth + 1;
                             let fresh4 = ssize;
                             ssize = ssize + 1;
                             stack[fresh4 as usize]
                                 .d = ss_ilg(
                                 c.offset_from(b) as libc::c_long as libc::c_int,
                             );
-                            debug_assert!(ssize < 16 as libc::c_int);
+                            debug_assert!(ssize < 16);
                             stack[ssize as usize].a = c;
                             stack[ssize as usize].b = last;
                             stack[ssize as usize].c = depth;
@@ -1257,17 +1257,17 @@ unsafe extern "C" fn ss_mintrosort(
                         } else if a.offset_from(first) as libc::c_long
                             <= c.offset_from(b) as libc::c_long
                         {
-                            debug_assert!(ssize < 16 as libc::c_int);
+                            debug_assert!(ssize < 16);
                             stack[ssize as usize].a = c;
                             stack[ssize as usize].b = last;
                             stack[ssize as usize].c = depth;
                             let fresh6 = ssize;
                             ssize = ssize + 1;
                             stack[fresh6 as usize].d = limit;
-                            debug_assert!(ssize < 16 as libc::c_int);
+                            debug_assert!(ssize < 16);
                             stack[ssize as usize].a = b;
                             stack[ssize as usize].b = c;
-                            stack[ssize as usize].c = depth + 1 as libc::c_int;
+                            stack[ssize as usize].c = depth + 1;
                             let fresh7 = ssize;
                             ssize = ssize + 1;
                             stack[fresh7 as usize]
@@ -1276,14 +1276,14 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                             last = a;
                         } else {
-                            debug_assert!(ssize < 16 as libc::c_int);
+                            debug_assert!(ssize < 16);
                             stack[ssize as usize].a = c;
                             stack[ssize as usize].b = last;
                             stack[ssize as usize].c = depth;
                             let fresh8 = ssize;
                             ssize = ssize + 1;
                             stack[fresh8 as usize].d = limit;
-                            debug_assert!(ssize < 16 as libc::c_int);
+                            debug_assert!(ssize < 16);
                             stack[ssize as usize].a = first;
                             stack[ssize as usize].b = a;
                             stack[ssize as usize].c = depth;
@@ -1300,15 +1300,15 @@ unsafe extern "C" fn ss_mintrosort(
                     } else if a.offset_from(first) as libc::c_long
                         <= c.offset_from(b) as libc::c_long
                     {
-                        debug_assert!(ssize < 16 as libc::c_int);
+                        debug_assert!(ssize < 16);
                         stack[ssize as usize].a = b;
                         stack[ssize as usize].b = c;
-                        stack[ssize as usize].c = depth + 1 as libc::c_int;
+                        stack[ssize as usize].c = depth + 1;
                         let fresh10 = ssize;
                         ssize = ssize + 1;
                         stack[fresh10 as usize]
                             .d = ss_ilg(c.offset_from(b) as libc::c_long as libc::c_int);
-                        debug_assert!(ssize < 16 as libc::c_int);
+                        debug_assert!(ssize < 16);
                         stack[ssize as usize].a = first;
                         stack[ssize as usize].b = a;
                         stack[ssize as usize].c = depth;
@@ -1319,31 +1319,31 @@ unsafe extern "C" fn ss_mintrosort(
                     } else if last.offset_from(c) as libc::c_long
                         <= c.offset_from(b) as libc::c_long
                     {
-                        debug_assert!(ssize < 16 as libc::c_int);
+                        debug_assert!(ssize < 16);
                         stack[ssize as usize].a = first;
                         stack[ssize as usize].b = a;
                         stack[ssize as usize].c = depth;
                         let fresh12 = ssize;
                         ssize = ssize + 1;
                         stack[fresh12 as usize].d = limit;
-                        debug_assert!(ssize < 16 as libc::c_int);
+                        debug_assert!(ssize < 16);
                         stack[ssize as usize].a = b;
                         stack[ssize as usize].b = c;
-                        stack[ssize as usize].c = depth + 1 as libc::c_int;
+                        stack[ssize as usize].c = depth + 1;
                         let fresh13 = ssize;
                         ssize = ssize + 1;
                         stack[fresh13 as usize]
                             .d = ss_ilg(c.offset_from(b) as libc::c_long as libc::c_int);
                         first = c;
                     } else {
-                        debug_assert!(ssize < 16 as libc::c_int);
+                        debug_assert!(ssize < 16);
                         stack[ssize as usize].a = first;
                         stack[ssize as usize].b = a;
                         stack[ssize as usize].c = depth;
                         let fresh14 = ssize;
                         ssize = ssize + 1;
                         stack[fresh14 as usize].d = limit;
-                        debug_assert!(ssize < 16 as libc::c_int);
+                        debug_assert!(ssize < 16);
                         stack[ssize as usize].a = c;
                         stack[ssize as usize].b = last;
                         stack[ssize as usize].c = depth;
@@ -1380,7 +1380,7 @@ unsafe extern "C" fn ss_blockswap(
     mut n: libc::c_int,
 ) {
     let mut t: libc::c_int = 0;
-    while (0 as libc::c_int) < n {
+    while (0) < n {
         t = *a;
         *a = *b;
         *b = t;
@@ -1402,13 +1402,13 @@ unsafe extern "C" fn ss_rotate(
     let mut r: libc::c_int = 0;
     l = middle.offset_from(first) as libc::c_long as libc::c_int;
     r = last.offset_from(middle) as libc::c_long as libc::c_int;
-    while (0 as libc::c_int) < l && (0 as libc::c_int) < r {
+    while (0) < l && (0) < r {
         if l == r {
             ss_blockswap(first, middle, l);
             break;
         } else if l < r {
-            a = last.offset(-(1 as libc::c_int as isize));
-            b = middle.offset(-(1 as libc::c_int as isize));
+            a = last.offset(-(1));
+            b = middle.offset(-(1));
             t = *a;
             loop {
                 let fresh16 = a;
@@ -1422,12 +1422,12 @@ unsafe extern "C" fn ss_rotate(
                 }
                 *a = t;
                 last = a;
-                r -= l + 1 as libc::c_int;
+                r -= l + 1;
                 if r <= l {
                     break;
                 }
-                a = a.offset(-(1 as libc::c_int as isize));
-                b = middle.offset(-(1 as libc::c_int as isize));
+                a = a.offset(-(1));
+                b = middle.offset(-(1));
                 t = *a;
             }
         } else {
@@ -1445,12 +1445,12 @@ unsafe extern "C" fn ss_rotate(
                     continue;
                 }
                 *a = t;
-                first = a.offset(1 as libc::c_int as isize);
-                l -= r + 1 as libc::c_int;
+                first = a.offset(1);
+                l -= r + 1;
                 if l <= r {
                     break;
                 }
-                a = a.offset(1 as libc::c_int as isize);
+                a = a.offset(1);
                 b = middle;
                 t = *a;
             }
@@ -1474,18 +1474,18 @@ unsafe extern "C" fn ss_inplacemerge(
     let mut r: libc::c_int = 0;
     let mut x: libc::c_int = 0;
     loop {
-        if *last.offset(-(1 as libc::c_int as isize)) < 0 as libc::c_int {
+        if *last.offset(-(1)) < 0 {
             x = 1 as libc::c_int;
-            p = PA.offset(!*last.offset(-(1 as libc::c_int as isize)) as isize);
+            p = PA.offset(!*last.offset(-(1)) as isize);
         } else {
             x = 0 as libc::c_int;
-            p = PA.offset(*last.offset(-(1 as libc::c_int as isize)) as isize);
+            p = PA.offset(*last.offset(-(1)) as isize);
         }
         a = first;
         len = middle.offset_from(first) as libc::c_long as libc::c_int;
         half = len >> 1 as libc::c_int;
-        r = -(1 as libc::c_int);
-        while (0 as libc::c_int) < len {
+        r = -(1);
+        while (0) < len {
             b = a.offset(half as isize);
             q = ss_compare(
                 T,
@@ -1493,9 +1493,9 @@ unsafe extern "C" fn ss_inplacemerge(
                 p,
                 depth,
             );
-            if q < 0 as libc::c_int {
-                a = b.offset(1 as libc::c_int as isize);
-                half -= len & 1 as libc::c_int ^ 1 as libc::c_int;
+            if q < 0 {
+                a = b.offset(1);
+                half -= len & 1 ^ 1 as libc::c_int;
             } else {
                 r = q;
             }
@@ -1503,7 +1503,7 @@ unsafe extern "C" fn ss_inplacemerge(
             half >>= 1 as libc::c_int;
         }
         if a < middle {
-            if r == 0 as libc::c_int {
+            if r == 0 {
                 *a = !*a;
             }
             ss_rotate(a, middle, last);
@@ -1517,7 +1517,7 @@ unsafe extern "C" fn ss_inplacemerge(
         if x != 0 as libc::c_int {
             loop {
                 last = last.offset(-1);
-                if !(*last < 0 as libc::c_int) {
+                if !(*last < 0) {
                     break;
                 }
             }
@@ -1544,7 +1544,7 @@ unsafe extern "C" fn ss_mergeforward(
     let mut r: libc::c_int = 0;
     bufend = buf
         .offset(middle.offset_from(first) as libc::c_long as isize)
-        .offset(-(1 as libc::c_int as isize));
+        .offset(-(1));
     ss_blockswap(buf, first, middle.offset_from(first) as libc::c_long as libc::c_int);
     a = first;
     t = *a;
@@ -1552,7 +1552,7 @@ unsafe extern "C" fn ss_mergeforward(
     c = middle;
     loop {
         r = ss_compare(T, PA.offset(*b as isize), PA.offset(*c as isize), depth);
-        if r < 0 as libc::c_int {
+        if r < 0 {
             loop {
                 let fresh20 = a;
                 a = a.offset(1);
@@ -1564,11 +1564,11 @@ unsafe extern "C" fn ss_mergeforward(
                 let fresh21 = b;
                 b = b.offset(1);
                 *fresh21 = *a;
-                if !(*b < 0 as libc::c_int) {
+                if !(*b < 0) {
                     break;
                 }
             }
-        } else if r > 0 as libc::c_int {
+        } else if r > 0 {
             loop {
                 let fresh22 = a;
                 a = a.offset(1);
@@ -1589,7 +1589,7 @@ unsafe extern "C" fn ss_mergeforward(
                     *b = t;
                     return;
                 }
-                if !(*c < 0 as libc::c_int) {
+                if !(*c < 0) {
                     break;
                 }
             }
@@ -1606,7 +1606,7 @@ unsafe extern "C" fn ss_mergeforward(
                 let fresh27 = b;
                 b = b.offset(1);
                 *fresh27 = *a;
-                if !(*b < 0 as libc::c_int) {
+                if !(*b < 0) {
                     break;
                 }
             }
@@ -1630,7 +1630,7 @@ unsafe extern "C" fn ss_mergeforward(
                     *b = t;
                     return;
                 }
-                if !(*c < 0 as libc::c_int) {
+                if !(*c < 0) {
                     break;
                 }
             }
@@ -1657,29 +1657,29 @@ unsafe extern "C" fn ss_mergebackward(
     let mut x: libc::c_int = 0;
     bufend = buf
         .offset(last.offset_from(middle) as libc::c_long as isize)
-        .offset(-(1 as libc::c_int as isize));
+        .offset(-(1));
     ss_blockswap(buf, middle, last.offset_from(middle) as libc::c_long as libc::c_int);
     x = 0 as libc::c_int;
-    if *bufend < 0 as libc::c_int {
+    if *bufend < 0 {
         p1 = PA.offset(!*bufend as isize);
         x |= 1 as libc::c_int;
     } else {
         p1 = PA.offset(*bufend as isize);
     }
-    if *middle.offset(-(1 as libc::c_int as isize)) < 0 as libc::c_int {
-        p2 = PA.offset(!*middle.offset(-(1 as libc::c_int as isize)) as isize);
+    if *middle.offset(-(1)) < 0 {
+        p2 = PA.offset(!*middle.offset(-(1)) as isize);
         x |= 2 as libc::c_int;
     } else {
-        p2 = PA.offset(*middle.offset(-(1 as libc::c_int as isize)) as isize);
+        p2 = PA.offset(*middle.offset(-(1)) as isize);
     }
-    a = last.offset(-(1 as libc::c_int as isize));
+    a = last.offset(-(1));
     t = *a;
     b = bufend;
-    c = middle.offset(-(1 as libc::c_int as isize));
+    c = middle.offset(-(1));
     loop {
         r = ss_compare(T, p1, p2, depth);
-        if (0 as libc::c_int) < r {
-            if x & 1 as libc::c_int != 0 {
+        if (0) < r {
+            if x & 1 != 0 {
                 loop {
                     let fresh32 = a;
                     a = a.offset(-1);
@@ -1687,7 +1687,7 @@ unsafe extern "C" fn ss_mergebackward(
                     let fresh33 = b;
                     b = b.offset(-1);
                     *fresh33 = *a;
-                    if !(*b < 0 as libc::c_int) {
+                    if !(*b < 0) {
                         break;
                     }
                 }
@@ -1703,15 +1703,15 @@ unsafe extern "C" fn ss_mergebackward(
                 let fresh35 = b;
                 b = b.offset(-1);
                 *fresh35 = *a;
-                if *b < 0 as libc::c_int {
+                if *b < 0 {
                     p1 = PA.offset(!*b as isize);
                     x |= 1 as libc::c_int;
                 } else {
                     p1 = PA.offset(*b as isize);
                 }
             }
-        } else if r < 0 as libc::c_int {
-            if x & 2 as libc::c_int != 0 {
+        } else if r < 0 {
+            if x & 2 != 0 {
                 loop {
                     let fresh36 = a;
                     a = a.offset(-1);
@@ -1719,7 +1719,7 @@ unsafe extern "C" fn ss_mergebackward(
                     let fresh37 = c;
                     c = c.offset(-1);
                     *fresh37 = *a;
-                    if !(*c < 0 as libc::c_int) {
+                    if !(*c < 0) {
                         break;
                     }
                 }
@@ -1743,14 +1743,14 @@ unsafe extern "C" fn ss_mergebackward(
                 *a = *b;
                 *b = t;
                 break;
-            } else if *c < 0 as libc::c_int {
+            } else if *c < 0 {
                 p2 = PA.offset(!*c as isize);
                 x |= 2 as libc::c_int;
             } else {
                 p2 = PA.offset(*c as isize);
             }
         } else {
-            if x & 1 as libc::c_int != 0 {
+            if x & 1 != 0 {
                 loop {
                     let fresh42 = a;
                     a = a.offset(-1);
@@ -1758,7 +1758,7 @@ unsafe extern "C" fn ss_mergebackward(
                     let fresh43 = b;
                     b = b.offset(-1);
                     *fresh43 = *a;
-                    if !(*b < 0 as libc::c_int) {
+                    if !(*b < 0) {
                         break;
                     }
                 }
@@ -1774,7 +1774,7 @@ unsafe extern "C" fn ss_mergebackward(
                 let fresh45 = b;
                 b = b.offset(-1);
                 *fresh45 = *a;
-                if x & 2 as libc::c_int != 0 {
+                if x & 2 != 0 {
                     loop {
                         let fresh46 = a;
                         a = a.offset(-1);
@@ -1782,7 +1782,7 @@ unsafe extern "C" fn ss_mergebackward(
                         let fresh47 = c;
                         c = c.offset(-1);
                         *fresh47 = *a;
-                        if !(*c < 0 as libc::c_int) {
+                        if !(*c < 0) {
                             break;
                         }
                     }
@@ -1807,13 +1807,13 @@ unsafe extern "C" fn ss_mergebackward(
                     *b = t;
                     break;
                 } else {
-                    if *b < 0 as libc::c_int {
+                    if *b < 0 {
                         p1 = PA.offset(!*b as isize);
                         x |= 1 as libc::c_int;
                     } else {
                         p1 = PA.offset(*b as isize);
                     }
-                    if *c < 0 as libc::c_int {
+                    if *c < 0 {
                         p2 = PA.offset(!*c as isize);
                         x |= 2 as libc::c_int;
                     } else {
@@ -1857,47 +1857,47 @@ unsafe extern "C" fn ss_swapmerge(
             if first < middle && middle < last {
                 ss_mergebackward(T, PA, first, middle, last, buf, depth);
             }
-            if check & 1 as libc::c_int != 0
-                || check & 2 as libc::c_int != 0
+            if check & 1 != 0
+                || check & 2 != 0
                     && ss_compare(
                         T,
                         PA
                             .offset(
                                 (if 0 as libc::c_int
-                                    <= *first.offset(-(1 as libc::c_int as isize))
+                                    <= *first.offset(-(1))
                                 {
-                                    *first.offset(-(1 as libc::c_int as isize))
+                                    *first.offset(-(1))
                                 } else {
-                                    !*first.offset(-(1 as libc::c_int as isize))
+                                    !*first.offset(-(1))
                                 }) as isize,
                             ),
                         PA.offset(*first as isize),
                         depth,
-                    ) == 0 as libc::c_int
+                    ) == 0
             {
                 *first = !*first;
             }
-            if check & 4 as libc::c_int != 0
+            if check & 4 != 0
                 && ss_compare(
                     T,
                     PA
                         .offset(
                             (if 0 as libc::c_int
-                                <= *last.offset(-(1 as libc::c_int as isize))
+                                <= *last.offset(-(1))
                             {
-                                *last.offset(-(1 as libc::c_int as isize))
+                                *last.offset(-(1))
                             } else {
-                                !*last.offset(-(1 as libc::c_int as isize))
+                                !*last.offset(-(1))
                             }) as isize,
                         ),
                     PA.offset(*last as isize),
                     depth,
-                ) == 0 as libc::c_int
+                ) == 0
             {
                 *last = !*last;
             }
             debug_assert!(0 as libc::c_int <= ssize);
-            if ssize == 0 as libc::c_int {
+            if ssize == 0 {
                 return;
             }
             ssize -= 1;
@@ -1909,47 +1909,47 @@ unsafe extern "C" fn ss_swapmerge(
             if first < middle {
                 ss_mergeforward(T, PA, first, middle, last, buf, depth);
             }
-            if check & 1 as libc::c_int != 0
-                || check & 2 as libc::c_int != 0
+            if check & 1 != 0
+                || check & 2 != 0
                     && ss_compare(
                         T,
                         PA
                             .offset(
                                 (if 0 as libc::c_int
-                                    <= *first.offset(-(1 as libc::c_int as isize))
+                                    <= *first.offset(-(1))
                                 {
-                                    *first.offset(-(1 as libc::c_int as isize))
+                                    *first.offset(-(1))
                                 } else {
-                                    !*first.offset(-(1 as libc::c_int as isize))
+                                    !*first.offset(-(1))
                                 }) as isize,
                             ),
                         PA.offset(*first as isize),
                         depth,
-                    ) == 0 as libc::c_int
+                    ) == 0
             {
                 *first = !*first;
             }
-            if check & 4 as libc::c_int != 0
+            if check & 4 != 0
                 && ss_compare(
                     T,
                     PA
                         .offset(
                             (if 0 as libc::c_int
-                                <= *last.offset(-(1 as libc::c_int as isize))
+                                <= *last.offset(-(1))
                             {
-                                *last.offset(-(1 as libc::c_int as isize))
+                                *last.offset(-(1))
                             } else {
-                                !*last.offset(-(1 as libc::c_int as isize))
+                                !*last.offset(-(1))
                             }) as isize,
                         ),
                     PA.offset(*last as isize),
                     depth,
-                ) == 0 as libc::c_int
+                ) == 0
             {
                 *last = !*last;
             }
             debug_assert!(0 as libc::c_int <= ssize);
-            if ssize == 0 as libc::c_int {
+            if ssize == 0 {
                 return;
             }
             ssize -= 1;
@@ -1967,7 +1967,7 @@ unsafe extern "C" fn ss_swapmerge(
                 last.offset_from(middle) as libc::c_long
             }) as libc::c_int;
             half = len >> 1 as libc::c_int;
-            while (0 as libc::c_int) < len {
+            while (0) < len {
                 if ss_compare(
                     T,
                     PA
@@ -1986,29 +1986,29 @@ unsafe extern "C" fn ss_swapmerge(
                                 <= *middle
                                     .offset(-(m as isize))
                                     .offset(-(half as isize))
-                                    .offset(-(1 as libc::c_int as isize))
+                                    .offset(-(1))
                             {
                                 *middle
                                     .offset(-(m as isize))
                                     .offset(-(half as isize))
-                                    .offset(-(1 as libc::c_int as isize))
+                                    .offset(-(1))
                             } else {
                                 !*middle
                                     .offset(-(m as isize))
                                     .offset(-(half as isize))
-                                    .offset(-(1 as libc::c_int as isize))
+                                    .offset(-(1))
                             }) as isize,
                         ),
                     depth,
-                ) < 0 as libc::c_int
+                ) < 0
                 {
-                    m += half + 1 as libc::c_int;
-                    half -= len & 1 as libc::c_int ^ 1 as libc::c_int;
+                    m += half + 1;
+                    half -= len & 1 ^ 1 as libc::c_int;
                 }
                 len = half;
                 half >>= 1 as libc::c_int;
             }
-            if (0 as libc::c_int) < m {
+            if (0) < m {
                 lm = middle.offset(-(m as isize));
                 rm = middle.offset(m as isize);
                 ss_blockswap(lm, middle, m);
@@ -2016,12 +2016,12 @@ unsafe extern "C" fn ss_swapmerge(
                 l = r;
                 next = 0 as libc::c_int;
                 if rm < last {
-                    if *rm < 0 as libc::c_int {
+                    if *rm < 0 {
                         *rm = !*rm;
                         if first < lm {
                             loop {
                                 l = l.offset(-1);
-                                if !(*l < 0 as libc::c_int) {
+                                if !(*l < 0) {
                                     break;
                                 }
                             }
@@ -2029,7 +2029,7 @@ unsafe extern "C" fn ss_swapmerge(
                         }
                         next |= 1 as libc::c_int;
                     } else if first < lm {
-                        while *r < 0 as libc::c_int {
+                        while *r < 0 {
                             r = r.offset(1);
                         }
                         next |= 2 as libc::c_int;
@@ -2038,32 +2038,32 @@ unsafe extern "C" fn ss_swapmerge(
                 if l.offset_from(first) as libc::c_long
                     <= last.offset_from(r) as libc::c_long
                 {
-                    debug_assert!(ssize < 32 as libc::c_int);
+                    debug_assert!(ssize < 32);
                     stack[ssize as usize].a = r;
                     stack[ssize as usize].b = rm;
                     stack[ssize as usize].c = last;
                     let fresh52 = ssize;
                     ssize = ssize + 1;
                     stack[fresh52 as usize]
-                        .d = next & 3 as libc::c_int | check & 4 as libc::c_int;
+                        .d = next & 3 | check & 4;
                     middle = lm;
                     last = l;
-                    check = check & 3 as libc::c_int | next & 4 as libc::c_int;
+                    check = check & 3 | next & 4;
                 } else {
-                    if next & 2 as libc::c_int != 0 && r == middle {
+                    if next & 2 != 0 && r == middle {
                         next ^= 6 as libc::c_int;
                     }
-                    debug_assert!(ssize < 32 as libc::c_int);
+                    debug_assert!(ssize < 32);
                     stack[ssize as usize].a = first;
                     stack[ssize as usize].b = lm;
                     stack[ssize as usize].c = l;
                     let fresh53 = ssize;
                     ssize = ssize + 1;
                     stack[fresh53 as usize]
-                        .d = check & 3 as libc::c_int | next & 4 as libc::c_int;
+                        .d = check & 3 | next & 4;
                     first = r;
                     middle = rm;
-                    check = next & 3 as libc::c_int | check & 4 as libc::c_int;
+                    check = next & 3 | check & 4;
                 }
             } else {
                 if ss_compare(
@@ -2071,60 +2071,60 @@ unsafe extern "C" fn ss_swapmerge(
                     PA
                         .offset(
                             (if 0 as libc::c_int
-                                <= *middle.offset(-(1 as libc::c_int as isize))
+                                <= *middle.offset(-(1))
                             {
-                                *middle.offset(-(1 as libc::c_int as isize))
+                                *middle.offset(-(1))
                             } else {
-                                !*middle.offset(-(1 as libc::c_int as isize))
+                                !*middle.offset(-(1))
                             }) as isize,
                         ),
                     PA.offset(*middle as isize),
                     depth,
-                ) == 0 as libc::c_int
+                ) == 0
                 {
                     *middle = !*middle;
                 }
-                if check & 1 as libc::c_int != 0
-                    || check & 2 as libc::c_int != 0
+                if check & 1 != 0
+                    || check & 2 != 0
                         && ss_compare(
                             T,
                             PA
                                 .offset(
                                     (if 0 as libc::c_int
-                                        <= *first.offset(-(1 as libc::c_int as isize))
+                                        <= *first.offset(-(1))
                                     {
-                                        *first.offset(-(1 as libc::c_int as isize))
+                                        *first.offset(-(1))
                                     } else {
-                                        !*first.offset(-(1 as libc::c_int as isize))
+                                        !*first.offset(-(1))
                                     }) as isize,
                                 ),
                             PA.offset(*first as isize),
                             depth,
-                        ) == 0 as libc::c_int
+                        ) == 0
                 {
                     *first = !*first;
                 }
-                if check & 4 as libc::c_int != 0
+                if check & 4 != 0
                     && ss_compare(
                         T,
                         PA
                             .offset(
                                 (if 0 as libc::c_int
-                                    <= *last.offset(-(1 as libc::c_int as isize))
+                                    <= *last.offset(-(1))
                                 {
-                                    *last.offset(-(1 as libc::c_int as isize))
+                                    *last.offset(-(1))
                                 } else {
-                                    !*last.offset(-(1 as libc::c_int as isize))
+                                    !*last.offset(-(1))
                                 }) as isize,
                             ),
                         PA.offset(*last as isize),
                         depth,
-                    ) == 0 as libc::c_int
+                    ) == 0
                 {
                     *last = !*last;
                 }
                 debug_assert!(0 as libc::c_int <= ssize);
-                if ssize == 0 as libc::c_int {
+                if ssize == 0 {
                     return;
                 }
                 ssize -= 1;
@@ -2190,7 +2190,7 @@ unsafe extern "C" fn sssort(
         b = a;
         k = SS_BLOCKSIZE;
         j = i;
-        while j & 1 as libc::c_int != 0 {
+        while j & 1 != 0 {
             ss_swapmerge(
                 T,
                 PA,
@@ -2211,7 +2211,7 @@ unsafe extern "C" fn sssort(
     ss_mintrosort(T, PA, a, middle, depth);
     k = SS_BLOCKSIZE;
     while i != 0 as libc::c_int {
-        if i & 1 as libc::c_int != 0 {
+        if i & 1 != 0 {
             ss_swapmerge(T, PA, a.offset(-(k as isize)), a, middle, buf, bufsize, depth);
             a = a.offset(-(k as isize));
         }
@@ -2225,24 +2225,24 @@ unsafe extern "C" fn sssort(
     if lastsuffix != 0 as libc::c_int {
         let mut PAi: [libc::c_int; 2] = [0; 2];
         PAi[0 as libc::c_int
-            as usize] = *PA.offset(*first.offset(-(1 as libc::c_int as isize)) as isize);
+            as usize] = *PA.offset(*first.offset(-(1)) as isize);
         PAi[1 as libc::c_int as usize] = n - 2 as libc::c_int;
         a = first;
-        i = *first.offset(-(1 as libc::c_int as isize));
+        i = *first.offset(-(1));
         while a < last
-            && (*a < 0 as libc::c_int
-                || (0 as libc::c_int)
+            && (*a < 0
+                || (0)
                     < ss_compare(
                         T,
-                        &mut *PAi.as_mut_ptr().offset(0 as libc::c_int as isize),
+                        &mut *PAi.as_mut_ptr().offset(0),
                         PA.offset(*a as isize),
                         depth,
                     ))
         {
-            *a.offset(-(1 as libc::c_int as isize)) = *a;
+            *a.offset(-(1)) = *a;
             a = a.offset(1);
         }
-        *a.offset(-(1 as libc::c_int as isize)) = i;
+        *a.offset(-(1)) = i;
     }
 }
 #[inline]
@@ -2272,19 +2272,19 @@ unsafe extern "C" fn tr_insertionsort(
     let mut b = 0 as *mut libc::c_int;
     let mut t: libc::c_int = 0;
     let mut r: libc::c_int = 0;
-    a = first.offset(1 as libc::c_int as isize);
+    a = first.offset(1);
     while a < last {
         t = *a;
-        b = a.offset(-(1 as libc::c_int as isize));
+        b = a.offset(-(1));
         loop {
             r = *ISAd.offset(t as isize) - *ISAd.offset(*b as isize);
             if !(0 as libc::c_int > r) {
                 break;
             }
             loop {
-                *b.offset(1 as libc::c_int as isize) = *b;
+                *b.offset(1) = *b;
                 b = b.offset(-1);
-                if !(first <= b && *b < 0 as libc::c_int) {
+                if !(first <= b && *b < 0) {
                     break;
                 }
             }
@@ -2292,10 +2292,10 @@ unsafe extern "C" fn tr_insertionsort(
                 break;
             }
         }
-        if r == 0 as libc::c_int {
+        if r == 0 {
             *b = !*b;
         }
-        *b.offset(1 as libc::c_int as isize) = t;
+        *b.offset(1) = t;
         a = a.offset(1);
     }
 }
@@ -2315,7 +2315,7 @@ unsafe extern "C" fn tr_fixdown(
     v = *SA.offset(i as isize);
     c = *ISAd.offset(v as isize);
     loop {
-        j = 2 as libc::c_int * i + 1 as libc::c_int;
+        j = 2 as libc::c_int * i + 1;
         if !(j < size) {
             break;
         }
@@ -2345,7 +2345,7 @@ unsafe extern "C" fn tr_heapsort(
     let mut m: libc::c_int = 0;
     let mut t: libc::c_int = 0;
     m = size;
-    if size % 2 as libc::c_int == 0 as libc::c_int {
+    if size % 2 as libc::c_int == 0 {
         m -= 1;
         if *ISAd.offset(*SA.offset((m / 2 as libc::c_int) as isize) as isize)
             < *ISAd.offset(*SA.offset(m as isize) as isize)
@@ -2360,16 +2360,16 @@ unsafe extern "C" fn tr_heapsort(
         tr_fixdown(ISAd, SA, i, m);
         i -= 1;
     }
-    if size % 2 as libc::c_int == 0 as libc::c_int {
-        t = *SA.offset(0 as libc::c_int as isize);
-        *SA.offset(0 as libc::c_int as isize) = *SA.offset(m as isize);
+    if size % 2 as libc::c_int == 0 {
+        t = *SA.offset(0);
+        *SA.offset(0) = *SA.offset(m as isize);
         *SA.offset(m as isize) = t;
         tr_fixdown(ISAd, SA, 0 as libc::c_int, m);
     }
     i = m - 1 as libc::c_int;
-    while (0 as libc::c_int) < i {
-        t = *SA.offset(0 as libc::c_int as isize);
-        *SA.offset(0 as libc::c_int as isize) = *SA.offset(i as isize);
+    while (0) < i {
+        t = *SA.offset(0);
+        *SA.offset(0) = *SA.offset(i as isize);
         tr_fixdown(ISAd, SA, 0 as libc::c_int, i);
         *SA.offset(i as isize) = t;
         i -= 1;
@@ -2453,13 +2453,13 @@ unsafe extern "C" fn tr_pivot(
     let mut t: libc::c_int = 0;
     t = last.offset_from(first) as libc::c_long as libc::c_int;
     middle = first.offset((t / 2 as libc::c_int) as isize);
-    if t <= 512 as libc::c_int {
-        if t <= 32 as libc::c_int {
+    if t <= 512 {
+        if t <= 32 {
             return tr_median3(
                 ISAd,
                 first,
                 middle,
-                last.offset(-(1 as libc::c_int as isize)),
+                last.offset(-(1)),
             )
         } else {
             t >>= 2 as libc::c_int;
@@ -2468,8 +2468,8 @@ unsafe extern "C" fn tr_pivot(
                 first,
                 first.offset(t as isize),
                 middle,
-                last.offset(-(1 as libc::c_int as isize)).offset(-(t as isize)),
-                last.offset(-(1 as libc::c_int as isize)),
+                last.offset(-(1)).offset(-(t as isize)),
+                last.offset(-(1)),
             );
         }
     }
@@ -2489,10 +2489,10 @@ unsafe extern "C" fn tr_pivot(
     last = tr_median3(
         ISAd,
         last
-            .offset(-(1 as libc::c_int as isize))
+            .offset(-(1))
             .offset(-((t << 1 as libc::c_int) as isize)),
-        last.offset(-(1 as libc::c_int as isize)).offset(-(t as isize)),
-        last.offset(-(1 as libc::c_int as isize)),
+        last.offset(-(1)).offset(-(t as isize)),
+        last.offset(-(1)),
     );
     return tr_median3(ISAd, first, middle, last);
 }
@@ -2515,7 +2515,7 @@ unsafe extern "C" fn trbudget_check(
         (*budget).remain -= size;
         return 1 as libc::c_int;
     }
-    if (*budget).chance == 0 as libc::c_int {
+    if (*budget).chance == 0 {
         (*budget).count += size;
         return 0 as libc::c_int;
     }
@@ -2542,7 +2542,7 @@ unsafe extern "C" fn tr_partition(
     let mut t: libc::c_int = 0;
     let mut s: libc::c_int = 0;
     let mut x = 0 as libc::c_int;
-    b = middle.offset(-(1 as libc::c_int as isize));
+    b = middle.offset(-(1));
     loop {
         b = b.offset(1);
         if !(b < last
@@ -2646,7 +2646,7 @@ unsafe extern "C" fn tr_partition(
         }
     }
     if a <= d {
-        c = b.offset(-(1 as libc::c_int as isize));
+        c = b.offset(-(1));
         s = a.offset_from(first) as libc::c_long as libc::c_int;
         t = b.offset_from(a) as libc::c_long as libc::c_int;
         if s > t {
@@ -2654,7 +2654,7 @@ unsafe extern "C" fn tr_partition(
         }
         e = first;
         f = b.offset(-(s as isize));
-        while (0 as libc::c_int) < s {
+        while (0) < s {
             t = *e;
             *e = *f;
             *f = t;
@@ -2670,7 +2670,7 @@ unsafe extern "C" fn tr_partition(
         }
         e = b;
         f = last.offset(-(s as isize));
-        while (0 as libc::c_int) < s {
+        while (0) < s {
             t = *e;
             *e = *f;
             *f = t;
@@ -2701,7 +2701,7 @@ unsafe extern "C" fn tr_copy(
     v = (b.offset_from(SA) as libc::c_long - 1 as libc::c_int as libc::c_long)
         as libc::c_int;
     c = first;
-    d = a.offset(-(1 as libc::c_int as isize));
+    d = a.offset(-(1));
     while c <= d {
         s = *c - depth;
         if 0 as libc::c_int <= s && *ISA.offset(s as isize) == v {
@@ -2711,8 +2711,8 @@ unsafe extern "C" fn tr_copy(
         }
         c = c.offset(1);
     }
-    c = last.offset(-(1 as libc::c_int as isize));
-    e = d.offset(1 as libc::c_int as isize);
+    c = last.offset(-(1));
+    e = d.offset(1);
     d = b;
     while e < d {
         s = *c - depth;
@@ -2740,12 +2740,12 @@ unsafe extern "C" fn tr_partialcopy(
     let mut v: libc::c_int = 0;
     let mut rank: libc::c_int = 0;
     let mut lastrank: libc::c_int = 0;
-    let mut newrank = -(1 as libc::c_int);
+    let mut newrank = -(1);
     v = (b.offset_from(SA) as libc::c_long - 1 as libc::c_int as libc::c_long)
         as libc::c_int;
-    lastrank = -(1 as libc::c_int);
+    lastrank = -(1);
     c = first;
-    d = a.offset(-(1 as libc::c_int as isize));
+    d = a.offset(-(1));
     while c <= d {
         s = *c - depth;
         if 0 as libc::c_int <= s && *ISA.offset(s as isize) == v {
@@ -2760,7 +2760,7 @@ unsafe extern "C" fn tr_partialcopy(
         }
         c = c.offset(1);
     }
-    lastrank = -(1 as libc::c_int);
+    lastrank = -(1);
     e = d;
     while first <= e {
         rank = *ISA.offset(*e as isize);
@@ -2773,9 +2773,9 @@ unsafe extern "C" fn tr_partialcopy(
         }
         e = e.offset(-1);
     }
-    lastrank = -(1 as libc::c_int);
-    c = last.offset(-(1 as libc::c_int as isize));
-    e = d.offset(1 as libc::c_int as isize);
+    lastrank = -(1);
+    c = last.offset(-(1));
+    e = d.offset(1);
     d = b;
     while e < d {
         s = *c - depth;
@@ -2817,12 +2817,12 @@ unsafe extern "C" fn tr_introsort(
     let mut limit: libc::c_int = 0;
     let mut next: libc::c_int = 0;
     let mut ssize: libc::c_int = 0;
-    let mut trlink = -(1 as libc::c_int);
+    let mut trlink = -(1);
     ssize = 0 as libc::c_int;
     limit = tr_ilg(last.offset_from(first) as libc::c_long as libc::c_int);
     loop {
-        if limit < 0 as libc::c_int {
-            if limit == -(1 as libc::c_int) {
+        if limit < 0 {
+            if limit == -(1) {
                 tr_partition(
                     ISAd.offset(-(incr as isize)),
                     first,
@@ -2851,9 +2851,9 @@ unsafe extern "C" fn tr_introsort(
                         c = c.offset(1);
                     }
                 }
-                if (1 as libc::c_int as libc::c_long) < b.offset_from(a) as libc::c_long
+                if (1) < b.offset_from(a) as libc::c_long
                 {
-                    debug_assert!(ssize < 64 as libc::c_int);
+                    debug_assert!(ssize < 64);
                     stack[ssize as usize].a = 0 as *const libc::c_int;
                     stack[ssize as usize].b = a;
                     stack[ssize as usize].c = b;
@@ -2861,11 +2861,11 @@ unsafe extern "C" fn tr_introsort(
                     let fresh55 = ssize;
                     ssize = ssize + 1;
                     stack[fresh55 as usize].e = 0 as libc::c_int;
-                    debug_assert!(ssize < 64 as libc::c_int);
+                    debug_assert!(ssize < 64);
                     stack[ssize as usize].a = ISAd.offset(-(incr as isize));
                     stack[ssize as usize].b = first;
                     stack[ssize as usize].c = last;
-                    stack[ssize as usize].d = -(2 as libc::c_int);
+                    stack[ssize as usize].d = -(2);
                     let fresh56 = ssize;
                     ssize = ssize + 1;
                     stack[fresh56 as usize].e = trlink;
@@ -2874,10 +2874,10 @@ unsafe extern "C" fn tr_introsort(
                 if a.offset_from(first) as libc::c_long
                     <= last.offset_from(b) as libc::c_long
                 {
-                    if (1 as libc::c_int as libc::c_long)
+                    if (1)
                         < a.offset_from(first) as libc::c_long
                     {
-                        debug_assert!(ssize < 64 as libc::c_int);
+                        debug_assert!(ssize < 64);
                         stack[ssize as usize].a = ISAd;
                         stack[ssize as usize].b = b;
                         stack[ssize as usize].c = last;
@@ -2892,7 +2892,7 @@ unsafe extern "C" fn tr_introsort(
                         limit = tr_ilg(
                             a.offset_from(first) as libc::c_long as libc::c_int,
                         );
-                    } else if (1 as libc::c_int as libc::c_long)
+                    } else if (1)
                         < last.offset_from(b) as libc::c_long
                     {
                         first = b;
@@ -2901,7 +2901,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     } else {
                         debug_assert!(0 as libc::c_int <= ssize);
-                        if ssize == 0 as libc::c_int {
+                        if ssize == 0 {
                             return;
                         }
                         ssize -= 1;
@@ -2911,10 +2911,10 @@ unsafe extern "C" fn tr_introsort(
                         limit = stack[ssize as usize].d;
                         trlink = stack[ssize as usize].e;
                     }
-                } else if (1 as libc::c_int as libc::c_long)
+                } else if (1)
                     < last.offset_from(b) as libc::c_long
                 {
-                    debug_assert!(ssize < 64 as libc::c_int);
+                    debug_assert!(ssize < 64);
                     stack[ssize as usize].a = ISAd;
                     stack[ssize as usize].b = first;
                     stack[ssize as usize].c = a;
@@ -2925,14 +2925,14 @@ unsafe extern "C" fn tr_introsort(
                     stack[fresh58 as usize].e = trlink;
                     first = b;
                     limit = tr_ilg(last.offset_from(b) as libc::c_long as libc::c_int);
-                } else if (1 as libc::c_int as libc::c_long)
+                } else if (1)
                     < a.offset_from(first) as libc::c_long
                 {
                     last = a;
                     limit = tr_ilg(a.offset_from(first) as libc::c_long as libc::c_int);
                 } else {
                     debug_assert!(0 as libc::c_int <= ssize);
-                    if ssize == 0 as libc::c_int {
+                    if ssize == 0 {
                         return;
                     }
                     ssize -= 1;
@@ -2942,11 +2942,11 @@ unsafe extern "C" fn tr_introsort(
                     limit = stack[ssize as usize].d;
                     trlink = stack[ssize as usize].e;
                 }
-            } else if limit == -(2 as libc::c_int) {
+            } else if limit == -(2) {
                 ssize -= 1;
                 a = stack[ssize as usize].b;
                 b = stack[ssize as usize].c;
-                if stack[ssize as usize].d == 0 as libc::c_int {
+                if stack[ssize as usize].d == 0 {
                     tr_copy(
                         ISA,
                         SA,
@@ -2958,7 +2958,7 @@ unsafe extern "C" fn tr_introsort(
                     );
                 } else {
                     if 0 as libc::c_int <= trlink {
-                        stack[trlink as usize].d = -(1 as libc::c_int);
+                        stack[trlink as usize].d = -(1);
                     }
                     tr_partialcopy(
                         ISA,
@@ -2971,7 +2971,7 @@ unsafe extern "C" fn tr_introsort(
                     );
                 }
                 debug_assert!(0 as libc::c_int <= ssize);
-                if ssize == 0 as libc::c_int {
+                if ssize == 0 {
                     return;
                 }
                 ssize -= 1;
@@ -3000,17 +3000,17 @@ unsafe extern "C" fn tr_introsort(
                     loop {
                         *a = !*a;
                         a = a.offset(1);
-                        if !(*a < 0 as libc::c_int) {
+                        if !(*a < 0) {
                             break;
                         }
                     }
                     next = if *ISA.offset(*a as isize) != *ISAd.offset(*a as isize) {
                         tr_ilg(
                             (a.offset_from(first) as libc::c_long
-                                + 1 as libc::c_int as libc::c_long) as libc::c_int,
+                                + 1) as libc::c_int,
                         )
                     } else {
-                        -(1 as libc::c_int)
+                        -(1)
                     };
                     a = a.offset(1);
                     if a < last {
@@ -3030,21 +3030,21 @@ unsafe extern "C" fn tr_introsort(
                         if a.offset_from(first) as libc::c_long
                             <= last.offset_from(a) as libc::c_long
                         {
-                            debug_assert!(ssize < 64 as libc::c_int);
+                            debug_assert!(ssize < 64);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = a;
                             stack[ssize as usize].c = last;
-                            stack[ssize as usize].d = -(3 as libc::c_int);
+                            stack[ssize as usize].d = -(3);
                             let fresh59 = ssize;
                             ssize = ssize + 1;
                             stack[fresh59 as usize].e = trlink;
                             ISAd = ISAd.offset(incr as isize);
                             last = a;
                             limit = next;
-                        } else if (1 as libc::c_int as libc::c_long)
+                        } else if (1)
                             < last.offset_from(a) as libc::c_long
                         {
-                            debug_assert!(ssize < 64 as libc::c_int);
+                            debug_assert!(ssize < 64);
                             stack[ssize as usize].a = ISAd.offset(incr as isize);
                             stack[ssize as usize].b = first;
                             stack[ssize as usize].c = a;
@@ -3053,7 +3053,7 @@ unsafe extern "C" fn tr_introsort(
                             ssize = ssize + 1;
                             stack[fresh60 as usize].e = trlink;
                             first = a;
-                            limit = -(3 as libc::c_int);
+                            limit = -(3);
                         } else {
                             ISAd = ISAd.offset(incr as isize);
                             last = a;
@@ -3061,16 +3061,16 @@ unsafe extern "C" fn tr_introsort(
                         }
                     } else {
                         if 0 as libc::c_int <= trlink {
-                            stack[trlink as usize].d = -(1 as libc::c_int);
+                            stack[trlink as usize].d = -(1);
                         }
-                        if (1 as libc::c_int as libc::c_long)
+                        if (1)
                             < last.offset_from(a) as libc::c_long
                         {
                             first = a;
-                            limit = -(3 as libc::c_int);
+                            limit = -(3);
                         } else {
                             debug_assert!(0 as libc::c_int <= ssize);
-                            if ssize == 0 as libc::c_int {
+                            if ssize == 0 {
                                 return;
                             }
                             ssize -= 1;
@@ -3083,7 +3083,7 @@ unsafe extern "C" fn tr_introsort(
                     }
                 } else {
                     debug_assert!(0 as libc::c_int <= ssize);
-                    if ssize == 0 as libc::c_int {
+                    if ssize == 0 {
                         return;
                     }
                     ssize -= 1;
@@ -3098,27 +3098,27 @@ unsafe extern "C" fn tr_introsort(
             <= TR_INSERTIONSORT_THRESHOLD as libc::c_long
         {
             tr_insertionsort(ISAd, first, last);
-            limit = -(3 as libc::c_int);
+            limit = -(3);
         } else {
             let fresh61 = limit;
             limit = limit - 1;
-            if fresh61 == 0 as libc::c_int {
+            if fresh61 == 0 {
                 tr_heapsort(
                     ISAd,
                     first,
                     last.offset_from(first) as libc::c_long as libc::c_int,
                 );
-                a = last.offset(-(1 as libc::c_int as isize));
+                a = last.offset(-(1));
                 while first < a {
                     x = *ISAd.offset(*a as isize);
-                    b = a.offset(-(1 as libc::c_int as isize));
+                    b = a.offset(-(1));
                     while first <= b && *ISAd.offset(*b as isize) == x {
                         *b = !*b;
                         b = b.offset(-1);
                     }
                     a = b;
                 }
-                limit = -(3 as libc::c_int);
+                limit = -(3);
             } else {
                 a = tr_pivot(ISAd, first, last);
                 t = *first;
@@ -3128,7 +3128,7 @@ unsafe extern "C" fn tr_introsort(
                 tr_partition(
                     ISAd,
                     first,
-                    first.offset(1 as libc::c_int as isize),
+                    first.offset(1),
                     last,
                     &mut a,
                     &mut b,
@@ -3140,7 +3140,7 @@ unsafe extern "C" fn tr_introsort(
                     next = if *ISA.offset(*a as isize) != v {
                         tr_ilg(b.offset_from(a) as libc::c_long as libc::c_int)
                     } else {
-                        -(1 as libc::c_int)
+                        -(1)
                     };
                     c = first;
                     v = (a.offset_from(SA) as libc::c_long
@@ -3158,7 +3158,7 @@ unsafe extern "C" fn tr_introsort(
                             c = c.offset(1);
                         }
                     }
-                    if (1 as libc::c_int as libc::c_long)
+                    if (1)
                         < b.offset_from(a) as libc::c_long
                         && trbudget_check(
                             budget,
@@ -3171,10 +3171,10 @@ unsafe extern "C" fn tr_introsort(
                             if last.offset_from(b) as libc::c_long
                                 <= b.offset_from(a) as libc::c_long
                             {
-                                if (1 as libc::c_int as libc::c_long)
+                                if (1)
                                     < a.offset_from(first) as libc::c_long
                                 {
-                                    debug_assert!(ssize < 64 as libc::c_int);
+                                    debug_assert!(ssize < 64);
                                     stack[ssize as usize].a = ISAd.offset(incr as isize);
                                     stack[ssize as usize].b = a;
                                     stack[ssize as usize].c = b;
@@ -3182,7 +3182,7 @@ unsafe extern "C" fn tr_introsort(
                                     let fresh62 = ssize;
                                     ssize = ssize + 1;
                                     stack[fresh62 as usize].e = trlink;
-                                    debug_assert!(ssize < 64 as libc::c_int);
+                                    debug_assert!(ssize < 64);
                                     stack[ssize as usize].a = ISAd;
                                     stack[ssize as usize].b = b;
                                     stack[ssize as usize].c = last;
@@ -3191,10 +3191,10 @@ unsafe extern "C" fn tr_introsort(
                                     ssize = ssize + 1;
                                     stack[fresh63 as usize].e = trlink;
                                     last = a;
-                                } else if (1 as libc::c_int as libc::c_long)
+                                } else if (1)
                                     < last.offset_from(b) as libc::c_long
                                 {
-                                    debug_assert!(ssize < 64 as libc::c_int);
+                                    debug_assert!(ssize < 64);
                                     stack[ssize as usize].a = ISAd.offset(incr as isize);
                                     stack[ssize as usize].b = a;
                                     stack[ssize as usize].c = b;
@@ -3212,10 +3212,10 @@ unsafe extern "C" fn tr_introsort(
                             } else if a.offset_from(first) as libc::c_long
                                 <= b.offset_from(a) as libc::c_long
                             {
-                                if (1 as libc::c_int as libc::c_long)
+                                if (1)
                                     < a.offset_from(first) as libc::c_long
                                 {
-                                    debug_assert!(ssize < 64 as libc::c_int);
+                                    debug_assert!(ssize < 64);
                                     stack[ssize as usize].a = ISAd;
                                     stack[ssize as usize].b = b;
                                     stack[ssize as usize].c = last;
@@ -3223,7 +3223,7 @@ unsafe extern "C" fn tr_introsort(
                                     let fresh65 = ssize;
                                     ssize = ssize + 1;
                                     stack[fresh65 as usize].e = trlink;
-                                    debug_assert!(ssize < 64 as libc::c_int);
+                                    debug_assert!(ssize < 64);
                                     stack[ssize as usize].a = ISAd.offset(incr as isize);
                                     stack[ssize as usize].b = a;
                                     stack[ssize as usize].c = b;
@@ -3233,7 +3233,7 @@ unsafe extern "C" fn tr_introsort(
                                     stack[fresh66 as usize].e = trlink;
                                     last = a;
                                 } else {
-                                    debug_assert!(ssize < 64 as libc::c_int);
+                                    debug_assert!(ssize < 64);
                                     stack[ssize as usize].a = ISAd;
                                     stack[ssize as usize].b = b;
                                     stack[ssize as usize].c = last;
@@ -3247,7 +3247,7 @@ unsafe extern "C" fn tr_introsort(
                                     limit = next;
                                 }
                             } else {
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = b;
                                 stack[ssize as usize].c = last;
@@ -3255,7 +3255,7 @@ unsafe extern "C" fn tr_introsort(
                                 let fresh68 = ssize;
                                 ssize = ssize + 1;
                                 stack[fresh68 as usize].e = trlink;
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3271,10 +3271,10 @@ unsafe extern "C" fn tr_introsort(
                         } else if a.offset_from(first) as libc::c_long
                             <= b.offset_from(a) as libc::c_long
                         {
-                            if (1 as libc::c_int as libc::c_long)
+                            if (1)
                                 < last.offset_from(b) as libc::c_long
                             {
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd.offset(incr as isize);
                                 stack[ssize as usize].b = a;
                                 stack[ssize as usize].c = b;
@@ -3282,7 +3282,7 @@ unsafe extern "C" fn tr_introsort(
                                 let fresh70 = ssize;
                                 ssize = ssize + 1;
                                 stack[fresh70 as usize].e = trlink;
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3291,10 +3291,10 @@ unsafe extern "C" fn tr_introsort(
                                 ssize = ssize + 1;
                                 stack[fresh71 as usize].e = trlink;
                                 first = b;
-                            } else if (1 as libc::c_int as libc::c_long)
+                            } else if (1)
                                 < a.offset_from(first) as libc::c_long
                             {
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd.offset(incr as isize);
                                 stack[ssize as usize].b = a;
                                 stack[ssize as usize].c = b;
@@ -3312,10 +3312,10 @@ unsafe extern "C" fn tr_introsort(
                         } else if last.offset_from(b) as libc::c_long
                             <= b.offset_from(a) as libc::c_long
                         {
-                            if (1 as libc::c_int as libc::c_long)
+                            if (1)
                                 < last.offset_from(b) as libc::c_long
                             {
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3323,7 +3323,7 @@ unsafe extern "C" fn tr_introsort(
                                 let fresh73 = ssize;
                                 ssize = ssize + 1;
                                 stack[fresh73 as usize].e = trlink;
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd.offset(incr as isize);
                                 stack[ssize as usize].b = a;
                                 stack[ssize as usize].c = b;
@@ -3333,7 +3333,7 @@ unsafe extern "C" fn tr_introsort(
                                 stack[fresh74 as usize].e = trlink;
                                 first = b;
                             } else {
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = first;
                                 stack[ssize as usize].c = a;
@@ -3347,7 +3347,7 @@ unsafe extern "C" fn tr_introsort(
                                 limit = next;
                             }
                         } else {
-                            debug_assert!(ssize < 64 as libc::c_int);
+                            debug_assert!(ssize < 64);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = first;
                             stack[ssize as usize].c = a;
@@ -3355,7 +3355,7 @@ unsafe extern "C" fn tr_introsort(
                             let fresh76 = ssize;
                             ssize = ssize + 1;
                             stack[fresh76 as usize].e = trlink;
-                            debug_assert!(ssize < 64 as libc::c_int);
+                            debug_assert!(ssize < 64);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = b;
                             stack[ssize as usize].c = last;
@@ -3369,19 +3369,19 @@ unsafe extern "C" fn tr_introsort(
                             limit = next;
                         }
                     } else {
-                        if (1 as libc::c_int as libc::c_long)
+                        if (1)
                             < b.offset_from(a) as libc::c_long
                             && 0 as libc::c_int <= trlink
                         {
-                            stack[trlink as usize].d = -(1 as libc::c_int);
+                            stack[trlink as usize].d = -(1);
                         }
                         if a.offset_from(first) as libc::c_long
                             <= last.offset_from(b) as libc::c_long
                         {
-                            if (1 as libc::c_int as libc::c_long)
+                            if (1)
                                 < a.offset_from(first) as libc::c_long
                             {
-                                debug_assert!(ssize < 64 as libc::c_int);
+                                debug_assert!(ssize < 64);
                                 stack[ssize as usize].a = ISAd;
                                 stack[ssize as usize].b = b;
                                 stack[ssize as usize].c = last;
@@ -3390,13 +3390,13 @@ unsafe extern "C" fn tr_introsort(
                                 ssize = ssize + 1;
                                 stack[fresh78 as usize].e = trlink;
                                 last = a;
-                            } else if (1 as libc::c_int as libc::c_long)
+                            } else if (1)
                                 < last.offset_from(b) as libc::c_long
                             {
                                 first = b;
                             } else {
                                 debug_assert!(0 as libc::c_int <= ssize);
-                                if ssize == 0 as libc::c_int {
+                                if ssize == 0 {
                                     return;
                                 }
                                 ssize -= 1;
@@ -3406,10 +3406,10 @@ unsafe extern "C" fn tr_introsort(
                                 limit = stack[ssize as usize].d;
                                 trlink = stack[ssize as usize].e;
                             }
-                        } else if (1 as libc::c_int as libc::c_long)
+                        } else if (1)
                             < last.offset_from(b) as libc::c_long
                         {
-                            debug_assert!(ssize < 64 as libc::c_int);
+                            debug_assert!(ssize < 64);
                             stack[ssize as usize].a = ISAd;
                             stack[ssize as usize].b = first;
                             stack[ssize as usize].c = a;
@@ -3418,13 +3418,13 @@ unsafe extern "C" fn tr_introsort(
                             ssize = ssize + 1;
                             stack[fresh79 as usize].e = trlink;
                             first = b;
-                        } else if (1 as libc::c_int as libc::c_long)
+                        } else if (1)
                             < a.offset_from(first) as libc::c_long
                         {
                             last = a;
                         } else {
                             debug_assert!(0 as libc::c_int <= ssize);
-                            if ssize == 0 as libc::c_int {
+                            if ssize == 0 {
                                 return;
                             }
                             ssize -= 1;
@@ -3446,10 +3446,10 @@ unsafe extern "C" fn tr_introsort(
                     ISAd = ISAd.offset(incr as isize);
                 } else {
                     if 0 as libc::c_int <= trlink {
-                        stack[trlink as usize].d = -(1 as libc::c_int);
+                        stack[trlink as usize].d = -(1);
                     }
                     debug_assert!(0 as libc::c_int <= ssize);
-                    if ssize == 0 as libc::c_int {
+                    if ssize == 0 {
                         return;
                     }
                     ssize -= 1;
@@ -3481,7 +3481,7 @@ unsafe extern "C" fn trsort(
     let mut t: libc::c_int = 0;
     let mut skip: libc::c_int = 0;
     let mut unsorted: libc::c_int = 0;
-    trbudget_init(&mut budget, tr_ilg(n) * 2 as libc::c_int / 3 as libc::c_int, n);
+    trbudget_init(&mut budget, tr_ilg(n) * 2 / 3 as libc::c_int, n);
     ISAd = ISA.offset(depth as isize);
     while -n < *SA {
         first = SA;
@@ -3489,7 +3489,7 @@ unsafe extern "C" fn trsort(
         unsorted = 0 as libc::c_int;
         loop {
             t = *first;
-            if t < 0 as libc::c_int {
+            if t < 0 {
                 first = first.offset(-(t as isize));
                 skip += t;
             } else {
@@ -3499,8 +3499,8 @@ unsafe extern "C" fn trsort(
                 }
                 last = SA
                     .offset(*ISA.offset(t as isize) as isize)
-                    .offset(1 as libc::c_int as isize);
-                if (1 as libc::c_int as libc::c_long)
+                    .offset(1);
+                if (1)
                     < last.offset_from(first) as libc::c_long
                 {
                     budget.count = 0 as libc::c_int;
@@ -3511,9 +3511,9 @@ unsafe extern "C" fn trsort(
                         skip = first.offset_from(last) as libc::c_long as libc::c_int;
                     }
                 } else if last.offset_from(first) as libc::c_long
-                    == 1 as libc::c_int as libc::c_long
+                    == 1
                 {
-                    skip = -(1 as libc::c_int);
+                    skip = -(1);
                 }
                 first = last;
             }
@@ -3524,7 +3524,7 @@ unsafe extern "C" fn trsort(
         if skip != 0 as libc::c_int {
             *first.offset(skip as isize) = skip;
         }
-        if unsorted == 0 as libc::c_int {
+        if unsorted == 0 {
             break;
         }
         ISAd = ISAd.offset(ISAd.offset_from(ISA) as libc::c_long as isize);
@@ -3607,7 +3607,7 @@ unsafe extern "C" fn sort_typeBstar(
         t = i + *bucket_A.offset(c0 as isize);
         *bucket_A.offset(c0 as isize) = i + j;
         i = t + *bucket_B.offset((c0 << 8 as libc::c_int | c0) as isize);
-        c1 = c0 + 1 as libc::c_int;
+        c1 = c0 + 1;
         while c1 < ALPHABET_SIZE {
             j += *bucket_B.offset((c0 << 8 as libc::c_int | c1) as isize);
             *bucket_B.offset((c0 << 8 as libc::c_int | c1) as isize) = j;
@@ -3616,14 +3616,14 @@ unsafe extern "C" fn sort_typeBstar(
         }
         c0 += 1;
     }
-    if (0 as libc::c_int) < m {
+    if (0) < m {
         PAb = SA.offset(n as isize).offset(-(m as isize));
         ISAb = SA.offset(m as isize);
         i = m - 2 as libc::c_int;
         while 0 as libc::c_int <= i {
             t = *PAb.offset(i as isize);
             c0 = *T.offset(t as isize) as libc::c_int;
-            c1 = *T.offset((t + 1 as libc::c_int) as isize) as libc::c_int;
+            c1 = *T.offset((t + 1) as isize) as libc::c_int;
             let ref mut fresh83 = *bucket_B
                 .offset((c0 << 8 as libc::c_int | c1) as isize);
             *fresh83 -= 1;
@@ -3632,7 +3632,7 @@ unsafe extern "C" fn sort_typeBstar(
         }
         t = *PAb.offset((m - 1 as libc::c_int) as isize);
         c0 = *T.offset(t as isize) as libc::c_int;
-        c1 = *T.offset((t + 1 as libc::c_int) as isize) as libc::c_int;
+        c1 = *T.offset((t + 1) as isize) as libc::c_int;
         let ref mut fresh84 = *bucket_B.offset((c0 << 8 as libc::c_int | c1) as isize);
         *fresh84 -= 1;
         *SA.offset(*fresh84 as isize) = m - 1 as libc::c_int;
@@ -3640,11 +3640,11 @@ unsafe extern "C" fn sort_typeBstar(
         bufsize = n - 2 as libc::c_int * m;
         c0 = ALPHABET_SIZE - 2 as libc::c_int;
         j = m;
-        while (0 as libc::c_int) < j {
+        while (0) < j {
             c1 = ALPHABET_SIZE - 1 as libc::c_int;
             while c0 < c1 {
                 i = *bucket_B.offset((c0 << 8 as libc::c_int | c1) as isize);
-                if (1 as libc::c_int) < j - i {
+                if (1) < j - i {
                     sssort(
                         T,
                         PAb,
@@ -3675,8 +3675,8 @@ unsafe extern "C" fn sort_typeBstar(
                         break;
                     }
                 }
-                *SA.offset((i + 1 as libc::c_int) as isize) = i - j;
-                if i <= 0 as libc::c_int {
+                *SA.offset((i + 1) as isize) = i - j;
+                if i <= 0 {
                     break;
                 }
             }
@@ -3686,7 +3686,7 @@ unsafe extern "C" fn sort_typeBstar(
                 *fresh85 = !*SA.offset(i as isize);
                 *ISAb.offset(*fresh85 as isize) = j;
                 i -= 1;
-                if !(*SA.offset(i as isize) < 0 as libc::c_int) {
+                if !(*SA.offset(i as isize) < 0) {
                     break;
                 }
             }
@@ -3726,7 +3726,7 @@ unsafe extern "C" fn sort_typeBstar(
                 *SA
                     .offset(
                         *ISAb.offset(j as isize) as isize,
-                    ) = if t == 0 as libc::c_int || (1 as libc::c_int) < t - i {
+                    ) = if t == 0 || (1) < t - i {
                     t
                 } else {
                     !t
@@ -3736,12 +3736,12 @@ unsafe extern "C" fn sort_typeBstar(
         *bucket_B
             .offset(
                 ((256 as libc::c_int - 1 as libc::c_int) << 8 as libc::c_int
-                    | 256 as libc::c_int - 1 as libc::c_int) as isize,
+                    | 256 - 1 as libc::c_int) as isize,
             ) = n;
         c0 = ALPHABET_SIZE - 2 as libc::c_int;
         k = m - 1 as libc::c_int;
         while 0 as libc::c_int <= c0 {
-            i = *bucket_A.offset((c0 + 1 as libc::c_int) as isize) - 1 as libc::c_int;
+            i = *bucket_A.offset((c0 + 1) as isize) - 1 as libc::c_int;
             c1 = ALPHABET_SIZE - 1 as libc::c_int;
             while c0 < c1 {
                 t = i - *bucket_B.offset((c1 << 8 as libc::c_int | c0) as isize);
@@ -3757,9 +3757,9 @@ unsafe extern "C" fn sort_typeBstar(
             }
             *bucket_B
                 .offset(
-                    (c0 << 8 as libc::c_int | c0 + 1 as libc::c_int) as isize,
+                    (c0 << 8 as libc::c_int | c0 + 1) as isize,
                 ) = i - *bucket_B.offset((c0 << 8 as libc::c_int | c0) as isize)
-                + 1 as libc::c_int;
+                + 1;
             *bucket_B.offset((c0 << 8 as libc::c_int | c0) as isize) = i;
             c0 -= 1;
         }
@@ -3781,34 +3781,34 @@ unsafe extern "C" fn construct_SA(
     let mut c0: libc::c_int = 0;
     let mut c1: libc::c_int = 0;
     let mut c2: libc::c_int = 0;
-    if (0 as libc::c_int) < m {
+    if (0) < m {
         c1 = ALPHABET_SIZE - 2 as libc::c_int;
         while 0 as libc::c_int <= c1 {
             i = SA
                 .offset(
                     *bucket_B
                         .offset(
-                            (c1 << 8 as libc::c_int | c1 + 1 as libc::c_int) as isize,
+                            (c1 << 8 as libc::c_int | c1 + 1) as isize,
                         ) as isize,
                 );
             j = SA
-                .offset(*bucket_A.offset((c1 + 1 as libc::c_int) as isize) as isize)
-                .offset(-(1 as libc::c_int as isize));
+                .offset(*bucket_A.offset((c1 + 1) as isize) as isize)
+                .offset(-(1));
             k = NULL as *mut libc::c_int;
-            c2 = -(1 as libc::c_int);
+            c2 = -(1);
             while i <= j {
                 s = *j;
-                if (0 as libc::c_int) < s {
+                if (0) < s {
                     debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
-                    debug_assert!((s + 1 as libc::c_int) < n
+                    debug_assert!((s + 1) < n
                         && *T.offset(s as isize) as libc::c_int
-                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int);
+                            <= *T.offset((s + 1) as isize) as libc::c_int);
                     debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
                         <= *T.offset(s as isize) as libc::c_int);
                     *j = !s;
                     s -= 1;
                     c0 = *T.offset(s as isize) as libc::c_int;
-                    if (0 as libc::c_int) < s
+                    if (0) < s
                         && *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int > c0
                     {
                         s = !s;
@@ -3833,9 +3833,9 @@ unsafe extern "C" fn construct_SA(
                     k = k.offset(-1);
                     *fresh86 = s;
                 } else {
-                    debug_assert!(s == 0 as libc::c_int
+                    debug_assert!(s == 0
                         && *T.offset(s as isize) as libc::c_int == c1
-                        || s < 0 as libc::c_int);
+                        || s < 0);
                     *j = !s;
                 }
                 j = j.offset(-1);
@@ -3856,12 +3856,12 @@ unsafe extern "C" fn construct_SA(
     j = SA.offset(n as isize);
     while i < j {
         s = *i;
-        if (0 as libc::c_int) < s {
+        if (0) < s {
             debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
                 >= *T.offset(s as isize) as libc::c_int);
             s -= 1;
             c0 = *T.offset(s as isize) as libc::c_int;
-            if s == 0 as libc::c_int
+            if s == 0
                 || (*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int) < c0
             {
                 s = !s;
@@ -3879,7 +3879,7 @@ unsafe extern "C" fn construct_SA(
             k = k.offset(1);
             *fresh88 = s;
         } else {
-            debug_assert!(s < 0 as libc::c_int);
+            debug_assert!(s < 0);
             *i = !s;
         }
         i = i.offset(1);
@@ -3901,34 +3901,34 @@ unsafe extern "C" fn construct_BWT(
     let mut c0: libc::c_int = 0;
     let mut c1: libc::c_int = 0;
     let mut c2: libc::c_int = 0;
-    if (0 as libc::c_int) < m {
+    if (0) < m {
         c1 = ALPHABET_SIZE - 2 as libc::c_int;
         while 0 as libc::c_int <= c1 {
             i = SA
                 .offset(
                     *bucket_B
                         .offset(
-                            (c1 << 8 as libc::c_int | c1 + 1 as libc::c_int) as isize,
+                            (c1 << 8 as libc::c_int | c1 + 1) as isize,
                         ) as isize,
                 );
             j = SA
-                .offset(*bucket_A.offset((c1 + 1 as libc::c_int) as isize) as isize)
-                .offset(-(1 as libc::c_int as isize));
+                .offset(*bucket_A.offset((c1 + 1) as isize) as isize)
+                .offset(-(1));
             k = NULL as *mut libc::c_int;
-            c2 = -(1 as libc::c_int);
+            c2 = -(1);
             while i <= j {
                 s = *j;
-                if (0 as libc::c_int) < s {
+                if (0) < s {
                     debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
-                    debug_assert!((s + 1 as libc::c_int) < n
+                    debug_assert!((s + 1) < n
                         && *T.offset(s as isize) as libc::c_int
-                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int);
+                            <= *T.offset((s + 1) as isize) as libc::c_int);
                     debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
                         <= *T.offset(s as isize) as libc::c_int);
                     s -= 1;
                     c0 = *T.offset(s as isize) as libc::c_int;
                     *j = !c0;
-                    if (0 as libc::c_int) < s
+                    if (0) < s
                         && *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int > c0
                     {
                         s = !s;
@@ -3976,13 +3976,13 @@ unsafe extern "C" fn construct_BWT(
     orig = SA;
     while i < j {
         s = *i;
-        if (0 as libc::c_int) < s {
+        if (0) < s {
             debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
                 >= *T.offset(s as isize) as libc::c_int);
             s -= 1;
             c0 = *T.offset(s as isize) as libc::c_int;
             *i = c0;
-            if (0 as libc::c_int) < s
+            if (0) < s
                 && (*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int) < c0
             {
                 s = !(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int);
@@ -4033,42 +4033,42 @@ unsafe extern "C" fn construct_BWT_indexes(
     mod_0 |= mod_0 >> 8 as libc::c_int;
     mod_0 |= mod_0 >> 16 as libc::c_int;
     mod_0 >>= 1 as libc::c_int;
-    *num_indexes = ((n - 1 as libc::c_int) / (mod_0 + 1 as libc::c_int))
+    *num_indexes = ((n - 1 as libc::c_int) / (mod_0 + 1))
         as libc::c_uchar;
-    if (0 as libc::c_int) < m {
+    if (0) < m {
         c1 = ALPHABET_SIZE - 2 as libc::c_int;
         while 0 as libc::c_int <= c1 {
             i = SA
                 .offset(
                     *bucket_B
                         .offset(
-                            (c1 << 8 as libc::c_int | c1 + 1 as libc::c_int) as isize,
+                            (c1 << 8 as libc::c_int | c1 + 1) as isize,
                         ) as isize,
                 );
             j = SA
-                .offset(*bucket_A.offset((c1 + 1 as libc::c_int) as isize) as isize)
-                .offset(-(1 as libc::c_int as isize));
+                .offset(*bucket_A.offset((c1 + 1) as isize) as isize)
+                .offset(-(1));
             k = NULL as *mut libc::c_int;
-            c2 = -(1 as libc::c_int);
+            c2 = -(1);
             while i <= j {
                 s = *j;
-                if (0 as libc::c_int) < s {
+                if (0) < s {
                     debug_assert!(*T.offset(s as isize) as libc::c_int == c1);
-                    debug_assert!((s + 1 as libc::c_int) < n
+                    debug_assert!((s + 1) < n
                         && *T.offset(s as isize) as libc::c_int
-                            <= *T.offset((s + 1 as libc::c_int) as isize) as libc::c_int);
+                            <= *T.offset((s + 1) as isize) as libc::c_int);
                     debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
                         <= *T.offset(s as isize) as libc::c_int);
-                    if s & mod_0 == 0 as libc::c_int {
+                    if s & mod_0 == 0 {
                         *indexes
                             .offset(
-                                (s / (mod_0 + 1 as libc::c_int) - 1 as libc::c_int) as isize,
+                                (s / (mod_0 + 1) - 1 as libc::c_int) as isize,
                             ) = j.offset_from(SA) as libc::c_long as libc::c_int;
                     }
                     s -= 1;
                     c0 = *T.offset(s as isize) as libc::c_int;
                     *j = !c0;
-                    if (0 as libc::c_int) < s
+                    if (0) < s
                         && *T.offset((s - 1 as libc::c_int) as isize) as libc::c_int > c0
                     {
                         s = !s;
@@ -4105,10 +4105,10 @@ unsafe extern "C" fn construct_BWT_indexes(
     c2 = *T.offset((n - 1 as libc::c_int) as isize) as libc::c_int;
     k = SA.offset(*bucket_A.offset(c2 as isize) as isize);
     if (*T.offset((n - 2 as libc::c_int) as isize) as libc::c_int) < c2 {
-        if n - 1 as libc::c_int & mod_0 == 0 as libc::c_int {
+        if n - 1 as libc::c_int & mod_0 == 0 {
             *indexes
                 .offset(
-                    ((n - 1 as libc::c_int) / (mod_0 + 1 as libc::c_int)
+                    ((n - 1 as libc::c_int) / (mod_0 + 1)
                         - 1 as libc::c_int) as isize,
                 ) = k.offset_from(SA) as libc::c_long as libc::c_int;
         }
@@ -4125,13 +4125,13 @@ unsafe extern "C" fn construct_BWT_indexes(
     orig = SA;
     while i < j {
         s = *i;
-        if (0 as libc::c_int) < s {
+        if (0) < s {
             debug_assert!(*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int
                 >= *T.offset(s as isize) as libc::c_int);
-            if s & mod_0 == 0 as libc::c_int {
+            if s & mod_0 == 0 {
                 *indexes
                     .offset(
-                        (s / (mod_0 + 1 as libc::c_int) - 1 as libc::c_int) as isize,
+                        (s / (mod_0 + 1) - 1 as libc::c_int) as isize,
                     ) = i.offset_from(SA) as libc::c_long as libc::c_int;
             }
             s -= 1;
@@ -4146,13 +4146,13 @@ unsafe extern "C" fn construct_BWT_indexes(
                 k = SA.offset(*bucket_A.offset(c2 as isize) as isize);
             }
             debug_assert!(i < k);
-            if (0 as libc::c_int) < s
+            if (0) < s
                 && (*T.offset((s - 1 as libc::c_int) as isize) as libc::c_int) < c0
             {
-                if s & mod_0 == 0 as libc::c_int {
+                if s & mod_0 == 0 {
                     *indexes
                         .offset(
-                            (s / (mod_0 + 1 as libc::c_int) - 1 as libc::c_int) as isize,
+                            (s / (mod_0 + 1) - 1 as libc::c_int) as isize,
                         ) = k.offset_from(SA) as libc::c_long as libc::c_int;
                 }
                 let fresh95 = k;
@@ -4183,19 +4183,19 @@ pub unsafe extern "C" fn divsufsort(
     let mut bucket_B = 0 as *mut libc::c_int;
     let mut m: libc::c_int = 0;
     let mut err = 0 as libc::c_int;
-    if T.is_null() || SA.is_null() || n < 0 as libc::c_int {
-        return -(1 as libc::c_int)
+    if T.is_null() || SA.is_null() || n < 0 {
+        return -(1)
     } else {
-        if n == 0 as libc::c_int {
+        if n == 0 {
             return 0 as libc::c_int
         } else {
-            if n == 1 as libc::c_int {
-                *SA.offset(0 as libc::c_int as isize) = 0 as libc::c_int;
+            if n == 1 {
+                *SA.offset(0) = 0 as libc::c_int;
                 return 0 as libc::c_int;
             } else {
-                if n == 2 as libc::c_int {
-                    m = ((*T.offset(0 as libc::c_int as isize) as libc::c_int)
-                        < *T.offset(1 as libc::c_int as isize) as libc::c_int)
+                if n == 2 {
+                    m = ((*T.offset(0) as libc::c_int)
+                        < *T.offset(1) as libc::c_int)
                         as libc::c_int;
                     *SA.offset((m ^ 1 as libc::c_int) as isize) = 0 as libc::c_int;
                     *SA.offset(m as isize) = 1 as libc::c_int;
@@ -4206,17 +4206,17 @@ pub unsafe extern "C" fn divsufsort(
     }
     bucket_A = malloc(
         (BUCKET_A_SIZE as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_int>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<libc::c_int>()),
     ) as *mut libc::c_int;
     bucket_B = malloc(
         (BUCKET_B_SIZE as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_int>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<libc::c_int>()),
     ) as *mut libc::c_int;
     if !bucket_A.is_null() && !bucket_B.is_null() {
         m = sort_typeBstar(T, SA, bucket_A, bucket_B, n, openMP);
         construct_SA(T, SA, bucket_A, bucket_B, n, m);
     } else {
-        err = -(2 as libc::c_int);
+        err = -(2);
     }
     free(bucket_B as *mut libc::c_void);
     free(bucket_A as *mut libc::c_void);
@@ -4238,15 +4238,15 @@ pub unsafe extern "C" fn divbwt(
     let mut m: libc::c_int = 0;
     let mut pidx: libc::c_int = 0;
     let mut i: libc::c_int = 0;
-    if T.is_null() || U.is_null() || n < 0 as libc::c_int {
-        return -(1 as libc::c_int)
+    if T.is_null() || U.is_null() || n < 0 {
+        return -(1)
     } else {
-        if n <= 1 as libc::c_int {
-            if n == 1 as libc::c_int {
+        if n <= 1 {
+            if n == 1 {
                 *U
                     .offset(
                         0 as libc::c_int as isize,
-                    ) = *T.offset(0 as libc::c_int as isize);
+                    ) = *T.offset(0);
             }
             return n;
         }
@@ -4254,17 +4254,17 @@ pub unsafe extern "C" fn divbwt(
     B = A;
     if B.is_null() {
         B = malloc(
-            ((n + 1 as libc::c_int) as libc::size_t)
-                .wrapping_mul(::core::mem::size_of::<libc::c_int>() as libc::c_ulong),
+            ((n + 1) as libc::size_t)
+                .wrapping_mul(::core::mem::size_of::<libc::c_int>()),
         ) as *mut libc::c_int;
     }
     bucket_A = malloc(
         (BUCKET_A_SIZE as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_int>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<libc::c_int>()),
     ) as *mut libc::c_int;
     bucket_B = malloc(
         (BUCKET_B_SIZE as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_int>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<libc::c_int>()),
     ) as *mut libc::c_int;
     if !B.is_null() && !bucket_A.is_null() && !bucket_B.is_null() {
         m = sort_typeBstar(T, B, bucket_A, bucket_B, n, openMP);
@@ -4290,7 +4290,7 @@ pub unsafe extern "C" fn divbwt(
         while i < pidx {
             *U
                 .offset(
-                    (i + 1 as libc::c_int) as isize,
+                    (i + 1) as isize,
                 ) = *B.offset(i as isize) as libc::c_uchar;
             i += 1;
         }
@@ -4301,7 +4301,7 @@ pub unsafe extern "C" fn divbwt(
         }
         pidx += 1 as libc::c_int;
     } else {
-        pidx = -(2 as libc::c_int);
+        pidx = -(2);
     }
     free(bucket_B as *mut libc::c_void);
     free(bucket_A as *mut libc::c_void);

@@ -308,7 +308,7 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: libc::size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0 as libc::c_int as libc::c_ulong).wrapping_sub(code) as ERR_enum;
+    return (0).wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
     return (code > -(ZSTD_error_maxCode as libc::c_int) as libc::size_t) as libc::c_int
@@ -322,14 +322,14 @@ static mut ZSTDv07_frameHeaderSize_min: libc::size_t = 5 as libc::c_int as libc:
 static mut ZSTDv07_frameHeaderSize_max: libc::size_t = ZSTDv07_FRAMEHEADERSIZE_MAX as libc::size_t;
 static mut ZSTDv07_skippableHeaderSize: libc::size_t = 8 as libc::c_int as libc::size_t;
 pub const ZSTDv07_BLOCKSIZE_ABSOLUTEMAX: libc::c_int = 128 as libc::c_int
-    * 1024 as libc::c_int;
+    * 1024;
 unsafe extern "C" fn MEM_32bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 4 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>()
+        == 4) as libc::c_int as libc::c_uint;
 }
 unsafe extern "C" fn MEM_64bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 8 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>()
+        == 8) as libc::c_int as libc::c_uint;
 }
 unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
     let one = C2RustUnnamed {
@@ -342,7 +342,7 @@ unsafe extern "C" fn MEM_read16(mut memPtr: *const libc::c_void) -> u16 {
     memcpy(
         &mut val as *mut u16 as *mut libc::c_void,
         memPtr,
-        ::core::mem::size_of::<u16>() as libc::c_ulong,
+        ::core::mem::size_of::<u16>(),
     );
     return val;
 }
@@ -351,7 +351,7 @@ unsafe extern "C" fn MEM_read32(mut memPtr: *const libc::c_void) -> u32 {
     memcpy(
         &mut val as *mut u32 as *mut libc::c_void,
         memPtr,
-        ::core::mem::size_of::<u32>() as libc::c_ulong,
+        ::core::mem::size_of::<u32>(),
     );
     return val;
 }
@@ -360,7 +360,7 @@ unsafe extern "C" fn MEM_read64(mut memPtr: *const libc::c_void) -> u64 {
     memcpy(
         &mut val as *mut u64 as *mut libc::c_void,
         memPtr,
-        ::core::mem::size_of::<u64>() as libc::c_ulong,
+        ::core::mem::size_of::<u64>(),
     );
     return val;
 }
@@ -368,7 +368,7 @@ unsafe extern "C" fn MEM_write16(mut memPtr: *mut libc::c_void, mut value: u16) 
     memcpy(
         memPtr,
         &mut value as *mut u16 as *const libc::c_void,
-        ::core::mem::size_of::<u16>() as libc::c_ulong,
+        ::core::mem::size_of::<u16>(),
     );
 }
 unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
@@ -399,8 +399,8 @@ unsafe extern "C" fn MEM_readLE16(mut memPtr: *const libc::c_void) -> u16 {
         return MEM_read16(memPtr)
     } else {
         let mut p = memPtr as *const u8;
-        return (*p.offset(0 as libc::c_int as isize) as libc::c_int
-            + ((*p.offset(1 as libc::c_int as isize) as libc::c_int)
+        return (*p.offset(0) as libc::c_int
+            + ((*p.offset(1) as libc::c_int)
                 << 8 as libc::c_int)) as u16;
     };
 }
@@ -409,7 +409,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut libc::c_void, mut val: u16) 
         MEM_write16(memPtr, val);
     } else {
         let mut p = memPtr as *mut u8;
-        *p.offset(0 as libc::c_int as isize) = val as u8;
+        *p.offset(0) = val as u8;
         *p
             .offset(
                 1 as libc::c_int as isize,
@@ -445,31 +445,31 @@ unsafe extern "C" fn BITv07_initDStream(
     mut srcBuffer: *const libc::c_void,
     mut srcSize: libc::size_t,
 ) -> libc::size_t {
-    if srcSize < 1 as libc::c_int as libc::c_ulong {
+    if srcSize < 1 {
         memset(
             bitD as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<BITv07_DStream_t>() as libc::c_ulong,
+            ::core::mem::size_of::<BITv07_DStream_t>(),
         );
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
-    if srcSize >= ::core::mem::size_of::<libc::size_t>() as libc::c_ulong {
+    if srcSize >= ::core::mem::size_of::<libc::size_t>() {
         (*bitD).start = srcBuffer as *const libc::c_char;
         (*bitD)
             .ptr = (srcBuffer as *const libc::c_char)
             .offset(srcSize as isize)
-            .offset(-(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize));
+            .offset(-(::core::mem::size_of::<libc::size_t>() as isize));
         (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const libc::c_void);
         let lastByte = *(srcBuffer as *const u8)
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
             .bitsConsumed = if lastByte as libc::c_int != 0 {
-            (8 as libc::c_int as libc::c_uint)
+            (8)
                 .wrapping_sub(BITv07_highbit32(lastByte as u32))
         } else {
             0 as libc::c_int as libc::c_uint
         };
-        if lastByte as libc::c_int == 0 as libc::c_int {
+        if lastByte as libc::c_int == 0 {
             return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
         }
     } else {
@@ -482,9 +482,9 @@ unsafe extern "C" fn BITv07_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const u8).offset(6 as libc::c_int as isize)
+                        (*(srcBuffer as *const u8).offset(6)
                             as libc::size_t)
-                            << (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                            << (::core::mem::size_of::<libc::size_t>())
                                 .wrapping_mul(8)
                                 .wrapping_sub(16),
                     ) ;
@@ -514,9 +514,9 @@ unsafe extern "C" fn BITv07_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const u8).offset(5 as libc::c_int as isize)
+                        (*(srcBuffer as *const u8).offset(5)
                             as libc::size_t)
-                            << (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                            << (::core::mem::size_of::<libc::size_t>())
                                 .wrapping_mul(8)
                                 .wrapping_sub(24),
                     ) ;
@@ -529,9 +529,9 @@ unsafe extern "C" fn BITv07_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const u8).offset(4 as libc::c_int as isize)
+                        (*(srcBuffer as *const u8).offset(4)
                             as libc::size_t)
-                            << (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                            << (::core::mem::size_of::<libc::size_t>())
                                 .wrapping_mul(8)
                                 .wrapping_sub(32),
                     ) ;
@@ -544,7 +544,7 @@ unsafe extern "C" fn BITv07_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const u8).offset(3 as libc::c_int as isize)
+                        (*(srcBuffer as *const u8).offset(3)
                             as libc::size_t) << 24 as libc::c_int,
                     ) ;
                 current_block_20 = 4388566298172193598;
@@ -556,7 +556,7 @@ unsafe extern "C" fn BITv07_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const u8).offset(2 as libc::c_int as isize)
+                        (*(srcBuffer as *const u8).offset(2)
                             as libc::size_t) << 16 as libc::c_int,
                     ) ;
                 current_block_20 = 16942010770580489165;
@@ -568,7 +568,7 @@ unsafe extern "C" fn BITv07_initDStream(
                 (*bitD)
                     .bitContainer = ((*bitD).bitContainer as libc::c_ulong)
                     .wrapping_add(
-                        (*(srcBuffer as *const u8).offset(1 as libc::c_int as isize)
+                        (*(srcBuffer as *const u8).offset(1)
                             as libc::size_t) << 8 as libc::c_int,
                     ) ;
             }
@@ -578,18 +578,18 @@ unsafe extern "C" fn BITv07_initDStream(
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
             .bitsConsumed = if lastByte_0 as libc::c_int != 0 {
-            (8 as libc::c_int as libc::c_uint)
+            (8)
                 .wrapping_sub(BITv07_highbit32(lastByte_0 as u32))
         } else {
             0 as libc::c_int as libc::c_uint
         };
-        if lastByte_0 as libc::c_int == 0 as libc::c_int {
+        if lastByte_0 as libc::c_int == 0 {
             return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
         }
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
-                ((::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                ((::core::mem::size_of::<libc::size_t>())
                     .wrapping_sub(srcSize) as u32)
                     .wrapping_mul(8),
             );
@@ -600,7 +600,7 @@ unsafe extern "C" fn BITv07_lookBits(
     mut bitD: *const BITv07_DStream_t,
     mut nbBits: u32,
 ) -> libc::size_t {
-    let bitMask = (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+    let bitMask = (::core::mem::size_of::<libc::size_t>())
         .wrapping_mul(8)
         .wrapping_sub(1) as u32;
     return (*bitD).bitContainer << ((*bitD).bitsConsumed & bitMask) >> 1 as libc::c_int
@@ -610,7 +610,7 @@ unsafe extern "C" fn BITv07_lookBitsFast(
     mut bitD: *const BITv07_DStream_t,
     mut nbBits: u32,
 ) -> libc::size_t {
-    let bitMask = (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+    let bitMask = (::core::mem::size_of::<libc::size_t>())
         .wrapping_mul(8)
         .wrapping_sub(1) as u32;
     return (*bitD).bitContainer << ((*bitD).bitsConsumed & bitMask)
@@ -640,25 +640,25 @@ unsafe extern "C" fn BITv07_reloadDStream(
     mut bitD: *mut BITv07_DStream_t,
 ) -> BITv07_DStream_status {
     if (*bitD).bitsConsumed as libc::c_ulong
-        > (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        > (::core::mem::size_of::<libc::size_t>())
             .wrapping_mul(8)
     {
         return BITv07_DStream_overflow;
     }
     if (*bitD).ptr
         >= ((*bitD).start)
-            .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize)
+            .offset(::core::mem::size_of::<libc::size_t>() as isize)
     {
         (*bitD)
             .ptr = ((*bitD).ptr)
             .offset(-(((*bitD).bitsConsumed >> 3 as libc::c_int) as isize));
-        (*bitD).bitsConsumed &= 7 as libc::c_int as libc::c_uint;
+        (*bitD).bitsConsumed &= 7;
         (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const libc::c_void);
         return BITv07_DStream_unfinished;
     }
     if (*bitD).ptr == (*bitD).start {
         if ((*bitD).bitsConsumed as libc::c_ulong)
-            < (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            < (::core::mem::size_of::<libc::size_t>())
                 .wrapping_mul(8)
         {
             return BITv07_DStream_endOfBuffer;
@@ -683,7 +683,7 @@ unsafe extern "C" fn BITv07_endOfDStream(
 ) -> libc::c_uint {
     return ((*DStream).ptr == (*DStream).start
         && (*DStream).bitsConsumed as libc::c_ulong
-            == (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            == (::core::mem::size_of::<libc::size_t>())
                 .wrapping_mul(8)) as libc::c_int
         as libc::c_uint;
 }
@@ -696,7 +696,7 @@ unsafe extern "C" fn FSEv07_initDState(
     let DTableH = ptr as *const FSEv07_DTableHeader;
     (*DStatePtr).state = BITv07_readBits(bitD, (*DTableH).tableLog as libc::c_uint);
     BITv07_reloadDStream(bitD);
-    (*DStatePtr).table = dt.offset(1 as libc::c_int as isize) as *const libc::c_void;
+    (*DStatePtr).table = dt.offset(1) as *const libc::c_void;
 }
 unsafe extern "C" fn FSEv07_peekSymbol(mut DStatePtr: *const FSEv07_DState_t) -> u8 {
     let DInfo = *((*DStatePtr).table as *const FSEv07_decode_t)
@@ -762,7 +762,7 @@ pub unsafe extern "C" fn HUFv07_getErrorName(mut code: libc::size_t) -> *const l
     return ERR_getErrorName(code);
 }
 unsafe extern "C" fn FSEv07_abs(mut a: libc::c_short) -> libc::c_short {
-    return (if (a as libc::c_int) < 0 as libc::c_int {
+    return (if (a as libc::c_int) < 0 {
         -(a as libc::c_int)
     } else {
         a as libc::c_int
@@ -786,7 +786,7 @@ pub unsafe extern "C" fn FSEv07_readNCount(
     let mut bitCount: libc::c_int = 0;
     let mut charnum = 0 as libc::c_int as libc::c_uint;
     let mut previous0 = 0 as libc::c_int;
-    if hbSize < 4 as libc::c_int as libc::c_ulong {
+    if hbSize < 4 {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     bitStream = MEM_readLE32(ip as *const libc::c_void);
@@ -798,32 +798,32 @@ pub unsafe extern "C" fn FSEv07_readNCount(
     bitStream >>= 4 as libc::c_int;
     bitCount = 4 as libc::c_int;
     *tableLogPtr = nbBits as libc::c_uint;
-    remaining = ((1 as libc::c_int) << nbBits) + 1 as libc::c_int;
-    threshold = (1 as libc::c_int) << nbBits;
+    remaining = ((1) << nbBits) + 1;
+    threshold = (1) << nbBits;
     nbBits += 1;
-    while remaining > 1 as libc::c_int && charnum <= *maxSVPtr {
+    while remaining > 1 && charnum <= *maxSVPtr {
         if previous0 != 0 {
             let mut n0 = charnum;
             while bitStream & 0xffff as libc::c_int as libc::c_uint
                 == 0xffff as libc::c_int as libc::c_uint
             {
                 n0 = n0.wrapping_add(24);
-                if ip < iend.offset(-(5 as libc::c_int as isize)) {
-                    ip = ip.offset(2 as libc::c_int as isize);
+                if ip < iend.offset(-(5)) {
+                    ip = ip.offset(2);
                     bitStream = MEM_readLE32(ip as *const libc::c_void) >> bitCount;
                 } else {
                     bitStream >>= 16 as libc::c_int;
                     bitCount += 16 as libc::c_int;
                 }
             }
-            while bitStream & 3 as libc::c_int as libc::c_uint
-                == 3 as libc::c_int as libc::c_uint
+            while bitStream & 3
+                == 3
             {
                 n0 = n0.wrapping_add(3);
                 bitStream >>= 2 as libc::c_int;
                 bitCount += 2 as libc::c_int;
             }
-            n0 = n0.wrapping_add(bitStream & 3 as libc::c_int as libc::c_uint);
+            n0 = n0.wrapping_add(bitStream & 3);
             bitCount += 2 as libc::c_int;
             if n0 > *maxSVPtr {
                 return -(ZSTD_error_maxSymbolValue_tooSmall as libc::c_int) as libc::size_t;
@@ -834,12 +834,12 @@ pub unsafe extern "C" fn FSEv07_readNCount(
                 *normalizedCounter
                     .offset(fresh0 as isize) = 0 as libc::c_int as libc::c_short;
             }
-            if ip <= iend.offset(-(7 as libc::c_int as isize))
+            if ip <= iend.offset(-(7))
                 || ip.offset((bitCount >> 3 as libc::c_int) as isize)
-                    <= iend.offset(-(4 as libc::c_int as isize))
+                    <= iend.offset(-(4))
             {
                 ip = ip.offset((bitCount >> 3 as libc::c_int) as isize);
-                bitCount &= 7 as libc::c_int;
+                bitCount &= 7;
                 bitStream = MEM_readLE32(ip as *const libc::c_void) >> bitCount;
             } else {
                 bitStream >>= 2 as libc::c_int;
@@ -871,27 +871,27 @@ pub unsafe extern "C" fn FSEv07_readNCount(
             nbBits -= 1;
             threshold >>= 1 as libc::c_int;
         }
-        if ip <= iend.offset(-(7 as libc::c_int as isize))
+        if ip <= iend.offset(-(7))
             || ip.offset((bitCount >> 3 as libc::c_int) as isize)
-                <= iend.offset(-(4 as libc::c_int as isize))
+                <= iend.offset(-(4))
         {
             ip = ip.offset((bitCount >> 3 as libc::c_int) as isize);
-            bitCount &= 7 as libc::c_int;
+            bitCount &= 7;
         } else {
             bitCount
                 -= (8 as libc::c_int as libc::c_long
-                    * iend.offset(-(4 as libc::c_int as isize)).offset_from(ip)
+                    * iend.offset(-(4)).offset_from(ip)
                         as libc::c_long) as libc::c_int;
-            ip = iend.offset(-(4 as libc::c_int as isize));
+            ip = iend.offset(-(4));
         }
         bitStream = MEM_readLE32(ip as *const libc::c_void)
-            >> (bitCount & 31 as libc::c_int);
+            >> (bitCount & 31);
     }
     if remaining != 1 as libc::c_int {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     *maxSVPtr = charnum.wrapping_sub(1);
-    ip = ip.offset((bitCount + 7 as libc::c_int >> 3 as libc::c_int) as isize);
+    ip = ip.offset((bitCount + 7 >> 3 as libc::c_int) as isize);
     if ip.offset_from(istart) as libc::c_long as libc::size_t > hbSize {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
@@ -914,9 +914,9 @@ pub unsafe extern "C" fn HUFv07_readStats(
     if srcSize == 0 {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
-    iSize = *ip.offset(0 as libc::c_int as isize) as libc::size_t;
-    if iSize >= 128 as libc::c_int as libc::c_ulong {
-        if iSize >= 242 as libc::c_int as libc::c_ulong {
+    iSize = *ip.offset(0) as libc::size_t;
+    if iSize >= 128 {
+        if iSize >= 242 {
             static mut l: [u32; 14] = [
                 1 as libc::c_int as u32,
                 2 as libc::c_int as u32,
@@ -948,7 +948,7 @@ pub unsafe extern "C" fn HUFv07_readStats(
             if oSize >= hwSize {
                 return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
-            ip = ip.offset(1 as libc::c_int as isize);
+            ip = ip.offset(1);
             let mut n: u32 = 0;
             n = 0 as libc::c_int as u32;
             while (n as libc::c_ulong) < oSize {
@@ -963,7 +963,7 @@ pub unsafe extern "C" fn HUFv07_readStats(
                         n.wrapping_add(1) as isize,
                     ) = (*ip
                     .offset(n.wrapping_div(2) as isize)
-                    as libc::c_int & 15 as libc::c_int) as u8;
+                    as libc::c_int & 15) as u8;
                 n = (n as libc::c_uint).wrapping_add(2)
                     ;
             }
@@ -975,7 +975,7 @@ pub unsafe extern "C" fn HUFv07_readStats(
         oSize = FSEv07_decompress(
             huffWeight as *mut libc::c_void,
             hwSize.wrapping_sub(1),
-            ip.offset(1 as libc::c_int as isize) as *const libc::c_void,
+            ip.offset(1) as *const libc::c_void,
             iSize,
         );
         if FSEv07_isError_0(oSize) != 0 {
@@ -985,8 +985,8 @@ pub unsafe extern "C" fn HUFv07_readStats(
     memset(
         rankStats as *mut libc::c_void,
         0 as libc::c_int,
-        ((HUFv07_TABLELOG_ABSOLUTEMAX + 1 as libc::c_int) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+        ((HUFv07_TABLELOG_ABSOLUTEMAX + 1) as libc::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<u32>()),
     );
     weightTotal = 0 as libc::c_int as u32;
     let mut n_0: u32 = 0;
@@ -1001,12 +1001,12 @@ pub unsafe extern "C" fn HUFv07_readStats(
         *fresh2 = (*fresh2).wrapping_add(1);
         weightTotal = (weightTotal as libc::c_uint)
             .wrapping_add(
-                ((1 as libc::c_int) << *huffWeight.offset(n_0 as isize) as libc::c_int
+                ((1) << *huffWeight.offset(n_0 as isize) as libc::c_int
                     >> 1 as libc::c_int) as libc::c_uint,
             ) ;
         n_0 = n_0.wrapping_add(1);
     }
-    if weightTotal == 0 as libc::c_int as libc::c_uint {
+    if weightTotal == 0 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     let tableLog = (BITv07_highbit32(weightTotal))
@@ -1015,9 +1015,9 @@ pub unsafe extern "C" fn HUFv07_readStats(
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     *tableLogPtr = tableLog;
-    let total = ((1 as libc::c_int) << tableLog) as u32;
+    let total = ((1) << tableLog) as u32;
     let rest = total.wrapping_sub(weightTotal);
-    let verif = ((1 as libc::c_int) << BITv07_highbit32(rest)) as u32;
+    let verif = ((1) << BITv07_highbit32(rest)) as u32;
     let lastWeight = (BITv07_highbit32(rest))
         .wrapping_add(1);
     if verif != rest {
@@ -1026,9 +1026,9 @@ pub unsafe extern "C" fn HUFv07_readStats(
     *huffWeight.offset(oSize as isize) = lastWeight as u8;
     let ref mut fresh3 = *rankStats.offset(lastWeight as isize);
     *fresh3 = (*fresh3).wrapping_add(1);
-    if *rankStats.offset(1 as libc::c_int as isize) < 2 as libc::c_int as libc::c_uint
-        || *rankStats.offset(1 as libc::c_int as isize)
-            & 1 as libc::c_int as libc::c_uint != 0
+    if *rankStats.offset(1) < 2
+        || *rankStats.offset(1)
+            & 1 != 0
     {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
@@ -1044,8 +1044,8 @@ pub unsafe extern "C" fn FSEv07_createDTable(
         tableLog = FSEv07_TABLELOG_ABSOLUTE_MAX as libc::c_uint;
     }
     return malloc(
-        ((1 as libc::c_int + ((1 as libc::c_int) << tableLog)) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+        ((1 as libc::c_int + ((1) << tableLog)) as libc::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut FSEv07_DTable;
 }
 #[no_mangle]
@@ -1059,11 +1059,11 @@ pub unsafe extern "C" fn FSEv07_buildDTable(
     mut maxSymbolValue: libc::c_uint,
     mut tableLog: libc::c_uint,
 ) -> libc::size_t {
-    let tdPtr = dt.offset(1 as libc::c_int as isize) as *mut libc::c_void;
+    let tdPtr = dt.offset(1) as *mut libc::c_void;
     let tableDecode = tdPtr as *mut FSEv07_decode_t;
     let mut symbolNext: [u16; 256] = [0; 256];
     let maxSV1 = maxSymbolValue.wrapping_add(1);
-    let tableSize = ((1 as libc::c_int) << tableLog) as u32;
+    let tableSize = ((1) << tableLog) as u32;
     let mut highThreshold = tableSize.wrapping_sub(1);
     if maxSymbolValue > FSEv07_MAX_SYMBOL_VALUE as libc::c_uint {
         return -(ZSTD_error_maxSymbolValue_tooLarge as libc::c_int) as libc::size_t;
@@ -1077,12 +1077,12 @@ pub unsafe extern "C" fn FSEv07_buildDTable(
     };
     DTableH.tableLog = tableLog as u16;
     DTableH.fastMode = 1 as libc::c_int as u16;
-    let largeLimit = ((1 as libc::c_int)
+    let largeLimit = ((1)
         << tableLog.wrapping_sub(1)) as i16;
     let mut s: u32 = 0;
     s = 0 as libc::c_int as u32;
     while s < maxSV1 {
-        if *normalizedCounter.offset(s as isize) as libc::c_int == -(1 as libc::c_int) {
+        if *normalizedCounter.offset(s as isize) as libc::c_int == -(1) {
             let fresh4 = highThreshold;
             highThreshold = highThreshold.wrapping_sub(1);
             (*tableDecode.offset(fresh4 as isize)).symbol = s as u8;
@@ -1100,7 +1100,7 @@ pub unsafe extern "C" fn FSEv07_buildDTable(
     memcpy(
         dt as *mut libc::c_void,
         &mut DTableH as *mut FSEv07_DTableHeader as *const libc::c_void,
-        ::core::mem::size_of::<FSEv07_DTableHeader>() as libc::c_ulong,
+        ::core::mem::size_of::<FSEv07_DTableHeader>(),
     );
     let tableMask = tableSize.wrapping_sub(1);
     let step = (tableSize >> 1 as libc::c_int)
@@ -1149,7 +1149,7 @@ pub unsafe extern "C" fn FSEv07_buildDTable_rle(
 ) -> libc::size_t {
     let mut ptr = dt as *mut libc::c_void;
     let DTableH = ptr as *mut FSEv07_DTableHeader;
-    let mut dPtr = dt.offset(1 as libc::c_int as isize) as *mut libc::c_void;
+    let mut dPtr = dt.offset(1) as *mut libc::c_void;
     let cell = dPtr as *mut FSEv07_decode_t;
     (*DTableH).tableLog = 0 as libc::c_int as u16;
     (*DTableH).fastMode = 0 as libc::c_int as u16;
@@ -1165,13 +1165,13 @@ pub unsafe extern "C" fn FSEv07_buildDTable_raw(
 ) -> libc::size_t {
     let mut ptr = dt as *mut libc::c_void;
     let DTableH = ptr as *mut FSEv07_DTableHeader;
-    let mut dPtr = dt.offset(1 as libc::c_int as isize) as *mut libc::c_void;
+    let mut dPtr = dt.offset(1) as *mut libc::c_void;
     let dinfo = dPtr as *mut FSEv07_decode_t;
-    let tableSize = ((1 as libc::c_int) << nbBits) as libc::c_uint;
+    let tableSize = ((1) << nbBits) as libc::c_uint;
     let tableMask = tableSize.wrapping_sub(1);
     let maxSV1 = tableMask.wrapping_add(1);
     let mut s: libc::c_uint = 0;
-    if nbBits < 1 as libc::c_int as libc::c_uint {
+    if nbBits < 1 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     (*DTableH).tableLog = nbBits as u16;
@@ -1197,7 +1197,7 @@ unsafe extern "C" fn FSEv07_decompress_usingDTable_generic(
     let ostart = dst as *mut u8;
     let mut op = ostart;
     let omax = op.offset(maxDstSize as isize);
-    let olimit = omax.offset(-(3 as libc::c_int as isize));
+    let olimit = omax.offset(-(3));
     let mut bitD = BITv07_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
@@ -1229,8 +1229,8 @@ unsafe extern "C" fn FSEv07_decompress_usingDTable_generic(
         } else {
             FSEv07_decodeSymbol(&mut state1, &mut bitD) as libc::c_int
         }) as u8;
-        if (FSEv07_MAX_TABLELOG * 2 as libc::c_int + 7 as libc::c_int) as libc::c_ulong
-            > (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        if (FSEv07_MAX_TABLELOG * 2 + 7) as libc::c_ulong
+            > (::core::mem::size_of::<libc::size_t>())
                 .wrapping_mul(8)
         {
             BITv07_reloadDStream(&mut bitD);
@@ -1243,14 +1243,14 @@ unsafe extern "C" fn FSEv07_decompress_usingDTable_generic(
         } else {
             FSEv07_decodeSymbol(&mut state2, &mut bitD) as libc::c_int
         }) as u8;
-        if (FSEv07_MAX_TABLELOG * 4 as libc::c_int + 7 as libc::c_int) as libc::c_ulong
-            > (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        if (FSEv07_MAX_TABLELOG * 4 + 7) as libc::c_ulong
+            > (::core::mem::size_of::<libc::size_t>())
                 .wrapping_mul(8)
         {
             if BITv07_reloadDStream(&mut bitD) as libc::c_uint
                 > BITv07_DStream_unfinished as libc::c_int as libc::c_uint
             {
-                op = op.offset(2 as libc::c_int as isize);
+                op = op.offset(2);
                 break;
             }
         }
@@ -1262,8 +1262,8 @@ unsafe extern "C" fn FSEv07_decompress_usingDTable_generic(
         } else {
             FSEv07_decodeSymbol(&mut state1, &mut bitD) as libc::c_int
         }) as u8;
-        if (FSEv07_MAX_TABLELOG * 2 as libc::c_int + 7 as libc::c_int) as libc::c_ulong
-            > (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        if (FSEv07_MAX_TABLELOG * 2 + 7) as libc::c_ulong
+            > (::core::mem::size_of::<libc::size_t>())
                 .wrapping_mul(8)
         {
             BITv07_reloadDStream(&mut bitD);
@@ -1276,10 +1276,10 @@ unsafe extern "C" fn FSEv07_decompress_usingDTable_generic(
         } else {
             FSEv07_decodeSymbol(&mut state2, &mut bitD) as libc::c_int
         }) as u8;
-        op = op.offset(4 as libc::c_int as isize);
+        op = op.offset(4);
     }
     loop {
-        if op > omax.offset(-(2 as libc::c_int as isize)) {
+        if op > omax.offset(-(2)) {
             return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         let fresh6 = op;
@@ -1301,7 +1301,7 @@ unsafe extern "C" fn FSEv07_decompress_usingDTable_generic(
             }) as u8;
             break;
         } else {
-            if op > omax.offset(-(2 as libc::c_int as isize)) {
+            if op > omax.offset(-(2)) {
                 return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
             }
             let fresh8 = op;
@@ -1371,7 +1371,7 @@ pub unsafe extern "C" fn FSEv07_decompress(
     let mut dt: DTable_max_t = [0; 4097];
     let mut tableLog: libc::c_uint = 0;
     let mut maxSymbolValue = FSEv07_MAX_SYMBOL_VALUE as libc::c_uint;
-    if cSrcSize < 2 as libc::c_int as libc::c_ulong {
+    if cSrcSize < 2 {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     let NCountLength = FSEv07_readNCount(
@@ -1419,7 +1419,7 @@ unsafe extern "C" fn HUFv07_getDTableDesc(
     memcpy(
         &mut dtd as *mut DTableDesc as *mut libc::c_void,
         table as *const libc::c_void,
-        ::core::mem::size_of::<DTableDesc>() as libc::c_ulong,
+        ::core::mem::size_of::<DTableDesc>(),
     );
     return dtd;
 }
@@ -1434,11 +1434,11 @@ pub unsafe extern "C" fn HUFv07_readDTableX2(
     let mut tableLog = 0 as libc::c_int as u32;
     let mut nbSymbols = 0 as libc::c_int as u32;
     let mut iSize: libc::size_t = 0;
-    let dtPtr = DTable.offset(1 as libc::c_int as isize) as *mut libc::c_void;
+    let dtPtr = DTable.offset(1) as *mut libc::c_void;
     let dt = dtPtr as *mut HUFv07_DEltX2;
     iSize = HUFv07_readStats(
         huffWeight.as_mut_ptr(),
-        (HUFv07_SYMBOLVALUE_MAX + 1 as libc::c_int) as libc::size_t,
+        (HUFv07_SYMBOLVALUE_MAX + 1) as libc::size_t,
         rankVal.as_mut_ptr(),
         &mut nbSymbols,
         &mut tableLog,
@@ -1449,7 +1449,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX2(
         return iSize;
     }
     let mut dtd = HUFv07_getDTableDesc(DTable);
-    if tableLog > (dtd.maxTableLog as libc::c_int + 1 as libc::c_int) as u32 {
+    if tableLog > (dtd.maxTableLog as libc::c_int + 1) as u32 {
         return -(ZSTD_error_tableLog_tooLarge as libc::c_int) as libc::size_t;
     }
     dtd.tableType = 0 as libc::c_int as u8;
@@ -1457,7 +1457,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX2(
     memcpy(
         DTable as *mut libc::c_void,
         &mut dtd as *mut DTableDesc as *const libc::c_void,
-        ::core::mem::size_of::<DTableDesc>() as libc::c_ulong,
+        ::core::mem::size_of::<DTableDesc>(),
     );
     let mut n: u32 = 0;
     let mut nextRankStart = 0 as libc::c_int as u32;
@@ -1475,7 +1475,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX2(
     n_0 = 0 as libc::c_int as u32;
     while n_0 < nbSymbols {
         let w = huffWeight[n_0 as usize] as u32;
-        let length = ((1 as libc::c_int) << w >> 1 as libc::c_int) as u32;
+        let length = ((1) << w >> 1 as libc::c_int) as u32;
         let mut i: u32 = 0;
         let mut D = HUFv07_DEltX2 {
             byte: 0,
@@ -1519,14 +1519,14 @@ unsafe extern "C" fn HUFv07_decodeStreamX2(
     let pStart = p;
     while BITv07_reloadDStream(bitDPtr) as libc::c_uint
         == BITv07_DStream_unfinished as libc::c_int as libc::c_uint
-        && p <= pEnd.offset(-(4 as libc::c_int as isize))
+        && p <= pEnd.offset(-(4))
     {
         if MEM_64bits() != 0 {
             let fresh10 = p;
             p = p.offset(1);
             *fresh10 = HUFv07_decodeSymbolX2(bitDPtr, dt, dtLog);
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             let fresh11 = p;
             p = p.offset(1);
             *fresh11 = HUFv07_decodeSymbolX2(bitDPtr, dt, dtLog);
@@ -1563,7 +1563,7 @@ unsafe extern "C" fn HUFv07_decompress1X2_usingDTable_internal(
 ) -> libc::size_t {
     let mut op = dst as *mut u8;
     let oend = op.offset(dstSize as isize);
-    let mut dtPtr = DTable.offset(1 as libc::c_int as isize) as *const libc::c_void;
+    let mut dtPtr = DTable.offset(1) as *const libc::c_void;
     let dt = dtPtr as *const HUFv07_DEltX2;
     let mut bitD = BITv07_DStream_t {
         bitContainer: 0,
@@ -3697,13 +3697,13 @@ unsafe extern "C" fn HUFv07_decompress4X2_usingDTable_internal(
     mut cSrcSize: libc::size_t,
     mut DTable: *const HUFv07_DTable,
 ) -> libc::size_t {
-    if cSrcSize < 10 as libc::c_int as libc::c_ulong {
+    if cSrcSize < 10 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     let istart = cSrc as *const u8;
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
-    let dtPtr = DTable.offset(1 as libc::c_int as isize) as *const libc::c_void;
+    let dtPtr = DTable.offset(1) as *const libc::c_void;
     let dt = dtPtr as *const HUFv07_DEltX2;
     let mut bitD1 = BITv07_DStream_t {
         bitContainer: 0,
@@ -3731,10 +3731,10 @@ unsafe extern "C" fn HUFv07_decompress4X2_usingDTable_internal(
     };
     let length1 = MEM_readLE16(istart as *const libc::c_void) as libc::size_t;
     let length2 = MEM_readLE16(
-        istart.offset(2 as libc::c_int as isize) as *const libc::c_void,
+        istart.offset(2) as *const libc::c_void,
     ) as libc::size_t;
     let length3 = MEM_readLE16(
-        istart.offset(4 as libc::c_int as isize) as *const libc::c_void,
+        istart.offset(4) as *const libc::c_void,
     ) as libc::size_t;
     let length4 = cSrcSize
         .wrapping_sub(
@@ -3743,7 +3743,7 @@ unsafe extern "C" fn HUFv07_decompress4X2_usingDTable_internal(
                 .wrapping_add(length3)
                 .wrapping_add(6),
         );
-    let istart1 = istart.offset(6 as libc::c_int as isize);
+    let istart1 = istart.offset(6);
     let istart2 = istart1.offset(length1 as isize);
     let istart3 = istart2.offset(length2 as isize);
     let istart4 = istart3.offset(length3 as isize);
@@ -3800,7 +3800,7 @@ unsafe extern "C" fn HUFv07_decompress4X2_usingDTable_internal(
         | BITv07_reloadDStream(&mut bitD3) as libc::c_uint
         | BITv07_reloadDStream(&mut bitD4) as libc::c_uint;
     while endSignal == BITv07_DStream_unfinished as libc::c_int as libc::c_uint
-        && op4 < oend.offset(-(7 as libc::c_int as isize))
+        && op4 < oend.offset(-(7))
     {
         if MEM_64bits() != 0 {
             let fresh16 = op1;
@@ -3822,22 +3822,22 @@ unsafe extern "C" fn HUFv07_decompress4X2_usingDTable_internal(
             op4 = op4.offset(1);
             *fresh19 = HUFv07_decodeSymbolX2(&mut bitD4, dt, dtLog);
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             let fresh20 = op1;
             op1 = op1.offset(1);
             *fresh20 = HUFv07_decodeSymbolX2(&mut bitD1, dt, dtLog);
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             let fresh21 = op2;
             op2 = op2.offset(1);
             *fresh21 = HUFv07_decodeSymbolX2(&mut bitD2, dt, dtLog);
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             let fresh22 = op3;
             op3 = op3.offset(1);
             *fresh22 = HUFv07_decodeSymbolX2(&mut bitD3, dt, dtLog);
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             let fresh23 = op4;
             op4 = op4.offset(1);
             *fresh23 = HUFv07_decodeSymbolX2(&mut bitD4, dt, dtLog);
@@ -6026,9 +6026,9 @@ unsafe extern "C" fn HUFv07_fillDTableX4Level2(
     memcpy(
         rankVal.as_mut_ptr() as *mut libc::c_void,
         rankValOrigin as *const libc::c_void,
-        ::core::mem::size_of::<[u32; 17]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 17]>(),
     );
-    if minWeight > 1 as libc::c_int {
+    if minWeight > 1 {
         let mut i: u32 = 0;
         let mut skipSize = rankVal[minWeight as usize];
         MEM_writeLE16(&mut DElt.sequence as *mut u16 as *mut libc::c_void, baseSeq);
@@ -6046,7 +6046,7 @@ unsafe extern "C" fn HUFv07_fillDTableX4Level2(
         let symbol = (*sortedSymbols.offset(s as isize)).symbol as u32;
         let weight = (*sortedSymbols.offset(s as isize)).weight as u32;
         let nbBits = nbBitsBaseline.wrapping_sub(weight);
-        let length = ((1 as libc::c_int) << sizeLog.wrapping_sub(nbBits)) as u32;
+        let length = ((1) << sizeLog.wrapping_sub(nbBits)) as u32;
         let start = rankVal[weight as usize];
         let mut i_0 = start;
         let end = start.wrapping_add(length);
@@ -6087,7 +6087,7 @@ unsafe extern "C" fn HUFv07_fillDTableX4(
     memcpy(
         rankVal.as_mut_ptr() as *mut libc::c_void,
         rankValOrigin as *const libc::c_void,
-        ::core::mem::size_of::<[u32; 17]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 17]>(),
     );
     s = 0 as libc::c_int as u32;
     while s < sortedListSize {
@@ -6095,12 +6095,12 @@ unsafe extern "C" fn HUFv07_fillDTableX4(
         let weight = (*sortedList.offset(s as isize)).weight as u32;
         let nbBits = nbBitsBaseline.wrapping_sub(weight);
         let start = rankVal[weight as usize];
-        let length = ((1 as libc::c_int) << targetLog.wrapping_sub(nbBits)) as u32;
+        let length = ((1) << targetLog.wrapping_sub(nbBits)) as u32;
         if targetLog.wrapping_sub(nbBits) >= minBits {
             let mut sortedRank: u32 = 0;
             let mut minWeight = nbBits.wrapping_add(scaleLog as libc::c_uint)
                 as libc::c_int;
-            if minWeight < 1 as libc::c_int {
+            if minWeight < 1 {
                 minWeight = 1 as libc::c_int;
             }
             sortedRank = *rankStart.offset(minWeight as isize);
@@ -6188,7 +6188,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX4(
         0,
         0,
     ];
-    let rankStart = rankStart0.as_mut_ptr().offset(1 as libc::c_int as isize);
+    let rankStart = rankStart0.as_mut_ptr().offset(1);
     let mut rankVal: rankVal_t = [[0; 17]; 16];
     let mut tableLog: u32 = 0;
     let mut maxW: u32 = 0;
@@ -6197,14 +6197,14 @@ pub unsafe extern "C" fn HUFv07_readDTableX4(
     let mut dtd = HUFv07_getDTableDesc(DTable);
     let maxTableLog = dtd.maxTableLog as u32;
     let mut iSize: libc::size_t = 0;
-    let mut dtPtr = DTable.offset(1 as libc::c_int as isize) as *mut libc::c_void;
+    let mut dtPtr = DTable.offset(1) as *mut libc::c_void;
     let dt = dtPtr as *mut HUFv07_DEltX4;
     if maxTableLog > HUFv07_TABLELOG_ABSOLUTEMAX as libc::c_uint {
         return -(ZSTD_error_tableLog_tooLarge as libc::c_int) as libc::size_t;
     }
     iSize = HUFv07_readStats(
         weightList.as_mut_ptr(),
-        (HUFv07_SYMBOLVALUE_MAX + 1 as libc::c_int) as libc::size_t,
+        (HUFv07_SYMBOLVALUE_MAX + 1) as libc::size_t,
         rankStats.as_mut_ptr(),
         &mut nbSymbols,
         &mut tableLog,
@@ -6218,7 +6218,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX4(
         return -(ZSTD_error_tableLog_tooLarge as libc::c_int) as libc::size_t;
     }
     maxW = tableLog;
-    while rankStats[maxW as usize] == 0 as libc::c_int as libc::c_uint {
+    while rankStats[maxW as usize] == 0 {
         maxW = maxW.wrapping_sub(1);
     }
     let mut w: u32 = 0;
@@ -6231,7 +6231,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX4(
         *rankStart.offset(w as isize) = current;
         w = w.wrapping_add(1);
     }
-    *rankStart.offset(0 as libc::c_int as isize) = nextRankStart;
+    *rankStart.offset(0) = nextRankStart;
     sizeOfSort = nextRankStart;
     let mut s: u32 = 0;
     s = 0 as libc::c_int as u32;
@@ -6245,7 +6245,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX4(
         sortedSymbol[r as usize].weight = w_0 as u8;
         s = s.wrapping_add(1);
     }
-    *rankStart.offset(0 as libc::c_int as isize) = 0 as libc::c_int as u32;
+    *rankStart.offset(0) = 0 as libc::c_int as u32;
     let rankVal0 = (rankVal[0 as libc::c_int as usize]).as_mut_ptr();
     let rescale = maxTableLog
         .wrapping_sub(tableLog)
@@ -6297,7 +6297,7 @@ pub unsafe extern "C" fn HUFv07_readDTableX4(
     memcpy(
         DTable as *mut libc::c_void,
         &mut dtd as *mut DTableDesc as *const libc::c_void,
-        ::core::mem::size_of::<DTableDesc>() as libc::c_ulong,
+        ::core::mem::size_of::<DTableDesc>(),
     );
     return iSize;
 }
@@ -6328,19 +6328,19 @@ unsafe extern "C" fn HUFv07_decodeLastSymbolX4(
         dt.offset(val as isize) as *const libc::c_void,
         1 as libc::c_int as libc::c_ulong,
     );
-    if (*dt.offset(val as isize)).length as libc::c_int == 1 as libc::c_int {
+    if (*dt.offset(val as isize)).length as libc::c_int == 1 {
         BITv07_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
     } else if ((*DStream).bitsConsumed as libc::c_ulong)
-        < (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        < (::core::mem::size_of::<libc::size_t>())
             .wrapping_mul(8)
     {
         BITv07_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
         if (*DStream).bitsConsumed as libc::c_ulong
-            > (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            > (::core::mem::size_of::<libc::size_t>())
                 .wrapping_mul(8)
         {
             (*DStream)
-                .bitsConsumed = (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                .bitsConsumed = (::core::mem::size_of::<libc::size_t>())
                 .wrapping_mul(8) as libc::c_uint;
         }
     }
@@ -6357,7 +6357,7 @@ unsafe extern "C" fn HUFv07_decodeStreamX4(
     let pStart = p;
     while BITv07_reloadDStream(bitDPtr) as libc::c_uint
         == BITv07_DStream_unfinished as libc::c_int as libc::c_uint
-        && p < pEnd.offset(-(7 as libc::c_int as isize))
+        && p < pEnd.offset(-(7))
     {
         if MEM_64bits() != 0 {
             p = p
@@ -6366,7 +6366,7 @@ unsafe extern "C" fn HUFv07_decodeStreamX4(
                         as isize,
                 );
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             p = p
                 .offset(
                     HUFv07_decodeSymbolX4(p as *mut libc::c_void, bitDPtr, dt, dtLog)
@@ -6388,7 +6388,7 @@ unsafe extern "C" fn HUFv07_decodeStreamX4(
     }
     while BITv07_reloadDStream(bitDPtr) as libc::c_uint
         == BITv07_DStream_unfinished as libc::c_int as libc::c_uint
-        && p <= pEnd.offset(-(2 as libc::c_int as isize))
+        && p <= pEnd.offset(-(2))
     {
         p = p
             .offset(
@@ -6396,7 +6396,7 @@ unsafe extern "C" fn HUFv07_decodeStreamX4(
                     as isize,
             );
     }
-    while p <= pEnd.offset(-(2 as libc::c_int as isize)) {
+    while p <= pEnd.offset(-(2)) {
         p = p
             .offset(
                 HUFv07_decodeSymbolX4(p as *mut libc::c_void, bitDPtr, dt, dtLog)
@@ -6431,7 +6431,7 @@ unsafe extern "C" fn HUFv07_decompress1X4_usingDTable_internal(
     }
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
-    let dtPtr = DTable.offset(1 as libc::c_int as isize) as *const libc::c_void;
+    let dtPtr = DTable.offset(1) as *const libc::c_void;
     let dt = dtPtr as *const HUFv07_DEltX4;
     let dtd = HUFv07_getDTableDesc(DTable);
     HUFv07_decodeStreamX4(ostart, &mut bitD, oend, dt, dtd.tableLog as u32);
@@ -6494,7 +6494,7 @@ pub unsafe extern "C" fn HUFv07_decompress1X4(
     mut cSrcSize: libc::size_t,
 ) -> libc::size_t {
     let mut DTable: [HUFv07_DTable; 4097] = [
-        (12 as libc::c_int as u32)
+        (12)
             .wrapping_mul(0x1000001 as libc::c_int as libc::c_uint),
         0,
         0,
@@ -10602,13 +10602,13 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
     mut cSrcSize: libc::size_t,
     mut DTable: *const HUFv07_DTable,
 ) -> libc::size_t {
-    if cSrcSize < 10 as libc::c_int as libc::c_ulong {
+    if cSrcSize < 10 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     let istart = cSrc as *const u8;
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
-    let dtPtr = DTable.offset(1 as libc::c_int as isize) as *const libc::c_void;
+    let dtPtr = DTable.offset(1) as *const libc::c_void;
     let dt = dtPtr as *const HUFv07_DEltX4;
     let mut bitD1 = BITv07_DStream_t {
         bitContainer: 0,
@@ -10636,10 +10636,10 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
     };
     let length1 = MEM_readLE16(istart as *const libc::c_void) as libc::size_t;
     let length2 = MEM_readLE16(
-        istart.offset(2 as libc::c_int as isize) as *const libc::c_void,
+        istart.offset(2) as *const libc::c_void,
     ) as libc::size_t;
     let length3 = MEM_readLE16(
-        istart.offset(4 as libc::c_int as isize) as *const libc::c_void,
+        istart.offset(4) as *const libc::c_void,
     ) as libc::size_t;
     let length4 = cSrcSize
         .wrapping_sub(
@@ -10648,7 +10648,7 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
                 .wrapping_add(length3)
                 .wrapping_add(6),
         );
-    let istart1 = istart.offset(6 as libc::c_int as isize);
+    let istart1 = istart.offset(6);
     let istart2 = istart1.offset(length1 as isize);
     let istart3 = istart2.offset(length2 as isize);
     let istart4 = istart3.offset(length3 as isize);
@@ -10705,7 +10705,7 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
         | BITv07_reloadDStream(&mut bitD3) as libc::c_uint
         | BITv07_reloadDStream(&mut bitD4) as libc::c_uint;
     while endSignal == BITv07_DStream_unfinished as libc::c_int as libc::c_uint
-        && op4 < oend.offset(-(7 as libc::c_int as isize))
+        && op4 < oend.offset(-(7))
     {
         if MEM_64bits() != 0 {
             op1 = op1
@@ -10751,7 +10751,7 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
                     ) as isize,
                 );
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             op1 = op1
                 .offset(
                     HUFv07_decodeSymbolX4(
@@ -10762,7 +10762,7 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
                     ) as isize,
                 );
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             op2 = op2
                 .offset(
                     HUFv07_decodeSymbolX4(
@@ -10773,7 +10773,7 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
                     ) as isize,
                 );
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             op3 = op3
                 .offset(
                     HUFv07_decodeSymbolX4(
@@ -10784,7 +10784,7 @@ unsafe extern "C" fn HUFv07_decompress4X4_usingDTable_internal(
                     ) as isize,
                 );
         }
-        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 as libc::c_int {
+        if MEM_64bits() != 0 || HUFv07_TABLELOG_MAX <= 12 {
             op4 = op4
                 .offset(
                     HUFv07_decodeSymbolX4(
@@ -10938,7 +10938,7 @@ pub unsafe extern "C" fn HUFv07_decompress4X4(
     mut cSrcSize: libc::size_t,
 ) -> libc::size_t {
     let mut DTable: [HUFv07_DTable; 4097] = [
-        (12 as libc::c_int as u32)
+        (12)
             .wrapping_mul(0x1000001 as libc::c_int as libc::c_uint),
         0,
         0,
@@ -15515,7 +15515,7 @@ pub unsafe extern "C" fn HUFv07_decompress(
             ),
         ]
     };
-    if dstSize == 0 as libc::c_int as libc::c_ulong {
+    if dstSize == 0 {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if cSrcSize > dstSize {
@@ -15525,7 +15525,7 @@ pub unsafe extern "C" fn HUFv07_decompress(
         memcpy(dst, cSrc, dstSize);
         return dstSize;
     }
-    if cSrcSize == 1 as libc::c_int as libc::c_ulong {
+    if cSrcSize == 1 {
         memset(dst, *(cSrc as *const u8) as libc::c_int, dstSize);
         return dstSize;
     }
@@ -15541,7 +15541,7 @@ pub unsafe extern "C" fn HUFv07_decompress4X_DCtx(
     mut cSrc: *const libc::c_void,
     mut cSrcSize: libc::size_t,
 ) -> libc::size_t {
-    if dstSize == 0 as libc::c_int as libc::c_ulong {
+    if dstSize == 0 {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if cSrcSize > dstSize {
@@ -15551,7 +15551,7 @@ pub unsafe extern "C" fn HUFv07_decompress4X_DCtx(
         memcpy(dst, cSrc, dstSize);
         return dstSize;
     }
-    if cSrcSize == 1 as libc::c_int as libc::c_ulong {
+    if cSrcSize == 1 {
         memset(dst, *(cSrc as *const u8) as libc::c_int, dstSize);
         return dstSize;
     }
@@ -15570,10 +15570,10 @@ pub unsafe extern "C" fn HUFv07_decompress4X_hufOnly(
     mut cSrc: *const libc::c_void,
     mut cSrcSize: libc::size_t,
 ) -> libc::size_t {
-    if dstSize == 0 as libc::c_int as libc::c_ulong {
+    if dstSize == 0 {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    if cSrcSize >= dstSize || cSrcSize <= 1 as libc::c_int as libc::c_ulong {
+    if cSrcSize >= dstSize || cSrcSize <= 1 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     let algoNb = HUFv07_selectDecoder(dstSize, cSrcSize);
@@ -15591,7 +15591,7 @@ pub unsafe extern "C" fn HUFv07_decompress1X_DCtx(
     mut cSrc: *const libc::c_void,
     mut cSrcSize: libc::size_t,
 ) -> libc::size_t {
-    if dstSize == 0 as libc::c_int as libc::c_ulong {
+    if dstSize == 0 {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if cSrcSize > dstSize {
@@ -15601,7 +15601,7 @@ pub unsafe extern "C" fn HUFv07_decompress1X_DCtx(
         memcpy(dst, cSrc, dstSize);
         return dstSize;
     }
-    if cSrcSize == 1 as libc::c_int as libc::c_ulong {
+    if cSrcSize == 1 {
         memset(dst, *(cSrc as *const u8) as libc::c_int, dstSize);
         return dstSize;
     }
@@ -15667,7 +15667,7 @@ static mut ZSTDv07_did_fieldSize: [libc::size_t; 4] = [
 pub const ZSTDv07_BLOCKHEADERSIZE: libc::c_int = 3 as libc::c_int;
 static mut ZSTDv07_blockHeaderSize: libc::size_t = ZSTDv07_BLOCKHEADERSIZE as libc::size_t;
 pub const MIN_SEQUENCES_SIZE: libc::c_int = 1 as libc::c_int;
-pub const MIN_CBLOCK_SIZE: libc::c_int = 1 as libc::c_int + 1 as libc::c_int
+pub const MIN_CBLOCK_SIZE: libc::c_int = 1 as libc::c_int + 1
     + MIN_SEQUENCES_SIZE;
 pub const LONGNBSEQ: libc::c_int = 0x7f00 as libc::c_int;
 pub const MINMATCH: libc::c_int = 3 as libc::c_int;
@@ -15681,7 +15681,7 @@ pub const FSEv07_ENCODING_RAW: libc::c_int = 0;
 pub const FSEv07_ENCODING_RLE: libc::c_int = 1;
 pub const FSEv07_ENCODING_STATIC: libc::c_int = 2;
 pub const FSEv07_ENCODING_DYNAMIC: libc::c_int = 3;
-pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0 as libc::c_ulonglong)
+pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0)
     .wrapping_sub(2);
 static mut LL_bits: [u32; 36] = [
     0 as libc::c_int as u32,
@@ -15754,10 +15754,10 @@ static mut LL_defaultNorm: [i16; 36] = [
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
 ];
 static mut LL_defaultNormLog: u32 = 6 as libc::c_int as u32;
 static mut ML_bits: [u32; 53] = [
@@ -15862,13 +15862,13 @@ static mut ML_defaultNorm: [i16; 53] = [
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
 ];
 static mut ML_defaultNormLog: u32 = 6 as libc::c_int as u32;
 static mut OF_defaultNorm: [i16; 29] = [
@@ -15896,11 +15896,11 @@ static mut OF_defaultNorm: [i16; 29] = [
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
 ];
 static mut OF_defaultNormLog: u32 = 5 as libc::c_int as u32;
 unsafe extern "C" fn ZSTDv07_copy8(
@@ -15920,8 +15920,8 @@ unsafe extern "C" fn ZSTDv07_wildcopy(
     let oend = op.offset(length as isize);
     loop {
         ZSTDv07_copy8(op as *mut libc::c_void, ip as *const libc::c_void);
-        op = op.offset(8 as libc::c_int as isize);
-        ip = ip.offset(8 as libc::c_int as isize);
+        op = op.offset(8);
+        ip = ip.offset(8);
         if !(op < oend) {
             break;
         }
@@ -15957,11 +15957,11 @@ unsafe extern "C" fn ZSTDv07_copy4(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTDv07_sizeofDCtx(mut dctx: *const ZSTDv07_DCtx) -> libc::size_t {
-    return ::core::mem::size_of::<ZSTDv07_DCtx>() as libc::c_ulong;
+    return ::core::mem::size_of::<ZSTDv07_DCtx>();
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTDv07_estimateDCtxSize() -> libc::size_t {
-    return ::core::mem::size_of::<ZSTDv07_DCtx>() as libc::c_ulong;
+    return ::core::mem::size_of::<ZSTDv07_DCtx>();
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTDv07_decompressBegin(mut dctx: *mut ZSTDv07_DCtx) -> libc::size_t {
@@ -15999,7 +15999,7 @@ pub unsafe extern "C" fn ZSTDv07_createDCtx_advanced(
     dctx = (customMem.customAlloc)
         .expect(
             "non-null function pointer",
-        )(customMem.opaque, ::core::mem::size_of::<ZSTDv07_DCtx>() as libc::c_ulong)
+        )(customMem.opaque, ::core::mem::size_of::<ZSTDv07_DCtx>())
         as *mut ZSTDv07_DCtx;
     if dctx.is_null() {
         return NULL as *mut ZSTDv07_DCtx;
@@ -16007,7 +16007,7 @@ pub unsafe extern "C" fn ZSTDv07_createDCtx_advanced(
     memcpy(
         &mut (*dctx).customMem as *mut ZSTDv07_customMem as *mut libc::c_void,
         &mut customMem as *mut ZSTDv07_customMem as *const libc::c_void,
-        ::core::mem::size_of::<ZSTDv07_customMem>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTDv07_customMem>(),
     );
     ZSTDv07_decompressBegin(dctx);
     return dctx;
@@ -16035,7 +16035,7 @@ pub unsafe extern "C" fn ZSTDv07_copyDCtx(
     memcpy(
         dstDCtx as *mut libc::c_void,
         srcDCtx as *const libc::c_void,
-        (::core::mem::size_of::<ZSTDv07_DCtx>() as libc::c_ulong)
+        (::core::mem::size_of::<ZSTDv07_DCtx>())
             .wrapping_sub(
                 ((ZSTDv07_BLOCKSIZE_ABSOLUTEMAX + WILDCOPY_OVERLENGTH) as libc::c_ulong)
                     .wrapping_add(ZSTDv07_frameHeaderSize_max),
@@ -16049,9 +16049,9 @@ unsafe extern "C" fn ZSTDv07_frameHeaderSize(
     if srcSize < ZSTDv07_frameHeaderSize_min {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
-    let fhd = *(src as *const u8).offset(4 as libc::c_int as isize);
-    let dictID = (fhd as libc::c_int & 3 as libc::c_int) as u32;
-    let directMode = (fhd as libc::c_int >> 5 as libc::c_int & 1 as libc::c_int) as u32;
+    let fhd = *(src as *const u8).offset(4);
+    let dictID = (fhd as libc::c_int & 3) as u32;
+    let directMode = (fhd as libc::c_int >> 5 as libc::c_int & 1) as u32;
     let fcsId = (fhd as libc::c_int >> 6 as libc::c_int) as u32;
     return ZSTDv07_frameHeaderSize_min
         .wrapping_add((directMode == 0) as libc::c_int as libc::c_ulong)
@@ -16075,7 +16075,7 @@ pub unsafe extern "C" fn ZSTDv07_getFrameParams(
     memset(
         fparamsPtr as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTDv07_frameParams>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTDv07_frameParams>(),
     );
     if MEM_readLE32(src) != ZSTDv07_MAGICNUMBER {
         if MEM_readLE32(src) & 0xfffffff0 as libc::c_uint
@@ -16086,7 +16086,7 @@ pub unsafe extern "C" fn ZSTDv07_getFrameParams(
             }
             (*fparamsPtr)
                 .frameContentSize = MEM_readLE32(
-                (src as *const libc::c_char).offset(4 as libc::c_int as isize)
+                (src as *const libc::c_char).offset(4)
                     as *const libc::c_void,
             ) as libc::c_ulonglong;
             (*fparamsPtr).windowSize = 0 as libc::c_int as libc::c_uint;
@@ -16098,15 +16098,15 @@ pub unsafe extern "C" fn ZSTDv07_getFrameParams(
     if srcSize < fhsize {
         return fhsize;
     }
-    let fhdByte = *ip.offset(4 as libc::c_int as isize);
+    let fhdByte = *ip.offset(4);
     let mut pos = 5 as libc::c_int as libc::size_t;
-    let dictIDSizeCode = (fhdByte as libc::c_int & 3 as libc::c_int) as u32;
-    let checksumFlag = (fhdByte as libc::c_int >> 2 as libc::c_int & 1 as libc::c_int)
+    let dictIDSizeCode = (fhdByte as libc::c_int & 3) as u32;
+    let checksumFlag = (fhdByte as libc::c_int >> 2 as libc::c_int & 1)
         as u32;
-    let directMode = (fhdByte as libc::c_int >> 5 as libc::c_int & 1 as libc::c_int)
+    let directMode = (fhdByte as libc::c_int >> 5 as libc::c_int & 1)
         as u32;
     let fcsID = (fhdByte as libc::c_int >> 6 as libc::c_int) as u32;
-    let windowSizeMax = (1 as libc::c_uint)
+    let windowSizeMax = (1)
         << (if MEM_32bits() != 0 {
             ZSTDv07_WINDOWLOG_MAX_32
         } else {
@@ -16133,12 +16133,12 @@ pub unsafe extern "C" fn ZSTDv07_getFrameParams(
         {
             return -(ZSTD_error_frameParameter_unsupported as libc::c_int) as libc::size_t;
         }
-        windowSize = (1 as libc::c_uint) << windowLog;
+        windowSize = (1) << windowLog;
         windowSize = (windowSize as libc::c_uint)
             .wrapping_add(
                 (windowSize >> 3 as libc::c_int)
                     .wrapping_mul(
-                        (wlByte as libc::c_int & 7 as libc::c_int) as libc::c_uint,
+                        (wlByte as libc::c_int & 7) as libc::c_uint,
                     ),
             ) ;
     }
@@ -16163,7 +16163,7 @@ pub unsafe extern "C" fn ZSTDv07_getFrameParams(
         1 => {
             frameContentSize = (MEM_readLE16(
                 ip.offset(pos as isize) as *const libc::c_void,
-            ) as libc::c_int + 256 as libc::c_int) as u64;
+            ) as libc::c_int + 256) as u64;
         }
         2 => {
             frameContentSize = MEM_readLE32(
@@ -16235,9 +16235,9 @@ unsafe extern "C" fn ZSTDv07_getcBlockSize(
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     (*bpPtr).blockType = (*in_0 as libc::c_int >> 6 as libc::c_int) as blockType_t;
-    cSize = (*in_0.offset(2 as libc::c_int as isize) as libc::c_int
-        + ((*in_0.offset(1 as libc::c_int as isize) as libc::c_int) << 8 as libc::c_int)
-        + ((*in_0.offset(0 as libc::c_int as isize) as libc::c_int & 7 as libc::c_int)
+    cSize = (*in_0.offset(2) as libc::c_int
+        + ((*in_0.offset(1) as libc::c_int) << 8 as libc::c_int)
+        + ((*in_0.offset(0) as libc::c_int & 7)
             << 16 as libc::c_int)) as u32;
     (*bpPtr)
         .origSize = if (*bpPtr).blockType as libc::c_uint
@@ -16264,7 +16264,7 @@ unsafe extern "C" fn ZSTDv07_copyRawBlock(
     if srcSize > dstCapacity {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    if srcSize > 0 as libc::c_int as libc::c_ulong {
+    if srcSize > 0 {
         memcpy(dst, src, srcSize);
     }
     return srcSize;
@@ -16278,58 +16278,58 @@ unsafe extern "C" fn ZSTDv07_decodeLiteralsBlock(
     if srcSize < MIN_CBLOCK_SIZE as libc::c_ulong {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
-    match (*istart.offset(0 as libc::c_int as isize) as libc::c_int >> 6 as libc::c_int)
+    match (*istart.offset(0) as libc::c_int >> 6 as libc::c_int)
         as litBlockType_t as libc::c_uint
     {
         0 => {
             let mut litSize: libc::size_t = 0;
             let mut litCSize: libc::size_t = 0;
             let mut singleStream = 0 as libc::c_int as libc::size_t;
-            let mut lhSize = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                >> 4 as libc::c_int & 3 as libc::c_int) as u32;
-            if srcSize < 5 as libc::c_int as libc::c_ulong {
+            let mut lhSize = (*istart.offset(0) as libc::c_int
+                >> 4 as libc::c_int & 3) as u32;
+            if srcSize < 5 {
                 return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
             match lhSize {
                 2 => {
                     lhSize = 4 as libc::c_int as u32;
-                    litSize = (((*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                        & 15 as libc::c_int) << 10 as libc::c_int)
-                        + ((*istart.offset(1 as libc::c_int as isize) as libc::c_int)
+                    litSize = (((*istart.offset(0) as libc::c_int
+                        & 15) << 10 as libc::c_int)
+                        + ((*istart.offset(1) as libc::c_int)
                             << 2 as libc::c_int)
-                        + (*istart.offset(2 as libc::c_int as isize) as libc::c_int
+                        + (*istart.offset(2) as libc::c_int
                             >> 6 as libc::c_int)) as libc::size_t;
-                    litCSize = (((*istart.offset(2 as libc::c_int as isize)
-                        as libc::c_int & 63 as libc::c_int) << 8 as libc::c_int)
-                        + *istart.offset(3 as libc::c_int as isize) as libc::c_int)
+                    litCSize = (((*istart.offset(2)
+                        as libc::c_int & 63) << 8 as libc::c_int)
+                        + *istart.offset(3) as libc::c_int)
                         as libc::size_t;
                 }
                 3 => {
                     lhSize = 5 as libc::c_int as u32;
-                    litSize = (((*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                        & 15 as libc::c_int) << 14 as libc::c_int)
-                        + ((*istart.offset(1 as libc::c_int as isize) as libc::c_int)
+                    litSize = (((*istart.offset(0) as libc::c_int
+                        & 15) << 14 as libc::c_int)
+                        + ((*istart.offset(1) as libc::c_int)
                             << 6 as libc::c_int)
-                        + (*istart.offset(2 as libc::c_int as isize) as libc::c_int
+                        + (*istart.offset(2) as libc::c_int
                             >> 2 as libc::c_int)) as libc::size_t;
-                    litCSize = (((*istart.offset(2 as libc::c_int as isize)
-                        as libc::c_int & 3 as libc::c_int) << 16 as libc::c_int)
-                        + ((*istart.offset(3 as libc::c_int as isize) as libc::c_int)
+                    litCSize = (((*istart.offset(2)
+                        as libc::c_int & 3) << 16 as libc::c_int)
+                        + ((*istart.offset(3) as libc::c_int)
                             << 8 as libc::c_int)
-                        + *istart.offset(4 as libc::c_int as isize) as libc::c_int)
+                        + *istart.offset(4) as libc::c_int)
                         as libc::size_t;
                 }
                 0 | 1 | _ => {
                     lhSize = 3 as libc::c_int as u32;
-                    singleStream = (*istart.offset(0 as libc::c_int as isize)
-                        as libc::c_int & 16 as libc::c_int) as libc::size_t;
-                    litSize = (((*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                        & 15 as libc::c_int) << 6 as libc::c_int)
-                        + (*istart.offset(1 as libc::c_int as isize) as libc::c_int
+                    singleStream = (*istart.offset(0)
+                        as libc::c_int & 16) as libc::size_t;
+                    litSize = (((*istart.offset(0) as libc::c_int
+                        & 15) << 6 as libc::c_int)
+                        + (*istart.offset(1) as libc::c_int
                             >> 2 as libc::c_int)) as libc::size_t;
-                    litCSize = (((*istart.offset(1 as libc::c_int as isize)
-                        as libc::c_int & 3 as libc::c_int) << 8 as libc::c_int)
-                        + *istart.offset(2 as libc::c_int as isize) as libc::c_int)
+                    litCSize = (((*istart.offset(1)
+                        as libc::c_int & 3) << 8 as libc::c_int)
+                        + *istart.offset(2) as libc::c_int)
                         as libc::size_t;
                 }
             }
@@ -16375,22 +16375,22 @@ unsafe extern "C" fn ZSTDv07_decodeLiteralsBlock(
         1 => {
             let mut litSize_0: libc::size_t = 0;
             let mut litCSize_0: libc::size_t = 0;
-            let mut lhSize_0 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                >> 4 as libc::c_int & 3 as libc::c_int) as u32;
+            let mut lhSize_0 = (*istart.offset(0) as libc::c_int
+                >> 4 as libc::c_int & 3) as u32;
             if lhSize_0 != 1 as libc::c_int as libc::c_uint {
                 return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
-            if (*dctx).litEntropy == 0 as libc::c_int as libc::c_uint {
+            if (*dctx).litEntropy == 0 {
                 return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
             }
             lhSize_0 = 3 as libc::c_int as u32;
-            litSize_0 = (((*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                & 15 as libc::c_int) << 6 as libc::c_int)
-                + (*istart.offset(1 as libc::c_int as isize) as libc::c_int
+            litSize_0 = (((*istart.offset(0) as libc::c_int
+                & 15) << 6 as libc::c_int)
+                + (*istart.offset(1) as libc::c_int
                     >> 2 as libc::c_int)) as libc::size_t;
-            litCSize_0 = (((*istart.offset(1 as libc::c_int as isize) as libc::c_int
-                & 3 as libc::c_int) << 8 as libc::c_int)
-                + *istart.offset(2 as libc::c_int as isize) as libc::c_int) as libc::size_t;
+            litCSize_0 = (((*istart.offset(1) as libc::c_int
+                & 3) << 8 as libc::c_int)
+                + *istart.offset(2) as libc::c_int) as libc::size_t;
             if litCSize_0.wrapping_add(lhSize_0 as libc::c_ulong) > srcSize {
                 return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
             }
@@ -16416,27 +16416,27 @@ unsafe extern "C" fn ZSTDv07_decodeLiteralsBlock(
         }
         2 => {
             let mut litSize_1: libc::size_t = 0;
-            let mut lhSize_1 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                >> 4 as libc::c_int & 3 as libc::c_int) as u32;
+            let mut lhSize_1 = (*istart.offset(0) as libc::c_int
+                >> 4 as libc::c_int & 3) as u32;
             match lhSize_1 {
                 2 => {
-                    litSize_1 = (((*istart.offset(0 as libc::c_int as isize)
-                        as libc::c_int & 15 as libc::c_int) << 8 as libc::c_int)
-                        + *istart.offset(1 as libc::c_int as isize) as libc::c_int)
+                    litSize_1 = (((*istart.offset(0)
+                        as libc::c_int & 15) << 8 as libc::c_int)
+                        + *istart.offset(1) as libc::c_int)
                         as libc::size_t;
                 }
                 3 => {
-                    litSize_1 = (((*istart.offset(0 as libc::c_int as isize)
-                        as libc::c_int & 15 as libc::c_int) << 16 as libc::c_int)
-                        + ((*istart.offset(1 as libc::c_int as isize) as libc::c_int)
+                    litSize_1 = (((*istart.offset(0)
+                        as libc::c_int & 15) << 16 as libc::c_int)
+                        + ((*istart.offset(1) as libc::c_int)
                             << 8 as libc::c_int)
-                        + *istart.offset(2 as libc::c_int as isize) as libc::c_int)
+                        + *istart.offset(2) as libc::c_int)
                         as libc::size_t;
                 }
                 0 | 1 | _ => {
                     lhSize_1 = 1 as libc::c_int as u32;
-                    litSize_1 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                        & 31 as libc::c_int) as libc::size_t;
+                    litSize_1 = (*istart.offset(0) as libc::c_int
+                        & 31) as libc::size_t;
                 }
             }
             if (lhSize_1 as libc::c_ulong)
@@ -16467,31 +16467,31 @@ unsafe extern "C" fn ZSTDv07_decodeLiteralsBlock(
         }
         3 => {
             let mut litSize_2: libc::size_t = 0;
-            let mut lhSize_2 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                >> 4 as libc::c_int & 3 as libc::c_int) as u32;
+            let mut lhSize_2 = (*istart.offset(0) as libc::c_int
+                >> 4 as libc::c_int & 3) as u32;
             match lhSize_2 {
                 2 => {
-                    litSize_2 = (((*istart.offset(0 as libc::c_int as isize)
-                        as libc::c_int & 15 as libc::c_int) << 8 as libc::c_int)
-                        + *istart.offset(1 as libc::c_int as isize) as libc::c_int)
+                    litSize_2 = (((*istart.offset(0)
+                        as libc::c_int & 15) << 8 as libc::c_int)
+                        + *istart.offset(1) as libc::c_int)
                         as libc::size_t;
                 }
                 3 => {
-                    litSize_2 = (((*istart.offset(0 as libc::c_int as isize)
-                        as libc::c_int & 15 as libc::c_int) << 16 as libc::c_int)
-                        + ((*istart.offset(1 as libc::c_int as isize) as libc::c_int)
+                    litSize_2 = (((*istart.offset(0)
+                        as libc::c_int & 15) << 16 as libc::c_int)
+                        + ((*istart.offset(1) as libc::c_int)
                             << 8 as libc::c_int)
-                        + *istart.offset(2 as libc::c_int as isize) as libc::c_int)
+                        + *istart.offset(2) as libc::c_int)
                         as libc::size_t;
-                    if srcSize < 4 as libc::c_int as libc::c_ulong {
+                    if srcSize < 4 {
                         return -(ZSTD_error_corruption_detected as libc::c_int)
                             as libc::size_t;
                     }
                 }
                 0 | 1 | _ => {
                     lhSize_2 = 1 as libc::c_int as u32;
-                    litSize_2 = (*istart.offset(0 as libc::c_int as isize) as libc::c_int
-                        & 31 as libc::c_int) as libc::size_t;
+                    litSize_2 = (*istart.offset(0) as libc::c_int
+                        & 31) as libc::size_t;
                 }
             }
             if litSize_2 > ZSTDv07_BLOCKSIZE_ABSOLUTEMAX as libc::c_ulong {
@@ -16586,11 +16586,11 @@ unsafe extern "C" fn ZSTDv07_decodeSeqHeaders(
     }
     if nbSeq > 0x7f as libc::c_int {
         if nbSeq == 0xff as libc::c_int {
-            if ip.offset(2 as libc::c_int as isize) > iend {
+            if ip.offset(2) > iend {
                 return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
             }
             nbSeq = MEM_readLE16(ip as *const libc::c_void) as libc::c_int + LONGNBSEQ;
-            ip = ip.offset(2 as libc::c_int as isize);
+            ip = ip.offset(2);
         } else {
             if ip >= iend {
                 return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
@@ -16602,12 +16602,12 @@ unsafe extern "C" fn ZSTDv07_decodeSeqHeaders(
         }
     }
     *nbSeqPtr = nbSeq;
-    if ip.offset(4 as libc::c_int as isize) > iend {
+    if ip.offset(4) > iend {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     let LLtype = (*ip as libc::c_int >> 6 as libc::c_int) as u32;
-    let OFtype = (*ip as libc::c_int >> 4 as libc::c_int & 3 as libc::c_int) as u32;
-    let MLtype = (*ip as libc::c_int >> 2 as libc::c_int & 3 as libc::c_int) as u32;
+    let OFtype = (*ip as libc::c_int >> 4 as libc::c_int & 3) as u32;
+    let MLtype = (*ip as libc::c_int >> 2 as libc::c_int & 3) as u32;
     ip = ip.offset(1);
     let llhSize = ZSTDv07_buildSeqTable(
         DTableLL,
@@ -16803,11 +16803,11 @@ unsafe extern "C" fn ZSTDv07_decodeSequence(mut seqState: *mut seqState_t) -> se
             BITv07_reloadDStream(&mut (*seqState).DStream);
         }
     }
-    if ofCode <= 1 as libc::c_int as libc::c_uint {
-        if (llCode == 0 as libc::c_int as libc::c_uint) as libc::c_int
-            & (offset <= 1 as libc::c_int as libc::c_ulong) as libc::c_int != 0
+    if ofCode <= 1 {
+        if (llCode == 0) as libc::c_int
+            & (offset <= 1) as libc::c_int != 0
         {
-            offset = (1 as libc::c_int as libc::c_ulong).wrapping_sub(offset);
+            offset = (1).wrapping_sub(offset);
         }
         if offset != 0 {
             let temp = (*seqState).prevOffset[offset as usize];
@@ -16837,21 +16837,21 @@ unsafe extern "C" fn ZSTDv07_decodeSequence(mut seqState: *mut seqState_t) -> se
     seq
         .matchLength = (ML_base[mlCode as usize] as libc::c_ulong)
         .wrapping_add(
-            (if mlCode > 31 as libc::c_int as libc::c_uint {
+            (if mlCode > 31 {
                 BITv07_readBits(&mut (*seqState).DStream, mlBits)
             } else {
                 0 as libc::c_int as libc::c_ulong
             }),
         );
     if MEM_32bits() != 0
-        && mlBits.wrapping_add(llBits) > 24 as libc::c_int as libc::c_uint
+        && mlBits.wrapping_add(llBits) > 24
     {
         BITv07_reloadDStream(&mut (*seqState).DStream);
     }
     seq
         .litLength = (LL_base[llCode as usize] as libc::c_ulong)
         .wrapping_add(
-            (if llCode > 15 as libc::c_int as libc::c_uint {
+            (if llCode > 15 {
                 BITv07_readBits(&mut (*seqState).DStream, llBits)
             } else {
                 0 as libc::c_int as libc::c_ulong
@@ -16939,7 +16939,7 @@ unsafe extern "C" fn ZSTDv07_execSequence(
             return sequenceLength;
         }
     }
-    if sequence.offset < 8 as libc::c_int as libc::c_ulong {
+    if sequence.offset < 8 {
         static mut dec32table: [u32; 8] = [
             0 as libc::c_int as u32,
             1 as libc::c_int as u32,
@@ -16964,30 +16964,30 @@ unsafe extern "C" fn ZSTDv07_execSequence(
         *op
             .offset(
                 0 as libc::c_int as isize,
-            ) = *match_0.offset(0 as libc::c_int as isize);
+            ) = *match_0.offset(0);
         *op
             .offset(
                 1 as libc::c_int as isize,
-            ) = *match_0.offset(1 as libc::c_int as isize);
+            ) = *match_0.offset(1);
         *op
             .offset(
                 2 as libc::c_int as isize,
-            ) = *match_0.offset(2 as libc::c_int as isize);
+            ) = *match_0.offset(2);
         *op
             .offset(
                 3 as libc::c_int as isize,
-            ) = *match_0.offset(3 as libc::c_int as isize);
+            ) = *match_0.offset(3);
         match_0 = match_0.offset(dec32table[sequence.offset as usize] as isize);
         ZSTDv07_copy4(
-            op.offset(4 as libc::c_int as isize) as *mut libc::c_void,
+            op.offset(4) as *mut libc::c_void,
             match_0 as *const libc::c_void,
         );
         match_0 = match_0.offset(-(sub2 as isize));
     } else {
         ZSTDv07_copy8(op as *mut libc::c_void, match_0 as *const libc::c_void);
     }
-    op = op.offset(8 as libc::c_int as isize);
-    match_0 = match_0.offset(8 as libc::c_int as isize);
+    op = op.offset(8);
+    match_0 = match_0.offset(8);
     if oMatchEnd > oend.offset(-((16 as libc::c_int - MINMATCH) as isize)) {
         if op < oend_w {
             ZSTDv07_wildcopy(
@@ -17122,7 +17122,7 @@ unsafe extern "C" fn ZSTDv07_decompressSequences(
     if lastLLSize > oend.offset_from(op) as libc::c_long as libc::size_t {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    if lastLLSize > 0 as libc::c_int as libc::c_ulong {
+    if lastLLSize > 0 {
         memcpy(op as *mut libc::c_void, litPtr as *const libc::c_void, lastLLSize);
         op = op.offset(lastLLSize as isize);
     }
@@ -17207,7 +17207,7 @@ unsafe extern "C" fn ZSTDv07_generateNxBytes(
     if length > dstCapacity {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    if length > 0 as libc::c_int as libc::c_ulong {
+    if length > 0 {
         memset(dst, byte as libc::c_int, length);
     }
     return length;
@@ -17549,13 +17549,13 @@ pub unsafe extern "C" fn ZSTDv07_decompressContinue(
                 if (*dctx).fParams.checksumFlag != 0 {
                     let h64 = ZSTD_XXH64_digest(&mut (*dctx).xxhState);
                     let h32 = (h64 >> 11 as libc::c_int) as u32
-                        & (((1 as libc::c_int) << 22 as libc::c_int) - 1 as libc::c_int)
+                        & (((1) << 22 as libc::c_int) - 1 as libc::c_int)
                             as libc::c_uint;
                     let ip = src as *const u8;
-                    let check32 = (*ip.offset(2 as libc::c_int as isize) as libc::c_int
-                        + ((*ip.offset(1 as libc::c_int as isize) as libc::c_int)
+                    let check32 = (*ip.offset(2) as libc::c_int
+                        + ((*ip.offset(1) as libc::c_int)
                             << 8 as libc::c_int)
-                        + ((*ip.offset(0 as libc::c_int as isize) as libc::c_int
+                        + ((*ip.offset(0) as libc::c_int
                             & 0x3f as libc::c_int) << 16 as libc::c_int)) as u32;
                     if check32 != h32 {
                         return -(ZSTD_error_checksum_wrong as libc::c_int) as libc::size_t;
@@ -17614,7 +17614,7 @@ pub unsafe extern "C" fn ZSTDv07_decompressContinue(
             );
             (*dctx)
                 .expected = MEM_readLE32(
-                ((*dctx).headerBuffer).as_mut_ptr().offset(4 as libc::c_int as isize)
+                ((*dctx).headerBuffer).as_mut_ptr().offset(4)
                     as *const libc::c_void,
             ) as libc::size_t;
             (*dctx).stage = ZSTDds_skipFrame;
@@ -17755,15 +17755,15 @@ unsafe extern "C" fn ZSTDv07_loadEntropy(
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     dictPtr = dictPtr.offset(litlengthHeaderSize as isize);
-    if dictPtr.offset(12 as libc::c_int as isize) > dictEnd {
+    if dictPtr.offset(12) > dictEnd {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     (*dctx)
         .rep[0 as libc::c_int
         as usize] = MEM_readLE32(
-        dictPtr.offset(0 as libc::c_int as isize) as *const libc::c_void,
+        dictPtr.offset(0) as *const libc::c_void,
     );
-    if (*dctx).rep[0 as libc::c_int as usize] == 0 as libc::c_int as libc::c_uint
+    if (*dctx).rep[0 as libc::c_int as usize] == 0
         || (*dctx).rep[0 as libc::c_int as usize] as libc::c_ulong >= dictSize
     {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
@@ -17771,9 +17771,9 @@ unsafe extern "C" fn ZSTDv07_loadEntropy(
     (*dctx)
         .rep[1 as libc::c_int
         as usize] = MEM_readLE32(
-        dictPtr.offset(4 as libc::c_int as isize) as *const libc::c_void,
+        dictPtr.offset(4) as *const libc::c_void,
     );
-    if (*dctx).rep[1 as libc::c_int as usize] == 0 as libc::c_int as libc::c_uint
+    if (*dctx).rep[1 as libc::c_int as usize] == 0
         || (*dctx).rep[1 as libc::c_int as usize] as libc::c_ulong >= dictSize
     {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
@@ -17781,14 +17781,14 @@ unsafe extern "C" fn ZSTDv07_loadEntropy(
     (*dctx)
         .rep[2 as libc::c_int
         as usize] = MEM_readLE32(
-        dictPtr.offset(8 as libc::c_int as isize) as *const libc::c_void,
+        dictPtr.offset(8) as *const libc::c_void,
     );
-    if (*dctx).rep[2 as libc::c_int as usize] == 0 as libc::c_int as libc::c_uint
+    if (*dctx).rep[2 as libc::c_int as usize] == 0
         || (*dctx).rep[2 as libc::c_int as usize] as libc::c_ulong >= dictSize
     {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
-    dictPtr = dictPtr.offset(12 as libc::c_int as isize);
+    dictPtr = dictPtr.offset(12);
     (*dctx).fseEntropy = 1 as libc::c_int as u32;
     (*dctx).litEntropy = (*dctx).fseEntropy;
     return dictPtr.offset_from(dict as *const u8) as libc::c_long as libc::size_t;
@@ -17798,7 +17798,7 @@ unsafe extern "C" fn ZSTDv07_decompress_insertDictionary(
     mut dict: *const libc::c_void,
     mut dictSize: libc::size_t,
 ) -> libc::size_t {
-    if dictSize < 8 as libc::c_int as libc::c_ulong {
+    if dictSize < 8 {
         return ZSTDv07_refDictContent(dctx, dict, dictSize);
     }
     let magic = MEM_readLE32(dict);
@@ -17807,10 +17807,10 @@ unsafe extern "C" fn ZSTDv07_decompress_insertDictionary(
     }
     (*dctx)
         .dictID = MEM_readLE32(
-        (dict as *const libc::c_char).offset(4 as libc::c_int as isize)
+        (dict as *const libc::c_char).offset(4)
             as *const libc::c_void,
     );
-    dict = (dict as *const libc::c_char).offset(8 as libc::c_int as isize)
+    dict = (dict as *const libc::c_char).offset(8)
         as *const libc::c_void;
     dictSize = (dictSize as libc::c_ulong)
         .wrapping_sub(8) ;
@@ -17854,7 +17854,7 @@ unsafe extern "C" fn ZSTDv07_createDDict_advanced(
     let ddict = (customMem.customAlloc)
         .expect(
             "non-null function pointer",
-        )(customMem.opaque, ::core::mem::size_of::<ZSTDv07_DDict>() as libc::c_ulong)
+        )(customMem.opaque, ::core::mem::size_of::<ZSTDv07_DDict>())
         as *mut ZSTDv07_DDict;
     let dictContent = (customMem.customAlloc)
         .expect("non-null function pointer")(customMem.opaque, dictSize);
@@ -17958,7 +17958,7 @@ pub unsafe extern "C" fn ZBUFFv07_createDCtx_advanced(
     zbd = (customMem.customAlloc)
         .expect(
             "non-null function pointer",
-        )(customMem.opaque, ::core::mem::size_of::<ZBUFFv07_DCtx>() as libc::c_ulong)
+        )(customMem.opaque, ::core::mem::size_of::<ZBUFFv07_DCtx>())
         as *mut ZBUFFv07_DCtx;
     if zbd.is_null() {
         return NULL as *mut ZBUFFv07_DCtx;
@@ -17966,12 +17966,12 @@ pub unsafe extern "C" fn ZBUFFv07_createDCtx_advanced(
     memset(
         zbd as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZBUFFv07_DCtx>() as libc::c_ulong,
+        ::core::mem::size_of::<ZBUFFv07_DCtx>(),
     );
     memcpy(
         &mut (*zbd).customMem as *mut ZSTDv07_customMem as *mut libc::c_void,
         &mut customMem as *mut ZSTDv07_customMem as *const libc::c_void,
-        ::core::mem::size_of::<ZSTDv07_customMem>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTDv07_customMem>(),
     );
     (*zbd).zd = ZSTDv07_createDCtx_advanced(customMem);
     if ((*zbd).zd).is_null() {
@@ -18033,7 +18033,7 @@ unsafe extern "C" fn ZBUFFv07_limitCopy(
     mut srcSize: libc::size_t,
 ) -> libc::size_t {
     let length = if dstCapacity < srcSize { dstCapacity } else { srcSize };
-    if length > 0 as libc::c_int as libc::c_ulong {
+    if length > 0 {
         memcpy(dst, src, length);
     }
     return length;
@@ -18126,18 +18126,18 @@ pub unsafe extern "C" fn ZBUFFv07_decompressContinue(
                     (*zbd)
                         .fParams
                         .windowSize = if (*zbd).fParams.windowSize
-                        > (1 as libc::c_uint) << 10 as libc::c_int
+                        > (1) << 10 as libc::c_int
                     {
                         (*zbd).fParams.windowSize
                     } else {
-                        (1 as libc::c_uint) << 10 as libc::c_int
+                        (1) << 10 as libc::c_int
                     };
                     let blockSize = (if (*zbd).fParams.windowSize
-                        < (128 as libc::c_int * 1024 as libc::c_int) as libc::c_uint
+                        < (128 as libc::c_int * 1024) as libc::c_uint
                     {
                         (*zbd).fParams.windowSize
                     } else {
-                        (128 as libc::c_int * 1024 as libc::c_int) as libc::c_uint
+                        (128 as libc::c_int * 1024) as libc::c_uint
                     }) as libc::size_t;
                     (*zbd).blockSize = blockSize;
                     if (*zbd).inBuffSize < blockSize {
@@ -18162,7 +18162,7 @@ pub unsafe extern "C" fn ZBUFFv07_decompressContinue(
                     let neededOutSize = ((*zbd).fParams.windowSize as libc::c_ulong)
                         .wrapping_add(blockSize)
                         .wrapping_add(
-                            (WILDCOPY_OVERLENGTH * 2 as libc::c_int) as libc::c_ulong,
+                            (WILDCOPY_OVERLENGTH * 2) as libc::c_ulong,
                         );
                     if (*zbd).outBuffSize < neededOutSize {
                         ((*zbd).customMem.customFree)
@@ -18202,7 +18202,7 @@ pub unsafe extern "C" fn ZBUFFv07_decompressContinue(
         match current_block_66 {
             8845338526596852646 => {
                 let neededInSize = ZSTDv07_nextSrcSizeToDecompress((*zbd).zd);
-                if neededInSize == 0 as libc::c_int as libc::c_ulong {
+                if neededInSize == 0 {
                     (*zbd).stage = ZBUFFds_init;
                     notDone = 0 as libc::c_int as u32;
                     current_block_66 = 12961834331865314435;

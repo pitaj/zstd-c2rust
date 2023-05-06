@@ -182,7 +182,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut libc::c_void, mut val: u16) 
         MEM_write16(memPtr, val);
     } else {
         let mut p = memPtr as *mut u8;
-        *p.offset(0 as libc::c_int as isize) = val as u8;
+        *p.offset(0) = val as u8;
         *p
             .offset(
                 1 as libc::c_int as isize,
@@ -193,7 +193,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut libc::c_void, mut val: u16) 
 unsafe extern "C" fn MEM_writeLE24(mut memPtr: *mut libc::c_void, mut val: u32) {
     MEM_writeLE16(memPtr, val as u16);
     *(memPtr as *mut u8)
-        .offset(2 as libc::c_int as isize) = (val >> 16 as libc::c_int) as u8;
+        .offset(2) = (val >> 16 as libc::c_int) as u8;
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut libc::c_void, mut val32: u32) {
@@ -256,8 +256,8 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
 ) -> libc::size_t {
     let ostart = dst as *mut u8;
     let flSize = (1 as libc::c_int
-        + (srcSize > 31 as libc::c_int as libc::c_ulong) as libc::c_int
-        + (srcSize > 4095 as libc::c_int as libc::c_ulong) as libc::c_int) as u32;
+        + (srcSize > 31) as libc::c_int
+        + (srcSize > 4095) as libc::c_int) as u32;
     if srcSize.wrapping_add(flSize as libc::c_ulong) > dstCapacity {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
@@ -274,7 +274,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
                 ostart as *mut libc::c_void,
                 ((set_basic as libc::c_int as u32)
                     .wrapping_add(
-                        ((1 as libc::c_int) << 2 as libc::c_int) as libc::c_uint,
+                        ((1) << 2 as libc::c_int) as libc::c_uint,
                     ) as libc::c_ulong)
                     .wrapping_add(srcSize << 4 as libc::c_int) as u16,
             );
@@ -284,7 +284,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
                 ostart as *mut libc::c_void,
                 ((set_basic as libc::c_int as u32)
                     .wrapping_add(
-                        ((3 as libc::c_int) << 2 as libc::c_int) as libc::c_uint,
+                        ((3) << 2 as libc::c_int) as libc::c_uint,
                     ) as libc::c_ulong)
                     .wrapping_add(srcSize << 4 as libc::c_int) as u32,
             );
@@ -304,9 +304,9 @@ unsafe extern "C" fn allBytesIdentical(
     mut src: *const libc::c_void,
     mut srcSize: libc::size_t,
 ) -> libc::c_int {
-    debug_assert!(srcSize >= 1 as libc::c_int as libc::c_ulong);
+    debug_assert!(srcSize >= 1);
     debug_assert!(!src.is_null());
-    let b = *(src as *const u8).offset(0 as libc::c_int as isize);
+    let b = *(src as *const u8).offset(0);
     let mut p: libc::size_t = 0;
     p = 1 as libc::c_int as libc::size_t;
     while p < srcSize {
@@ -326,9 +326,9 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
 ) -> libc::size_t {
     let ostart = dst as *mut u8;
     let flSize = (1 as libc::c_int
-        + (srcSize > 31 as libc::c_int as libc::c_ulong) as libc::c_int
-        + (srcSize > 4095 as libc::c_int as libc::c_ulong) as libc::c_int) as u32;
-    debug_assert!(dstCapacity >= 4 as libc::c_int as libc::c_ulong);
+        + (srcSize > 31) as libc::c_int
+        + (srcSize > 4095) as libc::c_int) as u32;
+    debug_assert!(dstCapacity >= 4);
     debug_assert!(allBytesIdentical(src, srcSize) != 0);
     match flSize {
         1 => {
@@ -343,7 +343,7 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
                 ostart as *mut libc::c_void,
                 ((set_rle as libc::c_int as u32)
                     .wrapping_add(
-                        ((1 as libc::c_int) << 2 as libc::c_int) as libc::c_uint,
+                        ((1) << 2 as libc::c_int) as libc::c_uint,
                     ) as libc::c_ulong)
                     .wrapping_add(srcSize << 4 as libc::c_int) as u16,
             );
@@ -353,7 +353,7 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
                 ostart as *mut libc::c_void,
                 ((set_rle as libc::c_int as u32)
                     .wrapping_add(
-                        ((3 as libc::c_int) << 2 as libc::c_int) as libc::c_uint,
+                        ((3) << 2 as libc::c_int) as libc::c_uint,
                     ) as libc::c_ulong)
                     .wrapping_add(srcSize << 4 as libc::c_int) as u32,
             );
@@ -369,9 +369,9 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     mut strategy: ZSTD_strategy,
     mut huf_repeat: HUF_repeat,
 ) -> libc::size_t {
-    debug_assert!(strategy as libc::c_int >= 0 as libc::c_int);
-    debug_assert!(strategy as libc::c_int <= 9 as libc::c_int);
-    let shift = if (9 as libc::c_int - strategy as libc::c_int) < 3 as libc::c_int {
+    debug_assert!(strategy as libc::c_int >= 0);
+    debug_assert!(strategy as libc::c_int <= 9);
+    let shift = if (9 as libc::c_int - strategy as libc::c_int) < 3 {
         9 as libc::c_int - strategy as libc::c_int
     } else {
         3 as libc::c_int
@@ -381,7 +381,7 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     {
         6 as libc::c_int as libc::c_ulong
     } else {
-        (8 as libc::c_int as libc::size_t) << shift
+        (8) << shift
     };
     return mintc;
 }
@@ -402,20 +402,20 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
 ) -> libc::size_t {
     let lhSize = (3 as libc::c_int
         + (srcSize
-            >= (1 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+            >= (1 as libc::c_int * ((1) << 10 as libc::c_int))
                 as libc::c_ulong) as libc::c_int
         + (srcSize
-            >= (16 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+            >= (16 as libc::c_int * ((1) << 10 as libc::c_int))
                 as libc::c_ulong) as libc::c_int) as libc::size_t;
     let ostart = dst as *mut u8;
-    let mut singleStream = (srcSize < 256 as libc::c_int as libc::c_ulong) as libc::c_int
+    let mut singleStream = (srcSize < 256) as libc::c_int
         as u32;
     let mut hType = set_compressed;
     let mut cLitSize: libc::size_t = 0;
     libc::memcpy(
         nextHuf as *mut libc::c_void,
         prevHuf as *const libc::c_void,
-        ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::size_t,
     );
     if disableLiteralCompression != 0 {
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
@@ -430,7 +430,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     let flags = 0 as libc::c_int
         | (if bmi2 != 0 { HUF_flags_bmi2 as libc::c_int } else { 0 as libc::c_int })
         | (if (strategy as libc::c_uint) < ZSTD_lazy as libc::c_int as libc::c_uint
-            && srcSize <= 1024 as libc::c_int as libc::c_ulong
+            && srcSize <= 1024
         {
             HUF_flags_preferRepeat as libc::c_int
         } else {
@@ -448,7 +448,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         });
     let mut huf_compress: huf_compress_f = None;
     if repeat as libc::c_uint == HUF_repeat_valid as libc::c_int as libc::c_uint
-        && lhSize == 3 as libc::c_int as libc::c_ulong
+        && lhSize == 3
     {
         singleStream = 1 as libc::c_int as u32;
     }
@@ -507,24 +507,24 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         hType = set_repeat;
     }
     let minGain = ZSTD_minGain(srcSize, strategy);
-    if cLitSize == 0 as libc::c_int as libc::c_ulong
+    if cLitSize == 0
         || cLitSize >= srcSize.wrapping_sub(minGain) || ERR_isError(cLitSize) != 0
     {
         libc::memcpy(
             nextHuf as *mut libc::c_void,
             prevHuf as *const libc::c_void,
-            ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::c_ulong as libc::size_t,
+            ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::size_t,
         );
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
     }
-    if cLitSize == 1 as libc::c_int as libc::c_ulong {
-        if srcSize >= 8 as libc::c_int as libc::c_ulong
+    if cLitSize == 1 {
+        if srcSize >= 8
             || allBytesIdentical(src, srcSize) != 0
         {
             libc::memcpy(
                 nextHuf as *mut libc::c_void,
                 prevHuf as *const libc::c_void,
-                ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::c_ulong
+                ::core::mem::size_of::<ZSTD_hufCTables_t>()
                     as libc::size_t,
             );
             return ZSTD_compressRleLiteralsBlock(dst, dstCapacity, src, srcSize);
@@ -536,7 +536,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     match lhSize {
         3 => {
             if singleStream == 0 {
-                debug_assert!(srcSize >= 6 as libc::c_int as libc::c_ulong);
+                debug_assert!(srcSize >= 6);
             }
             let lhc = (hType as libc::c_uint)
                 .wrapping_add(
@@ -547,17 +547,17 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             MEM_writeLE24(ostart as *mut libc::c_void, lhc);
         }
         4 => {
-            debug_assert!(srcSize >= 6 as libc::c_int as libc::c_ulong);
+            debug_assert!(srcSize >= 6);
             let lhc_0 = (hType as libc::c_uint)
-                .wrapping_add(((2 as libc::c_int) << 2 as libc::c_int) as libc::c_uint)
+                .wrapping_add(((2) << 2 as libc::c_int) as libc::c_uint)
                 .wrapping_add((srcSize as u32) << 4 as libc::c_int)
                 .wrapping_add((cLitSize as u32) << 18 as libc::c_int);
             MEM_writeLE32(ostart as *mut libc::c_void, lhc_0);
         }
         5 => {
-            debug_assert!(srcSize >= 6 as libc::c_int as libc::c_ulong);
+            debug_assert!(srcSize >= 6);
             let lhc_1 = (hType as libc::c_uint)
-                .wrapping_add(((3 as libc::c_int) << 2 as libc::c_int) as libc::c_uint)
+                .wrapping_add(((3) << 2 as libc::c_int) as libc::c_uint)
                 .wrapping_add((srcSize as u32) << 4 as libc::c_int)
                 .wrapping_add((cLitSize as u32) << 22 as libc::c_int);
             MEM_writeLE32(ostart as *mut libc::c_void, lhc_1);

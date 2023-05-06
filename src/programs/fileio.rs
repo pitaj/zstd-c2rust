@@ -695,8 +695,8 @@ unsafe extern "C" fn MEM_readLE16(mut memPtr: *const libc::c_void) -> u16 {
         return MEM_read16(memPtr)
     } else {
         let mut p = memPtr as *const u8;
-        return (*p.offset(0 as libc::c_int as isize) as libc::c_int
-            + ((*p.offset(1 as libc::c_int as isize) as libc::c_int)
+        return (*p.offset(0) as libc::c_int
+            + ((*p.offset(1) as libc::c_int)
                 << 8 as libc::c_int)) as u16;
     };
 }
@@ -704,7 +704,7 @@ unsafe extern "C" fn MEM_readLE16(mut memPtr: *const libc::c_void) -> u16 {
 unsafe extern "C" fn MEM_readLE24(mut memPtr: *const libc::c_void) -> u32 {
     return (MEM_readLE16(memPtr) as u32)
         .wrapping_add(
-            (*(memPtr as *const u8).offset(2 as libc::c_int as isize) as u32)
+            (*(memPtr as *const u8).offset(2) as u32)
                 << 16 as libc::c_int,
         );
 }
@@ -723,7 +723,7 @@ unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
 pub const PATH_SEP: libc::c_int = '/' as i32;
 pub const __S_IREAD: libc::c_int = 0o400 as libc::c_int;
 pub const __S_IWRITE: libc::c_int = 0o200 as libc::c_int;
-pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1 as libc::c_int);
+pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1);
 pub const CLOCKS_PER_SEC: libc::c_int = 1000000 as libc::c_int;
 pub const S_IRUSR: libc::c_int = __S_IREAD;
 pub const S_IWUSR: libc::c_int = __S_IWRITE;
@@ -748,10 +748,10 @@ pub const ZSTD_MAGICNUMBER: libc::c_uint = 0xfd2fb528 as libc::c_uint;
 pub const ZSTD_MAGIC_SKIPPABLE_START: libc::c_int = 0x184d2a50 as libc::c_int;
 pub const ZSTD_MAGIC_SKIPPABLE_MASK: libc::c_uint = 0xfffffff0 as libc::c_uint;
 pub const ZSTD_BLOCKSIZELOG_MAX: libc::c_int = 17 as libc::c_int;
-pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1 as libc::c_int) << ZSTD_BLOCKSIZELOG_MAX;
-pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0 as libc::c_ulonglong)
+pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1) << ZSTD_BLOCKSIZELOG_MAX;
+pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0)
     .wrapping_sub(1);
-pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0 as libc::c_ulonglong)
+pub const ZSTD_CONTENTSIZE_ERROR: libc::c_ulonglong = (0)
     .wrapping_sub(2);
 pub const ZSTD_WINDOWLOG_LIMIT_DEFAULT: libc::c_int = 27 as libc::c_int;
 pub const LZ4_EXTENSION: [libc::c_char; 5] = unsafe {
@@ -829,13 +829,13 @@ pub unsafe extern "C" fn FIO_lzmaVersion() -> *const libc::c_char {
 }
 pub const ADAPT_WINDOWLOG_DEFAULT: libc::c_int = 23 as libc::c_int;
 pub const DICTSIZE_MAX: libc::c_int = 32 as libc::c_int
-    * ((1 as libc::c_int) << 20 as libc::c_int);
+    * ((1) << 20 as libc::c_int);
 pub const DEFAULT_FILE_PERMISSIONS: libc::c_int = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP
     | S_IROTH | S_IWOTH;
 pub const TEMPORARY_FILE_PERMISSIONS: libc::c_int = S_IRUSR | S_IWUSR;
 static mut g_artefact: *const libc::c_char = NULL as *const libc::c_char;
 unsafe extern "C" fn INThandler(mut sig: libc::c_int) {
-    debug_assert!(sig == 2 as libc::c_int);
+    debug_assert!(sig == 2);
     signal(
         sig,
         ::core::mem::transmute::<
@@ -848,7 +848,7 @@ unsafe extern "C" fn INThandler(mut sig: libc::c_int) {
         remove(g_artefact);
     }
     fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-    exit(2 as libc::c_int);
+    exit(2);
 }
 unsafe extern "C" fn addHandler(mut dstFileName: *const libc::c_char) {
     if UTIL_isRegularFile(dstFileName) != 0 {
@@ -903,7 +903,7 @@ unsafe extern "C" fn ABRThandler(mut sig: libc::c_int) {
         name,
     );
     addrlen = backtrace(addrlist.as_mut_ptr(), MAX_STACK_FRAMES);
-    if addrlen == 0 as libc::c_int {
+    if addrlen == 0 {
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
         return;
     }
@@ -938,29 +938,29 @@ pub unsafe extern "C" fn FIO_addAbortHandler() {
 unsafe extern "C" fn FIO_shouldDisplayFileSummary(
     mut fCtx: *const FIO_ctx_t,
 ) -> libc::c_int {
-    return ((*fCtx).nbFilesTotal <= 1 as libc::c_int
-        || g_display_prefs.displayLevel >= 3 as libc::c_int) as libc::c_int;
+    return ((*fCtx).nbFilesTotal <= 1
+        || g_display_prefs.displayLevel >= 3) as libc::c_int;
 }
 unsafe extern "C" fn FIO_shouldDisplayMultipleFileSummary(
     mut fCtx: *const FIO_ctx_t,
 ) -> libc::c_int {
-    let shouldDisplay = ((*fCtx).nbFilesProcessed >= 1 as libc::c_int
-        && (*fCtx).nbFilesTotal > 1 as libc::c_int) as libc::c_int;
+    let shouldDisplay = ((*fCtx).nbFilesProcessed >= 1
+        && (*fCtx).nbFilesTotal > 1) as libc::c_int;
     debug_assert!(shouldDisplay != 0 || FIO_shouldDisplayFileSummary(fCtx) != 0
-        || (*fCtx).nbFilesProcessed == 0 as libc::c_int);
+        || (*fCtx).nbFilesProcessed == 0);
     return shouldDisplay;
 }
 pub const FIO_OVERLAP_LOG_NOTSET: libc::c_int = 9999 as libc::c_int;
 pub const FIO_LDM_PARAM_NOTSET: libc::c_int = 9999 as libc::c_int;
 #[no_mangle]
 pub unsafe extern "C" fn FIO_createPreferences() -> *mut FIO_prefs_t {
-    let ret = malloc(::core::mem::size_of::<FIO_prefs_t>() as libc::c_ulong)
+    let ret = malloc(::core::mem::size_of::<FIO_prefs_t>())
         as *mut FIO_prefs_t;
     if ret.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -970,24 +970,24 @@ pub unsafe extern "C" fn FIO_createPreferences() -> *mut FIO_prefs_t {
                 281 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 21 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Allocation error : not enough memory\0" as *const u8
                     as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(21 as libc::c_int);
+        exit(21);
     }
     (*ret).compressionType = FIO_zstdCompression;
     (*ret).overwrite = 0 as libc::c_int;
@@ -1001,7 +1001,7 @@ pub unsafe extern "C" fn FIO_createPreferences() -> *mut FIO_prefs_t {
     (*ret).overlapLog = FIO_OVERLAP_LOG_NOTSET;
     (*ret).adaptiveMode = 0 as libc::c_int;
     (*ret).rsyncable = 0 as libc::c_int;
-    (*ret).minAdaptLevel = -(50 as libc::c_int);
+    (*ret).minAdaptLevel = -(50);
     (*ret).maxAdaptLevel = 22 as libc::c_int;
     (*ret).ldmFlag = 0 as libc::c_int;
     (*ret).ldmHashLog = 0 as libc::c_int;
@@ -1016,18 +1016,18 @@ pub unsafe extern "C" fn FIO_createPreferences() -> *mut FIO_prefs_t {
     (*ret).excludeCompressedFiles = 0 as libc::c_int;
     (*ret).allowBlockDevices = 0 as libc::c_int;
     (*ret).asyncIO = AIO_supported();
-    (*ret).passThrough = -(1 as libc::c_int);
+    (*ret).passThrough = -(1);
     return ret;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_createContext() -> *mut FIO_ctx_t {
-    let ret = malloc(::core::mem::size_of::<FIO_ctx_t>() as libc::c_ulong)
+    let ret = malloc(::core::mem::size_of::<FIO_ctx_t>())
         as *mut FIO_ctx_t;
     if ret.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1037,24 +1037,24 @@ pub unsafe extern "C" fn FIO_createContext() -> *mut FIO_ctx_t {
                 317 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 21 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Allocation error : not enough memory\0" as *const u8
                     as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(21 as libc::c_int);
+        exit(21);
     }
     (*ret).currFileIdx = 0 as libc::c_int;
     (*ret).hasStdinInput = 0 as libc::c_int;
@@ -1132,8 +1132,8 @@ pub unsafe extern "C" fn FIO_setNbWorkers(
     prefs: *mut FIO_prefs_t,
     mut nbWorkers: libc::c_int,
 ) {
-    if nbWorkers > 0 as libc::c_int {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+    if nbWorkers > 0 {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"Note : multi-threading is disabled \n\0" as *const u8
@@ -1162,8 +1162,8 @@ pub unsafe extern "C" fn FIO_setBlockSize(
     prefs: *mut FIO_prefs_t,
     mut blockSize: libc::c_int,
 ) {
-    if blockSize != 0 && (*prefs).nbWorkers == 0 as libc::c_int {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+    if blockSize != 0 && (*prefs).nbWorkers == 0 {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"Setting block size is useless in single-thread mode \n\0" as *const u8
@@ -1178,8 +1178,8 @@ pub unsafe extern "C" fn FIO_setOverlapLog(
     prefs: *mut FIO_prefs_t,
     mut overlapLog: libc::c_int,
 ) {
-    if overlapLog != 0 && (*prefs).nbWorkers == 0 as libc::c_int {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+    if overlapLog != 0 && (*prefs).nbWorkers == 0 {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"Setting overlapLog is useless in single-thread mode \n\0" as *const u8
@@ -1194,11 +1194,11 @@ pub unsafe extern "C" fn FIO_setAdaptiveMode(
     prefs: *mut FIO_prefs_t,
     mut adapt: libc::c_int,
 ) {
-    if adapt > 0 as libc::c_int && (*prefs).nbWorkers == 0 as libc::c_int {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+    if adapt > 0 && (*prefs).nbWorkers == 0 {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1208,24 +1208,24 @@ pub unsafe extern "C" fn FIO_setAdaptiveMode(
                 394 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 1 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Adaptive mode is not compatible with single thread mode \n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     (*prefs).adaptiveMode = adapt;
 }
@@ -1241,11 +1241,11 @@ pub unsafe extern "C" fn FIO_setRsyncable(
     prefs: *mut FIO_prefs_t,
     mut rsyncable: libc::c_int,
 ) {
-    if rsyncable > 0 as libc::c_int && (*prefs).nbWorkers == 0 as libc::c_int {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+    if rsyncable > 0 && (*prefs).nbWorkers == 0 {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1255,24 +1255,24 @@ pub unsafe extern "C" fn FIO_setRsyncable(
                 404 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 1 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Rsyncable mode is not compatible with single thread mode \n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     (*prefs).rsyncable = rsyncable;
 }
@@ -1296,7 +1296,7 @@ pub unsafe extern "C" fn FIO_setSrcSizeHint(
     mut srcSizeHint: libc::size_t,
 ) {
     (*prefs)
-        .srcSizeHint = (if (2147483647 as libc::c_int as libc::size_t) < srcSizeHint {
+        .srcSizeHint = (if (2147483647) < srcSizeHint {
         2147483647 as libc::c_int as libc::size_t
     } else {
         srcSizeHint
@@ -1336,7 +1336,7 @@ pub unsafe extern "C" fn FIO_setLdmFlag(
     prefs: *mut FIO_prefs_t,
     mut ldmFlag: libc::c_uint,
 ) {
-    (*prefs).ldmFlag = (ldmFlag > 0 as libc::c_int as libc::c_uint) as libc::c_int;
+    (*prefs).ldmFlag = (ldmFlag > 0) as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FIO_setLdmHashLog(
@@ -1385,7 +1385,7 @@ pub unsafe extern "C" fn FIO_setAsyncIOFlag(
     prefs: *mut FIO_prefs_t,
     mut value: libc::c_int,
 ) {
-    if g_display_prefs.displayLevel >= 2 as libc::c_int {
+    if g_display_prefs.displayLevel >= 2 {
         fprintf(
             stderr,
             b"Note : asyncio is disabled (lack of multithreading support) \n\0"
@@ -1455,7 +1455,7 @@ unsafe extern "C" fn FIO_removeFile(mut path: *const libc::c_char) -> libc::c_in
         __glibc_reserved: [0; 3],
     };
     if UTIL_stat(path, &mut statbuf) == 0 {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"zstd: Failed to stat %s while trying to remove it\n\0" as *const u8
@@ -1466,7 +1466,7 @@ unsafe extern "C" fn FIO_removeFile(mut path: *const libc::c_char) -> libc::c_in
         return 0 as libc::c_int;
     }
     if UTIL_isRegularFileStat(&mut statbuf) == 0 {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"zstd: Refusing to remove non-regular file %s\n\0" as *const u8
@@ -1491,7 +1491,7 @@ unsafe extern "C" fn FIO_openSrcFile(
     debug_assert!(!srcFileName.is_null());
     debug_assert!(!statbuf.is_null());
     if strcmp(srcFileName, stdinmark.as_ptr()) == 0 {
-        if g_display_prefs.displayLevel >= 4 as libc::c_int {
+        if g_display_prefs.displayLevel >= 4 {
             fprintf(
                 stderr,
                 b"Using stdin for input \n\0" as *const u8 as *const libc::c_char,
@@ -1500,7 +1500,7 @@ unsafe extern "C" fn FIO_openSrcFile(
         return stdin;
     }
     if UTIL_stat(srcFileName, statbuf) == 0 {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: can't stat %s : %s -- ignored \n\0" as *const u8
@@ -1514,7 +1514,7 @@ unsafe extern "C" fn FIO_openSrcFile(
     if UTIL_isRegularFileStat(statbuf) == 0 && UTIL_isFIFOStat(statbuf) == 0
         && !(allowBlockDevices != 0 && UTIL_isBlockDevStat(statbuf) != 0)
     {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: %s is not a regular file -- ignored \n\0" as *const u8
@@ -1526,7 +1526,7 @@ unsafe extern "C" fn FIO_openSrcFile(
     }
     let f = fopen(srcFileName, b"rb\0" as *const u8 as *const libc::c_char);
     if f.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: %s: %s \n\0" as *const u8 as *const libc::c_char,
@@ -1550,15 +1550,15 @@ unsafe extern "C" fn FIO_openDstFile(
     }
     debug_assert!(!dstFileName.is_null());
     if strcmp(dstFileName, stdoutmark.as_ptr()) == 0 {
-        if g_display_prefs.displayLevel >= 4 as libc::c_int {
+        if g_display_prefs.displayLevel >= 4 {
             fprintf(
                 stderr,
                 b"Using stdout for output \n\0" as *const u8 as *const libc::c_char,
             );
         }
-        if (*prefs).sparseFileSupport == 1 as libc::c_int {
+        if (*prefs).sparseFileSupport == 1 {
             (*prefs).sparseFileSupport = 0 as libc::c_int;
-            if g_display_prefs.displayLevel >= 4 as libc::c_int {
+            if g_display_prefs.displayLevel >= 4 {
                 fprintf(
                     stderr,
                     b"Sparse File Support is automatically disabled on stdout ; try --sparse \n\0"
@@ -1569,7 +1569,7 @@ unsafe extern "C" fn FIO_openDstFile(
         return stdout;
     }
     if !srcFileName.is_null() && UTIL_isSameFile(srcFileName, dstFileName) != 0 {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: Refusing to open an output file which will overwrite the input file \n\0"
@@ -1579,11 +1579,11 @@ unsafe extern "C" fn FIO_openDstFile(
         return NULL as *mut FILE;
     }
     isDstRegFile = UTIL_isRegularFile(dstFileName);
-    if (*prefs).sparseFileSupport == 1 as libc::c_int {
+    if (*prefs).sparseFileSupport == 1 {
         (*prefs).sparseFileSupport = ZSTD_SPARSE_DEFAULT;
         if isDstRegFile == 0 {
             (*prefs).sparseFileSupport = 0 as libc::c_int;
-            if g_display_prefs.displayLevel >= 4 as libc::c_int {
+            if g_display_prefs.displayLevel >= 4 {
                 fprintf(
                     stderr,
                     b"Sparse File Support is disabled when output is not a file \n\0"
@@ -1594,10 +1594,10 @@ unsafe extern "C" fn FIO_openDstFile(
     }
     if isDstRegFile != 0 {
         if strcmp(dstFileName, nulmark.as_ptr()) == 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1607,14 +1607,14 @@ unsafe extern "C" fn FIO_openDstFile(
                     621 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     40 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s is unexpectedly categorized as a regular file\0" as *const u8
@@ -1622,14 +1622,14 @@ unsafe extern "C" fn FIO_openDstFile(
                     dstFileName,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(40 as libc::c_int);
+            exit(40);
         }
         if (*prefs).overwrite == 0 {
-            if g_display_prefs.displayLevel <= 1 as libc::c_int {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel <= 1 {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s already exists; not overwritten  \n\0" as *const u8
@@ -1659,11 +1659,11 @@ unsafe extern "C" fn FIO_openDstFile(
     let openflags = O_WRONLY | O_CREAT | O_TRUNC;
     let fd = open(dstFileName, openflags, mode);
     let mut f = NULL as *mut FILE;
-    if fd != -(1 as libc::c_int) {
+    if fd != -(1) {
         f = fdopen(fd, b"wb\0" as *const u8 as *const libc::c_char);
     }
     if f.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: %s: %s\n\0" as *const u8 as *const libc::c_char,
@@ -1675,10 +1675,10 @@ unsafe extern "C" fn FIO_openDstFile(
         f,
         NULL as *mut libc::c_char,
         _IOFBF,
-        (1 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as libc::size_t,
+        (1 as libc::c_int * ((1) << 20 as libc::c_int)) as libc::size_t,
     ) != 0
     {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"Warning: setvbuf failed for %s\n\0" as *const u8
@@ -1698,10 +1698,10 @@ unsafe extern "C" fn FIO_getDictFileStat(
         return;
     }
     if UTIL_stat(fileName, dictFileStat) == 0 {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1711,14 +1711,14 @@ unsafe extern "C" fn FIO_getDictFileStat(
                 689 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 31 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Stat failed on dictionary file %s: %s\0" as *const u8
@@ -1727,16 +1727,16 @@ unsafe extern "C" fn FIO_getDictFileStat(
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(31 as libc::c_int);
+        exit(31);
     }
     if UTIL_isRegularFileStat(dictFileStat) == 0 {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1746,14 +1746,14 @@ unsafe extern "C" fn FIO_getDictFileStat(
                 693 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 32 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Dictionary %s must be a regular file.\0" as *const u8
@@ -1761,10 +1761,10 @@ unsafe extern "C" fn FIO_getDictFileStat(
                 fileName,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(32 as libc::c_int);
+        exit(32);
     }
 }
 unsafe extern "C" fn FIO_setDictBufferMalloc(
@@ -1782,7 +1782,7 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
     if fileName.is_null() {
         return 0 as libc::c_int as libc::size_t;
     }
-    if g_display_prefs.displayLevel >= 4 as libc::c_int {
+    if g_display_prefs.displayLevel >= 4 {
         fprintf(
             stderr,
             b"Loading %s as dictionary \n\0" as *const u8 as *const libc::c_char,
@@ -1791,10 +1791,10 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
     }
     fileHandle = fopen(fileName, b"rb\0" as *const u8 as *const libc::c_char);
     if fileHandle.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1804,14 +1804,14 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
                 719 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 33 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Couldn't open dictionary %s: %s\0" as *const u8 as *const libc::c_char,
@@ -1819,10 +1819,10 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(33 as libc::c_int);
+        exit(33);
     }
     fileSize = UTIL_getFileSizeStat(dictFileStat);
     let dictSizeMax = (if (*prefs).patchFromMode != 0 {
@@ -1831,10 +1831,10 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
         DICTSIZE_MAX as libc::c_uint
     }) as libc::size_t;
     if fileSize > dictSizeMax {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1844,14 +1844,14 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
                 727 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 34 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Dictionary file %s is too large (> %u bytes)\0" as *const u8
@@ -1860,17 +1860,17 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
                 dictSizeMax as libc::c_uint,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(34 as libc::c_int);
+        exit(34);
     }
     *bufferPtr = malloc(fileSize);
     if (*bufferPtr).is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1880,24 +1880,24 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
                 731 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 34 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(34 as libc::c_int);
+        exit(34);
     }
     let readSize = fread(
         *bufferPtr,
@@ -1906,10 +1906,10 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
         fileHandle,
     );
     if readSize != fileSize {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1919,14 +1919,14 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
                 735 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 35 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error reading dictionary file %s : %s\0" as *const u8
@@ -1935,10 +1935,10 @@ unsafe extern "C" fn FIO_setDictBufferMalloc(
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(35 as libc::c_int);
+        exit(35);
     }
     fclose(fileHandle);
     return fileSize;
@@ -1965,7 +1965,7 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
     if fileName.is_null() {
         return 0 as libc::c_int as libc::size_t;
     }
-    if g_display_prefs.displayLevel >= 4 as libc::c_int {
+    if g_display_prefs.displayLevel >= 4 {
         fprintf(
             stderr,
             b"Loading %s as dictionary \n\0" as *const u8 as *const libc::c_char,
@@ -1973,11 +1973,11 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
         );
     }
     fileHandle = open(fileName, O_RDONLY);
-    if fileHandle == -(1 as libc::c_int) {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+    if fileHandle == -(1) {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -1987,14 +1987,14 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
                 766 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 33 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Couldn't open dictionary %s: %s\0" as *const u8 as *const libc::c_char,
@@ -2002,10 +2002,10 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(33 as libc::c_int);
+        exit(33);
     }
     fileSize = UTIL_getFileSizeStat(dictFileStat);
     let dictSizeMax = (if (*prefs).patchFromMode != 0 {
@@ -2014,10 +2014,10 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
         DICTSIZE_MAX as libc::c_uint
     }) as libc::size_t;
     if fileSize > dictSizeMax {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2027,14 +2027,14 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
                 774 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 34 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Dictionary file %s is too large (> %u bytes)\0" as *const u8
@@ -2043,10 +2043,10 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
                 dictSizeMax as libc::c_uint,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(34 as libc::c_int);
+        exit(34);
     }
     *bufferPtr = mmap(
         NULL as *mut libc::c_void,
@@ -2057,10 +2057,10 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
         0 as libc::c_int as __off_t,
     );
     if (*bufferPtr).is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2070,24 +2070,24 @@ unsafe extern "C" fn FIO_setDictBufferMMap(
                 779 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 34 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(34 as libc::c_int);
+        exit(34);
     }
     close(fileHandle);
     return fileSize;
@@ -2144,11 +2144,11 @@ pub unsafe extern "C" fn FIO_checkFilenameCollisions(
     let mut filename = 0 as *const libc::c_char;
     let mut u: libc::c_uint = 0;
     filenameTableSorted = malloc(
-        (::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong)
+        (::core::mem::size_of::<*mut libc::c_char>())
             .wrapping_mul(nbFiles as libc::c_ulong),
     ) as *mut *const libc::c_char;
     if filenameTableSorted.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Allocation error during filename collision checking \n\0" as *const u8
@@ -2165,14 +2165,14 @@ pub unsafe extern "C" fn FIO_checkFilenameCollisions(
             *fresh0 = *filenameTable.offset(u as isize);
         } else {
             let ref mut fresh1 = *filenameTableSorted.offset(u as isize);
-            *fresh1 = filename.offset(1 as libc::c_int as isize);
+            *fresh1 = filename.offset(1);
         }
         u = u.wrapping_add(1);
     }
     qsort(
         filenameTableSorted as *mut libc::c_void,
         nbFiles as libc::size_t,
-        ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
+        ::core::mem::size_of::<*mut libc::c_char>(),
         Some(
             UTIL_compareStr
                 as unsafe extern "C" fn(
@@ -2181,12 +2181,12 @@ pub unsafe extern "C" fn FIO_checkFilenameCollisions(
                 ) -> libc::c_int,
         ),
     );
-    prevElem = *filenameTableSorted.offset(0 as libc::c_int as isize);
+    prevElem = *filenameTableSorted.offset(0);
     u = 1 as libc::c_int as libc::c_uint;
     while u < nbFiles {
-        if strcmp(prevElem, *filenameTableSorted.offset(u as isize)) == 0 as libc::c_int
+        if strcmp(prevElem, *filenameTableSorted.offset(u as isize)) == 0
         {
-            if g_display_prefs.displayLevel >= 2 as libc::c_int {
+            if g_display_prefs.displayLevel >= 2 {
                 fprintf(
                     stderr,
                     b"WARNING: Two files have same filename: %s\n\0" as *const u8
@@ -2209,7 +2209,7 @@ unsafe extern "C" fn extractFilename(
     if search.is_null() {
         return path;
     }
-    return search.offset(1 as libc::c_int as isize);
+    return search.offset(1);
 }
 unsafe extern "C" fn FIO_createFilename_fromOutDir(
     mut path: *const libc::c_char,
@@ -2230,10 +2230,10 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
             .wrapping_add(1),
     ) as *mut libc::c_char;
     if result.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2243,14 +2243,14 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
                 936 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 30 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: FIO_createFilename_fromOutDir: %s\0" as *const u8
@@ -2258,10 +2258,10 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(30 as libc::c_int);
+        exit(30);
     }
     memcpy(
         result as *mut libc::c_void,
@@ -2285,7 +2285,7 @@ unsafe extern "C" fn FIO_createFilename_fromOutDir(
             1 as libc::c_int as libc::c_ulong,
         );
         memcpy(
-            result.offset(strlen(outDirName) as isize).offset(1 as libc::c_int as isize)
+            result.offset(strlen(outDirName) as isize).offset(1)
                 as *mut libc::c_void,
             filenameStart as *const libc::c_void,
             strlen(filenameStart),
@@ -2317,19 +2317,19 @@ unsafe extern "C" fn FIO_adjustMemLimitForPatchFromMode(
     } else {
         maxSrcFileSize
     };
-    let maxWindowSize = (1 as libc::c_uint)
-        << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+    let maxWindowSize = (1)
+        << (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             ZSTD_WINDOWLOG_MAX_32
         } else {
             ZSTD_WINDOWLOG_MAX_64
         });
     if maxSize == UTIL_FILESIZE_UNKNOWN as libc::c_ulonglong {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2339,31 +2339,31 @@ unsafe extern "C" fn FIO_adjustMemLimitForPatchFromMode(
                 970 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 42 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Using --patch-from with stdin requires --stream-size\0" as *const u8
                     as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(42 as libc::c_int);
+        exit(42);
     }
-    debug_assert!(maxSize != -(1 as libc::c_int) as u64 as libc::c_ulonglong);
+    debug_assert!(maxSize != -(1) as u64 as libc::c_ulonglong);
     if maxSize > maxWindowSize as libc::c_ulonglong {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2373,29 +2373,29 @@ unsafe extern "C" fn FIO_adjustMemLimitForPatchFromMode(
                 973 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 42 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Can't handle files larger than %u GB\n\0" as *const u8
                     as *const libc::c_char,
                 maxWindowSize
                     .wrapping_div(
-                        (1 as libc::c_int as libc::c_uint)
-                            .wrapping_mul((1 as libc::c_uint) << 30 as libc::c_int),
+                        (1)
+                            .wrapping_mul((1) << 30 as libc::c_int),
                     ),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(42 as libc::c_int);
+        exit(42);
     }
     FIO_setMemLimit(prefs, maxSize as libc::c_uint);
 }
@@ -2407,10 +2407,10 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
 ) -> libc::c_int {
     if (*fCtx).hasStdoutOutput != 0 {
         if (*prefs).removeSrcFile != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2420,32 +2420,32 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
                     1000 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     43 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"It's not allowed to remove input files when processed output is piped to stdout. This scenario is not supposed to be possible. This is a programming error. File an issue for it to be fixed.\0"
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(43 as libc::c_int);
+            exit(43);
         }
     }
     if (*prefs).testMode != 0 {
         if (*prefs).removeSrcFile != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2455,43 +2455,43 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
                     1008 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     43 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"Test mode shall not remove input files! This scenario is not supposed to be possible. This is a programming error. File an issue for it to be fixed.\0"
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(43 as libc::c_int);
+            exit(43);
         }
         return 0 as libc::c_int;
     }
-    if (*fCtx).nbFilesTotal == 1 as libc::c_int {
+    if (*fCtx).nbFilesTotal == 1 {
         return 0 as libc::c_int;
     }
-    debug_assert!((*fCtx).nbFilesTotal > 1 as libc::c_int);
+    debug_assert!((*fCtx).nbFilesTotal > 1);
     if outFileName.is_null() {
         return 0 as libc::c_int;
     }
     if (*fCtx).hasStdoutOutput != 0 {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"zstd: WARNING: all input files will be processed and concatenated into stdout. \n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-    } else if g_display_prefs.displayLevel >= 2 as libc::c_int {
+    } else if g_display_prefs.displayLevel >= 2 {
         fprintf(
             stderr,
             b"zstd: WARNING: all input files will be processed and concatenated into a single output file: %s \n\0"
@@ -2499,7 +2499,7 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
             outFileName,
         );
     }
-    if g_display_prefs.displayLevel >= 2 as libc::c_int {
+    if g_display_prefs.displayLevel >= 2 {
         fprintf(
             stderr,
             b"The concatenated output CANNOT regenerate original file names nor directory structure. \n\0"
@@ -2507,7 +2507,7 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
         );
     }
     if (*prefs).removeSrcFile != 0 {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int {
+        if g_display_prefs.displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"Since it's a destructive operation, input files will not be removed. \n\0"
@@ -2523,14 +2523,14 @@ unsafe extern "C" fn FIO_multiFilesConcatWarning(
         return 0 as libc::c_int;
     }
     if g_display_prefs.displayLevel <= displayLevelCutoff {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Concatenating multiple processed inputs into a single output loses file metadata. \n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"Aborting. \n\0" as *const u8 as *const libc::c_char);
         }
         return 1 as libc::c_int;
@@ -2575,7 +2575,7 @@ unsafe extern "C" fn setOutBuffer(
 unsafe extern "C" fn ZSTD_cycleLog(mut hashLog: u32, mut strat: ZSTD_strategy) -> u32 {
     let btScale = (strat as u32 >= ZSTD_btlazy2 as libc::c_int as u32) as libc::c_int
         as u32;
-    debug_assert!(hashLog > 1 as libc::c_int as libc::c_uint);
+    debug_assert!(hashLog > 1);
     return hashLog.wrapping_sub(btScale);
 }
 unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
@@ -2594,15 +2594,15 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
     );
     FIO_adjustMemLimitForPatchFromMode(prefs, dictSize, maxSrcFileSize);
     if fileWindowLog
-        > (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        > (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             ZSTD_WINDOWLOG_MAX_32
         } else {
             ZSTD_WINDOWLOG_MAX_64
         }) as libc::c_uint
     {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Max window log exceeded by file (compression ratio will suffer)\n\0"
@@ -2612,16 +2612,16 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
     }
     (*comprParams)
         .windowLog = if 10 as libc::c_int as libc::c_uint
-        > (if ((if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        > (if ((if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             30 as libc::c_int
         } else {
             31 as libc::c_int
         }) as libc::c_uint) < fileWindowLog
         {
-            (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+            (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 30 as libc::c_int
             } else {
@@ -2632,16 +2632,16 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
         })
     {
         10 as libc::c_int as libc::c_uint
-    } else if ((if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 4 as libc::c_int as libc::c_ulong
+    } else if ((if ::core::mem::size_of::<libc::size_t>()
+        == 4
     {
         30 as libc::c_int
     } else {
         31 as libc::c_int
     }) as libc::c_uint) < fileWindowLog
     {
-        (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             30 as libc::c_int
         } else {
@@ -2652,7 +2652,7 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
     };
     if fileWindowLog > ZSTD_cycleLog(cParams.chainLog, cParams.strategy) {
         if (*prefs).ldmFlag == 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"long mode automatically triggered\n\0" as *const u8
@@ -2663,34 +2663,34 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
         FIO_setLdmFlag(prefs, 1 as libc::c_int as libc::c_uint);
     }
     if cParams.strategy as libc::c_uint >= ZSTD_btopt as libc::c_int as libc::c_uint {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"[Optimal parser notes] Consider the following to improve patch size at the cost of speed:\n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"- Use --single-thread mode in the zstd cli\n\0" as *const u8
                     as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"- Set a larger targetLength (e.g. --zstd=targetLength=4096)\n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"- Set a larger chainLog (e.g. --zstd=chainLog=%u)\n\0" as *const u8
                     as *const libc::c_char,
-                if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                    == 4 as libc::c_int as libc::c_ulong
+                if ::core::mem::size_of::<libc::size_t>()
+                    == 4
                 {
                     29 as libc::c_int
                 } else {
@@ -2698,7 +2698,7 @@ unsafe extern "C" fn FIO_adjustParamsForPatchFromMode(
                 },
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Also consider playing around with searchLog and hashLog\n\0"
@@ -2750,9 +2750,9 @@ unsafe extern "C" fn FIO_createCResources(
     memset(
         &mut ress as *mut cRess_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<cRess_t>() as libc::c_ulong,
+        ::core::mem::size_of::<cRess_t>(),
     );
-    if g_display_prefs.displayLevel >= 6 as libc::c_int {
+    if g_display_prefs.displayLevel >= 6 {
         fprintf(
             stderr,
             b"FIO_createCResources \n\0" as *const u8 as *const libc::c_char,
@@ -2760,10 +2760,10 @@ unsafe extern "C" fn FIO_createCResources(
     }
     ress.cctx = ZSTD_createCCtx();
     if (ress.cctx).is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2773,14 +2773,14 @@ unsafe extern "C" fn FIO_createCResources(
                 1124 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 30 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"allocation error (%s): can't create ZSTD_CCtx\0" as *const u8
@@ -2788,10 +2788,10 @@ unsafe extern "C" fn FIO_createCResources(
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(30 as libc::c_int);
+        exit(30);
     }
     FIO_getDictFileStat(dictFileName, &mut ress.dictFileStat);
     if (*prefs).patchFromMode != 0 {
@@ -2802,7 +2802,7 @@ unsafe extern "C" fn FIO_createCResources(
             prefs,
             &mut comprParams,
             dictSize as libc::c_ulonglong,
-            if ssSize > 0 as libc::c_int as libc::c_ulonglong {
+            if ssSize > 0 {
                 ssSize
             } else {
                 maxSrcFileSize
@@ -2825,10 +2825,10 @@ unsafe extern "C" fn FIO_createCResources(
     ress.writeCtx = AIO_WritePool_create(prefs, ZSTD_CStreamOutSize());
     ress.readCtx = AIO_ReadPool_create(prefs, ZSTD_CStreamInSize());
     if !dictFileName.is_null() && (ress.dict.dictBuffer).is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2838,24 +2838,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1145 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 32 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"allocation error : can't create dictBuffer\0" as *const u8
                     as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(32 as libc::c_int);
+        exit(32);
     }
     ress.dictFileName = dictFileName;
     if (*prefs).adaptiveMode != 0 && (*prefs).ldmFlag == 0 && comprParams.windowLog == 0
@@ -2869,7 +2869,7 @@ unsafe extern "C" fn FIO_createCResources(
         (*prefs).contentSize,
     );
     if ZSTD_isError(err) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -2877,10 +2877,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2890,29 +2890,29 @@ unsafe extern "C" fn FIO_createCResources(
                 1151 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_0: libc::size_t = 0;
     err_0 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_dictIDFlag, (*prefs).dictIDFlag);
     if ZSTD_isError(err_0) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -2920,10 +2920,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2933,24 +2933,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1152 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_0),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_1: libc::size_t = 0;
     err_1 = ZSTD_CCtx_setParameter(
@@ -2959,7 +2959,7 @@ unsafe extern "C" fn FIO_createCResources(
         (*prefs).checksumFlag,
     );
     if ZSTD_isError(err_1) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -2967,10 +2967,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -2980,29 +2980,29 @@ unsafe extern "C" fn FIO_createCResources(
                 1153 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_1),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_2: libc::size_t = 0;
     err_2 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_compressionLevel, cLevel);
     if ZSTD_isError(err_2) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3010,10 +3010,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3023,24 +3023,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1155 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_2),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_3: libc::size_t = 0;
     err_3 = ZSTD_CCtx_setParameter(
@@ -3049,7 +3049,7 @@ unsafe extern "C" fn FIO_createCResources(
         (*prefs).targetCBlockSize as libc::c_int,
     );
     if ZSTD_isError(err_3) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3057,10 +3057,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3070,24 +3070,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1157 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_3),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_4: libc::size_t = 0;
     err_4 = ZSTD_CCtx_setParameter(
@@ -3096,7 +3096,7 @@ unsafe extern "C" fn FIO_createCResources(
         (*prefs).srcSizeHint,
     );
     if ZSTD_isError(err_4) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3104,10 +3104,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3117,24 +3117,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1159 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_4),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_5: libc::size_t = 0;
     err_5 = ZSTD_CCtx_setParameter(
@@ -3143,7 +3143,7 @@ unsafe extern "C" fn FIO_createCResources(
         (*prefs).ldmFlag,
     );
     if ZSTD_isError(err_5) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3151,10 +3151,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3164,29 +3164,29 @@ unsafe extern "C" fn FIO_createCResources(
                 1161 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_5),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_6: libc::size_t = 0;
     err_6 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_ldmHashLog, (*prefs).ldmHashLog);
     if ZSTD_isError(err_6) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3194,10 +3194,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3207,29 +3207,29 @@ unsafe extern "C" fn FIO_createCResources(
                 1162 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_6),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_7: libc::size_t = 0;
     err_7 = ZSTD_CCtx_setParameter(ress.cctx, ZSTD_c_ldmMinMatch, (*prefs).ldmMinMatch);
     if ZSTD_isError(err_7) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3237,10 +3237,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3250,24 +3250,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1163 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_7),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     if (*prefs).ldmBucketSizeLog != FIO_LDM_PARAM_NOTSET {
         let mut err_8: libc::size_t = 0;
@@ -3277,7 +3277,7 @@ unsafe extern "C" fn FIO_createCResources(
             (*prefs).ldmBucketSizeLog,
         );
         if ZSTD_isError(err_8) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3285,10 +3285,10 @@ unsafe extern "C" fn FIO_createCResources(
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3298,24 +3298,24 @@ unsafe extern "C" fn FIO_createCResources(
                     1165 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err_8),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
     }
     if (*prefs).ldmHashRateLog != FIO_LDM_PARAM_NOTSET {
@@ -3326,7 +3326,7 @@ unsafe extern "C" fn FIO_createCResources(
             (*prefs).ldmHashRateLog,
         );
         if ZSTD_isError(err_9) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3334,10 +3334,10 @@ unsafe extern "C" fn FIO_createCResources(
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3347,24 +3347,24 @@ unsafe extern "C" fn FIO_createCResources(
                     1168 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err_9),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
     }
     let mut err_10: libc::size_t = 0;
@@ -3374,7 +3374,7 @@ unsafe extern "C" fn FIO_createCResources(
         (*prefs).useRowMatchFinder,
     );
     if ZSTD_isError(err_10) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3382,10 +3382,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3395,24 +3395,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1170 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_10),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_11: libc::size_t = 0;
     err_11 = ZSTD_CCtx_setParameter(
@@ -3421,7 +3421,7 @@ unsafe extern "C" fn FIO_createCResources(
         comprParams.windowLog as libc::c_int,
     );
     if ZSTD_isError(err_11) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3429,10 +3429,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3442,24 +3442,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1172 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_11),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_12: libc::size_t = 0;
     err_12 = ZSTD_CCtx_setParameter(
@@ -3468,7 +3468,7 @@ unsafe extern "C" fn FIO_createCResources(
         comprParams.chainLog as libc::c_int,
     );
     if ZSTD_isError(err_12) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3476,10 +3476,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3489,24 +3489,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1173 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_12),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_13: libc::size_t = 0;
     err_13 = ZSTD_CCtx_setParameter(
@@ -3515,7 +3515,7 @@ unsafe extern "C" fn FIO_createCResources(
         comprParams.hashLog as libc::c_int,
     );
     if ZSTD_isError(err_13) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3523,10 +3523,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3536,24 +3536,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1174 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_13),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_14: libc::size_t = 0;
     err_14 = ZSTD_CCtx_setParameter(
@@ -3562,7 +3562,7 @@ unsafe extern "C" fn FIO_createCResources(
         comprParams.searchLog as libc::c_int,
     );
     if ZSTD_isError(err_14) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3570,10 +3570,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3583,24 +3583,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1175 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_14),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_15: libc::size_t = 0;
     err_15 = ZSTD_CCtx_setParameter(
@@ -3609,7 +3609,7 @@ unsafe extern "C" fn FIO_createCResources(
         comprParams.minMatch as libc::c_int,
     );
     if ZSTD_isError(err_15) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3617,10 +3617,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3630,24 +3630,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1176 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_15),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_16: libc::size_t = 0;
     err_16 = ZSTD_CCtx_setParameter(
@@ -3656,7 +3656,7 @@ unsafe extern "C" fn FIO_createCResources(
         comprParams.targetLength as libc::c_int,
     );
     if ZSTD_isError(err_16) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3664,10 +3664,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3677,24 +3677,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1177 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_16),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_17: libc::size_t = 0;
     err_17 = ZSTD_CCtx_setParameter(
@@ -3703,7 +3703,7 @@ unsafe extern "C" fn FIO_createCResources(
         comprParams.strategy as libc::c_int,
     );
     if ZSTD_isError(err_17) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3711,10 +3711,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3724,24 +3724,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1178 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_17),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_18: libc::size_t = 0;
     err_18 = ZSTD_CCtx_setParameter(
@@ -3750,7 +3750,7 @@ unsafe extern "C" fn FIO_createCResources(
         (*prefs).literalCompressionMode as libc::c_int,
     );
     if ZSTD_isError(err_18) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3758,10 +3758,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3771,24 +3771,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1179 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_18),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_19: libc::size_t = 0;
     err_19 = ZSTD_CCtx_setParameter(
@@ -3797,7 +3797,7 @@ unsafe extern "C" fn FIO_createCResources(
         1 as libc::c_int,
     );
     if ZSTD_isError(err_19) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3805,10 +3805,10 @@ unsafe extern "C" fn FIO_createCResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3818,24 +3818,24 @@ unsafe extern "C" fn FIO_createCResources(
                 1180 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_19),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     if (*prefs).patchFromMode != 0 {
         let mut err_20: libc::size_t = 0;
@@ -3845,7 +3845,7 @@ unsafe extern "C" fn FIO_createCResources(
             ress.dict.dictBufferSize,
         );
         if ZSTD_isError(err_20) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3853,10 +3853,10 @@ unsafe extern "C" fn FIO_createCResources(
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3866,24 +3866,24 @@ unsafe extern "C" fn FIO_createCResources(
                     1194 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err_20),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
     } else {
         let mut err_21: libc::size_t = 0;
@@ -3893,7 +3893,7 @@ unsafe extern "C" fn FIO_createCResources(
             ress.dict.dictBufferSize,
         );
         if ZSTD_isError(err_21) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -3901,10 +3901,10 @@ unsafe extern "C" fn FIO_createCResources(
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -3914,24 +3914,24 @@ unsafe extern "C" fn FIO_createCResources(
                     1196 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err_21),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
     }
     return ress;
@@ -3986,7 +3986,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
     let mut lastAdaptTime = UTIL_getTime();
     let adaptEveryMicro = REFRESH_RATE;
     let file_hrs = UTIL_makeHumanReadableSize(fileSize);
-    if g_display_prefs.displayLevel >= 6 as libc::c_int {
+    if g_display_prefs.displayLevel >= 6 {
         fprintf(
             stderr,
             b"compression using zstd format \n\0" as *const u8 as *const libc::c_char,
@@ -3997,7 +3997,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
         let mut err: libc::size_t = 0;
         err = ZSTD_CCtx_setPledgedSrcSize(ress.cctx, fileSize as libc::c_ulonglong);
         if ZSTD_isError(err) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -4005,10 +4005,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4018,26 +4018,26 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     1522 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
-    } else if (*prefs).streamSrcSize > 0 as libc::c_int as libc::c_ulong {
+    } else if (*prefs).streamSrcSize > 0 {
         pledgedSrcSize = (*prefs).streamSrcSize;
         let mut err_0: libc::size_t = 0;
         err_0 = ZSTD_CCtx_setPledgedSrcSize(
@@ -4045,7 +4045,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             (*prefs).streamSrcSize as libc::c_ulonglong,
         );
         if ZSTD_isError(err_0) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -4053,10 +4053,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4066,24 +4066,24 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     1526 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err_0),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
     }
     let mut windowLog: libc::c_int = 0;
@@ -4095,7 +4095,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
     let mut err_1: libc::size_t = 0;
     err_1 = ZSTD_CCtx_getParameter(ress.cctx, ZSTD_c_windowLog, &mut windowLog);
     if ZSTD_isError(err_1) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -4103,10 +4103,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4116,26 +4116,26 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                 1532 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_1),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
-    if windowLog == 0 as libc::c_int {
+    if windowLog == 0 {
         if (*prefs).ldmFlag != 0 {
             windowLog = ZSTD_WINDOWLOG_LIMIT_DEFAULT;
         } else {
@@ -4149,24 +4149,24 @@ unsafe extern "C" fn FIO_compressZstdFrame(
     }
     windowSize = UTIL_makeHumanReadableSize(
         (if 1 as libc::c_ulonglong
-            > (if (1 as libc::c_ulonglong) << windowLog
+            > (if (1) << windowLog
                 < pledgedSrcSize as libc::c_ulonglong
             {
-                (1 as libc::c_ulonglong) << windowLog
+                (1) << windowLog
             } else {
                 pledgedSrcSize as libc::c_ulonglong
             })
         {
             1 as libc::c_ulonglong
-        } else if (1 as libc::c_ulonglong) << windowLog
+        } else if (1) << windowLog
             < pledgedSrcSize as libc::c_ulonglong
         {
-            (1 as libc::c_ulonglong) << windowLog
+            (1) << windowLog
         } else {
             pledgedSrcSize as libc::c_ulonglong
         }) as u64,
     );
-    if g_display_prefs.displayLevel >= 4 as libc::c_int {
+    if g_display_prefs.displayLevel >= 4 {
         fprintf(
             stderr,
             b"Decompression will require %.*f%s of memory\n\0" as *const u8
@@ -4184,7 +4184,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             (*ress.readCtx).srcBufferLoaded,
             0 as libc::c_int as libc::size_t,
         );
-        if g_display_prefs.displayLevel >= 6 as libc::c_int {
+        if g_display_prefs.displayLevel >= 6 {
             fprintf(
                 stderr,
                 b"fread %u bytes from source \n\0" as *const u8 as *const libc::c_char,
@@ -4192,7 +4192,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             );
         }
         *readsize = (*readsize as libc::c_ulong).wrapping_add(inSize) ;
-        if (*ress.readCtx).srcBufferLoaded == 0 as libc::c_int as libc::c_ulong
+        if (*ress.readCtx).srcBufferLoaded == 0
             || *readsize == fileSize
         {
             directive = ZSTD_e_end;
@@ -4216,7 +4216,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                 directive,
             );
             if ZSTD_isError(stillToFlush) != 0 {
-                if g_display_prefs.displayLevel >= 5 as libc::c_int {
+                if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
                         b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -4224,10 +4224,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             as *const u8 as *const libc::c_char,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
                 }
-                if g_display_prefs.displayLevel >= 5 as libc::c_int {
+                if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
                         b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4237,24 +4237,24 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         1566 as libc::c_int,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"error %i : \0" as *const u8 as *const libc::c_char,
                         11 as libc::c_int,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"%s\0" as *const u8 as *const libc::c_char,
                         ZSTD_getErrorName(stillToFlush),
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                 }
-                exit(11 as libc::c_int);
+                exit(11);
             }
             AIO_ReadPool_consumeBytes(ress.readCtx, (inBuff.pos).wrapping_sub(oldIPos));
             inputPresented = inputPresented.wrapping_add(1);
@@ -4264,7 +4264,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             if toFlushNow == 0 {
                 flushWaiting = 1 as libc::c_int as libc::c_uint;
             }
-            if g_display_prefs.displayLevel >= 6 as libc::c_int {
+            if g_display_prefs.displayLevel >= 6 {
                 fprintf(
                     stderr,
                     b"ZSTD_compress_generic(end:%u) => input pos(%u)<=(%u)size ; output generated %u bytes \n\0"
@@ -4286,17 +4286,17 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             {
                 let zfp = ZSTD_getFrameProgression(ress.cctx);
                 lastAdaptTime = UTIL_getTime();
-                if zfp.currentJobID > 1 as libc::c_int as libc::c_uint {
+                if zfp.currentJobID > 1 {
                     let mut newlyProduced = (zfp.produced)
                         .wrapping_sub(previous_zfp_update.produced);
                     let mut newlyFlushed = (zfp.flushed)
                         .wrapping_sub(previous_zfp_update.flushed);
                     debug_assert!(zfp.produced >= previous_zfp_update.produced);
-                    debug_assert!((*prefs).nbWorkers >= 1 as libc::c_int);
+                    debug_assert!((*prefs).nbWorkers >= 1);
                     if zfp.consumed == previous_zfp_update.consumed
-                        && zfp.nbActiveWorkers == 0 as libc::c_int as libc::c_uint
+                        && zfp.nbActiveWorkers == 0
                     {
-                        if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 6 {
                             fprintf(
                                 stderr,
                                 b"all buffers full : compression stopped => slow down \n\0"
@@ -4310,9 +4310,9 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         > newlyFlushed
                             .wrapping_mul(9)
                             .wrapping_div(8)
-                        && flushWaiting == 0 as libc::c_int as libc::c_uint
+                        && flushWaiting == 0
                     {
-                        if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 6 {
                             fprintf(
                                 stderr,
                                 b"compression faster than flush (%llu > %llu), and flushed was never slowed down by lack of production => slow down \n\0"
@@ -4326,7 +4326,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     flushWaiting = 0 as libc::c_int as libc::c_uint;
                 }
                 if zfp.currentJobID > lastJobID {
-                    if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 6 {
                         fprintf(
                             stderr,
                             b"compression level adaptation check \n\0" as *const u8
@@ -4334,10 +4334,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         );
                     }
                     if zfp.currentJobID
-                        > ((*prefs).nbWorkers + 1 as libc::c_int) as libc::c_uint
+                        > ((*prefs).nbWorkers + 1) as libc::c_uint
                     {
-                        if inputBlocked <= 0 as libc::c_int as libc::c_uint {
-                            if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                        if inputBlocked <= 0 {
+                            if g_display_prefs.displayLevel >= 6 {
                                 fprintf(
                                     stderr,
                                     b"input is never blocked => input is slower than ingestion \n\0"
@@ -4357,8 +4357,8 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             let mut newlyFlushed_0 = (zfp.flushed)
                                 .wrapping_sub(previous_zfp_correction.flushed);
                             previous_zfp_correction = zfp;
-                            debug_assert!(inputPresented > 0 as libc::c_int as libc::c_uint);
-                            if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                            debug_assert!(inputPresented > 0);
+                            if g_display_prefs.displayLevel >= 6 {
                                 fprintf(
                                     stderr,
                                     b"input blocked %u/%u(%.2f) - ingested:%u vs %u:consumed - flushed:%u vs %u:produced \n\0"
@@ -4367,7 +4367,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                                     inputPresented,
                                     inputBlocked as libc::c_double
                                         / inputPresented as libc::c_double
-                                        * 100 as libc::c_int as libc::c_double,
+                                        * 100,
                                     newlyIngested as libc::c_uint,
                                     newlyConsumed as libc::c_uint,
                                     newlyFlushed_0 as libc::c_uint,
@@ -4386,7 +4386,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                                     .wrapping_div(32)
                                     > newlyConsumed
                             {
-                                if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                                if g_display_prefs.displayLevel >= 6 {
                                     fprintf(
                                         stderr,
                                         b"recommend faster as in(%llu) >= (%llu)comp(%llu) <= out(%llu) \n\0"
@@ -4406,7 +4406,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     if speedChange as libc::c_uint
                         == slower as libc::c_int as libc::c_uint
                     {
-                        if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 6 {
                             fprintf(
                                 stderr,
                                 b"slower speed , higher compression \n\0" as *const u8
@@ -4421,7 +4421,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             compressionLevel = (*prefs).maxAdaptLevel;
                         }
                         compressionLevel
-                            += (compressionLevel == 0 as libc::c_int) as libc::c_int;
+                            += (compressionLevel == 0) as libc::c_int;
                         ZSTD_CCtx_setParameter(
                             ress.cctx,
                             ZSTD_c_compressionLevel,
@@ -4431,7 +4431,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     if speedChange as libc::c_uint
                         == faster as libc::c_int as libc::c_uint
                     {
-                        if g_display_prefs.displayLevel >= 6 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 6 {
                             fprintf(
                                 stderr,
                                 b"faster speed , lighter compression \n\0" as *const u8
@@ -4443,7 +4443,7 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             compressionLevel = (*prefs).minAdaptLevel;
                         }
                         compressionLevel
-                            -= (compressionLevel == 0 as libc::c_int) as libc::c_int;
+                            -= (compressionLevel == 0) as libc::c_int;
                         ZSTD_CCtx_setParameter(
                             ress.cctx,
                             ZSTD_c_compressionLevel,
@@ -4456,18 +4456,18 @@ unsafe extern "C" fn FIO_compressZstdFrame(
             }
             if g_display_prefs.progressSetting as libc::c_uint
                 != FIO_ps_never as libc::c_int as libc::c_uint
-                && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                && (g_display_prefs.displayLevel >= 2
                     || g_display_prefs.progressSetting as libc::c_uint
                         == FIO_ps_always as libc::c_int as libc::c_uint)
                 && (UTIL_clockSpanMicro(g_displayClock) > REFRESH_RATE
-                    || g_display_prefs.displayLevel >= 4 as libc::c_int)
+                    || g_display_prefs.displayLevel >= 4)
             {
                 let zfp_0 = ZSTD_getFrameProgression(ress.cctx);
                 let cShare = zfp_0.produced as libc::c_double
                     / (zfp_0.consumed)
                         .wrapping_add(
                             (zfp_0.consumed == 0) as libc::c_int as libc::c_ulonglong,
-                        ) as libc::c_double * 100 as libc::c_int as libc::c_double;
+                        ) as libc::c_double * 100;
                 let buffered_hrs = UTIL_makeHumanReadableSize(
                     (zfp_0.ingested).wrapping_sub(zfp_0.consumed) as u64,
                 );
@@ -4476,11 +4476,11 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                 g_displayClock = UTIL_getTime();
                 if g_display_prefs.progressSetting as libc::c_uint
                     != FIO_ps_never as libc::c_int as libc::c_uint
-                    && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                    && (g_display_prefs.displayLevel >= 2
                         || g_display_prefs.progressSetting as libc::c_uint
                             == FIO_ps_always as libc::c_int as libc::c_uint)
                 {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,
                             b"\r%79s\r\0" as *const u8 as *const libc::c_char,
@@ -4488,14 +4488,14 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         );
                     }
                 }
-                if g_display_prefs.displayLevel >= 3 as libc::c_int {
+                if g_display_prefs.displayLevel >= 3 {
                     if g_display_prefs.progressSetting as libc::c_uint
                         != FIO_ps_never as libc::c_int as libc::c_uint
-                        && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                        && (g_display_prefs.displayLevel >= 2
                             || g_display_prefs.progressSetting as libc::c_uint
                                 == FIO_ps_always as libc::c_int as libc::c_uint)
                     {
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b"(L%i) Buffered:%5.*f%s - Consumed:%5.*f%s - Compressed:%5.*f%s => %.2f%% \0"
@@ -4515,24 +4515,24 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                         }
                     }
                 } else {
-                    if (*fCtx).nbFilesTotal > 1 as libc::c_int {
+                    if (*fCtx).nbFilesTotal > 1 {
                         let mut srcFileNameSize = strlen(srcFileName);
-                        if srcFileNameSize > 18 as libc::c_int as libc::c_ulong {
+                        if srcFileNameSize > 18 {
                             let mut truncatedSrcFileName = srcFileName
                                 .offset(srcFileNameSize as isize)
-                                .offset(-(15 as libc::c_int as isize));
+                                .offset(-(15));
                             if g_display_prefs.progressSetting as libc::c_uint
                                 != FIO_ps_never as libc::c_int as libc::c_uint
-                                && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                                && (g_display_prefs.displayLevel >= 2
                                     || g_display_prefs.progressSetting as libc::c_uint
                                         == FIO_ps_always as libc::c_int as libc::c_uint)
                             {
-                                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                                if g_display_prefs.displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"Compress: %u/%u files. Current: ...%s \0" as *const u8
                                             as *const libc::c_char,
-                                        (*fCtx).currFileIdx + 1 as libc::c_int,
+                                        (*fCtx).currFileIdx + 1,
                                         (*fCtx).nbFilesTotal,
                                         truncatedSrcFileName,
                                     );
@@ -4540,18 +4540,18 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                             }
                         } else if g_display_prefs.progressSetting as libc::c_uint
                             != FIO_ps_never as libc::c_int as libc::c_uint
-                            && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                            && (g_display_prefs.displayLevel >= 2
                                 || g_display_prefs.progressSetting as libc::c_uint
                                     == FIO_ps_always as libc::c_int as libc::c_uint)
                         {
-                            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                            if g_display_prefs.displayLevel >= 1 {
                                 fprintf(
                                     stderr,
                                     b"Compress: %u/%u files. Current: %*s \0" as *const u8
                                         as *const libc::c_char,
-                                    (*fCtx).currFileIdx + 1 as libc::c_int,
+                                    (*fCtx).currFileIdx + 1,
                                     (*fCtx).nbFilesTotal,
-                                    (18 as libc::c_int as libc::c_ulong)
+                                    (18)
                                         .wrapping_sub(srcFileNameSize) as libc::c_int,
                                     srcFileName,
                                 );
@@ -4560,11 +4560,11 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     }
                     if g_display_prefs.progressSetting as libc::c_uint
                         != FIO_ps_never as libc::c_int as libc::c_uint
-                        && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                        && (g_display_prefs.displayLevel >= 2
                             || g_display_prefs.progressSetting as libc::c_uint
                                 == FIO_ps_always as libc::c_int as libc::c_uint)
                     {
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b"Read:%6.*f%4s \0" as *const u8 as *const libc::c_char,
@@ -4577,11 +4577,11 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     if fileSize != UTIL_FILESIZE_UNKNOWN as u64 {
                         if g_display_prefs.progressSetting as libc::c_uint
                             != FIO_ps_never as libc::c_int as libc::c_uint
-                            && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                            && (g_display_prefs.displayLevel >= 2
                                 || g_display_prefs.progressSetting as libc::c_uint
                                     == FIO_ps_always as libc::c_int as libc::c_uint)
                         {
-                            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                            if g_display_prefs.displayLevel >= 1 {
                                 fprintf(
                                     stderr,
                                     b"/%6.*f%4s\0" as *const u8 as *const libc::c_char,
@@ -4594,11 +4594,11 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                     }
                     if g_display_prefs.progressSetting as libc::c_uint
                         != FIO_ps_never as libc::c_int as libc::c_uint
-                        && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                        && (g_display_prefs.displayLevel >= 2
                             || g_display_prefs.progressSetting as libc::c_uint
                                 == FIO_ps_always as libc::c_int as libc::c_uint)
                     {
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b" ==> %2.f%%\0" as *const u8 as *const libc::c_char,
@@ -4614,10 +4614,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
         }
     }
     if fileSize != UTIL_FILESIZE_UNKNOWN as u64 && *readsize != fileSize {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4627,14 +4627,14 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                 1719 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 27 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Read error : Incomplete read : %llu / %llu B\0" as *const u8
@@ -4643,10 +4643,10 @@ unsafe extern "C" fn FIO_compressZstdFrame(
                 fileSize as libc::c_ulonglong,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(27 as libc::c_int);
+        exit(27);
     }
     AIO_WritePool_releaseIoJob(writeJob);
     AIO_WritePool_sparseWriteEnd((*ressPtr).writeCtx);
@@ -4665,7 +4665,7 @@ unsafe extern "C" fn FIO_compressFilename_internal(
     let mut readsize = 0 as libc::c_int as u64;
     let mut compressedfilesize = 0 as libc::c_int as u64;
     let fileSize = UTIL_getFileSize(srcFileName);
-    if g_display_prefs.displayLevel >= 5 as libc::c_int {
+    if g_display_prefs.displayLevel >= 5 {
         fprintf(
             stderr,
             b"%s: %llu bytes \n\0" as *const u8 as *const libc::c_char,
@@ -4675,10 +4675,10 @@ unsafe extern "C" fn FIO_compressFilename_internal(
     }
     match (*prefs).compressionType as libc::c_uint {
         1 => {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4688,14 +4688,14 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                     1760 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     20 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s: file cannot be compressed as gzip (zstd compiled without ZSTD_GZCOMPRESS) -- ignored \n\0"
@@ -4703,16 +4703,16 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                     srcFileName,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(20 as libc::c_int);
+            exit(20);
         }
         2 | 3 => {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4722,14 +4722,14 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                     1771 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     20 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s: file cannot be compressed as xz/lzma (zstd compiled without ZSTD_LZMACOMPRESS) -- ignored \n\0"
@@ -4737,16 +4737,16 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                     srcFileName,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(20 as libc::c_int);
+            exit(20);
         }
         4 => {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -4756,14 +4756,14 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                     1781 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     20 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s: file cannot be compressed as lz4 (zstd compiled without ZSTD_LZ4COMPRESS) -- ignored \n\0"
@@ -4771,10 +4771,10 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                     srcFileName,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(20 as libc::c_int);
+            exit(20);
         }
         0 | _ => {
             compressedfilesize = FIO_compressZstdFrame(
@@ -4796,11 +4796,11 @@ unsafe extern "C" fn FIO_compressFilename_internal(
         .wrapping_add(compressedfilesize) ;
     if g_display_prefs.progressSetting as libc::c_uint
         != FIO_ps_never as libc::c_int as libc::c_uint
-        && (g_display_prefs.displayLevel >= 2 as libc::c_int
+        && (g_display_prefs.displayLevel >= 2
             || g_display_prefs.progressSetting as libc::c_uint
                 == FIO_ps_always as libc::c_int as libc::c_uint)
     {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"\r%79s\r\0" as *const u8 as *const libc::c_char,
@@ -4811,12 +4811,12 @@ unsafe extern "C" fn FIO_compressFilename_internal(
     if FIO_shouldDisplayFileSummary(fCtx) != 0 {
         let mut hr_isize = UTIL_makeHumanReadableSize(readsize);
         let mut hr_osize = UTIL_makeHumanReadableSize(compressedfilesize);
-        if readsize == 0 as libc::c_int as libc::c_ulong {
-            if g_display_prefs.displayLevel >= 2 as libc::c_int
+        if readsize == 0 {
+            if g_display_prefs.displayLevel >= 2
                 || g_display_prefs.progressSetting as libc::c_uint
                     == FIO_ps_always as libc::c_int as libc::c_uint
             {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"%-20s :  (%6.*f%s => %6.*f%s, %s) \n\0" as *const u8
@@ -4832,18 +4832,18 @@ unsafe extern "C" fn FIO_compressFilename_internal(
                     );
                 }
             }
-        } else if g_display_prefs.displayLevel >= 2 as libc::c_int
+        } else if g_display_prefs.displayLevel >= 2
             || g_display_prefs.progressSetting as libc::c_uint
                 == FIO_ps_always as libc::c_int as libc::c_uint
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%-20s :%6.2f%%   (%6.*f%s => %6.*f%s, %s) \n\0" as *const u8
                         as *const libc::c_char,
                     srcFileName,
                     compressedfilesize as libc::c_double / readsize as libc::c_double
-                        * 100 as libc::c_int as libc::c_double,
+                        * 100,
                     hr_isize.precision,
                     hr_isize.value,
                     hr_isize.suffix,
@@ -4861,8 +4861,8 @@ unsafe extern "C" fn FIO_compressFilename_internal(
     let timeLength_ns = UTIL_clockSpanNano(timeStart);
     let timeLength_s = timeLength_ns as libc::c_double
         / 1000000000 as libc::c_int as libc::c_double;
-    let cpuLoad_pct = cpuLoad_s / timeLength_s * 100 as libc::c_int as libc::c_double;
-    if g_display_prefs.displayLevel >= 4 as libc::c_int {
+    let cpuLoad_pct = cpuLoad_s / timeLength_s * 100;
+    if g_display_prefs.displayLevel >= 4 {
         fprintf(
             stderr,
             b"%-20s : Completed in %.2f sec  (cpu load : %.0f%%)\n\0" as *const u8
@@ -4887,7 +4887,7 @@ unsafe extern "C" fn FIO_compressFilename_dstFile(
     let mut result: libc::c_int = 0;
     let mut transferStat = 0 as libc::c_int;
     let mut dstFile = 0 as *mut FILE;
-    let mut dstFd = -(1 as libc::c_int);
+    let mut dstFd = -(1);
     debug_assert!(!(AIO_ReadPool_getFile(ress.readCtx)).is_null());
     if (AIO_WritePool_getFile(ress.writeCtx)).is_null() {
         let mut dstFileInitialPermissions = DEFAULT_FILE_PERMISSIONS;
@@ -4899,7 +4899,7 @@ unsafe extern "C" fn FIO_compressFilename_dstFile(
             dstFileInitialPermissions = TEMPORARY_FILE_PERMISSIONS;
         }
         closeDstFile = 1 as libc::c_int;
-        if g_display_prefs.displayLevel >= 6 as libc::c_int {
+        if g_display_prefs.displayLevel >= 6 {
             fprintf(
                 stderr,
                 b"FIO_compressFilename_dstFile: opening dst: %s \n\0" as *const u8
@@ -4934,7 +4934,7 @@ unsafe extern "C" fn FIO_compressFilename_dstFile(
         if transferStat != 0 {
             UTIL_setFDStat(dstFd, dstFileName, srcFileStat);
         }
-        if g_display_prefs.displayLevel >= 6 as libc::c_int {
+        if g_display_prefs.displayLevel >= 6 {
             fprintf(
                 stderr,
                 b"FIO_compressFilename_dstFile: closing dst: %s \n\0" as *const u8
@@ -4943,7 +4943,7 @@ unsafe extern "C" fn FIO_compressFilename_dstFile(
             );
         }
         if AIO_WritePool_closeFile(ress.writeCtx) != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s: %s \n\0" as *const u8 as *const libc::c_char,
@@ -5002,7 +5002,7 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
         __glibc_reserved: [0; 3],
     };
     let mut fileSize = UTIL_FILESIZE_UNKNOWN as u64;
-    if g_display_prefs.displayLevel >= 6 as libc::c_int {
+    if g_display_prefs.displayLevel >= 6 {
         fprintf(
             stderr,
             b"FIO_compressFilename_srcFile: %s \n\0" as *const u8 as *const libc::c_char,
@@ -5012,7 +5012,7 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
     if strcmp(srcFileName, stdinmark.as_ptr()) != 0 {
         if UTIL_stat(srcFileName, &mut srcFileStat) != 0 {
             if UTIL_isDirectoryStat(&mut srcFileStat) != 0 {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s is a directory -- ignored \n\0" as *const u8
@@ -5030,7 +5030,7 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
                     &mut ress.dictFileStat,
                 ) != 0
             {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: cannot use %s as an input file and dictionary \n\0"
@@ -5042,10 +5042,10 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
             }
         }
     }
-    if (*prefs).excludeCompressedFiles == 1 as libc::c_int
+    if (*prefs).excludeCompressedFiles == 1
         && UTIL_isCompressedFile(srcFileName, compressedFileExtensions.as_mut_ptr()) != 0
     {
-        if g_display_prefs.displayLevel >= 4 as libc::c_int {
+        if g_display_prefs.displayLevel >= 4 {
             fprintf(
                 stderr,
                 b"File is already compressed : %s \n\0" as *const u8
@@ -5063,7 +5063,7 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
         fileSize = UTIL_getFileSizeStat(&mut srcFileStat);
     }
     if fileSize != UTIL_FILESIZE_UNKNOWN as u64
-        && fileSize < (ZSTD_BLOCKSIZE_MAX * 3 as libc::c_int) as libc::c_ulong
+        && fileSize < (ZSTD_BLOCKSIZE_MAX * 3) as libc::c_ulong
     {
         AIO_ReadPool_setAsync(ress.readCtx, 0 as libc::c_int);
         AIO_WritePool_setAsync(ress.writeCtx, 0 as libc::c_int);
@@ -5082,15 +5082,15 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
         compressionLevel,
     );
     AIO_ReadPool_closeFile(ress.readCtx);
-    if (*prefs).removeSrcFile != 0 && result == 0 as libc::c_int
+    if (*prefs).removeSrcFile != 0 && result == 0
         && strcmp(srcFileName, stdinmark.as_ptr()) != 0
     {
         clearHandler();
         if FIO_removeFile(srcFileName) != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5100,14 +5100,14 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
                     1988 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     1 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s: %s\0" as *const u8 as *const libc::c_char,
@@ -5115,10 +5115,10 @@ unsafe extern "C" fn FIO_compressFilename_srcFile(
                     strerror(*__errno_location()),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(1 as libc::c_int);
+            exit(1);
         }
     }
     return result;
@@ -5162,7 +5162,7 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
         b" --compress-literals\0" as *const u8 as *const libc::c_char,
         b" --no-compress-literals\0" as *const u8 as *const libc::c_char,
     ];
-    debug_assert!(g_display_prefs.displayLevel >= 4 as libc::c_int);
+    debug_assert!(g_display_prefs.displayLevel >= 4);
     fprintf(
         stderr,
         b"--format=%s\0" as *const u8 as *const libc::c_char,
@@ -5173,9 +5173,9 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
         b"%s\0" as *const u8 as *const libc::c_char,
         checked_index(
             sparseOptions.as_mut_ptr(),
-            (::core::mem::size_of::<[*const libc::c_char; 3]>() as libc::c_ulong)
+            (::core::mem::size_of::<[*const libc::c_char; 3]>())
                 .wrapping_div(
-                    ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
+                    ::core::mem::size_of::<*mut libc::c_char>(),
                 ),
             (*prefs).sparseFileSupport as libc::size_t,
         ),
@@ -5194,9 +5194,9 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
         b"%s\0" as *const u8 as *const libc::c_char,
         checked_index(
             checkSumOptions.as_mut_ptr(),
-            (::core::mem::size_of::<[*const libc::c_char; 3]>() as libc::c_ulong)
+            (::core::mem::size_of::<[*const libc::c_char; 3]>())
                 .wrapping_div(
-                    ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
+                    ::core::mem::size_of::<*mut libc::c_char>(),
                 ),
             (*prefs).checksumFlag as libc::size_t,
         ),
@@ -5219,9 +5219,9 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
         b"%s\0" as *const u8 as *const libc::c_char,
         checked_index(
             rowMatchFinderOptions.as_mut_ptr(),
-            (::core::mem::size_of::<[*const libc::c_char; 3]>() as libc::c_ulong)
+            (::core::mem::size_of::<[*const libc::c_char; 3]>())
                 .wrapping_div(
-                    ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
+                    ::core::mem::size_of::<*mut libc::c_char>(),
                 ),
             (*prefs).useRowMatchFinder as libc::size_t,
         ),
@@ -5261,9 +5261,9 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
         b"%s\0" as *const u8 as *const libc::c_char,
         checked_index(
             compressLiteralsOptions.as_mut_ptr(),
-            (::core::mem::size_of::<[*const libc::c_char; 3]>() as libc::c_ulong)
+            (::core::mem::size_of::<[*const libc::c_char; 3]>())
                 .wrapping_div(
-                    ::core::mem::size_of::<*mut libc::c_char>() as libc::c_ulong,
+                    ::core::mem::size_of::<*mut libc::c_char>(),
                 ),
             (*prefs).literalCompressionMode as libc::size_t,
         ),
@@ -5274,7 +5274,7 @@ pub unsafe extern "C" fn FIO_displayCompressionParameters(
         if (*prefs).memLimit != 0 {
             (*prefs).memLimit
         } else {
-            (128 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int))
+            (128 as libc::c_int * ((1) << 20 as libc::c_int))
                 as libc::c_uint
         },
     );
@@ -5364,10 +5364,10 @@ unsafe extern "C" fn FIO_determineCompressedName(
             .wrapping_add(30);
         dstFileNameBuffer = malloc(dfnbCapacity) as *mut libc::c_char;
         if dstFileNameBuffer.is_null() {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5377,24 +5377,24 @@ unsafe extern "C" fn FIO_determineCompressedName(
                     2082 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     30 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s\0" as *const u8 as *const libc::c_char,
                     strerror(*__errno_location()),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(30 as libc::c_int);
+            exit(30);
         }
     }
     debug_assert!(!dstFileNameBuffer.is_null());
@@ -5491,10 +5491,10 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
                 (*fCtx).currFileIdx += 1;
             }
             if AIO_WritePool_closeFile(ress.writeCtx) != 0 {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
                 }
-                if g_display_prefs.displayLevel >= 5 as libc::c_int {
+                if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
                         b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5504,14 +5504,14 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
                         2149 as libc::c_int,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"error %i : \0" as *const u8 as *const libc::c_char,
                         29 as libc::c_int,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"Write error (%s) : cannot properly close %s\0" as *const u8
@@ -5520,10 +5520,10 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
                         outFileName,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                 }
-                exit(29 as libc::c_int);
+                exit(29);
             }
         }
     } else {
@@ -5552,7 +5552,7 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
                     free(validMirroredDirName as *mut libc::c_void);
                     current_block_63 = 5892776923941496671;
                 } else {
-                    if g_display_prefs.displayLevel >= 2 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 2 {
                         fprintf(
                             stderr,
                             b"zstd: --output-dir-mirror cannot compress '%s' into '%s' \n\0"
@@ -5603,11 +5603,11 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
         let mut hr_osize = UTIL_makeHumanReadableSize((*fCtx).totalBytesOutput);
         if g_display_prefs.progressSetting as libc::c_uint
             != FIO_ps_never as libc::c_int as libc::c_uint
-            && (g_display_prefs.displayLevel >= 2 as libc::c_int
+            && (g_display_prefs.displayLevel >= 2
                 || g_display_prefs.progressSetting as libc::c_uint
                     == FIO_ps_always as libc::c_int as libc::c_uint)
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"\r%79s\r\0" as *const u8 as *const libc::c_char,
@@ -5615,12 +5615,12 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
                 );
             }
         }
-        if (*fCtx).totalBytesInput == 0 as libc::c_int as libc::c_ulong {
-            if g_display_prefs.displayLevel >= 2 as libc::c_int
+        if (*fCtx).totalBytesInput == 0 {
+            if g_display_prefs.displayLevel >= 2
                 || g_display_prefs.progressSetting as libc::c_uint
                     == FIO_ps_always as libc::c_int as libc::c_uint
             {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"%3d files compressed : (%6.*f%4s => %6.*f%4s)\n\0" as *const u8
@@ -5635,11 +5635,11 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
                     );
                 }
             }
-        } else if g_display_prefs.displayLevel >= 2 as libc::c_int
+        } else if g_display_prefs.displayLevel >= 2
             || g_display_prefs.progressSetting as libc::c_uint
                 == FIO_ps_always as libc::c_int as libc::c_uint
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%3d files compressed : %.2f%% (%6.*f%4s => %6.*f%4s)\n\0"
@@ -5647,7 +5647,7 @@ pub unsafe extern "C" fn FIO_compressMultipleFilenames(
                     (*fCtx).nbFilesProcessed,
                     (*fCtx).totalBytesOutput as libc::c_double
                         / (*fCtx).totalBytesInput as libc::c_double
-                        * 100 as libc::c_int as libc::c_double,
+                        * 100,
                     hr_isize.precision,
                     hr_isize.value,
                     hr_isize.suffix,
@@ -5699,7 +5699,7 @@ unsafe extern "C" fn FIO_createDResources(
     memset(
         &mut ress as *mut dRess_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<dRess_t>() as libc::c_ulong,
+        ::core::mem::size_of::<dRess_t>(),
     );
     FIO_getDictFileStat(dictFileName, &mut statbuf);
     if (*prefs).patchFromMode != 0 {
@@ -5713,10 +5713,10 @@ unsafe extern "C" fn FIO_createDResources(
     }
     ress.dctx = ZSTD_createDStream();
     if (ress.dctx).is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5726,14 +5726,14 @@ unsafe extern "C" fn FIO_createDResources(
                 2238 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 60 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error: %s : can't create ZSTD_DStream\0" as *const u8
@@ -5741,15 +5741,15 @@ unsafe extern "C" fn FIO_createDResources(
                 strerror(*__errno_location()),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(60 as libc::c_int);
+        exit(60);
     }
     let mut err: libc::size_t = 0;
     err = ZSTD_DCtx_setMaxWindowSize(ress.dctx, (*prefs).memLimit as libc::size_t);
     if ZSTD_isError(err) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -5757,10 +5757,10 @@ unsafe extern "C" fn FIO_createDResources(
                     as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5770,24 +5770,24 @@ unsafe extern "C" fn FIO_createDResources(
                 2239 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut err_0: libc::size_t = 0;
     err_0 = ZSTD_DCtx_setParameter(
@@ -5796,7 +5796,7 @@ unsafe extern "C" fn FIO_createDResources(
         ((*prefs).checksumFlag == 0) as libc::c_int,
     );
     if ZSTD_isError(err_0) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -5804,10 +5804,10 @@ unsafe extern "C" fn FIO_createDResources(
                     as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5817,24 +5817,24 @@ unsafe extern "C" fn FIO_createDResources(
                 2240 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_0),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     let mut dictBufferType = (if useMMap != 0 && forceNoUseMMap == 0 {
         FIO_mmapDict as libc::c_int
@@ -5845,7 +5845,7 @@ unsafe extern "C" fn FIO_createDResources(
     let mut err_1: libc::size_t = 0;
     err_1 = ZSTD_DCtx_reset(ress.dctx, ZSTD_reset_session_only);
     if ZSTD_isError(err_1) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -5853,10 +5853,10 @@ unsafe extern "C" fn FIO_createDResources(
                     as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5866,24 +5866,24 @@ unsafe extern "C" fn FIO_createDResources(
                 2247 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err_1),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     if (*prefs).patchFromMode != 0 {
         let mut err_2: libc::size_t = 0;
@@ -5893,7 +5893,7 @@ unsafe extern "C" fn FIO_createDResources(
             ress.dict.dictBufferSize,
         );
         if ZSTD_isError(err_2) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -5901,10 +5901,10 @@ unsafe extern "C" fn FIO_createDResources(
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5914,24 +5914,24 @@ unsafe extern "C" fn FIO_createDResources(
                     2250 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err_2),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
     } else {
         let mut err_3: libc::size_t = 0;
@@ -5941,7 +5941,7 @@ unsafe extern "C" fn FIO_createDResources(
             ress.dict.dictBufferSize,
         );
         if ZSTD_isError(err_3) != 0 {
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"%s \n\0" as *const u8 as *const libc::c_char,
@@ -5949,10 +5949,10 @@ unsafe extern "C" fn FIO_createDResources(
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -5962,24 +5962,24 @@ unsafe extern "C" fn FIO_createDResources(
                     2252 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     11 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s\0" as *const u8 as *const libc::c_char,
                     ZSTD_getErrorName(err_3),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(11 as libc::c_int);
+            exit(11);
         }
     }
     ress.writeCtx = AIO_WritePool_create(prefs, ZSTD_DStreamOutSize());
@@ -5991,17 +5991,17 @@ unsafe extern "C" fn FIO_freeDResources(mut ress: dRess_t) {
     let mut err: libc::size_t = 0;
     err = ZSTD_freeDStream(ress.dctx);
     if ZSTD_isError(err) != 0 {
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"%s \n\0" as *const u8 as *const libc::c_char,
                 b"ZSTD_freeDStream(ress.dctx)\0" as *const u8 as *const libc::c_char,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
         }
-        if g_display_prefs.displayLevel >= 5 as libc::c_int {
+        if g_display_prefs.displayLevel >= 5 {
             fprintf(
                 stderr,
                 b"Error defined at %s, line %i : \n\0" as *const u8
@@ -6011,42 +6011,42 @@ unsafe extern "C" fn FIO_freeDResources(mut ress: dRess_t) {
                 2264 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"error %i : \0" as *const u8 as *const libc::c_char,
                 11 as libc::c_int,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s\0" as *const u8 as *const libc::c_char,
                 ZSTD_getErrorName(err),
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
-        exit(11 as libc::c_int);
+        exit(11);
     }
     AIO_WritePool_free(ress.writeCtx);
     AIO_ReadPool_free(ress.readCtx);
 }
 unsafe extern "C" fn FIO_passThrough(mut ress: *mut dRess_t) -> libc::c_int {
     let blockSize = if (if ((64 as libc::c_int
-        * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::c_ulong)
+        * ((1) << 10 as libc::c_int)) as libc::c_ulong)
         < ZSTD_DStreamInSize()
     {
-        (64 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::c_ulong
+        (64 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::c_ulong
     } else {
         ZSTD_DStreamInSize()
     }) < ZSTD_DStreamOutSize()
     {
-        if ((64 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        if ((64 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulong) < ZSTD_DStreamInSize()
         {
-            (64 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+            (64 as libc::c_int * ((1) << 10 as libc::c_int))
                 as libc::c_ulong
         } else {
             ZSTD_DStreamInSize()
@@ -6106,7 +6106,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
         (*(*ress).readCtx).srcBuffer as *const libc::c_void,
         (*(*ress).readCtx).srcBufferLoaded,
     );
-    if err == 0 as libc::c_int as libc::c_ulong {
+    if err == 0 {
         let windowSize = header.windowSize;
         let windowLog = (FIO_highbit64(windowSize))
             .wrapping_add(
@@ -6115,8 +6115,8 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
                     != 0 as libc::c_int as libc::c_ulonglong) as libc::c_int
                     as libc::c_uint,
             );
-        debug_assert!((*prefs).memLimit > 0 as libc::c_int as libc::c_uint);
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        debug_assert!((*prefs).memLimit > 0);
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"%s : Window size larger than maximum : %llu > %u \n\0" as *const u8
@@ -6127,8 +6127,8 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
             );
         }
         if windowLog
-            <= (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+            <= (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 ZSTD_WINDOWLOG_MAX_32
             } else {
@@ -6138,15 +6138,15 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
             let windowMB = (windowSize >> 20 as libc::c_int)
                 .wrapping_add(
                     (windowSize
-                        & (1 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+                        & (1 as libc::c_int * ((1) << 20 as libc::c_int)
                             - 1 as libc::c_int) as libc::c_ulonglong
                         != 0 as libc::c_int as libc::c_ulonglong) as libc::c_int
                         as libc::c_ulonglong,
                 ) as libc::c_uint;
             debug_assert!(windowSize
-                < ((1 as libc::c_ulonglong) << 52 as libc::c_int) as u64
+                < ((1) << 52 as libc::c_int) as u64
                     as libc::c_ulonglong);
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s : Use --long=%u or --memory=%uMB \n\0" as *const u8
@@ -6159,14 +6159,14 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
             return;
         }
     }
-    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+    if g_display_prefs.displayLevel >= 1 {
         fprintf(
             stderr,
             b"%s : Window log larger than ZSTD_WINDOWLOG_MAX=%u; not supported \n\0"
                 as *const u8 as *const libc::c_char,
             srcFileName,
-            if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+            if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 30 as libc::c_int
             } else {
@@ -6175,7 +6175,7 @@ unsafe extern "C" fn FIO_zstdErrorHelp(
         );
     }
 }
-pub const FIO_ERROR_FRAME_DECODING: libc::c_int = -(2 as libc::c_int);
+pub const FIO_ERROR_FRAME_DECODING: libc::c_int = -(2);
 unsafe extern "C" fn FIO_decompressZstdFrame(
     fCtx: *mut FIO_ctx_t,
     mut ress: *mut dRess_t,
@@ -6186,7 +6186,7 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
     let mut frameSize = 0 as libc::c_int as u64;
     let mut writeJob = AIO_WritePool_acquireJob((*ress).writeCtx);
     let srcFileLength = strlen(srcFileName);
-    if srcFileLength > 20 as libc::c_int as libc::c_ulong {
+    if srcFileLength > 20 {
         srcFileName = srcFileName
             .offset(
                 srcFileLength.wrapping_sub(20) as isize,
@@ -6212,7 +6212,7 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
         );
         let hrs = UTIL_makeHumanReadableSize(alreadyDecoded.wrapping_add(frameSize));
         if ZSTD_isError(readSizeHint) != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s : Decoding error (36) : %s \n\0" as *const u8
@@ -6228,38 +6228,38 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
         (*writeJob).usedBufferSize = outBuff.pos;
         AIO_WritePool_enqueueAndReacquireWriteJob(&mut writeJob);
         frameSize = (frameSize as libc::c_ulong).wrapping_add(outBuff.pos) ;
-        if (*fCtx).nbFilesTotal > 1 as libc::c_int {
+        if (*fCtx).nbFilesTotal > 1 {
             let mut srcFileNameSize = strlen(srcFileName);
-            if srcFileNameSize > 18 as libc::c_int as libc::c_ulong {
+            if srcFileNameSize > 18 {
                 let mut truncatedSrcFileName = srcFileName
                     .offset(srcFileNameSize as isize)
-                    .offset(-(15 as libc::c_int as isize));
+                    .offset(-(15));
                 if g_display_prefs.progressSetting as libc::c_uint
                     != FIO_ps_never as libc::c_int as libc::c_uint
-                    && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                    && (g_display_prefs.displayLevel >= 2
                         || g_display_prefs.progressSetting as libc::c_uint
                             == FIO_ps_always as libc::c_int as libc::c_uint)
                 {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int
+                    if g_display_prefs.displayLevel >= 1
                         && g_display_prefs.progressSetting as libc::c_uint
                             != FIO_ps_never as libc::c_int as libc::c_uint
                     {
                         if UTIL_clockSpanMicro(g_displayClock) > REFRESH_RATE
-                            || g_display_prefs.displayLevel >= 4 as libc::c_int
+                            || g_display_prefs.displayLevel >= 4
                         {
                             g_displayClock = UTIL_getTime();
                             fprintf(
                                 stderr,
                                 b"\rDecompress: %2u/%2u files. Current: ...%s : %.*f%s...    \0"
                                     as *const u8 as *const libc::c_char,
-                                (*fCtx).currFileIdx + 1 as libc::c_int,
+                                (*fCtx).currFileIdx + 1,
                                 (*fCtx).nbFilesTotal,
                                 truncatedSrcFileName,
                                 hrs.precision,
                                 hrs.value,
                                 hrs.suffix,
                             );
-                            if g_display_prefs.displayLevel >= 4 as libc::c_int {
+                            if g_display_prefs.displayLevel >= 4 {
                                 fflush(stderr);
                             }
                         }
@@ -6267,30 +6267,30 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
                 }
             } else if g_display_prefs.progressSetting as libc::c_uint
                 != FIO_ps_never as libc::c_int as libc::c_uint
-                && (g_display_prefs.displayLevel >= 2 as libc::c_int
+                && (g_display_prefs.displayLevel >= 2
                     || g_display_prefs.progressSetting as libc::c_uint
                         == FIO_ps_always as libc::c_int as libc::c_uint)
             {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int
+                if g_display_prefs.displayLevel >= 1
                     && g_display_prefs.progressSetting as libc::c_uint
                         != FIO_ps_never as libc::c_int as libc::c_uint
                 {
                     if UTIL_clockSpanMicro(g_displayClock) > REFRESH_RATE
-                        || g_display_prefs.displayLevel >= 4 as libc::c_int
+                        || g_display_prefs.displayLevel >= 4
                     {
                         g_displayClock = UTIL_getTime();
                         fprintf(
                             stderr,
                             b"\rDecompress: %2u/%2u files. Current: %s : %.*f%s...    \0"
                                 as *const u8 as *const libc::c_char,
-                            (*fCtx).currFileIdx + 1 as libc::c_int,
+                            (*fCtx).currFileIdx + 1,
                             (*fCtx).nbFilesTotal,
                             srcFileName,
                             hrs.precision,
                             hrs.value,
                             hrs.suffix,
                         );
-                        if g_display_prefs.displayLevel >= 4 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 4 {
                             fflush(stderr);
                         }
                     }
@@ -6298,16 +6298,16 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
             }
         } else if g_display_prefs.progressSetting as libc::c_uint
             != FIO_ps_never as libc::c_int as libc::c_uint
-            && (g_display_prefs.displayLevel >= 2 as libc::c_int
+            && (g_display_prefs.displayLevel >= 2
                 || g_display_prefs.progressSetting as libc::c_uint
                     == FIO_ps_always as libc::c_int as libc::c_uint)
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int
+            if g_display_prefs.displayLevel >= 1
                 && g_display_prefs.progressSetting as libc::c_uint
                     != FIO_ps_never as libc::c_int as libc::c_uint
             {
                 if UTIL_clockSpanMicro(g_displayClock) > REFRESH_RATE
-                    || g_display_prefs.displayLevel >= 4 as libc::c_int
+                    || g_display_prefs.displayLevel >= 4
                 {
                     g_displayClock = UTIL_getTime();
                     fprintf(
@@ -6319,14 +6319,14 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
                         hrs.value,
                         hrs.suffix,
                     );
-                    if g_display_prefs.displayLevel >= 4 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 4 {
                         fflush(stderr);
                     }
                 }
             }
         }
         AIO_ReadPool_consumeBytes((*ress).readCtx, inBuff.pos);
-        if readSizeHint == 0 as libc::c_int as libc::c_ulong {
+        if readSizeHint == 0 {
             break;
         }
         let toDecode = if readSizeHint < ZSTD_DStreamInSize() {
@@ -6336,8 +6336,8 @@ unsafe extern "C" fn FIO_decompressZstdFrame(
         };
         if (*(*ress).readCtx).srcBufferLoaded < toDecode {
             let readSize = AIO_ReadPool_fillBuffer((*ress).readCtx, toDecode);
-            if readSize == 0 as libc::c_int as libc::c_ulong {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if readSize == 0 {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"%s : Read error (39) : premature end \n\0" as *const u8
@@ -6364,19 +6364,19 @@ unsafe extern "C" fn FIO_decompressFrames(
     let mut readSomething = 0 as libc::c_int as libc::c_uint;
     let mut filesize = 0 as libc::c_int as libc::c_ulonglong;
     let mut passThrough = (*prefs).passThrough;
-    if passThrough == -(1 as libc::c_int) {
+    if passThrough == -(1) {
         passThrough = ((*prefs).overwrite != 0
             && strcmp(dstFileName, stdoutmark.as_ptr()) == 0) as libc::c_int;
     }
-    debug_assert!(passThrough == 0 as libc::c_int || passThrough == 1 as libc::c_int);
+    debug_assert!(passThrough == 0 || passThrough == 1);
     loop {
         let toRead = 4 as libc::c_int as libc::size_t;
         let mut buf = 0 as *const u8;
         AIO_ReadPool_fillBuffer(ress.readCtx, toRead);
         buf = (*ress.readCtx).srcBuffer as *const u8;
-        if (*ress.readCtx).srcBufferLoaded == 0 as libc::c_int as libc::c_ulong {
-            if readSomething == 0 as libc::c_int as libc::c_uint {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if (*ress.readCtx).srcBufferLoaded == 0 {
+            if readSomething == 0 {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s: unexpected end of file \n\0" as *const u8
@@ -6393,7 +6393,7 @@ unsafe extern "C" fn FIO_decompressFrames(
                 if passThrough != 0 {
                     return FIO_passThrough(&mut ress);
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s: unknown header \n\0" as *const u8
@@ -6417,12 +6417,12 @@ unsafe extern "C" fn FIO_decompressFrames(
                     return 1 as libc::c_int;
                 }
                 filesize = filesize.wrapping_add(frameSize);
-            } else if *buf.offset(0 as libc::c_int as isize) as libc::c_int
-                == 31 as libc::c_int
-                && *buf.offset(1 as libc::c_int as isize) as libc::c_int
-                    == 139 as libc::c_int
+            } else if *buf.offset(0) as libc::c_int
+                == 31
+                && *buf.offset(1) as libc::c_int
+                    == 139
             {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s: gzip file cannot be uncompressed (zstd compiled without HAVE_ZLIB) -- ignored \n\0"
@@ -6431,16 +6431,16 @@ unsafe extern "C" fn FIO_decompressFrames(
                     );
                 }
                 return 1 as libc::c_int;
-            } else if *buf.offset(0 as libc::c_int as isize) as libc::c_int
+            } else if *buf.offset(0) as libc::c_int
                 == 0xfd as libc::c_int
-                && *buf.offset(1 as libc::c_int as isize) as libc::c_int
+                && *buf.offset(1) as libc::c_int
                     == 0x37 as libc::c_int
-                || *buf.offset(0 as libc::c_int as isize) as libc::c_int
+                || *buf.offset(0) as libc::c_int
                     == 0x5d as libc::c_int
-                    && *buf.offset(1 as libc::c_int as isize) as libc::c_int
-                        == 0 as libc::c_int
+                    && *buf.offset(1) as libc::c_int
+                        == 0
             {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s: xz/lzma file cannot be uncompressed (zstd compiled without HAVE_LZMA) -- ignored \n\0"
@@ -6452,7 +6452,7 @@ unsafe extern "C" fn FIO_decompressFrames(
             } else if MEM_readLE32(buf as *const libc::c_void)
                 == LZ4_MAGICNUMBER as libc::c_uint
             {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s: lz4 file cannot be uncompressed (zstd compiled without HAVE_LZ4) -- ignored \n\0"
@@ -6464,7 +6464,7 @@ unsafe extern "C" fn FIO_decompressFrames(
             } else if passThrough != 0 {
                 return FIO_passThrough(&mut ress)
             } else {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"zstd: %s: unsupported format \n\0" as *const u8
@@ -6481,11 +6481,11 @@ unsafe extern "C" fn FIO_decompressFrames(
         .wrapping_add(filesize as libc::size_t) ;
     if g_display_prefs.progressSetting as libc::c_uint
         != FIO_ps_never as libc::c_int as libc::c_uint
-        && (g_display_prefs.displayLevel >= 2 as libc::c_int
+        && (g_display_prefs.displayLevel >= 2
             || g_display_prefs.progressSetting as libc::c_uint
                 == FIO_ps_always as libc::c_int as libc::c_uint)
     {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"\r%79s\r\0" as *const u8 as *const libc::c_char,
@@ -6494,11 +6494,11 @@ unsafe extern "C" fn FIO_decompressFrames(
         }
     }
     if FIO_shouldDisplayFileSummary(fCtx) != 0 {
-        if g_display_prefs.displayLevel >= 2 as libc::c_int
+        if g_display_prefs.displayLevel >= 2
             || g_display_prefs.progressSetting as libc::c_uint
                 == FIO_ps_always as libc::c_int as libc::c_uint
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%-20s: %llu bytes \n\0" as *const u8 as *const libc::c_char,
@@ -6523,7 +6523,7 @@ unsafe extern "C" fn FIO_decompressDstFile(
     let mut transferStat = 0 as libc::c_int;
     let mut dstFd = 0 as libc::c_int;
     if (AIO_WritePool_getFile(ress.writeCtx)).is_null()
-        && (*prefs).testMode == 0 as libc::c_int
+        && (*prefs).testMode == 0
     {
         let mut dstFile = 0 as *mut FILE;
         let mut dstFilePermissions = DEFAULT_FILE_PERMISSIONS;
@@ -6556,7 +6556,7 @@ unsafe extern "C" fn FIO_decompressDstFile(
             UTIL_setFDStat(dstFd, dstFileName, srcFileStat);
         }
         if AIO_WritePool_closeFile(ress.writeCtx) != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s: %s \n\0" as *const u8 as *const libc::c_char,
@@ -6603,7 +6603,7 @@ unsafe extern "C" fn FIO_decompressSrcFile(
     let mut result: libc::c_int = 0;
     let mut fileSize = UTIL_FILESIZE_UNKNOWN as u64;
     if UTIL_isDirectory(srcFileName) != 0 {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: %s is a directory -- ignored \n\0" as *const u8
@@ -6621,7 +6621,7 @@ unsafe extern "C" fn FIO_decompressSrcFile(
         fileSize = UTIL_getFileSizeStat(&mut srcFileStat);
     }
     if fileSize != UTIL_FILESIZE_UNKNOWN as u64
-        && fileSize < (ZSTD_BLOCKSIZE_MAX * 3 as libc::c_int) as libc::c_ulong
+        && fileSize < (ZSTD_BLOCKSIZE_MAX * 3) as libc::c_ulong
     {
         AIO_ReadPool_setAsync(ress.readCtx, 0 as libc::c_int);
         AIO_WritePool_setAsync(ress.writeCtx, 0 as libc::c_int);
@@ -6640,7 +6640,7 @@ unsafe extern "C" fn FIO_decompressSrcFile(
     );
     AIO_ReadPool_setFile(ress.readCtx, NULL as *mut FILE);
     if fclose(srcFile) != 0 {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: %s: %s \n\0" as *const u8 as *const libc::c_char,
@@ -6650,12 +6650,12 @@ unsafe extern "C" fn FIO_decompressSrcFile(
         }
         return 1 as libc::c_int;
     }
-    if (*prefs).removeSrcFile != 0 && result == 0 as libc::c_int
+    if (*prefs).removeSrcFile != 0 && result == 0
         && strcmp(srcFileName, stdinmark.as_ptr()) != 0
     {
         clearHandler();
         if FIO_removeFile(srcFileName) != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: %s: %s \n\0" as *const u8 as *const libc::c_char,
@@ -6712,7 +6712,7 @@ unsafe extern "C" fn FIO_determineDstName(
         return stdoutmark.as_ptr();
     }
     if srcSuffix.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: %s: unknown suffix (%s expected). Can't derive the output file name. Specify it with -o dstFileName. Ignoring.\n\0"
@@ -6733,7 +6733,7 @@ unsafe extern "C" fn FIO_determineDstName(
         matchedSuffixPtr = matchedSuffixPtr.offset(1);
     }
     if sfnSize <= srcSuffixLen || (*matchedSuffixPtr).is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: %s: unknown suffix (%s expected). Can't derive the output file name. Specify it with -o dstFileName. Ignoring.\n\0"
@@ -6744,7 +6744,7 @@ unsafe extern "C" fn FIO_determineDstName(
         }
         return NULL as *const libc::c_char;
     }
-    if *(*matchedSuffixPtr).offset(1 as libc::c_int as isize) as libc::c_int
+    if *(*matchedSuffixPtr).offset(1) as libc::c_int
         == 't' as i32
     {
         dstSuffix = b".tar\0" as *const u8 as *const libc::c_char;
@@ -6768,10 +6768,10 @@ unsafe extern "C" fn FIO_determineDstName(
         dfnbCapacity = sfnSize.wrapping_add(20);
         dstFileNameBuffer = malloc(dfnbCapacity) as *mut libc::c_char;
         if dstFileNameBuffer.is_null() {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -6781,14 +6781,14 @@ unsafe extern "C" fn FIO_determineDstName(
                     2958 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     74 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%s : not enough memory for dstFileName\0" as *const u8
@@ -6796,10 +6796,10 @@ unsafe extern "C" fn FIO_determineDstName(
                     strerror(*__errno_location()),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(74 as libc::c_int);
+            exit(74);
         }
     }
     debug_assert!(!dstFileNameBuffer.is_null());
@@ -6848,10 +6848,10 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
                 DEFAULT_FILE_PERMISSIONS,
             );
             if dstFile.is_null() {
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
                 }
-                if g_display_prefs.displayLevel >= 5 as libc::c_int {
+                if g_display_prefs.displayLevel >= 5 {
                     fprintf(
                         stderr,
                         b"Error defined at %s, line %i : \n\0" as *const u8
@@ -6861,24 +6861,24 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
                         2998 as libc::c_int,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"error %i : \0" as *const u8 as *const libc::c_char,
                         19 as libc::c_int,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"cannot open %s\0" as *const u8 as *const libc::c_char,
                         outFileName,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                 }
-                exit(19 as libc::c_int);
+                exit(19);
             }
             AIO_WritePool_setFile(ress.writeCtx, dstFile);
         }
@@ -6897,10 +6897,10 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
             (*fCtx).currFileIdx += 1;
         }
         if (*prefs).testMode == 0 && AIO_WritePool_closeFile(ress.writeCtx) != 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b"zstd: \0" as *const u8 as *const libc::c_char);
             }
-            if g_display_prefs.displayLevel >= 5 as libc::c_int {
+            if g_display_prefs.displayLevel >= 5 {
                 fprintf(
                     stderr,
                     b"Error defined at %s, line %i : \n\0" as *const u8
@@ -6910,14 +6910,14 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
                     3008 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"error %i : \0" as *const u8 as *const libc::c_char,
                     72 as libc::c_int,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"Write error : %s : cannot properly close output file\0"
@@ -6925,10 +6925,10 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
                     strerror(*__errno_location()),
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
-            exit(72 as libc::c_int);
+            exit(72);
         }
     } else {
         if !outMirroredRootDirName.is_null() {
@@ -6952,7 +6952,7 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
                         validMirroredDirName,
                     );
                     free(validMirroredDirName as *mut libc::c_void);
-                } else if g_display_prefs.displayLevel >= 2 as libc::c_int {
+                } else if g_display_prefs.displayLevel >= 2 {
                     fprintf(
                         stderr,
                         b"zstd: --output-dir-mirror cannot decompress '%s' into '%s'\n\0"
@@ -6991,11 +6991,11 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
     if FIO_shouldDisplayMultipleFileSummary(fCtx) != 0 {
         if g_display_prefs.progressSetting as libc::c_uint
             != FIO_ps_never as libc::c_int as libc::c_uint
-            && (g_display_prefs.displayLevel >= 2 as libc::c_int
+            && (g_display_prefs.displayLevel >= 2
                 || g_display_prefs.progressSetting as libc::c_uint
                     == FIO_ps_always as libc::c_int as libc::c_uint)
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"\r%79s\r\0" as *const u8 as *const libc::c_char,
@@ -7003,11 +7003,11 @@ pub unsafe extern "C" fn FIO_decompressMultipleFilenames(
                 );
             }
         }
-        if g_display_prefs.displayLevel >= 2 as libc::c_int
+        if g_display_prefs.displayLevel >= 2
             || g_display_prefs.progressSetting as libc::c_uint
                 == FIO_ps_always as libc::c_int as libc::c_uint
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"%d files decompressed : %6llu bytes total \n\0" as *const u8
@@ -7030,7 +7030,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
         let numBytesRead = fread(
             headerBuffer.as_mut_ptr() as *mut libc::c_void,
             1 as libc::c_int as libc::c_ulong,
-            ::core::mem::size_of::<[u8; 18]>() as libc::c_ulong,
+            ::core::mem::size_of::<[u8; 18]>(),
             srcFile,
         );
         if numBytesRead
@@ -7040,14 +7040,14 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 2 as libc::c_int
             }) as libc::c_ulong
         {
-            if feof(srcFile) != 0 && numBytesRead == 0 as libc::c_int as libc::c_ulong
-                && (*info).compressedSize > 0 as libc::c_int as libc::c_ulong
+            if feof(srcFile) != 0 && numBytesRead == 0
+                && (*info).compressedSize > 0
                 && (*info).compressedSize != UTIL_FILESIZE_UNKNOWN as u64
             {
                 let mut file_position = ftell(srcFile) as libc::c_ulonglong;
                 let mut file_size = (*info).compressedSize as libc::c_ulonglong;
                 if file_position != file_size {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,
                             b"Error: seeked to position %llu, which is beyond file size of %llu\n\0"
@@ -7056,7 +7056,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
                             file_size,
                         );
                     }
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                     }
                     return info_truncated_input;
@@ -7064,26 +7064,26 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 break;
             } else {
                 if feof(srcFile) != 0 {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,
                             b"Error: reached end of file with incomplete frame\0"
                                 as *const u8 as *const libc::c_char,
                         );
                     }
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                     }
                     return info_not_zstd;
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(
                         stderr,
                         b"Error: did not reach end of file but ran out of frames\0"
                             as *const u8 as *const libc::c_char,
                     );
                 }
-                if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                if g_display_prefs.displayLevel >= 1 {
                     fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                 }
                 return info_frame_error;
@@ -7123,14 +7123,14 @@ unsafe extern "C" fn FIO_analyzeFrames(
                     numBytesRead,
                 ) != 0 as libc::c_int as libc::c_ulong
                 {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,
                             b"Error: could not decode frame header\0" as *const u8
                                 as *const libc::c_char,
                         );
                     }
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                     }
                     return info_frame_error;
@@ -7153,14 +7153,14 @@ unsafe extern "C" fn FIO_analyzeFrames(
                     numBytesRead,
                 );
                 if ZSTD_isError(headerSize) != 0 {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,
                             b"Error: could not determine frame header size\0"
                                 as *const u8 as *const libc::c_char,
                         );
                     }
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                     }
                     return info_frame_error;
@@ -7171,14 +7171,14 @@ unsafe extern "C" fn FIO_analyzeFrames(
                     1 as libc::c_int,
                 ) != 0 as libc::c_int
                 {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,
                             b"Error: could not move to end of frame header\0"
                                 as *const u8 as *const libc::c_char,
                         );
                     }
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                     }
                     return info_frame_error;
@@ -7193,14 +7193,14 @@ unsafe extern "C" fn FIO_analyzeFrames(
                         srcFile,
                     ) != 3 as libc::c_int as libc::c_ulong
                     {
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b"Error while reading block header\0" as *const u8
                                     as *const libc::c_char,
                             );
                         }
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b" \n\0" as *const u8 as *const libc::c_char,
@@ -7212,10 +7212,10 @@ unsafe extern "C" fn FIO_analyzeFrames(
                         blockHeaderBuffer.as_mut_ptr() as *const libc::c_void,
                     );
                     let blockTypeID = blockHeader >> 1 as libc::c_int
-                        & 3 as libc::c_int as libc::c_uint;
-                    let isRLE = (blockTypeID == 1 as libc::c_int as libc::c_uint)
+                        & 3;
+                    let isRLE = (blockTypeID == 1)
                         as libc::c_int as u32;
-                    let isWrongBlock = (blockTypeID == 3 as libc::c_int as libc::c_uint)
+                    let isWrongBlock = (blockTypeID == 3)
                         as libc::c_int as u32;
                     let blockSize = if isRLE != 0 {
                         1 as libc::c_int as libc::c_long
@@ -7223,14 +7223,14 @@ unsafe extern "C" fn FIO_analyzeFrames(
                         (blockHeader >> 3 as libc::c_int) as libc::c_long
                     };
                     if isWrongBlock != 0 {
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b"Error: unsupported block type\0" as *const u8
                                     as *const libc::c_char,
                             );
                         }
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b" \n\0" as *const u8 as *const libc::c_char,
@@ -7238,17 +7238,17 @@ unsafe extern "C" fn FIO_analyzeFrames(
                         }
                         return info_frame_error;
                     }
-                    lastBlock = (blockHeader & 1 as libc::c_int as libc::c_uint)
+                    lastBlock = (blockHeader & 1)
                         as libc::c_int;
                     if fseek(srcFile, blockSize, 1 as libc::c_int) != 0 as libc::c_int {
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b"Error: could not skip to end of block\0" as *const u8
                                     as *const libc::c_char,
                             );
                         }
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b" \n\0" as *const u8 as *const libc::c_char,
@@ -7262,7 +7262,7 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 }
                 let frameHeaderDescriptor = headerBuffer[4 as libc::c_int as usize];
                 let contentChecksumFlag = (frameHeaderDescriptor as libc::c_int
-                    & (1 as libc::c_int) << 2 as libc::c_int) >> 2 as libc::c_int;
+                    & (1) << 2 as libc::c_int) >> 2 as libc::c_int;
                 if contentChecksumFlag != 0 {
                     (*info).usesCheck = 1 as libc::c_int;
                     if fread(
@@ -7272,14 +7272,14 @@ unsafe extern "C" fn FIO_analyzeFrames(
                         srcFile,
                     ) != 4 as libc::c_int as libc::c_ulong
                     {
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b"Error: could not read checksum\0" as *const u8
                                     as *const libc::c_char,
                             );
                         }
-                        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                        if g_display_prefs.displayLevel >= 1 {
                             fprintf(
                                 stderr,
                                 b" \n\0" as *const u8 as *const libc::c_char,
@@ -7293,21 +7293,21 @@ unsafe extern "C" fn FIO_analyzeFrames(
                 == ZSTD_MAGIC_SKIPPABLE_START as libc::c_uint
             {
                 let frameSize = MEM_readLE32(
-                    headerBuffer.as_mut_ptr().offset(4 as libc::c_int as isize)
+                    headerBuffer.as_mut_ptr().offset(4)
                         as *const libc::c_void,
                 );
-                let seek = ((8 as libc::c_int as libc::c_uint).wrapping_add(frameSize)
+                let seek = ((8).wrapping_add(frameSize)
                     as libc::c_ulong)
                     .wrapping_sub(numBytesRead) as libc::c_long;
                 if fseek(srcFile, seek, 1 as libc::c_int) != 0 as libc::c_int {
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(
                             stderr,
                             b"Error: could not find end of skippable frame\0"
                                 as *const u8 as *const libc::c_char,
                         );
                     }
-                    if g_display_prefs.displayLevel >= 1 as libc::c_int {
+                    if g_display_prefs.displayLevel >= 1 {
                         fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
                     }
                     return info_frame_error;
@@ -7348,7 +7348,7 @@ unsafe extern "C" fn getFileInfo_fileConfirmed(
         &mut srcFileStat,
     );
     if srcFile.is_null() {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error: could not open source file %s\0" as *const u8
@@ -7356,7 +7356,7 @@ unsafe extern "C" fn getFileInfo_fileConfirmed(
                 inFileName,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
         return info_file_error;
@@ -7372,14 +7372,14 @@ unsafe extern "C" fn getFileInfo(
     mut srcFileName: *const libc::c_char,
 ) -> InfoError {
     if UTIL_isRegularFile(srcFileName) == 0 {
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : %s is not a file\0" as *const u8 as *const libc::c_char,
                 srcFileName,
             );
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
         }
         return info_file_error;
@@ -7394,7 +7394,7 @@ unsafe extern "C" fn displayInfo(
     let window_hrs = UTIL_makeHumanReadableSize((*info).windowSize);
     let compressed_hrs = UTIL_makeHumanReadableSize((*info).compressedSize);
     let decompressed_hrs = UTIL_makeHumanReadableSize((*info).decompressedSize);
-    let ratio = if (*info).compressedSize == 0 as libc::c_int as libc::c_ulong {
+    let ratio = if (*info).compressedSize == 0 {
         0 as libc::c_int as libc::c_double
     } else {
         (*info).decompressedSize as libc::c_double
@@ -7405,7 +7405,7 @@ unsafe extern "C" fn displayInfo(
     } else {
         b"None\0" as *const u8 as *const libc::c_char
     };
-    if displayLevel <= 2 as libc::c_int {
+    if displayLevel <= 2 {
         if (*info).decompUnavailable == 0 {
             fprintf(
                 stdout,
@@ -7488,7 +7488,7 @@ unsafe extern "C" fn displayInfo(
                 ratio,
             );
         }
-        if (*info).usesCheck != 0 && (*info).numActualFrames == 1 as libc::c_int {
+        if (*info).usesCheck != 0 && (*info).numActualFrames == 1 {
             fprintf(
                 stdout,
                 b"Check: %s %02x%02x%02x%02x\n\0" as *const u8 as *const libc::c_char,
@@ -7527,7 +7527,7 @@ unsafe extern "C" fn FIO_addFInfo(
     memset(
         &mut total as *mut fileInfo_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<fileInfo_t>() as libc::c_ulong,
+        ::core::mem::size_of::<fileInfo_t>(),
     );
     total.numActualFrames = fi1.numActualFrames + fi2.numActualFrames;
     total.numSkippableFrames = fi1.numSkippableFrames + fi2.numSkippableFrames;
@@ -7558,12 +7558,12 @@ unsafe extern "C" fn FIO_listFile(
     memset(
         &mut info as *mut fileInfo_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<fileInfo_t>() as libc::c_ulong,
+        ::core::mem::size_of::<fileInfo_t>(),
     );
     let error = getFileInfo(&mut info, inFileName);
     match error as libc::c_uint {
         1 => {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"Error while parsing \"%s\" \n\0" as *const u8
@@ -7579,13 +7579,13 @@ unsafe extern "C" fn FIO_listFile(
                     as *const libc::c_char,
                 inFileName,
             );
-            if displayLevel > 2 as libc::c_int {
+            if displayLevel > 2 {
                 fprintf(stdout, b"\n\0" as *const u8 as *const libc::c_char);
             }
             return 1 as libc::c_int;
         }
         3 => {
-            if displayLevel > 2 as libc::c_int {
+            if displayLevel > 2 {
                 fprintf(stdout, b"\n\0" as *const u8 as *const libc::c_char);
             }
             return 1 as libc::c_int;
@@ -7596,7 +7596,7 @@ unsafe extern "C" fn FIO_listFile(
                 b"File \"%s\" is truncated \n\0" as *const u8 as *const libc::c_char,
                 inFileName,
             );
-            if displayLevel > 2 as libc::c_int {
+            if displayLevel > 2 {
                 fprintf(stdout, b"\n\0" as *const u8 as *const libc::c_char);
             }
             return 1 as libc::c_int;
@@ -7623,23 +7623,23 @@ pub unsafe extern "C" fn FIO_listMultipleFiles(
             b"/*stdin*\\\0" as *const u8 as *const libc::c_char,
         ) == 0
         {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: --list does not support reading from standard input\0"
                         as *const u8 as *const libc::c_char,
                 );
             }
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(stderr, b" \n\0" as *const u8 as *const libc::c_char);
             }
             return 1 as libc::c_int;
         }
         u = u.wrapping_add(1);
     }
-    if numFiles == 0 as libc::c_int as libc::c_uint {
+    if numFiles == 0 {
         if UTIL_isConsole(stdin) == 0 {
-            if g_display_prefs.displayLevel >= 1 as libc::c_int {
+            if g_display_prefs.displayLevel >= 1 {
                 fprintf(
                     stderr,
                     b"zstd: --list does not support reading from standard input \n\0"
@@ -7647,12 +7647,12 @@ pub unsafe extern "C" fn FIO_listMultipleFiles(
                 );
             }
         }
-        if g_display_prefs.displayLevel >= 1 as libc::c_int {
+        if g_display_prefs.displayLevel >= 1 {
             fprintf(stderr, b"No files given \n\0" as *const u8 as *const libc::c_char);
         }
         return 1 as libc::c_int;
     }
-    if displayLevel <= 2 as libc::c_int {
+    if displayLevel <= 2 {
         fprintf(
             stdout,
             b"Frames  Skips  Compressed  Uncompressed  Ratio  Check  Filename\n\0"
@@ -7675,7 +7675,7 @@ pub unsafe extern "C" fn FIO_listMultipleFiles(
     memset(
         &mut total as *mut fileInfo_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<fileInfo_t>() as libc::c_ulong,
+        ::core::mem::size_of::<fileInfo_t>(),
     );
     total.usesCheck = 1 as libc::c_int;
     let mut u_0: libc::c_uint = 0;
@@ -7689,10 +7689,10 @@ pub unsafe extern "C" fn FIO_listMultipleFiles(
             );
         u_0 = u_0.wrapping_add(1);
     }
-    if numFiles > 1 as libc::c_int as libc::c_uint && displayLevel <= 2 as libc::c_int {
+    if numFiles > 1 && displayLevel <= 2 {
         let compressed_hrs = UTIL_makeHumanReadableSize(total.compressedSize);
         let decompressed_hrs = UTIL_makeHumanReadableSize(total.decompressedSize);
-        let ratio = if total.compressedSize == 0 as libc::c_int as libc::c_ulong {
+        let ratio = if total.compressedSize == 0 {
             0 as libc::c_int as libc::c_double
         } else {
             total.decompressedSize as libc::c_double

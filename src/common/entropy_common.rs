@@ -85,7 +85,7 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: libc::size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0 as libc::c_int as libc::c_ulong).wrapping_sub(code) as ERR_enum;
+    return (0).wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
@@ -95,13 +95,13 @@ unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
     return val.trailing_zeros() as i32 as libc::c_uint;
 }
-pub const FSE_VERSION_NUMBER: libc::c_int = FSE_VERSION_MAJOR * 100 as libc::c_int
-    * 100 as libc::c_int + FSE_VERSION_MINOR * 100 as libc::c_int + FSE_VERSION_RELEASE;
+pub const FSE_VERSION_NUMBER: libc::c_int = FSE_VERSION_MAJOR * 100
+    * 100 + FSE_VERSION_MINOR * 100 + FSE_VERSION_RELEASE;
 pub const FSE_VERSION_MAJOR: libc::c_int = 0 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
-    return (31 as libc::c_int as libc::c_uint)
+    return (31)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -153,7 +153,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     let mut charnum = 0 as libc::c_int as libc::c_uint;
     let maxSV1 = (*maxSVPtr).wrapping_add(1);
     let mut previous0 = 0 as libc::c_int;
-    if hbSize < 8 as libc::c_int as libc::c_ulong {
+    if hbSize < 8 {
         let mut buffer: [libc::c_char; 8] = [
             0 as libc::c_int as libc::c_char,
             0,
@@ -174,7 +174,7 @@ unsafe extern "C" fn FSE_readNCount_body(
             maxSVPtr,
             tableLogPtr,
             buffer.as_mut_ptr() as *const libc::c_void,
-            ::core::mem::size_of::<[libc::c_char; 8]>() as libc::c_ulong,
+            ::core::mem::size_of::<[libc::c_char; 8]>(),
         );
         if FSE_isError(countSize) != 0 {
             return countSize;
@@ -184,12 +184,12 @@ unsafe extern "C" fn FSE_readNCount_body(
         }
         return countSize;
     }
-    debug_assert!(hbSize >= 8 as libc::c_int as libc::c_ulong);
+    debug_assert!(hbSize >= 8);
     libc::memset(
         normalizedCounter as *mut libc::c_void,
         0 as libc::c_int,
         ((*maxSVPtr).wrapping_add(1) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_short>() as libc::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<libc::c_short>())
             as libc::size_t,
     );
     bitStream = MEM_readLE32(ip as *const libc::c_void);
@@ -201,30 +201,30 @@ unsafe extern "C" fn FSE_readNCount_body(
     bitStream >>= 4 as libc::c_int;
     bitCount = 4 as libc::c_int;
     *tableLogPtr = nbBits as libc::c_uint;
-    remaining = ((1 as libc::c_int) << nbBits) + 1 as libc::c_int;
-    threshold = (1 as libc::c_int) << nbBits;
+    remaining = ((1) << nbBits) + 1;
+    threshold = (1) << nbBits;
     nbBits += 1;
     loop {
         if previous0 != 0 {
             let mut repeats = (ZSTD_countTrailingZeros32(
                 !bitStream | 0x80000000 as libc::c_uint,
             ) >> 1 as libc::c_int) as libc::c_int;
-            while repeats >= 12 as libc::c_int {
+            while repeats >= 12 {
                 charnum = charnum
                     .wrapping_add(
-                        (3 as libc::c_int * 12 as libc::c_int) as libc::c_uint,
+                        (3 as libc::c_int * 12) as libc::c_uint,
                     );
-                if (ip <= iend.offset(-(7 as libc::c_int as isize))) as libc::c_int
+                if (ip <= iend.offset(-(7))) as libc::c_int
                     as libc::c_long != 0
                 {
-                    ip = ip.offset(3 as libc::c_int as isize);
+                    ip = ip.offset(3);
                 } else {
                     bitCount
                         -= (8 as libc::c_int as libc::c_long
-                            * iend.offset(-(7 as libc::c_int as isize)).offset_from(ip)
+                            * iend.offset(-(7)).offset_from(ip)
                                 as libc::c_long) as libc::c_int;
-                    bitCount &= 31 as libc::c_int;
-                    ip = iend.offset(-(4 as libc::c_int as isize));
+                    bitCount &= 31;
+                    ip = iend.offset(-(4));
                 }
                 bitStream = MEM_readLE32(ip as *const libc::c_void) >> bitCount;
                 repeats = (ZSTD_countTrailingZeros32(
@@ -234,28 +234,28 @@ unsafe extern "C" fn FSE_readNCount_body(
             charnum = charnum.wrapping_add((3 as libc::c_int * repeats) as libc::c_uint);
             bitStream >>= 2 as libc::c_int * repeats;
             bitCount += 2 as libc::c_int * repeats;
-            debug_assert!((bitStream & 3 as libc::c_int as libc::c_uint)
-                < 3 as libc::c_int as libc::c_uint);
-            charnum = charnum.wrapping_add(bitStream & 3 as libc::c_int as libc::c_uint);
+            debug_assert!((bitStream & 3)
+                < 3);
+            charnum = charnum.wrapping_add(bitStream & 3);
             bitCount += 2 as libc::c_int;
             if charnum >= maxSV1 {
                 break;
             }
-            if (ip <= iend.offset(-(7 as libc::c_int as isize))) as libc::c_int
+            if (ip <= iend.offset(-(7))) as libc::c_int
                 as libc::c_long != 0
                 || ip.offset((bitCount >> 3 as libc::c_int) as isize)
-                    <= iend.offset(-(4 as libc::c_int as isize))
+                    <= iend.offset(-(4))
             {
-                debug_assert!(bitCount >> 3 as libc::c_int <= 3 as libc::c_int);
+                debug_assert!(bitCount >> 3 as libc::c_int <= 3);
                 ip = ip.offset((bitCount >> 3 as libc::c_int) as isize);
-                bitCount &= 7 as libc::c_int;
+                bitCount &= 7;
             } else {
                 bitCount
                     -= (8 as libc::c_int as libc::c_long
-                        * iend.offset(-(4 as libc::c_int as isize)).offset_from(ip)
+                        * iend.offset(-(4)).offset_from(ip)
                             as libc::c_long) as libc::c_int;
-                bitCount &= 31 as libc::c_int;
-                ip = iend.offset(-(4 as libc::c_int as isize));
+                bitCount &= 31;
+                ip = iend.offset(-(4));
             }
             bitStream = MEM_readLE32(ip as *const libc::c_void) >> bitCount;
         }
@@ -275,42 +275,42 @@ unsafe extern "C" fn FSE_readNCount_body(
             bitCount += nbBits;
         }
         count -= 1;
-        if count >= 0 as libc::c_int {
+        if count >= 0 {
             remaining -= count;
         } else {
-            debug_assert!(count == -(1 as libc::c_int));
+            debug_assert!(count == -(1));
             remaining += count;
         }
         let fresh0 = charnum;
         charnum = charnum.wrapping_add(1);
         *normalizedCounter.offset(fresh0 as isize) = count as libc::c_short;
         previous0 = (count == 0) as libc::c_int;
-        debug_assert!(threshold > 1 as libc::c_int);
+        debug_assert!(threshold > 1);
         if remaining < threshold {
-            if remaining <= 1 as libc::c_int {
+            if remaining <= 1 {
                 break;
             }
             nbBits = (ZSTD_highbit32(remaining as u32))
                 .wrapping_add(1) as libc::c_int;
-            threshold = (1 as libc::c_int) << nbBits - 1 as libc::c_int;
+            threshold = (1) << nbBits - 1 as libc::c_int;
         }
         if charnum >= maxSV1 {
             break;
         }
-        if (ip <= iend.offset(-(7 as libc::c_int as isize))) as libc::c_int
+        if (ip <= iend.offset(-(7))) as libc::c_int
             as libc::c_long != 0
             || ip.offset((bitCount >> 3 as libc::c_int) as isize)
-                <= iend.offset(-(4 as libc::c_int as isize))
+                <= iend.offset(-(4))
         {
             ip = ip.offset((bitCount >> 3 as libc::c_int) as isize);
-            bitCount &= 7 as libc::c_int;
+            bitCount &= 7;
         } else {
             bitCount
                 -= (8 as libc::c_int as libc::c_long
-                    * iend.offset(-(4 as libc::c_int as isize)).offset_from(ip)
+                    * iend.offset(-(4)).offset_from(ip)
                         as libc::c_long) as libc::c_int;
-            bitCount &= 31 as libc::c_int;
-            ip = iend.offset(-(4 as libc::c_int as isize));
+            bitCount &= 31;
+            ip = iend.offset(-(4));
         }
         bitStream = MEM_readLE32(ip as *const libc::c_void) >> bitCount;
     }
@@ -320,11 +320,11 @@ unsafe extern "C" fn FSE_readNCount_body(
     if charnum > maxSV1 {
         return -(ZSTD_error_maxSymbolValue_tooSmall as libc::c_int) as libc::size_t;
     }
-    if bitCount > 32 as libc::c_int {
+    if bitCount > 32 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     *maxSVPtr = charnum.wrapping_sub(1);
-    ip = ip.offset((bitCount + 7 as libc::c_int >> 3 as libc::c_int) as isize);
+    ip = ip.offset((bitCount + 7 >> 3 as libc::c_int) as isize);
     return ip.offset_from(istart) as libc::c_long as libc::size_t;
 }
 unsafe extern "C" fn FSE_readNCount_body_default(
@@ -420,7 +420,7 @@ pub unsafe extern "C" fn HUF_readStats(
         src,
         srcSize,
         wksp.as_mut_ptr() as *mut libc::c_void,
-        ::core::mem::size_of::<[u32; 219]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u32; 219]>(),
         0 as libc::c_int,
     );
 }
@@ -444,8 +444,8 @@ unsafe extern "C" fn HUF_readStats_body(
     if srcSize == 0 {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
-    iSize = *ip.offset(0 as libc::c_int as isize) as libc::size_t;
-    if iSize >= 128 as libc::c_int as libc::c_ulong {
+    iSize = *ip.offset(0) as libc::size_t;
+    if iSize >= 128 {
         oSize = iSize.wrapping_sub(127);
         iSize = oSize
             .wrapping_add(1)
@@ -456,7 +456,7 @@ unsafe extern "C" fn HUF_readStats_body(
         if oSize >= hwSize {
             return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }
-        ip = ip.offset(1 as libc::c_int as isize);
+        ip = ip.offset(1);
         let mut n: u32 = 0;
         n = 0 as libc::c_int as u32;
         while (n as libc::c_ulong) < oSize {
@@ -471,7 +471,7 @@ unsafe extern "C" fn HUF_readStats_body(
                     n.wrapping_add(1) as isize,
                 ) = (*ip
                 .offset(n.wrapping_div(2) as isize)
-                as libc::c_int & 15 as libc::c_int) as u8;
+                as libc::c_int & 15) as u8;
             n = (n as libc::c_uint).wrapping_add(2) as u32
                 as u32;
         }
@@ -482,7 +482,7 @@ unsafe extern "C" fn HUF_readStats_body(
         oSize = FSE_decompress_wksp_bmi2(
             huffWeight as *mut libc::c_void,
             hwSize.wrapping_sub(1),
-            ip.offset(1 as libc::c_int as isize) as *const libc::c_void,
+            ip.offset(1) as *const libc::c_void,
             iSize,
             6 as libc::c_int as libc::c_uint,
             workSpace,
@@ -496,8 +496,8 @@ unsafe extern "C" fn HUF_readStats_body(
     libc::memset(
         rankStats as *mut libc::c_void,
         0 as libc::c_int,
-        ((12 as libc::c_int + 1 as libc::c_int) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong) as libc::size_t,
+        ((12 as libc::c_int + 1) as libc::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<u32>()) as libc::size_t,
     );
     weightTotal = 0 as libc::c_int as u32;
     let mut n_0: u32 = 0;
@@ -511,12 +511,12 @@ unsafe extern "C" fn HUF_readStats_body(
         *fresh1 = (*fresh1).wrapping_add(1);
         weightTotal = (weightTotal as libc::c_uint)
             .wrapping_add(
-                ((1 as libc::c_int) << *huffWeight.offset(n_0 as isize) as libc::c_int
+                ((1) << *huffWeight.offset(n_0 as isize) as libc::c_int
                     >> 1 as libc::c_int) as libc::c_uint,
             ) ;
         n_0 = n_0.wrapping_add(1);
     }
-    if weightTotal == 0 as libc::c_int as libc::c_uint {
+    if weightTotal == 0 {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     let tableLog = (ZSTD_highbit32(weightTotal))
@@ -525,9 +525,9 @@ unsafe extern "C" fn HUF_readStats_body(
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }
     *tableLogPtr = tableLog;
-    let total = ((1 as libc::c_int) << tableLog) as u32;
+    let total = ((1) << tableLog) as u32;
     let rest = total.wrapping_sub(weightTotal);
-    let verif = ((1 as libc::c_int) << ZSTD_highbit32(rest)) as u32;
+    let verif = ((1) << ZSTD_highbit32(rest)) as u32;
     let lastWeight = (ZSTD_highbit32(rest))
         .wrapping_add(1);
     if verif != rest {
@@ -536,9 +536,9 @@ unsafe extern "C" fn HUF_readStats_body(
     *huffWeight.offset(oSize as isize) = lastWeight as u8;
     let ref mut fresh2 = *rankStats.offset(lastWeight as isize);
     *fresh2 = (*fresh2).wrapping_add(1);
-    if *rankStats.offset(1 as libc::c_int as isize) < 2 as libc::c_int as libc::c_uint
-        || *rankStats.offset(1 as libc::c_int as isize)
-            & 1 as libc::c_int as libc::c_uint != 0
+    if *rankStats.offset(1) < 2
+        || *rankStats.offset(1)
+            & 1 != 0
     {
         return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
     }

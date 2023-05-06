@@ -202,10 +202,10 @@ pub struct fileStats {
     pub oneSampleTooLarge: libc::c_int,
 }
 pub const NULL: libc::c_int = 0 as libc::c_int;
-pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1 as libc::c_int);
+pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1);
 pub const SEC_TO_MICRO: libc::c_int = 1000000 as libc::c_int;
 pub const SAMPLESIZE_MAX: libc::c_int = 128 as libc::c_int
-    * ((1 as libc::c_int) << 10 as libc::c_int);
+    * ((1) << 10 as libc::c_int);
 pub const MEMMULT: libc::c_int = 11 as libc::c_int;
 pub const COVER_MEMMULT: libc::c_int = 9 as libc::c_int;
 pub const FASTCOVER_MEMMULT: libc::c_int = 1 as libc::c_int;
@@ -222,7 +222,7 @@ pub const DEBUG: libc::c_int = 0 as libc::c_int;
 unsafe extern "C" fn DiB_getFileSize(mut fileName: *const libc::c_char) -> i64 {
     let fileSize = UTIL_getFileSize(fileName);
     return if fileSize == UTIL_FILESIZE_UNKNOWN as u64 {
-        -(1 as libc::c_int) as libc::c_long
+        -(1) as libc::c_long
     } else {
         fileSize as i64
     };
@@ -243,12 +243,12 @@ unsafe extern "C" fn DiB_loadFiles(
     let mut fileIndex = 0 as libc::c_int;
     let mut f = NULL as *mut FILE;
     debug_assert!(targetChunkSize
-        <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        <= (128 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulong);
     while nbSamplesLoaded < sstSize && fileIndex < nbFiles {
         let mut fileDataLoaded: libc::size_t = 0;
         let fileSize = DiB_getFileSize(*fileNamesTable.offset(fileIndex as isize));
-        if fileSize <= 0 as libc::c_int as libc::c_long {
+        if fileSize <= 0 {
             fileIndex += 1;
         } else {
             f = fopen(
@@ -268,11 +268,11 @@ unsafe extern "C" fn DiB_loadFiles(
                     strerror(*__errno_location()),
                 );
                 fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-                exit(10 as libc::c_int);
+                exit(10);
             }
-            if displayLevel >= 2 as libc::c_int {
+            if displayLevel >= 2 {
                 if UTIL_clockSpanMicro(g_displayClock) > g_refreshRate
-                    || displayLevel >= 4 as libc::c_int
+                    || displayLevel >= 4
                 {
                     g_displayClock = UTIL_getTime();
                     fprintf(
@@ -280,12 +280,12 @@ unsafe extern "C" fn DiB_loadFiles(
                         b"Loading %s...       \r\0" as *const u8 as *const libc::c_char,
                         *fileNamesTable.offset(fileIndex as isize),
                     );
-                    if displayLevel >= 4 as libc::c_int {
+                    if displayLevel >= 4 {
                         fflush(stderr);
                     }
                 }
             }
-            fileDataLoaded = if targetChunkSize > 0 as libc::c_int as libc::c_ulong {
+            fileDataLoaded = if targetChunkSize > 0 {
                 (if fileSize < targetChunkSize as i64 {
                     fileSize
                 } else {
@@ -293,12 +293,12 @@ unsafe extern "C" fn DiB_loadFiles(
                 }) as libc::size_t
             } else {
                 (if fileSize
-                    < (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                    < (128 as libc::c_int * ((1) << 10 as libc::c_int))
                         as libc::c_long
                 {
                     fileSize
                 } else {
-                    (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                    (128 as libc::c_int * ((1) << 10 as libc::c_int))
                         as libc::c_long
                 }) as libc::size_t
             };
@@ -323,14 +323,14 @@ unsafe extern "C" fn DiB_loadFiles(
                     *fileNamesTable.offset(fileIndex as isize),
                 );
                 fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-                exit(11 as libc::c_int);
+                exit(11);
             }
             let fresh0 = nbSamplesLoaded;
             nbSamplesLoaded = nbSamplesLoaded + 1;
             *sampleSizes.offset(fresh0 as isize) = fileDataLoaded;
             totalDataLoaded = (totalDataLoaded as libc::c_ulong)
                 .wrapping_add(fileDataLoaded) ;
-            if targetChunkSize > 0 as libc::c_int as libc::c_ulong {
+            if targetChunkSize > 0 {
                 while (fileDataLoaded as i64) < fileSize && nbSamplesLoaded < sstSize {
                     let chunkSize = if (fileSize as libc::c_ulong)
                         .wrapping_sub(fileDataLoaded) < targetChunkSize
@@ -360,7 +360,7 @@ unsafe extern "C" fn DiB_loadFiles(
                             *fileNamesTable.offset(fileIndex as isize),
                         );
                         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-                        exit(11 as libc::c_int);
+                        exit(11);
                     }
                     let fresh1 = nbSamplesLoaded;
                     nbSamplesLoaded = nbSamplesLoaded + 1;
@@ -379,21 +379,21 @@ unsafe extern "C" fn DiB_loadFiles(
     if !f.is_null() {
         fclose(f);
     }
-    if displayLevel >= 2 as libc::c_int {
+    if displayLevel >= 2 {
         fprintf(
             stderr,
             b"\r%79s\r\0" as *const u8 as *const libc::c_char,
             b"\0" as *const u8 as *const libc::c_char,
         );
     }
-    if displayLevel >= 4 as libc::c_int {
+    if displayLevel >= 4 {
         fprintf(
             stderr,
             b"Loaded %d KB total training data, %d nb samples \n\0" as *const u8
                 as *const libc::c_char,
             totalDataLoaded
                 .wrapping_div(
-                    (1 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                    (1 as libc::c_int * ((1) << 10 as libc::c_int))
                         as libc::c_ulong,
                 ) as libc::c_int,
             nbSamplesLoaded,
@@ -419,11 +419,11 @@ unsafe extern "C" fn DiB_shuffle(
 ) {
     let mut seed = 0xfd2fb528 as libc::c_uint;
     let mut i: libc::c_uint = 0;
-    if nbFiles == 0 as libc::c_int as libc::c_uint {
+    if nbFiles == 0 {
         return;
     }
     i = nbFiles.wrapping_sub(1);
-    while i > 0 as libc::c_int as libc::c_uint {
+    while i > 0 {
         let j = (DiB_rand(&mut seed))
             .wrapping_rem(i.wrapping_add(1));
         let tmp = *fileNamesTable.offset(j as isize);
@@ -435,7 +435,7 @@ unsafe extern "C" fn DiB_shuffle(
     }
 }
 unsafe extern "C" fn DiB_findMaxMem(mut requiredMem: libc::c_ulonglong) -> libc::size_t {
-    let step = (8 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as libc::size_t;
+    let step = (8 as libc::c_int * ((1) << 20 as libc::c_int)) as libc::size_t;
     let mut testmem = NULL as *mut libc::c_void;
     requiredMem = (requiredMem >> 23 as libc::c_int)
         .wrapping_add(1) << 23 as libc::c_int;
@@ -481,7 +481,7 @@ unsafe extern "C" fn DiB_saveDict(
             dictFileName,
         );
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-        exit(3 as libc::c_int);
+        exit(3);
     }
     let n = fwrite(buff, 1 as libc::c_int as libc::c_ulong, buffSize, f);
     if n != buffSize {
@@ -496,7 +496,7 @@ unsafe extern "C" fn DiB_saveDict(
             dictFileName,
         );
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-        exit(4 as libc::c_int);
+        exit(4);
     }
     let n_0 = fclose(f) as libc::size_t;
     if n_0 != 0 as libc::c_int as libc::c_ulong {
@@ -511,7 +511,7 @@ unsafe extern "C" fn DiB_saveDict(
             dictFileName,
         );
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-        exit(5 as libc::c_int);
+        exit(5);
     }
 }
 unsafe extern "C" fn DiB_fileStats(
@@ -529,16 +529,16 @@ unsafe extern "C" fn DiB_fileStats(
     memset(
         &mut fs as *mut fileStats as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<fileStats>() as libc::c_ulong,
+        ::core::mem::size_of::<fileStats>(),
     );
     debug_assert!(chunkSize
-        <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        <= (128 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulong);
     n = 0 as libc::c_int;
     while n < nbFiles {
         let fileSize = DiB_getFileSize(*fileNamesTable.offset(n as isize));
-        if fileSize == 0 as libc::c_int as libc::c_long {
-            if displayLevel >= 3 as libc::c_int {
+        if fileSize == 0 {
+            if displayLevel >= 3 {
                 fprintf(
                     stderr,
                     b"Sample file '%s' has zero size, skipping...\n\0" as *const u8
@@ -546,7 +546,7 @@ unsafe extern "C" fn DiB_fileStats(
                     *fileNamesTable.offset(n as isize),
                 );
             }
-        } else if chunkSize > 0 as libc::c_int as libc::c_ulong {
+        } else if chunkSize > 0 {
             fs.nbSamples
                 += (fileSize as libc::c_ulong)
                     .wrapping_add(chunkSize)
@@ -558,40 +558,40 @@ unsafe extern "C" fn DiB_fileStats(
                 fs.oneSampleTooLarge
                     |= (fileSize > (2 as libc::c_int * SAMPLESIZE_MAX) as libc::c_long)
                         as libc::c_int;
-                if displayLevel >= 3 as libc::c_int {
+                if displayLevel >= 3 {
                     fprintf(
                         stderr,
                         b"Sample file '%s' is too large, limiting to %d KB\0"
                             as *const u8 as *const libc::c_char,
                         *fileNamesTable.offset(n as isize),
-                        128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)
+                        128 as libc::c_int * ((1) << 10 as libc::c_int)
                             / (1 as libc::c_int
-                                * ((1 as libc::c_int) << 10 as libc::c_int)),
+                                * ((1) << 10 as libc::c_int)),
                     );
                 }
             }
             fs.nbSamples += 1 as libc::c_int;
             fs.totalSizeToLoad
                 += if fileSize
-                    < (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                    < (128 as libc::c_int * ((1) << 10 as libc::c_int))
                         as libc::c_long
                 {
                     fileSize
                 } else {
-                    (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                    (128 as libc::c_int * ((1) << 10 as libc::c_int))
                         as libc::c_long
                 };
         }
         n += 1;
     }
-    if displayLevel >= 4 as libc::c_int {
+    if displayLevel >= 4 {
         fprintf(
             stderr,
             b"Found training data %d files, %d KB, %d samples\n\0" as *const u8
                 as *const libc::c_char,
             nbFiles,
             (fs.totalSizeToLoad
-                / (1 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                / (1 as libc::c_int * ((1) << 10 as libc::c_int))
                     as libc::c_long) as libc::c_int,
             fs.nbSamples,
         );
@@ -631,7 +631,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
     } else {
         0 as libc::c_int as libc::c_uint
     }) as libc::c_int;
-    if displayLevel >= 3 as libc::c_int {
+    if displayLevel >= 3 {
         fprintf(
             stderr,
             b"Shuffling input files\n\0" as *const u8 as *const libc::c_char,
@@ -655,8 +655,8 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
     } else {
         fs.totalSizeToLoad
     })
-        < (2 as libc::c_int as libc::c_uint)
-            .wrapping_mul((1 as libc::c_uint) << 30 as libc::c_int) as libc::c_long
+        < (2)
+            .wrapping_mul((1) << 30 as libc::c_int) as libc::c_long
     {
         if (maxMem as i64) < fs.totalSizeToLoad {
             maxMem as i64
@@ -664,18 +664,18 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
             fs.totalSizeToLoad
         }
     } else {
-        (2 as libc::c_int as libc::c_uint)
-            .wrapping_mul((1 as libc::c_uint) << 30 as libc::c_int) as libc::c_long
+        (2)
+            .wrapping_mul((1) << 30 as libc::c_int) as libc::c_long
     }) as libc::size_t;
     if memLimit != 0 as libc::c_int as libc::c_uint {
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Warning : setting manual memory limit for dictionary training data at %u MB \n\0"
                     as *const u8 as *const libc::c_char,
                 memLimit
                     .wrapping_div(
-                        (1 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int))
+                        (1 as libc::c_int * ((1) << 20 as libc::c_int))
                             as libc::c_uint,
                     ),
             );
@@ -689,7 +689,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
     srcBuffer = malloc(loadedSize.wrapping_add(NOISELENGTH as libc::c_ulong));
     sampleSizes = malloc(
         (fs.nbSamples as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::size_t>() as libc::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<libc::size_t>()),
     ) as *mut libc::size_t;
     if fs.nbSamples != 0 && sampleSizes.is_null() || srcBuffer.is_null()
         || dictBuffer.is_null()
@@ -704,48 +704,48 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
             b"not enough memory for DiB_trainFiles\0" as *const u8 as *const libc::c_char,
         );
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-        exit(12 as libc::c_int);
+        exit(12);
     }
     if fs.oneSampleTooLarge != 0 {
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Warning : some sample(s) are very large \n\0" as *const u8
                     as *const libc::c_char,
             );
         }
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Note that dictionary is only useful for small samples. \n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  As a consequence, only the first %u bytes of each sample are loaded \n\0"
                     as *const u8 as *const libc::c_char,
-                128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int),
+                128 as libc::c_int * ((1) << 10 as libc::c_int),
             );
         }
     }
-    if fs.nbSamples < 5 as libc::c_int {
-        if displayLevel >= 2 as libc::c_int {
+    if fs.nbSamples < 5 {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Warning : nb of samples too low for proper processing ! \n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Please provide _one file per sample_. \n\0" as *const u8
                     as *const libc::c_char,
             );
         }
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Alternatively, split files into fixed-size blocks representative of samples, with -B# \n\0"
@@ -759,17 +759,17 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         );
         fprintf(stderr, b"nb of samples too low\0" as *const u8 as *const libc::c_char);
         fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
-        exit(14 as libc::c_int);
+        exit(14);
     }
-    if fs.totalSizeToLoad < maxDictSize as i64 * 8 as libc::c_int as libc::c_long {
-        if displayLevel >= 2 as libc::c_int {
+    if fs.totalSizeToLoad < maxDictSize as i64 * 8 {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Warning : data size of samples too small for target dictionary size \n\0"
                     as *const u8 as *const libc::c_char,
             );
         }
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  Samples should be about 100x larger than target dictionary size \n\0"
@@ -778,17 +778,17 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         }
     }
     if (loadedSize as i64) < fs.totalSizeToLoad {
-        if displayLevel >= 1 as libc::c_int {
+        if displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Training samples set too large (%u MB); training on %u MB only...\n\0"
                     as *const u8 as *const libc::c_char,
                 (fs.totalSizeToLoad
-                    / (1 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int))
+                    / (1 as libc::c_int * ((1) << 20 as libc::c_int))
                         as libc::c_long) as libc::c_uint,
                 loadedSize
                     .wrapping_div(
-                        (1 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int))
+                        (1 as libc::c_int * ((1) << 20 as libc::c_int))
                             as libc::c_ulong,
                     ) as libc::c_uint,
             );
@@ -831,8 +831,8 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
             );
             if ZDICT_isError(dictSize) == 0 {
                 let mut splitPercentage = ((*coverParams).splitPoint
-                    * 100 as libc::c_int as libc::c_double) as libc::c_uint;
-                if displayLevel >= 2 as libc::c_int {
+                    * 100) as libc::c_uint;
+                if displayLevel >= 2 {
                     fprintf(
                         stderr,
                         b"k=%u\nd=%u\nsteps=%u\nsplit=%u\n\0" as *const u8
@@ -866,8 +866,8 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
             );
             if ZDICT_isError(dictSize) == 0 {
                 let mut splitPercentage_0 = ((*fastCoverParams).splitPoint
-                    * 100 as libc::c_int as libc::c_double) as libc::c_uint;
-                if displayLevel >= 2 as libc::c_int {
+                    * 100) as libc::c_uint;
+                if displayLevel >= 2 {
                     fprintf(
                         stderr,
                         b"k=%u\nd=%u\nf=%u\nsteps=%u\nsplit=%u\naccel=%u\n\0"
@@ -895,7 +895,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         debug_assert!(false);
     }
     if ZDICT_isError(dictSize) != 0 {
-        if displayLevel >= 1 as libc::c_int {
+        if displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"dictionary training failed : %s \n\0" as *const u8
@@ -905,7 +905,7 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
         }
         result = 1 as libc::c_int;
     } else {
-        if displayLevel >= 2 as libc::c_int {
+        if displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"Save dictionary of size %u into file %s \n\0" as *const u8
@@ -922,18 +922,18 @@ pub unsafe extern "C" fn DiB_trainFromFiles(
     return result;
 }
 unsafe extern "C" fn run_static_initializers() {
-    g_maxMemory = if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 4 as libc::c_int as libc::c_ulong
+    g_maxMemory = if ::core::mem::size_of::<libc::size_t>()
+        == 4
     {
-        (2 as libc::c_int as libc::c_uint)
-            .wrapping_mul((1 as libc::c_uint) << 30 as libc::c_int)
+        (2)
+            .wrapping_mul((1) << 30 as libc::c_int)
             .wrapping_sub(
-                (64 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int))
+                (64 as libc::c_int * ((1) << 20 as libc::c_int))
                     as libc::c_uint,
             ) as libc::c_ulong
     } else {
-        ((512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)) as libc::size_t)
-            << ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
+        ((512 as libc::c_int * ((1) << 20 as libc::c_int)) as libc::size_t)
+            << ::core::mem::size_of::<libc::size_t>()
     };
     g_refreshRate = (SEC_TO_MICRO as PTime)
         .wrapping_div(6);

@@ -330,7 +330,7 @@ pub const zom_compress: zstd_operation_mode = 0;
 pub const ZSTDCLI_CLEVEL_DEFAULT: libc::c_int = 3 as libc::c_int;
 pub const ZSTDCLI_CLEVEL_MAX: libc::c_int = 19 as libc::c_int;
 pub const NULL: libc::c_int = 0 as libc::c_int;
-pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1 as libc::c_int);
+pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1);
 pub const ZSTD_EXTENSION: [libc::c_char; 5] = unsafe {
     *::core::mem::transmute::<&[u8; 5], &[libc::c_char; 5]>(b".zst\0")
 };
@@ -398,7 +398,7 @@ pub const DISPLAY_LEVEL_DEFAULT: libc::c_int = 2 as libc::c_int;
 static mut g_defaultDictName: *const libc::c_char = b"dictionary\0" as *const u8
     as *const libc::c_char;
 static mut g_defaultMaxDictSize: libc::c_uint = (110 as libc::c_int
-    * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::c_uint;
+    * ((1) << 10 as libc::c_int)) as libc::c_uint;
 static mut g_defaultDictCLevel: libc::c_int = 3 as libc::c_int;
 static mut g_defaultSelectivityLevel: libc::c_uint = 9 as libc::c_int as libc::c_uint;
 static mut g_defaultMaxWindowLog: libc::c_uint = 27 as libc::c_int as libc::c_uint;
@@ -413,7 +413,7 @@ static mut g_displayLevel: libc::c_int = DISPLAY_LEVEL_DEFAULT;
 unsafe extern "C" fn checkLibVersion() {
     if strcmp(b"1.5.5\0" as *const u8 as *const libc::c_char, ZSTD_versionString()) != 0
     {
-        if g_displayLevel >= 1 as libc::c_int {
+        if g_displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Error : incorrect library version (expecting : %s ; actual : %s ) \n\0"
@@ -422,7 +422,7 @@ unsafe extern "C" fn checkLibVersion() {
                 ZSTD_versionString(),
             );
         }
-        if g_displayLevel >= 1 as libc::c_int {
+        if g_displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Please update library to version %s, or use stand-alone zstd binary \n\0"
@@ -430,7 +430,7 @@ unsafe extern "C" fn checkLibVersion() {
                 b"1.5.5\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
 }
 unsafe extern "C" fn exeNameMatch(
@@ -540,7 +540,7 @@ unsafe extern "C" fn usage_advanced(mut programName: *const libc::c_char) {
         stdout,
         b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8 as *const libc::c_char,
         b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-        (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        (::core::mem::size_of::<libc::size_t>())
             .wrapping_mul(8) as libc::c_int,
         b"v1.5.5\0" as *const u8 as *const libc::c_char,
         b"Yann Collet\0" as *const u8 as *const libc::c_char,
@@ -747,13 +747,13 @@ unsafe extern "C" fn usage_advanced(mut programName: *const libc::c_char) {
     );
 }
 unsafe extern "C" fn badusage(mut programName: *const libc::c_char) {
-    if g_displayLevel >= 1 as libc::c_int {
+    if g_displayLevel >= 1 {
         fprintf(
             stderr,
             b"Incorrect parameters \n\0" as *const u8 as *const libc::c_char,
         );
     }
-    if g_displayLevel >= 2 as libc::c_int {
+    if g_displayLevel >= 2 {
         usage(stderr, programName);
     }
 }
@@ -770,18 +770,18 @@ unsafe extern "C" fn lastNameFromPath(
 ) -> *const libc::c_char {
     let mut name = path;
     if !(strrchr(name, '/' as i32)).is_null() {
-        name = (strrchr(name, '/' as i32)).offset(1 as libc::c_int as isize);
+        name = (strrchr(name, '/' as i32)).offset(1);
     }
     if !(strrchr(name, '\\' as i32)).is_null() {
-        name = (strrchr(name, '\\' as i32)).offset(1 as libc::c_int as isize);
+        name = (strrchr(name, '\\' as i32)).offset(1);
     }
     return name;
 }
 unsafe extern "C" fn errorOut(mut msg: *const libc::c_char) {
-    if g_displayLevel >= 1 as libc::c_int {
+    if g_displayLevel >= 1 {
         fprintf(stderr, b"%s \n\0" as *const u8 as *const libc::c_char, msg);
     }
-    exit(1 as libc::c_int);
+    exit(1);
 }
 unsafe extern "C" fn readU32FromCharChecked(
     mut stringPtr: *mut *const libc::c_char,
@@ -791,7 +791,7 @@ unsafe extern "C" fn readU32FromCharChecked(
     while **stringPtr as libc::c_int >= '0' as i32
         && **stringPtr as libc::c_int <= '9' as i32
     {
-        let max = (-(1 as libc::c_int) as libc::c_uint)
+        let max = (-(1) as libc::c_uint)
             .wrapping_div(10);
         let mut last = result;
         if result > max {
@@ -808,7 +808,7 @@ unsafe extern "C" fn readU32FromCharChecked(
     if **stringPtr as libc::c_int == 'K' as i32
         || **stringPtr as libc::c_int == 'M' as i32
     {
-        let maxK = -(1 as libc::c_int) as libc::c_uint >> 10 as libc::c_int;
+        let maxK = -(1) as libc::c_uint >> 10 as libc::c_int;
         if result > maxK {
             return 1 as libc::c_int;
         }
@@ -858,7 +858,7 @@ unsafe extern "C" fn readIntFromChar(
     let mut result: libc::c_uint = 0;
     if **stringPtr as libc::c_int == '-' as i32 {
         *stringPtr = (*stringPtr).offset(1);
-        sign = -(1 as libc::c_int);
+        sign = -(1);
     }
     if readU32FromCharChecked(stringPtr, &mut result) != 0 {
         errorOut(errorMsg.as_ptr());
@@ -873,7 +873,7 @@ unsafe extern "C" fn readSizeTFromCharChecked(
     while **stringPtr as libc::c_int >= '0' as i32
         && **stringPtr as libc::c_int <= '9' as i32
     {
-        let max = (-(1 as libc::c_int) as libc::size_t)
+        let max = (-(1) as libc::size_t)
             .wrapping_div(10);
         let mut last = result;
         if result > max {
@@ -892,7 +892,7 @@ unsafe extern "C" fn readSizeTFromCharChecked(
     if **stringPtr as libc::c_int == 'K' as i32
         || **stringPtr as libc::c_int == 'M' as i32
     {
-        let maxK = -(1 as libc::c_int) as libc::size_t >> 10 as libc::c_int;
+        let maxK = -(1) as libc::size_t >> 10 as libc::c_int;
         if result > maxK {
             return 1 as libc::c_int;
         }
@@ -950,7 +950,7 @@ unsafe extern "C" fn parseAdaptParameters(
             != 0
         {
             *adaptMinPtr = readIntFromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -962,14 +962,14 @@ unsafe extern "C" fn parseAdaptParameters(
         ) != 0
         {
             *adaptMaxPtr = readIntFromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
             }
             stringPtr = stringPtr.offset(1);
         } else {
-            if g_displayLevel >= 4 as libc::c_int {
+            if g_displayLevel >= 4 {
                 fprintf(
                     stderr,
                     b"invalid compression parameter \n\0" as *const u8
@@ -979,11 +979,11 @@ unsafe extern "C" fn parseAdaptParameters(
             return 0 as libc::c_int as libc::c_uint;
         }
     }
-    if *stringPtr.offset(0 as libc::c_int as isize) as libc::c_int != 0 as libc::c_int {
+    if *stringPtr.offset(0) as libc::c_int != 0 as libc::c_int {
         return 0 as libc::c_int as libc::c_uint;
     }
     if *adaptMinPtr > *adaptMaxPtr {
-        if g_displayLevel >= 4 as libc::c_int {
+        if g_displayLevel >= 4 {
             fprintf(
                 stderr,
                 b"incoherent adaptation limits \n\0" as *const u8 as *const libc::c_char,
@@ -1008,7 +1008,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).windowLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1024,7 +1024,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).chainLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1040,7 +1040,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).hashLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1056,7 +1056,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).searchLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1072,7 +1072,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).minMatch = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1088,7 +1088,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).targetLength = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1104,7 +1104,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             (*params).strategy = readU32FromChar(&mut stringPtr) as ZSTD_strategy;
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1120,7 +1120,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_overlapLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1136,7 +1136,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmHashLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1152,7 +1152,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmMinMatch = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1168,7 +1168,7 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmBucketSizeLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
@@ -1184,14 +1184,14 @@ unsafe extern "C" fn parseCompressionParameters(
             ) != 0
         {
             g_ldmHashRateLog = readU32FromChar(&mut stringPtr);
-            if !(*stringPtr.offset(0 as libc::c_int as isize) as libc::c_int
+            if !(*stringPtr.offset(0) as libc::c_int
                 == ',' as i32)
             {
                 break;
             }
             stringPtr = stringPtr.offset(1);
         } else {
-            if g_displayLevel >= 4 as libc::c_int {
+            if g_displayLevel >= 4 {
                 fprintf(
                     stderr,
                     b"invalid compression parameter \n\0" as *const u8
@@ -1201,7 +1201,7 @@ unsafe extern "C" fn parseCompressionParameters(
             return 0 as libc::c_int as libc::c_uint;
         }
     }
-    if g_displayLevel >= 4 as libc::c_int {
+    if g_displayLevel >= 4 {
         fprintf(
             stderr,
             b"windowLog=%d, chainLog=%d, hashLog=%d, searchLog=%d \n\0" as *const u8
@@ -1212,7 +1212,7 @@ unsafe extern "C" fn parseCompressionParameters(
             (*params).searchLog,
         );
     }
-    if g_displayLevel >= 4 as libc::c_int {
+    if g_displayLevel >= 4 {
         fprintf(
             stderr,
             b"minMatch=%d, targetLength=%d, strategy=%d \n\0" as *const u8
@@ -1222,7 +1222,7 @@ unsafe extern "C" fn parseCompressionParameters(
             (*params).strategy as libc::c_uint,
         );
     }
-    if *stringPtr.offset(0 as libc::c_int as isize) as libc::c_int != 0 as libc::c_int {
+    if *stringPtr.offset(0) as libc::c_int != 0 as libc::c_int {
         return 0 as libc::c_int as libc::c_uint;
     }
     return 1 as libc::c_int as libc::c_uint;
@@ -1240,12 +1240,12 @@ unsafe extern "C" fn printVersion() {
         stdout,
         b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8 as *const libc::c_char,
         b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-        (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+        (::core::mem::size_of::<libc::size_t>())
             .wrapping_mul(8) as libc::c_int,
         b"v1.5.5\0" as *const u8 as *const libc::c_char,
         b"Yann Collet\0" as *const u8 as *const libc::c_char,
     );
-    if g_displayLevel >= 3 as libc::c_int {
+    if g_displayLevel >= 3 {
         fprintf(stdout, b"*** supports: zstd\0" as *const u8 as *const libc::c_char);
         fprintf(
             stdout,
@@ -1253,7 +1253,7 @@ unsafe extern "C" fn printVersion() {
             5 as libc::c_int,
         );
         fprintf(stdout, b"\n\0" as *const u8 as *const libc::c_char);
-        if g_displayLevel >= 4 as libc::c_int {
+        if g_displayLevel >= 4 {
             fprintf(
                 stdout,
                 b"zlib version %s\n\0" as *const u8 as *const libc::c_char,
@@ -1357,7 +1357,7 @@ unsafe extern "C" fn printDefaultCParams(
         cParams.targetLength,
     );
     debug_assert!((cParams.strategy as libc::c_uint)
-        < (9 as libc::c_int + 1 as libc::c_int) as libc::c_uint);
+        < (9 as libc::c_int + 1) as libc::c_uint);
     fprintf(
         stderr,
         b" - strategy      : %s (%u)\n\0" as *const u8 as *const libc::c_char,
@@ -1378,46 +1378,46 @@ unsafe extern "C" fn printActualCParams(
         0 as libc::c_int as libc::c_ulong
     };
     let mut actualCParams = ZSTD_getCParams(cLevel, fileSize, dictSize);
-    debug_assert!(g_displayLevel >= 4 as libc::c_int);
+    debug_assert!(g_displayLevel >= 4);
     actualCParams
-        .windowLog = if (*cParams).windowLog == 0 as libc::c_int as libc::c_uint {
+        .windowLog = if (*cParams).windowLog == 0 {
         actualCParams.windowLog
     } else {
         (*cParams).windowLog
     };
     actualCParams
-        .chainLog = if (*cParams).chainLog == 0 as libc::c_int as libc::c_uint {
+        .chainLog = if (*cParams).chainLog == 0 {
         actualCParams.chainLog
     } else {
         (*cParams).chainLog
     };
     actualCParams
-        .hashLog = if (*cParams).hashLog == 0 as libc::c_int as libc::c_uint {
+        .hashLog = if (*cParams).hashLog == 0 {
         actualCParams.hashLog
     } else {
         (*cParams).hashLog
     };
     actualCParams
-        .searchLog = if (*cParams).searchLog == 0 as libc::c_int as libc::c_uint {
+        .searchLog = if (*cParams).searchLog == 0 {
         actualCParams.searchLog
     } else {
         (*cParams).searchLog
     };
     actualCParams
-        .minMatch = if (*cParams).minMatch == 0 as libc::c_int as libc::c_uint {
+        .minMatch = if (*cParams).minMatch == 0 {
         actualCParams.minMatch
     } else {
         (*cParams).minMatch
     };
     actualCParams
-        .targetLength = if (*cParams).targetLength == 0 as libc::c_int as libc::c_uint {
+        .targetLength = if (*cParams).targetLength == 0 {
         actualCParams.targetLength
     } else {
         (*cParams).targetLength
     };
     actualCParams
         .strategy = (if (*cParams).strategy as libc::c_uint
-        == 0 as libc::c_int as libc::c_uint
+        == 0
     {
         actualCParams.strategy as libc::c_uint
     } else {
@@ -1445,7 +1445,7 @@ unsafe extern "C" fn init_cLevel() -> libc::c_int {
         let mut ptr = env;
         let mut sign = 1 as libc::c_int;
         if *ptr as libc::c_int == '-' as i32 {
-            sign = -(1 as libc::c_int);
+            sign = -(1);
             ptr = ptr.offset(1);
         } else if *ptr as libc::c_int == '+' as i32 {
             ptr = ptr.offset(1);
@@ -1453,7 +1453,7 @@ unsafe extern "C" fn init_cLevel() -> libc::c_int {
         if *ptr as libc::c_int >= '0' as i32 && *ptr as libc::c_int <= '9' as i32 {
             let mut absLevel: libc::c_uint = 0;
             if readU32FromCharChecked(&mut ptr, &mut absLevel) != 0 {
-                if g_displayLevel >= 2 as libc::c_int {
+                if g_displayLevel >= 2 {
                     fprintf(
                         stderr,
                         b"Ignore environment variable setting %s=%s: numeric value too large \n\0"
@@ -1464,12 +1464,12 @@ unsafe extern "C" fn init_cLevel() -> libc::c_int {
                 }
                 return ZSTDCLI_CLEVEL_DEFAULT;
             } else {
-                if *ptr as libc::c_int == 0 as libc::c_int {
+                if *ptr as libc::c_int == 0 {
                     return sign * absLevel as libc::c_int;
                 }
             }
         }
-        if g_displayLevel >= 2 as libc::c_int {
+        if g_displayLevel >= 2 {
             fprintf(
                 stderr,
                 b"Ignore environment variable setting %s=%s: not a valid integer value \n\0"
@@ -1534,7 +1534,7 @@ unsafe fn main_0(
     let mut memLimit = 0 as libc::c_int as libc::c_uint;
     let mut filenames = UTIL_allocateFileNamesTable(argCount as libc::size_t);
     let mut file_of_names = UTIL_allocateFileNamesTable(argCount as libc::size_t);
-    let mut programName = *argv.offset(0 as libc::c_int as isize);
+    let mut programName = *argv.offset(0);
     let mut outFileName = NULL as *const libc::c_char;
     let mut outDirName = NULL as *const libc::c_char;
     let mut outMirroredDirName = NULL as *const libc::c_char;
@@ -1551,15 +1551,15 @@ unsafe fn main_0(
     let mut dictSelect = g_defaultSelectivityLevel;
     let mut literalCompressionMode = ZSTD_ps_auto;
     checkLibVersion();
-    debug_assert!(argCount >= 1 as libc::c_int);
+    debug_assert!(argCount >= 1);
     if filenames.is_null() || file_of_names.is_null() {
-        if g_displayLevel >= 1 as libc::c_int {
+        if g_displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"zstd: allocation error \n\0" as *const u8 as *const libc::c_char,
             );
         }
-        exit(1 as libc::c_int);
+        exit(1);
     }
     programName = lastNameFromPath(programName);
     if exeNameMatch(programName, ZSTD_ZSTDMT.as_ptr()) != 0 {
@@ -1638,7 +1638,7 @@ unsafe fn main_0(
     memset(
         &mut compressionParams as *mut ZSTD_compressionParameters as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_compressionParameters>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_compressionParameters>(),
     );
     FIO_addAbortHandler();
     argNb = 1 as libc::c_int;
@@ -1653,10 +1653,10 @@ unsafe fn main_0(
                 UTIL_refFilename(filenames, argument);
             } else if strcmp(argument, b"-\0" as *const u8 as *const libc::c_char) == 0 {
                 UTIL_refFilename(filenames, stdinmark.as_ptr());
-            } else if *argument.offset(0 as libc::c_int as isize) as libc::c_int
+            } else if *argument.offset(0) as libc::c_int
                 == '-' as i32
             {
-                if *argument.offset(1 as libc::c_int as isize) as libc::c_int
+                if *argument.offset(1) as libc::c_int
                     == '-' as i32
                 {
                     if strcmp(argument, b"--\0" as *const u8 as *const libc::c_char) == 0
@@ -2022,7 +2022,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2035,10 +2035,10 @@ unsafe fn main_0(
                             } else {
                                 __nb = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb.is_null());
-                                if *__nb.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2072,7 +2072,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2085,10 +2085,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_0 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_0.is_null());
-                                if *__nb_0.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_0.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2122,7 +2122,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2135,10 +2135,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_1 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_1.is_null());
-                                if *__nb_1.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_1.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2172,7 +2172,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2185,10 +2185,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_2 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_2.is_null());
-                                if *__nb_2.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_2.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2222,7 +2222,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2235,10 +2235,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_3 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_3.is_null());
-                                if *__nb_3.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_3.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2272,7 +2272,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2285,10 +2285,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_4 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_4.is_null());
-                                if *__nb_4.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_4.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2322,7 +2322,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2335,10 +2335,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_5 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_5.is_null());
-                                if *__nb_5.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_5.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2388,7 +2388,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2401,10 +2401,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_6 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_6.is_null());
-                                if *__nb_6.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_6.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2439,7 +2439,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2452,10 +2452,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_7 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_7.is_null());
-                                if *__nb_7.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_7.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2489,7 +2489,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2502,10 +2502,10 @@ unsafe fn main_0(
                             } else {
                                 __nb_8 = *argv.offset(argNb as isize);
                                 debug_assert!(!__nb_8.is_null());
-                                if *__nb_8.offset(0 as libc::c_int as isize) as libc::c_int
+                                if *__nb_8.offset(0) as libc::c_int
                                     == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2538,7 +2538,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2551,10 +2551,10 @@ unsafe fn main_0(
                             } else {
                                 outDirName = *argv.offset(argNb as isize);
                                 debug_assert!(!outDirName.is_null());
-                                if *outDirName.offset(0 as libc::c_int as isize)
+                                if *outDirName.offset(0)
                                     as libc::c_int == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2567,8 +2567,8 @@ unsafe fn main_0(
                                 }
                             }
                         }
-                        if strlen(outDirName) == 0 as libc::c_int as libc::c_ulong {
-                            if g_displayLevel >= 1 as libc::c_int {
+                        if strlen(outDirName) == 0 {
+                            if g_displayLevel >= 1 {
                                 fprintf(
                                     stderr,
                                     b"error: output dir cannot be empty string (did you mean to pass '.' instead?)\n\0"
@@ -2594,7 +2594,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2607,10 +2607,10 @@ unsafe fn main_0(
                             } else {
                                 threadDefault = *argv.offset(argNb as isize);
                                 debug_assert!(!threadDefault.is_null());
-                                if *threadDefault.offset(0 as libc::c_int as isize)
+                                if *threadDefault.offset(0)
                                     as libc::c_int == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2626,7 +2626,7 @@ unsafe fn main_0(
                         if strcmp(
                             threadDefault,
                             b"logical\0" as *const u8 as *const libc::c_char,
-                        ) == 0 as libc::c_int
+                        ) == 0
                         {
                             defaultLogicalCores = 1 as libc::c_int;
                         }
@@ -2644,7 +2644,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2657,10 +2657,10 @@ unsafe fn main_0(
                             } else {
                                 outMirroredDirName = *argv.offset(argNb as isize);
                                 debug_assert!(!outMirroredDirName.is_null());
-                                if *outMirroredDirName.offset(0 as libc::c_int as isize)
+                                if *outMirroredDirName.offset(0)
                                     as libc::c_int == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2674,9 +2674,9 @@ unsafe fn main_0(
                             }
                         }
                         if strlen(outMirroredDirName)
-                            == 0 as libc::c_int as libc::c_ulong
+                            == 0
                         {
-                            if g_displayLevel >= 1 as libc::c_int {
+                            if g_displayLevel >= 1 {
                                 fprintf(
                                     stderr,
                                     b"error: output dir cannot be empty string (did you mean to pass '.' instead?)\n\0"
@@ -2702,7 +2702,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2715,10 +2715,10 @@ unsafe fn main_0(
                             } else {
                                 patchFromDictFileName = *argv.offset(argNb as isize);
                                 debug_assert!(!patchFromDictFileName.is_null());
-                                if *patchFromDictFileName.offset(0 as libc::c_int as isize)
+                                if *patchFromDictFileName.offset(0)
                                     as libc::c_int == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2751,7 +2751,7 @@ unsafe fn main_0(
                             ldmWindowLog = g_defaultMaxWindowLog;
                         }
                         if compressionParams.windowLog
-                            == 0 as libc::c_int as libc::c_uint
+                            == 0
                         {
                             compressionParams.windowLog = ldmWindowLog;
                         }
@@ -2784,7 +2784,7 @@ unsafe fn main_0(
                             current_block = 18342783468770781838;
                             break;
                         } else {
-                            cLevel = -(1 as libc::c_int);
+                            cLevel = -(1);
                         }
                         current_block = 3229571381435211107;
                     } else if longCommandWArg(
@@ -2800,7 +2800,7 @@ unsafe fn main_0(
                         } else {
                             argNb += 1;
                             if argNb >= argCount {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"error: missing command argument \n\0" as *const u8
@@ -2813,10 +2813,10 @@ unsafe fn main_0(
                             } else {
                                 listName = *argv.offset(argNb as isize);
                                 debug_assert!(!listName.is_null());
-                                if *listName.offset(0 as libc::c_int as isize)
+                                if *listName.offset(0)
                                     as libc::c_int == '-' as i32
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"error: command cannot be separated from its argument by another command \n\0"
@@ -2841,7 +2841,7 @@ unsafe fn main_0(
                     3229571381435211107 => {}
                     _ => {
                         argument = argument.offset(1);
-                        while *argument.offset(0 as libc::c_int as isize) as libc::c_int
+                        while *argument.offset(0) as libc::c_int
                             != 0 as libc::c_int
                         {
                             if *argument as libc::c_int >= '0' as i32
@@ -2850,7 +2850,7 @@ unsafe fn main_0(
                                 cLevel = readU32FromChar(&mut argument) as libc::c_int;
                                 dictCLevel = cLevel;
                             } else {
-                                match *argument.offset(0 as libc::c_int as isize)
+                                match *argument.offset(0)
                                     as libc::c_int
                                 {
                                     86 => {
@@ -2897,7 +2897,7 @@ unsafe fn main_0(
                                         } else {
                                             argNb += 1;
                                             if argNb >= argCount {
-                                                if g_displayLevel >= 1 as libc::c_int {
+                                                if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
                                                         b"error: missing command argument \n\0" as *const u8
@@ -2910,12 +2910,12 @@ unsafe fn main_0(
                                             } else {
                                                 dictFileName = *argv.offset(argNb as isize);
                                                 debug_assert!(!dictFileName.is_null());
-                                                if !(*dictFileName.offset(0 as libc::c_int as isize)
+                                                if !(*dictFileName.offset(0)
                                                     as libc::c_int == '-' as i32)
                                                 {
                                                     continue;
                                                 }
-                                                if g_displayLevel >= 1 as libc::c_int {
+                                                if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
                                                         b"error: command cannot be separated from its argument by another command \n\0"
@@ -2965,7 +2965,7 @@ unsafe fn main_0(
                                         } else {
                                             argNb += 1;
                                             if argNb >= argCount {
-                                                if g_displayLevel >= 1 as libc::c_int {
+                                                if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
                                                         b"error: missing command argument \n\0" as *const u8
@@ -2978,12 +2978,12 @@ unsafe fn main_0(
                                             } else {
                                                 outFileName = *argv.offset(argNb as isize);
                                                 debug_assert!(!outFileName.is_null());
-                                                if !(*outFileName.offset(0 as libc::c_int as isize)
+                                                if !(*outFileName.offset(0)
                                                     as libc::c_int == '-' as i32)
                                                 {
                                                     continue;
                                                 }
-                                                if g_displayLevel >= 1 as libc::c_int {
+                                                if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
                                                         b"error: command cannot be separated from its argument by another command \n\0"
@@ -3044,13 +3044,13 @@ unsafe fn main_0(
     }
     match current_block {
         2356153619472235877 => {
-            if g_displayLevel >= 3 as libc::c_int {
+            if g_displayLevel >= 3 {
                 fprintf(
                     stderr,
                     b"*** %s (%i-bit) %s, by %s ***\n\0" as *const u8
                         as *const libc::c_char,
                     b"Zstandard CLI\0" as *const u8 as *const libc::c_char,
-                    (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                    (::core::mem::size_of::<libc::size_t>())
                         .wrapping_mul(8) as libc::c_int,
                     b"v1.5.5\0" as *const u8 as *const libc::c_char,
                     b"Yann Collet\0" as *const u8 as *const libc::c_char,
@@ -3067,7 +3067,7 @@ unsafe fn main_0(
                     if UTIL_isLink(*((*filenames).fileNames).offset(u as isize)) != 0
                         && UTIL_isFIFO(*((*filenames).fileNames).offset(u as isize)) == 0
                     {
-                        if g_displayLevel >= 2 as libc::c_int {
+                        if g_displayLevel >= 2 {
                             fprintf(
                                 stderr,
                                 b"Warning : %s is a symbolic link, ignoring \n\0"
@@ -3084,8 +3084,8 @@ unsafe fn main_0(
                     }
                     u = u.wrapping_add(1);
                 }
-                if fileNamesNb == 0 as libc::c_int as libc::c_uint
-                    && nbFilenames > 0 as libc::c_int as libc::c_uint
+                if fileNamesNb == 0
+                    && nbFilenames > 0
                 {
                     operationResult = 1 as libc::c_int;
                     current_block = 18342783468770781838;
@@ -3112,7 +3112,7 @@ unsafe fn main_0(
                                 *((*file_of_names).fileNames).offset(flNb as isize),
                             );
                             if fnt.is_null() {
-                                if g_displayLevel >= 1 as libc::c_int {
+                                if g_displayLevel >= 1 {
                                     fprintf(
                                         stderr,
                                         b"zstd: error reading %s \n\0" as *const u8
@@ -3153,7 +3153,7 @@ unsafe fn main_0(
                                 if operation as libc::c_uint
                                     == zom_train as libc::c_int as libc::c_uint
                                 {
-                                    if g_displayLevel >= 1 as libc::c_int {
+                                    if g_displayLevel >= 1 {
                                         fprintf(
                                             stderr,
                                             b"training mode not available \n\0" as *const u8
@@ -3170,10 +3170,10 @@ unsafe fn main_0(
                                         removeSrcFile = 0 as libc::c_int;
                                     }
                                     if (*filenames).tableSize
-                                        == 0 as libc::c_int as libc::c_ulong
+                                        == 0
                                     {
-                                        if nbInputFileNames > 0 as libc::c_int as libc::c_ulong {
-                                            if g_displayLevel >= 1 as libc::c_int {
+                                        if nbInputFileNames > 0 {
+                                            if g_displayLevel >= 1 {
                                                 fprintf(
                                                     stderr,
                                                     b"please provide correct input file(s) or non-empty directories -- ignored \n\0"
@@ -3193,9 +3193,9 @@ unsafe fn main_0(
                                         18342783468770781838 => {}
                                         _ => {
                                             if (*filenames).tableSize
-                                                == 1 as libc::c_int as libc::c_ulong
+                                                == 1
                                                 && strcmp(
-                                                    *((*filenames).fileNames).offset(0 as libc::c_int as isize),
+                                                    *((*filenames).fileNames).offset(0),
                                                     stdinmark.as_ptr(),
                                                 ) == 0 && outFileName.is_null()
                                             {
@@ -3203,9 +3203,9 @@ unsafe fn main_0(
                                             }
                                             if forceStdin == 0
                                                 && UTIL_searchFileNamesTable(filenames, stdinmark.as_ptr())
-                                                    != -(1 as libc::c_int) && UTIL_isConsole(stdin) != 0
+                                                    != -(1) && UTIL_isConsole(stdin) != 0
                                             {
-                                                if g_displayLevel >= 1 as libc::c_int {
+                                                if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
                                                         b"stdin is a console, aborting\n\0" as *const u8
@@ -3217,11 +3217,11 @@ unsafe fn main_0(
                                                 || strcmp(outFileName, stdoutmark.as_ptr()) == 0)
                                                 && UTIL_isConsole(stdout) != 0
                                                 && UTIL_searchFileNamesTable(filenames, stdinmark.as_ptr())
-                                                    != -(1 as libc::c_int) && forceStdout == 0
+                                                    != -(1) && forceStdout == 0
                                                 && operation as libc::c_uint
                                                     != zom_decompress as libc::c_int as libc::c_uint
                                             {
-                                                if g_displayLevel >= 1 as libc::c_int {
+                                                if g_displayLevel >= 1 {
                                                     fprintf(
                                                         stderr,
                                                         b"stdout is a console, aborting\n\0" as *const u8
@@ -3236,7 +3236,7 @@ unsafe fn main_0(
                                                     ZSTDCLI_CLEVEL_MAX
                                                 };
                                                 if cLevel > maxCLevel {
-                                                    if g_displayLevel >= 2 as libc::c_int {
+                                                    if g_displayLevel >= 2 {
                                                         fprintf(
                                                             stderr,
                                                             b"Warning : compression level higher than max, reduced to %i \n\0"
@@ -3250,7 +3250,7 @@ unsafe fn main_0(
                                                     if operation as libc::c_uint
                                                         == zom_decompress as libc::c_int as libc::c_uint
                                                     {
-                                                        if g_displayLevel >= 1 as libc::c_int {
+                                                        if g_displayLevel >= 1 {
                                                             fprintf(
                                                                 stderr,
                                                                 b"error : can't use --show-default-cparams in decompression mode \n\0"
@@ -3271,7 +3271,7 @@ unsafe fn main_0(
                                                         if !dictFileName.is_null()
                                                             && !patchFromDictFileName.is_null()
                                                         {
-                                                            if g_displayLevel >= 1 as libc::c_int {
+                                                            if g_displayLevel >= 1 {
                                                                 fprintf(
                                                                     stderr,
                                                                     b"error : can't use -D and --patch-from=# at the same time \n\0"
@@ -3281,9 +3281,9 @@ unsafe fn main_0(
                                                             operationResult = 1 as libc::c_int;
                                                         } else if !patchFromDictFileName.is_null()
                                                             && (*filenames).tableSize
-                                                                > 1 as libc::c_int as libc::c_ulong
+                                                                > 1
                                                         {
-                                                            if g_displayLevel >= 1 as libc::c_int {
+                                                            if g_displayLevel >= 1 {
                                                                 fprintf(
                                                                     stderr,
                                                                     b"error : can't use --patch-from=# on multiple files \n\0"
@@ -3295,7 +3295,7 @@ unsafe fn main_0(
                                                             hasStdout = (!outFileName.is_null()
                                                                 && strcmp(outFileName, stdoutmark.as_ptr()) == 0)
                                                                 as libc::c_int;
-                                                            if hasStdout != 0 && g_displayLevel == 2 as libc::c_int {
+                                                            if hasStdout != 0 && g_displayLevel == 2 {
                                                                 g_displayLevel = 1 as libc::c_int;
                                                             }
                                                             if UTIL_isConsole(stderr) == 0
@@ -3306,7 +3306,7 @@ unsafe fn main_0(
                                                             }
                                                             FIO_setProgressSetting(progress);
                                                             if hasStdout != 0 && removeSrcFile != 0 {
-                                                                if g_displayLevel >= 3 as libc::c_int {
+                                                                if g_displayLevel >= 3 {
                                                                     fprintf(
                                                                         stderr,
                                                                         b"Note: src files are not removed when output is stdout \n\0"
@@ -3330,16 +3330,16 @@ unsafe fn main_0(
                                                                     as libc::c_int,
                                                             );
                                                             FIO_setMMapDict(prefs, mmapDict);
-                                                            if memLimit == 0 as libc::c_int as libc::c_uint {
+                                                            if memLimit == 0 {
                                                                 if compressionParams.windowLog
-                                                                    == 0 as libc::c_int as libc::c_uint
+                                                                    == 0
                                                                 {
-                                                                    memLimit = (1 as libc::c_int as u32)
+                                                                    memLimit = (1)
                                                                         << g_defaultMaxWindowLog;
                                                                 } else {
-                                                                    memLimit = (1 as libc::c_int as u32)
+                                                                    memLimit = (1)
                                                                         << (compressionParams.windowLog
-                                                                            & 31 as libc::c_int as libc::c_uint);
+                                                                            & 31);
                                                                 }
                                                             }
                                                             if !patchFromDictFileName.is_null() {
@@ -3398,7 +3398,7 @@ unsafe fn main_0(
                                                                 );
                                                                 debug_assert!(9 as libc::c_int == strategyBounds.upperBound);
                                                                 if showDefaultCParams != 0
-                                                                    || g_displayLevel >= 4 as libc::c_int
+                                                                    || g_displayLevel >= 4
                                                                 {
                                                                     let mut fileNb: libc::size_t = 0;
                                                                     fileNb = 0 as libc::c_int as libc::size_t;
@@ -3410,7 +3410,7 @@ unsafe fn main_0(
                                                                                 cLevel,
                                                                             );
                                                                         }
-                                                                        if g_displayLevel >= 4 as libc::c_int {
+                                                                        if g_displayLevel >= 4 {
                                                                             printActualCParams(
                                                                                 *((*filenames).fileNames).offset(fileNb as isize),
                                                                                 dictFileName,
@@ -3421,18 +3421,18 @@ unsafe fn main_0(
                                                                         fileNb = fileNb.wrapping_add(1);
                                                                     }
                                                                 }
-                                                                if g_displayLevel >= 4 as libc::c_int {
+                                                                if g_displayLevel >= 4 {
                                                                     FIO_displayCompressionParameters(prefs);
                                                                 }
                                                                 if (*filenames).tableSize
-                                                                    == 1 as libc::c_int as libc::c_ulong
+                                                                    == 1
                                                                     && !outFileName.is_null()
                                                                 {
                                                                     operationResult = FIO_compressFilename(
                                                                         fCtx,
                                                                         prefs,
                                                                         outFileName,
-                                                                        *((*filenames).fileNames).offset(0 as libc::c_int as isize),
+                                                                        *((*filenames).fileNames).offset(0),
                                                                         dictFileName,
                                                                         cLevel,
                                                                         compressionParams,
@@ -3452,14 +3452,14 @@ unsafe fn main_0(
                                                                     );
                                                                 }
                                                             } else if (*filenames).tableSize
-                                                                == 1 as libc::c_int as libc::c_ulong
+                                                                == 1
                                                                 && !outFileName.is_null()
                                                             {
                                                                 operationResult = FIO_decompressFilename(
                                                                     fCtx,
                                                                     prefs,
                                                                     outFileName,
-                                                                    *((*filenames).fileNames).offset(0 as libc::c_int as isize),
+                                                                    *((*filenames).fileNames).offset(0),
                                                                     dictFileName,
                                                                 );
                                                             } else {

@@ -81,20 +81,20 @@ pub const __ASSERT_FUNCTION: [libc::c_char; 75] = unsafe {
         &[libc::c_char; 75],
     >(b"BMK_runOutcome_t BMK_benchTimedFn(BMK_timedFnState_t *, BMK_benchParams_t)\0")
 };
-pub const TIMELOOP_NANOSEC: libc::c_ulonglong = (1 as libc::c_int as libc::c_ulonglong)
+pub const TIMELOOP_NANOSEC: libc::c_ulonglong = (1)
     .wrapping_mul(1000000000);
 #[no_mangle]
 pub unsafe extern "C" fn BMK_isSuccessful_runOutcome(
     mut outcome: BMK_runOutcome_t,
 ) -> libc::c_int {
-    return (outcome.error_tag_never_ever_use_directly == 0 as libc::c_int)
+    return (outcome.error_tag_never_ever_use_directly == 0)
         as libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn BMK_extract_runTime(
     mut outcome: BMK_runOutcome_t,
 ) -> BMK_runTime_t {
-    if !(outcome.error_tag_never_ever_use_directly == 0 as libc::c_int) {
+    if !(outcome.error_tag_never_ever_use_directly == 0) {
         abort();
     }
     return outcome.internal_never_ever_use_directly;
@@ -120,7 +120,7 @@ unsafe extern "C" fn BMK_runOutcome_error(mut errorResult: libc::size_t) -> BMK_
     memset(
         &mut b as *mut BMK_runOutcome_t as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<BMK_runOutcome_t>() as libc::c_ulong,
+        ::core::mem::size_of::<BMK_runOutcome_t>(),
     );
     b.error_tag_never_ever_use_directly = 1 as libc::c_int;
     b.error_result_never_ever_use_directly = errorResult;
@@ -178,7 +178,7 @@ pub unsafe extern "C" fn BMK_benchFunction(
                 *(p.dstCapacities).offset(blockNb as isize),
                 p.benchPayload,
             );
-            if loopNb == 0 as libc::c_int as libc::c_uint {
+            if loopNb == 0 {
                 if !(p.blockResults).is_null() {
                     *(p.blockResults).offset(blockNb as isize) = res;
                 }
@@ -208,7 +208,7 @@ pub unsafe extern "C" fn BMK_createTimedFnState(
     mut total_ms: libc::c_uint,
     mut run_ms: libc::c_uint,
 ) -> *mut BMK_timedFnState_t {
-    let r = malloc(::core::mem::size_of::<BMK_timedFnState_t>() as libc::c_ulong)
+    let r = malloc(::core::mem::size_of::<BMK_timedFnState_t>())
         as *mut BMK_timedFnState_t;
     if r.is_null() {
         return NULL as *mut BMK_timedFnState_t;
@@ -232,7 +232,7 @@ pub unsafe extern "C" fn BMK_initStatic_timedFnState(
     if buffer.is_null() {
         return NULL as *mut BMK_timedFnState_t;
     }
-    if size < ::core::mem::size_of::<BMK_timedFnState_s>() as libc::c_ulong {
+    if size < ::core::mem::size_of::<BMK_timedFnState_s>() {
         return NULL as *mut BMK_timedFnState_t;
     }
     if (buffer as libc::size_t).wrapping_rem(tfs_alignment) != 0 {
@@ -268,8 +268,8 @@ pub unsafe extern "C" fn BMK_resetTimedFnState(
     (*timedFnState)
         .fastestRun
         .nanoSecPerRun = TIMELOOP_NANOSEC as libc::c_double
-        * 2000000000 as libc::c_int as libc::c_double;
-    (*timedFnState).fastestRun.sumOfReturn = -(1 as libc::c_longlong) as libc::size_t;
+        * 2000000000;
+    (*timedFnState).fastestRun.sumOfReturn = -(1) as libc::size_t;
     (*timedFnState).nbLoops = 1 as libc::c_int as libc::c_uint;
     (*timedFnState).coolTime = UTIL_getTime();
 }
@@ -315,11 +315,11 @@ pub unsafe extern "C" fn BMK_benchTimedFn(
         } else {
             let multiplier = 10 as libc::c_int as libc::c_uint;
             debug_assert!((*cont).nbLoops
-                < (-(1 as libc::c_int) as libc::c_uint).wrapping_div(multiplier));
+                < (-(1) as libc::c_uint).wrapping_div(multiplier));
             (*cont).nbLoops = ((*cont).nbLoops).wrapping_mul(multiplier);
         }
         if loopDuration_ns < runTimeMin_ns as libc::c_double {
-            debug_assert!(completed == 0 as libc::c_int);
+            debug_assert!(completed == 0);
         } else {
             if newRunTime.nanoSecPerRun < bestRunTime.nanoSecPerRun {
                 bestRunTime = newRunTime;

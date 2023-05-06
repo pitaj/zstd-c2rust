@@ -76,7 +76,7 @@ pub unsafe extern "C" fn UTIL_waitForNextTick() {
     loop {
         clockEnd = UTIL_getTime();
         if !(UTIL_getSpanTimeNano(clockStart, clockEnd)
-            == 0 as libc::c_int as libc::c_ulong)
+            == 0)
         {
             break;
         }

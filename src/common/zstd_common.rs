@@ -47,7 +47,7 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: libc::size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0 as libc::c_int as libc::c_ulong).wrapping_sub(code) as ERR_enum;
+    return (0).wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
@@ -55,8 +55,8 @@ unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_
 pub const ZSTD_VERSION_MAJOR: libc::c_int = 1 as libc::c_int;
 pub const ZSTD_VERSION_MINOR: libc::c_int = 5 as libc::c_int;
 pub const ZSTD_VERSION_RELEASE: libc::c_int = 5 as libc::c_int;
-pub const ZSTD_VERSION_NUMBER: libc::c_int = ZSTD_VERSION_MAJOR * 100 as libc::c_int
-    * 100 as libc::c_int + ZSTD_VERSION_MINOR * 100 as libc::c_int
+pub const ZSTD_VERSION_NUMBER: libc::c_int = ZSTD_VERSION_MAJOR * 100
+    * 100 + ZSTD_VERSION_MINOR * 100
     + ZSTD_VERSION_RELEASE;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_versionNumber() -> libc::c_uint {

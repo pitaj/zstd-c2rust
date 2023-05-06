@@ -368,7 +368,7 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
     {
         return 0 as libc::c_int as libc::size_t;
     }
-    if (*ddict).dictSize < 8 as libc::c_int as libc::c_ulong {
+    if (*ddict).dictSize < 8 {
         if dictContentType as libc::c_uint
             == ZSTD_dct_fullDict as libc::c_int as libc::c_uint
         {
@@ -448,7 +448,7 @@ pub unsafe extern "C" fn ZSTD_createDDict_advanced(
         return NULL as *mut ZSTD_DDict;
     }
     let ddict = ZSTD_customMalloc(
-        ::core::mem::size_of::<ZSTD_DDict>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_DDict>(),
         customMem,
     ) as *mut ZSTD_DDict;
     if ddict.is_null() {
@@ -531,7 +531,7 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
     mut dictContentType: ZSTD_dictContentType_e,
 ) -> *const ZSTD_DDict {
-    let neededSpace = (::core::mem::size_of::<ZSTD_DDict>() as libc::c_ulong)
+    let neededSpace = (::core::mem::size_of::<ZSTD_DDict>())
         .wrapping_add(
             (if dictLoadMethod as libc::c_uint
                 == ZSTD_dlm_byRef as libc::c_int as libc::c_uint
@@ -544,7 +544,7 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
     let ddict = sBuffer as *mut ZSTD_DDict;
     debug_assert!(!sBuffer.is_null());
     debug_assert!(!dict.is_null());
-    if sBuffer as libc::size_t & 7 as libc::c_int as libc::c_ulong != 0 {
+    if sBuffer as libc::size_t & 7 != 0 {
         return NULL as *const ZSTD_DDict;
     }
     if sBufferSize < neededSpace {
@@ -552,11 +552,11 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
     }
     if dictLoadMethod as libc::c_uint == ZSTD_dlm_byCopy as libc::c_int as libc::c_uint {
         libc::memcpy(
-            ddict.offset(1 as libc::c_int as isize) as *mut libc::c_void,
+            ddict.offset(1) as *mut libc::c_void,
             dict,
             dictSize as libc::size_t,
         );
-        dict = ddict.offset(1 as libc::c_int as isize) as *const libc::c_void;
+        dict = ddict.offset(1) as *const libc::c_void;
     }
     if ERR_isError(
         ZSTD_initDDict_internal(ddict, dict, dictSize, ZSTD_dlm_byRef, dictContentType),
@@ -581,7 +581,7 @@ pub unsafe extern "C" fn ZSTD_estimateDDictSize(
     mut dictSize: libc::size_t,
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
 ) -> libc::size_t {
-    return (::core::mem::size_of::<ZSTD_DDict>() as libc::c_ulong)
+    return (::core::mem::size_of::<ZSTD_DDict>())
         .wrapping_add(
             (if dictLoadMethod as libc::c_uint
                 == ZSTD_dlm_byRef as libc::c_int as libc::c_uint
@@ -597,7 +597,7 @@ pub unsafe extern "C" fn ZSTD_sizeof_DDict(mut ddict: *const ZSTD_DDict) -> libc
     if ddict.is_null() {
         return 0 as libc::c_int as libc::size_t;
     }
-    return (::core::mem::size_of::<ZSTD_DDict>() as libc::c_ulong)
+    return (::core::mem::size_of::<ZSTD_DDict>())
         .wrapping_add(
             (if !((*ddict).dictBuffer).is_null() {
                 (*ddict).dictSize

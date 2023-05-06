@@ -50,7 +50,7 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
 }
 pub const HIST_WKSP_SIZE_U32: libc::c_int = 1024 as libc::c_int;
 pub const HIST_WKSP_SIZE: libc::c_ulong = (HIST_WKSP_SIZE_U32 as libc::c_ulong)
-    .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong);
+    .wrapping_mul(::core::mem::size_of::<libc::c_uint>());
 #[no_mangle]
 pub unsafe extern "C" fn HIST_isError(mut code: libc::size_t) -> libc::c_uint {
     return ERR_isError(code);
@@ -70,10 +70,10 @@ pub unsafe extern "C" fn HIST_count_simple(
         count as *mut libc::c_void,
         0 as libc::c_int,
         (maxSymbolValue.wrapping_add(1) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<libc::c_uint>())
             as libc::size_t,
     );
-    if srcSize == 0 as libc::c_int as libc::c_ulong {
+    if srcSize == 0 {
         *maxSymbolValuePtr = 0 as libc::c_int as libc::c_uint;
         return 0 as libc::c_int as libc::c_uint;
     }
@@ -110,13 +110,13 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     let iend = ip.offset(sourceSize as isize);
     let countSize = ((*maxSymbolValuePtr).wrapping_add(1)
         as libc::c_ulong)
-        .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong);
+        .wrapping_mul(::core::mem::size_of::<libc::c_uint>());
     let mut max = 0 as libc::c_int as libc::c_uint;
     let Counting1 = workSpace;
-    let Counting2 = Counting1.offset(256 as libc::c_int as isize);
-    let Counting3 = Counting2.offset(256 as libc::c_int as isize);
-    let Counting4 = Counting3.offset(256 as libc::c_int as isize);
-    debug_assert!(*maxSymbolValuePtr <= 255 as libc::c_int as libc::c_uint);
+    let Counting2 = Counting1.offset(256);
+    let Counting3 = Counting2.offset(256);
+    let Counting4 = Counting3.offset(256);
+    debug_assert!(*maxSymbolValuePtr <= 255);
     if sourceSize == 0 {
         libc::memset(
             count as *mut libc::c_void,
@@ -129,16 +129,16 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     libc::memset(
         workSpace as *mut libc::c_void,
         0 as libc::c_int,
-        ((4 as libc::c_int * 256 as libc::c_int) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+        ((4 as libc::c_int * 256) as libc::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<libc::c_uint>())
             as libc::size_t,
     );
     let mut cached = MEM_read32(ip as *const libc::c_void);
-    ip = ip.offset(4 as libc::c_int as isize);
-    while ip < iend.offset(-(15 as libc::c_int as isize)) {
+    ip = ip.offset(4);
+    while ip < iend.offset(-(15)) {
         let mut c = cached;
         cached = MEM_read32(ip as *const libc::c_void);
-        ip = ip.offset(4 as libc::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh2 = *Counting1.offset(c as u8 as isize);
         *fresh2 = (*fresh2).wrapping_add(1);
         let ref mut fresh3 = *Counting2.offset((c >> 8 as libc::c_int) as u8 as isize);
@@ -150,7 +150,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh5 = (*fresh5).wrapping_add(1);
         c = cached;
         cached = MEM_read32(ip as *const libc::c_void);
-        ip = ip.offset(4 as libc::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh6 = *Counting1.offset(c as u8 as isize);
         *fresh6 = (*fresh6).wrapping_add(1);
         let ref mut fresh7 = *Counting2.offset((c >> 8 as libc::c_int) as u8 as isize);
@@ -162,7 +162,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh9 = (*fresh9).wrapping_add(1);
         c = cached;
         cached = MEM_read32(ip as *const libc::c_void);
-        ip = ip.offset(4 as libc::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh10 = *Counting1.offset(c as u8 as isize);
         *fresh10 = (*fresh10).wrapping_add(1);
         let ref mut fresh11 = *Counting2
@@ -175,7 +175,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh13 = (*fresh13).wrapping_add(1);
         c = cached;
         cached = MEM_read32(ip as *const libc::c_void);
-        ip = ip.offset(4 as libc::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh14 = *Counting1.offset(c as u8 as isize);
         *fresh14 = (*fresh14).wrapping_add(1);
         let ref mut fresh15 = *Counting2
@@ -187,7 +187,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         let ref mut fresh17 = *Counting4.offset((c >> 24 as libc::c_int) as isize);
         *fresh17 = (*fresh17).wrapping_add(1);
     }
-    ip = ip.offset(-(4 as libc::c_int as isize));
+    ip = ip.offset(-(4));
     while ip < iend {
         let fresh18 = ip;
         ip = ip.offset(1);
@@ -196,7 +196,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     }
     let mut s: u32 = 0;
     s = 0 as libc::c_int as u32;
-    while s < 256 as libc::c_int as libc::c_uint {
+    while s < 256 {
         let ref mut fresh20 = *Counting1.offset(s as isize);
         *fresh20 = (*fresh20 as libc::c_uint)
             .wrapping_add(
@@ -233,10 +233,10 @@ pub unsafe extern "C" fn HIST_countFast_wksp(
     mut workSpace: *mut libc::c_void,
     mut workSpaceSize: libc::size_t,
 ) -> libc::size_t {
-    if sourceSize < 1500 as libc::c_int as libc::c_ulong {
+    if sourceSize < 1500 {
         return HIST_count_simple(count, maxSymbolValuePtr, source, sourceSize) as libc::size_t;
     }
-    if workSpace as libc::size_t & 3 as libc::c_int as libc::c_ulong != 0 {
+    if workSpace as libc::size_t & 3 != 0 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     if workSpaceSize < HIST_WKSP_SIZE {
@@ -260,13 +260,13 @@ pub unsafe extern "C" fn HIST_count_wksp(
     mut workSpace: *mut libc::c_void,
     mut workSpaceSize: libc::size_t,
 ) -> libc::size_t {
-    if workSpace as libc::size_t & 3 as libc::c_int as libc::c_ulong != 0 {
+    if workSpace as libc::size_t & 3 != 0 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     if workSpaceSize < HIST_WKSP_SIZE {
         return -(ZSTD_error_workSpace_tooSmall as libc::c_int) as libc::size_t;
     }
-    if *maxSymbolValuePtr < 255 as libc::c_int as libc::c_uint {
+    if *maxSymbolValuePtr < 255 {
         return HIST_count_parallel_wksp(
             count,
             maxSymbolValuePtr,
@@ -300,7 +300,7 @@ pub unsafe extern "C" fn HIST_countFast(
         source,
         sourceSize,
         tmpCounters.as_mut_ptr() as *mut libc::c_void,
-        ::core::mem::size_of::<[libc::c_uint; 1024]>() as libc::c_ulong,
+        ::core::mem::size_of::<[libc::c_uint; 1024]>(),
     );
 }
 #[no_mangle]
@@ -317,6 +317,6 @@ pub unsafe extern "C" fn HIST_count(
         src,
         srcSize,
         tmpCounters.as_mut_ptr() as *mut libc::c_void,
-        ::core::mem::size_of::<[libc::c_uint; 1024]>() as libc::c_ulong,
+        ::core::mem::size_of::<[libc::c_uint; 1024]>(),
     );
 }

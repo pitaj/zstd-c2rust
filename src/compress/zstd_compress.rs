@@ -1305,7 +1305,7 @@ pub type C2RustUnnamed_1 = libc::c_uint;
 pub const bt_reserved: C2RustUnnamed_1 = 3;
 pub type C2RustUnnamed_2 = libc::c_uint;
 pub const ZSTD_MAGIC_DICTIONARY: libc::c_uint = 0xec30a437 as libc::c_uint;
-pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0 as libc::c_ulonglong)
+pub const ZSTD_CONTENTSIZE_UNKNOWN: libc::c_ulonglong = (0)
     .wrapping_sub(1);
 #[inline]
 unsafe extern "C" fn ZSTD_customMalloc(
@@ -1335,21 +1335,21 @@ static mut ZSTD_defaultCMem: ZSTD_customMem = unsafe {
         init
     }
 };
-pub const ZSTD_VERSION_NUMBER: libc::c_int = ZSTD_VERSION_MAJOR * 100 as libc::c_int
-    * 100 as libc::c_int + ZSTD_VERSION_MINOR * 100 as libc::c_int
+pub const ZSTD_VERSION_NUMBER: libc::c_int = ZSTD_VERSION_MAJOR * 100
+    * 100 + ZSTD_VERSION_MINOR * 100
     + ZSTD_VERSION_RELEASE;
 pub const ZSTD_VERSION_MAJOR: libc::c_int = 1 as libc::c_int;
 pub const ZSTD_VERSION_MINOR: libc::c_int = 5 as libc::c_int;
 pub const ZSTD_VERSION_RELEASE: libc::c_int = 5 as libc::c_int;
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 4 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>()
+        == 4) as libc::c_int as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> libc::c_uint {
-    return (::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-        == 8 as libc::c_int as libc::c_ulong) as libc::c_int as libc::c_uint;
+    return (::core::mem::size_of::<libc::size_t>()
+        == 8) as libc::c_int as libc::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> libc::c_uint {
@@ -1401,7 +1401,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut libc::c_void, mut val: u16) 
         MEM_write16(memPtr, val);
     } else {
         let mut p = memPtr as *mut u8;
-        *p.offset(0 as libc::c_int as isize) = val as u8;
+        *p.offset(0) = val as u8;
         *p
             .offset(
                 1 as libc::c_int as isize,
@@ -1412,7 +1412,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut libc::c_void, mut val: u16) 
 unsafe extern "C" fn MEM_writeLE24(mut memPtr: *mut libc::c_void, mut val: u32) {
     MEM_writeLE16(memPtr, val as u16);
     *(memPtr as *mut u8)
-        .offset(2 as libc::c_int as isize) = (val >> 16 as libc::c_int) as u8;
+        .offset(2) = (val >> 16 as libc::c_int) as u8;
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut libc::c_void, mut val32: u32) {
@@ -1451,8 +1451,8 @@ pub const ZSTD_SKIPPABLEHEADERSIZE: libc::c_int = 8 as libc::c_int;
 pub const ZSTD_MAGIC_SKIPPABLE_START: libc::c_int = 0x184d2a50 as libc::c_int;
 pub const ZSTD_c_searchForExternalRepcodes: libc::c_int = 1016;
 pub const ZSTD_BLOCKSIZELOG_MAX: libc::c_int = 17 as libc::c_int;
-pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1 as libc::c_int) << ZSTD_BLOCKSIZELOG_MAX;
-pub const ZSTD_BLOCKSIZE_MAX_MIN: libc::c_int = (1 as libc::c_int) << 10 as libc::c_int;
+pub const ZSTD_BLOCKSIZE_MAX: libc::c_int = (1) << ZSTD_BLOCKSIZELOG_MAX;
+pub const ZSTD_BLOCKSIZE_MAX_MIN: libc::c_int = (1) << 10 as libc::c_int;
 pub const ZSTD_c_maxBlockSize: libc::c_int = 1015;
 pub const ZSTD_c_enableSeqProducerFallback: libc::c_int = 1014;
 pub const ZSTD_c_prefetchCDictTables: libc::c_int = 1013;
@@ -1514,18 +1514,18 @@ unsafe extern "C" fn ZSTD_customCalloc(
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0 as libc::c_int as libc::c_uint);
-    return (31 as libc::c_int as libc::c_uint)
+    return (31)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 pub const STREAM_ACCUMULATOR_MIN_32: libc::c_int = 25 as libc::c_int;
 pub const STREAM_ACCUMULATOR_MIN_64: libc::c_int = 57 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_rotateRight_U64(value: u64, mut count: u32) -> u64 {
-    debug_assert!(count < 64 as libc::c_int as libc::c_uint);
+    debug_assert!(count < 64);
     count &= 0x3f as libc::c_int as libc::c_uint;
     return value >> count
         | value
-            << ((0 as libc::c_uint).wrapping_sub(count)
+            << ((0).wrapping_sub(count)
                 & 0x3f as libc::c_int as libc::c_uint);
 }
 #[inline]
@@ -1571,8 +1571,8 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
     return (code > -(ZSTD_error_maxCode as libc::c_int) as libc::size_t) as libc::c_int
         as libc::c_uint;
 }
-pub const HUF_WORKSPACE_SIZE: libc::c_int = ((8 as libc::c_int) << 10 as libc::c_int)
-    + 512 as libc::c_int;
+pub const HUF_WORKSPACE_SIZE: libc::c_int = ((8) << 10 as libc::c_int)
+    + 512;
 pub const HUF_SYMBOLVALUE_MAX: libc::c_int = 255 as libc::c_int;
 pub const HUF_OPTIMAL_DEPTH_THRESHOLD: libc::c_int = ZSTD_btultra as libc::c_int;
 #[inline]
@@ -1580,7 +1580,7 @@ unsafe extern "C" fn ZSTD_window_init(mut window: *mut ZSTD_window_t) {
     libc::memset(
         window as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_window_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_window_t>() as libc::size_t,
     );
     (*window).base = b" \0" as *const u8 as *const libc::c_char as *const u8;
     (*window).dictBase = b" \0" as *const u8 as *const libc::c_char as *const u8;
@@ -1615,14 +1615,14 @@ unsafe extern "C" fn ZSTD_cpuid() -> ZSTD_cpuid_t {
         "cpuid", inlateout("ax") 0 as libc::c_int => n, out("ecx")   _, out("edx")   _,
         options(preserves_flags, pure, readonly, att_syntax)
     );
-    if n >= 1 as libc::c_int as libc::c_uint {
+    if n >= 1 {
         let mut f1a: u32 = 0;
         asm!(
             "cpuid", inlateout("ax") 1 as libc::c_int => f1a, lateout("cx") f1c,
             lateout("dx") f1d, options(preserves_flags, pure, readonly, att_syntax)
         );
     }
-    if n >= 7 as libc::c_int as libc::c_uint {
+    if n >= 7 {
         let mut f7a: u32 = 0;
         asm!(
             "cpuid\nmov {restmp0:x}, %bx", restmp0 = lateout(reg) f7b, inlateout("ax") 7
@@ -1644,12 +1644,12 @@ unsafe extern "C" fn ZSTD_cpuid() -> ZSTD_cpuid_t {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cpuid_bmi2(cpuid: ZSTD_cpuid_t) -> libc::c_int {
-    return (cpuid.f7b & (1 as libc::c_uint) << 8 as libc::c_int
+    return (cpuid.f7b & (1) << 8 as libc::c_int
         != 0 as libc::c_int as libc::c_uint) as libc::c_int;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cpuid_bmi1(cpuid: ZSTD_cpuid_t) -> libc::c_int {
-    return (cpuid.f7b & (1 as libc::c_uint) << 3 as libc::c_int
+    return (cpuid.f7b & (1) << 3 as libc::c_int
         != 0 as libc::c_int as libc::c_uint) as libc::c_int;
 }
 pub const ZSTD_WINDOWLOG_ABSOLUTEMIN: libc::c_int = 10 as libc::c_int;
@@ -1663,7 +1663,7 @@ unsafe extern "C" fn ZSTD_window_update(
 ) -> u32 {
     let ip = src as *const u8;
     let mut contiguous = 1 as libc::c_int as u32;
-    if srcSize == 0 as libc::c_int as libc::c_ulong {
+    if srcSize == 0 {
         return contiguous;
     }
     debug_assert!(!((*window).base).is_null());
@@ -1701,7 +1701,7 @@ unsafe extern "C" fn ZSTD_window_update(
     return contiguous;
 }
 pub const ZSTDMT_JOBSIZE_MIN: libc::c_int = 512 as libc::c_int
-    * ((1 as libc::c_int) << 10 as libc::c_int);
+    * ((1) << 10 as libc::c_int);
 #[inline]
 unsafe extern "C" fn ZSTD_window_canOverflowCorrect(
     window: ZSTD_window_t,
@@ -1710,7 +1710,7 @@ unsafe extern "C" fn ZSTD_window_canOverflowCorrect(
     mut loadedDictEnd: u32,
     mut src: *const libc::c_void,
 ) -> u32 {
-    let cycleSize = (1 as libc::c_uint) << cycleLog;
+    let cycleSize = (1) << cycleLog;
     let curr = (src as *const u8).offset_from(window.base) as libc::c_long as u32;
     let minIndexToOverflowCorrect = cycleSize
         .wrapping_add((if maxDist > cycleSize { maxDist } else { cycleSize }))
@@ -1740,11 +1740,11 @@ unsafe extern "C" fn ZSTD_window_needOverflowCorrection(
 ) -> u32 {
     let curr = (srcEnd as *const u8).offset_from(window.base) as libc::c_long as u32;
     return (curr
-        > ((3 as libc::c_uint) << 29 as libc::c_int)
+        > ((3) << 29 as libc::c_int)
             .wrapping_add(
-                (1 as libc::c_uint)
-                    << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                        == 4 as libc::c_int as libc::c_ulong
+                (1)
+                    << (if ::core::mem::size_of::<libc::size_t>()
+                        == 4
                     {
                         ZSTD_WINDOWLOG_MAX_32
                     } else {
@@ -1760,7 +1760,7 @@ unsafe extern "C" fn ZSTD_limitCopy(
     mut srcSize: libc::size_t,
 ) -> libc::size_t {
     let length = if dstCapacity < srcSize { dstCapacity } else { srcSize };
-    if length > 0 as libc::c_int as libc::c_ulong {
+    if length > 0 {
         libc::memcpy(dst, src, length as libc::size_t);
     }
     return length;
@@ -1776,14 +1776,14 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
     mut maxDist: u32,
     mut src: *const libc::c_void,
 ) -> u32 {
-    let cycleSize = (1 as libc::c_uint) << cycleLog;
+    let cycleSize = (1) << cycleLog;
     let cycleMask = cycleSize.wrapping_sub(1);
     let curr = (src as *const u8).offset_from((*window).base) as libc::c_long as u32;
     let currentCycle = curr & cycleMask;
     let currentCycleCorrection = if currentCycle
         < ZSTD_WINDOW_START_INDEX as libc::c_uint
     {
-        if cycleSize > 2 as libc::c_int as libc::c_uint {
+        if cycleSize > 2 {
             cycleSize
         } else {
             2 as libc::c_int as libc::c_uint
@@ -1796,11 +1796,11 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
         .wrapping_add((if maxDist > cycleSize { maxDist } else { cycleSize }));
     let correction = curr.wrapping_sub(newCurrent);
     debug_assert!(maxDist & maxDist.wrapping_sub(1)
-        == 0 as libc::c_int as libc::c_uint);
+        == 0);
     debug_assert!(curr & cycleMask == newCurrent & cycleMask);
     debug_assert!(curr > newCurrent);
     if ZSTD_WINDOW_OVERFLOW_CORRECT_FREQUENTLY == 0 {
-        debug_assert!(correction > ((1 as libc::c_int) << 28 as libc::c_int) as libc::c_uint);
+        debug_assert!(correction > ((1) << 28 as libc::c_int) as libc::c_uint);
     }
     (*window).base = ((*window).base).offset(correction as isize);
     (*window).dictBase = ((*window).dictBase).offset(correction as isize);
@@ -1823,7 +1823,7 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
             ;
     }
     debug_assert!(newCurrent >= maxDist);
-    debug_assert!(newCurrent.wrapping_sub(maxDist) >= 2 as libc::c_int as libc::c_uint);
+    debug_assert!(newCurrent.wrapping_sub(maxDist) >= 2);
     debug_assert!((*window).lowLimit <= newCurrent);
     debug_assert!((*window).dictLimit <= newCurrent);
     (*window).nbOverflowCorrections = ((*window).nbOverflowCorrections).wrapping_add(1);
@@ -1885,7 +1885,7 @@ unsafe extern "C" fn ZSTD_window_enforceMaxDist(
 }
 pub const ZSTD_MAX_NB_BLOCK_SPLITS: libc::c_int = 196 as libc::c_int;
 pub const LitHufLog: libc::c_int = 11 as libc::c_int;
-pub const ZSTD_OPT_NUM: libc::c_int = (1 as libc::c_int) << 12 as libc::c_int;
+pub const ZSTD_OPT_NUM: libc::c_int = (1) << 12 as libc::c_int;
 pub const Litbits: libc::c_int = 8 as libc::c_int;
 static mut LL_bits: [u8; 36] = [
     0 as libc::c_int as u8,
@@ -1992,11 +1992,11 @@ unsafe extern "C" fn ZSTD_rleCompressBlock(
     let cBlockHeader = lastBlock
         .wrapping_add((bt_rle as libc::c_int as u32) << 1 as libc::c_int)
         .wrapping_add((srcSize << 3 as libc::c_int) as u32);
-    if dstCapacity < 4 as libc::c_int as libc::c_ulong {
+    if dstCapacity < 4 {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     MEM_writeLE24(op as *mut libc::c_void, cBlockHeader);
-    *op.offset(3 as libc::c_int as isize) = src;
+    *op.offset(3) = src;
     return 4 as libc::c_int as libc::size_t;
 }
 #[inline]
@@ -2008,7 +2008,7 @@ unsafe extern "C" fn ZSTD_count(
     let pStart = pIn;
     let pInLoopLimit = pInLimit
         .offset(
-            -((::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+            -((::core::mem::size_of::<libc::size_t>())
                 .wrapping_sub(1) as isize),
         );
     if pIn < pInLoopLimit {
@@ -2017,36 +2017,36 @@ unsafe extern "C" fn ZSTD_count(
         if diff != 0 {
             return ZSTD_NbCommonBytes(diff) as libc::size_t;
         }
-        pIn = pIn.offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+        pIn = pIn.offset(::core::mem::size_of::<libc::size_t>() as isize);
         pMatch = pMatch
-            .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+            .offset(::core::mem::size_of::<libc::size_t>() as isize);
         while pIn < pInLoopLimit {
             let diff_0 = MEM_readST(pMatch as *const libc::c_void)
                 ^ MEM_readST(pIn as *const libc::c_void);
             if diff_0 == 0 {
                 pIn = pIn
-                    .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+                    .offset(::core::mem::size_of::<libc::size_t>() as isize);
                 pMatch = pMatch
-                    .offset(::core::mem::size_of::<libc::size_t>() as libc::c_ulong as isize);
+                    .offset(::core::mem::size_of::<libc::size_t>() as isize);
             } else {
                 pIn = pIn.offset(ZSTD_NbCommonBytes(diff_0) as isize);
                 return pIn.offset_from(pStart) as libc::c_long as libc::size_t;
             }
         }
     }
-    if MEM_64bits() != 0 && pIn < pInLimit.offset(-(3 as libc::c_int as isize))
+    if MEM_64bits() != 0 && pIn < pInLimit.offset(-(3))
         && MEM_read32(pMatch as *const libc::c_void)
             == MEM_read32(pIn as *const libc::c_void)
     {
-        pIn = pIn.offset(4 as libc::c_int as isize);
-        pMatch = pMatch.offset(4 as libc::c_int as isize);
+        pIn = pIn.offset(4);
+        pMatch = pMatch.offset(4);
     }
-    if pIn < pInLimit.offset(-(1 as libc::c_int as isize))
+    if pIn < pInLimit.offset(-(1))
         && MEM_read16(pMatch as *const libc::c_void) as libc::c_int
             == MEM_read16(pIn as *const libc::c_void) as libc::c_int
     {
-        pIn = pIn.offset(2 as libc::c_int as isize);
-        pMatch = pMatch.offset(2 as libc::c_int as isize);
+        pIn = pIn.offset(2);
+        pMatch = pMatch.offset(2);
     }
     if pIn < pInLimit && *pMatch as libc::c_int == *pIn as libc::c_int {
         pIn = pIn.offset(1);
@@ -2075,7 +2075,7 @@ unsafe extern "C" fn ZSTD_noCompressBlock(
     );
     return ZSTD_blockHeaderSize.wrapping_add(srcSize);
 }
-pub const MIN_CBLOCK_SIZE: libc::c_int = 1 as libc::c_int + 1 as libc::c_int;
+pub const MIN_CBLOCK_SIZE: libc::c_int = 1 as libc::c_int + 1;
 pub const ZSTD_BLOCKHEADERSIZE: libc::c_int = 3 as libc::c_int;
 static mut ZSTD_blockHeaderSize: libc::size_t = ZSTD_BLOCKHEADERSIZE as libc::size_t;
 static mut kNullRawSeqStore: rawSeqStore_t = {
@@ -2133,28 +2133,28 @@ unsafe extern "C" fn ZSTD_wildcopy(
     {
         loop {
             ZSTD_copy8(op as *mut libc::c_void, ip as *const libc::c_void);
-            op = op.offset(8 as libc::c_int as isize);
-            ip = ip.offset(8 as libc::c_int as isize);
+            op = op.offset(8);
+            ip = ip.offset(8);
             if !(op < oend) {
                 break;
             }
         }
     } else {
-        debug_assert!(diff >= 16 as libc::c_int as libc::c_long
-            || diff <= -(16 as libc::c_int) as libc::c_long);
+        debug_assert!(diff >= 16
+            || diff <= -(16) as libc::c_long);
         ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
         if 16 as libc::c_int as libc::c_long >= length {
             return;
         }
-        op = op.offset(16 as libc::c_int as isize);
-        ip = ip.offset(16 as libc::c_int as isize);
+        op = op.offset(16);
+        ip = ip.offset(16);
         loop {
             ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
-            op = op.offset(16 as libc::c_int as isize);
-            ip = ip.offset(16 as libc::c_int as isize);
+            op = op.offset(16);
+            ip = ip.offset(16);
             ZSTD_copy16(op as *mut libc::c_void, ip as *const libc::c_void);
-            op = op.offset(16 as libc::c_int as isize);
-            ip = ip.offset(16 as libc::c_int as isize);
+            op = op.offset(16);
+            ip = ip.offset(16);
             if !(op < oend) {
                 break;
             }
@@ -2201,7 +2201,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
     debug_assert!((((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart)
         as libc::c_long as libc::size_t) < (*seqStorePtr).maxNbSeq);
     debug_assert!((*seqStorePtr).maxNbLit
-        <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        <= (128 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulong);
     debug_assert!(((*seqStorePtr).lit).offset(litLength as isize)
         <= ((*seqStorePtr).litStart).offset((*seqStorePtr).maxNbLit as isize));
@@ -2211,11 +2211,11 @@ unsafe extern "C" fn ZSTD_storeSeq(
             (*seqStorePtr).lit as *mut libc::c_void,
             literals as *const libc::c_void,
         );
-        if litLength > 16 as libc::c_int as libc::c_ulong {
+        if litLength > 16 {
             ZSTD_wildcopy(
-                ((*seqStorePtr).lit).offset(16 as libc::c_int as isize)
+                ((*seqStorePtr).lit).offset(16)
                     as *mut libc::c_void,
-                literals.offset(16 as libc::c_int as isize) as *const libc::c_void,
+                literals.offset(16) as *const libc::c_void,
                 litLength as ptrdiff_t - 16 as libc::c_int as libc::c_long,
                 ZSTD_no_overlap,
             );
@@ -2232,10 +2232,10 @@ unsafe extern "C" fn ZSTD_storeSeq(
             .longLengthPos = ((*seqStorePtr).sequences)
             .offset_from((*seqStorePtr).sequencesStart) as libc::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize))
+    (*((*seqStorePtr).sequences).offset(0))
         .litLength = litLength as u16;
-    (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize)).offBase = offBase;
-    debug_assert!(matchLength >= 3 as libc::c_int as libc::c_ulong);
+    (*((*seqStorePtr).sequences).offset(0)).offBase = offBase;
+    debug_assert!(matchLength >= 3);
     let mlBase = matchLength.wrapping_sub(MINMATCH as libc::c_ulong);
     if mlBase > 0xffff as libc::c_int as libc::c_ulong {
         debug_assert!((*seqStorePtr).longLengthType as libc::c_uint
@@ -2245,7 +2245,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
             .longLengthPos = ((*seqStorePtr).sequences)
             .offset_from((*seqStorePtr).sequencesStart) as libc::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0 as libc::c_int as isize))
+    (*((*seqStorePtr).sequences).offset(0))
         .mlBase = mlBase as u16;
     (*seqStorePtr).sequences = ((*seqStorePtr).sequences).offset(1);
 }
@@ -2297,13 +2297,13 @@ static mut ML_defaultNorm: [i16; 53] = [
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
 ];
 pub const MLFSELog: libc::c_int = 9 as libc::c_int;
 pub const DefaultMaxOff: libc::c_int = 28 as libc::c_int;
@@ -2334,11 +2334,11 @@ static mut OF_defaultNorm: [i16; 29] = [
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
 ];
 pub const MaxOff: libc::c_int = 31 as libc::c_int;
 pub const OffFSELog: libc::c_int = 8 as libc::c_int;
@@ -2378,10 +2378,10 @@ static mut LL_defaultNorm: [i16; 36] = [
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
     1 as libc::c_int as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
-    -(1 as libc::c_int) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
+    -(1) as i16,
 ];
 pub const LLFSELog: libc::c_int = 9 as libc::c_int;
 #[inline]
@@ -2517,7 +2517,7 @@ unsafe extern "C" fn ZSTD_MLcode(mut mlBase: u32) -> u32 {
         42 as libc::c_int as u8,
     ];
     static mut ML_deltaCode: u32 = 36 as libc::c_int as u32;
-    return if mlBase > 127 as libc::c_int as libc::c_uint {
+    return if mlBase > 127 {
         (ZSTD_highbit32(mlBase)).wrapping_add(ML_deltaCode)
     } else {
         ML_Code[mlBase as usize] as libc::c_uint
@@ -2592,7 +2592,7 @@ unsafe extern "C" fn ZSTD_LLcode(mut litLength: u32) -> u32 {
         24 as libc::c_int as u8,
     ];
     static mut LL_deltaCode: u32 = 19 as libc::c_int as u32;
-    return if litLength > 63 as libc::c_int as libc::c_uint {
+    return if litLength > 63 {
         (ZSTD_highbit32(litLength)).wrapping_add(LL_deltaCode)
     } else {
         LL_Code[litLength as usize] as libc::c_uint
@@ -2613,7 +2613,7 @@ unsafe extern "C" fn ZSTD_literalsCompressionIsDisabled(
     }
     return ((*cctxParams).cParams.strategy as libc::c_uint
         == ZSTD_fast as libc::c_int as libc::c_uint
-        && (*cctxParams).cParams.targetLength > 0 as libc::c_int as libc::c_uint)
+        && (*cctxParams).cParams.targetLength > 0)
         as libc::c_int;
 }
 #[inline]
@@ -2651,22 +2651,22 @@ pub const ZSTD_isError: unsafe extern "C" fn(libc::size_t) -> libc::c_uint = ERR
 #[inline]
 unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
     if offBase > ZSTD_REP_NUM as libc::c_uint {
-        *rep.offset(2 as libc::c_int as isize) = *rep.offset(1 as libc::c_int as isize);
-        *rep.offset(1 as libc::c_int as isize) = *rep.offset(0 as libc::c_int as isize);
-        debug_assert!(offBase > 3 as libc::c_int as libc::c_uint);
+        *rep.offset(2) = *rep.offset(1);
+        *rep.offset(1) = *rep.offset(0);
+        debug_assert!(offBase > 3);
         *rep
             .offset(
                 0 as libc::c_int as isize,
             ) = offBase.wrapping_sub(ZSTD_REP_NUM as libc::c_uint);
     } else {
         debug_assert!(1 as libc::c_int as libc::c_uint <= offBase
-            && offBase <= 3 as libc::c_int as libc::c_uint);
+            && offBase <= 3);
         let repCode = offBase
             .wrapping_sub(1)
             .wrapping_add(ll0);
-        if repCode > 0 as libc::c_int as libc::c_uint {
+        if repCode > 0 {
             let currentOffset = if repCode == ZSTD_REP_NUM as libc::c_uint {
-                (*rep.offset(0 as libc::c_int as isize))
+                (*rep.offset(0))
                     .wrapping_sub(1)
             } else {
                 *rep.offset(repCode as isize)
@@ -2674,16 +2674,16 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
             *rep
                 .offset(
                     2 as libc::c_int as isize,
-                ) = if repCode >= 2 as libc::c_int as libc::c_uint {
-                *rep.offset(1 as libc::c_int as isize)
+                ) = if repCode >= 2 {
+                *rep.offset(1)
             } else {
-                *rep.offset(2 as libc::c_int as isize)
+                *rep.offset(2)
             };
             *rep
                 .offset(
                     1 as libc::c_int as isize,
-                ) = *rep.offset(0 as libc::c_int as isize);
-            *rep.offset(0 as libc::c_int as isize) = currentOffset;
+                ) = *rep.offset(0);
+            *rep.offset(0) = currentOffset;
         }
     };
 }
@@ -2717,7 +2717,7 @@ unsafe extern "C" fn ZSTD_cwksp_move(
     libc::memset(
         src as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_cwksp>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_cwksp>() as libc::size_t,
     );
 }
 #[inline]
@@ -2738,12 +2738,12 @@ unsafe extern "C" fn ZSTD_cwksp_reserve_aligned(
         ZSTD_cwksp_alloc_aligned,
     );
     debug_assert!(ptr as libc::size_t & (64 as libc::c_int - 1 as libc::c_int) as libc::c_ulong
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     return ptr;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cwksp_slack_space_required() -> libc::size_t {
-    let slackSpace = (ZSTD_CWKSP_ALIGNMENT_BYTES * 2 as libc::c_int) as libc::size_t;
+    let slackSpace = (ZSTD_CWKSP_ALIGNMENT_BYTES * 2) as libc::size_t;
     return slackSpace;
 }
 #[inline]
@@ -2758,7 +2758,7 @@ unsafe extern "C" fn ZSTD_cwksp_reserve_aligned_init_once(
         ZSTD_cwksp_alloc_aligned_init_once,
     );
     debug_assert!(ptr as libc::size_t & (64 as libc::c_int - 1 as libc::c_int) as libc::c_ulong
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     if !ptr.is_null() && ptr < (*ws).initOnceStart {
         libc::memset(
             ptr,
@@ -2808,9 +2808,9 @@ unsafe extern "C" fn ZSTD_cwksp_reserve_table(
     end = (alloc as *mut u8).offset(bytes as isize) as *mut libc::c_void;
     top = (*ws).allocStart;
     debug_assert!(bytes
-        & (::core::mem::size_of::<u32>() as libc::c_ulong)
+        & (::core::mem::size_of::<u32>())
             .wrapping_sub(1)
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     ZSTD_cwksp_assert_internal_consistency(ws);
     debug_assert!(end <= top);
     if end > top {
@@ -2819,9 +2819,9 @@ unsafe extern "C" fn ZSTD_cwksp_reserve_table(
     }
     (*ws).tableEnd = end;
     debug_assert!(bytes & (64 as libc::c_int - 1 as libc::c_int) as libc::c_ulong
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     debug_assert!(alloc as libc::size_t & (64 as libc::c_int - 1 as libc::c_int) as libc::c_ulong
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     return alloc;
 }
 #[inline]
@@ -2848,16 +2848,16 @@ unsafe extern "C" fn ZSTD_cwksp_reserve_object(
 ) -> *mut libc::c_void {
     let roundedBytes = ZSTD_cwksp_align(
         bytes,
-        ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong,
+        ::core::mem::size_of::<*mut libc::c_void>(),
     );
     let mut alloc = (*ws).objectEnd;
     let mut end = (alloc as *mut u8).offset(roundedBytes as isize)
         as *mut libc::c_void;
     debug_assert!((alloc as libc::size_t)
         .wrapping_rem(::core::mem::align_of::<*mut libc::c_void>() as libc::c_ulong)
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     debug_assert!(bytes.wrapping_rem(::core::mem::align_of::<*mut libc::c_void>() as libc::c_ulong)
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     ZSTD_cwksp_assert_internal_consistency(ws);
     if (*ws).phase as libc::c_uint
         != ZSTD_cwksp_alloc_objects as libc::c_int as libc::c_uint
@@ -2881,7 +2881,7 @@ unsafe extern "C" fn ZSTD_cwksp_owns_buffer(
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cwksp_alloc_size(mut size: libc::size_t) -> libc::size_t {
-    if size == 0 as libc::c_int as libc::c_ulong {
+    if size == 0 {
         return 0 as libc::c_int as libc::size_t;
     }
     return size;
@@ -2889,7 +2889,7 @@ unsafe extern "C" fn ZSTD_cwksp_alloc_size(mut size: libc::size_t) -> libc::size
 #[inline]
 unsafe extern "C" fn ZSTD_cwksp_align(mut size: libc::size_t, align: libc::size_t) -> libc::size_t {
     let mask = align.wrapping_sub(1);
-    debug_assert!(align & mask == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(align & mask == 0);
     return size.wrapping_add(mask) & !mask;
 }
 #[inline]
@@ -2913,9 +2913,9 @@ unsafe extern "C" fn ZSTD_cwksp_init(
     mut isStatic: ZSTD_cwksp_static_alloc_e,
 ) {
     debug_assert!(start as libc::size_t
-        & (::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong)
+        & (::core::mem::size_of::<*mut libc::c_void>())
             .wrapping_sub(1)
-        == 0 as libc::c_int as libc::c_ulong);
+        == 0);
     (*ws).workspace = start;
     (*ws).workspaceEnd = (start as *mut u8).offset(size as isize) as *mut libc::c_void;
     (*ws).objectEnd = (*ws).workspace;
@@ -2941,7 +2941,7 @@ unsafe extern "C" fn ZSTD_cwksp_reserve_internal(
 ) -> *mut libc::c_void {
     let mut alloc = 0 as *mut libc::c_void;
     if ERR_isError(ZSTD_cwksp_internal_advance_phase(ws, phase)) != 0
-        || bytes == 0 as libc::c_int as libc::c_ulong
+        || bytes == 0
     {
         return NULL as *mut libc::c_void;
     }
@@ -2957,7 +2957,7 @@ unsafe extern "C" fn ZSTD_cwksp_free(
     libc::memset(
         ws as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_cwksp>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_cwksp>() as libc::size_t,
     );
     ZSTD_customFree(ptr, customMem);
 }
@@ -3008,7 +3008,7 @@ unsafe extern "C" fn ZSTD_cwksp_bytes_to_align_ptr(
 ) -> libc::size_t {
     let alignBytesMask = alignBytes.wrapping_sub(1);
     let bytes = alignBytes.wrapping_sub(ptr as libc::size_t & alignBytesMask) & alignBytesMask;
-    debug_assert!(alignBytes & alignBytesMask == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(alignBytes & alignBytesMask == 0);
     debug_assert!(bytes < alignBytes);
     return bytes;
 }
@@ -3140,8 +3140,8 @@ pub const __INT_MAX__: libc::c_int = 2147483647 as libc::c_int;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_compressBound(mut srcSize: libc::size_t) -> libc::size_t {
     let r = if srcSize as libc::c_ulonglong
-        >= (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 8 as libc::c_int as libc::c_ulong
+        >= (if ::core::mem::size_of::<libc::size_t>()
+            == 8
         {
             0xff00ff00ff00ff00 as libc::c_ulonglong
         } else {
@@ -3154,16 +3154,16 @@ pub unsafe extern "C" fn ZSTD_compressBound(mut srcSize: libc::size_t) -> libc::
             .wrapping_add(srcSize >> 8 as libc::c_int)
             .wrapping_add(
                 (if srcSize
-                    < ((128 as libc::c_int) << 10 as libc::c_int) as libc::c_ulong
+                    < ((128) << 10 as libc::c_int) as libc::c_ulong
                 {
-                    (((128 as libc::c_int) << 10 as libc::c_int) as libc::c_ulong)
+                    (((128) << 10 as libc::c_int) as libc::c_ulong)
                         .wrapping_sub(srcSize) >> 11 as libc::c_int
                 } else {
                     0 as libc::c_int as libc::c_ulong
                 }),
             )
     };
-    if r == 0 as libc::c_int as libc::c_ulong {
+    if r == 0 {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
     return r;
@@ -3180,7 +3180,7 @@ unsafe extern "C" fn ZSTD_initCCtx(
     libc::memset(
         cctx as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_CCtx>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_CCtx>() as libc::size_t,
     );
     (*cctx).customMem = memManager;
     (*cctx).bmi2 = ZSTD_cpuSupportsBmi2();
@@ -3197,7 +3197,7 @@ pub unsafe extern "C" fn ZSTD_createCCtx_advanced(
         return NULL as *mut ZSTD_CCtx;
     }
     let cctx = ZSTD_customMalloc(
-        ::core::mem::size_of::<ZSTD_CCtx>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_CCtx>(),
         customMem,
     ) as *mut ZSTD_CCtx;
     if cctx.is_null() {
@@ -3225,16 +3225,16 @@ pub unsafe extern "C" fn ZSTD_initStaticCCtx(
         isStatic: ZSTD_cwksp_dynamic_alloc,
     };
     let mut cctx = 0 as *mut ZSTD_CCtx;
-    if workspaceSize <= ::core::mem::size_of::<ZSTD_CCtx>() as libc::c_ulong {
+    if workspaceSize <= ::core::mem::size_of::<ZSTD_CCtx>() {
         return NULL as *mut ZSTD_CCtx;
     }
-    if workspace as libc::size_t & 7 as libc::c_int as libc::c_ulong != 0 {
+    if workspace as libc::size_t & 7 != 0 {
         return NULL as *mut ZSTD_CCtx;
     }
     ZSTD_cwksp_init(&mut ws, workspace, workspaceSize, ZSTD_cwksp_static_alloc);
     cctx = ZSTD_cwksp_reserve_object(
         &mut ws,
-        ::core::mem::size_of::<ZSTD_CCtx>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_CCtx>(),
     ) as *mut ZSTD_CCtx;
     if cctx.is_null() {
         return NULL as *mut ZSTD_CCtx;
@@ -3242,7 +3242,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCCtx(
     libc::memset(
         cctx as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_CCtx>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_CCtx>() as libc::size_t,
     );
     ZSTD_cwksp_move(&mut (*cctx).workspace, &mut ws);
     (*cctx).staticSize = workspaceSize;
@@ -3250,17 +3250,17 @@ pub unsafe extern "C" fn ZSTD_initStaticCCtx(
         &mut (*cctx).workspace,
         (HUF_WORKSPACE_SIZE as libc::c_ulong)
             .wrapping_add(
-                (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                (::core::mem::size_of::<libc::c_uint>())
                     .wrapping_mul(
-                        ((if 35 as libc::c_int > 52 as libc::c_int {
+                        ((if 35 as libc::c_int > 52 {
                             35 as libc::c_int
                         } else {
                             52 as libc::c_int
-                        }) + 2 as libc::c_int) as libc::c_ulong,
+                        }) + 2) as libc::c_ulong,
                     ),
             )
             .wrapping_add(
-                (2 as libc::c_int as libc::c_ulong)
+                (2)
                     .wrapping_mul(
                         ::core::mem::size_of::<ZSTD_compressedBlockState_t>()
                             as libc::c_ulong,
@@ -3274,26 +3274,26 @@ pub unsafe extern "C" fn ZSTD_initStaticCCtx(
         .blockState
         .prevCBlock = ZSTD_cwksp_reserve_object(
         &mut (*cctx).workspace,
-        ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
     ) as *mut ZSTD_compressedBlockState_t;
     (*cctx)
         .blockState
         .nextCBlock = ZSTD_cwksp_reserve_object(
         &mut (*cctx).workspace,
-        ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
     ) as *mut ZSTD_compressedBlockState_t;
     (*cctx)
         .entropyWorkspace = ZSTD_cwksp_reserve_object(
         &mut (*cctx).workspace,
         (HUF_WORKSPACE_SIZE as libc::c_ulong)
             .wrapping_add(
-                (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                (::core::mem::size_of::<libc::c_uint>())
                     .wrapping_mul(
-                        ((if 35 as libc::c_int > 52 as libc::c_int {
+                        ((if 35 as libc::c_int > 52 {
                             35 as libc::c_int
                         } else {
                             52 as libc::c_int
-                        }) + 2 as libc::c_int) as libc::c_ulong,
+                        }) + 2) as libc::c_ulong,
                     ),
             ),
     ) as *mut u32;
@@ -3306,12 +3306,12 @@ unsafe extern "C" fn ZSTD_clearAllDicts(mut cctx: *mut ZSTD_CCtx) {
     libc::memset(
         &mut (*cctx).localDict as *mut ZSTD_localDict as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_localDict>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_localDict>() as libc::size_t,
     );
     libc::memset(
         &mut (*cctx).prefixDict as *mut ZSTD_prefixDict as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_prefixDict>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_prefixDict>() as libc::size_t,
     );
     (*cctx).cdict = NULL as *const ZSTD_CDict;
 }
@@ -3326,7 +3326,7 @@ unsafe extern "C" fn ZSTD_sizeof_localDict(mut dict: ZSTD_localDict) -> libc::si
 }
 unsafe extern "C" fn ZSTD_freeCCtxContent(mut cctx: *mut ZSTD_CCtx) {
     debug_assert!(!cctx.is_null());
-    debug_assert!((*cctx).staticSize == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!((*cctx).staticSize == 0);
     ZSTD_clearAllDicts(cctx);
     ZSTDMT_freeCCtx((*cctx).mtctx);
     (*cctx).mtctx = NULL as *mut ZSTDMT_CCtx;
@@ -3361,7 +3361,7 @@ pub unsafe extern "C" fn ZSTD_sizeof_CCtx(mut cctx: *const ZSTD_CCtx) -> libc::s
     return (if (*cctx).workspace.workspace == cctx as *mut libc::c_void {
         0 as libc::c_int as libc::c_ulong
     } else {
-        ::core::mem::size_of::<ZSTD_CCtx>() as libc::c_ulong
+        ::core::mem::size_of::<ZSTD_CCtx>()
     })
         .wrapping_add(ZSTD_cwksp_sizeof(&(*cctx).workspace))
         .wrapping_add(ZSTD_sizeof_localDict((*cctx).localDict))
@@ -3406,10 +3406,10 @@ unsafe extern "C" fn ZSTD_resolveRowMatchFinderMode(
         return mode;
     }
     if kHasSIMD128 != 0 {
-        if (*cParams).windowLog > 14 as libc::c_int as libc::c_uint {
+        if (*cParams).windowLog > 14 {
             mode = ZSTD_ps_enable;
         }
-    } else if (*cParams).windowLog > 17 as libc::c_int as libc::c_uint {
+    } else if (*cParams).windowLog > 17 {
         mode = ZSTD_ps_enable;
     }
     return mode;
@@ -3423,7 +3423,7 @@ unsafe extern "C" fn ZSTD_resolveBlockSplitterMode(
     }
     return (if (*cParams).strategy as libc::c_uint
         >= ZSTD_btopt as libc::c_int as libc::c_uint
-        && (*cParams).windowLog >= 17 as libc::c_int as libc::c_uint
+        && (*cParams).windowLog >= 17
     {
         ZSTD_ps_enable as libc::c_int
     } else {
@@ -3449,7 +3449,7 @@ unsafe extern "C" fn ZSTD_resolveEnableLdm(
     }
     return (if (*cParams).strategy as libc::c_uint
         >= ZSTD_btopt as libc::c_int as libc::c_uint
-        && (*cParams).windowLog >= 27 as libc::c_int as libc::c_uint
+        && (*cParams).windowLog >= 27
     {
         ZSTD_ps_enable as libc::c_int
     } else {
@@ -3462,7 +3462,7 @@ unsafe extern "C" fn ZSTD_resolveExternalSequenceValidation(
     return mode;
 }
 unsafe extern "C" fn ZSTD_resolveMaxBlockSize(mut maxBlockSize: libc::size_t) -> libc::size_t {
-    if maxBlockSize == 0 as libc::c_int as libc::c_ulong {
+    if maxBlockSize == 0 {
         return ZSTD_BLOCKSIZE_MAX as libc::size_t
     } else {
         return maxBlockSize
@@ -3475,7 +3475,7 @@ unsafe extern "C" fn ZSTD_resolveExternalRepcodeSearch(
     if value as libc::c_uint != ZSTD_ps_auto as libc::c_int as libc::c_uint {
         return value;
     }
-    if cLevel < 10 as libc::c_int {
+    if cLevel < 10 {
         return ZSTD_ps_disable
     } else {
         return ZSTD_ps_enable
@@ -3555,7 +3555,7 @@ unsafe extern "C" fn ZSTD_makeCCtxParamsFromCParams(
     {
         ZSTD_ldm_adjustParameters(&mut cctxParams.ldmParams, &mut cParams);
         debug_assert!(cctxParams.ldmParams.hashLog >= cctxParams.ldmParams.bucketSizeLog);
-        debug_assert!(cctxParams.ldmParams.hashRateLog < 32 as libc::c_int as libc::c_uint);
+        debug_assert!(cctxParams.ldmParams.hashRateLog < 32);
     }
     cctxParams
         .useBlockSplitter = ZSTD_resolveBlockSplitterMode(
@@ -3590,7 +3590,7 @@ unsafe extern "C" fn ZSTD_createCCtxParams_advanced(
         return NULL as *mut ZSTD_CCtx_params;
     }
     params = ZSTD_customCalloc(
-        ::core::mem::size_of::<ZSTD_CCtx_params>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_CCtx_params>(),
         customMem,
     ) as *mut ZSTD_CCtx_params;
     if params.is_null() {
@@ -3631,7 +3631,7 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_init(
     libc::memset(
         cctxParams as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_CCtx_params>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_CCtx_params>() as libc::size_t,
     );
     (*cctxParams).compressionLevel = compressionLevel;
     (*cctxParams).fParams.contentSizeFlag = 1 as libc::c_int;
@@ -3647,7 +3647,7 @@ unsafe extern "C" fn ZSTD_CCtxParams_init_internal(
     libc::memset(
         cctxParams as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_CCtx_params>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_CCtx_params>() as libc::size_t,
     );
     (*cctxParams).cParams = (*params).cParams;
     (*cctxParams).fParams = (*params).fParams;
@@ -3724,8 +3724,8 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
         101 => {
             bounds.lowerBound = ZSTD_WINDOWLOG_MIN;
             bounds
-                .upperBound = if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+                .upperBound = if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 ZSTD_WINDOWLOG_MAX_32
             } else {
@@ -3736,16 +3736,16 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
         102 => {
             bounds.lowerBound = ZSTD_HASHLOG_MIN;
             bounds
-                .upperBound = if (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+                .upperBound = if (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 ZSTD_WINDOWLOG_MAX_32
             } else {
                 ZSTD_WINDOWLOG_MAX_64
-            }) < 30 as libc::c_int
+            }) < 30
             {
-                if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                    == 4 as libc::c_int as libc::c_ulong
+                if ::core::mem::size_of::<libc::size_t>()
+                    == 4
                 {
                     ZSTD_WINDOWLOG_MAX_32
                 } else {
@@ -3759,8 +3759,8 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
         103 => {
             bounds.lowerBound = ZSTD_CHAINLOG_MIN;
             bounds
-                .upperBound = if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+                .upperBound = if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 ZSTD_CHAINLOG_MAX_32
             } else {
@@ -3771,8 +3771,8 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
         104 => {
             bounds.lowerBound = ZSTD_SEARCHLOG_MIN;
             bounds
-                .upperBound = (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+                .upperBound = (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 ZSTD_WINDOWLOG_MAX_32
             } else {
@@ -3814,7 +3814,7 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
             bounds.lowerBound = 0 as libc::c_int;
             bounds
                 .upperBound = if ::core::mem::size_of::<*mut libc::c_void>()
-                as libc::c_ulong == 4 as libc::c_int as libc::c_ulong
+                as libc::c_ulong == 4
             {
                 64 as libc::c_int
             } else {
@@ -3826,9 +3826,9 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
             bounds.lowerBound = 0 as libc::c_int;
             bounds
                 .upperBound = if MEM_32bits() != 0 {
-                512 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+                512 as libc::c_int * ((1) << 20 as libc::c_int)
             } else {
-                1024 as libc::c_int * ((1 as libc::c_int) << 20 as libc::c_int)
+                1024 as libc::c_int * ((1) << 20 as libc::c_int)
             };
             return bounds;
         }
@@ -3850,16 +3850,16 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
         161 => {
             bounds.lowerBound = ZSTD_LDM_HASHLOG_MIN;
             bounds
-                .upperBound = if (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+                .upperBound = if (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 ZSTD_WINDOWLOG_MAX_32
             } else {
                 ZSTD_WINDOWLOG_MAX_64
-            }) < 30 as libc::c_int
+            }) < 30
             {
-                if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                    == 4 as libc::c_int as libc::c_ulong
+                if ::core::mem::size_of::<libc::size_t>()
+                    == 4
                 {
                     ZSTD_WINDOWLOG_MAX_32
                 } else {
@@ -3883,8 +3883,8 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
         164 => {
             bounds.lowerBound = ZSTD_LDM_HASHRATELOG_MIN;
             bounds
-                .upperBound = (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                == 4 as libc::c_int as libc::c_ulong
+                .upperBound = (if ::core::mem::size_of::<libc::size_t>()
+                == 4
             {
                 ZSTD_WINDOWLOG_MAX_32
             } else {
@@ -4052,12 +4052,12 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
             if ERR_isError(err_code) != 0 {
                 return err_code;
             }
-            if value == 0 as libc::c_int {
+            if value == 0 {
                 (*CCtxParams).compressionLevel = ZSTD_CLEVEL_DEFAULT;
             } else {
                 (*CCtxParams).compressionLevel = value;
             }
-            if (*CCtxParams).compressionLevel >= 0 as libc::c_int {
+            if (*CCtxParams).compressionLevel >= 0 {
                 return (*CCtxParams).compressionLevel as libc::size_t;
             }
             return 0 as libc::c_int as libc::size_t;
@@ -4179,7 +4179,7 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
             if ERR_isError(err_code_1) != 0 {
                 return err_code_1;
             }
-            debug_assert!(value >= 0 as libc::c_int);
+            debug_assert!(value >= 0);
             (*CCtxParams).jobSize = value as libc::size_t;
             return (*CCtxParams).jobSize;
         }
@@ -4411,7 +4411,7 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_getParameter(
             *value = (*CCtxParams).nbWorkers;
         }
         401 => {
-            debug_assert!((*CCtxParams).jobSize <= 2147483647 as libc::c_int as libc::c_ulong);
+            debug_assert!((*CCtxParams).jobSize <= 2147483647);
             *value = (*CCtxParams).jobSize as libc::c_int;
         }
         402 => {
@@ -4586,7 +4586,7 @@ pub unsafe extern "C" fn ZSTD_CCtx_setFParams(
     let err_code_1 = ZSTD_CCtx_setParameter(
         cctx,
         ZSTD_c_dictIDFlag,
-        (fparams.noDictIDFlag == 0 as libc::c_int) as libc::c_int,
+        (fparams.noDictIDFlag == 0) as libc::c_int,
     );
     if ERR_isError(err_code_1) != 0 {
         return err_code_1;
@@ -4630,14 +4630,14 @@ unsafe extern "C" fn ZSTD_initLocalDict(mut cctx: *mut ZSTD_CCtx) -> libc::size_
     if ((*dl).dict).is_null() {
         debug_assert!(((*dl).dictBuffer).is_null());
         debug_assert!(((*dl).cdict).is_null());
-        debug_assert!((*dl).dictSize == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!((*dl).dictSize == 0);
         return 0 as libc::c_int as libc::size_t;
     }
     if !((*dl).cdict).is_null() {
         debug_assert!((*cctx).cdict == (*dl).cdict as *const ZSTD_CDict);
         return 0 as libc::c_int as libc::size_t;
     }
-    debug_assert!((*dl).dictSize > 0 as libc::c_int as libc::c_ulong);
+    debug_assert!((*dl).dictSize > 0);
     debug_assert!(((*cctx).cdict).is_null());
     debug_assert!(((*cctx).prefixDict.dict).is_null());
     (*dl)
@@ -4667,7 +4667,7 @@ pub unsafe extern "C" fn ZSTD_CCtx_loadDictionary_advanced(
         return -(ZSTD_error_stage_wrong as libc::c_int) as libc::size_t;
     }
     ZSTD_clearAllDicts(cctx);
-    if dict.is_null() || dictSize == 0 as libc::c_int as libc::c_ulong {
+    if dict.is_null() || dictSize == 0 {
         return 0 as libc::c_int as libc::size_t;
     }
     if dictLoadMethod as libc::c_uint == ZSTD_dlm_byRef as libc::c_int as libc::c_uint {
@@ -4759,7 +4759,7 @@ pub unsafe extern "C" fn ZSTD_CCtx_refPrefix_advanced(
         return -(ZSTD_error_stage_wrong as libc::c_int) as libc::size_t;
     }
     ZSTD_clearAllDicts(cctx);
-    if !prefix.is_null() && prefixSize > 0 as libc::c_int as libc::c_ulong {
+    if !prefix.is_null() && prefixSize > 0 {
         (*cctx).prefixDict.dict = prefix;
         (*cctx).prefixDict.dictSize = prefixSize;
         (*cctx).prefixDict.dictContentType = dictContentType;
@@ -4792,7 +4792,7 @@ pub unsafe extern "C" fn ZSTD_CCtx_reset(
             &mut (*cctx).externalMatchCtx as *mut ZSTD_externalMatchCtx
                 as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<ZSTD_externalMatchCtx>() as libc::c_ulong
+            ::core::mem::size_of::<ZSTD_externalMatchCtx>()
                 as libc::size_t,
         );
         return ZSTD_CCtxParams_reset(&mut (*cctx).requestedParams);
@@ -4891,34 +4891,34 @@ unsafe extern "C" fn ZSTD_dictAndWindowLog(
     mut srcSize: u64,
     mut dictSize: u64,
 ) -> u32 {
-    let maxWindowSize = ((1 as libc::c_ulonglong)
-        << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+    let maxWindowSize = ((1)
+        << (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             ZSTD_WINDOWLOG_MAX_32
         } else {
             ZSTD_WINDOWLOG_MAX_64
         })) as u64;
-    if dictSize == 0 as libc::c_int as libc::c_ulong {
+    if dictSize == 0 {
         return windowLog;
     }
     debug_assert!(windowLog
-        <= (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        <= (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             30 as libc::c_int
         } else {
             31 as libc::c_int
         }) as libc::c_uint);
     debug_assert!(srcSize as libc::c_ulonglong
-        != (0 as libc::c_ulonglong).wrapping_sub(1));
-    let windowSize = ((1 as libc::c_ulonglong) << windowLog) as u64;
+        != (0).wrapping_sub(1));
+    let windowSize = ((1) << windowLog) as u64;
     let dictAndWindowSize = dictSize.wrapping_add(windowSize);
     if windowSize >= dictSize.wrapping_add(srcSize) {
         return windowLog
     } else if dictAndWindowSize >= maxWindowSize {
-        return (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        return (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             ZSTD_WINDOWLOG_MAX_32
         } else {
@@ -4939,15 +4939,15 @@ unsafe extern "C" fn ZSTD_adjustCParams_internal(
     mut useRowMatchFinder: ZSTD_paramSwitch_e,
 ) -> ZSTD_compressionParameters {
     let minSrcSize = 513 as libc::c_int as u64;
-    let maxWindowResize = ((1 as libc::c_ulonglong)
-        << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+    let maxWindowResize = ((1)
+        << (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             ZSTD_WINDOWLOG_MAX_32
         } else {
             ZSTD_WINDOWLOG_MAX_64
         }) - 1 as libc::c_int) as u64;
-    debug_assert!(ZSTD_checkCParams(cPar) == 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(ZSTD_checkCParams(cPar) == 0);
     match mode as libc::c_uint {
         3 | 0 => {}
         2 => {
@@ -4964,7 +4964,7 @@ unsafe extern "C" fn ZSTD_adjustCParams_internal(
     }
     if srcSize <= maxWindowResize as libc::c_ulonglong && dictSize <= maxWindowResize {
         let tSize = srcSize.wrapping_add(dictSize as libc::c_ulonglong) as u32;
-        static mut hashSizeMin: u32 = ((1 as libc::c_int) << ZSTD_HASHLOG_MIN) as u32;
+        static mut hashSizeMin: u32 = ((1) << ZSTD_HASHLOG_MIN) as u32;
         let srcLog = if tSize < hashSizeMin {
             ZSTD_HASHLOG_MIN as libc::c_uint
         } else {
@@ -5014,14 +5014,14 @@ unsafe extern "C" fn ZSTD_adjustCParams_internal(
     }
     if ZSTD_rowMatchFinderUsed(cPar.strategy, useRowMatchFinder) != 0 {
         let rowLog = if 4 as libc::c_int as libc::c_uint
-            > (if cPar.searchLog < 6 as libc::c_int as libc::c_uint {
+            > (if cPar.searchLog < 6 {
                 cPar.searchLog
             } else {
                 6 as libc::c_int as libc::c_uint
             })
         {
             4 as libc::c_int as libc::c_uint
-        } else if cPar.searchLog < 6 as libc::c_int as libc::c_uint {
+        } else if cPar.searchLog < 6 {
             cPar.searchLog
         } else {
             6 as libc::c_int as libc::c_uint
@@ -5042,7 +5042,7 @@ pub unsafe extern "C" fn ZSTD_adjustCParams(
     mut dictSize: libc::size_t,
 ) -> ZSTD_compressionParameters {
     cPar = ZSTD_clampCParams(cPar);
-    if srcSize == 0 as libc::c_int as libc::c_ulonglong {
+    if srcSize == 0 {
         srcSize = ZSTD_CONTENTSIZE_UNKNOWN;
     }
     return ZSTD_adjustCParams_internal(
@@ -5096,7 +5096,7 @@ pub unsafe extern "C" fn ZSTD_getCParamsFromCCtxParams(
         strategy: 0 as ZSTD_strategy,
     };
     if srcSizeHint as libc::c_ulonglong == ZSTD_CONTENTSIZE_UNKNOWN
-        && (*CCtxParams).srcSizeHint > 0 as libc::c_int
+        && (*CCtxParams).srcSizeHint > 0
     {
         srcSizeHint = (*CCtxParams).srcSizeHint as u64;
     }
@@ -5133,15 +5133,15 @@ unsafe extern "C" fn ZSTD_sizeof_matchState(
         (enableDedicatedDictSearch != 0 && forCCtx == 0) as libc::c_int as u32,
     ) != 0
     {
-        (1 as libc::c_int as libc::size_t) << (*cParams).chainLog
+        (1) << (*cParams).chainLog
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    let hSize = (1 as libc::c_int as libc::size_t) << (*cParams).hashLog;
+    let hSize = (1) << (*cParams).hashLog;
     let hashLog3 = if forCCtx != 0
-        && (*cParams).minMatch == 3 as libc::c_int as libc::c_uint
+        && (*cParams).minMatch == 3
     {
-        if (17 as libc::c_int as libc::c_uint) < (*cParams).windowLog {
+        if (17) < (*cParams).windowLog {
             17 as libc::c_int as libc::c_uint
         } else {
             (*cParams).windowLog
@@ -5150,51 +5150,51 @@ unsafe extern "C" fn ZSTD_sizeof_matchState(
         0 as libc::c_int as libc::c_uint
     };
     let h3Size = if hashLog3 != 0 {
-        (1 as libc::c_int as libc::size_t) << hashLog3
+        (1) << hashLog3
     } else {
         0 as libc::c_int as libc::c_ulong
     };
     let tableSpace = chainSize
-        .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong)
-        .wrapping_add(hSize.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong))
+        .wrapping_mul(::core::mem::size_of::<u32>())
+        .wrapping_add(hSize.wrapping_mul(::core::mem::size_of::<u32>()))
         .wrapping_add(
-            h3Size.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+            h3Size.wrapping_mul(::core::mem::size_of::<u32>()),
         );
     let optPotentialSpace = (ZSTD_cwksp_aligned_alloc_size(
-        ((MaxML + 1 as libc::c_int) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+        ((MaxML + 1) as libc::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<u32>()),
     ))
         .wrapping_add(
             ZSTD_cwksp_aligned_alloc_size(
-                ((MaxLL + 1 as libc::c_int) as libc::c_ulong)
-                    .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+                ((MaxLL + 1) as libc::c_ulong)
+                    .wrapping_mul(::core::mem::size_of::<u32>()),
             ),
         )
         .wrapping_add(
             ZSTD_cwksp_aligned_alloc_size(
-                ((MaxOff + 1 as libc::c_int) as libc::c_ulong)
-                    .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+                ((MaxOff + 1) as libc::c_ulong)
+                    .wrapping_mul(::core::mem::size_of::<u32>()),
             ),
         )
         .wrapping_add(
             ZSTD_cwksp_aligned_alloc_size(
-                (((1 as libc::c_int) << Litbits) as libc::c_ulong)
-                    .wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+                (((1) << Litbits) as libc::c_ulong)
+                    .wrapping_mul(::core::mem::size_of::<u32>()),
             ),
         )
         .wrapping_add(
             ZSTD_cwksp_aligned_alloc_size(
-                ((ZSTD_OPT_NUM + 1 as libc::c_int) as libc::c_ulong)
+                ((ZSTD_OPT_NUM + 1) as libc::c_ulong)
                     .wrapping_mul(
-                        ::core::mem::size_of::<ZSTD_match_t>() as libc::c_ulong,
+                        ::core::mem::size_of::<ZSTD_match_t>(),
                     ),
             ),
         )
         .wrapping_add(
             ZSTD_cwksp_aligned_alloc_size(
-                ((ZSTD_OPT_NUM + 1 as libc::c_int) as libc::c_ulong)
+                ((ZSTD_OPT_NUM + 1) as libc::c_ulong)
                     .wrapping_mul(
-                        ::core::mem::size_of::<ZSTD_optimal_t>() as libc::c_ulong,
+                        ::core::mem::size_of::<ZSTD_optimal_t>(),
                     ),
             ),
         );
@@ -5227,7 +5227,7 @@ unsafe extern "C" fn ZSTD_maxNbSeq(
     mut minMatch: libc::c_uint,
     mut useSequenceProducer: libc::c_int,
 ) -> libc::size_t {
-    let divider = (if minMatch == 3 as libc::c_int as libc::c_uint
+    let divider = (if minMatch == 3
         || useSequenceProducer != 0
     {
         3 as libc::c_int
@@ -5248,19 +5248,19 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
     mut maxBlockSize: libc::size_t,
 ) -> libc::size_t {
     let windowSize = (if 1 as libc::c_ulonglong
-        > (if (1 as libc::c_ulonglong) << (*cParams).windowLog
+        > (if (1) << (*cParams).windowLog
             < pledgedSrcSize as libc::c_ulonglong
         {
-            (1 as libc::c_ulonglong) << (*cParams).windowLog
+            (1) << (*cParams).windowLog
         } else {
             pledgedSrcSize as libc::c_ulonglong
         })
     {
         1 as libc::c_ulonglong
-    } else if (1 as libc::c_ulonglong) << (*cParams).windowLog
+    } else if (1) << (*cParams).windowLog
         < pledgedSrcSize as libc::c_ulonglong
     {
-        (1 as libc::c_ulonglong) << (*cParams).windowLog
+        (1) << (*cParams).windowLog
     } else {
         pledgedSrcSize as libc::c_ulonglong
     }) as libc::size_t;
@@ -5275,16 +5275,16 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
     ))
         .wrapping_add(
             ZSTD_cwksp_aligned_alloc_size(
-                maxNbSeq.wrapping_mul(::core::mem::size_of::<seqDef>() as libc::c_ulong),
+                maxNbSeq.wrapping_mul(::core::mem::size_of::<seqDef>()),
             ),
         )
         .wrapping_add(
-            (3 as libc::c_int as libc::c_ulong)
+            (3)
                 .wrapping_mul(
                     ZSTD_cwksp_alloc_size(
                         maxNbSeq
                             .wrapping_mul(
-                                ::core::mem::size_of::<u8>() as libc::c_ulong,
+                                ::core::mem::size_of::<u8>(),
                             ),
                     ),
                 ),
@@ -5292,20 +5292,20 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
     let entropySpace = ZSTD_cwksp_alloc_size(
         (HUF_WORKSPACE_SIZE as libc::c_ulong)
             .wrapping_add(
-                (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                (::core::mem::size_of::<libc::c_uint>())
                     .wrapping_mul(
-                        ((if 35 as libc::c_int > 52 as libc::c_int {
+                        ((if 35 as libc::c_int > 52 {
                             35 as libc::c_int
                         } else {
                             52 as libc::c_int
-                        }) + 2 as libc::c_int) as libc::c_ulong,
+                        }) + 2) as libc::c_ulong,
                     ),
             ),
     );
-    let blockStateSpace = (2 as libc::c_int as libc::c_ulong)
+    let blockStateSpace = (2)
         .wrapping_mul(
             ZSTD_cwksp_alloc_size(
-                ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong,
+                ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
             ),
         );
     let matchStateSize = ZSTD_sizeof_matchState(
@@ -5320,7 +5320,7 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
         == ZSTD_ps_enable as libc::c_int as libc::c_uint
     {
         ZSTD_cwksp_aligned_alloc_size(
-            maxNbLdmSeq.wrapping_mul(::core::mem::size_of::<rawSeq>() as libc::c_ulong),
+            maxNbLdmSeq.wrapping_mul(::core::mem::size_of::<rawSeq>()),
         )
     } else {
         0 as libc::c_int as libc::c_ulong
@@ -5328,7 +5328,7 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
     let bufferSpace = (ZSTD_cwksp_alloc_size(buffInSize))
         .wrapping_add(ZSTD_cwksp_alloc_size(buffOutSize));
     let cctxSpace = if isStatic != 0 {
-        ZSTD_cwksp_alloc_size(::core::mem::size_of::<ZSTD_CCtx>() as libc::c_ulong)
+        ZSTD_cwksp_alloc_size(::core::mem::size_of::<ZSTD_CCtx>())
     } else {
         0 as libc::c_int as libc::c_ulong
     };
@@ -5336,7 +5336,7 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
     let externalSeqSpace = if useSequenceProducer != 0 {
         ZSTD_cwksp_aligned_alloc_size(
             maxNbExternalSeq
-                .wrapping_mul(::core::mem::size_of::<ZSTD_Sequence>() as libc::c_ulong),
+                .wrapping_mul(::core::mem::size_of::<ZSTD_Sequence>()),
         )
     } else {
         0 as libc::c_int as libc::c_ulong
@@ -5366,7 +5366,7 @@ pub unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams(
         (*params).useRowMatchFinder,
         &cParams,
     );
-    if (*params).nbWorkers > 0 as libc::c_int {
+    if (*params).nbWorkers > 0 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     return ZSTD_estimateCCtxSize_usingCCtxParams_internal(
@@ -5404,7 +5404,7 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_internal(
 ) -> libc::size_t {
     let mut tier = 0 as libc::c_int;
     let mut largestSize = 0 as libc::c_int as libc::size_t;
-    while tier < 4 as libc::c_int {
+    while tier < 4 {
         let cParams = ZSTD_getCParams_internal(
             compressionLevel,
             srcSizeTiers[tier as usize],
@@ -5426,7 +5426,7 @@ pub unsafe extern "C" fn ZSTD_estimateCCtxSize(
 ) -> libc::size_t {
     let mut level: libc::c_int = 0;
     let mut memBudget = 0 as libc::c_int as libc::size_t;
-    level = if compressionLevel < 1 as libc::c_int {
+    level = if compressionLevel < 1 {
         compressionLevel
     } else {
         1 as libc::c_int
@@ -5444,7 +5444,7 @@ pub unsafe extern "C" fn ZSTD_estimateCCtxSize(
 pub unsafe extern "C" fn ZSTD_estimateCStreamSize_usingCCtxParams(
     mut params: *const ZSTD_CCtx_params,
 ) -> libc::size_t {
-    if (*params).nbWorkers > 0 as libc::c_int {
+    if (*params).nbWorkers > 0 {
         return -(ZSTD_error_GENERIC as libc::c_int) as libc::size_t;
     }
     let cParams = ZSTD_getCParamsFromCCtxParams(
@@ -5454,16 +5454,16 @@ pub unsafe extern "C" fn ZSTD_estimateCStreamSize_usingCCtxParams(
         ZSTD_cpm_noAttachDict,
     );
     let blockSize = if ZSTD_resolveMaxBlockSize((*params).maxBlockSize)
-        < (1 as libc::c_int as libc::size_t) << cParams.windowLog
+        < (1) << cParams.windowLog
     {
         ZSTD_resolveMaxBlockSize((*params).maxBlockSize)
     } else {
-        (1 as libc::c_int as libc::size_t) << cParams.windowLog
+        (1) << cParams.windowLog
     };
     let inBuffSize = if (*params).inBufferMode as libc::c_uint
         == ZSTD_bm_buffered as libc::c_int as libc::c_uint
     {
-        ((1 as libc::c_int as libc::size_t) << cParams.windowLog).wrapping_add(blockSize)
+        ((1) << cParams.windowLog).wrapping_add(blockSize)
     } else {
         0 as libc::c_int as libc::c_ulong
     };
@@ -5524,7 +5524,7 @@ pub unsafe extern "C" fn ZSTD_estimateCStreamSize(
 ) -> libc::size_t {
     let mut level: libc::c_int = 0;
     let mut memBudget = 0 as libc::c_int as libc::size_t;
-    level = if compressionLevel < 1 as libc::c_int {
+    level = if compressionLevel < 1 {
         compressionLevel
     } else {
         1 as libc::c_int
@@ -5542,7 +5542,7 @@ pub unsafe extern "C" fn ZSTD_estimateCStreamSize(
 pub unsafe extern "C" fn ZSTD_getFrameProgression(
     mut cctx: *const ZSTD_CCtx,
 ) -> ZSTD_frameProgression {
-    if (*cctx).appliedParams.nbWorkers > 0 as libc::c_int {
+    if (*cctx).appliedParams.nbWorkers > 0 {
         return ZSTDMT_getFrameProgression((*cctx).mtctx);
     }
     let mut fp = ZSTD_frameProgression {
@@ -5561,7 +5561,7 @@ pub unsafe extern "C" fn ZSTD_getFrameProgression(
     if buffered != 0 {
         debug_assert!((*cctx).inBuffPos >= (*cctx).inToCompress);
     }
-    debug_assert!(buffered <= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
+    debug_assert!(buffered <= ((1) << 17 as libc::c_int) as libc::c_ulong);
     fp.ingested = ((*cctx).consumedSrcSize).wrapping_add(buffered as libc::c_ulonglong);
     fp.consumed = (*cctx).consumedSrcSize;
     fp.produced = (*cctx).producedCSize;
@@ -5572,7 +5572,7 @@ pub unsafe extern "C" fn ZSTD_getFrameProgression(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_toFlushNow(mut cctx: *mut ZSTD_CCtx) -> libc::size_t {
-    if (*cctx).appliedParams.nbWorkers > 0 as libc::c_int {
+    if (*cctx).appliedParams.nbWorkers > 0 {
         return ZSTDMT_toFlushNow((*cctx).mtctx);
     }
     return 0 as libc::c_int as libc::size_t;
@@ -5645,16 +5645,16 @@ unsafe extern "C" fn ZSTD_reset_matchState(
             as u32,
     ) != 0
     {
-        (1 as libc::c_int as libc::size_t) << (*cParams).chainLog
+        (1) << (*cParams).chainLog
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    let hSize = (1 as libc::c_int as libc::size_t) << (*cParams).hashLog;
+    let hSize = (1) << (*cParams).hashLog;
     let hashLog3 = if forWho as libc::c_uint
         == ZSTD_resetTarget_CCtx as libc::c_int as libc::c_uint
-        && (*cParams).minMatch == 3 as libc::c_int as libc::c_uint
+        && (*cParams).minMatch == 3
     {
-        if (17 as libc::c_int as libc::c_uint) < (*cParams).windowLog {
+        if (17) < (*cParams).windowLog {
             17 as libc::c_int as libc::c_uint
         } else {
             (*cParams).windowLog
@@ -5663,7 +5663,7 @@ unsafe extern "C" fn ZSTD_reset_matchState(
         0 as libc::c_int as libc::c_uint
     };
     let h3Size = if hashLog3 != 0 {
-        (1 as libc::c_int as libc::size_t) << hashLog3
+        (1) << hashLog3
     } else {
         0 as libc::c_int as libc::c_ulong
     };
@@ -5680,17 +5680,17 @@ unsafe extern "C" fn ZSTD_reset_matchState(
     (*ms)
         .hashTable = ZSTD_cwksp_reserve_table(
         ws,
-        hSize.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+        hSize.wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     (*ms)
         .chainTable = ZSTD_cwksp_reserve_table(
         ws,
-        chainSize.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+        chainSize.wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     (*ms)
         .hashTable3 = ZSTD_cwksp_reserve_table(
         ws,
-        h3Size.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong),
+        h3Size.wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     if ZSTD_cwksp_reserve_failed(ws) != 0 {
         return -(ZSTD_error_memory_allocation as libc::c_int) as libc::size_t;
@@ -5716,14 +5716,14 @@ unsafe extern "C" fn ZSTD_reset_matchState(
             (*ms).hashSalt = 0 as libc::c_int as u64;
         }
         let rowLog = if 4 as libc::c_int as libc::c_uint
-            > (if (*cParams).searchLog < 6 as libc::c_int as libc::c_uint {
+            > (if (*cParams).searchLog < 6 {
                 (*cParams).searchLog
             } else {
                 6 as libc::c_int as libc::c_uint
             })
         {
             4 as libc::c_int as libc::c_uint
-        } else if (*cParams).searchLog < 6 as libc::c_int as libc::c_uint {
+        } else if (*cParams).searchLog < 6 {
             (*cParams).searchLog
         } else {
             6 as libc::c_int as libc::c_uint
@@ -5739,43 +5739,43 @@ unsafe extern "C" fn ZSTD_reset_matchState(
             .opt
             .litFreq = ZSTD_cwksp_reserve_aligned(
             ws,
-            (((1 as libc::c_int) << Litbits) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong),
+            (((1) << Litbits) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
         ) as *mut libc::c_uint;
         (*ms)
             .opt
             .litLengthFreq = ZSTD_cwksp_reserve_aligned(
             ws,
-            ((MaxLL + 1 as libc::c_int) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong),
+            ((MaxLL + 1) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
         ) as *mut libc::c_uint;
         (*ms)
             .opt
             .matchLengthFreq = ZSTD_cwksp_reserve_aligned(
             ws,
-            ((MaxML + 1 as libc::c_int) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong),
+            ((MaxML + 1) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
         ) as *mut libc::c_uint;
         (*ms)
             .opt
             .offCodeFreq = ZSTD_cwksp_reserve_aligned(
             ws,
-            ((MaxOff + 1 as libc::c_int) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong),
+            ((MaxOff + 1) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
         ) as *mut libc::c_uint;
         (*ms)
             .opt
             .matchTable = ZSTD_cwksp_reserve_aligned(
             ws,
-            ((ZSTD_OPT_NUM + 1 as libc::c_int) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<ZSTD_match_t>() as libc::c_ulong),
+            ((ZSTD_OPT_NUM + 1) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<ZSTD_match_t>()),
         ) as *mut ZSTD_match_t;
         (*ms)
             .opt
             .priceTable = ZSTD_cwksp_reserve_aligned(
             ws,
-            ((ZSTD_OPT_NUM + 1 as libc::c_int) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<ZSTD_optimal_t>() as libc::c_ulong),
+            ((ZSTD_OPT_NUM + 1) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<ZSTD_optimal_t>()),
         ) as *mut ZSTD_optimal_t;
     }
     (*ms).cParams = *cParams;
@@ -5785,14 +5785,14 @@ unsafe extern "C" fn ZSTD_reset_matchState(
     return 0 as libc::c_int as libc::size_t;
 }
 pub const ZSTD_INDEXOVERFLOW_MARGIN: libc::c_int = 16 as libc::c_int
-    * ((1 as libc::c_int) << 20 as libc::c_int);
+    * ((1) << 20 as libc::c_int);
 unsafe extern "C" fn ZSTD_indexTooCloseToMax(mut w: ZSTD_window_t) -> libc::c_int {
     return ((w.nextSrc).offset_from(w.base) as libc::c_long as libc::size_t
-        > ((3 as libc::c_uint) << 29 as libc::c_int)
+        > ((3) << 29 as libc::c_int)
             .wrapping_add(
-                (1 as libc::c_uint)
-                    << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                        == 4 as libc::c_int as libc::c_ulong
+                (1)
+                    << (if ::core::mem::size_of::<libc::size_t>()
+                        == 4
                     {
                         ZSTD_WINDOWLOG_MAX_32
                     } else {
@@ -5804,13 +5804,13 @@ unsafe extern "C" fn ZSTD_indexTooCloseToMax(mut w: ZSTD_window_t) -> libc::c_in
 }
 unsafe extern "C" fn ZSTD_dictTooBig(loadedDictSize: libc::size_t) -> libc::c_int {
     return (loadedDictSize
-        > (-(1 as libc::c_int) as u32)
+        > (-(1) as u32)
             .wrapping_sub(
-                ((3 as libc::c_uint) << 29 as libc::c_int)
+                ((3) << 29 as libc::c_int)
                     .wrapping_add(
-                        (1 as libc::c_uint)
-                            << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                                == 4 as libc::c_int as libc::c_ulong
+                        (1)
+                            << (if ::core::mem::size_of::<libc::size_t>()
+                                == 4
                             {
                                 ZSTD_WINDOWLOG_MAX_32
                             } else {
@@ -5847,18 +5847,18 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
             &(*params).cParams,
         );
         debug_assert!((*params).ldmParams.hashLog >= (*params).ldmParams.bucketSizeLog);
-        debug_assert!((*params).ldmParams.hashRateLog < 32 as libc::c_int as libc::c_uint);
+        debug_assert!((*params).ldmParams.hashRateLog < 32);
     }
     let windowSize = if 1 as libc::c_int as libc::c_ulong
-        > (if (1 as libc::c_int as u64) << (*params).cParams.windowLog < pledgedSrcSize {
-            (1 as libc::c_int as u64) << (*params).cParams.windowLog
+        > (if (1) << (*params).cParams.windowLog < pledgedSrcSize {
+            (1) << (*params).cParams.windowLog
         } else {
             pledgedSrcSize
         })
     {
         1 as libc::c_int as libc::c_ulong
-    } else if (1 as libc::c_int as u64) << (*params).cParams.windowLog < pledgedSrcSize {
-        (1 as libc::c_int as u64) << (*params).cParams.windowLog
+    } else if (1) << (*params).cParams.windowLog < pledgedSrcSize {
+        (1) << (*params).cParams.windowLog
     } else {
         pledgedSrcSize
     };
@@ -5934,7 +5934,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
         }
         debug_assert!(ZSTD_cwksp_check_available(
             ws,
-            (2 as libc::c_int as libc::c_ulong)
+            (2)
                 .wrapping_mul(
                     ::core::mem::size_of::<ZSTD_compressedBlockState_t>()
                         as libc::c_ulong,
@@ -5944,7 +5944,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
             .blockState
             .prevCBlock = ZSTD_cwksp_reserve_object(
             ws,
-            ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong,
+            ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
         ) as *mut ZSTD_compressedBlockState_t;
         if ((*zc).blockState.prevCBlock).is_null() {
             return -(ZSTD_error_memory_allocation as libc::c_int) as libc::size_t;
@@ -5953,7 +5953,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
             .blockState
             .nextCBlock = ZSTD_cwksp_reserve_object(
             ws,
-            ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong,
+            ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
         ) as *mut ZSTD_compressedBlockState_t;
         if ((*zc).blockState.nextCBlock).is_null() {
             return -(ZSTD_error_memory_allocation as libc::c_int) as libc::size_t;
@@ -5963,13 +5963,13 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
             ws,
             (HUF_WORKSPACE_SIZE as libc::c_ulong)
                 .wrapping_add(
-                    (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                    (::core::mem::size_of::<libc::c_uint>())
                         .wrapping_mul(
-                            ((if 35 as libc::c_int > 52 as libc::c_int {
+                            ((if 35 as libc::c_int > 52 {
                                 35 as libc::c_int
                             } else {
                                 52 as libc::c_int
-                            }) + 2 as libc::c_int) as libc::c_ulong,
+                            }) + 2) as libc::c_ulong,
                         ),
                 ),
         ) as *mut u32;
@@ -6014,28 +6014,28 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
         .seqStore
         .sequencesStart = ZSTD_cwksp_reserve_aligned(
         ws,
-        maxNbSeq.wrapping_mul(::core::mem::size_of::<seqDef>() as libc::c_ulong),
+        maxNbSeq.wrapping_mul(::core::mem::size_of::<seqDef>()),
     ) as *mut seqDef;
     if (*params).ldmParams.enableLdm as libc::c_uint
         == ZSTD_ps_enable as libc::c_int as libc::c_uint
     {
-        let ldmHSize = (1 as libc::c_int as libc::size_t) << (*params).ldmParams.hashLog;
+        let ldmHSize = (1) << (*params).ldmParams.hashLog;
         (*zc)
             .ldmState
             .hashTable = ZSTD_cwksp_reserve_aligned(
             ws,
-            ldmHSize.wrapping_mul(::core::mem::size_of::<ldmEntry_t>() as libc::c_ulong),
+            ldmHSize.wrapping_mul(::core::mem::size_of::<ldmEntry_t>()),
         ) as *mut ldmEntry_t;
         libc::memset(
             (*zc).ldmState.hashTable as *mut libc::c_void,
             0 as libc::c_int,
-            ldmHSize.wrapping_mul(::core::mem::size_of::<ldmEntry_t>() as libc::c_ulong)
+            ldmHSize.wrapping_mul(::core::mem::size_of::<ldmEntry_t>())
                 as libc::size_t,
         );
         (*zc)
             .ldmSequences = ZSTD_cwksp_reserve_aligned(
             ws,
-            maxNbLdmSeq.wrapping_mul(::core::mem::size_of::<rawSeq>() as libc::c_ulong),
+            maxNbLdmSeq.wrapping_mul(::core::mem::size_of::<rawSeq>()),
         ) as *mut rawSeq;
         (*zc).maxNbLdmSequences = maxNbLdmSeq;
         ZSTD_window_init(&mut (*zc).ldmState.window);
@@ -6049,7 +6049,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
             .seqBuffer = ZSTD_cwksp_reserve_aligned(
             ws,
             maxNbExternalSeq
-                .wrapping_mul(::core::mem::size_of::<ZSTD_Sequence>() as libc::c_ulong),
+                .wrapping_mul(::core::mem::size_of::<ZSTD_Sequence>()),
         ) as *mut ZSTD_Sequence;
     }
     (*zc)
@@ -6067,7 +6067,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
     if (*params).ldmParams.enableLdm as libc::c_uint
         == ZSTD_ps_enable as libc::c_int as libc::c_uint
     {
-        let numBuckets = (1 as libc::c_int as libc::size_t)
+        let numBuckets = (1)
             << ((*params).ldmParams.hashLog)
                 .wrapping_sub((*params).ldmParams.bucketSizeLog);
         (*zc).ldmState.bucketOffsets = ZSTD_cwksp_reserve_buffer(ws, numBuckets);
@@ -6083,19 +6083,19 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
         .seqStore
         .llCode = ZSTD_cwksp_reserve_buffer(
         ws,
-        maxNbSeq.wrapping_mul(::core::mem::size_of::<u8>() as libc::c_ulong),
+        maxNbSeq.wrapping_mul(::core::mem::size_of::<u8>()),
     );
     (*zc)
         .seqStore
         .mlCode = ZSTD_cwksp_reserve_buffer(
         ws,
-        maxNbSeq.wrapping_mul(::core::mem::size_of::<u8>() as libc::c_ulong),
+        maxNbSeq.wrapping_mul(::core::mem::size_of::<u8>()),
     );
     (*zc)
         .seqStore
         .ofCode = ZSTD_cwksp_reserve_buffer(
         ws,
-        maxNbSeq.wrapping_mul(::core::mem::size_of::<u8>() as libc::c_ulong),
+        maxNbSeq.wrapping_mul(::core::mem::size_of::<u8>()),
     );
     debug_assert!(ZSTD_cwksp_estimated_space_within_bounds(ws, neededSpace) != 0);
     (*zc).initialized = 1 as libc::c_int;
@@ -6112,16 +6112,16 @@ pub unsafe extern "C" fn ZSTD_invalidateRepCodes(mut cctx: *mut ZSTD_CCtx) {
     debug_assert!(ZSTD_window_hasExtDict((*cctx).blockState.matchState.window) == 0);;
 }
 static mut attachDictSizeCutoffs: [libc::size_t; 10] = [
-    (8 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (8 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (16 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (32 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (32 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (32 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (32 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (32 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (8 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
-    (8 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int)) as libc::size_t,
+    (8 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (8 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (16 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (32 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (32 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (32 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (32 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (32 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (8 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
+    (8 as libc::c_int * ((1) << 10 as libc::c_int)) as libc::size_t,
 ];
 unsafe extern "C" fn ZSTD_shouldAttachDict(
     mut cdict: *const ZSTD_CDict,
@@ -6179,7 +6179,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_byAttachingCDict(
     let cdictEnd = ((*cdict).matchState.window.nextSrc)
         .offset_from((*cdict).matchState.window.base) as libc::c_long as u32;
     let cdictLen = cdictEnd.wrapping_sub((*cdict).matchState.window.dictLimit);
-    if !(cdictLen == 0 as libc::c_int as libc::c_uint) {
+    if !(cdictLen == 0) {
         (*cctx).blockState.matchState.dictMatchState = &(*cdict).matchState;
         if (*cctx).blockState.matchState.window.dictLimit < cdictEnd {
             (*cctx)
@@ -6201,7 +6201,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_byAttachingCDict(
         (*cctx).blockState.prevCBlock as *mut libc::c_void,
         &(*cdict).cBlockState as *const ZSTD_compressedBlockState_t
             as *const libc::c_void,
-        ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong
+        ::core::mem::size_of::<ZSTD_compressedBlockState_t>()
             as libc::size_t,
     );
     return 0 as libc::c_int as libc::size_t;
@@ -6225,7 +6225,7 @@ unsafe extern "C" fn ZSTD_copyCDictTableIntoCCtx(
         libc::memcpy(
             dst as *mut libc::c_void,
             src as *const libc::c_void,
-            tableSize.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong)
+            tableSize.wrapping_mul(::core::mem::size_of::<u32>())
                 as libc::size_t,
         );
     };
@@ -6270,11 +6270,11 @@ unsafe extern "C" fn ZSTD_resetCCtx_byCopyingCDict(
         0 as libc::c_int as u32,
     ) != 0
     {
-        (1 as libc::c_int as libc::size_t) << (*cdict_cParams).chainLog
+        (1) << (*cdict_cParams).chainLog
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    let hSize = (1 as libc::c_int as libc::size_t) << (*cdict_cParams).hashLog;
+    let hSize = (1) << (*cdict_cParams).hashLog;
     ZSTD_copyCDictTableIntoCCtx(
         (*cctx).blockState.matchState.hashTable,
         (*cdict).matchState.hashTable,
@@ -6307,15 +6307,15 @@ unsafe extern "C" fn ZSTD_resetCCtx_byCopyingCDict(
     }
     let h3log = (*cctx).blockState.matchState.hashLog3 as libc::c_int;
     let h3Size = if h3log != 0 {
-        (1 as libc::c_int as libc::size_t) << h3log
+        (1) << h3log
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    debug_assert!((*cdict).matchState.hashLog3 == 0 as libc::c_int as libc::c_uint);
+    debug_assert!((*cdict).matchState.hashLog3 == 0);
     libc::memset(
         (*cctx).blockState.matchState.hashTable3 as *mut libc::c_void,
         0 as libc::c_int,
-        h3Size.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong)
+        h3Size.wrapping_mul(::core::mem::size_of::<u32>())
             as libc::size_t,
     );
     ZSTD_cwksp_mark_tables_clean(&mut (*cctx).workspace);
@@ -6330,7 +6330,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_byCopyingCDict(
         (*cctx).blockState.prevCBlock as *mut libc::c_void,
         &(*cdict).cBlockState as *const ZSTD_compressedBlockState_t
             as *const libc::c_void,
-        ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong
+        ::core::mem::size_of::<ZSTD_compressedBlockState_t>()
             as libc::size_t,
     );
     return 0 as libc::c_int as libc::size_t;
@@ -6367,7 +6367,7 @@ unsafe extern "C" fn ZSTD_copyCCtx_internal(
     libc::memcpy(
         &mut (*dstCCtx).customMem as *mut ZSTD_customMem as *mut libc::c_void,
         &(*srcCCtx).customMem as *const ZSTD_customMem as *const libc::c_void,
-        ::core::mem::size_of::<ZSTD_customMem>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_customMem>() as libc::size_t,
     );
     let mut params = (*dstCCtx).requestedParams;
     params.cParams = (*srcCCtx).appliedParams.cParams;
@@ -6407,33 +6407,33 @@ unsafe extern "C" fn ZSTD_copyCCtx_internal(
         0 as libc::c_int as u32,
     ) != 0
     {
-        (1 as libc::c_int as libc::size_t) << (*srcCCtx).appliedParams.cParams.chainLog
+        (1) << (*srcCCtx).appliedParams.cParams.chainLog
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    let hSize = (1 as libc::c_int as libc::size_t) << (*srcCCtx).appliedParams.cParams.hashLog;
+    let hSize = (1) << (*srcCCtx).appliedParams.cParams.hashLog;
     let h3log = (*srcCCtx).blockState.matchState.hashLog3 as libc::c_int;
     let h3Size = if h3log != 0 {
-        (1 as libc::c_int as libc::size_t) << h3log
+        (1) << h3log
     } else {
         0 as libc::c_int as libc::c_ulong
     };
     libc::memcpy(
         (*dstCCtx).blockState.matchState.hashTable as *mut libc::c_void,
         (*srcCCtx).blockState.matchState.hashTable as *const libc::c_void,
-        hSize.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong)
+        hSize.wrapping_mul(::core::mem::size_of::<u32>())
             as libc::size_t,
     );
     libc::memcpy(
         (*dstCCtx).blockState.matchState.chainTable as *mut libc::c_void,
         (*srcCCtx).blockState.matchState.chainTable as *const libc::c_void,
-        chainSize.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong)
+        chainSize.wrapping_mul(::core::mem::size_of::<u32>())
             as libc::size_t,
     );
     libc::memcpy(
         (*dstCCtx).blockState.matchState.hashTable3 as *mut libc::c_void,
         (*srcCCtx).blockState.matchState.hashTable3 as *const libc::c_void,
-        h3Size.wrapping_mul(::core::mem::size_of::<u32>() as libc::c_ulong)
+        h3Size.wrapping_mul(::core::mem::size_of::<u32>())
             as libc::size_t,
     );
     ZSTD_cwksp_mark_tables_clean(&mut (*dstCCtx).workspace);
@@ -6449,7 +6449,7 @@ unsafe extern "C" fn ZSTD_copyCCtx_internal(
     libc::memcpy(
         (*dstCCtx).blockState.prevCBlock as *mut libc::c_void,
         (*srcCCtx).blockState.prevCBlock as *const libc::c_void,
-        ::core::mem::size_of::<ZSTD_compressedBlockState_t>() as libc::c_ulong
+        ::core::mem::size_of::<ZSTD_compressedBlockState_t>()
             as libc::size_t,
     );
     return 0 as libc::c_int as libc::size_t;
@@ -6469,7 +6469,7 @@ pub unsafe extern "C" fn ZSTD_copyCCtx(
         init
     };
     let zbuff = (*srcCCtx).bufferedPolicy;
-    if pledgedSrcSize == 0 as libc::c_int as libc::c_ulonglong {
+    if pledgedSrcSize == 0 {
         pledgedSrcSize = ZSTD_CONTENTSIZE_UNKNOWN;
     }
     fParams
@@ -6496,8 +6496,8 @@ unsafe extern "C" fn ZSTD_reduceTable_internal(
     let reducerThreshold = reducerValue
         .wrapping_add(ZSTD_WINDOW_START_INDEX as libc::c_uint);
     debug_assert!(size & (16 as libc::c_int - 1 as libc::c_int) as libc::c_uint
-        == 0 as libc::c_int as libc::c_uint);
-    debug_assert!(size < (1 as libc::c_uint) << 31 as libc::c_int);
+        == 0);
+    debug_assert!(size < (1) << 31 as libc::c_int);
     rowNb = 0 as libc::c_int;
     while rowNb < nbRows {
         let mut column: libc::c_int = 0;
@@ -6536,7 +6536,7 @@ unsafe extern "C" fn ZSTD_reduceIndex(
     mut params: *const ZSTD_CCtx_params,
     reducerValue: u32,
 ) {
-    let hSize = (1 as libc::c_int as u32) << (*params).cParams.hashLog;
+    let hSize = (1) << (*params).cParams.hashLog;
     ZSTD_reduceTable((*ms).hashTable, hSize, reducerValue);
     if ZSTD_allocateChainTable(
         (*params).cParams.strategy,
@@ -6544,7 +6544,7 @@ unsafe extern "C" fn ZSTD_reduceIndex(
         (*ms).dedicatedDictSearch as u32,
     ) != 0
     {
-        let chainSize = (1 as libc::c_int as u32) << (*params).cParams.chainLog;
+        let chainSize = (1) << (*params).cParams.chainLog;
         if (*params).cParams.strategy as libc::c_uint
             == ZSTD_btlazy2 as libc::c_int as libc::c_uint
         {
@@ -6554,7 +6554,7 @@ unsafe extern "C" fn ZSTD_reduceIndex(
         }
     }
     if (*ms).hashLog3 != 0 {
-        let h3Size = (1 as libc::c_int as u32) << (*ms).hashLog3;
+        let h3Size = (1) << (*ms).hashLog3;
         ZSTD_reduceTable((*ms).hashTable3, h3Size, reducerValue);
     }
 }
@@ -6700,7 +6700,7 @@ unsafe extern "C" fn ZSTD_buildSequencesStatistics(
         LL_defaultNormLog,
         MaxLL as u32,
         ((*prevEntropy).litlengthCTable).as_ptr(),
-        ::core::mem::size_of::<[FSE_CTable; 329]>() as libc::c_ulong,
+        ::core::mem::size_of::<[FSE_CTable; 329]>(),
         entropyWorkspace,
         entropyWkspSize,
     );
@@ -6759,7 +6759,7 @@ unsafe extern "C" fn ZSTD_buildSequencesStatistics(
         OF_defaultNormLog,
         DefaultMaxOff as u32,
         ((*prevEntropy).offcodeCTable).as_ptr(),
-        ::core::mem::size_of::<[FSE_CTable; 193]>() as libc::c_ulong,
+        ::core::mem::size_of::<[FSE_CTable; 193]>(),
         entropyWorkspace,
         entropyWkspSize,
     );
@@ -6813,7 +6813,7 @@ unsafe extern "C" fn ZSTD_buildSequencesStatistics(
         ML_defaultNormLog,
         MaxML as u32,
         ((*prevEntropy).matchlengthCTable).as_ptr(),
-        ::core::mem::size_of::<[FSE_CTable; 363]>() as libc::c_ulong,
+        ::core::mem::size_of::<[FSE_CTable; 363]>(),
         entropyWorkspace,
         entropyWkspSize,
     );
@@ -6860,30 +6860,30 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
     let mut longOffsets = 0 as libc::c_int;
     entropyWorkspace = count
         .offset(
-            ((if 35 as libc::c_int > 52 as libc::c_int {
+            ((if 35 as libc::c_int > 52 {
                 35 as libc::c_int
             } else {
                 52 as libc::c_int
-            }) + 1 as libc::c_int) as isize,
+            }) + 1) as isize,
         ) as *mut libc::c_void;
     entropyWkspSize = (entropyWkspSize as libc::c_ulong)
         .wrapping_sub(
-            (((if 35 as libc::c_int > 52 as libc::c_int {
+            (((if 35 as libc::c_int > 52 {
                 35 as libc::c_int
             } else {
                 52 as libc::c_int
-            }) + 1 as libc::c_int) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong),
+            }) + 1) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
         ) ;
     debug_assert!(entropyWkspSize
-        >= (((8 as libc::c_int) << 10 as libc::c_int) + 512 as libc::c_int)
+        >= (((8) << 10 as libc::c_int) + 512)
             as libc::c_ulong);
     let literals: *const u8 = (*seqStorePtr).litStart;
     let numSequences = ((*seqStorePtr).sequences)
         .offset_from((*seqStorePtr).sequencesStart) as libc::c_long as libc::size_t;
     let numLiterals = ((*seqStorePtr).lit).offset_from((*seqStorePtr).litStart)
         as libc::c_long as libc::size_t;
-    let suspectUncompressible = (numSequences == 0 as libc::c_int as libc::c_ulong
+    let suspectUncompressible = (numSequences == 0
         || numLiterals.wrapping_div(numSequences)
             >= SUSPECT_UNCOMPRESSIBLE_LITERAL_RATIO as libc::c_ulong) as libc::c_int
         as libc::c_uint;
@@ -6909,11 +6909,11 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
     debug_assert!(cSize <= dstCapacity);
     op = op.offset(cSize as isize);
     if (oend.offset_from(op) as libc::c_long)
-        < (3 as libc::c_int + 1 as libc::c_int) as libc::c_long
+        < (3 as libc::c_int + 1) as libc::c_long
     {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    if nbSeq < 128 as libc::c_int as libc::c_ulong {
+    if nbSeq < 128 {
         let fresh2 = op;
         op = op.offset(1);
         *fresh2 = nbSeq as u8;
@@ -6923,22 +6923,22 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
                 0 as libc::c_int as isize,
             ) = (nbSeq >> 8 as libc::c_int)
             .wrapping_add(0x80 as libc::c_int as libc::c_ulong) as u8;
-        *op.offset(1 as libc::c_int as isize) = nbSeq as u8;
-        op = op.offset(2 as libc::c_int as isize);
+        *op.offset(1) = nbSeq as u8;
+        op = op.offset(2);
     } else {
-        *op.offset(0 as libc::c_int as isize) = 0xff as libc::c_int as u8;
+        *op.offset(0) = 0xff as libc::c_int as u8;
         MEM_writeLE16(
-            op.offset(1 as libc::c_int as isize) as *mut libc::c_void,
+            op.offset(1) as *mut libc::c_void,
             nbSeq.wrapping_sub(LONGNBSEQ as libc::c_ulong) as u16,
         );
-        op = op.offset(3 as libc::c_int as isize);
+        op = op.offset(3);
     }
     debug_assert!(op <= oend);
-    if nbSeq == 0 as libc::c_int as libc::c_ulong {
+    if nbSeq == 0 {
         libc::memcpy(
             &mut (*nextEntropy).fse as *mut ZSTD_fseCTables_t as *mut libc::c_void,
             &(*prevEntropy).fse as *const ZSTD_fseCTables_t as *const libc::c_void,
-            ::core::mem::size_of::<ZSTD_fseCTables_t>() as libc::c_ulong as libc::size_t,
+            ::core::mem::size_of::<ZSTD_fseCTables_t>() as libc::size_t,
         );
         return op.offset_from(ostart) as libc::c_long as libc::size_t;
     }
@@ -6988,9 +6988,9 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
     op = op.offset(bitstreamSize as isize);
     debug_assert!(op <= oend);
     if lastCountSize != 0
-        && lastCountSize.wrapping_add(bitstreamSize) < 4 as libc::c_int as libc::c_ulong
+        && lastCountSize.wrapping_add(bitstreamSize) < 4
     {
-        debug_assert!(lastCountSize.wrapping_add(bitstreamSize) == 3 as libc::c_int as libc::c_ulong);
+        debug_assert!(lastCountSize.wrapping_add(bitstreamSize) == 3);
         return 0 as libc::c_int as libc::size_t;
     }
     return op.offset_from(ostart) as libc::c_long as libc::size_t;
@@ -7019,7 +7019,7 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore(
         entropyWkspSize,
         bmi2,
     );
-    if cSize == 0 as libc::c_int as libc::c_ulong {
+    if cSize == 0 {
         return 0 as libc::c_int as libc::size_t;
     }
     if (cSize == -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t) as libc::c_int
@@ -7036,7 +7036,7 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore(
     if cSize >= maxCSize {
         return 0 as libc::c_int as libc::size_t;
     }
-    debug_assert!(cSize < ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
+    debug_assert!(cSize < ((1) << 17 as libc::c_int) as libc::c_ulong);
     return cSize;
 }
 #[no_mangle]
@@ -7588,24 +7588,24 @@ unsafe extern "C" fn ZSTD_postProcessSequenceProducerResult(
     if nbExternalSeqs > outSeqsCapacity {
         return -(ZSTD_error_sequenceProducer_failed as libc::c_int) as libc::size_t;
     }
-    if nbExternalSeqs == 0 as libc::c_int as libc::c_ulong
-        && srcSize > 0 as libc::c_int as libc::c_ulong
+    if nbExternalSeqs == 0
+        && srcSize > 0
     {
         return -(ZSTD_error_sequenceProducer_failed as libc::c_int) as libc::size_t;
     }
-    if srcSize == 0 as libc::c_int as libc::c_ulong {
+    if srcSize == 0 {
         libc::memset(
-            &mut *outSeqs.offset(0 as libc::c_int as isize) as *mut ZSTD_Sequence
+            &mut *outSeqs.offset(0) as *mut ZSTD_Sequence
                 as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<ZSTD_Sequence>() as libc::c_ulong as libc::size_t,
+            ::core::mem::size_of::<ZSTD_Sequence>() as libc::size_t,
         );
         return 1 as libc::c_int as libc::size_t;
     }
     let lastSeq = *outSeqs
         .offset(nbExternalSeqs.wrapping_sub(1) as isize);
-    if lastSeq.offset == 0 as libc::c_int as libc::c_uint
-        && lastSeq.matchLength == 0 as libc::c_int as libc::c_uint
+    if lastSeq.offset == 0
+        && lastSeq.matchLength == 0
     {
         return nbExternalSeqs;
     }
@@ -7616,7 +7616,7 @@ unsafe extern "C" fn ZSTD_postProcessSequenceProducerResult(
         &mut *outSeqs.offset(nbExternalSeqs as isize) as *mut ZSTD_Sequence
             as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_Sequence>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_Sequence>() as libc::size_t,
     );
     return nbExternalSeqs.wrapping_add(1);
 }
@@ -7647,7 +7647,7 @@ unsafe extern "C" fn ZSTD_buildSeqStore(
     mut srcSize: libc::size_t,
 ) -> libc::size_t {
     let ms: *mut ZSTD_matchState_t = &mut (*zc).blockState.matchState;
-    debug_assert!(srcSize <= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
+    debug_assert!(srcSize <= ((1) << 17 as libc::c_int) as libc::c_ulong);
     ZSTD_assertEqualCParams((*zc).appliedParams.cParams, (*ms).cParams);
     if srcSize
         < (MIN_CBLOCK_SIZE as libc::c_ulong)
@@ -7675,17 +7675,17 @@ unsafe extern "C" fn ZSTD_buildSeqStore(
     let base = (*ms).window.base;
     let istart = src as *const u8;
     let curr = istart.offset_from(base) as libc::c_long as u32;
-    if ::core::mem::size_of::<ptrdiff_t>() as libc::c_ulong
-        == 8 as libc::c_int as libc::c_ulong
+    if ::core::mem::size_of::<ptrdiff_t>()
+        == 8
     {
         debug_assert!((istart.offset_from(base) as libc::c_long)
-            < -(1 as libc::c_int) as u32 as ptrdiff_t);
+            < -(1) as u32 as ptrdiff_t);
     }
     if curr > ((*ms).nextToUpdate).wrapping_add(384) {
         (*ms)
             .nextToUpdate = curr
             .wrapping_sub(
-                (if (192 as libc::c_int as libc::c_uint)
+                (if (192)
                     < curr
                         .wrapping_sub((*ms).nextToUpdate)
                         .wrapping_sub(384)
@@ -7756,7 +7756,7 @@ unsafe extern "C" fn ZSTD_buildSeqStore(
     } else if (*zc).appliedParams.useSequenceProducer != 0 {
         debug_assert!((*zc).externalMatchCtx.seqBufferCapacity >= ZSTD_sequenceBound(srcSize));
         debug_assert!(((*zc).externalMatchCtx.mFinder).is_some());
-        let windowSize = (1 as libc::c_int as u32)
+        let windowSize = (1)
             << (*zc).appliedParams.cParams.windowLog;
         let nbExternalSeqs = ((*zc).externalMatchCtx.mFinder)
             .expect(
@@ -7872,7 +7872,7 @@ unsafe extern "C" fn ZSTD_copyBlockSequences(mut zc: *mut ZSTD_CCtx) {
     libc::memcpy(
         (updatedRepcodes.rep).as_mut_ptr() as *mut libc::c_void,
         ((*(*zc).blockState.prevCBlock).rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     i = 0 as libc::c_int as libc::size_t;
     while i < seqStoreSeqSize {
@@ -7907,7 +7907,7 @@ unsafe extern "C" fn ZSTD_copyBlockSequences(mut zc: *mut ZSTD_CCtx) {
                     .rep[((*outSeqs.offset(i as isize)).rep)
                     .wrapping_sub(1) as usize];
             } else if (*outSeqs.offset(i as isize)).rep
-                == 3 as libc::c_int as libc::c_uint
+                == 3
             {
                 rawOffset = (updatedRepcodes.rep[0 as libc::c_int as usize])
                     .wrapping_sub(1);
@@ -7921,7 +7921,7 @@ unsafe extern "C" fn ZSTD_copyBlockSequences(mut zc: *mut ZSTD_CCtx) {
             (updatedRepcodes.rep).as_mut_ptr(),
             (*seqStoreSeqs.offset(i as isize)).offBase,
             ((*seqStoreSeqs.offset(i as isize)).litLength as libc::c_int
-                == 0 as libc::c_int) as libc::c_int as u32,
+                == 0) as libc::c_int as u32,
         );
         literalsRead = (literalsRead as libc::c_ulong)
             .wrapping_add((*outSeqs.offset(i as isize)).litLength as libc::c_ulong)
@@ -7984,9 +7984,9 @@ pub unsafe extern "C" fn ZSTD_mergeBlockDelimiters(
     let mut in_0 = 0 as libc::c_int as libc::size_t;
     let mut out = 0 as libc::c_int as libc::size_t;
     while in_0 < seqsSize {
-        if (*sequences.offset(in_0 as isize)).offset == 0 as libc::c_int as libc::c_uint
+        if (*sequences.offset(in_0 as isize)).offset == 0
             && (*sequences.offset(in_0 as isize)).matchLength
-                == 0 as libc::c_int as libc::c_uint
+                == 0
         {
             if in_0 != seqsSize.wrapping_sub(1) {
                 let ref mut fresh8 = (*sequences
@@ -8010,20 +8010,20 @@ unsafe extern "C" fn ZSTD_isRLE(
     mut length: libc::size_t,
 ) -> libc::c_int {
     let mut ip = src;
-    let value = *ip.offset(0 as libc::c_int as isize);
+    let value = *ip.offset(0);
     let valueST = (value as u64 as libc::c_ulonglong)
         .wrapping_mul(0x101010101010101 as libc::c_ulonglong) as libc::size_t;
-    let unrollSize = (::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+    let unrollSize = (::core::mem::size_of::<libc::size_t>())
         .wrapping_mul(4);
     let unrollMask = unrollSize.wrapping_sub(1);
     let prefixLength = length & unrollMask;
     let mut i: libc::size_t = 0;
-    if length == 1 as libc::c_int as libc::c_ulong {
+    if length == 1 {
         return 1 as libc::c_int;
     }
     if prefixLength != 0
         && ZSTD_count(
-            ip.offset(1 as libc::c_int as isize),
+            ip.offset(1),
             ip,
             ip.offset(prefixLength as isize),
         ) != prefixLength.wrapping_sub(1)
@@ -8042,7 +8042,7 @@ unsafe extern "C" fn ZSTD_isRLE(
                 return 0 as libc::c_int;
             }
             u = (u as libc::c_ulong)
-                .wrapping_add(::core::mem::size_of::<libc::size_t>() as libc::c_ulong)
+                .wrapping_add(::core::mem::size_of::<libc::size_t>())
                 ;
         }
         i = (i as libc::c_ulong).wrapping_add(unrollSize) ;
@@ -8054,8 +8054,8 @@ unsafe extern "C" fn ZSTD_maybeRLE(mut seqStore: *const seqStore_t) -> libc::c_i
         as libc::c_long as libc::size_t;
     let nbLits = ((*seqStore).lit).offset_from((*seqStore).litStart) as libc::c_long
         as libc::size_t;
-    return (nbSeqs < 4 as libc::c_int as libc::c_ulong
-        && nbLits < 10 as libc::c_int as libc::c_ulong) as libc::c_int;
+    return (nbSeqs < 4
+        && nbLits < 10) as libc::c_int;
 }
 unsafe extern "C" fn ZSTD_blockState_confirmRepcodesAndEntropyTables(
     bs: *mut ZSTD_blockState_t,
@@ -8070,7 +8070,7 @@ unsafe extern "C" fn writeBlockHeader(
     mut blockSize: libc::size_t,
     mut lastBlock: u32,
 ) {
-    let cBlockHeader = if cSize == 1 as libc::c_int as libc::c_ulong {
+    let cBlockHeader = if cSize == 1 {
         lastBlock
             .wrapping_add((bt_rle as libc::c_int as u32) << 1 as libc::c_int)
             .wrapping_add((blockSize << 3 as libc::c_int) as u32)
@@ -8096,8 +8096,8 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
     let wkspEnd = wkspStart.offset(wkspSize as isize);
     let countWkspStart = wkspStart;
     let countWksp = workspace as *mut libc::c_uint;
-    let countWkspSize = ((HUF_SYMBOLVALUE_MAX + 1 as libc::c_int) as libc::c_ulong)
-        .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong);
+    let countWkspSize = ((HUF_SYMBOLVALUE_MAX + 1) as libc::c_ulong)
+        .wrapping_mul(::core::mem::size_of::<libc::c_uint>());
     let nodeWksp = countWkspStart.offset(countWkspSize as isize);
     let nodeWkspSize = wkspEnd.offset_from(nodeWksp) as libc::c_long as libc::size_t;
     let mut maxSymbolValue = HUF_SYMBOLVALUE_MAX as libc::c_uint;
@@ -8106,7 +8106,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
     libc::memcpy(
         nextHuf as *mut libc::c_void,
         prevHuf as *const libc::c_void,
-        ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::size_t,
     );
     if literalsCompressionIsDisabled != 0 {
         (*hufMetadata).hType = set_basic;
@@ -8154,7 +8154,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
     libc::memset(
         ((*nextHuf).CTable).as_mut_ptr() as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<[HUF_CElt; 257]>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<[HUF_CElt; 257]>() as libc::size_t,
     );
     huffLog = HUF_optimalTableLog(
         huffLog,
@@ -8166,7 +8166,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
         countWksp,
         hufFlags,
     );
-    debug_assert!(huffLog <= 11 as libc::c_int as libc::c_uint);
+    debug_assert!(huffLog <= 11);
     let maxBits = HUF_buildCTable_wksp(
         ((*nextHuf).CTable).as_mut_ptr(),
         countWksp,
@@ -8187,7 +8187,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
     );
     let hSize = HUF_writeCTable_wksp(
         ((*hufMetadata).hufDesBuffer).as_mut_ptr() as *mut libc::c_void,
-        ::core::mem::size_of::<[u8; 128]>() as libc::c_ulong,
+        ::core::mem::size_of::<[u8; 128]>(),
         ((*nextHuf).CTable).as_mut_ptr(),
         maxSymbolValue,
         huffLog,
@@ -8207,7 +8207,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
             libc::memcpy(
                 nextHuf as *mut libc::c_void,
                 prevHuf as *const libc::c_void,
-                ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::c_ulong
+                ::core::mem::size_of::<ZSTD_hufCTables_t>()
                     as libc::size_t,
             );
             (*hufMetadata).hType = set_repeat;
@@ -8218,7 +8218,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
         libc::memcpy(
             nextHuf as *mut libc::c_void,
             prevHuf as *const libc::c_void,
-            ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::c_ulong as libc::size_t,
+            ::core::mem::size_of::<ZSTD_hufCTables_t>() as libc::size_t,
         );
         (*hufMetadata).hType = set_basic;
         return 0 as libc::c_int as libc::size_t;
@@ -8261,25 +8261,25 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_sequences(
         as libc::c_long as libc::size_t;
     let ostart = ((*fseMetadata).fseTablesBuffer).as_mut_ptr();
     let oend = ostart
-        .offset(::core::mem::size_of::<[u8; 133]>() as libc::c_ulong as isize);
+        .offset(::core::mem::size_of::<[u8; 133]>() as isize);
     let mut op = ostart;
     let mut countWorkspace = workspace as *mut libc::c_uint;
     let mut entropyWorkspace = countWorkspace
         .offset(
-            ((if 35 as libc::c_int > 52 as libc::c_int {
+            ((if 35 as libc::c_int > 52 {
                 35 as libc::c_int
             } else {
                 52 as libc::c_int
-            }) + 1 as libc::c_int) as isize,
+            }) + 1) as isize,
         );
     let mut entropyWorkspaceSize = wkspSize
         .wrapping_sub(
-            (((if 35 as libc::c_int > 52 as libc::c_int {
+            (((if 35 as libc::c_int > 52 {
                 35 as libc::c_int
             } else {
                 52 as libc::c_int
-            }) + 1 as libc::c_int) as libc::c_ulong)
-                .wrapping_mul(::core::mem::size_of::<libc::c_uint>() as libc::c_ulong),
+            }) + 1) as libc::c_ulong)
+                .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
         );
     let mut stats = ZSTD_symbolEncodingTypeStats_t {
         LLtype: 0,
@@ -8381,12 +8381,12 @@ unsafe extern "C" fn ZSTD_estimateBlockSize_literal(
     let mut maxSymbolValue = HUF_SYMBOLVALUE_MAX as libc::c_uint;
     let mut literalSectionHeaderSize = (3 as libc::c_int
         + (litSize
-            >= (1 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+            >= (1 as libc::c_int * ((1) << 10 as libc::c_int))
                 as libc::c_ulong) as libc::c_int
         + (litSize
-            >= (16 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+            >= (16 as libc::c_int * ((1) << 10 as libc::c_int))
                 as libc::c_ulong) as libc::c_int) as libc::size_t;
-    let mut singleStream = (litSize < 256 as libc::c_int as libc::c_ulong) as libc::c_int
+    let mut singleStream = (litSize < 256) as libc::c_int
         as u32;
     if (*hufMetadata).hType as libc::c_uint == set_basic as libc::c_int as libc::c_uint {
         return litSize
@@ -8503,8 +8503,8 @@ unsafe extern "C" fn ZSTD_estimateBlockSize_sequences(
     mut wkspSize: libc::size_t,
     mut writeEntropy: libc::c_int,
 ) -> libc::size_t {
-    let mut sequencesSectionHeaderSize = (1 as libc::c_int + 1 as libc::c_int
-        + (nbSeq >= 128 as libc::c_int as libc::c_ulong) as libc::c_int
+    let mut sequencesSectionHeaderSize = (1 as libc::c_int + 1
+        + (nbSeq >= 128) as libc::c_int
         + (nbSeq >= LONGNBSEQ as libc::c_ulong) as libc::c_int) as libc::size_t;
     let mut cSeqSizeEstimate = 0 as libc::c_int as libc::size_t;
     cSeqSizeEstimate = (cSeqSizeEstimate as libc::c_ulong)
@@ -8611,16 +8611,16 @@ unsafe extern "C" fn ZSTD_buildEntropyStatisticsAndEstimateSubBlockSize(
         &mut (*zc).appliedParams,
         entropyMetadata,
         (*zc).entropyWorkspace as *mut libc::c_void,
-        ((((8 as libc::c_int) << 10 as libc::c_int) + 512 as libc::c_int)
+        ((((8) << 10 as libc::c_int) + 512)
             as libc::c_ulong)
             .wrapping_add(
-                (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                (::core::mem::size_of::<libc::c_uint>())
                     .wrapping_mul(
-                        ((if 35 as libc::c_int > 52 as libc::c_int {
+                        ((if 35 as libc::c_int > 52 {
                             35 as libc::c_int
                         } else {
                             52 as libc::c_int
-                        }) + 2 as libc::c_int) as libc::c_ulong,
+                        }) + 2) as libc::c_ulong,
                     ),
             ),
     );
@@ -8640,13 +8640,13 @@ unsafe extern "C" fn ZSTD_buildEntropyStatisticsAndEstimateSubBlockSize(
         (*zc).entropyWorkspace as *mut libc::c_void,
         (HUF_WORKSPACE_SIZE as libc::c_ulong)
             .wrapping_add(
-                (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                (::core::mem::size_of::<libc::c_uint>())
                     .wrapping_mul(
-                        ((if 35 as libc::c_int > 52 as libc::c_int {
+                        ((if 35 as libc::c_int > 52 {
                             35 as libc::c_int
                         } else {
                             52 as libc::c_int
-                        }) + 2 as libc::c_int) as libc::c_ulong,
+                        }) + 2) as libc::c_ulong,
                     ),
             ),
         ((*entropyMetadata).hufMetadata.hType as libc::c_uint
@@ -8710,7 +8710,7 @@ unsafe extern "C" fn ZSTD_deriveSeqStoreChunk(
     mut endIdx: libc::size_t,
 ) {
     *resultSeqStore = *originalSeqStore;
-    if startIdx > 0 as libc::c_int as libc::c_ulong {
+    if startIdx > 0 {
         (*resultSeqStore)
             .sequences = ((*originalSeqStore).sequencesStart).offset(startIdx as isize);
         (*resultSeqStore)
@@ -8754,15 +8754,15 @@ unsafe extern "C" fn ZSTD_resolveRepcodeToRawOffset(
     ll0: u32,
 ) -> u32 {
     debug_assert!(1 as libc::c_int as libc::c_uint <= offBase
-        && offBase <= 3 as libc::c_int as libc::c_uint);
+        && offBase <= 3);
     let adjustedRepCode = offBase
         .wrapping_sub(1)
         .wrapping_add(ll0);
     debug_assert!(1 as libc::c_int as libc::c_uint <= offBase
-        && offBase <= 3 as libc::c_int as libc::c_uint);
+        && offBase <= 3);
     if adjustedRepCode == ZSTD_REP_NUM as libc::c_uint {
         debug_assert!(ll0 != 0);
-        return (*rep.offset(0 as libc::c_int as isize))
+        return (*rep.offset(0))
             .wrapping_sub(1);
     }
     return *rep.offset(adjustedRepCode as isize);
@@ -8783,10 +8783,10 @@ unsafe extern "C" fn ZSTD_seqStore_resolveOffCodes(
     };
     while idx < nbSeq {
         let seq = ((*seqStore).sequencesStart).offset(idx as isize);
-        let ll0 = ((*seq).litLength as libc::c_int == 0 as libc::c_int
+        let ll0 = ((*seq).litLength as libc::c_int == 0
             && idx != longLitLenIdx) as libc::c_int as u32;
         let offBase = (*seq).offBase;
-        debug_assert!(offBase > 0 as libc::c_int as libc::c_uint);
+        debug_assert!(offBase > 0);
         if 1 as libc::c_int as libc::c_uint <= offBase
             && offBase <= ZSTD_REP_NUM as libc::c_uint
         {
@@ -8801,7 +8801,7 @@ unsafe extern "C" fn ZSTD_seqStore_resolveOffCodes(
                 ll0,
             );
             if dRawOffset != cRawOffset {
-                debug_assert!(cRawOffset > 0 as libc::c_int as libc::c_uint);
+                debug_assert!(cRawOffset > 0);
                 (*seq).offBase = cRawOffset.wrapping_add(ZSTD_REP_NUM as libc::c_uint);
             }
         }
@@ -8851,13 +8851,13 @@ unsafe extern "C" fn ZSTD_compressSeqStore_singleBlock(
         (*zc).entropyWorkspace as *mut libc::c_void,
         (HUF_WORKSPACE_SIZE as libc::c_ulong)
             .wrapping_add(
-                (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                (::core::mem::size_of::<libc::c_uint>())
                     .wrapping_mul(
-                        ((if 35 as libc::c_int > 52 as libc::c_int {
+                        ((if 35 as libc::c_int > 52 {
                             35 as libc::c_int
                         } else {
                             52 as libc::c_int
-                        }) + 2 as libc::c_int) as libc::c_ulong,
+                        }) + 2) as libc::c_ulong,
                     ),
             ),
         (*zc).bmi2,
@@ -8876,7 +8876,7 @@ unsafe extern "C" fn ZSTD_compressSeqStore_singleBlock(
         ZSTD_blockState_confirmRepcodesAndEntropyTables(&mut (*zc).blockState);
         return 0 as libc::c_int as libc::size_t;
     }
-    if cSeqsSize == 0 as libc::c_int as libc::c_ulong {
+    if cSeqsSize == 0 {
         cSize = ZSTD_noCompressBlock(
             op as *mut libc::c_void,
             dstCapacity,
@@ -8889,7 +8889,7 @@ unsafe extern "C" fn ZSTD_compressSeqStore_singleBlock(
             return err_code_0;
         }
         *dRep = dRepOriginal;
-    } else if cSeqsSize == 1 as libc::c_int as libc::c_ulong {
+    } else if cSeqsSize == 1 {
         cSize = ZSTD_rleCompressBlock(
             op as *mut libc::c_void,
             dstCapacity,
@@ -8980,7 +8980,7 @@ unsafe extern "C" fn ZSTD_deriveBlockSplits(
     };
     splits.splitLocations = partitions;
     splits.idx = 0 as libc::c_int as libc::size_t;
-    if nbSeq <= 4 as libc::c_int as libc::c_uint {
+    if nbSeq <= 4 {
         return 0 as libc::c_int as libc::size_t;
     }
     ZSTD_deriveBlockSplitsHelper(
@@ -9016,19 +9016,19 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
     libc::memcpy(
         (dRep.rep).as_mut_ptr() as *mut libc::c_void,
         ((*(*zc).blockState.prevCBlock).rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     libc::memcpy(
         (cRep.rep).as_mut_ptr() as *mut libc::c_void,
         ((*(*zc).blockState.prevCBlock).rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     libc::memset(
         nextSeqStore as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<seqStore_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<seqStore_t>() as libc::size_t,
     );
-    if numSplits == 0 as libc::c_int as libc::c_ulong {
+    if numSplits == 0 {
         let mut cSizeSingleBlock = ZSTD_compressSeqStore_singleBlock(
             zc,
             &mut (*zc).seqStore,
@@ -9045,7 +9045,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
         if ERR_isError(err_code) != 0 {
             return err_code;
         }
-        debug_assert!((*zc).blockSize <= ((1 as libc::c_int) << 17 as libc::c_int) as libc::c_ulong);
+        debug_assert!((*zc).blockSize <= ((1) << 17 as libc::c_int) as libc::c_ulong);
         debug_assert!(cSizeSingleBlock <= ((*zc).blockSize).wrapping_add(ZSTD_blockHeaderSize));
         return cSizeSingleBlock;
     }
@@ -9053,7 +9053,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
         currSeqStore,
         &mut (*zc).seqStore,
         0 as libc::c_int as libc::size_t,
-        *partitions.offset(0 as libc::c_int as isize) as libc::size_t,
+        *partitions.offset(0) as libc::size_t,
     );
     i = 0 as libc::c_int as libc::size_t;
     while i <= numSplits {
@@ -9106,7 +9106,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
     libc::memcpy(
         ((*(*zc).blockState.prevCBlock).rep).as_mut_ptr() as *mut libc::c_void,
         (dRep.rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     return cSize;
 }
@@ -9196,13 +9196,13 @@ unsafe extern "C" fn ZSTD_compressBlock_internal(
             (*zc).entropyWorkspace as *mut libc::c_void,
             (HUF_WORKSPACE_SIZE as libc::c_ulong)
                 .wrapping_add(
-                    (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                    (::core::mem::size_of::<libc::c_uint>())
                         .wrapping_mul(
-                            ((if 35 as libc::c_int > 52 as libc::c_int {
+                            ((if 35 as libc::c_int > 52 {
                                 35 as libc::c_int
                             } else {
                                 52 as libc::c_int
-                            }) + 2 as libc::c_int) as libc::c_ulong,
+                            }) + 2) as libc::c_ulong,
                         ),
                 ),
             (*zc).bmi2,
@@ -9214,10 +9214,10 @@ unsafe extern "C" fn ZSTD_compressBlock_internal(
             *op
                 .offset(
                     0 as libc::c_int as isize,
-                ) = *ip.offset(0 as libc::c_int as isize);
+                ) = *ip.offset(0);
         }
     }
-    if ERR_isError(cSize) == 0 && cSize > 1 as libc::c_int as libc::c_ulong {
+    if ERR_isError(cSize) == 0 && cSize > 1 {
         ZSTD_blockState_confirmRepcodesAndEntropyTables(&mut (*zc).blockState);
     }
     if (*(*zc).blockState.prevCBlock).entropy.fse.offcode_repeatMode as libc::c_uint
@@ -9317,7 +9317,7 @@ unsafe extern "C" fn ZSTD_overflowCorrectIfNeeded(
     mut iend: *const libc::c_void,
 ) {
     let cycleLog = ZSTD_cycleLog((*params).cParams.chainLog, (*params).cParams.strategy);
-    let maxDist = (1 as libc::c_int as u32) << (*params).cParams.windowLog;
+    let maxDist = (1) << (*params).cParams.windowLog;
     if ZSTD_window_needOverflowCorrection(
         (*ms).window,
         cycleLog,
@@ -9360,10 +9360,10 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
     let mut ip = src as *const u8;
     let ostart = dst as *mut u8;
     let mut op = ostart;
-    let maxDist = (1 as libc::c_int as u32) << (*cctx).appliedParams.cParams.windowLog;
+    let maxDist = (1) << (*cctx).appliedParams.cParams.windowLog;
     debug_assert!((*cctx).appliedParams.cParams.windowLog
-        <= (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-            == 4 as libc::c_int as libc::c_ulong
+        <= (if ::core::mem::size_of::<libc::size_t>()
+            == 4
         {
             30 as libc::c_int
         } else {
@@ -9378,7 +9378,7 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
             & (blockSize >= remaining) as libc::c_int as libc::c_uint;
         if dstCapacity
             < ZSTD_blockHeaderSize
-                .wrapping_add((1 as libc::c_int + 1 as libc::c_int) as libc::c_ulong)
+                .wrapping_add((1 as libc::c_int + 1) as libc::c_ulong)
                 .wrapping_add(1)
         {
             return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
@@ -9424,7 +9424,7 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
             if ERR_isError(err_code) != 0 {
                 return err_code;
             }
-            debug_assert!(cSize > 0 as libc::c_int as libc::c_ulong);
+            debug_assert!(cSize > 0);
             debug_assert!(cSize <= blockSize.wrapping_add(ZSTD_blockHeaderSize));
         } else if ZSTD_blockSplitterEnabled(&mut (*cctx).appliedParams) != 0 {
             cSize = ZSTD_compressBlock_splitBlock(
@@ -9439,8 +9439,8 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
             if ERR_isError(err_code_0) != 0 {
                 return err_code_0;
             }
-            debug_assert!(cSize > 0 as libc::c_int as libc::c_ulong
-                || (*cctx).seqCollector.collectSequences == 1 as libc::c_int);
+            debug_assert!(cSize > 0
+                || (*cctx).seqCollector.collectSequences == 1);
         } else {
             cSize = ZSTD_compressBlock_internal(
                 cctx,
@@ -9454,7 +9454,7 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
             if ERR_isError(err_code_1) != 0 {
                 return err_code_1;
             }
-            if cSize == 0 as libc::c_int as libc::c_ulong {
+            if cSize == 0 {
                 cSize = ZSTD_noCompressBlock(
                     op as *mut libc::c_void,
                     dstCapacity,
@@ -9467,7 +9467,7 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
                     return err_code_2;
                 }
             } else {
-                let cBlockHeader = if cSize == 1 as libc::c_int as libc::c_ulong {
+                let cBlockHeader = if cSize == 1 {
                     lastBlock
                         .wrapping_add((bt_rle as libc::c_int as u32) << 1 as libc::c_int)
                         .wrapping_add((blockSize << 3 as libc::c_int) as u32)
@@ -9506,26 +9506,26 @@ unsafe extern "C" fn ZSTD_writeFrameHeader(
     mut dictID: u32,
 ) -> libc::size_t {
     let op = dst as *mut u8;
-    let dictIDSizeCodeLength = ((dictID > 0 as libc::c_int as libc::c_uint)
-        as libc::c_int + (dictID >= 256 as libc::c_int as libc::c_uint) as libc::c_int
-        + (dictID >= 65536 as libc::c_int as libc::c_uint) as libc::c_int) as u32;
+    let dictIDSizeCodeLength = ((dictID > 0)
+        as libc::c_int + (dictID >= 256) as libc::c_int
+        + (dictID >= 65536) as libc::c_int) as u32;
     let dictIDSizeCode = if (*params).fParams.noDictIDFlag != 0 {
         0 as libc::c_int as libc::c_uint
     } else {
         dictIDSizeCodeLength
     };
-    let checksumFlag = ((*params).fParams.checksumFlag > 0 as libc::c_int) as libc::c_int
+    let checksumFlag = ((*params).fParams.checksumFlag > 0) as libc::c_int
         as u32;
-    let windowSize = (1 as libc::c_int as u32) << (*params).cParams.windowLog;
+    let windowSize = (1) << (*params).cParams.windowLog;
     let singleSegment = ((*params).fParams.contentSizeFlag != 0
         && windowSize as libc::c_ulong >= pledgedSrcSize) as libc::c_int as u32;
     let windowLogByte = (((*params).cParams.windowLog)
         .wrapping_sub(ZSTD_WINDOWLOG_ABSOLUTEMIN as libc::c_uint) << 3 as libc::c_int)
         as u8;
     let fcsCode = (if (*params).fParams.contentSizeFlag != 0 {
-        (pledgedSrcSize >= 256 as libc::c_int as libc::c_ulong) as libc::c_int
+        (pledgedSrcSize >= 256) as libc::c_int
             + (pledgedSrcSize
-                >= (65536 as libc::c_int + 256 as libc::c_int) as libc::c_ulong)
+                >= (65536 as libc::c_int + 256) as libc::c_ulong)
                 as libc::c_int
             + (pledgedSrcSize >= 0xffffffff as libc::c_uint as libc::c_ulong)
                 as libc::c_int
@@ -9539,9 +9539,9 @@ unsafe extern "C" fn ZSTD_writeFrameHeader(
     let mut pos = 0 as libc::c_int as libc::size_t;
     debug_assert!(!((*params).fParams.contentSizeFlag != 0
         && pledgedSrcSize as libc::c_ulonglong
-            == (0 as libc::c_ulonglong)
+            == (0)
                 .wrapping_sub(1)));
-    if dstCapacity < 18 as libc::c_int as libc::c_ulong {
+    if dstCapacity < 18 {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
     if (*params).format as libc::c_uint == ZSTD_f_zstd1 as libc::c_int as libc::c_uint {
@@ -9637,7 +9637,7 @@ pub unsafe extern "C" fn ZSTD_writeSkippableFrame(
     if srcSize > 0xffffffff as libc::c_uint as libc::c_ulong {
         return -(ZSTD_error_srcSize_wrong as libc::c_int) as libc::size_t;
     }
-    if magicVariant > 15 as libc::c_int as libc::c_uint {
+    if magicVariant > 15 {
         return -(ZSTD_error_parameter_outOfBound as libc::c_int) as libc::size_t;
     }
     MEM_writeLE32(
@@ -9645,11 +9645,11 @@ pub unsafe extern "C" fn ZSTD_writeSkippableFrame(
         (ZSTD_MAGIC_SKIPPABLE_START as libc::c_uint).wrapping_add(magicVariant),
     );
     MEM_writeLE32(
-        op.offset(4 as libc::c_int as isize) as *mut libc::c_void,
+        op.offset(4) as *mut libc::c_void,
         srcSize as u32,
     );
     libc::memcpy(
-        op.offset(8 as libc::c_int as isize) as *mut libc::c_void,
+        op.offset(8) as *mut libc::c_void,
         src,
         srcSize as libc::size_t,
     );
@@ -9663,7 +9663,7 @@ pub unsafe extern "C" fn ZSTD_writeLastEmptyBlock(
     if dstCapacity < ZSTD_blockHeaderSize {
         return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
     }
-    let cBlockHeader24 = (1 as libc::c_int as libc::c_uint)
+    let cBlockHeader24 = (1)
         .wrapping_add((bt_raw as libc::c_int as u32) << 1 as libc::c_int);
     MEM_writeLE24(dst, cBlockHeader24);
     return ZSTD_blockHeaderSize;
@@ -9774,7 +9774,7 @@ unsafe extern "C" fn ZSTD_compressContinue_internal(
         .producedCSize = ((*cctx).producedCSize)
         .wrapping_add(cSize.wrapping_add(fhSize) as libc::c_ulonglong);
     debug_assert!(!((*cctx).appliedParams.fParams.contentSizeFlag != 0
-        && (*cctx).pledgedSrcSizePlusOne == 0 as libc::c_int as libc::c_ulonglong));
+        && (*cctx).pledgedSrcSizePlusOne == 0));
     if (*cctx).pledgedSrcSizePlusOne != 0 as libc::c_int as libc::c_ulonglong {
         if ((*cctx).consumedSrcSize).wrapping_add(1)
             > (*cctx).pledgedSrcSizePlusOne
@@ -9816,11 +9816,11 @@ unsafe extern "C" fn ZSTD_getBlockSize_deprecated(mut cctx: *const ZSTD_CCtx) ->
     let cParams = (*cctx).appliedParams.cParams;
     debug_assert!(ZSTD_checkCParams(cParams) == 0);
     return if (*cctx).appliedParams.maxBlockSize
-        < (1 as libc::c_int as libc::size_t) << cParams.windowLog
+        < (1) << cParams.windowLog
     {
         (*cctx).appliedParams.maxBlockSize
     } else {
-        (1 as libc::c_int as libc::size_t) << cParams.windowLog
+        (1) << cParams.windowLog
     };
 }
 #[no_mangle]
@@ -9875,11 +9875,11 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
         == ZSTD_ps_enable as libc::c_int as libc::c_uint && !ls.is_null())
         as libc::c_int;
     ZSTD_assertEqualCParams((*params).cParams, (*ms).cParams);
-    let mut maxDictSize = ((3 as libc::c_uint) << 29 as libc::c_int)
+    let mut maxDictSize = ((3) << 29 as libc::c_int)
         .wrapping_add(
-            (1 as libc::c_uint)
-                << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                    == 4 as libc::c_int as libc::c_ulong
+            (1)
+                << (if ::core::mem::size_of::<libc::size_t>()
+                    == 4
                 {
                     ZSTD_WINDOWLOG_MAX_32
                 } else {
@@ -9891,7 +9891,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
     if CDictTaggedIndices != 0
         && tfp as libc::c_uint == ZSTD_tfp_forCDict as libc::c_int as libc::c_uint
     {
-        let shortCacheMaxDictSize = ((1 as libc::c_uint)
+        let shortCacheMaxDictSize = ((1)
             << 32 as libc::c_int - ZSTD_SHORT_CACHE_TAG_BITS)
             .wrapping_sub(ZSTD_WINDOW_START_INDEX as libc::c_uint);
         maxDictSize = if maxDictSize < shortCacheMaxDictSize {
@@ -9907,13 +9907,13 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
         srcSize = maxDictSize as libc::size_t;
     }
     if srcSize
-        > (-(1 as libc::c_int) as u32)
+        > (-(1) as u32)
             .wrapping_sub(
-                ((3 as libc::c_uint) << 29 as libc::c_int)
+                ((3) << 29 as libc::c_int)
                     .wrapping_add(
-                        (1 as libc::c_uint)
-                            << (if ::core::mem::size_of::<libc::size_t>() as libc::c_ulong
-                                == 4 as libc::c_int as libc::c_ulong
+                        (1)
+                            << (if ::core::mem::size_of::<libc::size_t>()
+                                == 4
                             {
                                 ZSTD_WINDOWLOG_MAX_32
                             } else {
@@ -9941,12 +9941,12 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
     if ((*params).cParams.strategy as libc::c_uint)
         < ZSTD_btultra as libc::c_int as libc::c_uint
     {
-        let mut maxDictSize_0 = (8 as libc::c_uint)
+        let mut maxDictSize_0 = (8)
             << (if (if (*params).cParams.hashLog > (*params).cParams.chainLog {
                 (*params).cParams.hashLog
             } else {
                 (*params).cParams.chainLog
-            }) < 28 as libc::c_int as libc::c_uint
+            }) < 28
             {
                 (if (*params).cParams.hashLog > (*params).cParams.chainLog {
                     (*params).cParams.hashLog
@@ -9988,7 +9988,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
             ZSTD_fillDoubleHashTable(ms, iend as *const libc::c_void, dtlm, tfp);
         }
         3 | 4 | 5 => {
-            debug_assert!(srcSize >= 8 as libc::c_int as libc::c_ulong);
+            debug_assert!(srcSize >= 8);
             if (*ms).dedicatedDictSearch != 0 {
                 debug_assert!(!((*ms).chainTable).is_null());
                 ZSTD_dedicatedDictSearch_lazy_loadDictionary(
@@ -10001,7 +10001,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
                 if (*params).useRowMatchFinder as libc::c_uint
                     == ZSTD_ps_enable as libc::c_int as libc::c_uint
                 {
-                    let tagTableSize = (1 as libc::c_int as libc::size_t)
+                    let tagTableSize = (1)
                         << (*params).cParams.hashLog;
                     libc::memset(
                         (*ms).tagTable as *mut libc::c_void,
@@ -10018,7 +10018,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
             }
         }
         6 | 7 | 8 | 9 => {
-            debug_assert!(srcSize >= 8 as libc::c_int as libc::c_ulong);
+            debug_assert!(srcSize >= 8);
             ZSTD_updateTree(ms, iend.offset(-(HASH_READ_SIZE as isize)), iend);
         }
         _ => {
@@ -10039,7 +10039,7 @@ unsafe extern "C" fn ZSTD_dictNCountRepeat(
     }
     s = 0 as libc::c_int as u32;
     while s <= maxSymbolValue {
-        if *normalizedCounter.offset(s as isize) as libc::c_int == 0 as libc::c_int {
+        if *normalizedCounter.offset(s as isize) as libc::c_int == 0 {
             return FSE_repeat_check;
         }
         s = s.wrapping_add(1);
@@ -10057,7 +10057,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     let mut offcodeMaxValue = MaxOff as libc::c_uint;
     let mut dictPtr = dict as *const u8;
     let dictEnd = dictPtr.offset(dictSize as isize);
-    dictPtr = dictPtr.offset(8 as libc::c_int as isize);
+    dictPtr = dictPtr.offset(8);
     (*bs).entropy.huf.repeatMode = HUF_repeat_check;
     let mut maxSymbolValue = 255 as libc::c_int as libc::c_uint;
     let mut hasZeroWeights = 1 as libc::c_int as libc::c_uint;
@@ -10074,7 +10074,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     if ERR_isError(hufHeaderSize) != 0 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
-    if maxSymbolValue < 255 as libc::c_int as libc::c_uint {
+    if maxSymbolValue < 255 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     dictPtr = dictPtr.offset(hufHeaderSize as isize);
@@ -10089,7 +10089,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     if ERR_isError(offcodeHeaderSize) != 0 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
-    if offcodeLog > 8 as libc::c_int as libc::c_uint {
+    if offcodeLog > 8 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     if ERR_isError(
@@ -10099,7 +10099,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
             31 as libc::c_int as libc::c_uint,
             offcodeLog,
             workspace,
-            (((8 as libc::c_int) << 10 as libc::c_int) + 512 as libc::c_int) as libc::size_t,
+            (((8) << 10 as libc::c_int) + 512) as libc::size_t,
         ),
     ) != 0
     {
@@ -10119,7 +10119,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     if ERR_isError(matchlengthHeaderSize) != 0 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
-    if matchlengthLog > 9 as libc::c_int as libc::c_uint {
+    if matchlengthLog > 9 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     if ERR_isError(
@@ -10129,7 +10129,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
             matchlengthMaxValue,
             matchlengthLog,
             workspace,
-            (((8 as libc::c_int) << 10 as libc::c_int) + 512 as libc::c_int) as libc::size_t,
+            (((8) << 10 as libc::c_int) + 512) as libc::size_t,
         ),
     ) != 0
     {
@@ -10157,7 +10157,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     if ERR_isError(litlengthHeaderSize) != 0 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
-    if litlengthLog > 9 as libc::c_int as libc::c_uint {
+    if litlengthLog > 9 {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     if ERR_isError(
@@ -10167,7 +10167,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
             litlengthMaxValue,
             litlengthLog,
             workspace,
-            (((8 as libc::c_int) << 10 as libc::c_int) + 512 as libc::c_int) as libc::size_t,
+            (((8) << 10 as libc::c_int) + 512) as libc::size_t,
         ),
     ) != 0
     {
@@ -10182,37 +10182,37 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         MaxLL as libc::c_uint,
     );
     dictPtr = dictPtr.offset(litlengthHeaderSize as isize);
-    if dictPtr.offset(12 as libc::c_int as isize) > dictEnd {
+    if dictPtr.offset(12) > dictEnd {
         return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
     }
     (*bs)
         .rep[0 as libc::c_int
         as usize] = MEM_readLE32(
-        dictPtr.offset(0 as libc::c_int as isize) as *const libc::c_void,
+        dictPtr.offset(0) as *const libc::c_void,
     );
     (*bs)
         .rep[1 as libc::c_int
         as usize] = MEM_readLE32(
-        dictPtr.offset(4 as libc::c_int as isize) as *const libc::c_void,
+        dictPtr.offset(4) as *const libc::c_void,
     );
     (*bs)
         .rep[2 as libc::c_int
         as usize] = MEM_readLE32(
-        dictPtr.offset(8 as libc::c_int as isize) as *const libc::c_void,
+        dictPtr.offset(8) as *const libc::c_void,
     );
-    dictPtr = dictPtr.offset(12 as libc::c_int as isize);
+    dictPtr = dictPtr.offset(12);
     let dictContentSize = dictEnd.offset_from(dictPtr) as libc::c_long as libc::size_t;
     let mut offcodeMax = MaxOff as u32;
     if dictContentSize
-        <= (-(1 as libc::c_int) as u32)
+        <= (-(1) as u32)
             .wrapping_sub(
-                (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                (128 as libc::c_int * ((1) << 10 as libc::c_int))
                     as libc::c_uint,
             ) as libc::c_ulong
     {
         let maxOffset = (dictContentSize as u32)
             .wrapping_add(
-                (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+                (128 as libc::c_int * ((1) << 10 as libc::c_int))
                     as libc::c_uint,
             );
         offcodeMax = ZSTD_highbit32(maxOffset);
@@ -10223,7 +10223,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         .offcode_repeatMode = ZSTD_dictNCountRepeat(
         offcodeNCount.as_mut_ptr(),
         offcodeMaxValue,
-        if offcodeMax < 31 as libc::c_int as libc::c_uint {
+        if offcodeMax < 31 {
             offcodeMax
         } else {
             31 as libc::c_int as libc::c_uint
@@ -10231,8 +10231,8 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     );
     let mut u: u32 = 0;
     u = 0 as libc::c_int as u32;
-    while u < 3 as libc::c_int as libc::c_uint {
-        if (*bs).rep[u as usize] == 0 as libc::c_int as libc::c_uint {
+    while u < 3 {
+        if (*bs).rep[u as usize] == 0 {
             return -(ZSTD_error_dictionary_corrupted as libc::c_int) as libc::size_t;
         }
         if (*bs).rep[u as usize] as libc::c_ulong > dictContentSize {
@@ -10257,12 +10257,12 @@ unsafe extern "C" fn ZSTD_loadZstdDictionary(
     let dictEnd = dictPtr.offset(dictSize as isize);
     let mut dictID: libc::size_t = 0;
     let mut eSize: libc::size_t = 0;
-    debug_assert!(dictSize >= 8 as libc::c_int as libc::c_ulong);
+    debug_assert!(dictSize >= 8);
     debug_assert!(MEM_readLE32(dictPtr as *const libc::c_void) == 0xec30a437 as libc::c_uint);
     dictID = (if (*params).fParams.noDictIDFlag != 0 {
         0 as libc::c_int as libc::c_uint
     } else {
-        MEM_readLE32(dictPtr.offset(4 as libc::c_int as isize) as *const libc::c_void)
+        MEM_readLE32(dictPtr.offset(4) as *const libc::c_void)
     }) as libc::size_t;
     eSize = ZSTD_loadCEntropy(bs, workspace, dict, dictSize);
     let err_code = eSize;
@@ -10299,7 +10299,7 @@ unsafe extern "C" fn ZSTD_compress_insertDictionary(
     mut tfp: ZSTD_tableFillPurpose_e,
     mut workspace: *mut libc::c_void,
 ) -> libc::size_t {
-    if dict.is_null() || dictSize < 8 as libc::c_int as libc::c_ulong {
+    if dict.is_null() || dictSize < 8 {
         if dictContentType as libc::c_uint
             == ZSTD_dct_fullDict as libc::c_int as libc::c_uint
         {
@@ -10348,7 +10348,7 @@ unsafe extern "C" fn ZSTD_compress_insertDictionary(
     );
 }
 pub const ZSTD_USE_CDICT_PARAMS_SRCSIZE_CUTOFF: libc::c_int = 128 as libc::c_int
-    * ((1 as libc::c_int) << 10 as libc::c_int);
+    * ((1) << 10 as libc::c_int);
 pub const ZSTD_USE_CDICT_PARAMS_DICTSIZE_MULTIPLIER: libc::c_ulonglong = 6
     as libc::c_ulonglong;
 unsafe extern "C" fn ZSTD_compressBegin_internal(
@@ -10380,13 +10380,13 @@ unsafe extern "C" fn ZSTD_compressBegin_internal(
     };
     debug_assert!(ERR_isError(ZSTD_checkCParams((*params).cParams)) == 0);
     debug_assert!(!(!dict.is_null() && !cdict.is_null()));
-    if !cdict.is_null() && (*cdict).dictContentSize > 0 as libc::c_int as libc::c_ulong
+    if !cdict.is_null() && (*cdict).dictContentSize > 0
         && (pledgedSrcSize < ZSTD_USE_CDICT_PARAMS_SRCSIZE_CUTOFF as libc::c_ulong
             || (pledgedSrcSize as libc::c_ulonglong)
                 < ((*cdict).dictContentSize as libc::c_ulonglong)
                     .wrapping_mul(ZSTD_USE_CDICT_PARAMS_DICTSIZE_MULTIPLIER)
             || pledgedSrcSize as libc::c_ulonglong == ZSTD_CONTENTSIZE_UNKNOWN
-            || (*cdict).compressionLevel == 0 as libc::c_int)
+            || (*cdict).compressionLevel == 0)
         && (*params).attachDictPref as libc::c_uint
             != ZSTD_dictForceLoad as libc::c_int as libc::c_uint
     {
@@ -10437,7 +10437,7 @@ unsafe extern "C" fn ZSTD_compressBegin_internal(
         return err_code_0;
     }
     debug_assert!(dictID
-        <= (2147483647 as libc::c_int as libc::c_uint)
+        <= (2147483647)
             .wrapping_mul(2)
             .wrapping_add(1) as libc::c_ulong);
     (*cctx).dictID = dictID as u32;
@@ -10612,7 +10612,7 @@ unsafe extern "C" fn ZSTD_compressBegin_usingDict_deprecated(
     ZSTD_CCtxParams_init_internal(
         &mut cctxParams,
         &params,
-        if compressionLevel == 0 as libc::c_int {
+        if compressionLevel == 0 {
             ZSTD_CLEVEL_DEFAULT
         } else {
             compressionLevel
@@ -10685,10 +10685,10 @@ unsafe extern "C" fn ZSTD_writeEpilogue(
         (*cctx).stage = ZSTDcs_ongoing;
     }
     if (*cctx).stage as libc::c_uint != ZSTDcs_ending as libc::c_int as libc::c_uint {
-        let cBlockHeader24 = (1 as libc::c_int as libc::c_uint)
+        let cBlockHeader24 = (1)
             .wrapping_add((bt_raw as libc::c_int as u32) << 1 as libc::c_int)
             .wrapping_add(0);
-        if dstCapacity < 4 as libc::c_int as libc::c_ulong {
+        if dstCapacity < 4 {
             return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         MEM_writeLE32(op as *mut libc::c_void, cBlockHeader24);
@@ -10698,11 +10698,11 @@ unsafe extern "C" fn ZSTD_writeEpilogue(
     }
     if (*cctx).appliedParams.fParams.checksumFlag != 0 {
         let checksum = ZSTD_XXH64_digest(&mut (*cctx).xxhState) as u32;
-        if dstCapacity < 4 as libc::c_int as libc::c_ulong {
+        if dstCapacity < 4 {
             return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         MEM_writeLE32(op as *mut libc::c_void, checksum);
-        op = op.offset(4 as libc::c_int as isize);
+        op = op.offset(4);
     }
     (*cctx).stage = ZSTDcs_created;
     return op.offset_from(ostart) as libc::c_long as libc::size_t;
@@ -10719,9 +10719,9 @@ pub unsafe extern "C" fn ZSTD_CCtx_trace(
         ))
             .is_some()
     {
-        let streaming = ((*cctx).inBuffSize > 0 as libc::c_int as libc::c_ulong
-            || (*cctx).outBuffSize > 0 as libc::c_int as libc::c_ulong
-            || (*cctx).appliedParams.nbWorkers > 0 as libc::c_int) as libc::c_int;
+        let streaming = ((*cctx).inBuffSize > 0
+            || (*cctx).outBuffSize > 0
+            || (*cctx).appliedParams.nbWorkers > 0) as libc::c_int;
         let mut trace = ZSTD_Trace {
             version: 0,
             streaming: 0,
@@ -10737,7 +10737,7 @@ pub unsafe extern "C" fn ZSTD_CCtx_trace(
         libc::memset(
             &mut trace as *mut ZSTD_Trace as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<ZSTD_Trace>() as libc::c_ulong as libc::size_t,
+            ::core::mem::size_of::<ZSTD_Trace>() as libc::size_t,
         );
         trace.version = ZSTD_VERSION_NUMBER as libc::c_uint;
         trace.streaming = streaming as libc::c_uint;
@@ -10785,7 +10785,7 @@ pub unsafe extern "C" fn ZSTD_compressEnd_public(
         return err_code_0;
     }
     debug_assert!(!((*cctx).appliedParams.fParams.contentSizeFlag != 0
-        && (*cctx).pledgedSrcSizePlusOne == 0 as libc::c_int as libc::c_ulonglong));
+        && (*cctx).pledgedSrcSizePlusOne == 0));
     if (*cctx).pledgedSrcSizePlusOne != 0 as libc::c_int as libc::c_ulonglong {
         if (*cctx).pledgedSrcSizePlusOne
             != ((*cctx).consumedSrcSize)
@@ -10882,11 +10882,11 @@ pub unsafe extern "C" fn ZSTD_compress_usingDict(
         if !dict.is_null() { dictSize } else { 0 as libc::c_int as libc::c_ulong },
         ZSTD_cpm_noAttachDict,
     );
-    debug_assert!(params.fParams.contentSizeFlag == 1 as libc::c_int);
+    debug_assert!(params.fParams.contentSizeFlag == 1);
     ZSTD_CCtxParams_init_internal(
         &mut (*cctx).simpleApiParams,
         &params,
-        if compressionLevel == 0 as libc::c_int {
+        if compressionLevel == 0 {
             ZSTD_CLEVEL_DEFAULT
         } else {
             compressionLevel
@@ -11382,7 +11382,7 @@ pub unsafe extern "C" fn ZSTD_estimateCDictSize_advanced(
     mut cParams: ZSTD_compressionParameters,
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
 ) -> libc::size_t {
-    return (ZSTD_cwksp_alloc_size(::core::mem::size_of::<ZSTD_CDict>() as libc::c_ulong))
+    return (ZSTD_cwksp_alloc_size(::core::mem::size_of::<ZSTD_CDict>()))
         .wrapping_add(ZSTD_cwksp_alloc_size(HUF_WORKSPACE_SIZE as libc::size_t))
         .wrapping_add(
             ZSTD_sizeof_matchState(
@@ -11401,7 +11401,7 @@ pub unsafe extern "C" fn ZSTD_estimateCDictSize_advanced(
                 ZSTD_cwksp_alloc_size(
                     ZSTD_cwksp_align(
                         dictSize,
-                        ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong,
+                        ::core::mem::size_of::<*mut libc::c_void>(),
                     ),
                 )
             }),
@@ -11428,7 +11428,7 @@ pub unsafe extern "C" fn ZSTD_sizeof_CDict(mut cdict: *const ZSTD_CDict) -> libc
     return (if (*cdict).workspace.workspace == cdict as *mut libc::c_void {
         0 as libc::c_int as libc::c_ulong
     } else {
-        ::core::mem::size_of::<ZSTD_CDict>() as libc::c_ulong
+        ::core::mem::size_of::<ZSTD_CDict>()
     })
         .wrapping_add(ZSTD_cwksp_sizeof(&(*cdict).workspace));
 }
@@ -11452,7 +11452,7 @@ unsafe extern "C" fn ZSTD_initCDict_internal(
             &mut (*cdict).workspace,
             ZSTD_cwksp_align(
                 dictSize,
-                ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong,
+                ::core::mem::size_of::<*mut libc::c_void>(),
             ),
         );
         if internalBuffer.is_null() {
@@ -11500,7 +11500,7 @@ unsafe extern "C" fn ZSTD_initCDict_internal(
     if ERR_isError(err_code_0) != 0 {
         return err_code_0;
     }
-    debug_assert!(dictID <= -(1 as libc::c_int) as u32 as libc::size_t);
+    debug_assert!(dictID <= -(1) as u32 as libc::size_t);
     (*cdict).dictID = dictID as u32;
     return 0 as libc::c_int as libc::size_t;
 }
@@ -11518,7 +11518,7 @@ unsafe extern "C" fn ZSTD_createCDict_advanced_internal(
         return NULL as *mut ZSTD_CDict;
     }
     let workspaceSize = (ZSTD_cwksp_alloc_size(
-        ::core::mem::size_of::<ZSTD_CDict>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_CDict>(),
     ))
         .wrapping_add(ZSTD_cwksp_alloc_size(HUF_WORKSPACE_SIZE as libc::size_t))
         .wrapping_add(
@@ -11538,7 +11538,7 @@ unsafe extern "C" fn ZSTD_createCDict_advanced_internal(
                 ZSTD_cwksp_alloc_size(
                     ZSTD_cwksp_align(
                         dictSize,
-                        ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong,
+                        ::core::mem::size_of::<*mut libc::c_void>(),
                     ),
                 )
             }),
@@ -11565,7 +11565,7 @@ unsafe extern "C" fn ZSTD_createCDict_advanced_internal(
     ZSTD_cwksp_init(&mut ws, workspace, workspaceSize, ZSTD_cwksp_dynamic_alloc);
     cdict = ZSTD_cwksp_reserve_object(
         &mut ws,
-        ::core::mem::size_of::<ZSTD_CDict>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_CDict>(),
     ) as *mut ZSTD_CDict;
     debug_assert!(!cdict.is_null());
     ZSTD_cwksp_move(&mut (*cdict).workspace, &mut ws);
@@ -11639,7 +11639,7 @@ pub unsafe extern "C" fn ZSTD_createCDict_advanced(
     libc::memset(
         &mut cctxParams as *mut ZSTD_CCtx_params as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_CCtx_params>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_CCtx_params>() as libc::size_t,
     );
     ZSTD_CCtxParams_init(&mut cctxParams, 0 as libc::c_int);
     cctxParams.cParams = cParams;
@@ -11753,7 +11753,7 @@ pub unsafe extern "C" fn ZSTD_createCDict(
     );
     if !cdict.is_null() {
         (*cdict)
-            .compressionLevel = if compressionLevel == 0 as libc::c_int {
+            .compressionLevel = if compressionLevel == 0 {
             ZSTD_CLEVEL_DEFAULT
         } else {
             compressionLevel
@@ -11783,7 +11783,7 @@ pub unsafe extern "C" fn ZSTD_createCDict_byReference(
     );
     if !cdict.is_null() {
         (*cdict)
-            .compressionLevel = if compressionLevel == 0 as libc::c_int {
+            .compressionLevel = if compressionLevel == 0 {
             ZSTD_CLEVEL_DEFAULT
         } else {
             compressionLevel
@@ -11825,7 +11825,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCDict(
         0 as libc::c_int as u32,
     );
     let neededSize = (ZSTD_cwksp_alloc_size(
-        ::core::mem::size_of::<ZSTD_CDict>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_CDict>(),
     ))
         .wrapping_add(
             (if dictLoadMethod as libc::c_uint
@@ -11836,7 +11836,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCDict(
                 ZSTD_cwksp_alloc_size(
                     ZSTD_cwksp_align(
                         dictSize,
-                        ::core::mem::size_of::<*mut libc::c_void>() as libc::c_ulong,
+                        ::core::mem::size_of::<*mut libc::c_void>(),
                     ),
                 )
             }),
@@ -11897,7 +11897,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCDict(
         maxBlockSize: 0,
         searchForExternalRepcodes: ZSTD_ps_auto,
     };
-    if workspace as libc::size_t & 7 as libc::c_int as libc::c_ulong != 0 {
+    if workspace as libc::size_t & 7 != 0 {
         return NULL as *const ZSTD_CDict;
     }
     let mut ws = ZSTD_cwksp {
@@ -11916,7 +11916,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCDict(
     ZSTD_cwksp_init(&mut ws, workspace, workspaceSize, ZSTD_cwksp_static_alloc);
     cdict = ZSTD_cwksp_reserve_object(
         &mut ws,
-        ::core::mem::size_of::<ZSTD_CDict>() as libc::c_ulong,
+        ::core::mem::size_of::<ZSTD_CDict>(),
     ) as *mut ZSTD_CDict;
     if cdict.is_null() {
         return NULL as *const ZSTD_CDict;
@@ -12047,7 +12047,7 @@ unsafe extern "C" fn ZSTD_compressBegin_usingCDict_internal(
             < ((*cdict).dictContentSize as libc::c_ulonglong)
                 .wrapping_mul(ZSTD_USE_CDICT_PARAMS_DICTSIZE_MULTIPLIER)
         || pledgedSrcSize == ZSTD_CONTENTSIZE_UNKNOWN
-        || (*cdict).compressionLevel == 0 as libc::c_int
+        || (*cdict).compressionLevel == 0
     {
         ZSTD_getCParamsFromCDict(cdict)
     } else {
@@ -12064,13 +12064,13 @@ unsafe extern "C" fn ZSTD_compressBegin_usingCDict_internal(
     );
     if pledgedSrcSize != ZSTD_CONTENTSIZE_UNKNOWN {
         let limitedSrcSize = (if pledgedSrcSize
-            < ((1 as libc::c_uint) << 19 as libc::c_int) as libc::c_ulonglong
+            < ((1) << 19 as libc::c_int) as libc::c_ulonglong
         {
             pledgedSrcSize
         } else {
-            ((1 as libc::c_uint) << 19 as libc::c_int) as libc::c_ulonglong
+            ((1) << 19 as libc::c_int) as libc::c_ulonglong
         }) as u32;
-        let limitedSrcLog = if limitedSrcSize > 1 as libc::c_int as libc::c_uint {
+        let limitedSrcLog = if limitedSrcSize > 1 {
             (ZSTD_highbit32(
                 limitedSrcSize.wrapping_sub(1),
             ))
@@ -12248,7 +12248,7 @@ pub unsafe extern "C" fn ZSTD_resetCStream(
     mut zcs: *mut ZSTD_CStream,
     mut pss: libc::c_ulonglong,
 ) -> libc::size_t {
-    let pledgedSrcSize = (if pss == 0 as libc::c_int as libc::c_ulonglong {
+    let pledgedSrcSize = (if pss == 0 {
         ZSTD_CONTENTSIZE_UNKNOWN
     } else {
         pss
@@ -12344,8 +12344,8 @@ pub unsafe extern "C" fn ZSTD_initCStream_advanced(
     mut params: ZSTD_parameters,
     mut pss: libc::c_ulonglong,
 ) -> libc::size_t {
-    let pledgedSrcSize = (if pss == 0 as libc::c_int as libc::c_ulonglong
-        && params.fParams.contentSizeFlag == 0 as libc::c_int
+    let pledgedSrcSize = (if pss == 0
+        && params.fParams.contentSizeFlag == 0
     {
         ZSTD_CONTENTSIZE_UNKNOWN
     } else {
@@ -12404,7 +12404,7 @@ pub unsafe extern "C" fn ZSTD_initCStream_srcSize(
     mut compressionLevel: libc::c_int,
     mut pss: libc::c_ulonglong,
 ) -> libc::size_t {
-    let pledgedSrcSize = (if pss == 0 as libc::c_int as libc::c_ulonglong {
+    let pledgedSrcSize = (if pss == 0 {
         ZSTD_CONTENTSIZE_UNKNOWN
     } else {
         pss
@@ -12466,7 +12466,7 @@ unsafe extern "C" fn ZSTD_nextInputSizeHint(mut cctx: *const ZSTD_CCtx) -> libc:
     debug_assert!((*cctx).appliedParams.inBufferMode as libc::c_uint
         == ZSTD_bm_buffered as libc::c_int as libc::c_uint);
     let mut hintInSize = ((*cctx).inBuffTarget).wrapping_sub((*cctx).inBuffPos);
-    if hintInSize == 0 as libc::c_int as libc::c_ulong {
+    if hintInSize == 0 {
         hintInSize = (*cctx).blockSize;
     }
     return hintInSize;
@@ -12517,20 +12517,20 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
         == ZSTD_bm_buffered as libc::c_int as libc::c_uint
     {
         debug_assert!(!((*zcs).inBuff).is_null());
-        debug_assert!((*zcs).inBuffSize > 0 as libc::c_int as libc::c_ulong);
+        debug_assert!((*zcs).inBuffSize > 0);
     }
     if (*zcs).appliedParams.outBufferMode as libc::c_uint
         == ZSTD_bm_buffered as libc::c_int as libc::c_uint
     {
         debug_assert!(!((*zcs).outBuff).is_null());
-        debug_assert!((*zcs).outBuffSize > 0 as libc::c_int as libc::c_ulong);
+        debug_assert!((*zcs).outBuffSize > 0);
     }
     if ((*input).src).is_null() {
-        debug_assert!((*input).size == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!((*input).size == 0);
     }
     debug_assert!((*input).pos <= (*input).size);
     if ((*output).dst).is_null() {
-        debug_assert!((*output).size == 0 as libc::c_int as libc::c_ulong);
+        debug_assert!((*output).size == 0);
     }
     debug_assert!((*output).pos <= (*output).size);
     debug_assert!(flushMode as u32 <= ZSTD_e_end as libc::c_int as u32);
@@ -12546,7 +12546,7 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
                         )
                         || (*zcs).appliedParams.outBufferMode as libc::c_uint
                             == ZSTD_bm_stable as libc::c_int as libc::c_uint)
-                    && (*zcs).inBuffPos == 0 as libc::c_int as libc::c_ulong
+                    && (*zcs).inBuffPos == 0
                 {
                     let cSize = ZSTD_compressEnd_public(
                         zcs,
@@ -12795,7 +12795,7 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
 unsafe extern "C" fn ZSTD_nextInputSizeHint_MTorST(
     mut cctx: *const ZSTD_CCtx,
 ) -> libc::size_t {
-    if (*cctx).appliedParams.nbWorkers >= 1 as libc::c_int {
+    if (*cctx).appliedParams.nbWorkers >= 1 {
         debug_assert!(!((*cctx).mtctx).is_null());
         return ZSTDMT_nextInputSizeHint((*cctx).mtctx);
     }
@@ -12869,7 +12869,7 @@ unsafe extern "C" fn ZSTD_CCtx_init_compressStream2(
     libc::memset(
         &mut (*cctx).prefixDict as *mut ZSTD_prefixDict as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_prefixDict>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_prefixDict>() as libc::size_t,
     );
     debug_assert!((prefixDict.dict).is_null() || ((*cctx).cdict).is_null());
     if !((*cctx).cdict).is_null() && ((*cctx).localDict.cdict).is_null() {
@@ -12927,8 +12927,8 @@ unsafe extern "C" fn ZSTD_CCtx_init_compressStream2(
         params.searchForExternalRepcodes,
         params.compressionLevel,
     );
-    if params.useSequenceProducer == 1 as libc::c_int
-        && params.nbWorkers >= 1 as libc::c_int
+    if params.useSequenceProducer == 1
+        && params.nbWorkers >= 1
     {
         return -(ZSTD_error_parameter_combination_unsupported as libc::c_int) as libc::size_t;
     }
@@ -12938,7 +12938,7 @@ unsafe extern "C" fn ZSTD_CCtx_init_compressStream2(
     {
         params.nbWorkers = 0 as libc::c_int;
     }
-    if params.nbWorkers > 0 as libc::c_int {
+    if params.nbWorkers > 0 {
         (*cctx)
             .traceCtx = if (Some(
             ZSTD_trace_compress_begin
@@ -13008,7 +13008,7 @@ unsafe extern "C" fn ZSTD_CCtx_init_compressStream2(
         if ERR_isError(err_code_1) != 0 {
             return err_code_1;
         }
-        debug_assert!((*cctx).appliedParams.nbWorkers == 0 as libc::c_int);
+        debug_assert!((*cctx).appliedParams.nbWorkers == 0);
         (*cctx).inToCompress = 0 as libc::c_int as libc::size_t;
         (*cctx).inBuffPos = 0 as libc::c_int as libc::size_t;
         if (*cctx).appliedParams.inBufferMode as libc::c_uint
@@ -13087,7 +13087,7 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
     if ERR_isError(err_code_0) != 0 {
         return err_code_0;
     }
-    if (*cctx).appliedParams.nbWorkers > 0 as libc::c_int {
+    if (*cctx).appliedParams.nbWorkers > 0 {
         let mut flushMin: libc::size_t = 0;
         if (*cctx).cParamsChanged != 0 {
             ZSTDMT_updateCParams_whileCompressing(
@@ -13122,9 +13122,9 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
                 .wrapping_add(((*output).pos).wrapping_sub(opos) as libc::c_ulonglong);
             if ERR_isError(flushMin) != 0
                 || endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint
-                    && flushMin == 0 as libc::c_int as libc::c_ulong
+                    && flushMin == 0
             {
-                if flushMin == 0 as libc::c_int as libc::c_ulong {
+                if flushMin == 0 {
                     ZSTD_CCtx_trace(cctx, 0 as libc::c_int as libc::size_t);
                 }
                 ZSTD_CCtx_reset(cctx, ZSTD_reset_session_only);
@@ -13142,7 +13142,7 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
             } else {
                 debug_assert!(endOp as libc::c_uint == ZSTD_e_flush as libc::c_int as libc::c_uint
                     || endOp as libc::c_uint == ZSTD_e_end as libc::c_int as libc::c_uint);
-                if flushMin == 0 as libc::c_int as libc::c_ulong
+                if flushMin == 0
                     || (*output).pos == (*output).size
                 {
                     break;
@@ -13150,7 +13150,7 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
             }
         }
         debug_assert!(endOp as libc::c_uint == ZSTD_e_continue as libc::c_int as libc::c_uint
-            || flushMin == 0 as libc::c_int as libc::c_ulong
+            || flushMin == 0
             || (*output).pos == (*output).size);
         ZSTD_setBufferExpectations(cctx, output, input);
         return flushMin;
@@ -13241,20 +13241,20 @@ unsafe extern "C" fn ZSTD_validateSequence(
     mut dictSize: libc::size_t,
     mut useSequenceProducer: libc::c_int,
 ) -> libc::size_t {
-    let windowSize = (1 as libc::c_uint) << windowLog;
+    let windowSize = (1) << windowLog;
     let offsetBound = if posInSrc > windowSize as libc::c_ulong {
         windowSize as libc::size_t
     } else {
         posInSrc.wrapping_add(dictSize)
     };
-    let matchLenLowerBound = (if minMatch == 3 as libc::c_int as libc::c_uint
+    let matchLenLowerBound = (if minMatch == 3
         || useSequenceProducer != 0
     {
         3 as libc::c_int
     } else {
         4 as libc::c_int
     }) as libc::size_t;
-    debug_assert!(offsetBound > 0 as libc::c_int as libc::c_ulong);
+    debug_assert!(offsetBound > 0);
     if offCode as libc::c_ulong
         > offsetBound.wrapping_add(3)
     {
@@ -13270,31 +13270,31 @@ unsafe extern "C" fn ZSTD_finalizeOffBase(
     mut rep: *const u32,
     mut ll0: u32,
 ) -> u32 {
-    debug_assert!(rawOffset > 0 as libc::c_int as libc::c_uint);
+    debug_assert!(rawOffset > 0);
     let mut offBase = rawOffset.wrapping_add(ZSTD_REP_NUM as libc::c_uint);
-    if ll0 == 0 && rawOffset == *rep.offset(0 as libc::c_int as isize) {
-        debug_assert!(1 as libc::c_int >= 1 as libc::c_int);
-        debug_assert!(1 as libc::c_int <= 3 as libc::c_int);
+    if ll0 == 0 && rawOffset == *rep.offset(0) {
+        debug_assert!(1 as libc::c_int >= 1);
+        debug_assert!(1 as libc::c_int <= 3);
         offBase = 1 as libc::c_int as u32;
-    } else if rawOffset == *rep.offset(1 as libc::c_int as isize) {
-        debug_assert!((2 as libc::c_int as libc::c_uint).wrapping_sub(ll0)
-            >= 1 as libc::c_int as libc::c_uint);
-        debug_assert!((2 as libc::c_int as libc::c_uint).wrapping_sub(ll0)
-            <= 3 as libc::c_int as libc::c_uint);
-        offBase = (2 as libc::c_int as libc::c_uint).wrapping_sub(ll0);
-    } else if rawOffset == *rep.offset(2 as libc::c_int as isize) {
-        debug_assert!((3 as libc::c_int as libc::c_uint).wrapping_sub(ll0)
-            >= 1 as libc::c_int as libc::c_uint);
-        debug_assert!((3 as libc::c_int as libc::c_uint).wrapping_sub(ll0)
-            <= 3 as libc::c_int as libc::c_uint);
-        offBase = (3 as libc::c_int as libc::c_uint).wrapping_sub(ll0);
+    } else if rawOffset == *rep.offset(1) {
+        debug_assert!((2).wrapping_sub(ll0)
+            >= 1);
+        debug_assert!((2).wrapping_sub(ll0)
+            <= 3);
+        offBase = (2).wrapping_sub(ll0);
+    } else if rawOffset == *rep.offset(2) {
+        debug_assert!((3).wrapping_sub(ll0)
+            >= 1);
+        debug_assert!((3).wrapping_sub(ll0)
+            <= 3);
+        offBase = (3).wrapping_sub(ll0);
     } else if ll0 != 0
         && rawOffset
-            == (*rep.offset(0 as libc::c_int as isize))
+            == (*rep.offset(0))
                 .wrapping_sub(1)
     {
-        debug_assert!(3 as libc::c_int >= 1 as libc::c_int);
-        debug_assert!(3 as libc::c_int <= 3 as libc::c_int);
+        debug_assert!(3 as libc::c_int >= 1);
+        debug_assert!(3 as libc::c_int <= 3);
         offBase = 3 as libc::c_int as u32;
     }
     return offBase;
@@ -13325,7 +13325,7 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreExplicitBlockDelim(
     libc::memcpy(
         (updatedRepcodes.rep).as_mut_ptr() as *mut libc::c_void,
         ((*(*cctx).blockState.prevCBlock).rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     while (idx as libc::c_ulong) < inSeqsSize
         && ((*inSeqs.offset(idx as isize)).matchLength
@@ -13338,11 +13338,11 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreExplicitBlockDelim(
         if externalRepSearch as libc::c_uint
             == ZSTD_ps_disable as libc::c_int as libc::c_uint
         {
-            debug_assert!((*inSeqs.offset(idx as isize)).offset > 0 as libc::c_int as libc::c_uint);
+            debug_assert!((*inSeqs.offset(idx as isize)).offset > 0);
             offBase = ((*inSeqs.offset(idx as isize)).offset)
                 .wrapping_add(ZSTD_REP_NUM as libc::c_uint);
         } else {
-            let ll0 = (litLength == 0 as libc::c_int as libc::c_uint) as libc::c_int
+            let ll0 = (litLength == 0) as libc::c_int
                 as u32;
             offBase = ZSTD_finalizeOffBase(
                 (*inSeqs.offset(idx as isize)).offset,
@@ -13416,7 +13416,7 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreExplicitBlockDelim(
             *rep
                 .offset(
                     2 as libc::c_int as isize,
-                ) = *rep.offset(0 as libc::c_int as isize);
+                ) = *rep.offset(0);
             *rep
                 .offset(
                     1 as libc::c_int as isize,
@@ -13434,11 +13434,11 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreExplicitBlockDelim(
             *rep
                 .offset(
                     2 as libc::c_int as isize,
-                ) = *rep.offset(1 as libc::c_int as isize);
+                ) = *rep.offset(1);
             *rep
                 .offset(
                     1 as libc::c_int as isize,
-                ) = *rep.offset(0 as libc::c_int as isize);
+                ) = *rep.offset(0);
             *rep
                 .offset(
                     0 as libc::c_int as isize,
@@ -13448,7 +13448,7 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreExplicitBlockDelim(
     libc::memcpy(
         ((*(*cctx).blockState.nextCBlock).rep).as_mut_ptr() as *mut libc::c_void,
         (updatedRepcodes.rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     if (*inSeqs.offset(idx as isize)).litLength != 0 {
         ZSTD_storeLastLiterals(
@@ -13497,7 +13497,7 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreNoBlockDelim(
     libc::memcpy(
         (updatedRepcodes.rep).as_mut_ptr() as *mut libc::c_void,
         ((*(*cctx).blockState.prevCBlock).rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     while endPosInSequence != 0 && (idx as libc::c_ulong) < inSeqsSize
         && finalMatchSplit == 0
@@ -13560,7 +13560,7 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreNoBlockDelim(
                 break;
             }
         }
-        let ll0 = (litLength == 0 as libc::c_int as libc::c_uint) as libc::c_int as u32;
+        let ll0 = (litLength == 0) as libc::c_int as u32;
         offBase = ZSTD_finalizeOffBase(
             rawOffset,
             (updatedRepcodes.rep).as_mut_ptr() as *const u32,
@@ -13611,7 +13611,7 @@ pub unsafe extern "C" fn ZSTD_copySequencesToSeqStoreNoBlockDelim(
     libc::memcpy(
         ((*(*cctx).blockState.nextCBlock).rep).as_mut_ptr() as *mut libc::c_void,
         (updatedRepcodes.rep).as_mut_ptr() as *const libc::c_void,
-        ::core::mem::size_of::<repcodes_t>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<repcodes_t>() as libc::size_t,
     );
     iend = iend.offset(-(bytesAdjustment as isize));
     if ip != iend {
@@ -13679,7 +13679,7 @@ unsafe extern "C" fn blockSize_explicitDelimiter(
     debug_assert!(spos <= inSeqsSize);
     while spos < inSeqsSize {
         end = ((*inSeqs.offset(spos as isize)).offset
-            == 0 as libc::c_int as libc::c_uint) as libc::c_int;
+            == 0) as libc::c_int;
         blockSize = (blockSize as libc::c_ulong)
             .wrapping_add(
                 ((*inSeqs.offset(spos as isize)).litLength)
@@ -13757,10 +13757,10 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
     let sequenceCopier = ZSTD_selectSequenceCopier(
         (*cctx).appliedParams.blockDelimiters,
     );
-    if remaining == 0 as libc::c_int as libc::c_ulong {
-        let cBlockHeader24 = (1 as libc::c_int as libc::c_uint)
+    if remaining == 0 {
+        let cBlockHeader24 = (1)
             .wrapping_add((bt_raw as libc::c_int as u32) << 1 as libc::c_int);
-        if dstCapacity < 4 as libc::c_int as libc::c_ulong {
+        if dstCapacity < 4 {
             return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         MEM_writeLE32(op as *mut libc::c_void, cBlockHeader24);
@@ -13847,13 +13847,13 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
                 (*cctx).entropyWorkspace as *mut libc::c_void,
                 (HUF_WORKSPACE_SIZE as libc::c_ulong)
                     .wrapping_add(
-                        (::core::mem::size_of::<libc::c_uint>() as libc::c_ulong)
+                        (::core::mem::size_of::<libc::c_uint>())
                             .wrapping_mul(
-                                ((if 35 as libc::c_int > 52 as libc::c_int {
+                                ((if 35 as libc::c_int > 52 {
                                     35 as libc::c_int
                                 } else {
                                     52 as libc::c_int
-                                }) + 2 as libc::c_int) as libc::c_ulong,
+                                }) + 2) as libc::c_ulong,
                             ),
                     ),
                 (*cctx).bmi2,
@@ -13867,7 +13867,7 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
             {
                 compressedSeqsSize = 1 as libc::c_int as libc::size_t;
             }
-            if compressedSeqsSize == 0 as libc::c_int as libc::c_ulong {
+            if compressedSeqsSize == 0 {
                 cBlockSize = ZSTD_noCompressBlock(
                     op as *mut libc::c_void,
                     dstCapacity,
@@ -13879,7 +13879,7 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
                 if ERR_isError(err_code_3) != 0 {
                     return err_code_3;
                 }
-            } else if compressedSeqsSize == 1 as libc::c_int as libc::c_ulong {
+            } else if compressedSeqsSize == 1 {
                 cBlockSize = ZSTD_rleCompressBlock(
                     op as *mut libc::c_void,
                     dstCapacity,
@@ -13978,7 +13978,7 @@ pub unsafe extern "C" fn ZSTD_compressSequences(
         ;
     if (*cctx).appliedParams.fParams.checksumFlag != 0 {
         let checksum = ZSTD_XXH64_digest(&mut (*cctx).xxhState) as u32;
-        if dstCapacity < 4 as libc::c_int as libc::c_ulong {
+        if dstCapacity < 4 {
             return -(ZSTD_error_dstSize_tooSmall as libc::c_int) as libc::size_t;
         }
         MEM_writeLE32(
@@ -14025,7 +14025,7 @@ pub unsafe extern "C" fn ZSTD_endStream(
     if ERR_isError(err_code) != 0 {
         return err_code;
     }
-    if (*zcs).appliedParams.nbWorkers > 0 as libc::c_int {
+    if (*zcs).appliedParams.nbWorkers > 0 {
         return remainingToFlush;
     }
     let lastBlockSize = (if (*zcs).frameEnded != 0 {
@@ -14036,7 +14036,7 @@ pub unsafe extern "C" fn ZSTD_endStream(
     let checksumSize = (if (*zcs).frameEnded != 0 {
         0 as libc::c_int
     } else {
-        (*zcs).appliedParams.fParams.checksumFlag * 4 as libc::c_int
+        (*zcs).appliedParams.fParams.checksumFlag * 4
     }) as libc::size_t;
     let toFlush = remainingToFlush
         .wrapping_add(lastBlockSize)
@@ -15198,7 +15198,7 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_isSupported(
         && (*cParams).strategy as libc::c_uint
             <= ZSTD_lazy2 as libc::c_int as libc::c_uint
         && (*cParams).hashLog > (*cParams).chainLog
-        && (*cParams).chainLog <= 24 as libc::c_int as libc::c_uint) as libc::c_int;
+        && (*cParams).chainLog <= 24) as libc::c_int;
 }
 unsafe extern "C" fn ZSTD_dedicatedDictSearch_revertCParams(
     mut cParams: *mut ZSTD_compressionParameters,
@@ -15231,12 +15231,12 @@ unsafe extern "C" fn ZSTD_getCParamRowSize(
     }
     let unknown = (srcSizeHint as libc::c_ulonglong == ZSTD_CONTENTSIZE_UNKNOWN)
         as libc::c_int;
-    let addedSize = (if unknown != 0 && dictSize > 0 as libc::c_int as libc::c_ulong {
+    let addedSize = (if unknown != 0 && dictSize > 0 {
         500 as libc::c_int
     } else {
         0 as libc::c_int
     }) as libc::size_t;
-    return (if unknown != 0 && dictSize == 0 as libc::c_int as libc::c_ulong {
+    return (if unknown != 0 && dictSize == 0 {
         ZSTD_CONTENTSIZE_UNKNOWN
     } else {
         srcSizeHint.wrapping_add(dictSize).wrapping_add(addedSize) as libc::c_ulonglong
@@ -15250,18 +15250,18 @@ unsafe extern "C" fn ZSTD_getCParams_internal(
 ) -> ZSTD_compressionParameters {
     let rSize = ZSTD_getCParamRowSize(srcSizeHint as u64, dictSize, mode);
     let tableID = ((rSize
-        <= (256 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        <= (256 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulong) as libc::c_int
         + (rSize
-            <= (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+            <= (128 as libc::c_int * ((1) << 10 as libc::c_int))
                 as libc::c_ulong) as libc::c_int
         + (rSize
-            <= (16 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+            <= (16 as libc::c_int * ((1) << 10 as libc::c_int))
                 as libc::c_ulong) as libc::c_int) as u32;
     let mut row: libc::c_int = 0;
-    if compressionLevel == 0 as libc::c_int {
+    if compressionLevel == 0 {
         row = ZSTD_CLEVEL_DEFAULT;
-    } else if compressionLevel < 0 as libc::c_int {
+    } else if compressionLevel < 0 {
         row = 0 as libc::c_int;
     } else if compressionLevel > ZSTD_MAX_CLEVEL {
         row = ZSTD_MAX_CLEVEL;
@@ -15269,7 +15269,7 @@ unsafe extern "C" fn ZSTD_getCParams_internal(
         row = compressionLevel;
     }
     let mut cp = ZSTD_defaultCParameters[tableID as usize][row as usize];
-    if compressionLevel < 0 as libc::c_int {
+    if compressionLevel < 0 {
         let clampedCompressionLevel = if ZSTD_minCLevel() > compressionLevel {
             ZSTD_minCLevel()
         } else {
@@ -15285,7 +15285,7 @@ pub unsafe extern "C" fn ZSTD_getCParams(
     mut srcSizeHint: libc::c_ulonglong,
     mut dictSize: libc::size_t,
 ) -> ZSTD_compressionParameters {
-    if srcSizeHint == 0 as libc::c_int as libc::c_ulonglong {
+    if srcSizeHint == 0 {
         srcSizeHint = ZSTD_CONTENTSIZE_UNKNOWN;
     }
     return ZSTD_getCParams_internal(
@@ -15326,7 +15326,7 @@ unsafe extern "C" fn ZSTD_getParams_internal(
     libc::memset(
         &mut params as *mut ZSTD_parameters as *mut libc::c_void,
         0 as libc::c_int,
-        ::core::mem::size_of::<ZSTD_parameters>() as libc::c_ulong as libc::size_t,
+        ::core::mem::size_of::<ZSTD_parameters>() as libc::size_t,
     );
     params.cParams = cParams;
     params.fParams.contentSizeFlag = 1 as libc::c_int;
@@ -15338,7 +15338,7 @@ pub unsafe extern "C" fn ZSTD_getParams(
     mut srcSizeHint: libc::c_ulonglong,
     mut dictSize: libc::size_t,
 ) -> ZSTD_parameters {
-    if srcSizeHint == 0 as libc::c_int as libc::c_ulonglong {
+    if srcSizeHint == 0 {
         srcSizeHint = ZSTD_CONTENTSIZE_UNKNOWN;
     }
     return ZSTD_getParams_internal(
@@ -15372,7 +15372,7 @@ pub unsafe extern "C" fn ZSTD_registerSequenceProducer(
             &mut (*zc).externalMatchCtx as *mut ZSTD_externalMatchCtx
                 as *mut libc::c_void,
             0 as libc::c_int,
-            ::core::mem::size_of::<ZSTD_externalMatchCtx>() as libc::c_ulong
+            ::core::mem::size_of::<ZSTD_externalMatchCtx>()
                 as libc::size_t,
         );
         (*zc).requestedParams.useSequenceProducer = 0 as libc::c_int;
@@ -15380,11 +15380,11 @@ pub unsafe extern "C" fn ZSTD_registerSequenceProducer(
 }
 unsafe extern "C" fn run_static_initializers() {
     srcSizeTiers = [
-        (16 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        (16 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulonglong,
-        (128 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        (128 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulonglong,
-        (256 as libc::c_int * ((1 as libc::c_int) << 10 as libc::c_int))
+        (256 as libc::c_int * ((1) << 10 as libc::c_int))
             as libc::c_ulonglong,
         ZSTD_CONTENTSIZE_UNKNOWN,
     ];
