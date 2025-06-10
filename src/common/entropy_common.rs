@@ -85,7 +85,7 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: libc::size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0).wrapping_sub(code) as ERR_enum;
+    return 0_usize.wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
@@ -101,7 +101,7 @@ pub const FSE_VERSION_MAJOR: libc::c_int = 0 as libc::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0);
-    return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
+    return (31 as libc::c_uint).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
@@ -178,7 +178,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     libc::memset(
         normalizedCounter as *mut libc::c_void,
         0 as libc::c_int,
-        ((*maxSVPtr).wrapping_add(1) as libc::c_ulong)
+        ((*maxSVPtr).wrapping_add(1) as libc::size_t)
             .wrapping_mul(::core::mem::size_of::<libc::c_short>()) as libc::size_t,
     );
     bitStream = MEM_readLE32(ip as *const libc::c_void);
@@ -428,7 +428,7 @@ unsafe extern "C" fn HUF_readStats_body(
         ip = ip.offset(1);
         let mut n: u32 = 0;
         n = 0 as libc::c_int as u32;
-        while (n as libc::c_ulong) < oSize {
+        while (n as libc::size_t) < oSize {
             *huffWeight.offset(n as isize) =
                 (*ip.offset(n.wrapping_div(2) as isize) as libc::c_int >> 4 as libc::c_int) as u8;
             *huffWeight.offset(n.wrapping_add(1) as isize) =
@@ -456,13 +456,13 @@ unsafe extern "C" fn HUF_readStats_body(
     libc::memset(
         rankStats as *mut libc::c_void,
         0 as libc::c_int,
-        ((12 as libc::c_int + 1) as libc::c_ulong).wrapping_mul(::core::mem::size_of::<u32>())
+        ((12 as libc::c_int + 1) as libc::size_t).wrapping_mul(::core::mem::size_of::<u32>())
             as libc::size_t,
     );
     weightTotal = 0 as libc::c_int as u32;
     let mut n_0: u32 = 0;
     n_0 = 0 as libc::c_int as u32;
-    while (n_0 as libc::c_ulong) < oSize {
+    while (n_0 as libc::size_t) < oSize {
         if *huffWeight.offset(n_0 as isize) as libc::c_int > HUF_TABLELOG_MAX {
             return -(ZSTD_error_corruption_detected as libc::c_int) as libc::size_t;
         }

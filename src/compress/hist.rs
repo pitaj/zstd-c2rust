@@ -48,9 +48,9 @@ unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
     return (code > -(ZSTD_error_maxCode as libc::c_int) as libc::size_t) as libc::c_int
         as libc::c_uint;
 }
-pub const HIST_WKSP_SIZE_U32: libc::c_int = 1024 as libc::c_int;
-pub const HIST_WKSP_SIZE: libc::c_ulong =
-    (HIST_WKSP_SIZE_U32 as libc::c_ulong).wrapping_mul(::core::mem::size_of::<libc::c_uint>());
+pub const HIST_WKSP_SIZE_U32: libc::size_t = 1024;
+pub const HIST_WKSP_SIZE: libc::size_t =
+    HIST_WKSP_SIZE_U32.wrapping_mul(::core::mem::size_of::<libc::c_uint>());
 #[no_mangle]
 pub unsafe extern "C" fn HIST_isError(mut code: libc::size_t) -> libc::c_uint {
     return ERR_isError(code);
@@ -69,8 +69,8 @@ pub unsafe extern "C" fn HIST_count_simple(
     libc::memset(
         count as *mut libc::c_void,
         0 as libc::c_int,
-        (maxSymbolValue.wrapping_add(1) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_uint>()) as libc::size_t,
+        (maxSymbolValue.wrapping_add(1) as libc::size_t)
+            .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
     );
     if srcSize == 0 {
         *maxSymbolValuePtr = 0 as libc::c_int as libc::c_uint;
@@ -107,7 +107,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
 ) -> libc::size_t {
     let mut ip = source as *const u8;
     let iend = ip.offset(sourceSize as isize);
-    let countSize = ((*maxSymbolValuePtr).wrapping_add(1) as libc::c_ulong)
+    let countSize = ((*maxSymbolValuePtr).wrapping_add(1) as libc::size_t)
         .wrapping_mul(::core::mem::size_of::<libc::c_uint>());
     let mut max = 0 as libc::c_int as libc::c_uint;
     let Counting1 = workSpace;
@@ -127,8 +127,8 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     libc::memset(
         workSpace as *mut libc::c_void,
         0 as libc::c_int,
-        ((4 as libc::c_int * 256) as libc::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<libc::c_uint>()) as libc::size_t,
+        ((4 as libc::c_int * 256) as libc::size_t)
+            .wrapping_mul(::core::mem::size_of::<libc::c_uint>()),
     );
     let mut cached = MEM_read32(ip as *const libc::c_void);
     ip = ip.offset(4);

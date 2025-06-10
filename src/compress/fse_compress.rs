@@ -113,7 +113,7 @@ unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut libc::c_void, mut val: libc:
     if MEM_32bits() != 0 {
         MEM_writeLE32(memPtr, val as u32);
     } else {
-        MEM_writeLE64(memPtr, val);
+        MEM_writeLE64(memPtr, val as u64);
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: libc::size_t) -> libc::c_uint {
@@ -128,7 +128,7 @@ unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> libc::c_uint {
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> libc::c_uint {
     debug_assert!(val != 0);
-    return (31).wrapping_sub(ZSTD_countLeadingZeros32(val));
+    return (31 as libc::c_uint).wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
 unsafe extern "C" fn BIT_closeCStream(mut bitC: *mut BIT_CStream_t) -> libc::size_t {
@@ -152,7 +152,7 @@ unsafe extern "C" fn BIT_addBitsFast(
 ) {
     debug_assert!(value >> nbBits == 0);
     debug_assert!(
-        (nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
+        (nbBits.wrapping_add((*bitC).bitPos) as libc::size_t)
             < (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8)
     );
     (*bitC).bitContainer |= value << (*bitC).bitPos;
@@ -162,7 +162,7 @@ unsafe extern "C" fn BIT_addBitsFast(
 unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
     let nbBytes = ((*bitC).bitPos >> 3 as libc::c_int) as libc::size_t;
     debug_assert!(
-        ((*bitC).bitPos as libc::c_ulong)
+        ((*bitC).bitPos as libc::size_t)
             < (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8)
     );
     debug_assert!((*bitC).ptr <= (*bitC).endPtr);
@@ -178,7 +178,7 @@ unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
 unsafe extern "C" fn BIT_flushBitsFast(mut bitC: *mut BIT_CStream_t) {
     let nbBytes = ((*bitC).bitPos >> 3 as libc::c_int) as libc::size_t;
     debug_assert!(
-        ((*bitC).bitPos as libc::c_ulong)
+        ((*bitC).bitPos as libc::size_t)
             < (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8)
     );
     debug_assert!((*bitC).ptr <= (*bitC).endPtr);
@@ -212,12 +212,12 @@ unsafe extern "C" fn BIT_addBits(
     mut nbBits: libc::c_uint,
 ) {
     debug_assert!(
-        (nbBits as libc::c_ulong)
+        (nbBits as libc::size_t)
             < (::core::mem::size_of::<[libc::c_uint; 32]>())
                 .wrapping_div(::core::mem::size_of::<libc::c_uint>())
     );
     debug_assert!(
-        (nbBits.wrapping_add((*bitC).bitPos) as libc::c_ulong)
+        (nbBits.wrapping_add((*bitC).bitPos) as libc::size_t)
             < (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8)
     );
     (*bitC).bitContainer |= BIT_getLowerBits(value, nbBits) << (*bitC).bitPos;
@@ -260,11 +260,11 @@ static mut BIT_mask: [libc::c_uint; 32] = [
 #[inline(always)]
 unsafe extern "C" fn BIT_getLowerBits(mut bitContainer: libc::size_t, nbBits: u32) -> libc::size_t {
     debug_assert!(
-        (nbBits as libc::c_ulong)
+        (nbBits as libc::size_t)
             < (::core::mem::size_of::<[libc::c_uint; 32]>())
                 .wrapping_div(::core::mem::size_of::<libc::c_uint>())
     );
-    return bitContainer & BIT_mask[nbBits as usize] as libc::c_ulong;
+    return bitContainer & BIT_mask[nbBits as usize] as libc::size_t;
 }
 pub const FSE_NCOUNTBOUND: libc::c_int = 512 as libc::c_int;
 #[inline]
@@ -425,28 +425,28 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                 i += 8 as libc::c_int;
             }
             debug_assert!(n >= 0);
-            pos = (pos as libc::c_ulong).wrapping_add(n as libc::size_t);
+            pos = pos.wrapping_add(n as libc::size_t);
             s = s.wrapping_add(1);
             sv = (sv as libc::c_ulong).wrapping_add(add);
         }
         let mut position = 0 as libc::c_int as libc::size_t;
         let mut s_0: libc::size_t = 0;
         let unroll = 2 as libc::c_int as libc::size_t;
-        debug_assert!((tableSize as libc::c_ulong).wrapping_rem(unroll) == 0);
+        debug_assert!((tableSize as libc::size_t).wrapping_rem(unroll) == 0);
         s_0 = 0 as libc::c_int as libc::size_t;
         while s_0 < tableSize as libc::size_t {
             let mut u_0: libc::size_t = 0;
             u_0 = 0 as libc::c_int as libc::size_t;
             while u_0 < unroll {
-                let uPosition = position.wrapping_add(u_0.wrapping_mul(step as libc::c_ulong))
-                    & tableMask as libc::c_ulong;
+                let uPosition = position.wrapping_add(u_0.wrapping_mul(step as libc::size_t))
+                    & tableMask as libc::size_t;
                 *tableSymbol.offset(uPosition as isize) =
                     *spread.offset(s_0.wrapping_add(u_0) as isize);
                 u_0 = u_0.wrapping_add(1);
             }
-            position = position.wrapping_add(unroll.wrapping_mul(step as libc::c_ulong))
-                & tableMask as libc::c_ulong;
-            s_0 = (s_0 as libc::c_ulong).wrapping_add(unroll);
+            position = position.wrapping_add(unroll.wrapping_mul(step as libc::size_t))
+                & tableMask as libc::size_t;
+            s_0 = s_0.wrapping_add(unroll);
         }
         debug_assert!(position == 0);
     } else {
@@ -531,7 +531,7 @@ pub unsafe extern "C" fn FSE_NCountWriteBound(
     return if maxSymbolValue != 0 {
         maxHeaderSize
     } else {
-        FSE_NCOUNTBOUND as libc::c_ulong
+        FSE_NCOUNTBOUND as libc::size_t
     };
 }
 unsafe extern "C" fn FSE_writeNCount_generic(
@@ -771,10 +771,10 @@ unsafe extern "C" fn FSE_normalizeM2(
     if ToDistribute == 0 {
         return 0 as libc::c_int as libc::size_t;
     }
-    if total.wrapping_div(ToDistribute as libc::c_ulong) > lowOne as libc::c_ulong {
+    if total.wrapping_div(ToDistribute as libc::size_t) > lowOne as libc::size_t {
         lowOne = total
             .wrapping_mul(3)
-            .wrapping_div(ToDistribute.wrapping_mul(2) as libc::c_ulong) as u32;
+            .wrapping_div(ToDistribute.wrapping_mul(2) as libc::size_t) as u32;
         s = 0 as libc::c_int as u32;
         while s <= maxSymbolValue {
             if *norm.offset(s as isize) as libc::c_int == NOT_YET_ASSIGNED as libc::c_int
@@ -820,12 +820,12 @@ unsafe extern "C" fn FSE_normalizeM2(
         }
         return 0 as libc::c_int as libc::size_t;
     }
-    let vStepLog = (62).wrapping_sub(tableLog) as u64;
-    let mid = ((1) << vStepLog.wrapping_sub(1)).wrapping_sub(1) as u64;
-    let rStep = ((1) << vStepLog)
-        .wrapping_mul(ToDistribute as libc::c_ulong)
+    let vStepLog = 62_u32.wrapping_sub(tableLog) as u64;
+    let mid = (1_u64 << vStepLog.wrapping_sub(1)).wrapping_sub(1);
+    let rStep = (1_u64 << vStepLog)
+        .wrapping_mul(ToDistribute as u64)
         .wrapping_add(mid)
-        .wrapping_div(total as u32 as libc::c_ulong);
+        .wrapping_div(total as u64);
     let mut tmpTotal = mid;
     s = 0 as libc::c_int as u32;
     while s <= maxSymbolValue {
@@ -881,9 +881,9 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     } else {
         1 as libc::c_int
     }) as libc::c_short;
-    let scale = (62).wrapping_sub(tableLog) as u64;
-    let step = ((1) << 62 as libc::c_int).wrapping_div(total as u32 as libc::c_ulong);
-    let vStep = ((1) << scale.wrapping_sub(20)) as u64;
+    let scale = 62_u64.wrapping_sub(tableLog as u64);
+    let step = (1_u64 << 62).wrapping_div(total as u64);
+    let vStep = 1_u64 << scale.wrapping_sub(20);
     let mut stillToDistribute = (1) << tableLog;
     let mut s: libc::c_uint = 0;
     let mut largest = 0 as libc::c_int as libc::c_uint;
@@ -891,7 +891,7 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     let mut lowThreshold = (total >> tableLog) as u32;
     s = 0 as libc::c_int as libc::c_uint;
     while s <= maxSymbolValue {
-        if *count.offset(s as isize) as libc::c_ulong == total {
+        if *count.offset(s as isize) as libc::size_t == total {
             return 0 as libc::c_int as libc::size_t;
         }
         if *count.offset(s as isize) == 0 {
@@ -1012,9 +1012,9 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         ip = ip.offset(-1);
         FSE_initCState2(&mut CState1, ct, *ip as u32);
     }
-    srcSize = (srcSize as libc::c_ulong).wrapping_sub(2);
+    srcSize = srcSize.wrapping_sub(2);
     if (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8)
-        > (FSE_MAX_TABLELOG * 4 + 7) as libc::c_ulong
+        > (FSE_MAX_TABLELOG * 4 + 7) as libc::size_t
         && srcSize & 2 != 0
     {
         ip = ip.offset(-1);
@@ -1031,7 +1031,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as libc::c_uint);
         if (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8)
-            < (FSE_MAX_TABLELOG * 2 + 7) as libc::c_ulong
+            < (FSE_MAX_TABLELOG * 2 + 7) as libc::size_t
         {
             if fast != 0 {
                 BIT_flushBitsFast(&mut bitC);
@@ -1042,7 +1042,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as libc::c_uint);
         if (::core::mem::size_of::<libc::size_t>()).wrapping_mul(8)
-            > (FSE_MAX_TABLELOG * 4 + 7) as libc::c_ulong
+            > (FSE_MAX_TABLELOG * 4 + 7) as libc::size_t
         {
             ip = ip.offset(-1);
             FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as libc::c_uint);
@@ -1095,8 +1095,8 @@ pub unsafe extern "C" fn FSE_compress_usingCTable(
 }
 #[no_mangle]
 pub unsafe extern "C" fn FSE_compressBound(mut size: libc::size_t) -> libc::size_t {
-    return (FSE_NCOUNTBOUND as libc::c_ulong).wrapping_add(
-        size.wrapping_add(size >> 7 as libc::c_int)
+    return (FSE_NCOUNTBOUND as libc::size_t).wrapping_add(
+        size.wrapping_add(size >> 7)
             .wrapping_add(4)
             .wrapping_add(::core::mem::size_of::<libc::size_t>()),
     );

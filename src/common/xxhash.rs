@@ -1,8 +1,8 @@
 use ::libc;
 extern "C" {
-    fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
+    fn malloc(_: libc::size_t) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
-    fn memset(_: *mut libc::c_void, _: libc::c_int, _: libc::c_ulong) -> *mut libc::c_void;
+    fn memset(_: *mut libc::c_void, _: libc::c_int, _: libc::size_t) -> *mut libc::c_void;
 }
 pub type XXH_errorcode = libc::c_uint;
 pub const XXH_ERROR: XXH_errorcode = 1;
@@ -34,7 +34,7 @@ pub type xxh_u64 = XXH64_hash_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct XXH64_state_s {
-    pub total_len: XXH64_hash_t,
+    pub total_len: libc::size_t,
     pub v: [XXH64_hash_t; 4],
     pub mem64: [XXH64_hash_t; 4],
     pub memsize: XXH32_hash_t,
@@ -234,7 +234,7 @@ unsafe extern "C" fn XXH32_finalize(
             ptr = ptr.offset(4);
             h32 = (::core::intrinsics::rotate_left(h32, 17 as libc::c_int as libc::c_uint))
                 .wrapping_mul(XXH_PRIME32_4);
-            len = (len as libc::c_ulong).wrapping_sub(4);
+            len = len.wrapping_sub(4);
         }
         while len > 0 {
             let fresh0 = ptr;
@@ -536,7 +536,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
         ((*state).total_len_32 as libc::c_uint).wrapping_add(len as XXH32_hash_t);
     (*state).large_len |=
         ((len >= 16) as libc::c_int | ((*state).total_len_32 >= 16) as libc::c_int) as XXH32_hash_t;
-    if ((*state).memsize as libc::c_ulong).wrapping_add(len) < 16 {
+    if ((*state).memsize as libc::size_t).wrapping_add(len) < 16 {
         XXH_memcpy(
             (((*state).mem32).as_mut_ptr() as *mut xxh_u8).offset((*state).memsize as isize)
                 as *mut libc::c_void,
@@ -551,7 +551,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
             (((*state).mem32).as_mut_ptr() as *mut xxh_u8).offset((*state).memsize as isize)
                 as *mut libc::c_void,
             input,
-            (16).wrapping_sub((*state).memsize) as libc::size_t,
+            16_u32.wrapping_sub((*state).memsize) as libc::size_t,
         );
         let mut p32: *const xxh_u32 = ((*state).mem32).as_mut_ptr();
         (*state).v[0 as libc::c_int as usize] = XXH32_round(
@@ -573,7 +573,7 @@ pub unsafe extern "C" fn ZSTD_XXH32_update(
             (*state).v[3 as libc::c_int as usize],
             XXH_readLE32(p32 as *const libc::c_void),
         );
-        p = p.offset((16).wrapping_sub((*state).memsize) as isize);
+        p = p.offset(16_u32.wrapping_sub((*state).memsize) as isize);
         (*state).memsize = 0 as libc::c_int as XXH32_hash_t;
     }
     if p <= bEnd.offset(-(16)) {
@@ -732,7 +732,7 @@ unsafe extern "C" fn XXH64_endian_align(
     } else {
         h64 = (seed as libc::c_ulonglong).wrapping_add(XXH_PRIME64_5) as xxh_u64;
     }
-    h64 = (h64 as libc::c_ulong).wrapping_add(len);
+    h64 = (h64 as libc::c_ulong).wrapping_add(len as libc::c_ulong);
     return XXH64_finalize(h64, input, len, align);
 }
 pub const XXH_PRIME64_3: libc::c_ulonglong = 0x165667b19e3779f9 as libc::c_ulonglong;
@@ -782,7 +782,7 @@ unsafe extern "C" fn XXH64_finalize(
             as libc::c_ulonglong)
             .wrapping_mul(XXH_PRIME64_1)
             .wrapping_add(XXH_PRIME64_4) as xxh_u64;
-        len = (len as libc::c_ulong).wrapping_sub(8);
+        len = len.wrapping_sub(8);
     }
     if len >= 4 {
         h64 = (h64 as libc::c_ulonglong
@@ -794,7 +794,7 @@ unsafe extern "C" fn XXH64_finalize(
             as libc::c_ulonglong)
             .wrapping_mul(XXH_PRIME64_2)
             .wrapping_add(XXH_PRIME64_3) as xxh_u64;
-        len = (len as libc::c_ulong).wrapping_sub(4);
+        len = len.wrapping_sub(4);
     }
     while len > 0 {
         let fresh7 = ptr;
@@ -871,8 +871,8 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
     }
     let mut p = input as *const xxh_u8;
     let bEnd = p.offset(len as isize);
-    (*state).total_len = ((*state).total_len as libc::c_ulong).wrapping_add(len);
-    if ((*state).memsize as libc::c_ulong).wrapping_add(len) < 32 {
+    (*state).total_len = (*state).total_len.wrapping_add(len);
+    if ((*state).memsize as libc::size_t).wrapping_add(len) < 32 {
         XXH_memcpy(
             (((*state).mem64).as_mut_ptr() as *mut xxh_u8).offset((*state).memsize as isize)
                 as *mut libc::c_void,
@@ -887,7 +887,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
             (((*state).mem64).as_mut_ptr() as *mut xxh_u8).offset((*state).memsize as isize)
                 as *mut libc::c_void,
             input,
-            (32).wrapping_sub((*state).memsize) as libc::size_t,
+            32_u32.wrapping_sub((*state).memsize) as libc::size_t,
         );
         (*state).v[0 as libc::c_int as usize] = XXH64_round(
             (*state).v[0 as libc::c_int as usize],
@@ -905,7 +905,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_update(
             (*state).v[3 as libc::c_int as usize],
             XXH_readLE64(((*state).mem64).as_mut_ptr().offset(3) as *const libc::c_void),
         );
-        p = p.offset((32).wrapping_sub((*state).memsize) as isize);
+        p = p.offset(32_u32.wrapping_sub((*state).memsize) as isize);
         (*state).memsize = 0 as libc::c_int as XXH32_hash_t;
     }
     if p.offset(32) <= bEnd {
@@ -974,7 +974,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_digest(mut state: *const XXH64_state_t) -> X
         h64 = ((*state).v[2 as libc::c_int as usize] as libc::c_ulonglong)
             .wrapping_add(XXH_PRIME64_5) as xxh_u64;
     }
-    h64 = (h64 as libc::c_ulong).wrapping_add((*state).total_len);
+    h64 = h64.wrapping_add((*state).total_len as libc::c_ulong);
     return XXH64_finalize(
         h64,
         ((*state).mem64).as_ptr() as *const xxh_u8,

@@ -1,6 +1,6 @@
 use ::libc;
 extern "C" {
-    fn calloc(_: libc::c_ulong, _: libc::c_ulong) -> *mut libc::c_void;
+    fn calloc(_: libc::c_ulong, _: libc::size_t) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
     fn pthread_join(__th: pthread_t, __thread_return: *mut *mut libc::c_void) -> libc::c_int;
     fn ZSTD_pthread_mutex_init(

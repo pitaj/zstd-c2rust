@@ -47,7 +47,7 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: libc::size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0).wrapping_sub(code) as ERR_enum;
+    return 0_usize.wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_getErrorName(mut code: libc::size_t) -> *const libc::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));

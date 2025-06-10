@@ -11,7 +11,7 @@ extern "C" {
     fn pthread_mutex_destroy(__mutex: *mut pthread_mutex_t) -> libc::c_int;
     fn pthread_cond_destroy(__cond: *mut pthread_cond_t) -> libc::c_int;
     fn free(_: *mut libc::c_void);
-    fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
+    fn malloc(_: libc::size_t) -> *mut libc::c_void;
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
