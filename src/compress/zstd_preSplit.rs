@@ -234,7 +234,7 @@ unsafe extern "C" fn removeEvents(
     }
     (*acc).nbEvents = ((*acc).nbEvents).wrapping_sub((*slice).nbEvents);
 }
-pub const CHUNKSIZE: std::ffi::c_int = (8 as std::ffi::c_int) << 10 as std::ffi::c_int;
+pub const CHUNKSIZE: std::ffi::c_int = (8 as std::ffi::c_int) << 10;
 unsafe extern "C" fn ZSTD_splitBlock_byChunks(
     mut blockStart: *const std::ffi::c_void,
     mut blockSize: usize,
@@ -383,12 +383,12 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
     let minDistance = (SEGMENT_SIZE * SEGMENT_SIZE / 3 as std::ffi::c_int) as u64;
     if abs64(distFromBegin as i64 - distFromEnd as i64) < minDistance {
         return (64 as std::ffi::c_int
-            * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as usize;
+            * ((1 as std::ffi::c_int) << 10)) as usize;
     }
     return (if distFromBegin > distFromEnd {
-        32 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)
+        32 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10)
     } else {
-        96 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)
+        96 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10)
     }) as usize;
 }
 pub const SEGMENT_SIZE: std::ffi::c_int = 512 as std::ffi::c_int;

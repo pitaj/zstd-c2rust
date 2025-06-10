@@ -455,7 +455,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
 }
 static mut prime5bytes: u64 = 889523592379 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 40 as std::ffi::c_int) * prime5bytes ^ s)
+    return ((u << 64 - 40 as std::ffi::c_int) * prime5bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash5Ptr(
@@ -466,7 +466,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
 }
 static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 48 as std::ffi::c_int) * prime6bytes ^ s)
+    return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash6Ptr(
@@ -477,7 +477,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
 }
 static mut prime7bytes: u64 = 58295818150454627 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 56 as std::ffi::c_int) * prime7bytes ^ s)
+    return ((u << 64 - 56 as std::ffi::c_int) * prime7bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash7Ptr(
@@ -658,14 +658,14 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
     if MEM_isLittleEndian() != 0 {
         if MEM_64bits() != 0 {
-            return ZSTD_countTrailingZeros64(val) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros64(val) >> 3
         } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
     } else if MEM_64bits() != 0 {
-        return ZSTD_countLeadingZeros64(val) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros64(val) >> 3
     } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros32(val as u32) >> 3
     };
 }
 unsafe extern "C" fn ZSTD_fillHashTableForCDict(

@@ -214,7 +214,7 @@ unsafe extern "C" fn BIT_addBitsFast(
 }
 #[inline]
 unsafe extern "C" fn BIT_flushBitsFast(mut bitC: *mut BIT_CStream_t) {
-    let nbBytes = ((*bitC).bitPos >> 3 as std::ffi::c_int) as usize;
+    let nbBytes = ((*bitC).bitPos >> 3) as usize;
     MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
     (*bitC).bitPos &= 7 as std::ffi::c_int as std::ffi::c_uint;
@@ -222,7 +222,7 @@ unsafe extern "C" fn BIT_flushBitsFast(mut bitC: *mut BIT_CStream_t) {
 }
 #[inline]
 unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
-    let nbBytes = ((*bitC).bitPos >> 3 as std::ffi::c_int) as usize;
+    let nbBytes = ((*bitC).bitPos >> 3) as usize;
     MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
     if (*bitC).ptr > (*bitC).endPtr {
@@ -285,10 +285,10 @@ unsafe extern "C" fn FSE_initCState2(
         .offset(symbol as isize);
     let mut stateTable = (*statePtr).stateTable as *const u16;
     let mut nbBitsOut = (symbolTT.deltaNbBits)
-        .wrapping_add(((1 as std::ffi::c_int) << 15 as std::ffi::c_int) as u32)
-        >> 16 as std::ffi::c_int;
+        .wrapping_add(((1 as std::ffi::c_int) << 15) as u32)
+        >> 16;
     (*statePtr)
-        .value = (nbBitsOut << 16 as std::ffi::c_int).wrapping_sub(symbolTT.deltaNbBits)
+        .value = (nbBitsOut << 16).wrapping_sub(symbolTT.deltaNbBits)
         as ptrdiff_t;
     (*statePtr)
         .value = *stateTable
@@ -307,7 +307,7 @@ unsafe extern "C" fn FSE_encodeSymbol(
         .offset(symbol as isize);
     let stateTable = (*statePtr).stateTable as *const u16;
     let nbBitsOut = ((*statePtr).value + symbolTT.deltaNbBits as ptrdiff_t
-        >> 16 as std::ffi::c_int) as u32;
+        >> 16) as u32;
     BIT_addBits(bitC, (*statePtr).value as BitContainerType, nbBitsOut);
     (*statePtr)
         .value = *stateTable
@@ -349,14 +349,14 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
         .offset(1 as std::ffi::c_int as isize)
         .offset(
             (if tableLog != 0 {
-                tableSize >> 1 as std::ffi::c_int
+                tableSize >> 1
             } else {
                 1 as std::ffi::c_int as u32
             }) as isize,
         ) as *mut std::ffi::c_void;
     let symbolTT = FSCT as *mut FSE_symbolCompressionTransform;
-    let step = (tableSize >> 1 as std::ffi::c_int)
-        .wrapping_add(tableSize >> 3 as std::ffi::c_int)
+    let step = (tableSize >> 1)
+        .wrapping_add(tableSize >> 3)
         .wrapping_add(3 as std::ffi::c_int as u32);
     let maxSV1 = maxSymbolValue.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
     let mut cumul = workSpace as *mut u16;
@@ -504,14 +504,14 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                 (*symbolTT.offset(s_2 as isize))
                     .deltaNbBits = (tableLog
                     .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
-                    << 16 as std::ffi::c_int)
+                    << 16)
                     .wrapping_sub(
                         ((1 as std::ffi::c_int) << tableLog) as std::ffi::c_uint,
                     );
             }
             -1 | 1 => {
                 (*symbolTT.offset(s_2 as isize))
-                    .deltaNbBits = (tableLog << 16 as std::ffi::c_int)
+                    .deltaNbBits = (tableLog << 16)
                     .wrapping_sub(
                         ((1 as std::ffi::c_int) << tableLog) as std::ffi::c_uint,
                     );
@@ -533,7 +533,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                 let minStatePlus = (*normalizedCounter.offset(s_2 as isize) as u32)
                     << maxBitsOut;
                 (*symbolTT.offset(s_2 as isize))
-                    .deltaNbBits = (maxBitsOut << 16 as std::ffi::c_int)
+                    .deltaNbBits = (maxBitsOut << 16)
                     .wrapping_sub(minStatePlus);
                 (*symbolTT.offset(s_2 as isize))
                     .deltaFindState = total
@@ -622,9 +622,9 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                 *out
                     .offset(
                         1 as std::ffi::c_int as isize,
-                    ) = (bitStream >> 8 as std::ffi::c_int) as u8;
+                    ) = (bitStream >> 8) as u8;
                 out = out.offset(2 as std::ffi::c_int as isize);
-                bitStream >>= 16 as std::ffi::c_int;
+                bitStream >>= 16;
             }
             while symbol >= start.wrapping_add(3 as std::ffi::c_int as std::ffi::c_uint)
             {
@@ -646,9 +646,9 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                 *out
                     .offset(
                         1 as std::ffi::c_int as isize,
-                    ) = (bitStream >> 8 as std::ffi::c_int) as u8;
+                    ) = (bitStream >> 8) as u8;
                 out = out.offset(2 as std::ffi::c_int as isize);
-                bitStream >>= 16 as std::ffi::c_int;
+                bitStream >>= 16;
                 bitCount -= 16 as std::ffi::c_int;
             }
         }
@@ -672,7 +672,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
         while remaining < threshold {
             nbBits -= 1;
             nbBits;
-            threshold >>= 1 as std::ffi::c_int;
+            threshold >>= 1;
         }
         if bitCount > 16 as std::ffi::c_int {
             if writeIsSafe == 0 && out > oend.offset(-(2 as std::ffi::c_int as isize)) {
@@ -682,9 +682,9 @@ unsafe extern "C" fn FSE_writeNCount_generic(
             *out
                 .offset(
                     1 as std::ffi::c_int as isize,
-                ) = (bitStream >> 8 as std::ffi::c_int) as u8;
+                ) = (bitStream >> 8) as u8;
             out = out.offset(2 as std::ffi::c_int as isize);
-            bitStream >>= 16 as std::ffi::c_int;
+            bitStream >>= 16;
             bitCount -= 16 as std::ffi::c_int;
         }
     }
@@ -698,7 +698,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
     *out
         .offset(
             1 as std::ffi::c_int as isize,
-        ) = (bitStream >> 8 as std::ffi::c_int) as u8;
+        ) = (bitStream >> 8) as u8;
     out = out
         .offset(((bitCount + 7 as std::ffi::c_int) / 8 as std::ffi::c_int) as isize);
     return out.offset_from(ostart) as std::ffi::c_long as usize;
@@ -951,7 +951,7 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     }) as std::ffi::c_short;
     let scale = (62 as std::ffi::c_int as std::ffi::c_uint).wrapping_sub(tableLog)
         as u64;
-    let step = ((1 as std::ffi::c_int as u64) << 62 as std::ffi::c_int)
+    let step = ((1 as std::ffi::c_int as u64) << 62)
         / total as u32 as u64;
     let vStep = ((1 as std::ffi::c_ulonglong)
         << scale.wrapping_sub(20 as std::ffi::c_int as u64)) as u64;
@@ -994,7 +994,7 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     }
     if -stillToDistribute
         >= *normalizedCounter.offset(largest as isize) as std::ffi::c_int
-            >> 1 as std::ffi::c_int
+            >> 1
     {
         let errorCode = FSE_normalizeM2(
             normalizedCounter,
@@ -1150,7 +1150,7 @@ pub unsafe extern "C" fn FSE_compress_usingCTable(
 ) -> usize {
     let fast = (dstSize
         >= srcSize
-            .wrapping_add(srcSize >> 7 as std::ffi::c_int)
+            .wrapping_add(srcSize >> 7)
             .wrapping_add(4 as std::ffi::c_int as usize)
             .wrapping_add(::core::mem::size_of::<usize>()))
         as std::ffi::c_int as std::ffi::c_uint;
@@ -1179,7 +1179,7 @@ pub unsafe extern "C" fn FSE_compressBound(mut size: usize) -> usize {
     return (FSE_NCOUNTBOUND as std::ffi::c_ulong)
         .wrapping_add(
             size
-                .wrapping_add(size >> 7 as std::ffi::c_int)
+                .wrapping_add(size >> 7)
                 .wrapping_add(4 as std::ffi::c_int as usize)
                 .wrapping_add(::core::mem::size_of::<usize>()),
         );

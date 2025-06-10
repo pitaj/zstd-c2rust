@@ -79,6 +79,12 @@ case $1 in
 
     ;;
 
+  cast-shift-rhs)
+    # (c >> 8 as std::ffi::c_int)
+    perl -i -p0e 's/((?:>>|<<|>>=|<<=) \d+)(?: as [\w\d:_]+)+/$1/gm' src/*/*.rs
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs

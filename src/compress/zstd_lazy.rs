@@ -455,7 +455,7 @@ unsafe extern "C" fn ZSTD_hash4PtrS(
 }
 static mut prime5bytes: u64 = 889523592379 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 40 as std::ffi::c_int) * prime5bytes ^ s)
+    return ((u << 64 - 40 as std::ffi::c_int) * prime5bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash5Ptr(
@@ -473,7 +473,7 @@ unsafe extern "C" fn ZSTD_hash5PtrS(
 }
 static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 48 as std::ffi::c_int) * prime6bytes ^ s)
+    return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash6Ptr(
@@ -491,7 +491,7 @@ unsafe extern "C" fn ZSTD_hash6PtrS(
 }
 static mut prime7bytes: u64 = 58295818150454627 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 56 as std::ffi::c_int) * prime7bytes ^ s)
+    return ((u << 64 - 56 as std::ffi::c_int) * prime7bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash7Ptr(
@@ -678,14 +678,14 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
     if MEM_isLittleEndian() != 0 {
         if MEM_64bits() != 0 {
-            return ZSTD_countTrailingZeros64(val) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros64(val) >> 3
         } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
     } else if MEM_64bits() != 0 {
-        return ZSTD_countLeadingZeros64(val) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros64(val) >> 3
     } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros32(val as u32) >> 3
     };
 }
 #[inline]
@@ -1301,7 +1301,7 @@ pub unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_loadDictionary(
             *tmpHashTable
                 .offset(
                     hashIdx as isize,
-                ) = (chainPos.wrapping_sub(count) << 8 as std::ffi::c_int)
+                ) = (chainPos.wrapping_sub(count) << 8)
                 .wrapping_add(count);
         } else {
             *tmpHashTable.offset(hashIdx as isize) = 0 as std::ffi::c_int as u32;
@@ -1397,7 +1397,7 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_search(
                 .wrapping_add(bucketSize as usize)
                 .wrapping_sub(1 as std::ffi::c_int as usize) as isize,
         );
-    let chainIndex = chainPackedPointer >> 8 as std::ffi::c_int;
+    let chainIndex = chainPackedPointer >> 8;
     &mut *((*dms).chainTable).offset(chainIndex as isize) as *mut u32;
     ddsAttempt = 0 as std::ffi::c_int as u32;
     while ddsAttempt < bucketLimit {
@@ -1439,7 +1439,7 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_search(
                 .wrapping_add(bucketSize as usize)
                 .wrapping_sub(1 as std::ffi::c_int as usize) as isize,
         );
-    let mut chainIndex_0 = chainPackedPointer_0 >> 8 as std::ffi::c_int;
+    let mut chainIndex_0 = chainPackedPointer_0 >> 8;
     let chainLength = chainPackedPointer_0 & 0xff as std::ffi::c_int as u32;
     let chainAttempts = nbAttempts.wrapping_sub(ddsAttempt);
     let chainLimit = if chainAttempts > chainLength {
@@ -1960,15 +1960,15 @@ unsafe extern "C" fn ZSTD_row_getSSEMask(
     }
     if nbChunks == 2 as std::ffi::c_int {
         return ZSTD_rotateRight_U32(
-            (matches[1 as std::ffi::c_int as usize] as u32) << 16 as std::ffi::c_int
+            (matches[1 as std::ffi::c_int as usize] as u32) << 16
                 | matches[0 as std::ffi::c_int as usize] as u32,
             head,
         ) as ZSTD_VecMask;
     }
     return ZSTD_rotateRight_U64(
-        (matches[3 as std::ffi::c_int as usize] as u64) << 48 as std::ffi::c_int
-            | (matches[2 as std::ffi::c_int as usize] as u64) << 32 as std::ffi::c_int
-            | (matches[1 as std::ffi::c_int as usize] as u64) << 16 as std::ffi::c_int
+        (matches[3 as std::ffi::c_int as usize] as u64) << 48
+            | (matches[2 as std::ffi::c_int as usize] as u64) << 32
+            | (matches[1 as std::ffi::c_int as usize] as u64) << 16
             | matches[0 as std::ffi::c_int as usize] as u64,
         head,
     );

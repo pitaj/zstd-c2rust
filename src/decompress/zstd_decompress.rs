@@ -573,7 +573,7 @@ pub const ZSTD_SKIPPABLEHEADERSIZE: std::ffi::c_int = 8 as std::ffi::c_int;
 pub const ZSTD_WINDOWLOG_MAX_32: std::ffi::c_int = 30 as std::ffi::c_int;
 pub const ZSTD_WINDOWLOG_MAX_64: std::ffi::c_int = 31 as std::ffi::c_int;
 pub const ZSTD_BLOCKSIZE_MAX_MIN: std::ffi::c_int = (1 as std::ffi::c_int)
-    << 10 as std::ffi::c_int;
+    << 10;
 pub const ZSTD_WINDOWLOG_LIMIT_DEFAULT: std::ffi::c_int = 27 as std::ffi::c_int;
 static mut ZSTD_defaultCMem: ZSTD_customMem = unsafe {
     {
@@ -794,7 +794,7 @@ unsafe extern "C" fn MEM_readLE16(mut memPtr: *const std::ffi::c_void) -> u16 {
         let mut p = memPtr as *const u8;
         return (*p.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int
             + ((*p.offset(1 as std::ffi::c_int as isize) as std::ffi::c_int)
-                << 8 as std::ffi::c_int)) as u16;
+                << 8)) as u16;
     };
 }
 #[inline]
@@ -1048,12 +1048,12 @@ unsafe extern "C" fn ZSTD_cpuid() -> ZSTD_cpuid_t {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cpuid_bmi1(cpuid: ZSTD_cpuid_t) -> std::ffi::c_int {
-    return (cpuid.f7b & (1 as std::ffi::c_uint) << 3 as std::ffi::c_int
+    return (cpuid.f7b & (1 as std::ffi::c_uint) << 3
         != 0 as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_int;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_cpuid_bmi2(cpuid: ZSTD_cpuid_t) -> std::ffi::c_int {
-    return (cpuid.f7b & (1 as std::ffi::c_uint) << 8 as std::ffi::c_int
+    return (cpuid.f7b & (1 as std::ffi::c_uint) << 8
         != 0 as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_int;
 }
 #[inline]
@@ -1801,9 +1801,9 @@ unsafe extern "C" fn ZSTD_frameHeaderSize_internal(
     let fhd = *(src as *const u8)
         .offset(minInputSize.wrapping_sub(1 as std::ffi::c_int as usize) as isize);
     let dictID = (fhd as std::ffi::c_int & 3 as std::ffi::c_int) as u32;
-    let singleSegment = (fhd as std::ffi::c_int >> 5 as std::ffi::c_int
+    let singleSegment = (fhd as std::ffi::c_int >> 5
         & 1 as std::ffi::c_int) as u32;
-    let fcsId = (fhd as std::ffi::c_int >> 6 as std::ffi::c_int) as u32;
+    let fcsId = (fhd as std::ffi::c_int >> 6) as u32;
     return minInputSize
         .wrapping_add((singleSegment == 0) as std::ffi::c_int as usize)
         .wrapping_add(ZSTD_did_fieldSize[dictID as usize])
@@ -1914,11 +1914,11 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
         .offset(minInputSize.wrapping_sub(1 as std::ffi::c_int as usize) as isize);
     let mut pos = minInputSize;
     let dictIDSizeCode = (fhdByte as std::ffi::c_int & 3 as std::ffi::c_int) as u32;
-    let checksumFlag = (fhdByte as std::ffi::c_int >> 2 as std::ffi::c_int
+    let checksumFlag = (fhdByte as std::ffi::c_int >> 2
         & 1 as std::ffi::c_int) as u32;
-    let singleSegment = (fhdByte as std::ffi::c_int >> 5 as std::ffi::c_int
+    let singleSegment = (fhdByte as std::ffi::c_int >> 5
         & 1 as std::ffi::c_int) as u32;
-    let fcsID = (fhdByte as std::ffi::c_int >> 6 as std::ffi::c_int) as u32;
+    let fcsID = (fhdByte as std::ffi::c_int >> 6) as u32;
     let mut windowSize: u64 = 0;
     let mut dictID: u32 = 0;
     let mut frameContentSize = ZSTD_CONTENTSIZE_UNKNOWN as u64;
@@ -1929,7 +1929,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
         let fresh2 = pos;
         pos = pos.wrapping_add(1);
         let wlByte = *ip.offset(fresh2 as isize);
-        let windowLog = ((wlByte as std::ffi::c_int >> 3 as std::ffi::c_int)
+        let windowLog = ((wlByte as std::ffi::c_int >> 3)
             + ZSTD_WINDOWLOG_ABSOLUTEMIN) as u32;
         if windowLog
             > (if ::core::mem::size_of::<usize>()
@@ -1946,7 +1946,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
         windowSize = ((1 as std::ffi::c_ulonglong) << windowLog) as u64;
         windowSize = windowSize
             .wrapping_add(
-                (windowSize >> 3 as std::ffi::c_int)
+                (windowSize >> 3)
                     * (wlByte as std::ffi::c_int & 7 as std::ffi::c_int) as u64,
             );
     }
@@ -1997,11 +1997,11 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
     (*zfhPtr).windowSize = windowSize as std::ffi::c_ulonglong;
     (*zfhPtr)
         .blockSizeMax = (if windowSize
-        < ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as u64
+        < ((1 as std::ffi::c_int) << 17) as u64
     {
         windowSize
     } else {
-        ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as u64
+        ((1 as std::ffi::c_int) << 17) as u64
     }) as std::ffi::c_uint;
     (*zfhPtr).dictID = dictID;
     (*zfhPtr).checksumFlag = checksumFlag;
@@ -3953,19 +3953,19 @@ unsafe extern "C" fn ZSTD_decodingBufferSize_internal(
     mut blockSizeMax: usize,
 ) -> usize {
     let blockSize = if ((if windowSize
-        < ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as std::ffi::c_ulonglong
+        < ((1 as std::ffi::c_int) << 17) as std::ffi::c_ulonglong
     {
         windowSize
     } else {
-        ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as std::ffi::c_ulonglong
+        ((1 as std::ffi::c_int) << 17) as std::ffi::c_ulonglong
     }) as usize) < blockSizeMax
     {
         (if windowSize
-            < ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as std::ffi::c_ulonglong
+            < ((1 as std::ffi::c_int) << 17) as std::ffi::c_ulonglong
         {
             windowSize
         } else {
-            ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as std::ffi::c_ulonglong
+            ((1 as std::ffi::c_int) << 17) as std::ffi::c_ulonglong
         }) as usize
     } else {
         blockSizeMax
@@ -4002,11 +4002,11 @@ pub unsafe extern "C" fn ZSTD_decodingBufferSize_min(
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_estimateDStreamSize(mut windowSize: usize) -> usize {
     let blockSize = if windowSize
-        < ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as usize
+        < ((1 as std::ffi::c_int) << 17) as usize
     {
         windowSize
     } else {
-        ((1 as std::ffi::c_int) << 17 as std::ffi::c_int) as usize
+        ((1 as std::ffi::c_int) << 17) as usize
     };
     let inBuffSize = blockSize;
     let outBuffSize = ZSTD_decodingBufferSize_min(
@@ -4476,12 +4476,12 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             (*zds)
                                 .fParams
                                 .windowSize = if (*zds).fParams.windowSize
-                                > ((1 as std::ffi::c_uint) << 10 as std::ffi::c_int)
+                                > ((1 as std::ffi::c_uint) << 10)
                                     as std::ffi::c_ulonglong
                             {
                                 (*zds).fParams.windowSize
                             } else {
-                                ((1 as std::ffi::c_uint) << 10 as std::ffi::c_int)
+                                ((1 as std::ffi::c_uint) << 10)
                                     as std::ffi::c_ulonglong
                             };
                             if (*zds).fParams.windowSize
