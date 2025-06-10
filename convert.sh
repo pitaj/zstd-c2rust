@@ -64,6 +64,11 @@ case $1 in
     # Fix casting size_of from usize to c_ulong
     perl -i -p0e 's/(::core::mem::size_of::<[^>]*>\(\)) as [^;,]*?c_ulong\b/$1/gm' src/*/*.rs
 
+    ;;
+
+  cast-var-decl)
+    # Remove unnecessary casts on variable declarations
+    perl -i -p0e 's/(let (?:mut )[\w\d_]+)( = \d+)(?: as [\w\d:_]+)* as ([\w\d:_]+)/$1: $3$2/gm' src/*/*.rs
 
     ;;
 

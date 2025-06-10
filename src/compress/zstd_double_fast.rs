@@ -815,8 +815,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
     let ilimit = iend.offset(-(HASH_READ_SIZE as isize));
     let mut offset_1 = *rep.offset(0 as std::ffi::c_int as isize);
     let mut offset_2 = *rep.offset(1 as std::ffi::c_int as isize);
-    let mut offsetSaved1 = 0 as std::ffi::c_int as u32;
-    let mut offsetSaved2 = 0 as std::ffi::c_int as u32;
+    let mut offsetSaved1: u32 = 0;
+    let mut offsetSaved2: u32 = 0;
     let mut mLength: usize = 0;
     let mut offset: u32 = 0;
     let mut curr: u32 = 0;

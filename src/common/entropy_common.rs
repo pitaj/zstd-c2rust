@@ -149,9 +149,9 @@ unsafe extern "C" fn FSE_readNCount_body(
     let mut threshold: std::ffi::c_int = 0;
     let mut bitStream: u32 = 0;
     let mut bitCount: std::ffi::c_int = 0;
-    let mut charnum = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut charnum: std::ffi::c_uint = 0;
     let maxSV1 = (*maxSVPtr).wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
-    let mut previous0 = 0 as std::ffi::c_int;
+    let mut previous0: std::ffi::c_int = 0;
     if hbSize < 8 as std::ffi::c_int as usize {
         let mut buffer: [std::ffi::c_char; 8] = [
             0 as std::ffi::c_int as std::ffi::c_char,

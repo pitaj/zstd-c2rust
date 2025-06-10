@@ -844,8 +844,8 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
     let mut current0: u32 = 0;
     let mut rep_offset1 = *rep.offset(0 as std::ffi::c_int as isize);
     let mut rep_offset2 = *rep.offset(1 as std::ffi::c_int as isize);
-    let mut offsetSaved1 = 0 as std::ffi::c_int as u32;
-    let mut offsetSaved2 = 0 as std::ffi::c_int as u32;
+    let mut offsetSaved1: u32 = 0;
+    let mut offsetSaved2: u32 = 0;
     let mut hash0: usize = 0;
     let mut hash1: usize = 0;
     let mut matchIdx: u32 = 0;
@@ -1783,8 +1783,8 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
     let ilimit = iend.offset(-(8 as std::ffi::c_int as isize));
     let mut offset_1 = *rep.offset(0 as std::ffi::c_int as isize);
     let mut offset_2 = *rep.offset(1 as std::ffi::c_int as isize);
-    let mut offsetSaved1 = 0 as std::ffi::c_int as u32;
-    let mut offsetSaved2 = 0 as std::ffi::c_int as u32;
+    let mut offsetSaved1: u32 = 0;
+    let mut offsetSaved2: u32 = 0;
     let mut ip0 = istart;
     let mut ip1 = 0 as *const u8;
     let mut ip2 = 0 as *const u8;

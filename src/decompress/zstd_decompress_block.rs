@@ -1568,7 +1568,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     let mut lhSize: usize = 0;
     let mut litSize: usize = 0;
     let mut litCSize: usize = 0;
-    let mut singleStream = 0 as std::ffi::c_int as u32;
+    let mut singleStream: u32 = 0;
     let lhlCode = (*istart.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int
         >> 2 as std::ffi::c_int & 3 as std::ffi::c_int) as u32;
     let lhc = MEM_readLE32(istart as *const std::ffi::c_void);
@@ -3394,8 +3394,8 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             .wrapping_add(tableSize >> 3 as std::ffi::c_int)
             .wrapping_add(3 as std::ffi::c_int as u32) as usize;
         let add = 0x101010101010101 as std::ffi::c_ulonglong as u64;
-        let mut pos = 0 as std::ffi::c_int as usize;
-        let mut sv = 0 as std::ffi::c_int as u64;
+        let mut pos: usize = 0;
+        let mut sv: u64 = 0;
         let mut s_0: u32 = 0;
         s_0 = 0 as std::ffi::c_int as u32;
         while s_0 < maxSV1 {
@@ -3416,7 +3416,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             s_0;
             sv = sv.wrapping_add(add);
         }
-        let mut position = 0 as std::ffi::c_int as usize;
+        let mut position: usize = 0;
         let mut s_1: usize = 0;
         let unroll = 2 as std::ffi::c_int as usize;
         s_1 = 0 as std::ffi::c_int as usize;
@@ -3439,7 +3439,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             .wrapping_add(tableSize >> 3 as std::ffi::c_int)
             .wrapping_add(3 as std::ffi::c_int as u32);
         let mut s_2: u32 = 0;
-        let mut position_0 = 0 as std::ffi::c_int as u32;
+        let mut position_0: u32 = 0;
         s_2 = 0 as std::ffi::c_int as u32;
         while s_2 < maxSV1 {
             let mut i_0: std::ffi::c_int = 0;

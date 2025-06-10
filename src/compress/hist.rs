@@ -81,7 +81,7 @@ pub unsafe extern "C" fn HIST_count_simple(
     let mut ip = src as *const u8;
     let end = ip.offset(srcSize as isize);
     let mut maxSymbolValue = *maxSymbolValuePtr;
-    let mut largestCount = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut largestCount: std::ffi::c_uint = 0;
     libc::memset(
         count as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
@@ -131,7 +131,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     let countSize = ((*maxSymbolValuePtr)
         .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_ulong)
         .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>());
-    let mut max = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut max: std::ffi::c_uint = 0;
     let Counting1 = workSpace;
     let Counting2 = Counting1.offset(256 as std::ffi::c_int as isize);
     let Counting3 = Counting2.offset(256 as std::ffi::c_int as isize);
@@ -249,7 +249,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         s = s.wrapping_add(1);
         s;
     }
-    let mut maxSymbolValue = 255 as std::ffi::c_int as std::ffi::c_uint;
+    let mut maxSymbolValue: std::ffi::c_uint = 255;
     while *Counting1.offset(maxSymbolValue as isize) == 0 {
         maxSymbolValue = maxSymbolValue.wrapping_sub(1);
         maxSymbolValue;

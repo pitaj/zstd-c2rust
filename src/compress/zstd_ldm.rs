@@ -1050,7 +1050,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_reset(
     mut minMatchLength: usize,
 ) {
     let mut hash = (*state).rolling;
-    let mut n = 0 as std::ffi::c_int as usize;
+    let mut n: usize = 0;
     while n.wrapping_add(3 as std::ffi::c_int as usize) < minMatchLength {
         hash = (hash << 1 as std::ffi::c_int)
             .wrapping_add(
@@ -1417,7 +1417,7 @@ unsafe extern "C" fn ZSTD_ldm_countBackwardsMatch(
     mut pMatch: *const u8,
     mut pMatchBase: *const u8,
 ) -> usize {
-    let mut matchLength = 0 as std::ffi::c_int as usize;
+    let mut matchLength: usize = 0;
     while pIn > pAnchor && pMatch > pMatchBase
         && *pIn.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
             == *pMatch.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
@@ -1657,9 +1657,9 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
         }
         n = 0 as std::ffi::c_int as std::ffi::c_uint;
         while n < numSplits {
-            let mut forwardMatchLength = 0 as std::ffi::c_int as usize;
-            let mut backwardMatchLength = 0 as std::ffi::c_int as usize;
-            let mut bestMatchLength = 0 as std::ffi::c_int as usize;
+            let mut forwardMatchLength: usize = 0;
+            let mut backwardMatchLength: usize = 0;
+            let mut bestMatchLength: usize = 0;
             let mut mLength: usize = 0;
             let mut offset: u32 = 0;
             let split_0 = (*candidates.offset(n as isize)).split;
@@ -1843,7 +1843,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
                 as std::ffi::c_int as usize,
         );
     let mut chunk: usize = 0;
-    let mut leftoverSize = 0 as std::ffi::c_int as usize;
+    let mut leftoverSize: usize = 0;
     chunk = 0 as std::ffi::c_int as usize;
     while chunk < nbChunks && (*sequences).size < (*sequences).capacity {
         let chunkStart = istart.offset((chunk * kMaxChunkSize) as isize);

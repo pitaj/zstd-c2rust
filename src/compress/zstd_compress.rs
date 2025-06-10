@@ -2105,7 +2105,7 @@ unsafe extern "C" fn ZSTD_window_update(
     mut forceNonContiguous: std::ffi::c_int,
 ) -> u32 {
     let ip = src as *const u8;
-    let mut contiguous = 1 as std::ffi::c_int as u32;
+    let mut contiguous: u32 = 1;
     if srcSize == 0 as std::ffi::c_int as usize {
         return contiguous;
     }
@@ -3039,10 +3039,10 @@ pub const STREAM_ACCUMULATOR_MIN_32: std::ffi::c_int = 25 as std::ffi::c_int;
 pub const STREAM_ACCUMULATOR_MIN_64: std::ffi::c_int = 57 as std::ffi::c_int;
 #[inline]
 unsafe extern "C" fn ZSTD_cpuid() -> ZSTD_cpuid_t {
-    let mut f1c = 0 as std::ffi::c_int as u32;
-    let mut f1d = 0 as std::ffi::c_int as u32;
-    let mut f7b = 0 as std::ffi::c_int as u32;
-    let mut f7c = 0 as std::ffi::c_int as u32;
+    let mut f1c: u32 = 0;
+    let mut f1d: u32 = 0;
+    let mut f7b: u32 = 0;
+    let mut f7c: u32 = 0;
     let mut n: u32 = 0;
     asm!(
         "cpuid", inlateout("ax") 0 as std::ffi::c_int => n, out("ecx") _, out("edx") _,
@@ -5731,8 +5731,8 @@ static mut srcSizeTiers: [std::ffi::c_ulonglong; 4] = [0; 4];
 unsafe extern "C" fn ZSTD_estimateCCtxSize_internal(
     mut compressionLevel: std::ffi::c_int,
 ) -> usize {
-    let mut tier = 0 as std::ffi::c_int;
-    let mut largestSize = 0 as std::ffi::c_int as usize;
+    let mut tier: std::ffi::c_int = 0;
+    let mut largestSize: usize = 0;
     while tier < 4 as std::ffi::c_int {
         let cParams = ZSTD_getCParams_internal(
             compressionLevel,
@@ -5755,7 +5755,7 @@ pub unsafe extern "C" fn ZSTD_estimateCCtxSize(
     mut compressionLevel: std::ffi::c_int,
 ) -> usize {
     let mut level: std::ffi::c_int = 0;
-    let mut memBudget = 0 as std::ffi::c_int as usize;
+    let mut memBudget: usize = 0;
     level = if compressionLevel < 1 as std::ffi::c_int {
         compressionLevel
     } else {
@@ -5854,7 +5854,7 @@ pub unsafe extern "C" fn ZSTD_estimateCStreamSize(
     mut compressionLevel: std::ffi::c_int,
 ) -> usize {
     let mut level: std::ffi::c_int = 0;
-    let mut memBudget = 0 as std::ffi::c_int as usize;
+    let mut memBudget: usize = 0;
     level = if compressionLevel < 1 as std::ffi::c_int {
         compressionLevel
     } else {
@@ -6854,7 +6854,7 @@ unsafe extern "C" fn ZSTD_reduceTable_internal(
     preserveMark: std::ffi::c_int,
 ) {
     let nbRows = size as std::ffi::c_int / ZSTD_ROWSIZE;
-    let mut cellNb = 0 as std::ffi::c_int;
+    let mut cellNb: std::ffi::c_int = 0;
     let mut rowNb: std::ffi::c_int = 0;
     let reducerThreshold = reducerValue.wrapping_add(ZSTD_WINDOW_START_INDEX as u32);
     rowNb = 0 as std::ffi::c_int;
@@ -6930,7 +6930,7 @@ pub unsafe extern "C" fn ZSTD_seqToCodes(
     let nbSeq = ((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart)
         as std::ffi::c_long as u32;
     let mut u: u32 = 0;
-    let mut longOffsets = 0 as std::ffi::c_int;
+    let mut longOffsets: std::ffi::c_int = 0;
     u = 0 as std::ffi::c_int as u32;
     while u < nbSeq {
         let llv = (*sequences.offset(u as isize)).litLength as u32;
@@ -7195,7 +7195,7 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
     let oend = ostart.offset(dstCapacity as isize);
     let mut op = ostart;
     let mut lastCountSize: usize = 0;
-    let mut longOffsets = 0 as std::ffi::c_int;
+    let mut longOffsets: std::ffi::c_int = 0;
     entropyWorkspace = count
         .offset(
             ((if 35 as std::ffi::c_int > 52 as std::ffi::c_int {
@@ -7867,7 +7867,7 @@ unsafe extern "C" fn ZSTD_copyBlockSequences(
         ((*seqCollector).seqStart).offset((*seqCollector).seqIndex as isize)
     };
     let nbOutSequences = nbInSequences.wrapping_add(1 as std::ffi::c_int as usize);
-    let mut nbOutLiterals = 0 as std::ffi::c_int as usize;
+    let mut nbOutLiterals: usize = 0;
     let mut repcodes = repcodes_s { rep: [0; 3] };
     let mut i: usize = 0;
     if nbOutSequences
@@ -8011,8 +8011,8 @@ pub unsafe extern "C" fn ZSTD_mergeBlockDelimiters(
     mut sequences: *mut ZSTD_Sequence,
     mut seqsSize: usize,
 ) -> usize {
-    let mut in_0 = 0 as std::ffi::c_int as usize;
-    let mut out = 0 as std::ffi::c_int as usize;
+    let mut in_0: usize = 0;
+    let mut out: usize = 0;
     while in_0 < seqsSize {
         if (*sequences.offset(in_0 as isize)).offset
             == 0 as std::ffi::c_int as std::ffi::c_uint
@@ -8485,7 +8485,7 @@ unsafe extern "C" fn ZSTD_estimateBlockSize_symbolType(
     let mut ctp = codeTable;
     let ctStart = ctp;
     let ctEnd = ctStart.offset(nbSeq as isize);
-    let mut cSymbolTypeSizeEstimateInBits = 0 as std::ffi::c_int as usize;
+    let mut cSymbolTypeSizeEstimateInBits: usize = 0;
     let mut max = maxCode;
     HIST_countFast_wksp(
         countWksp,
@@ -8543,7 +8543,7 @@ unsafe extern "C" fn ZSTD_estimateBlockSize_sequences(
     let mut sequencesSectionHeaderSize = (1 as std::ffi::c_int + 1 as std::ffi::c_int
         + (nbSeq >= 128 as std::ffi::c_int as usize) as std::ffi::c_int
         + (nbSeq >= LONGNBSEQ as usize) as std::ffi::c_int) as usize;
-    let mut cSeqSizeEstimate = 0 as std::ffi::c_int as usize;
+    let mut cSeqSizeEstimate: usize = 0;
     cSeqSizeEstimate = cSeqSizeEstimate
         .wrapping_add(
             ZSTD_estimateBlockSize_symbolType(
@@ -8673,7 +8673,7 @@ unsafe extern "C" fn ZSTD_buildEntropyStatisticsAndEstimateSubBlockSize(
 unsafe extern "C" fn ZSTD_countSeqStoreLiteralsBytes(
     seqStore: *const SeqStore_t,
 ) -> usize {
-    let mut literalsBytes = 0 as std::ffi::c_int as usize;
+    let mut literalsBytes: usize = 0;
     let nbSeqs = ((*seqStore).sequences).offset_from((*seqStore).sequencesStart)
         as std::ffi::c_long as usize;
     let mut i: usize = 0;
@@ -8696,7 +8696,7 @@ unsafe extern "C" fn ZSTD_countSeqStoreLiteralsBytes(
 unsafe extern "C" fn ZSTD_countSeqStoreMatchBytes(
     seqStore: *const SeqStore_t,
 ) -> usize {
-    let mut matchBytes = 0 as std::ffi::c_int as usize;
+    let mut matchBytes: usize = 0;
     let nbSeqs = ((*seqStore).sequences).offset_from((*seqStore).sequencesStart)
         as std::ffi::c_long as usize;
     let mut i: usize = 0;
@@ -8780,7 +8780,7 @@ unsafe extern "C" fn ZSTD_seqStore_resolveOffCodes(
     seqStore: *const SeqStore_t,
     nbSeq: u32,
 ) {
-    let mut idx = 0 as std::ffi::c_int as u32;
+    let mut idx: u32 = 0;
     let longLitLenIdx = if (*seqStore).longLengthType as std::ffi::c_uint
         == ZSTD_llt_literalLength as std::ffi::c_int as std::ffi::c_uint
     {
@@ -9001,11 +9001,11 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
     mut lastBlock: u32,
     mut nbSeq: u32,
 ) -> usize {
-    let mut cSize = 0 as std::ffi::c_int as usize;
+    let mut cSize: usize = 0;
     let mut ip = src as *const u8;
     let mut op = dst as *mut u8;
-    let mut i = 0 as std::ffi::c_int as usize;
-    let mut srcBytesTotal = 0 as std::ffi::c_int as usize;
+    let mut i: usize = 0;
+    let mut srcBytesTotal: usize = 0;
     let partitions = ((*zc).blockSplitCtx.partitions).as_mut_ptr();
     let nextSeqStore: *mut SeqStore_t = &mut (*zc).blockSplitCtx.nextSeqStore;
     let currSeqStore: *mut SeqStore_t = &mut (*zc).blockSplitCtx.currSeqStore;
@@ -9056,7 +9056,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
     while i <= numSplits {
         let mut cSizeChunk: usize = 0;
         let lastPartition = (i == numSplits) as std::ffi::c_int as u32;
-        let mut lastBlockEntireSrc = 0 as std::ffi::c_int as u32;
+        let mut lastBlockEntireSrc: u32 = 0;
         let mut srcBytes = (ZSTD_countSeqStoreLiteralsBytes(currSeqStore))
             .wrapping_add(ZSTD_countSeqStoreMatchBytes(currSeqStore));
         srcBytesTotal = srcBytesTotal.wrapping_add(srcBytes);
@@ -9279,7 +9279,7 @@ unsafe extern "C" fn ZSTD_compressBlock_targetCBlockSize(
     mut srcSize: usize,
     mut lastBlock: u32,
 ) -> usize {
-    let mut cSize = 0 as std::ffi::c_int as usize;
+    let mut cSize: usize = 0;
     let bss = ZSTD_buildSeqStore(zc, src, srcSize);
     let err_code = bss;
     if ERR_isError(err_code) != 0 {
@@ -9576,7 +9576,7 @@ unsafe extern "C" fn ZSTD_writeFrameHeader(
         .wrapping_add(checksumFlag << 2 as std::ffi::c_int)
         .wrapping_add(singleSegment << 5 as std::ffi::c_int)
         .wrapping_add(fcsCode << 6 as std::ffi::c_int) as u8;
-    let mut pos = 0 as std::ffi::c_int as usize;
+    let mut pos: usize = 0;
     if dstCapacity < 18 as std::ffi::c_int as usize {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
@@ -9713,7 +9713,7 @@ unsafe extern "C" fn ZSTD_compressContinue_internal(
     mut lastFrameChunk: u32,
 ) -> usize {
     let ms: *mut ZSTD_MatchState_t = &mut (*cctx).blockState.matchState;
-    let mut fhSize = 0 as std::ffi::c_int as usize;
+    let mut fhSize: usize = 0;
     if (*cctx).stage as std::ffi::c_uint
         == ZSTDcs_created as std::ffi::c_int as std::ffi::c_uint
     {
@@ -10074,8 +10074,8 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     let dictEnd = dictPtr.offset(dictSize as isize);
     dictPtr = dictPtr.offset(8 as std::ffi::c_int as isize);
     (*bs).entropy.huf.repeatMode = HUF_repeat_check;
-    let mut maxSymbolValue = 255 as std::ffi::c_int as std::ffi::c_uint;
-    let mut hasZeroWeights = 1 as std::ffi::c_int as std::ffi::c_uint;
+    let mut maxSymbolValue: std::ffi::c_uint = 255;
+    let mut hasZeroWeights: std::ffi::c_uint = 1;
     let hufHeaderSize = HUF_readCTable(
         ((*bs).entropy.huf.CTable).as_mut_ptr(),
         &mut maxSymbolValue,
@@ -12520,7 +12520,7 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
     } else {
         ostart
     };
-    let mut someMoreWork = 1 as std::ffi::c_int as u32;
+    let mut someMoreWork: u32 = 1;
     if (*zcs).appliedParams.inBufferMode as std::ffi::c_uint
         == ZSTD_bm_stable as std::ffi::c_int as std::ffi::c_uint
     {
@@ -13189,8 +13189,8 @@ pub unsafe extern "C" fn ZSTD_compress2(
     ZSTD_CCtx_reset(cctx, ZSTD_reset_session_only);
     (*cctx).requestedParams.inBufferMode = ZSTD_bm_stable;
     (*cctx).requestedParams.outBufferMode = ZSTD_bm_stable;
-    let mut oPos = 0 as std::ffi::c_int as usize;
-    let mut iPos = 0 as std::ffi::c_int as usize;
+    let mut oPos: usize = 0;
+    let mut iPos: usize = 0;
     let result = ZSTD_compressStream2_simpleArgs(
         cctx,
         dst,
@@ -13440,8 +13440,8 @@ unsafe extern "C" fn ZSTD_transferSequences_noDelim(
     let mut ip = istart;
     let mut iend = istart.offset(blockSize as isize);
     let mut updatedRepcodes = repcodes_s { rep: [0; 3] };
-    let mut bytesAdjustment = 0 as std::ffi::c_int as u32;
-    let mut finalMatchSplit = 0 as std::ffi::c_int as u32;
+    let mut bytesAdjustment: u32 = 0;
+    let mut finalMatchSplit: u32 = 0;
     if !((*cctx).cdict).is_null() {
         dictSize = (*(*cctx).cdict).dictContentSize;
     } else if !((*cctx).prefixDict.dict).is_null() {
@@ -13603,8 +13603,8 @@ unsafe extern "C" fn blockSize_explicitDelimiter(
     mut inSeqsSize: usize,
     mut seqPos: ZSTD_SequencePosition,
 ) -> usize {
-    let mut end = 0 as std::ffi::c_int;
-    let mut blockSize = 0 as std::ffi::c_int as usize;
+    let mut end: std::ffi::c_int = 0;
+    let mut blockSize: usize = 0;
     let mut spos = seqPos.idx as usize;
     while spos < inSeqsSize {
         end = ((*inSeqs.offset(spos as isize)).offset
@@ -13667,7 +13667,7 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
 ) -> usize {
-    let mut cSize = 0 as std::ffi::c_int as usize;
+    let mut cSize: usize = 0;
     let mut remaining = srcSize;
     let mut seqPos = {
         let mut init = ZSTD_SequencePosition {
@@ -13841,7 +13841,7 @@ pub unsafe extern "C" fn ZSTD_compressSequences(
     mut srcSize: usize,
 ) -> usize {
     let mut op = dst as *mut u8;
-    let mut cSize = 0 as std::ffi::c_int as usize;
+    let mut cSize: usize = 0;
     let err_code = ZSTD_CCtx_init_compressStream2(cctx, ZSTD_e_end, srcSize);
     if ERR_isError(err_code) != 0 {
         return err_code;
@@ -13893,7 +13893,7 @@ unsafe extern "C" fn convertSequences_noRepcodes(
     mut inSeqs: *const ZSTD_Sequence,
     mut nbSequences: usize,
 ) -> usize {
-    let mut longLen = 0 as std::ffi::c_int as usize;
+    let mut longLen: usize = 0;
     let mut n: usize = 0;
     n = 0 as std::ffi::c_int as usize;
     while n < nbSequences {
@@ -13932,7 +13932,7 @@ pub unsafe extern "C" fn ZSTD_convertBlockSequences(
     mut repcodeResolution: std::ffi::c_int,
 ) -> usize {
     let mut updatedRepcodes = repcodes_s { rep: [0; 3] };
-    let mut seqNb = 0 as std::ffi::c_int as usize;
+    let mut seqNb: usize = 0;
     if nbSequences >= (*cctx).seqStore.maxNbSeq {
         return -(ZSTD_error_externalSequences_invalid as std::ffi::c_int) as usize;
     }
@@ -14054,8 +14054,8 @@ pub unsafe extern "C" fn ZSTD_get1BlockSummary(
     mut seqs: *const ZSTD_Sequence,
     mut nbSeqs: usize,
 ) -> BlockSummary {
-    let mut totalMatchSize = 0 as std::ffi::c_int as usize;
-    let mut litSize = 0 as std::ffi::c_int as usize;
+    let mut totalMatchSize: usize = 0;
+    let mut litSize: usize = 0;
     let mut n: usize = 0;
     n = 0 as std::ffi::c_int as usize;
     while n < nbSeqs {
@@ -14102,7 +14102,7 @@ unsafe extern "C" fn ZSTD_compressSequencesAndLiterals_internal(
     mut srcSize: usize,
 ) -> usize {
     let mut remaining = srcSize;
-    let mut cSize = 0 as std::ffi::c_int as usize;
+    let mut cSize: usize = 0;
     let mut op = dst as *mut u8;
     let repcodeResolution = ((*cctx).appliedParams.searchForExternalRepcodes
         as std::ffi::c_uint == ZSTD_ps_enable as std::ffi::c_int as std::ffi::c_uint)
@@ -14229,7 +14229,7 @@ pub unsafe extern "C" fn ZSTD_compressSequencesAndLiterals(
     mut decompressedSize: usize,
 ) -> usize {
     let mut op = dst as *mut u8;
-    let mut cSize = 0 as std::ffi::c_int as usize;
+    let mut cSize: usize = 0;
     if litCapacity < litSize {
         return -(ZSTD_error_workSpace_tooSmall as std::ffi::c_int) as usize;
     }

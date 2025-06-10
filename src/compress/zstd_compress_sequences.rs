@@ -805,7 +805,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
     max: std::ffi::c_uint,
     total: usize,
 ) -> usize {
-    let mut cost = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut cost: std::ffi::c_uint = 0;
     let mut s: std::ffi::c_uint = 0;
     s = 0 as std::ffi::c_int as std::ffi::c_uint;
     while s <= max {
@@ -834,7 +834,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
     max: std::ffi::c_uint,
 ) -> usize {
     let kAccuracyLog = 8 as std::ffi::c_int as std::ffi::c_uint;
-    let mut cost = 0 as std::ffi::c_int as usize;
+    let mut cost: usize = 0;
     let mut s: std::ffi::c_uint = 0;
     let mut cstate = FSE_CState_t {
         value: 0,
@@ -872,7 +872,7 @@ pub unsafe extern "C" fn ZSTD_crossEntropyCost(
     max: std::ffi::c_uint,
 ) -> usize {
     let shift = (8 as std::ffi::c_int as std::ffi::c_uint).wrapping_sub(accuracyLog);
-    let mut cost = 0 as std::ffi::c_int as usize;
+    let mut cost: usize = 0;
     let mut s: std::ffi::c_uint = 0;
     s = 0 as std::ffi::c_int as std::ffi::c_uint;
     while s <= max {
