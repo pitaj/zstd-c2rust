@@ -9,7 +9,6 @@ extern "C" {
     fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
     fn free(_: *mut std::ffi::c_void);
 }
-pub type size_t = std::ffi::c_ulong;
 pub type trbudget_t = _trbudget_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -6894,11 +6893,11 @@ pub unsafe extern "C" fn divsufsort(
     }
     bucket_A = malloc(
         (BUCKET_A_SIZE as std::ffi::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     bucket_B = malloc(
         (BUCKET_B_SIZE as std::ffi::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     if !bucket_A.is_null() && !bucket_B.is_null() {
         m = sort_typeBstar(T, SA, bucket_A, bucket_B, n, openMP);
@@ -6940,19 +6939,19 @@ pub unsafe extern "C" fn divbwt(
     B = A;
     if B.is_null() {
         B = malloc(
-            ((n + 1 as std::ffi::c_int) as size_t)
+            ((n + 1 as std::ffi::c_int) as usize)
                 .wrapping_mul(
-                    ::core::mem::size_of::<std::ffi::c_int>() as std::ffi::c_ulong,
+                    ::core::mem::size_of::<std::ffi::c_int>(),
                 ),
         ) as *mut std::ffi::c_int;
     }
     bucket_A = malloc(
         (BUCKET_A_SIZE as std::ffi::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     bucket_B = malloc(
         (BUCKET_B_SIZE as std::ffi::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     if !B.is_null() && !bucket_A.is_null() && !bucket_B.is_null() {
         m = sort_typeBstar(T, B, bucket_A, bucket_B, n, openMP);

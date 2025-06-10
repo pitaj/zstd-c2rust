@@ -44,6 +44,29 @@ case $1 in
 
     ;;
 
+  integers)
+    # Replace integer types with rust equivalents
+
+    perl -i -p0e 's/\bU(64|32|16|8)\b/u$1/gm' src/*/*.rs
+    perl -i -p0e 's/\bS(64|32|16|8)\b/i$1/gm' src/*/*.rs
+    perl -i -p0e 's/\b(?:__)?(?:(u)i|(i))nt(64|32|16|8)_t\b/$1$2$3/gm' src/*/*.rs
+
+    perl -i -p0e 's/\bBYTE\b/u8/gm' src/*/*.rs
+    perl -i -p0e 's/\b(?:libc::)?size_t\b/usize/gm' src/*/*.rs
+
+    # Remove old typedefs
+    perl -i -p0e 's/\npub type (u8|u16|u32|u64|usize|i8|i16|i32|i64|isize) = [^;]+;//gm' src/*/*.rs
+    perl -i -p0e 's/\npub type (?:libc::)?size_t = [^;]+;//gm' src/*/*.rs
+
+    ;;
+  
+  cast-sizeof)
+    # Fix casting size_of from usize to c_ulong
+    perl -i -p0e 's/(::core::mem::size_of::<[^>]*>\(\)) as [^;,]*?c_ulong\b/$1/gm' src/*/*.rs
+
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs
@@ -109,29 +132,11 @@ case $1 in
 
     ;;
 
-  integers)
-    # Replace integer types with rust equivalents
-
-    perl -i -p0e 's/\bU(64|32|16|8)\b/u$1/gm' src/*/*.rs
-    perl -i -p0e 's/\bS(64|32|16|8)\b/i$1/gm' src/*/*.rs
-    perl -i -p0e 's/\b(?:__)?(?:(u)i|(i))nt(64|32|16|8)_t\b/$1$2$3/gm' src/*/*.rs
-
-    perl -i -p0e 's/\bBYTE\b/u8/gm' src/*/*.rs
-    perl -i -p0e 's/\b(?:libc::)?size_t\b/libc::size_t/gm' src/*/*.rs
-
-    # Remove old typedefs
-    perl -i -p0e 's/\npub type (u8|u16|u32|u64|usize|i8|i16|i32|i64|isize) = [^;]+;//gm' src/*/*.rs
-    perl -i -p0e 's/\npub type (?:libc::)?size_t = [^;]+;//gm' src/*/*.rs
-
-    ;;
-
   casts)
     # Remove redundant as casts
     perl -i -p0e 's/\b(as \w\S*) \1\b//gm' src/*/*.rs
     perl -i -p0e 's/(.wrapping_(?:sub|add|div|mul|rem)\(\d+)(?: as \w\S*?)+\)/$1)/gm' src/*/*.rs
 
-    # Fix casting size_of from usize to c_ulong
-    perl -i -p0e 's/(::core::mem::size_of::<[^>]*>\(\)) as libc::c_ulong\b/$1/gm' src/*/*.rs
     # Remove unnecessary casts where type can be inferred
     perl -i -p0e 's/( (?:>=|<=|>|<|==|!=|&|&=|\*|\+|\|) \d+)( as [^\s\);,]+)+/$1/gm' src/*/*.rs
     perl -i -p0e 's/\((\d+)(?: as [^\s\);,]+?)+\)/($1)/gm' src/*/*.rs
