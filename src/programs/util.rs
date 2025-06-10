@@ -1,76 +1,113 @@
 use ::libc;
+use ::c2rust_bitfields;
 extern "C" {
     pub type _IO_wide_data;
     pub type _IO_codecvt;
     pub type _IO_marker;
     pub type __dirstream;
+    fn chown(
+        __file: *const std::ffi::c_char,
+        __owner: __uid_t,
+        __group: __gid_t,
+    ) -> std::ffi::c_int;
+    fn fchown(
+        __fd: std::ffi::c_int,
+        __owner: __uid_t,
+        __group: __gid_t,
+    ) -> std::ffi::c_int;
+    fn sysconf(__name: std::ffi::c_int) -> std::ffi::c_long;
+    fn isatty(__fd: std::ffi::c_int) -> std::ffi::c_int;
     static mut stdin: *mut FILE;
     static mut stdout: *mut FILE;
     static mut stderr: *mut FILE;
-    fn fclose(__stream: *mut FILE) -> libc::c_int;
-    fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
-    fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
-    fn getchar() -> libc::c_int;
-    fn fgets(__s: *mut libc::c_char, __n: libc::c_int, __stream: *mut FILE) -> *mut libc::c_char;
-    fn feof(__stream: *mut FILE) -> libc::c_int;
-    fn ferror(__stream: *mut FILE) -> libc::c_int;
-    fn perror(__s: *const libc::c_char);
-    fn fileno(__stream: *mut FILE) -> libc::c_int;
-    fn stat(__file: *const libc::c_char, __buf: *mut stat) -> libc::c_int;
-    fn fstat(__fd: libc::c_int, __buf: *mut stat) -> libc::c_int;
-    fn lstat(__file: *const libc::c_char, __buf: *mut stat) -> libc::c_int;
-    fn chmod(__file: *const libc::c_char, __mode: __mode_t) -> libc::c_int;
-    fn fchmod(__fd: libc::c_int, __mode: __mode_t) -> libc::c_int;
-    fn mkdir(__path: *const libc::c_char, __mode: __mode_t) -> libc::c_int;
+    fn fclose(__stream: *mut FILE) -> std::ffi::c_int;
+    fn fopen(_: *const std::ffi::c_char, _: *const std::ffi::c_char) -> *mut FILE;
+    fn fprintf(_: *mut FILE, _: *const std::ffi::c_char, _: ...) -> std::ffi::c_int;
+    fn getchar() -> std::ffi::c_int;
+    fn fgets(
+        __s: *mut std::ffi::c_char,
+        __n: std::ffi::c_int,
+        __stream: *mut FILE,
+    ) -> *mut std::ffi::c_char;
+    fn fread(
+        _: *mut std::ffi::c_void,
+        _: std::ffi::c_ulong,
+        _: std::ffi::c_ulong,
+        _: *mut FILE,
+    ) -> std::ffi::c_ulong;
+    fn feof(__stream: *mut FILE) -> std::ffi::c_int;
+    fn ferror(__stream: *mut FILE) -> std::ffi::c_int;
+    fn fileno(__stream: *mut FILE) -> std::ffi::c_int;
+    fn stat(__file: *const std::ffi::c_char, __buf: *mut stat) -> std::ffi::c_int;
+    fn fstat(__fd: std::ffi::c_int, __buf: *mut stat) -> std::ffi::c_int;
+    fn lstat(__file: *const std::ffi::c_char, __buf: *mut stat) -> std::ffi::c_int;
+    fn chmod(__file: *const std::ffi::c_char, __mode: __mode_t) -> std::ffi::c_int;
+    fn fchmod(__fd: std::ffi::c_int, __mode: __mode_t) -> std::ffi::c_int;
+    fn mkdir(__path: *const std::ffi::c_char, __mode: __mode_t) -> std::ffi::c_int;
     fn utimensat(
-        __fd: libc::c_int,
-        __path: *const libc::c_char,
+        __fd: std::ffi::c_int,
+        __path: *const std::ffi::c_char,
         __times: *const timespec,
-        __flags: libc::c_int,
-    ) -> libc::c_int;
-    fn atoi(__nptr: *const libc::c_char) -> libc::c_int;
-    fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
-    fn calloc(_: libc::c_ulong, _: libc::c_ulong) -> *mut libc::c_void;
-    fn realloc(_: *mut libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
-    fn free(_: *mut libc::c_void);
-    fn exit(_: libc::c_int) -> !;
+        __flags: std::ffi::c_int,
+    ) -> std::ffi::c_int;
+    fn atoi(__nptr: *const std::ffi::c_char) -> std::ffi::c_int;
+    fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
+    fn calloc(_: std::ffi::c_ulong, _: std::ffi::c_ulong) -> *mut std::ffi::c_void;
+    fn realloc(_: *mut std::ffi::c_void, _: std::ffi::c_ulong) -> *mut std::ffi::c_void;
+    fn free(_: *mut std::ffi::c_void);
+    fn exit(_: std::ffi::c_int) -> !;
     fn qsort(
-        __base: *mut libc::c_void,
-        __nmemb: libc::size_t,
-        __size: libc::size_t,
+        __base: *mut std::ffi::c_void,
+        __nmemb: size_t,
+        __size: size_t,
         __compar: __compar_fn_t,
     );
-    fn isatty(__fd: libc::c_int) -> libc::c_int;
-    fn sysconf(__name: libc::c_int) -> libc::c_long;
-    fn fchown(__fd: libc::c_int, __owner: __uid_t, __group: __gid_t) -> libc::c_int;
-    fn chown(__file: *const libc::c_char, __owner: __uid_t, __group: __gid_t) -> libc::c_int;
-    fn memcpy(_: *mut libc::c_void, _: *const libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
-    fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
-    fn strncmp(_: *const libc::c_char, _: *const libc::c_char, _: libc::c_ulong) -> libc::c_int;
-    fn strdup(_: *const libc::c_char) -> *mut libc::c_char;
-    fn strchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
-    fn strrchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
-    fn strstr(_: *const libc::c_char, _: *const libc::c_char) -> *mut libc::c_char;
-    fn strlen(_: *const libc::c_char) -> libc::c_ulong;
-    fn strerror(_: libc::c_int) -> *mut libc::c_char;
-    fn __errno_location() -> *mut libc::c_int;
-    fn closedir(__dirp: *mut DIR) -> libc::c_int;
-    fn opendir(__name: *const libc::c_char) -> *mut DIR;
+    fn memcpy(
+        _: *mut std::ffi::c_void,
+        _: *const std::ffi::c_void,
+        _: std::ffi::c_ulong,
+    ) -> *mut std::ffi::c_void;
+    fn strcmp(_: *const std::ffi::c_char, _: *const std::ffi::c_char) -> std::ffi::c_int;
+    fn strncmp(
+        _: *const std::ffi::c_char,
+        _: *const std::ffi::c_char,
+        _: std::ffi::c_ulong,
+    ) -> std::ffi::c_int;
+    fn strdup(_: *const std::ffi::c_char) -> *mut std::ffi::c_char;
+    fn strchr(_: *const std::ffi::c_char, _: std::ffi::c_int) -> *mut std::ffi::c_char;
+    fn strrchr(_: *const std::ffi::c_char, _: std::ffi::c_int) -> *mut std::ffi::c_char;
+    fn strstr(
+        _: *const std::ffi::c_char,
+        _: *const std::ffi::c_char,
+    ) -> *mut std::ffi::c_char;
+    fn strlen(_: *const std::ffi::c_char) -> std::ffi::c_ulong;
+    fn strerror(_: std::ffi::c_int) -> *mut std::ffi::c_char;
+    fn __errno_location() -> *mut std::ffi::c_int;
+    fn __assert_fail(
+        __assertion: *const std::ffi::c_char,
+        __file: *const std::ffi::c_char,
+        __line: std::ffi::c_uint,
+        __function: *const std::ffi::c_char,
+    ) -> !;
+    fn closedir(__dirp: *mut DIR) -> std::ffi::c_int;
+    fn opendir(__name: *const std::ffi::c_char) -> *mut DIR;
     fn readdir(__dirp: *mut DIR) -> *mut dirent;
 }
-pub type __dev_t = libc::c_ulong;
-pub type __uid_t = libc::c_uint;
-pub type __gid_t = libc::c_uint;
-pub type __ino_t = libc::c_ulong;
-pub type __mode_t = libc::c_uint;
-pub type __nlink_t = libc::c_ulong;
-pub type __off_t = libc::c_long;
-pub type __off64_t = libc::c_long;
-pub type __time_t = libc::c_long;
-pub type __blksize_t = libc::c_long;
-pub type __blkcnt_t = libc::c_long;
-pub type __syscall_slong_t = libc::c_long;
-pub type C2RustUnnamed = libc::c_uint;
+pub type __uint64_t = std::ffi::c_ulong;
+pub type __dev_t = std::ffi::c_ulong;
+pub type __uid_t = std::ffi::c_uint;
+pub type __gid_t = std::ffi::c_uint;
+pub type __ino_t = std::ffi::c_ulong;
+pub type __mode_t = std::ffi::c_uint;
+pub type __nlink_t = std::ffi::c_ulong;
+pub type __off_t = std::ffi::c_long;
+pub type __off64_t = std::ffi::c_long;
+pub type __time_t = std::ffi::c_long;
+pub type __blksize_t = std::ffi::c_long;
+pub type __blkcnt_t = std::ffi::c_long;
+pub type __syscall_slong_t = std::ffi::c_long;
+pub type size_t = std::ffi::c_ulong;
+pub type C2RustUnnamed = std::ffi::c_uint;
 pub const _SC_SIGSTKSZ: C2RustUnnamed = 250;
 pub const _SC_MINSIGSTKSZ: C2RustUnnamed = 249;
 pub const _SC_THREAD_ROBUST_PRIO_PROTECT: C2RustUnnamed = 248;
@@ -288,42 +325,44 @@ pub const _SC_NGROUPS_MAX: C2RustUnnamed = 3;
 pub const _SC_CLK_TCK: C2RustUnnamed = 2;
 pub const _SC_CHILD_MAX: C2RustUnnamed = 1;
 pub const _SC_ARG_MAX: C2RustUnnamed = 0;
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
 pub struct _IO_FILE {
-    pub _flags: libc::c_int,
-    pub _IO_read_ptr: *mut libc::c_char,
-    pub _IO_read_end: *mut libc::c_char,
-    pub _IO_read_base: *mut libc::c_char,
-    pub _IO_write_base: *mut libc::c_char,
-    pub _IO_write_ptr: *mut libc::c_char,
-    pub _IO_write_end: *mut libc::c_char,
-    pub _IO_buf_base: *mut libc::c_char,
-    pub _IO_buf_end: *mut libc::c_char,
-    pub _IO_save_base: *mut libc::c_char,
-    pub _IO_backup_base: *mut libc::c_char,
-    pub _IO_save_end: *mut libc::c_char,
+    pub _flags: std::ffi::c_int,
+    pub _IO_read_ptr: *mut std::ffi::c_char,
+    pub _IO_read_end: *mut std::ffi::c_char,
+    pub _IO_read_base: *mut std::ffi::c_char,
+    pub _IO_write_base: *mut std::ffi::c_char,
+    pub _IO_write_ptr: *mut std::ffi::c_char,
+    pub _IO_write_end: *mut std::ffi::c_char,
+    pub _IO_buf_base: *mut std::ffi::c_char,
+    pub _IO_buf_end: *mut std::ffi::c_char,
+    pub _IO_save_base: *mut std::ffi::c_char,
+    pub _IO_backup_base: *mut std::ffi::c_char,
+    pub _IO_save_end: *mut std::ffi::c_char,
     pub _markers: *mut _IO_marker,
     pub _chain: *mut _IO_FILE,
-    pub _fileno: libc::c_int,
-    pub _flags2: libc::c_int,
+    pub _fileno: std::ffi::c_int,
+    #[bitfield(name = "_flags2", ty = "std::ffi::c_int", bits = "0..=23")]
+    pub _flags2: [u8; 3],
+    pub _short_backupbuf: [std::ffi::c_char; 1],
     pub _old_offset: __off_t,
-    pub _cur_column: libc::c_ushort,
-    pub _vtable_offset: libc::c_schar,
-    pub _shortbuf: [libc::c_char; 1],
-    pub _lock: *mut libc::c_void,
+    pub _cur_column: std::ffi::c_ushort,
+    pub _vtable_offset: std::ffi::c_schar,
+    pub _shortbuf: [std::ffi::c_char; 1],
+    pub _lock: *mut std::ffi::c_void,
     pub _offset: __off64_t,
     pub _codecvt: *mut _IO_codecvt,
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
-    pub _freeres_buf: *mut libc::c_void,
-    pub __pad5: libc::size_t,
-    pub _mode: libc::c_int,
-    pub _unused2: [libc::c_char; 20],
+    pub _freeres_buf: *mut std::ffi::c_void,
+    pub _prevchain: *mut *mut _IO_FILE,
+    pub _mode: std::ffi::c_int,
+    pub _unused2: [std::ffi::c_char; 20],
 }
 pub type _IO_lock_t = ();
 pub type FILE = _IO_FILE;
-pub type ptrdiff_t = libc::c_long;
+pub type ptrdiff_t = std::ffi::c_long;
 pub type mode_t = __mode_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -340,7 +379,7 @@ pub struct stat {
     pub st_mode: __mode_t,
     pub st_uid: __uid_t,
     pub st_gid: __gid_t,
-    pub __pad0: libc::c_int,
+    pub __pad0: std::ffi::c_int,
     pub st_rdev: __dev_t,
     pub st_size: __off_t,
     pub st_blksize: __blksize_t,
@@ -350,29 +389,35 @@ pub struct stat {
     pub st_ctim: timespec,
     pub __glibc_reserved: [__syscall_slong_t; 3],
 }
-pub type __compar_fn_t =
-    Option<unsafe extern "C" fn(*const libc::c_void, *const libc::c_void) -> libc::c_int>;
+pub type __compar_fn_t = Option::<
+    unsafe extern "C" fn(
+        *const std::ffi::c_void,
+        *const std::ffi::c_void,
+    ) -> std::ffi::c_int,
+>;
+pub type uint64_t = __uint64_t;
+pub type U64 = uint64_t;
 pub type stat_t = stat;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct UTIL_HumanReadableSize_t {
-    pub value: libc::c_double,
-    pub precision: libc::c_int,
-    pub suffix: *const libc::c_char,
+    pub value: std::ffi::c_double,
+    pub precision: std::ffi::c_int,
+    pub suffix: *const std::ffi::c_char,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union charunion {
-    pub chr: *mut libc::c_char,
-    pub cchr: *const libc::c_char,
+    pub chr: *mut std::ffi::c_char,
+    pub cchr: *const std::ffi::c_char,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct FileNamesTable {
-    pub fileNames: *mut *const libc::c_char,
-    pub buf: *mut libc::c_char,
-    pub tableSize: libc::size_t,
-    pub tableCapacity: libc::size_t,
+    pub fileNames: *mut *const std::ffi::c_char,
+    pub buf: *mut std::ffi::c_char,
+    pub tableSize: size_t,
+    pub tableCapacity: size_t,
 }
 pub type DIR = __dirstream;
 #[derive(Copy, Clone)]
@@ -380,109 +425,113 @@ pub type DIR = __dirstream;
 pub struct dirent {
     pub d_ino: __ino_t,
     pub d_off: __off_t,
-    pub d_reclen: libc::c_ushort,
-    pub d_type: libc::c_uchar,
-    pub d_name: [libc::c_char; 256],
+    pub d_reclen: std::ffi::c_ushort,
+    pub d_type: std::ffi::c_uchar,
+    pub d_name: [std::ffi::c_char; 256],
 }
-pub const EOF: libc::c_int = -(1);
-pub const __S_IFMT: libc::c_int = 0o170000 as libc::c_int;
-pub const UTIME_NOW: libc::c_long = ((1) << 30 as libc::c_int) - 1 as libc::c_long;
-pub const UTIL_FILESIZE_UNKNOWN: libc::c_int = -(1);
-pub const _SC_NPROCESSORS_ONLN_0: libc::c_int = _SC_NPROCESSORS_ONLN as libc::c_int;
-pub const PATH_SEP: libc::c_int = '/' as i32;
-pub const NULL: libc::c_int = 0 as libc::c_int;
-pub const EEXIST: libc::c_int = 17 as libc::c_int;
-pub const ENOMEM: libc::c_int = 12 as libc::c_int;
-pub const AT_FDCWD: libc::c_int = -(100);
-static mut g_traceDepth: libc::c_int = 0 as libc::c_int;
+pub const _SC_NPROCESSORS_ONLN_0: std::ffi::c_int = _SC_NPROCESSORS_ONLN
+    as std::ffi::c_int;
+pub const EOF: std::ffi::c_int = -(1 as std::ffi::c_int);
+pub const PATH_SEP: std::ffi::c_int = '/' as i32;
+pub const UTIL_FILESIZE_UNKNOWN: std::ffi::c_int = -(1 as std::ffi::c_int);
+pub const errno: std::ffi::c_int = *__errno_location();
+pub const AT_FDCWD: std::ffi::c_int = -(100 as std::ffi::c_int);
+pub const __S_IFMT: std::ffi::c_int = 0o170000 as std::ffi::c_int;
+pub const UTIME_NOW: std::ffi::c_long = ((1 as std::ffi::c_long)
+    << 30 as std::ffi::c_int) - 1 as std::ffi::c_long;
+pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
+pub const ENOMEM: std::ffi::c_int = 12 as std::ffi::c_int;
+pub const EEXIST: std::ffi::c_int = 17 as std::ffi::c_int;
+static mut g_traceDepth: std::ffi::c_int = 0 as std::ffi::c_int;
 #[no_mangle]
-pub static mut g_traceFileStat: libc::c_int = 0 as libc::c_int;
+pub static mut g_traceFileStat: std::ffi::c_int = 0 as std::ffi::c_int;
 unsafe extern "C" fn UTIL_realloc(
-    mut ptr: *mut libc::c_void,
-    mut size: libc::size_t,
-) -> *mut libc::c_void {
+    mut ptr: *mut std::ffi::c_void,
+    mut size: size_t,
+) -> *mut std::ffi::c_void {
     let mut newptr = realloc(ptr, size);
     if !newptr.is_null() {
         return newptr;
     }
     free(ptr);
-    return NULL as *mut libc::c_void;
+    return NULL as *mut std::ffi::c_void;
 }
 #[no_mangle]
-pub static mut g_utilDisplayLevel: libc::c_int = 0;
+pub static mut g_utilDisplayLevel: std::ffi::c_int = 0;
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_requireUserConfirmation(
-    mut prompt: *const libc::c_char,
-    mut abortMsg: *const libc::c_char,
-    mut acceptableLetters: *const libc::c_char,
-    mut hasStdinInput: libc::c_int,
-) -> libc::c_int {
-    let mut ch: libc::c_int = 0;
-    let mut result: libc::c_int = 0;
+    mut prompt: *const std::ffi::c_char,
+    mut abortMsg: *const std::ffi::c_char,
+    mut acceptableLetters: *const std::ffi::c_char,
+    mut hasStdinInput: std::ffi::c_int,
+) -> std::ffi::c_int {
+    let mut ch: std::ffi::c_int = 0;
+    let mut result: std::ffi::c_int = 0;
     if hasStdinInput != 0 {
         fprintf(
             stderr,
-            b"stdin is an input - not proceeding.\n\0" as *const u8 as *const libc::c_char,
+            b"stdin is an input - not proceeding.\n\0" as *const u8
+                as *const std::ffi::c_char,
         );
-        return 1 as libc::c_int;
+        return 1 as std::ffi::c_int;
     }
-    fprintf(stderr, b"%s\0" as *const u8 as *const libc::c_char, prompt);
+    fprintf(stderr, b"%s\0" as *const u8 as *const std::ffi::c_char, prompt);
     ch = getchar();
-    result = 0 as libc::c_int;
+    result = 0 as std::ffi::c_int;
     if (strchr(acceptableLetters, ch)).is_null() {
-        fprintf(
-            stderr,
-            b"%s \n\0" as *const u8 as *const libc::c_char,
-            abortMsg,
-        );
-        result = 1 as libc::c_int;
+        fprintf(stderr, b"%s \n\0" as *const u8 as *const std::ffi::c_char, abortMsg);
+        result = 1 as std::ffi::c_int;
     }
     while ch != EOF && ch != '\n' as i32 {
         ch = getchar();
     }
     return result;
 }
-pub const LIST_SIZE_INCREASE: libc::c_int = 8 as libc::c_int * 1024;
-pub const MAX_FILE_OF_FILE_NAMES_SIZE: libc::c_int = ((1) << 20 as libc::c_int) * 50;
+pub const LIST_SIZE_INCREASE: std::ffi::c_int = 8 as std::ffi::c_int
+    * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int);
+pub const MAX_FILE_OF_FILE_NAMES_SIZE: std::ffi::c_int = ((1 as std::ffi::c_int)
+    << 20 as std::ffi::c_int) * 50 as std::ffi::c_int;
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_traceFileStat() {
-    g_traceFileStat = 1 as libc::c_int;
+    g_traceFileStat = 1 as std::ffi::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_fstat(
-    fd: libc::c_int,
-    mut filename: *const libc::c_char,
+    fd: std::ffi::c_int,
+    mut filename: *const std::ffi::c_char,
     mut statbuf: *mut stat_t,
-) -> libc::c_int {
-    let mut ret: libc::c_int = 0;
+) -> std::ffi::c_int {
+    let mut ret: std::ffi::c_int = 0;
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_stat(%d, %s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_stat(%d, %s)\0" as *const u8 as *const std::ffi::c_char,
             fd,
             filename,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    if fd >= 0 {
-        ret = (fstat(fd, statbuf) == 0) as libc::c_int;
+    if fd >= 0 as std::ffi::c_int {
+        ret = (fstat(fd, statbuf) == 0) as std::ffi::c_int;
     } else {
-        ret = (stat(filename, statbuf) == 0) as libc::c_int;
+        ret = (stat(filename, statbuf) == 0) as std::ffi::c_int;
     }
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
@@ -490,14 +539,16 @@ pub unsafe extern "C" fn UTIL_fstat(
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_stat(
-    mut filename: *const libc::c_char,
+    mut filename: *const std::ffi::c_char,
     mut statbuf: *mut stat_t,
-) -> libc::c_int {
-    return UTIL_fstat(-(1), filename, statbuf);
+) -> std::ffi::c_int {
+    return UTIL_fstat(-(1 as std::ffi::c_int), filename, statbuf);
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isRegularFile(mut infilename: *const libc::c_char) -> libc::c_int {
-    let mut statbuf = stat_t {
+pub unsafe extern "C" fn UTIL_isFdRegularFile(
+    mut fd: std::ffi::c_int,
+) -> std::ffi::c_int {
+    let mut statbuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -509,72 +560,49 @@ pub unsafe extern "C" fn UTIL_isRegularFile(mut infilename: *const libc::c_char)
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
-    let mut ret: libc::c_int = 0;
+    let mut ret: std::ffi::c_int = 0;
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isRegularFile(%s)\0" as *const u8 as *const libc::c_char,
-            infilename,
+            b"UTIL_isFdRegularFile(%d)\0" as *const u8 as *const std::ffi::c_char,
+            fd,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    ret = (UTIL_stat(infilename, &mut statbuf) != 0 && UTIL_isRegularFileStat(&mut statbuf) != 0)
-        as libc::c_int;
+    ret = (fd >= 0 as std::ffi::c_int
+        && UTIL_fstat(fd, b"\0" as *const u8 as *const std::ffi::c_char, &mut statbuf)
+            != 0 && UTIL_isRegularFileStat(&mut statbuf) != 0) as std::ffi::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
     return ret;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isRegularFileStat(mut statbuf: *const stat_t) -> libc::c_int {
-    return (((*statbuf).st_mode & __S_IFMT as libc::c_uint
-        == 0o100000 as libc::c_int as libc::c_uint) as libc::c_int
-        != 0) as libc::c_int;
-}
-#[no_mangle]
-pub unsafe extern "C" fn UTIL_chmod(
-    mut filename: *const libc::c_char,
-    mut statbuf: *const stat_t,
-    mut permissions: mode_t,
-) -> libc::c_int {
-    return UTIL_fchmod(-(1), filename, statbuf, permissions);
-}
-#[no_mangle]
-pub unsafe extern "C" fn UTIL_fchmod(
-    fd: libc::c_int,
-    mut filename: *const libc::c_char,
-    mut statbuf: *const stat_t,
-    mut permissions: mode_t,
-) -> libc::c_int {
-    let mut localStatBuf = stat_t {
+pub unsafe extern "C" fn UTIL_isRegularFile(
+    mut infilename: *const std::ffi::c_char,
+) -> std::ffi::c_int {
+    let mut statbuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -586,131 +614,204 @@ pub unsafe extern "C" fn UTIL_fchmod(
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
+        __glibc_reserved: [0; 3],
+    };
+    let mut ret: std::ffi::c_int = 0;
+    if g_traceFileStat != 0 {
+        fprintf(
+            stderr,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
+            g_traceDepth,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+        );
+        fprintf(
+            stderr,
+            b"UTIL_isRegularFile(%s)\0" as *const u8 as *const std::ffi::c_char,
+            infilename,
+        );
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
+        g_traceDepth += 1;
+        g_traceDepth;
+    }
+    ret = (UTIL_stat(infilename, &mut statbuf) != 0
+        && UTIL_isRegularFileStat(&mut statbuf) != 0) as std::ffi::c_int;
+    if g_traceFileStat != 0 {
+        g_traceDepth -= 1;
+        g_traceDepth;
+        fprintf(
+            stderr,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
+            g_traceDepth,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+            ret,
+        );
+    }
+    return ret;
+}
+#[no_mangle]
+pub unsafe extern "C" fn UTIL_isRegularFileStat(
+    mut statbuf: *const stat_t,
+) -> std::ffi::c_int {
+    return (((*statbuf).st_mode & __S_IFMT as __mode_t
+        == 0o100000 as std::ffi::c_int as __mode_t) as std::ffi::c_int
+        != 0 as std::ffi::c_int) as std::ffi::c_int;
+}
+#[no_mangle]
+pub unsafe extern "C" fn UTIL_chmod(
+    mut filename: *const std::ffi::c_char,
+    mut statbuf: *const stat_t,
+    mut permissions: mode_t,
+) -> std::ffi::c_int {
+    return UTIL_fchmod(-(1 as std::ffi::c_int), filename, statbuf, permissions);
+}
+#[no_mangle]
+pub unsafe extern "C" fn UTIL_fchmod(
+    fd: std::ffi::c_int,
+    mut filename: *const std::ffi::c_char,
+    mut statbuf: *const stat_t,
+    mut permissions: mode_t,
+) -> std::ffi::c_int {
+    let mut localStatBuf = stat {
+        st_dev: 0,
+        st_ino: 0,
+        st_nlink: 0,
+        st_mode: 0,
+        st_uid: 0,
+        st_gid: 0,
+        __pad0: 0,
+        st_rdev: 0,
+        st_size: 0,
+        st_blksize: 0,
+        st_blocks: 0,
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_chmod(%s, %#4o)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_chmod(%s, %#4o)\0" as *const u8 as *const std::ffi::c_char,
             filename,
             permissions,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
     if statbuf.is_null() {
         if UTIL_fstat(fd, filename, &mut localStatBuf) == 0 {
             if g_traceFileStat != 0 {
                 g_traceDepth -= 1;
+                g_traceDepth;
                 fprintf(
                     stderr,
-                    b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                    b"Trace:FileStat: %*s< %d\n\0" as *const u8
+                        as *const std::ffi::c_char,
                     g_traceDepth,
-                    b"\0" as *const u8 as *const libc::c_char,
-                    0 as libc::c_int,
+                    b"\0" as *const u8 as *const std::ffi::c_char,
+                    0 as std::ffi::c_int,
                 );
             }
-            return 0 as libc::c_int;
+            return 0 as std::ffi::c_int;
         }
         statbuf = &mut localStatBuf;
     }
     if UTIL_isRegularFileStat(statbuf) == 0 {
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
-                0 as libc::c_int,
+                b"\0" as *const u8 as *const std::ffi::c_char,
+                0 as std::ffi::c_int,
             );
         }
-        return 0 as libc::c_int;
+        return 0 as std::ffi::c_int;
     }
-    if fd >= 0 {
-        let mut ret: libc::c_int = 0;
+    if fd >= 0 as std::ffi::c_int {
+        let mut ret: std::ffi::c_int = 0;
         if g_traceFileStat != 0 {
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
+                b"\0" as *const u8 as *const std::ffi::c_char,
             );
-            fprintf(stderr, b"fchmod\0" as *const u8 as *const libc::c_char);
-            fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+            fprintf(stderr, b"fchmod\0" as *const u8 as *const std::ffi::c_char);
+            fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
             g_traceDepth += 1;
+            g_traceDepth;
         }
         ret = fchmod(fd, permissions);
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
+                b"\0" as *const u8 as *const std::ffi::c_char,
                 ret,
             );
         }
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
+                b"\0" as *const u8 as *const std::ffi::c_char,
                 ret,
             );
         }
         return ret;
     } else {
-        let mut ret_0: libc::c_int = 0;
+        let mut ret_0: std::ffi::c_int = 0;
         if g_traceFileStat != 0 {
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
+                b"\0" as *const u8 as *const std::ffi::c_char,
             );
-            fprintf(stderr, b"chmod\0" as *const u8 as *const libc::c_char);
-            fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+            fprintf(stderr, b"chmod\0" as *const u8 as *const std::ffi::c_char);
+            fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
             g_traceDepth += 1;
+            g_traceDepth;
         }
         ret_0 = chmod(filename, permissions);
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
+                b"\0" as *const u8 as *const std::ffi::c_char,
                 ret_0,
             );
         }
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
+                b"\0" as *const u8 as *const std::ffi::c_char,
                 ret_0,
             );
         }
@@ -719,53 +820,52 @@ pub unsafe extern "C" fn UTIL_fchmod(
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_utime(
-    mut filename: *const libc::c_char,
+    mut filename: *const std::ffi::c_char,
     mut statbuf: *const stat_t,
-) -> libc::c_int {
-    let mut ret: libc::c_int = 0;
+) -> std::ffi::c_int {
+    let mut ret: std::ffi::c_int = 0;
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_utime(%s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_utime(%s)\0" as *const u8 as *const std::ffi::c_char,
             filename,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
     let mut timebuf: [timespec; 2] = [
         {
             let mut init = timespec {
-                tv_sec: 0 as libc::c_int as __time_t,
+                tv_sec: 0 as std::ffi::c_int as __time_t,
                 tv_nsec: UTIME_NOW,
             };
             init
         },
-        timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        timespec { tv_sec: 0, tv_nsec: 0 },
     ];
-    timebuf[1 as libc::c_int as usize] = (*statbuf).st_mtim;
+    timebuf[1 as std::ffi::c_int as usize] = (*statbuf).st_mtim;
     ret = utimensat(
         AT_FDCWD,
         filename,
         timebuf.as_mut_ptr() as *const timespec,
-        0 as libc::c_int,
+        0 as std::ffi::c_int,
     );
-    (*__errno_location()/* errno */) = 0 as libc::c_int;
+    errno = 0 as std::ffi::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
@@ -773,19 +873,19 @@ pub unsafe extern "C" fn UTIL_utime(
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_setFileStat(
-    mut filename: *const libc::c_char,
+    mut filename: *const std::ffi::c_char,
     mut statbuf: *const stat_t,
-) -> libc::c_int {
-    return UTIL_setFDStat(-(1), filename, statbuf);
+) -> std::ffi::c_int {
+    return UTIL_setFDStat(-(1 as std::ffi::c_int), filename, statbuf);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_setFDStat(
-    fd: libc::c_int,
-    mut filename: *const libc::c_char,
+    fd: std::ffi::c_int,
+    mut filename: *const std::ffi::c_char,
     mut statbuf: *const stat_t,
-) -> libc::c_int {
-    let mut res = 0 as libc::c_int;
-    let mut curStatBuf = stat_t {
+) -> std::ffi::c_int {
+    let mut res = 0 as std::ffi::c_int;
+    let mut curStatBuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -797,83 +897,80 @@ pub unsafe extern "C" fn UTIL_setFDStat(
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_setFileStat(%d, %s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_setFileStat(%d, %s)\0" as *const u8 as *const std::ffi::c_char,
             fd,
             filename,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
     if UTIL_fstat(fd, filename, &mut curStatBuf) == 0
         || UTIL_isRegularFileStat(&mut curStatBuf) == 0
     {
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
-                -(1),
+                b"\0" as *const u8 as *const std::ffi::c_char,
+                -(1 as std::ffi::c_int),
             );
         }
-        return -(1);
+        return -(1 as std::ffi::c_int);
     }
-    if fd >= 0 {
-        res += fchown(fd, -(1) as __uid_t, (*statbuf).st_gid);
+    if fd >= 0 as std::ffi::c_int {
+        res += fchown(fd, -(1 as std::ffi::c_int) as __uid_t, (*statbuf).st_gid);
     } else {
-        res += chown(filename, -(1) as __uid_t, (*statbuf).st_gid);
+        res += chown(filename, -(1 as std::ffi::c_int) as __uid_t, (*statbuf).st_gid);
     }
-    res += UTIL_fchmod(
-        fd,
-        filename,
-        &mut curStatBuf,
-        (*statbuf).st_mode & 0o777 as libc::c_int as libc::c_uint,
-    );
-    if fd >= 0 {
-        res += fchown(fd, (*statbuf).st_uid, -(1) as __gid_t);
+    res
+        += UTIL_fchmod(
+            fd,
+            filename,
+            &mut curStatBuf,
+            (*statbuf).st_mode & 0o777 as std::ffi::c_int as __mode_t,
+        );
+    if fd >= 0 as std::ffi::c_int {
+        res += fchown(fd, (*statbuf).st_uid, -(1 as std::ffi::c_int) as __gid_t);
     } else {
-        res += chown(filename, (*statbuf).st_uid, -(1) as __gid_t);
+        res += chown(filename, (*statbuf).st_uid, -(1 as std::ffi::c_int) as __gid_t);
     }
-    (*__errno_location()/* errno */) = 0 as libc::c_int;
+    errno = 0 as std::ffi::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             -res,
         );
     }
     return -res;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isDirectory(mut infilename: *const libc::c_char) -> libc::c_int {
-    let mut statbuf = stat_t {
+pub unsafe extern "C" fn UTIL_isDirectory(
+    mut infilename: *const std::ffi::c_char,
+) -> std::ffi::c_int {
+    let mut statbuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -885,77 +982,74 @@ pub unsafe extern "C" fn UTIL_isDirectory(mut infilename: *const libc::c_char) -
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
-    let mut ret: libc::c_int = 0;
+    let mut ret: std::ffi::c_int = 0;
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isDirectory(%s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_isDirectory(%s)\0" as *const u8 as *const std::ffi::c_char,
             infilename,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    ret = (UTIL_stat(infilename, &mut statbuf) != 0 && UTIL_isDirectoryStat(&mut statbuf) != 0)
-        as libc::c_int;
+    ret = (UTIL_stat(infilename, &mut statbuf) != 0
+        && UTIL_isDirectoryStat(&mut statbuf) != 0) as std::ffi::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
     return ret;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isDirectoryStat(mut statbuf: *const stat_t) -> libc::c_int {
-    let mut ret: libc::c_int = 0;
+pub unsafe extern "C" fn UTIL_isDirectoryStat(
+    mut statbuf: *const stat_t,
+) -> std::ffi::c_int {
+    let mut ret: std::ffi::c_int = 0;
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isDirectoryStat()\0" as *const u8 as *const libc::c_char,
+            b"UTIL_isDirectoryStat()\0" as *const u8 as *const std::ffi::c_char,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    ret = (((*statbuf).st_mode & __S_IFMT as libc::c_uint == 0o40000 as libc::c_int as libc::c_uint)
-        as libc::c_int
-        != 0) as libc::c_int;
+    ret = (((*statbuf).st_mode & __S_IFMT as __mode_t
+        == 0o40000 as std::ffi::c_int as __mode_t) as std::ffi::c_int
+        != 0 as std::ffi::c_int) as std::ffi::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
@@ -963,39 +1057,94 @@ pub unsafe extern "C" fn UTIL_isDirectoryStat(mut statbuf: *const stat_t) -> lib
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_compareStr(
-    mut p1: *const libc::c_void,
-    mut p2: *const libc::c_void,
-) -> libc::c_int {
+    mut p1: *const std::ffi::c_void,
+    mut p2: *const std::ffi::c_void,
+) -> std::ffi::c_int {
     return strcmp(
-        *(p1 as *const *mut libc::c_char),
-        *(p2 as *const *mut libc::c_char),
+        *(p1 as *const *mut std::ffi::c_char),
+        *(p2 as *const *mut std::ffi::c_char),
     );
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_isSameFile(
-    mut fName1: *const libc::c_char,
-    mut fName2: *const libc::c_char,
-) -> libc::c_int {
-    let mut ret: libc::c_int = 0;
-    debug_assert!(!fName1.is_null());
-    debug_assert!(!fName2.is_null());
+    mut fName1: *const std::ffi::c_char,
+    mut fName2: *const std::ffi::c_char,
+) -> std::ffi::c_int {
+    let mut ret: std::ffi::c_int = 0;
+    if !fName1.is_null() {} else {
+        __assert_fail(
+            b"fName1 != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            387 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 48],
+                &[std::ffi::c_char; 48],
+            >(b"int UTIL_isSameFile(const char *, const char *)\0"))
+                .as_ptr(),
+        );
+    }
+    'c_12298: {
+        if !fName1.is_null() {} else {
+            __assert_fail(
+                b"fName1 != NULL\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                387 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 48],
+                    &[std::ffi::c_char; 48],
+                >(b"int UTIL_isSameFile(const char *, const char *)\0"))
+                    .as_ptr(),
+            );
+        }
+    };
+    if !fName2.is_null() {} else {
+        __assert_fail(
+            b"fName2 != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            387 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 48],
+                &[std::ffi::c_char; 48],
+            >(b"int UTIL_isSameFile(const char *, const char *)\0"))
+                .as_ptr(),
+        );
+    }
+    'c_12255: {
+        if !fName2.is_null() {} else {
+            __assert_fail(
+                b"fName2 != NULL\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                387 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 48],
+                    &[std::ffi::c_char; 48],
+                >(b"int UTIL_isSameFile(const char *, const char *)\0"))
+                    .as_ptr(),
+            );
+        }
+    };
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isSameFile(%s, %s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_isSameFile(%s, %s)\0" as *const u8 as *const std::ffi::c_char,
             fName1,
             fName2,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    let mut file1Stat = stat_t {
+    let mut file1Stat = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -1007,21 +1156,12 @@ pub unsafe extern "C" fn UTIL_isSameFile(
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
-    let mut file2Stat = stat_t {
+    let mut file2Stat = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -1033,31 +1173,23 @@ pub unsafe extern "C" fn UTIL_isSameFile(
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
     ret = (UTIL_stat(fName1, &mut file1Stat) != 0
         && UTIL_stat(fName2, &mut file2Stat) != 0
         && UTIL_isSameFileStat(fName1, fName2, &mut file1Stat, &mut file2Stat) != 0)
-        as libc::c_int;
+        as std::ffi::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
@@ -1065,62 +1197,129 @@ pub unsafe extern "C" fn UTIL_isSameFile(
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_isSameFileStat(
-    mut fName1: *const libc::c_char,
-    mut fName2: *const libc::c_char,
+    mut fName1: *const std::ffi::c_char,
+    mut fName2: *const std::ffi::c_char,
     mut file1Stat: *const stat_t,
     mut file2Stat: *const stat_t,
-) -> libc::c_int {
-    let mut ret: libc::c_int = 0;
-    debug_assert!(!fName1.is_null());
-    debug_assert!(!fName2.is_null());
+) -> std::ffi::c_int {
+    let mut ret: std::ffi::c_int = 0;
+    if !fName1.is_null() {} else {
+        __assert_fail(
+            b"fName1 != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            412 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 84],
+                &[std::ffi::c_char; 84],
+            >(
+                b"int UTIL_isSameFileStat(const char *, const char *, const stat_t *, const stat_t *)\0",
+            ))
+                .as_ptr(),
+        );
+    }
+    'c_12159: {
+        if !fName1.is_null() {} else {
+            __assert_fail(
+                b"fName1 != NULL\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                412 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 84],
+                    &[std::ffi::c_char; 84],
+                >(
+                    b"int UTIL_isSameFileStat(const char *, const char *, const stat_t *, const stat_t *)\0",
+                ))
+                    .as_ptr(),
+            );
+        }
+    };
+    if !fName2.is_null() {} else {
+        __assert_fail(
+            b"fName2 != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            412 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 84],
+                &[std::ffi::c_char; 84],
+            >(
+                b"int UTIL_isSameFileStat(const char *, const char *, const stat_t *, const stat_t *)\0",
+            ))
+                .as_ptr(),
+        );
+    }
+    'c_12107: {
+        if !fName2.is_null() {} else {
+            __assert_fail(
+                b"fName2 != NULL\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                412 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 84],
+                    &[std::ffi::c_char; 84],
+                >(
+                    b"int UTIL_isSameFileStat(const char *, const char *, const stat_t *, const stat_t *)\0",
+                ))
+                    .as_ptr(),
+            );
+        }
+    };
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isSameFileStat(%s, %s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_isSameFileStat(%s, %s)\0" as *const u8 as *const std::ffi::c_char,
             fName1,
             fName2,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    ret = ((*file1Stat).st_dev == (*file2Stat).st_dev && (*file1Stat).st_ino == (*file2Stat).st_ino)
-        as libc::c_int;
+    ret = ((*file1Stat).st_dev == (*file2Stat).st_dev
+        && (*file1Stat).st_ino == (*file2Stat).st_ino) as std::ffi::c_int;
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
     return ret;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isFIFO(mut infilename: *const libc::c_char) -> libc::c_int {
+pub unsafe extern "C" fn UTIL_isFIFO(
+    mut infilename: *const std::ffi::c_char,
+) -> std::ffi::c_int {
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isFIFO(%s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_isFIFO(%s)\0" as *const u8 as *const std::ffi::c_char,
             infilename,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    let mut statbuf = stat_t {
+    let mut statbuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -1132,77 +1331,152 @@ pub unsafe extern "C" fn UTIL_isFIFO(mut infilename: *const libc::c_char) -> lib
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
     if UTIL_stat(infilename, &mut statbuf) != 0 && UTIL_isFIFOStat(&mut statbuf) != 0 {
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
-                1 as libc::c_int,
+                b"\0" as *const u8 as *const std::ffi::c_char,
+                1 as std::ffi::c_int,
             );
         }
-        return 1 as libc::c_int;
+        return 1 as std::ffi::c_int;
     }
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
-            0 as libc::c_int,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+            0 as std::ffi::c_int,
         );
     }
-    return 0 as libc::c_int;
+    return 0 as std::ffi::c_int;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isFIFOStat(mut statbuf: *const stat_t) -> libc::c_int {
-    if (*statbuf).st_mode & __S_IFMT as libc::c_uint == 0o10000 as libc::c_int as libc::c_uint {
-        return 1 as libc::c_int;
+pub unsafe extern "C" fn UTIL_isFIFOStat(mut statbuf: *const stat_t) -> std::ffi::c_int {
+    if (*statbuf).st_mode & __S_IFMT as __mode_t
+        == 0o10000 as std::ffi::c_int as __mode_t
+    {
+        return 1 as std::ffi::c_int;
     }
-    return 0 as libc::c_int;
+    return 0 as std::ffi::c_int;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isBlockDevStat(mut statbuf: *const stat_t) -> libc::c_int {
-    if (*statbuf).st_mode & __S_IFMT as libc::c_uint == 0o60000 as libc::c_int as libc::c_uint {
-        return 1 as libc::c_int;
-    }
-    return 0 as libc::c_int;
-}
-#[no_mangle]
-pub unsafe extern "C" fn UTIL_isLink(mut infilename: *const libc::c_char) -> libc::c_int {
+pub unsafe extern "C" fn UTIL_isFileDescriptorPipe(
+    mut filename: *const std::ffi::c_char,
+) -> std::ffi::c_int {
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isLink(%s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_isFileDescriptorPipe(%s)\0" as *const u8 as *const std::ffi::c_char,
+            filename,
+        );
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
+        g_traceDepth += 1;
+        g_traceDepth;
+    }
+    if *filename.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int == '/' as i32
+        && strncmp(
+            filename,
+            b"/dev/fd/\0" as *const u8 as *const std::ffi::c_char,
+            8 as std::ffi::c_int as std::ffi::c_ulong,
+        ) == 0 as std::ffi::c_int
+    {
+        if g_traceFileStat != 0 {
+            g_traceDepth -= 1;
+            g_traceDepth;
+            fprintf(
+                stderr,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
+                g_traceDepth,
+                b"\0" as *const u8 as *const std::ffi::c_char,
+                1 as std::ffi::c_int,
+            );
+        }
+        return 1 as std::ffi::c_int;
+    }
+    if *filename.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int == '/' as i32
+        && strncmp(
+            filename,
+            b"/proc/self/fd/\0" as *const u8 as *const std::ffi::c_char,
+            14 as std::ffi::c_int as std::ffi::c_ulong,
+        ) == 0 as std::ffi::c_int
+    {
+        if g_traceFileStat != 0 {
+            g_traceDepth -= 1;
+            g_traceDepth;
+            fprintf(
+                stderr,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
+                g_traceDepth,
+                b"\0" as *const u8 as *const std::ffi::c_char,
+                1 as std::ffi::c_int,
+            );
+        }
+        return 1 as std::ffi::c_int;
+    }
+    if g_traceFileStat != 0 {
+        g_traceDepth -= 1;
+        g_traceDepth;
+        fprintf(
+            stderr,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
+            g_traceDepth,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+            0 as std::ffi::c_int,
+        );
+    }
+    return 0 as std::ffi::c_int;
+}
+#[no_mangle]
+pub unsafe extern "C" fn UTIL_isBlockDevStat(
+    mut statbuf: *const stat_t,
+) -> std::ffi::c_int {
+    if (*statbuf).st_mode & __S_IFMT as __mode_t
+        == 0o60000 as std::ffi::c_int as __mode_t
+    {
+        return 1 as std::ffi::c_int;
+    }
+    return 0 as std::ffi::c_int;
+}
+#[no_mangle]
+pub unsafe extern "C" fn UTIL_isLink(
+    mut infilename: *const std::ffi::c_char,
+) -> std::ffi::c_int {
+    if g_traceFileStat != 0 {
+        fprintf(
+            stderr,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
+            g_traceDepth,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+        );
+        fprintf(
+            stderr,
+            b"UTIL_isLink(%s)\0" as *const u8 as *const std::ffi::c_char,
             infilename,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    let mut statbuf = stat_t {
+    let mut statbuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -1214,85 +1488,81 @@ pub unsafe extern "C" fn UTIL_isLink(mut infilename: *const libc::c_char) -> lib
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
     let r = lstat(infilename, &mut statbuf);
     if r == 0
-        && statbuf.st_mode & __S_IFMT as libc::c_uint == 0o120000 as libc::c_int as libc::c_uint
+        && statbuf.st_mode & __S_IFMT as __mode_t
+            == 0o120000 as std::ffi::c_int as __mode_t
     {
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
-                1 as libc::c_int,
+                b"\0" as *const u8 as *const std::ffi::c_char,
+                1 as std::ffi::c_int,
             );
         }
-        return 1 as libc::c_int;
+        return 1 as std::ffi::c_int;
     }
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
-            0 as libc::c_int,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+            0 as std::ffi::c_int,
         );
     }
-    return 0 as libc::c_int;
+    return 0 as std::ffi::c_int;
 }
-static mut g_fakeStdinIsConsole: libc::c_int = 0 as libc::c_int;
-static mut g_fakeStderrIsConsole: libc::c_int = 0 as libc::c_int;
-static mut g_fakeStdoutIsConsole: libc::c_int = 0 as libc::c_int;
+static mut g_fakeStdinIsConsole: std::ffi::c_int = 0 as std::ffi::c_int;
+static mut g_fakeStderrIsConsole: std::ffi::c_int = 0 as std::ffi::c_int;
+static mut g_fakeStdoutIsConsole: std::ffi::c_int = 0 as std::ffi::c_int;
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_isConsole(mut file: *mut FILE) -> libc::c_int {
-    let mut ret: libc::c_int = 0;
+pub unsafe extern "C" fn UTIL_isConsole(mut file: *mut FILE) -> std::ffi::c_int {
+    let mut ret: std::ffi::c_int = 0;
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_isConsole(%d)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_isConsole(%d)\0" as *const u8 as *const std::ffi::c_char,
             fileno(file),
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
     if file == stdin && g_fakeStdinIsConsole != 0 {
-        ret = 1 as libc::c_int;
+        ret = 1 as std::ffi::c_int;
     } else if file == stderr && g_fakeStderrIsConsole != 0 {
-        ret = 1 as libc::c_int;
+        ret = 1 as std::ffi::c_int;
     } else if file == stdout && g_fakeStdoutIsConsole != 0 {
-        ret = 1 as libc::c_int;
+        ret = 1 as std::ffi::c_int;
     } else {
         ret = isatty(fileno(file));
     }
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
             ret,
         );
     }
@@ -1300,19 +1570,21 @@ pub unsafe extern "C" fn UTIL_isConsole(mut file: *mut FILE) -> libc::c_int {
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_fakeStdinIsConsole() {
-    g_fakeStdinIsConsole = 1 as libc::c_int;
+    g_fakeStdinIsConsole = 1 as std::ffi::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_fakeStdoutIsConsole() {
-    g_fakeStdoutIsConsole = 1 as libc::c_int;
+    g_fakeStdoutIsConsole = 1 as std::ffi::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_fakeStderrIsConsole() {
-    g_fakeStderrIsConsole = 1 as libc::c_int;
+    g_fakeStderrIsConsole = 1 as std::ffi::c_int;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_getFileSize(mut infilename: *const libc::c_char) -> u64 {
-    let mut statbuf = stat_t {
+pub unsafe extern "C" fn UTIL_getFileSize(
+    mut infilename: *const std::ffi::c_char,
+) -> U64 {
+    let mut statbuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -1324,248 +1596,338 @@ pub unsafe extern "C" fn UTIL_getFileSize(mut infilename: *const libc::c_char) -
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_getFileSize(%s)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_getFileSize(%s)\0" as *const u8 as *const std::ffi::c_char,
             infilename,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
     if UTIL_stat(infilename, &mut statbuf) == 0 {
         if g_traceFileStat != 0 {
             g_traceDepth -= 1;
+            g_traceDepth;
             fprintf(
                 stderr,
-                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
                 g_traceDepth,
-                b"\0" as *const u8 as *const libc::c_char,
-                -(1),
+                b"\0" as *const u8 as *const std::ffi::c_char,
+                -(1 as std::ffi::c_int),
             );
         }
-        return UTIL_FILESIZE_UNKNOWN as u64;
+        return UTIL_FILESIZE_UNKNOWN as U64;
     }
     let size = UTIL_getFileSizeStat(&mut statbuf);
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
-            size as libc::c_int,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+            size as std::ffi::c_int,
         );
     }
     return size;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_getFileSizeStat(mut statbuf: *const stat_t) -> u64 {
+pub unsafe extern "C" fn UTIL_getFileSizeStat(mut statbuf: *const stat_t) -> U64 {
     if UTIL_isRegularFileStat(statbuf) == 0 {
-        return UTIL_FILESIZE_UNKNOWN as u64;
+        return UTIL_FILESIZE_UNKNOWN as U64;
     }
-    if !((*statbuf).st_mode & __S_IFMT as libc::c_uint == 0o100000 as libc::c_int as libc::c_uint) {
-        return UTIL_FILESIZE_UNKNOWN as u64;
+    if !((*statbuf).st_mode & __S_IFMT as __mode_t
+        == 0o100000 as std::ffi::c_int as __mode_t)
+    {
+        return UTIL_FILESIZE_UNKNOWN as U64;
     }
-    return (*statbuf).st_size as u64;
+    return (*statbuf).st_size as U64;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_makeHumanReadableSize(mut size: u64) -> UTIL_HumanReadableSize_t {
+pub unsafe extern "C" fn UTIL_makeHumanReadableSize(
+    mut size: U64,
+) -> UTIL_HumanReadableSize_t {
     let mut hrs = UTIL_HumanReadableSize_t {
         value: 0.,
         precision: 0,
-        suffix: 0 as *const libc::c_char,
+        suffix: 0 as *const std::ffi::c_char,
     };
-    if g_utilDisplayLevel > 3 {
-        if size as libc::c_ulonglong >= (1) << 53 as libc::c_int {
-            hrs.value = size as libc::c_double / ((1) << 20 as libc::c_int) as libc::c_double;
-            hrs.suffix = b" MiB\0" as *const u8 as *const libc::c_char;
-            hrs.precision = 2 as libc::c_int;
+    if g_utilDisplayLevel > 3 as std::ffi::c_int {
+        if size as std::ffi::c_ulonglong
+            >= (1 as std::ffi::c_ulonglong) << 53 as std::ffi::c_int
+        {
+            hrs
+                .value = size as std::ffi::c_double
+                / ((1 as std::ffi::c_ulonglong) << 20 as std::ffi::c_int)
+                    as std::ffi::c_double;
+            hrs.suffix = b" MiB\0" as *const u8 as *const std::ffi::c_char;
+            hrs.precision = 2 as std::ffi::c_int;
         } else {
-            hrs.value = size as libc::c_double;
-            hrs.suffix = b" B\0" as *const u8 as *const libc::c_char;
-            hrs.precision = 0 as libc::c_int;
+            hrs.value = size as std::ffi::c_double;
+            hrs.suffix = b" B\0" as *const u8 as *const std::ffi::c_char;
+            hrs.precision = 0 as std::ffi::c_int;
         }
     } else {
-        if size as libc::c_ulonglong >= (1) << 60 as libc::c_int {
-            hrs.value = size as libc::c_double / ((1) << 60 as libc::c_int) as libc::c_double;
-            hrs.suffix = b" EiB\0" as *const u8 as *const libc::c_char;
-        } else if size as libc::c_ulonglong >= (1) << 50 as libc::c_int {
-            hrs.value = size as libc::c_double / ((1) << 50 as libc::c_int) as libc::c_double;
-            hrs.suffix = b" PiB\0" as *const u8 as *const libc::c_char;
-        } else if size as libc::c_ulonglong >= (1) << 40 as libc::c_int {
-            hrs.value = size as libc::c_double / ((1) << 40 as libc::c_int) as libc::c_double;
-            hrs.suffix = b" TiB\0" as *const u8 as *const libc::c_char;
-        } else if size as libc::c_ulonglong >= (1) << 30 as libc::c_int {
-            hrs.value = size as libc::c_double / ((1) << 30 as libc::c_int) as libc::c_double;
-            hrs.suffix = b" GiB\0" as *const u8 as *const libc::c_char;
-        } else if size as libc::c_ulonglong >= (1) << 20 as libc::c_int {
-            hrs.value = size as libc::c_double / ((1) << 20 as libc::c_int) as libc::c_double;
-            hrs.suffix = b" MiB\0" as *const u8 as *const libc::c_char;
-        } else if size as libc::c_ulonglong >= (1) << 10 as libc::c_int {
-            hrs.value = size as libc::c_double / ((1) << 10 as libc::c_int) as libc::c_double;
-            hrs.suffix = b" KiB\0" as *const u8 as *const libc::c_char;
+        if size as std::ffi::c_ulonglong
+            >= (1 as std::ffi::c_ulonglong) << 60 as std::ffi::c_int
+        {
+            hrs
+                .value = size as std::ffi::c_double
+                / ((1 as std::ffi::c_ulonglong) << 60 as std::ffi::c_int)
+                    as std::ffi::c_double;
+            hrs.suffix = b" EiB\0" as *const u8 as *const std::ffi::c_char;
+        } else if size as std::ffi::c_ulonglong
+            >= (1 as std::ffi::c_ulonglong) << 50 as std::ffi::c_int
+        {
+            hrs
+                .value = size as std::ffi::c_double
+                / ((1 as std::ffi::c_ulonglong) << 50 as std::ffi::c_int)
+                    as std::ffi::c_double;
+            hrs.suffix = b" PiB\0" as *const u8 as *const std::ffi::c_char;
+        } else if size as std::ffi::c_ulonglong
+            >= (1 as std::ffi::c_ulonglong) << 40 as std::ffi::c_int
+        {
+            hrs
+                .value = size as std::ffi::c_double
+                / ((1 as std::ffi::c_ulonglong) << 40 as std::ffi::c_int)
+                    as std::ffi::c_double;
+            hrs.suffix = b" TiB\0" as *const u8 as *const std::ffi::c_char;
+        } else if size as std::ffi::c_ulonglong
+            >= (1 as std::ffi::c_ulonglong) << 30 as std::ffi::c_int
+        {
+            hrs
+                .value = size as std::ffi::c_double
+                / ((1 as std::ffi::c_ulonglong) << 30 as std::ffi::c_int)
+                    as std::ffi::c_double;
+            hrs.suffix = b" GiB\0" as *const u8 as *const std::ffi::c_char;
+        } else if size as std::ffi::c_ulonglong
+            >= (1 as std::ffi::c_ulonglong) << 20 as std::ffi::c_int
+        {
+            hrs
+                .value = size as std::ffi::c_double
+                / ((1 as std::ffi::c_ulonglong) << 20 as std::ffi::c_int)
+                    as std::ffi::c_double;
+            hrs.suffix = b" MiB\0" as *const u8 as *const std::ffi::c_char;
+        } else if size as std::ffi::c_ulonglong
+            >= (1 as std::ffi::c_ulonglong) << 10 as std::ffi::c_int
+        {
+            hrs
+                .value = size as std::ffi::c_double
+                / ((1 as std::ffi::c_ulonglong) << 10 as std::ffi::c_int)
+                    as std::ffi::c_double;
+            hrs.suffix = b" KiB\0" as *const u8 as *const std::ffi::c_char;
         } else {
-            hrs.value = size as libc::c_double;
-            hrs.suffix = b" B\0" as *const u8 as *const libc::c_char;
+            hrs.value = size as std::ffi::c_double;
+            hrs.suffix = b" B\0" as *const u8 as *const std::ffi::c_char;
         }
-        if hrs.value >= 100 || hrs.value as u64 == size {
-            hrs.precision = 0 as libc::c_int;
-        } else if hrs.value >= 10 {
-            hrs.precision = 1 as libc::c_int;
-        } else if hrs.value > 1 {
-            hrs.precision = 2 as libc::c_int;
+        if hrs.value >= 100 as std::ffi::c_int as std::ffi::c_double
+            || hrs.value as U64 == size
+        {
+            hrs.precision = 0 as std::ffi::c_int;
+        } else if hrs.value >= 10 as std::ffi::c_int as std::ffi::c_double {
+            hrs.precision = 1 as std::ffi::c_int;
+        } else if hrs.value > 1 as std::ffi::c_int as std::ffi::c_double {
+            hrs.precision = 2 as std::ffi::c_int;
         } else {
-            hrs.precision = 3 as libc::c_int;
+            hrs.precision = 3 as std::ffi::c_int;
         }
     }
     return hrs;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_getTotalFileSize(
-    mut fileNamesTable: *const *const libc::c_char,
-    mut nbFiles: libc::c_uint,
-) -> u64 {
-    let mut total = 0 as libc::c_int as u64;
-    let mut n: libc::c_uint = 0;
+    mut fileNamesTable: *const *const std::ffi::c_char,
+    mut nbFiles: std::ffi::c_uint,
+) -> U64 {
+    let mut total = 0 as std::ffi::c_int as U64;
+    let mut n: std::ffi::c_uint = 0;
     if g_traceFileStat != 0 {
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s> \0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s> \0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
+            b"\0" as *const u8 as *const std::ffi::c_char,
         );
         fprintf(
             stderr,
-            b"UTIL_getTotalFileSize(%u)\0" as *const u8 as *const libc::c_char,
+            b"UTIL_getTotalFileSize(%u)\0" as *const u8 as *const std::ffi::c_char,
             nbFiles,
         );
-        fprintf(stderr, b"\n\0" as *const u8 as *const libc::c_char);
+        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         g_traceDepth += 1;
+        g_traceDepth;
     }
-    n = 0 as libc::c_int as libc::c_uint;
+    n = 0 as std::ffi::c_int as std::ffi::c_uint;
     while n < nbFiles {
         let size = UTIL_getFileSize(*fileNamesTable.offset(n as isize));
-        if size == UTIL_FILESIZE_UNKNOWN as u64 {
+        if size == UTIL_FILESIZE_UNKNOWN as U64 {
             if g_traceFileStat != 0 {
                 g_traceDepth -= 1;
+                g_traceDepth;
                 fprintf(
                     stderr,
-                    b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+                    b"Trace:FileStat: %*s< %d\n\0" as *const u8
+                        as *const std::ffi::c_char,
                     g_traceDepth,
-                    b"\0" as *const u8 as *const libc::c_char,
-                    -(1),
+                    b"\0" as *const u8 as *const std::ffi::c_char,
+                    -(1 as std::ffi::c_int),
                 );
             }
-            return UTIL_FILESIZE_UNKNOWN as u64;
+            return UTIL_FILESIZE_UNKNOWN as U64;
         }
-        total = (total as libc::c_ulong).wrapping_add(size);
+        total = total.wrapping_add(size);
         n = n.wrapping_add(1);
+        n;
     }
     if g_traceFileStat != 0 {
         g_traceDepth -= 1;
+        g_traceDepth;
         fprintf(
             stderr,
-            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const libc::c_char,
+            b"Trace:FileStat: %*s< %d\n\0" as *const u8 as *const std::ffi::c_char,
             g_traceDepth,
-            b"\0" as *const u8 as *const libc::c_char,
-            total as libc::c_int,
+            b"\0" as *const u8 as *const std::ffi::c_char,
+            total as std::ffi::c_int,
         );
     }
     return total;
 }
-unsafe extern "C" fn readLineFromFile(
-    mut buf: *mut libc::c_char,
-    mut len: libc::size_t,
-    mut file: *mut FILE,
-) -> libc::size_t {
-    debug_assert!(feof(file) == 0);
-    if (fgets(buf, len as libc::c_int, file)).is_null() {
-        return 0 as libc::c_int as libc::size_t;
+unsafe extern "C" fn UTIL_readFileContent(
+    mut inFile: *mut FILE,
+    mut totalReadPtr: *mut size_t,
+) -> *mut std::ffi::c_char {
+    let mut bufSize = (64 as std::ffi::c_int
+        * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as size_t;
+    let mut totalRead = 0 as std::ffi::c_int as size_t;
+    let mut bytesRead = 0 as std::ffi::c_int as size_t;
+    let mut buf = malloc(bufSize) as *mut std::ffi::c_char;
+    if buf.is_null() {
+        return NULL as *mut std::ffi::c_char;
     }
-    let mut linelen = strlen(buf);
-    if strlen(buf) == 0 {
-        return 0 as libc::c_int as libc::size_t;
-    }
-    if *buf.offset(linelen.wrapping_sub(1) as isize) as libc::c_int == '\n' as i32 {
-        linelen = linelen.wrapping_sub(1);
-    }
-    *buf.offset(linelen as isize) = '\0' as i32 as libc::c_char;
-    return linelen.wrapping_add(1);
-}
-unsafe extern "C" fn readLinesFromFile(
-    mut dst: *mut libc::c_void,
-    mut dstCapacity: libc::size_t,
-    mut inputFileName: *const libc::c_char,
-) -> libc::c_int {
-    let mut nbFiles = 0 as libc::c_int;
-    let mut pos = 0 as libc::c_int as libc::size_t;
-    let buf = dst as *mut libc::c_char;
-    let inputFile = fopen(inputFileName, b"r\0" as *const u8 as *const libc::c_char);
-    debug_assert!(!dst.is_null());
-    if inputFile.is_null() {
-        if g_utilDisplayLevel >= 1 {
-            perror(b"zstd:util:readLinesFromFile\0" as *const u8 as *const libc::c_char);
-        }
-        return -(1);
-    }
-    while feof(inputFile) == 0 {
-        let lineLength = readLineFromFile(
-            buf.offset(pos as isize),
-            dstCapacity.wrapping_sub(pos),
-            inputFile,
+    loop {
+        bytesRead = fread(
+            buf.offset(totalRead as isize) as *mut std::ffi::c_void,
+            1 as std::ffi::c_int as std::ffi::c_ulong,
+            bufSize.wrapping_sub(totalRead).wrapping_sub(1 as std::ffi::c_int as size_t),
+            inFile,
         );
-        if lineLength == 0 {
+        if !(bytesRead > 0 as std::ffi::c_int as size_t) {
             break;
         }
-        debug_assert!(pos.wrapping_add(lineLength) <= dstCapacity);
-        pos = (pos as libc::c_ulong).wrapping_add(lineLength);
-        nbFiles += 1;
-    }
-    if !(fclose(inputFile) == 0) {
-        if g_utilDisplayLevel >= 1 {
-            fprintf(
-                stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                651 as libc::c_int,
-                b"fclose(inputFile) == 0\0" as *const u8 as *const libc::c_char,
-            );
+        totalRead = totalRead.wrapping_add(bytesRead);
+        if bufSize.wrapping_sub(totalRead)
+            < (1 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int))
+                as size_t
+        {
+            if bufSize >= MAX_FILE_OF_FILE_NAMES_SIZE as size_t {
+                free(buf as *mut std::ffi::c_void);
+                return NULL as *mut std::ffi::c_char;
+            }
+            let mut newBufSize = bufSize * 2 as std::ffi::c_int as size_t;
+            if newBufSize > MAX_FILE_OF_FILE_NAMES_SIZE as size_t {
+                newBufSize = MAX_FILE_OF_FILE_NAMES_SIZE as size_t;
+            }
+            let mut newBuf = realloc(buf as *mut std::ffi::c_void, newBufSize)
+                as *mut std::ffi::c_char;
+            if newBuf.is_null() {
+                free(buf as *mut std::ffi::c_void);
+                return NULL as *mut std::ffi::c_char;
+            }
+            buf = newBuf;
+            bufSize = newBufSize;
         }
-        exit(1);
     }
-    return nbFiles;
+    *buf.offset(totalRead as isize) = '\0' as i32 as std::ffi::c_char;
+    *totalReadPtr = totalRead;
+    return buf;
+}
+unsafe extern "C" fn UTIL_processLines(
+    mut buffer: *mut std::ffi::c_char,
+    mut bufferSize: size_t,
+) -> size_t {
+    let mut lineCount = 0 as std::ffi::c_int as size_t;
+    let mut i = 0 as std::ffi::c_int as size_t;
+    while i < bufferSize {
+        if *buffer.offset(i as isize) as std::ffi::c_int == '\n' as i32 {
+            *buffer.offset(i as isize) = '\0' as i32 as std::ffi::c_char;
+            lineCount = lineCount.wrapping_add(1);
+            lineCount;
+        }
+        i = i.wrapping_add(1);
+        i;
+    }
+    if bufferSize > 0 as std::ffi::c_int as size_t
+        && (i == 0 as std::ffi::c_int as size_t
+            || *buffer.offset(i.wrapping_sub(1 as std::ffi::c_int as size_t) as isize)
+                as std::ffi::c_int != '\0' as i32)
+    {
+        lineCount = lineCount.wrapping_add(1);
+        lineCount;
+    }
+    return lineCount;
+}
+unsafe extern "C" fn UTIL_createLinePointers(
+    mut buffer: *mut std::ffi::c_char,
+    mut numLines: size_t,
+    mut bufferSize: size_t,
+) -> *mut *const std::ffi::c_char {
+    let mut lineIndex = 0 as std::ffi::c_int as size_t;
+    let mut pos = 0 as std::ffi::c_int as size_t;
+    let bufferPtrs = malloc(
+        numLines
+            .wrapping_mul(
+                ::core::mem::size_of::<*mut *const std::ffi::c_char>()
+                    as std::ffi::c_ulong,
+            ),
+    );
+    let linePointers = bufferPtrs as *mut *const std::ffi::c_char;
+    if bufferPtrs.is_null() {
+        return NULL as *mut *const std::ffi::c_char;
+    }
+    while lineIndex < numLines && pos < bufferSize {
+        let mut len = 0 as std::ffi::c_int as size_t;
+        let fresh0 = lineIndex;
+        lineIndex = lineIndex.wrapping_add(1);
+        let ref mut fresh1 = *linePointers.offset(fresh0 as isize);
+        *fresh1 = buffer.offset(pos as isize);
+        while pos.wrapping_add(len) < bufferSize
+            && *buffer.offset(pos.wrapping_add(len) as isize) as std::ffi::c_int
+                != '\0' as i32
+        {
+            len = len.wrapping_add(1);
+            len;
+        }
+        pos = pos.wrapping_add(len);
+        if pos < bufferSize {
+            pos = pos.wrapping_add(1);
+            pos;
+        }
+    }
+    if lineIndex != numLines {
+        free(bufferPtrs);
+        return NULL as *mut *const std::ffi::c_char;
+    }
+    return linePointers;
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
-    mut inputFileName: *const libc::c_char,
+pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileList(
+    mut fileList: *const std::ffi::c_char,
 ) -> *mut FileNamesTable {
-    let mut nbFiles = 0 as libc::c_int as libc::size_t;
-    let mut buf = 0 as *mut libc::c_char;
-    let mut bufSize: libc::size_t = 0;
-    let mut pos = 0 as libc::c_int as libc::size_t;
-    let mut statbuf = stat_t {
+    let mut statbuf = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -1577,96 +1939,63 @@ pub unsafe extern "C" fn UTIL_createFileNamesTable_fromFileName(
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
-    if UTIL_stat(inputFileName, &mut statbuf) == 0 || UTIL_isRegularFileStat(&mut statbuf) == 0 {
+    let mut buffer = NULL as *mut std::ffi::c_char;
+    let mut numLines = 0 as std::ffi::c_int as size_t;
+    let mut bufferSize = 0 as std::ffi::c_int as size_t;
+    if UTIL_stat(fileList, &mut statbuf) == 0 {
         return NULL as *mut FileNamesTable;
     }
-    let inputFileSize = UTIL_getFileSizeStat(&mut statbuf);
-    if inputFileSize > MAX_FILE_OF_FILE_NAMES_SIZE as libc::c_ulong {
+    if UTIL_isRegularFileStat(&mut statbuf) == 0 && UTIL_isFIFOStat(&mut statbuf) == 0
+        && UTIL_isFileDescriptorPipe(fileList) == 0
+    {
         return NULL as *mut FileNamesTable;
     }
-    bufSize = inputFileSize.wrapping_add(1);
-    buf = malloc(bufSize) as *mut libc::c_char;
-    if buf.is_null() {
-        if g_utilDisplayLevel >= 1 {
-            fprintf(
-                stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                676 as libc::c_int,
-                b"buf != NULL\0" as *const u8 as *const libc::c_char,
-            );
-        }
-        exit(1);
-    }
-    let ret_nbFiles = readLinesFromFile(buf as *mut libc::c_void, bufSize, inputFileName);
-    if ret_nbFiles <= 0 {
-        free(buf as *mut libc::c_void);
+    let inFile = fopen(fileList, b"rb\0" as *const u8 as *const std::ffi::c_char);
+    if inFile.is_null() {
         return NULL as *mut FileNamesTable;
     }
-    nbFiles = ret_nbFiles as libc::size_t;
-    let mut filenamesTable =
-        malloc(nbFiles.wrapping_mul(::core::mem::size_of::<*const libc::c_char>()))
-            as *mut *const libc::c_char;
-    if filenamesTable.is_null() {
-        if g_utilDisplayLevel >= 1 {
-            fprintf(
-                stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
-                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                688 as libc::c_int,
-                b"filenamesTable != NULL\0" as *const u8 as *const libc::c_char,
-            );
-        }
-        exit(1);
+    buffer = UTIL_readFileContent(inFile, &mut bufferSize);
+    fclose(inFile);
+    if buffer.is_null() {
+        return NULL as *mut FileNamesTable;
     }
-    let mut fnb: libc::size_t = 0;
-    fnb = 0 as libc::c_int as libc::size_t;
-    pos = 0 as libc::c_int as libc::size_t;
-    while fnb < nbFiles {
-        let ref mut fresh0 = *filenamesTable.offset(fnb as isize);
-        *fresh0 = buf.offset(pos as isize);
-        pos =
-            (pos as libc::c_ulong).wrapping_add((strlen(buf.offset(pos as isize))).wrapping_add(1));
-        fnb = fnb.wrapping_add(1);
+    numLines = UTIL_processLines(buffer, bufferSize);
+    if numLines == 0 as std::ffi::c_int as size_t {
+        free(buffer as *mut std::ffi::c_void);
+        return NULL as *mut FileNamesTable;
     }
-    debug_assert!(pos <= bufSize);
-    return UTIL_assembleFileNamesTable(filenamesTable, nbFiles, buf);
+    let mut linePointers = UTIL_createLinePointers(buffer, numLines, bufferSize);
+    if linePointers.is_null() {
+        free(buffer as *mut std::ffi::c_void);
+        return NULL as *mut FileNamesTable;
+    }
+    return UTIL_assembleFileNamesTable(linePointers, numLines, buffer);
 }
 unsafe extern "C" fn UTIL_assembleFileNamesTable2(
-    mut filenames: *mut *const libc::c_char,
-    mut tableSize: libc::size_t,
-    mut tableCapacity: libc::size_t,
-    mut buf: *mut libc::c_char,
+    mut filenames: *mut *const std::ffi::c_char,
+    mut tableSize: size_t,
+    mut tableCapacity: size_t,
+    mut buf: *mut std::ffi::c_char,
 ) -> *mut FileNamesTable {
-    let table = malloc(::core::mem::size_of::<FileNamesTable>()) as *mut FileNamesTable;
+    let table = malloc(::core::mem::size_of::<FileNamesTable>() as std::ffi::c_ulong)
+        as *mut FileNamesTable;
     if table.is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                705 as libc::c_int,
-                b"table != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                803 as std::ffi::c_int,
+                b"table != NULL\0" as *const u8 as *const std::ffi::c_char,
             );
         }
-        exit(1);
+        exit(1 as std::ffi::c_int);
     }
     (*table).fileNames = filenames;
     (*table).buf = buf;
@@ -1676,9 +2005,9 @@ unsafe extern "C" fn UTIL_assembleFileNamesTable2(
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_assembleFileNamesTable(
-    mut filenames: *mut *const libc::c_char,
-    mut tableSize: libc::size_t,
-    mut buf: *mut libc::c_char,
+    mut filenames: *mut *const std::ffi::c_char,
+    mut tableSize: size_t,
+    mut buf: *mut std::ffi::c_char,
 ) -> *mut FileNamesTable {
     return UTIL_assembleFileNamesTable2(filenames, tableSize, tableSize, buf);
 }
@@ -1687,57 +2016,98 @@ pub unsafe extern "C" fn UTIL_freeFileNamesTable(mut table: *mut FileNamesTable)
     if table.is_null() {
         return;
     }
-    free((*table).fileNames as *mut libc::c_void);
-    free((*table).buf as *mut libc::c_void);
-    free(table as *mut libc::c_void);
+    free((*table).fileNames as *mut std::ffi::c_void);
+    free((*table).buf as *mut std::ffi::c_void);
+    free(table as *mut std::ffi::c_void);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_allocateFileNamesTable(
-    mut tableSize: libc::size_t,
+    mut tableSize: size_t,
 ) -> *mut FileNamesTable {
-    let fnTable = malloc(tableSize.wrapping_mul(::core::mem::size_of::<*const libc::c_char>()))
-        as *mut *const libc::c_char;
+    let fnTable = malloc(
+        tableSize
+            .wrapping_mul(
+                ::core::mem::size_of::<*const std::ffi::c_char>() as std::ffi::c_ulong,
+            ),
+    ) as *mut *const std::ffi::c_char;
     let mut fnt = 0 as *mut FileNamesTable;
     if fnTable.is_null() {
         return NULL as *mut FileNamesTable;
     }
-    fnt = UTIL_assembleFileNamesTable(fnTable, tableSize, NULL as *mut libc::c_char);
-    (*fnt).tableSize = 0 as libc::c_int as libc::size_t;
+    fnt = UTIL_assembleFileNamesTable(fnTable, tableSize, NULL as *mut std::ffi::c_char);
+    (*fnt).tableSize = 0 as std::ffi::c_int as size_t;
     return fnt;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_searchFileNamesTable(
     mut table: *mut FileNamesTable,
-    mut name: *const libc::c_char,
-) -> libc::c_int {
-    let mut i: libc::size_t = 0;
-    i = 0 as libc::c_int as libc::size_t;
+    mut name: *const std::ffi::c_char,
+) -> std::ffi::c_int {
+    let mut i: size_t = 0;
+    i = 0 as std::ffi::c_int as size_t;
     while i < (*table).tableSize {
         if strcmp(*((*table).fileNames).offset(i as isize), name) == 0 {
-            return i as libc::c_int;
+            return i as std::ffi::c_int;
         }
         i = i.wrapping_add(1);
+        i;
     }
-    return -(1);
+    return -(1 as std::ffi::c_int);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_refFilename(
     mut fnt: *mut FileNamesTable,
-    mut filename: *const libc::c_char,
+    mut filename: *const std::ffi::c_char,
 ) {
-    debug_assert!((*fnt).tableSize < (*fnt).tableCapacity);
-    let ref mut fresh1 = *((*fnt).fileNames).offset((*fnt).tableSize as isize);
-    *fresh1 = filename;
+    if (*fnt).tableSize < (*fnt).tableCapacity {} else {
+        __assert_fail(
+            b"fnt->tableSize < fnt->tableCapacity\0" as *const u8
+                as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            847 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 54],
+                &[std::ffi::c_char; 54],
+            >(b"void UTIL_refFilename(FileNamesTable *, const char *)\0"))
+                .as_ptr(),
+        );
+    }
+    'c_17880: {
+        if (*fnt).tableSize < (*fnt).tableCapacity {} else {
+            __assert_fail(
+                b"fnt->tableSize < fnt->tableCapacity\0" as *const u8
+                    as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                847 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 54],
+                    &[std::ffi::c_char; 54],
+                >(b"void UTIL_refFilename(FileNamesTable *, const char *)\0"))
+                    .as_ptr(),
+            );
+        }
+    };
+    let ref mut fresh2 = *((*fnt).fileNames).offset((*fnt).tableSize as isize);
+    *fresh2 = filename;
     (*fnt).tableSize = ((*fnt).tableSize).wrapping_add(1);
+    (*fnt).tableSize;
 }
-unsafe extern "C" fn getTotalTableSize(mut table: *mut FileNamesTable) -> libc::size_t {
-    let mut fnb = 0 as libc::c_int as libc::size_t;
-    let mut totalSize = 0 as libc::c_int as libc::size_t;
-    fnb = 0 as libc::c_int as libc::size_t;
-    while fnb < (*table).tableSize && !(*((*table).fileNames).offset(fnb as isize)).is_null() {
-        totalSize = (totalSize as libc::c_ulong)
-            .wrapping_add((strlen(*((*table).fileNames).offset(fnb as isize))).wrapping_add(1));
+unsafe extern "C" fn getTotalTableSize(mut table: *mut FileNamesTable) -> size_t {
+    let mut fnb: size_t = 0;
+    let mut totalSize = 0 as std::ffi::c_int as size_t;
+    fnb = 0 as std::ffi::c_int as size_t;
+    while fnb < (*table).tableSize
+        && !(*((*table).fileNames).offset(fnb as isize)).is_null()
+    {
+        totalSize = (totalSize as std::ffi::c_ulong)
+            .wrapping_add(
+                (strlen(*((*table).fileNames).offset(fnb as isize)))
+                    .wrapping_add(1 as std::ffi::c_int as std::ffi::c_ulong),
+            ) as size_t as size_t;
         fnb = fnb.wrapping_add(1);
+        fnb;
     }
     return totalSize;
 }
@@ -1746,289 +2116,446 @@ pub unsafe extern "C" fn UTIL_mergeFileNamesTable(
     mut table1: *mut FileNamesTable,
     mut table2: *mut FileNamesTable,
 ) -> *mut FileNamesTable {
-    let mut newTableIdx = 0 as libc::c_int as libc::c_uint;
-    let mut pos = 0 as libc::c_int as libc::size_t;
-    let mut newTotalTableSize: libc::size_t = 0;
-    let mut buf = 0 as *mut libc::c_char;
+    let mut newTableIdx = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut pos = 0 as std::ffi::c_int as size_t;
+    let mut newTotalTableSize: size_t = 0;
+    let mut buf = 0 as *mut std::ffi::c_char;
     let newTable = UTIL_assembleFileNamesTable(
-        NULL as *mut *const libc::c_char,
-        0 as libc::c_int as libc::size_t,
-        NULL as *mut libc::c_char,
+        NULL as *mut *const std::ffi::c_char,
+        0 as std::ffi::c_int as size_t,
+        NULL as *mut std::ffi::c_char,
     );
     if newTable.is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                772 as libc::c_int,
-                b"newTable != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                870 as std::ffi::c_int,
+                b"newTable != NULL\0" as *const u8 as *const std::ffi::c_char,
             );
         }
-        exit(1);
+        exit(1 as std::ffi::c_int);
     }
-    newTotalTableSize = (getTotalTableSize(table1)).wrapping_add(getTotalTableSize(table2));
-    buf = calloc(newTotalTableSize, ::core::mem::size_of::<libc::c_char>()) as *mut libc::c_char;
+    newTotalTableSize = (getTotalTableSize(table1))
+        .wrapping_add(getTotalTableSize(table2));
+    buf = calloc(
+        newTotalTableSize,
+        ::core::mem::size_of::<std::ffi::c_char>() as std::ffi::c_ulong,
+    ) as *mut std::ffi::c_char;
     if buf.is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                777 as libc::c_int,
-                b"buf != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                875 as std::ffi::c_int,
+                b"buf != NULL\0" as *const u8 as *const std::ffi::c_char,
             );
         }
-        exit(1);
+        exit(1 as std::ffi::c_int);
     }
     (*newTable).buf = buf;
     (*newTable).tableSize = ((*table1).tableSize).wrapping_add((*table2).tableSize);
-    (*newTable).fileNames = calloc(
+    (*newTable)
+        .fileNames = calloc(
         (*newTable).tableSize,
-        ::core::mem::size_of::<*const libc::c_char>(),
-    ) as *mut *const libc::c_char;
+        ::core::mem::size_of::<*const std::ffi::c_char>() as std::ffi::c_ulong,
+    ) as *mut *const std::ffi::c_char;
     if ((*newTable).fileNames).is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                782 as libc::c_int,
-                b"newTable->fileNames != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                880 as std::ffi::c_int,
+                b"newTable->fileNames != NULL\0" as *const u8 as *const std::ffi::c_char,
             );
         }
-        exit(1);
+        exit(1 as std::ffi::c_int);
     }
-    let mut idx1: libc::c_uint = 0;
-    idx1 = 0 as libc::c_int as libc::c_uint;
-    while (idx1 as libc::c_ulong) < (*table1).tableSize
+    let mut idx1: std::ffi::c_uint = 0;
+    idx1 = 0 as std::ffi::c_int as std::ffi::c_uint;
+    while (idx1 as size_t) < (*table1).tableSize
         && !(*((*table1).fileNames).offset(idx1 as isize)).is_null()
         && pos < newTotalTableSize
     {
         let curLen = strlen(*((*table1).fileNames).offset(idx1 as isize));
         memcpy(
-            buf.offset(pos as isize) as *mut libc::c_void,
-            *((*table1).fileNames).offset(idx1 as isize) as *const libc::c_void,
+            buf.offset(pos as isize) as *mut std::ffi::c_void,
+            *((*table1).fileNames).offset(idx1 as isize) as *const std::ffi::c_void,
             curLen,
         );
-        debug_assert!(newTableIdx as libc::c_ulong <= (*newTable).tableSize);
-        let ref mut fresh2 = *((*newTable).fileNames).offset(newTableIdx as isize);
-        *fresh2 = buf.offset(pos as isize);
-        pos = (pos as libc::c_ulong).wrapping_add(curLen.wrapping_add(1));
+        if newTableIdx as size_t <= (*newTable).tableSize {} else {
+            __assert_fail(
+                b"newTableIdx <= newTable->tableSize\0" as *const u8
+                    as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                886 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 77],
+                    &[std::ffi::c_char; 77],
+                >(
+                    b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
+                ))
+                    .as_ptr(),
+            );
+        }
+        'c_16229: {
+            if newTableIdx as size_t <= (*newTable).tableSize {} else {
+                __assert_fail(
+                    b"newTableIdx <= newTable->tableSize\0" as *const u8
+                        as *const std::ffi::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                        as *const std::ffi::c_char,
+                    886 as std::ffi::c_int as std::ffi::c_uint,
+                    (*::core::mem::transmute::<
+                        &[u8; 77],
+                        &[std::ffi::c_char; 77],
+                    >(
+                        b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
+                    ))
+                        .as_ptr(),
+                );
+            }
+        };
+        let ref mut fresh3 = *((*newTable).fileNames).offset(newTableIdx as isize);
+        *fresh3 = buf.offset(pos as isize);
+        pos = pos.wrapping_add(curLen.wrapping_add(1 as std::ffi::c_int as size_t));
         idx1 = idx1.wrapping_add(1);
+        idx1;
         newTableIdx = newTableIdx.wrapping_add(1);
+        newTableIdx;
     }
-    let mut idx2: libc::c_uint = 0;
-    idx2 = 0 as libc::c_int as libc::c_uint;
-    while (idx2 as libc::c_ulong) < (*table2).tableSize
+    let mut idx2: std::ffi::c_uint = 0;
+    idx2 = 0 as std::ffi::c_int as std::ffi::c_uint;
+    while (idx2 as size_t) < (*table2).tableSize
         && !(*((*table2).fileNames).offset(idx2 as isize)).is_null()
         && pos < newTotalTableSize
     {
         let curLen_0 = strlen(*((*table2).fileNames).offset(idx2 as isize));
         memcpy(
-            buf.offset(pos as isize) as *mut libc::c_void,
-            *((*table2).fileNames).offset(idx2 as isize) as *const libc::c_void,
+            buf.offset(pos as isize) as *mut std::ffi::c_void,
+            *((*table2).fileNames).offset(idx2 as isize) as *const std::ffi::c_void,
             curLen_0,
         );
-        debug_assert!((newTableIdx as libc::c_ulong) < (*newTable).tableSize);
-        let ref mut fresh3 = *((*newTable).fileNames).offset(newTableIdx as isize);
-        *fresh3 = buf.offset(pos as isize);
-        pos = (pos as libc::c_ulong).wrapping_add(curLen_0.wrapping_add(1));
+        if (newTableIdx as size_t) < (*newTable).tableSize {} else {
+            __assert_fail(
+                b"newTableIdx < newTable->tableSize\0" as *const u8
+                    as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                895 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 77],
+                    &[std::ffi::c_char; 77],
+                >(
+                    b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
+                ))
+                    .as_ptr(),
+            );
+        }
+        'c_16087: {
+            if (newTableIdx as size_t) < (*newTable).tableSize {} else {
+                __assert_fail(
+                    b"newTableIdx < newTable->tableSize\0" as *const u8
+                        as *const std::ffi::c_char,
+                    b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                        as *const std::ffi::c_char,
+                    895 as std::ffi::c_int as std::ffi::c_uint,
+                    (*::core::mem::transmute::<
+                        &[u8; 77],
+                        &[std::ffi::c_char; 77],
+                    >(
+                        b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
+                    ))
+                        .as_ptr(),
+                );
+            }
+        };
+        let ref mut fresh4 = *((*newTable).fileNames).offset(newTableIdx as isize);
+        *fresh4 = buf.offset(pos as isize);
+        pos = pos.wrapping_add(curLen_0.wrapping_add(1 as std::ffi::c_int as size_t));
         idx2 = idx2.wrapping_add(1);
+        idx2;
         newTableIdx = newTableIdx.wrapping_add(1);
+        newTableIdx;
     }
-    debug_assert!(pos <= newTotalTableSize);
-    (*newTable).tableSize = newTableIdx as libc::size_t;
+    if pos <= newTotalTableSize {} else {
+        __assert_fail(
+            b"pos <= newTotalTableSize\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            899 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 77],
+                &[std::ffi::c_char; 77],
+            >(
+                b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
+            ))
+                .as_ptr(),
+        );
+    }
+    'c_15998: {
+        if pos <= newTotalTableSize {} else {
+            __assert_fail(
+                b"pos <= newTotalTableSize\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                899 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 77],
+                    &[std::ffi::c_char; 77],
+                >(
+                    b"FileNamesTable *UTIL_mergeFileNamesTable(FileNamesTable *, FileNamesTable *)\0",
+                ))
+                    .as_ptr(),
+            );
+        }
+    };
+    (*newTable).tableSize = newTableIdx as size_t;
     UTIL_freeFileNamesTable(table1);
     UTIL_freeFileNamesTable(table2);
     return newTable;
 }
 unsafe extern "C" fn UTIL_prepareFileList(
-    mut dirName: *const libc::c_char,
-    mut bufStart: *mut *mut libc::c_char,
-    mut pos: *mut libc::size_t,
-    mut bufEnd: *mut *mut libc::c_char,
-    mut followLinks: libc::c_int,
-) -> libc::c_int {
+    mut dirName: *const std::ffi::c_char,
+    mut bufStart: *mut *mut std::ffi::c_char,
+    mut pos: *mut size_t,
+    mut bufEnd: *mut *mut std::ffi::c_char,
+    mut followLinks: std::ffi::c_int,
+) -> std::ffi::c_int {
     let mut dir = 0 as *mut DIR;
     let mut entry = 0 as *mut dirent;
-    let mut dirLength: libc::size_t = 0;
-    let mut nbFiles = 0 as libc::c_int;
+    let mut dirLength: size_t = 0;
+    let mut nbFiles = 0 as std::ffi::c_int;
     dir = opendir(dirName);
     if dir.is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Cannot open directory '%s': %s\n\0" as *const u8 as *const libc::c_char,
+                b"Cannot open directory '%s': %s\n\0" as *const u8
+                    as *const std::ffi::c_char,
                 dirName,
                 strerror(*__errno_location()),
             );
         }
-        return 0 as libc::c_int;
+        return 0 as std::ffi::c_int;
     }
     dirLength = strlen(dirName);
-    (*__errno_location()/* errno */) = 0 as libc::c_int;
+    errno = 0 as std::ffi::c_int;
     loop {
         entry = readdir(dir);
         if entry.is_null() {
             break;
         }
-        let mut path = 0 as *mut libc::c_char;
-        let mut fnameLength: libc::size_t = 0;
-        let mut pathLength: libc::size_t = 0;
+        let mut path = 0 as *mut std::ffi::c_char;
+        let mut fnameLength: size_t = 0;
+        let mut pathLength: size_t = 0;
         if strcmp(
             ((*entry).d_name).as_mut_ptr(),
-            b"..\0" as *const u8 as *const libc::c_char,
-        ) == 0
+            b"..\0" as *const u8 as *const std::ffi::c_char,
+        ) == 0 as std::ffi::c_int
             || strcmp(
                 ((*entry).d_name).as_mut_ptr(),
-                b".\0" as *const u8 as *const libc::c_char,
-            ) == 0
+                b".\0" as *const u8 as *const std::ffi::c_char,
+            ) == 0 as std::ffi::c_int
         {
             continue;
         }
         fnameLength = strlen(((*entry).d_name).as_mut_ptr());
-        path = malloc(dirLength.wrapping_add(fnameLength).wrapping_add(2)) as *mut libc::c_char;
+        path = malloc(
+            dirLength
+                .wrapping_add(fnameLength)
+                .wrapping_add(2 as std::ffi::c_int as size_t),
+        ) as *mut std::ffi::c_char;
         if path.is_null() {
             closedir(dir);
-            return 0 as libc::c_int;
+            return 0 as std::ffi::c_int;
         }
         memcpy(
-            path as *mut libc::c_void,
-            dirName as *const libc::c_void,
+            path as *mut std::ffi::c_void,
+            dirName as *const std::ffi::c_void,
             dirLength,
         );
-        *path.offset(dirLength as isize) = '/' as i32 as libc::c_char;
+        *path.offset(dirLength as isize) = '/' as i32 as std::ffi::c_char;
         memcpy(
-            path.offset(dirLength as isize).offset(1) as *mut libc::c_void,
-            ((*entry).d_name).as_mut_ptr() as *const libc::c_void,
+            path.offset(dirLength as isize).offset(1 as std::ffi::c_int as isize)
+                as *mut std::ffi::c_void,
+            ((*entry).d_name).as_mut_ptr() as *const std::ffi::c_void,
             fnameLength,
         );
-        pathLength = dirLength.wrapping_add(1).wrapping_add(fnameLength);
-        *path.offset(pathLength as isize) = 0 as libc::c_int as libc::c_char;
+        pathLength = dirLength
+            .wrapping_add(1 as std::ffi::c_int as size_t)
+            .wrapping_add(fnameLength);
+        *path.offset(pathLength as isize) = 0 as std::ffi::c_int as std::ffi::c_char;
         if followLinks == 0 && UTIL_isLink(path) != 0 {
-            if g_utilDisplayLevel >= 2 {
+            if g_utilDisplayLevel >= 2 as std::ffi::c_int {
                 fprintf(
                     stderr,
                     b"Warning : %s is a symbolic link, ignoring\n\0" as *const u8
-                        as *const libc::c_char,
+                        as *const std::ffi::c_char,
                     path,
                 );
             }
-            free(path as *mut libc::c_void);
+            free(path as *mut std::ffi::c_void);
         } else {
             if UTIL_isDirectory(path) != 0 {
-                nbFiles += UTIL_prepareFileList(path, bufStart, pos, bufEnd, followLinks);
+                nbFiles
+                    += UTIL_prepareFileList(path, bufStart, pos, bufEnd, followLinks);
                 if (*bufStart).is_null() {
-                    free(path as *mut libc::c_void);
+                    free(path as *mut std::ffi::c_void);
                     closedir(dir);
-                    return 0 as libc::c_int;
+                    return 0 as std::ffi::c_int;
                 }
             } else {
-                if (*bufStart)
-                    .offset(*pos as isize)
-                    .offset(pathLength as isize)
+                if (*bufStart).offset(*pos as isize).offset(pathLength as isize)
                     >= *bufEnd
                 {
-                    let mut newListSize = (*bufEnd).offset_from(*bufStart) as libc::c_long
-                        + LIST_SIZE_INCREASE as libc::c_long;
-                    debug_assert!(newListSize >= 0);
-                    *bufStart =
-                        UTIL_realloc(*bufStart as *mut libc::c_void, newListSize as libc::size_t)
-                            as *mut libc::c_char;
+                    let mut newListSize = (*bufEnd).offset_from(*bufStart)
+                        as std::ffi::c_long + LIST_SIZE_INCREASE as std::ffi::c_long;
+                    if newListSize >= 0 as std::ffi::c_int as ptrdiff_t {} else {
+                        __assert_fail(
+                            b"newListSize >= 0\0" as *const u8
+                                as *const std::ffi::c_char,
+                            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                                as *const std::ffi::c_char,
+                            1018 as std::ffi::c_int as std::ffi::c_uint,
+                            (*::core::mem::transmute::<
+                                &[u8; 72],
+                                &[std::ffi::c_char; 72],
+                            >(
+                                b"int UTIL_prepareFileList(const char *, char **, size_t *, char **, int)\0",
+                            ))
+                                .as_ptr(),
+                        );
+                    }
+                    'c_17109: {
+                        if newListSize >= 0 as std::ffi::c_int as ptrdiff_t {} else {
+                            __assert_fail(
+                                b"newListSize >= 0\0" as *const u8
+                                    as *const std::ffi::c_char,
+                                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0"
+                                    as *const u8 as *const std::ffi::c_char,
+                                1018 as std::ffi::c_int as std::ffi::c_uint,
+                                (*::core::mem::transmute::<
+                                    &[u8; 72],
+                                    &[std::ffi::c_char; 72],
+                                >(
+                                    b"int UTIL_prepareFileList(const char *, char **, size_t *, char **, int)\0",
+                                ))
+                                    .as_ptr(),
+                            );
+                        }
+                    };
+                    *bufStart = UTIL_realloc(
+                        *bufStart as *mut std::ffi::c_void,
+                        newListSize as size_t,
+                    ) as *mut std::ffi::c_char;
                     if !(*bufStart).is_null() {
                         *bufEnd = (*bufStart).offset(newListSize as isize);
                     } else {
-                        free(path as *mut libc::c_void);
+                        free(path as *mut std::ffi::c_void);
                         closedir(dir);
-                        return 0 as libc::c_int;
+                        return 0 as std::ffi::c_int;
                     }
                 }
-                if (*bufStart)
-                    .offset(*pos as isize)
-                    .offset(pathLength as isize)
+                if (*bufStart).offset(*pos as isize).offset(pathLength as isize)
                     < *bufEnd
                 {
                     memcpy(
-                        (*bufStart).offset(*pos as isize) as *mut libc::c_void,
-                        path as *const libc::c_void,
-                        pathLength.wrapping_add(1),
+                        (*bufStart).offset(*pos as isize) as *mut std::ffi::c_void,
+                        path as *const std::ffi::c_void,
+                        pathLength.wrapping_add(1 as std::ffi::c_int as size_t),
                     );
-                    *pos = (*pos as libc::c_ulong).wrapping_add(pathLength.wrapping_add(1));
+                    *pos = (*pos)
+                        .wrapping_add(
+                            pathLength.wrapping_add(1 as std::ffi::c_int as size_t),
+                        );
                     nbFiles += 1;
+                    nbFiles;
                 }
             }
-            free(path as *mut libc::c_void);
-            (*__errno_location()/* errno */) = 0 as libc::c_int;
+            free(path as *mut std::ffi::c_void);
+            errno = 0 as std::ffi::c_int;
         }
     }
-    if (*__errno_location()/* errno */) != 0 {
-        if g_utilDisplayLevel >= 1 {
+    if errno != 0 as std::ffi::c_int {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"readdir(%s) error: %s \n\0" as *const u8 as *const libc::c_char,
+                b"readdir(%s) error: %s \n\0" as *const u8 as *const std::ffi::c_char,
                 dirName,
                 strerror(*__errno_location()),
             );
         }
-        free(*bufStart as *mut libc::c_void);
-        *bufStart = NULL as *mut libc::c_char;
+        free(*bufStart as *mut std::ffi::c_void);
+        *bufStart = NULL as *mut std::ffi::c_char;
     }
     closedir(dir);
     return nbFiles;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_isCompressedFile(
-    mut inputName: *const libc::c_char,
-    mut extensionList: *mut *const libc::c_char,
-) -> libc::c_int {
+    mut inputName: *const std::ffi::c_char,
+    mut extensionList: *mut *const std::ffi::c_char,
+) -> std::ffi::c_int {
     let mut ext = UTIL_getFileExtension(inputName);
     while !(*extensionList).is_null() {
         let isCompressedExtension = strcmp(ext, *extensionList);
-        if isCompressedExtension == 0 {
-            return 1 as libc::c_int;
+        if isCompressedExtension == 0 as std::ffi::c_int {
+            return 1 as std::ffi::c_int;
         }
         extensionList = extensionList.offset(1);
+        extensionList;
     }
-    return 0 as libc::c_int;
+    return 0 as std::ffi::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_getFileExtension(
-    mut infilename: *const libc::c_char,
-) -> *const libc::c_char {
-    let mut extension: *const libc::c_char = strrchr(infilename, '.' as i32);
+    mut infilename: *const std::ffi::c_char,
+) -> *const std::ffi::c_char {
+    let mut extension: *const std::ffi::c_char = strrchr(infilename, '.' as i32);
     if extension.is_null() || extension == infilename {
-        return b"\0" as *const u8 as *const libc::c_char;
+        return b"\0" as *const u8 as *const std::ffi::c_char;
     }
     return extension;
 }
-unsafe extern "C" fn pathnameHas2Dots(mut pathname: *const libc::c_char) -> libc::c_int {
+unsafe extern "C" fn pathnameHas2Dots(
+    mut pathname: *const std::ffi::c_char,
+) -> std::ffi::c_int {
     let mut needle = pathname;
     loop {
-        needle = strstr(needle, b"..\0" as *const u8 as *const libc::c_char);
+        needle = strstr(needle, b"..\0" as *const u8 as *const std::ffi::c_char);
         if needle.is_null() {
-            return 0 as libc::c_int;
+            return 0 as std::ffi::c_int;
         }
-        if (needle == pathname || *needle.offset(-(1) as isize) as libc::c_int == PATH_SEP)
-            && (*needle.offset(2) as libc::c_int == '\0' as i32
-                || *needle.offset(2) as libc::c_int == PATH_SEP)
+        if (needle == pathname
+            || *needle.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
+                == PATH_SEP)
+            && (*needle.offset(2 as std::ffi::c_int as isize) as std::ffi::c_int
+                == '\0' as i32
+                || *needle.offset(2 as std::ffi::c_int as isize) as std::ffi::c_int
+                    == PATH_SEP)
         {
-            return 1 as libc::c_int;
+            return 1 as std::ffi::c_int;
         }
         needle = needle.offset(1);
-    }
+        needle;
+    };
 }
 unsafe extern "C" fn isFileNameValidForMirroredOutput(
-    mut filename: *const libc::c_char,
-) -> libc::c_int {
-    return (pathnameHas2Dots(filename) == 0) as libc::c_int;
+    mut filename: *const std::ffi::c_char,
+) -> std::ffi::c_int {
+    return (pathnameHas2Dots(filename) == 0) as std::ffi::c_int;
 }
-pub const DIR_DEFAULT_MODE: libc::c_int = 0o755 as libc::c_int;
-unsafe extern "C" fn getDirMode(mut dirName: *const libc::c_char) -> mode_t {
-    let mut st = stat_t {
+pub const DIR_DEFAULT_MODE: std::ffi::c_int = 0o755 as std::ffi::c_int;
+unsafe extern "C" fn getDirMode(mut dirName: *const std::ffi::c_char) -> mode_t {
+    let mut st = stat {
         st_dev: 0,
         st_ino: 0,
         st_nlink: 0,
@@ -2040,24 +2567,16 @@ unsafe extern "C" fn getDirMode(mut dirName: *const libc::c_char) -> mode_t {
         st_size: 0,
         st_blksize: 0,
         st_blocks: 0,
-        st_atim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_mtim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
-        st_ctim: timespec {
-            tv_sec: 0,
-            tv_nsec: 0,
-        },
+        st_atim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_mtim: timespec { tv_sec: 0, tv_nsec: 0 },
+        st_ctim: timespec { tv_sec: 0, tv_nsec: 0 },
         __glibc_reserved: [0; 3],
     };
     if UTIL_stat(dirName, &mut st) == 0 {
         fprintf(
             stderr,
-            b"zstd: failed to get DIR stats %s: %s\n\0" as *const u8 as *const libc::c_char,
+            b"zstd: failed to get DIR stats %s: %s\n\0" as *const u8
+                as *const std::ffi::c_char,
             dirName,
             strerror(*__errno_location()),
         );
@@ -2066,358 +2585,563 @@ unsafe extern "C" fn getDirMode(mut dirName: *const libc::c_char) -> mode_t {
     if UTIL_isDirectoryStat(&mut st) == 0 {
         fprintf(
             stderr,
-            b"zstd: expected directory: %s\n\0" as *const u8 as *const libc::c_char,
+            b"zstd: expected directory: %s\n\0" as *const u8 as *const std::ffi::c_char,
             dirName,
         );
         return DIR_DEFAULT_MODE as mode_t;
     }
     return st.st_mode;
 }
-unsafe extern "C" fn makeDir(mut dir: *const libc::c_char, mut mode: mode_t) -> libc::c_int {
+unsafe extern "C" fn makeDir(
+    mut dir: *const std::ffi::c_char,
+    mut mode: mode_t,
+) -> std::ffi::c_int {
     let mut ret = mkdir(dir, mode);
-    if ret != 0 {
-        if (*__errno_location()/* errno */) == EEXIST {
-            return 0 as libc::c_int;
+    if ret != 0 as std::ffi::c_int {
+        if errno == EEXIST {
+            return 0 as std::ffi::c_int;
         }
         fprintf(
             stderr,
-            b"zstd: failed to create DIR %s: %s\n\0" as *const u8 as *const libc::c_char,
+            b"zstd: failed to create DIR %s: %s\n\0" as *const u8
+                as *const std::ffi::c_char,
             dir,
             strerror(*__errno_location()),
         );
     }
     return ret;
 }
-unsafe extern "C" fn convertPathnameToDirName(mut pathname: *mut libc::c_char) {
-    let mut len = 0 as libc::c_int as libc::size_t;
-    let mut pos = NULL as *mut libc::c_char;
-    debug_assert!(!pathname.is_null());
-    len = strlen(pathname);
-    debug_assert!(len > 0);
-    while *pathname.offset(len as isize) as libc::c_int == PATH_SEP {
-        *pathname.offset(len as isize) = '\0' as i32 as libc::c_char;
-        len = len.wrapping_sub(1);
+unsafe extern "C" fn convertPathnameToDirName(mut pathname: *mut std::ffi::c_char) {
+    let mut len = 0 as std::ffi::c_int as size_t;
+    let mut pos = NULL as *mut std::ffi::c_char;
+    if !pathname.is_null() {} else {
+        __assert_fail(
+            b"pathname != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            1146 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 38],
+                &[std::ffi::c_char; 38],
+            >(b"void convertPathnameToDirName(char *)\0"))
+                .as_ptr(),
+        );
     }
-    if len == 0 {
+    'c_14846: {
+        if !pathname.is_null() {} else {
+            __assert_fail(
+                b"pathname != NULL\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                1146 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 38],
+                    &[std::ffi::c_char; 38],
+                >(b"void convertPathnameToDirName(char *)\0"))
+                    .as_ptr(),
+            );
+        }
+    };
+    len = strlen(pathname);
+    if len > 0 as std::ffi::c_int as size_t {} else {
+        __assert_fail(
+            b"len > 0\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            1150 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 38],
+                &[std::ffi::c_char; 38],
+            >(b"void convertPathnameToDirName(char *)\0"))
+                .as_ptr(),
+        );
+    }
+    'c_14799: {
+        if len > 0 as std::ffi::c_int as size_t {} else {
+            __assert_fail(
+                b"len > 0\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                1150 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 38],
+                    &[std::ffi::c_char; 38],
+                >(b"void convertPathnameToDirName(char *)\0"))
+                    .as_ptr(),
+            );
+        }
+    };
+    while *pathname.offset(len as isize) as std::ffi::c_int == PATH_SEP {
+        *pathname.offset(len as isize) = '\0' as i32 as std::ffi::c_char;
+        len = len.wrapping_sub(1);
+        len;
+    }
+    if len == 0 as std::ffi::c_int as size_t {
         return;
     }
     pos = strrchr(pathname, PATH_SEP);
     if pos.is_null() {
-        *pathname.offset(0) = '.' as i32 as libc::c_char;
-        *pathname.offset(1) = '\0' as i32 as libc::c_char;
+        *pathname.offset(0 as std::ffi::c_int as isize) = '.' as i32 as std::ffi::c_char;
+        *pathname
+            .offset(1 as std::ffi::c_int as isize) = '\0' as i32 as std::ffi::c_char;
     } else {
-        *pos = '\0' as i32 as libc::c_char;
+        *pos = '\0' as i32 as std::ffi::c_char;
     };
 }
-unsafe extern "C" fn trimLeadingRootChar(mut pathname: *const libc::c_char) -> *const libc::c_char {
-    debug_assert!(!pathname.is_null());
-    if *pathname.offset(0) as libc::c_int == PATH_SEP {
-        return pathname.offset(1);
+unsafe extern "C" fn trimLeadingRootChar(
+    mut pathname: *const std::ffi::c_char,
+) -> *const std::ffi::c_char {
+    if !pathname.is_null() {} else {
+        __assert_fail(
+            b"pathname != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            1174 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 46],
+                &[std::ffi::c_char; 46],
+            >(b"const char *trimLeadingRootChar(const char *)\0"))
+                .as_ptr(),
+        );
+    }
+    'c_13923: {
+        if !pathname.is_null() {} else {
+            __assert_fail(
+                b"pathname != NULL\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                1174 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 46],
+                    &[std::ffi::c_char; 46],
+                >(b"const char *trimLeadingRootChar(const char *)\0"))
+                    .as_ptr(),
+            );
+        }
+    };
+    if *pathname.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int == PATH_SEP {
+        return pathname.offset(1 as std::ffi::c_int as isize);
     }
     return pathname;
 }
 unsafe extern "C" fn trimLeadingCurrentDirConst(
-    mut pathname: *const libc::c_char,
-) -> *const libc::c_char {
-    debug_assert!(!pathname.is_null());
-    if *pathname.offset(0) as libc::c_int == '.' as i32
-        && *pathname.offset(1) as libc::c_int == PATH_SEP
+    mut pathname: *const std::ffi::c_char,
+) -> *const std::ffi::c_char {
+    if !pathname.is_null() {} else {
+        __assert_fail(
+            b"pathname != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            1183 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 53],
+                &[std::ffi::c_char; 53],
+            >(b"const char *trimLeadingCurrentDirConst(const char *)\0"))
+                .as_ptr(),
+        );
+    }
+    'c_13857: {
+        if !pathname.is_null() {} else {
+            __assert_fail(
+                b"pathname != NULL\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                1183 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 53],
+                    &[std::ffi::c_char; 53],
+                >(b"const char *trimLeadingCurrentDirConst(const char *)\0"))
+                    .as_ptr(),
+            );
+        }
+    };
+    if *pathname.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int == '.' as i32
+        && *pathname.offset(1 as std::ffi::c_int as isize) as std::ffi::c_int == PATH_SEP
     {
-        return pathname.offset(2);
+        return pathname.offset(2 as std::ffi::c_int as isize);
     }
     return pathname;
 }
-unsafe extern "C" fn trimLeadingCurrentDir(mut pathname: *mut libc::c_char) -> *mut libc::c_char {
+unsafe extern "C" fn trimLeadingCurrentDir(
+    mut pathname: *mut std::ffi::c_char,
+) -> *mut std::ffi::c_char {
     let mut ptr = charunion {
-        chr: 0 as *mut libc::c_char,
+        chr: 0 as *mut std::ffi::c_char,
     };
     ptr.cchr = trimLeadingCurrentDirConst(pathname);
     return ptr.chr;
 }
-unsafe extern "C" fn trimPath(mut pathname: *const libc::c_char) -> *const libc::c_char {
+unsafe extern "C" fn trimPath(
+    mut pathname: *const std::ffi::c_char,
+) -> *const std::ffi::c_char {
     return trimLeadingRootChar(trimLeadingCurrentDirConst(pathname));
 }
 unsafe extern "C" fn mallocAndJoin2Dir(
-    mut dir1: *const libc::c_char,
-    mut dir2: *const libc::c_char,
-) -> *mut libc::c_char {
-    debug_assert!(!dir1.is_null() && !dir2.is_null());
-    let dir1Size = strlen(dir1);
-    let dir2Size = strlen(dir2);
-    let mut outDirBuffer = 0 as *mut libc::c_char;
-    let mut buffer = 0 as *mut libc::c_char;
-    outDirBuffer = malloc(dir1Size.wrapping_add(dir2Size).wrapping_add(2)) as *mut libc::c_char;
-    if outDirBuffer.is_null() {
-        if g_utilDisplayLevel >= 1 {
-            fprintf(
-                stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+    mut dir1: *const std::ffi::c_char,
+    mut dir2: *const std::ffi::c_char,
+) -> *mut std::ffi::c_char {
+    if !dir1.is_null() && !dir2.is_null() {} else {
+        __assert_fail(
+            b"dir1 != NULL && dir2 != NULL\0" as *const u8 as *const std::ffi::c_char,
+            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                as *const std::ffi::c_char,
+            1210 as std::ffi::c_int as std::ffi::c_uint,
+            (*::core::mem::transmute::<
+                &[u8; 52],
+                &[std::ffi::c_char; 52],
+            >(b"char *mallocAndJoin2Dir(const char *, const char *)\0"))
+                .as_ptr(),
+        );
+    }
+    'c_14131: {
+        if !dir1.is_null() && !dir2.is_null() {} else {
+            __assert_fail(
+                b"dir1 != NULL && dir2 != NULL\0" as *const u8
+                    as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                1117 as libc::c_int,
-                b"outDirBuffer != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                1210 as std::ffi::c_int as std::ffi::c_uint,
+                (*::core::mem::transmute::<
+                    &[u8; 52],
+                    &[std::ffi::c_char; 52],
+                >(b"char *mallocAndJoin2Dir(const char *, const char *)\0"))
+                    .as_ptr(),
             );
         }
-        exit(1);
+    };
+    let dir1Size = strlen(dir1);
+    let dir2Size = strlen(dir2);
+    let mut outDirBuffer = 0 as *mut std::ffi::c_char;
+    let mut buffer = 0 as *mut std::ffi::c_char;
+    outDirBuffer = malloc(
+        dir1Size.wrapping_add(dir2Size).wrapping_add(2 as std::ffi::c_int as size_t),
+    ) as *mut std::ffi::c_char;
+    if outDirBuffer.is_null() {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
+            fprintf(
+                stderr,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
+                b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                    as *const std::ffi::c_char,
+                1216 as std::ffi::c_int,
+                b"outDirBuffer != NULL\0" as *const u8 as *const std::ffi::c_char,
+            );
+        }
+        exit(1 as std::ffi::c_int);
     }
     memcpy(
-        outDirBuffer as *mut libc::c_void,
-        dir1 as *const libc::c_void,
+        outDirBuffer as *mut std::ffi::c_void,
+        dir1 as *const std::ffi::c_void,
         dir1Size,
     );
-    *outDirBuffer.offset(dir1Size as isize) = '\0' as i32 as libc::c_char;
-    if *dir2.offset(0) as libc::c_int == '.' as i32 {
-        return outDirBuffer;
-    }
+    *outDirBuffer.offset(dir1Size as isize) = '\0' as i32 as std::ffi::c_char;
     buffer = outDirBuffer.offset(dir1Size as isize);
-    if dir1Size > 0 && *buffer.offset(-(1)) as libc::c_int != PATH_SEP {
-        *buffer = PATH_SEP as libc::c_char;
+    if dir1Size > 0 as std::ffi::c_int as size_t
+        && *buffer.offset(-(1 as std::ffi::c_int as isize)) as std::ffi::c_int
+            != PATH_SEP
+    {
+        *buffer = PATH_SEP as std::ffi::c_char;
         buffer = buffer.offset(1);
+        buffer;
     }
-    memcpy(
-        buffer as *mut libc::c_void,
-        dir2 as *const libc::c_void,
-        dir2Size,
-    );
-    *buffer.offset(dir2Size as isize) = '\0' as i32 as libc::c_char;
+    memcpy(buffer as *mut std::ffi::c_void, dir2 as *const std::ffi::c_void, dir2Size);
+    *buffer.offset(dir2Size as isize) = '\0' as i32 as std::ffi::c_char;
     return outDirBuffer;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_createMirroredDestDirName(
-    mut srcFileName: *const libc::c_char,
-    mut outDirRootName: *const libc::c_char,
-) -> *mut libc::c_char {
-    let mut pathname = NULL as *mut libc::c_char;
+    mut srcFileName: *const std::ffi::c_char,
+    mut outDirRootName: *const std::ffi::c_char,
+) -> *mut std::ffi::c_char {
+    let mut pathname = NULL as *mut std::ffi::c_char;
     if isFileNameValidForMirroredOutput(srcFileName) == 0 {
-        return NULL as *mut libc::c_char;
+        return NULL as *mut std::ffi::c_char;
     }
     pathname = mallocAndJoin2Dir(outDirRootName, trimPath(srcFileName));
     convertPathnameToDirName(pathname);
     return pathname;
 }
 unsafe extern "C" fn mirrorSrcDir(
-    mut srcDirName: *mut libc::c_char,
-    mut outDirName: *const libc::c_char,
-) -> libc::c_int {
+    mut srcDirName: *mut std::ffi::c_char,
+    mut outDirName: *const std::ffi::c_char,
+) -> std::ffi::c_int {
     let mut srcMode: mode_t = 0;
-    let mut status = 0 as libc::c_int;
+    let mut status = 0 as std::ffi::c_int;
     let mut newDir = mallocAndJoin2Dir(outDirName, trimPath(srcDirName));
     if newDir.is_null() {
         return -ENOMEM;
     }
     srcMode = getDirMode(srcDirName);
     status = makeDir(newDir, srcMode);
-    free(newDir as *mut libc::c_void);
+    free(newDir as *mut std::ffi::c_void);
     return status;
 }
 unsafe extern "C" fn mirrorSrcDirRecursive(
-    mut srcDirName: *mut libc::c_char,
-    mut outDirName: *const libc::c_char,
-) -> libc::c_int {
-    let mut status = 0 as libc::c_int;
+    mut srcDirName: *mut std::ffi::c_char,
+    mut outDirName: *const std::ffi::c_char,
+) -> std::ffi::c_int {
+    let mut status = 0 as std::ffi::c_int;
     let mut pp = trimLeadingCurrentDir(srcDirName);
-    let mut sp = NULL as *mut libc::c_char;
+    let mut sp = NULL as *mut std::ffi::c_char;
     loop {
         sp = strchr(pp, PATH_SEP);
         if sp.is_null() {
             break;
         }
         if sp != pp {
-            *sp = '\0' as i32 as libc::c_char;
+            *sp = '\0' as i32 as std::ffi::c_char;
             status = mirrorSrcDir(srcDirName, outDirName);
-            if status != 0 {
+            if status != 0 as std::ffi::c_int {
                 return status;
             }
-            *sp = PATH_SEP as libc::c_char;
+            *sp = PATH_SEP as std::ffi::c_char;
         }
-        pp = sp.offset(1);
+        pp = sp.offset(1 as std::ffi::c_int as isize);
     }
     status = mirrorSrcDir(srcDirName, outDirName);
     return status;
 }
 unsafe extern "C" fn makeMirroredDestDirsWithSameSrcDirMode(
-    mut srcDirNames: *mut *mut libc::c_char,
-    mut nbFile: libc::c_uint,
-    mut outDirName: *const libc::c_char,
+    mut srcDirNames: *mut *mut std::ffi::c_char,
+    mut nbFile: std::ffi::c_uint,
+    mut outDirName: *const std::ffi::c_char,
 ) {
-    let mut i = 0 as libc::c_int as libc::c_uint;
-    i = 0 as libc::c_int as libc::c_uint;
+    let mut i = 0 as std::ffi::c_int as std::ffi::c_uint;
+    i = 0 as std::ffi::c_int as std::ffi::c_uint;
     while i < nbFile {
         mirrorSrcDirRecursive(*srcDirNames.offset(i as isize), outDirName);
         i = i.wrapping_add(1);
+        i;
     }
 }
 unsafe extern "C" fn firstIsParentOrSameDirOfSecond(
-    mut firstDir: *const libc::c_char,
-    mut secondDir: *const libc::c_char,
-) -> libc::c_int {
+    mut firstDir: *const std::ffi::c_char,
+    mut secondDir: *const std::ffi::c_char,
+) -> std::ffi::c_int {
     let mut firstDirLen = strlen(firstDir);
     let mut secondDirLen = strlen(secondDir);
     return (firstDirLen <= secondDirLen
-        && (*secondDir.offset(firstDirLen as isize) as libc::c_int == PATH_SEP
-            || *secondDir.offset(firstDirLen as isize) as libc::c_int == '\0' as i32)
-        && 0 as libc::c_int == strncmp(firstDir, secondDir, firstDirLen))
-        as libc::c_int;
+        && (*secondDir.offset(firstDirLen as isize) as std::ffi::c_int == PATH_SEP
+            || *secondDir.offset(firstDirLen as isize) as std::ffi::c_int == '\0' as i32)
+        && 0 as std::ffi::c_int == strncmp(firstDir, secondDir, firstDirLen))
+        as std::ffi::c_int;
 }
 unsafe extern "C" fn compareDir(
-    mut pathname1: *const libc::c_void,
-    mut pathname2: *const libc::c_void,
-) -> libc::c_int {
-    let mut s1 = trimPath(*(pathname1 as *const *mut libc::c_char));
-    let mut s2 = trimPath(*(pathname2 as *const *mut libc::c_char));
+    mut pathname1: *const std::ffi::c_void,
+    mut pathname2: *const std::ffi::c_void,
+) -> std::ffi::c_int {
+    let mut s1 = trimPath(*(pathname1 as *const *mut std::ffi::c_char));
+    let mut s2 = trimPath(*(pathname2 as *const *mut std::ffi::c_char));
     return strcmp(s1, s2);
 }
 unsafe extern "C" fn makeUniqueMirroredDestDirs(
-    mut srcDirNames: *mut *mut libc::c_char,
-    mut nbFile: libc::c_uint,
-    mut outDirName: *const libc::c_char,
+    mut srcDirNames: *mut *mut std::ffi::c_char,
+    mut nbFile: std::ffi::c_uint,
+    mut outDirName: *const std::ffi::c_char,
 ) {
-    let mut i = 0 as libc::c_int as libc::c_uint;
-    let mut uniqueDirNr = 0 as libc::c_int as libc::c_uint;
-    let mut uniqueDirNames = NULL as *mut *mut libc::c_char;
-    if nbFile == 0 {
+    let mut i = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut uniqueDirNr = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut uniqueDirNames = NULL as *mut *mut std::ffi::c_char;
+    if nbFile == 0 as std::ffi::c_int as std::ffi::c_uint {
         return;
     }
-    uniqueDirNames =
-        malloc((nbFile as libc::c_ulong).wrapping_mul(::core::mem::size_of::<*mut libc::c_char>()))
-            as *mut *mut libc::c_char;
+    uniqueDirNames = malloc(
+        (nbFile as std::ffi::c_ulong)
+            .wrapping_mul(
+                ::core::mem::size_of::<*mut std::ffi::c_char>() as std::ffi::c_ulong,
+            ),
+    ) as *mut *mut std::ffi::c_char;
     if uniqueDirNames.is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                1221 as libc::c_int,
-                b"uniqueDirNames != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                1317 as std::ffi::c_int,
+                b"uniqueDirNames != NULL\0" as *const u8 as *const std::ffi::c_char,
             );
         }
-        exit(1);
+        exit(1 as std::ffi::c_int);
     }
     qsort(
-        srcDirNames as *mut libc::c_void,
-        nbFile as libc::size_t,
-        ::core::mem::size_of::<*mut libc::c_char>(),
+        srcDirNames as *mut std::ffi::c_void,
+        nbFile as size_t,
+        ::core::mem::size_of::<*mut std::ffi::c_char>() as std::ffi::c_ulong,
         Some(
             compareDir
-                as unsafe extern "C" fn(*const libc::c_void, *const libc::c_void) -> libc::c_int,
+                as unsafe extern "C" fn(
+                    *const std::ffi::c_void,
+                    *const std::ffi::c_void,
+                ) -> std::ffi::c_int,
         ),
     );
-    uniqueDirNr = 1 as libc::c_int as libc::c_uint;
-    let ref mut fresh4 = *uniqueDirNames.offset(uniqueDirNr.wrapping_sub(1) as isize);
-    *fresh4 = *srcDirNames.offset(0);
-    i = 1 as libc::c_int as libc::c_uint;
+    uniqueDirNr = 1 as std::ffi::c_int as std::ffi::c_uint;
+    let ref mut fresh5 = *uniqueDirNames
+        .offset(
+            uniqueDirNr.wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint) as isize,
+        );
+    *fresh5 = *srcDirNames.offset(0 as std::ffi::c_int as isize);
+    i = 1 as std::ffi::c_int as std::ffi::c_uint;
     while i < nbFile {
-        let mut prevDirName = *srcDirNames.offset(i.wrapping_sub(1) as isize);
+        let mut prevDirName = *srcDirNames
+            .offset(i.wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint) as isize);
         let mut currDirName = *srcDirNames.offset(i as isize);
-        if firstIsParentOrSameDirOfSecond(trimPath(prevDirName), trimPath(currDirName)) == 0 {
+        if firstIsParentOrSameDirOfSecond(trimPath(prevDirName), trimPath(currDirName))
+            == 0
+        {
             uniqueDirNr = uniqueDirNr.wrapping_add(1);
+            uniqueDirNr;
         }
-        let ref mut fresh5 = *uniqueDirNames.offset(uniqueDirNr.wrapping_sub(1) as isize);
-        *fresh5 = currDirName;
+        let ref mut fresh6 = *uniqueDirNames
+            .offset(
+                uniqueDirNr.wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint)
+                    as isize,
+            );
+        *fresh6 = currDirName;
         i = i.wrapping_add(1);
+        i;
     }
     makeMirroredDestDirsWithSameSrcDirMode(uniqueDirNames, uniqueDirNr, outDirName);
-    free(uniqueDirNames as *mut libc::c_void);
+    free(uniqueDirNames as *mut std::ffi::c_void);
 }
 unsafe extern "C" fn makeMirroredDestDirs(
-    mut srcFileNames: *mut *mut libc::c_char,
-    mut nbFile: libc::c_uint,
-    mut outDirName: *const libc::c_char,
+    mut srcFileNames: *mut *mut std::ffi::c_char,
+    mut nbFile: std::ffi::c_uint,
+    mut outDirName: *const std::ffi::c_char,
 ) {
-    let mut i = 0 as libc::c_int as libc::c_uint;
-    i = 0 as libc::c_int as libc::c_uint;
+    let mut i = 0 as std::ffi::c_int as std::ffi::c_uint;
+    i = 0 as std::ffi::c_int as std::ffi::c_uint;
     while i < nbFile {
         convertPathnameToDirName(*srcFileNames.offset(i as isize));
         i = i.wrapping_add(1);
+        i;
     }
     makeUniqueMirroredDestDirs(srcFileNames, nbFile, outDirName);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_mirrorSourceFilesDirectories(
-    mut inFileNames: *mut *const libc::c_char,
-    mut nbFile: libc::c_uint,
-    mut outDirName: *const libc::c_char,
+    mut inFileNames: *mut *const std::ffi::c_char,
+    mut nbFile: std::ffi::c_uint,
+    mut outDirName: *const std::ffi::c_char,
 ) {
-    let mut i = 0 as libc::c_int as libc::c_uint;
-    let mut validFilenamesNr = 0 as libc::c_int as libc::c_uint;
-    let mut srcFileNames =
-        malloc((nbFile as libc::c_ulong).wrapping_mul(::core::mem::size_of::<*mut libc::c_char>()))
-            as *mut *mut libc::c_char;
+    let mut i = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut validFilenamesNr = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut srcFileNames = malloc(
+        (nbFile as std::ffi::c_ulong)
+            .wrapping_mul(
+                ::core::mem::size_of::<*mut std::ffi::c_char>() as std::ffi::c_ulong,
+            ),
+    ) as *mut *mut std::ffi::c_char;
     if srcFileNames.is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                1263 as libc::c_int,
-                b"srcFileNames != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                1359 as std::ffi::c_int,
+                b"srcFileNames != NULL\0" as *const u8 as *const std::ffi::c_char,
             );
         }
-        exit(1);
+        exit(1 as std::ffi::c_int);
     }
-    i = 0 as libc::c_int as libc::c_uint;
+    i = 0 as std::ffi::c_int as std::ffi::c_uint;
     while i < nbFile {
         if isFileNameValidForMirroredOutput(*inFileNames.offset(i as isize)) != 0 {
             let mut fname = strdup(*inFileNames.offset(i as isize));
             if fname.is_null() {
-                if g_utilDisplayLevel >= 1 {
+                if g_utilDisplayLevel >= 1 as std::ffi::c_int {
                     fprintf(
                         stderr,
-                        b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                        b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                            as *const libc::c_char,
-                        1269 as libc::c_int,
-                        b"fname != NULL\0" as *const u8 as *const libc::c_char,
+                            as *const std::ffi::c_char,
+                        1365 as std::ffi::c_int,
+                        b"fname != NULL\0" as *const u8 as *const std::ffi::c_char,
                     );
                 }
-                exit(1);
+                exit(1 as std::ffi::c_int);
             }
-            let fresh6 = validFilenamesNr;
+            let fresh7 = validFilenamesNr;
             validFilenamesNr = validFilenamesNr.wrapping_add(1);
-            let ref mut fresh7 = *srcFileNames.offset(fresh6 as isize);
-            *fresh7 = fname;
+            let ref mut fresh8 = *srcFileNames.offset(fresh7 as isize);
+            *fresh8 = fname;
         }
         i = i.wrapping_add(1);
+        i;
     }
-    if validFilenamesNr > 0 {
+    if validFilenamesNr > 0 as std::ffi::c_int as std::ffi::c_uint {
         makeDir(outDirName, DIR_DEFAULT_MODE as mode_t);
         makeMirroredDestDirs(srcFileNames, validFilenamesNr, outDirName);
     }
-    i = 0 as libc::c_int as libc::c_uint;
+    i = 0 as std::ffi::c_int as std::ffi::c_uint;
     while i < validFilenamesNr {
-        free(*srcFileNames.offset(i as isize) as *mut libc::c_void);
+        free(*srcFileNames.offset(i as isize) as *mut std::ffi::c_void);
         i = i.wrapping_add(1);
+        i;
     }
-    free(srcFileNames as *mut libc::c_void);
+    free(srcFileNames as *mut std::ffi::c_void);
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_createExpandedFNT(
-    mut inputNames: *const *const libc::c_char,
-    mut nbIfns: libc::size_t,
-    mut followLinks: libc::c_int,
+    mut inputNames: *const *const std::ffi::c_char,
+    mut nbIfns: size_t,
+    mut followLinks: std::ffi::c_int,
 ) -> *mut FileNamesTable {
-    let mut nbFiles: libc::c_uint = 0;
-    let mut buf = malloc(LIST_SIZE_INCREASE as libc::c_ulong) as *mut libc::c_char;
+    let mut nbFiles: std::ffi::c_uint = 0;
+    let mut buf = malloc(LIST_SIZE_INCREASE as std::ffi::c_ulong)
+        as *mut std::ffi::c_char;
     let mut bufend = buf.offset(LIST_SIZE_INCREASE as isize);
     if buf.is_null() {
         return NULL as *mut FileNamesTable;
     }
-    let mut ifnNb: libc::size_t = 0;
-    let mut pos: libc::size_t = 0;
-    ifnNb = 0 as libc::c_int as libc::size_t;
-    pos = 0 as libc::c_int as libc::size_t;
-    nbFiles = 0 as libc::c_int as libc::c_uint;
+    let mut ifnNb: size_t = 0;
+    let mut pos: size_t = 0;
+    ifnNb = 0 as std::ffi::c_int as size_t;
+    pos = 0 as std::ffi::c_int as size_t;
+    nbFiles = 0 as std::ffi::c_int as std::ffi::c_uint;
     while ifnNb < nbIfns {
         if UTIL_isDirectory(*inputNames.offset(ifnNb as isize)) == 0 {
             let len = strlen(*inputNames.offset(ifnNb as isize));
             if buf.offset(pos as isize).offset(len as isize) >= bufend {
-                let mut newListSize =
-                    bufend.offset_from(buf) as libc::c_long + LIST_SIZE_INCREASE as libc::c_long;
-                debug_assert!(newListSize >= 0);
-                buf = UTIL_realloc(buf as *mut libc::c_void, newListSize as libc::size_t)
-                    as *mut libc::c_char;
+                let mut newListSize = bufend.offset_from(buf) as std::ffi::c_long
+                    + LIST_SIZE_INCREASE as std::ffi::c_long;
+                if newListSize >= 0 as std::ffi::c_int as ptrdiff_t {} else {
+                    __assert_fail(
+                        b"newListSize >= 0\0" as *const u8 as *const std::ffi::c_char,
+                        b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                            as *const std::ffi::c_char,
+                        1395 as std::ffi::c_int as std::ffi::c_uint,
+                        (*::core::mem::transmute::<
+                            &[u8; 73],
+                            &[std::ffi::c_char; 73],
+                        >(
+                            b"FileNamesTable *UTIL_createExpandedFNT(const char *const *, size_t, int)\0",
+                        ))
+                            .as_ptr(),
+                    );
+                }
+                'c_17562: {
+                    if newListSize >= 0 as std::ffi::c_int as ptrdiff_t {} else {
+                        __assert_fail(
+                            b"newListSize >= 0\0" as *const u8
+                                as *const std::ffi::c_char,
+                            b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
+                                as *const std::ffi::c_char,
+                            1395 as std::ffi::c_int as std::ffi::c_uint,
+                            (*::core::mem::transmute::<
+                                &[u8; 73],
+                                &[std::ffi::c_char; 73],
+                            >(
+                                b"FileNamesTable *UTIL_createExpandedFNT(const char *const *, size_t, int)\0",
+                            ))
+                                .as_ptr(),
+                        );
+                    }
+                };
+                buf = UTIL_realloc(buf as *mut std::ffi::c_void, newListSize as size_t)
+                    as *mut std::ffi::c_char;
                 if buf.is_null() {
                     return NULL as *mut FileNamesTable;
                 }
@@ -2425,112 +3149,143 @@ pub unsafe extern "C" fn UTIL_createExpandedFNT(
             }
             if buf.offset(pos as isize).offset(len as isize) < bufend {
                 memcpy(
-                    buf.offset(pos as isize) as *mut libc::c_void,
-                    *inputNames.offset(ifnNb as isize) as *const libc::c_void,
-                    len.wrapping_add(1),
+                    buf.offset(pos as isize) as *mut std::ffi::c_void,
+                    *inputNames.offset(ifnNb as isize) as *const std::ffi::c_void,
+                    len.wrapping_add(1 as std::ffi::c_int as size_t),
                 );
-                pos = (pos as libc::c_ulong).wrapping_add(len.wrapping_add(1));
+                pos = pos.wrapping_add(len.wrapping_add(1 as std::ffi::c_int as size_t));
                 nbFiles = nbFiles.wrapping_add(1);
+                nbFiles;
             }
         } else {
-            nbFiles = nbFiles.wrapping_add(UTIL_prepareFileList(
-                *inputNames.offset(ifnNb as isize),
-                &mut buf,
-                &mut pos,
-                &mut bufend,
-                followLinks,
-            ) as libc::c_uint);
+            nbFiles = nbFiles
+                .wrapping_add(
+                    UTIL_prepareFileList(
+                        *inputNames.offset(ifnNb as isize),
+                        &mut buf,
+                        &mut pos,
+                        &mut bufend,
+                        followLinks,
+                    ) as std::ffi::c_uint,
+                );
             if buf.is_null() {
                 return NULL as *mut FileNamesTable;
             }
         }
         ifnNb = ifnNb.wrapping_add(1);
+        ifnNb;
     }
-    let mut ifnNb_0: libc::size_t = 0;
-    let mut pos_0: libc::size_t = 0;
-    let fntCapacity = nbFiles.wrapping_add(1) as libc::size_t;
-    let fileNamesTable =
-        malloc(fntCapacity.wrapping_mul(::core::mem::size_of::<*const libc::c_char>()))
-            as *mut *const libc::c_char;
+    let mut ifnNb_0: size_t = 0;
+    let mut pos_0: size_t = 0;
+    let fntCapacity = nbFiles.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+        as size_t;
+    let fileNamesTable = malloc(
+        fntCapacity
+            .wrapping_mul(
+                ::core::mem::size_of::<*const std::ffi::c_char>() as std::ffi::c_ulong,
+            ),
+    ) as *mut *const std::ffi::c_char;
     if fileNamesTable.is_null() {
-        free(buf as *mut libc::c_void);
+        free(buf as *mut std::ffi::c_void);
         return NULL as *mut FileNamesTable;
     }
-    ifnNb_0 = 0 as libc::c_int as libc::size_t;
-    pos_0 = 0 as libc::c_int as libc::size_t;
-    while ifnNb_0 < nbFiles as libc::c_ulong {
-        let ref mut fresh8 = *fileNamesTable.offset(ifnNb_0 as isize);
-        *fresh8 = buf.offset(pos_0 as isize);
+    ifnNb_0 = 0 as std::ffi::c_int as size_t;
+    pos_0 = 0 as std::ffi::c_int as size_t;
+    while ifnNb_0 < nbFiles as size_t {
+        let ref mut fresh9 = *fileNamesTable.offset(ifnNb_0 as isize);
+        *fresh9 = buf.offset(pos_0 as isize);
         if buf.offset(pos_0 as isize) > bufend {
-            free(buf as *mut libc::c_void);
-            free(fileNamesTable as *mut libc::c_void);
+            free(buf as *mut std::ffi::c_void);
+            free(fileNamesTable as *mut std::ffi::c_void);
             return NULL as *mut FileNamesTable;
         }
-        pos_0 = (pos_0 as libc::c_ulong)
-            .wrapping_add((strlen(*fileNamesTable.offset(ifnNb_0 as isize))).wrapping_add(1));
+        pos_0 = (pos_0 as std::ffi::c_ulong)
+            .wrapping_add(
+                (strlen(*fileNamesTable.offset(ifnNb_0 as isize)))
+                    .wrapping_add(1 as std::ffi::c_int as std::ffi::c_ulong),
+            ) as size_t as size_t;
         ifnNb_0 = ifnNb_0.wrapping_add(1);
+        ifnNb_0;
     }
-    return UTIL_assembleFileNamesTable2(fileNamesTable, nbFiles as libc::size_t, fntCapacity, buf);
+    return UTIL_assembleFileNamesTable2(
+        fileNamesTable,
+        nbFiles as size_t,
+        fntCapacity,
+        buf,
+    );
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_expandFNT(
     mut fnt: *mut *mut FileNamesTable,
-    mut followLinks: libc::c_int,
+    mut followLinks: std::ffi::c_int,
 ) {
-    let newFNT = UTIL_createExpandedFNT((**fnt).fileNames, (**fnt).tableSize, followLinks);
+    let newFNT = UTIL_createExpandedFNT(
+        (**fnt).fileNames,
+        (**fnt).tableSize,
+        followLinks,
+    );
     if newFNT.is_null() {
-        if g_utilDisplayLevel >= 1 {
+        if g_utilDisplayLevel >= 1 as std::ffi::c_int {
             fprintf(
                 stderr,
-                b"Error : %s, %i : %s\0" as *const u8 as *const libc::c_char,
+                b"Error : %s, %i : %s\0" as *const u8 as *const std::ffi::c_char,
                 b"/home/peter/Dev/zstd-c2rust/programs/util.c\0" as *const u8
-                    as *const libc::c_char,
-                1334 as libc::c_int,
-                b"newFNT != NULL\0" as *const u8 as *const libc::c_char,
+                    as *const std::ffi::c_char,
+                1430 as std::ffi::c_int,
+                b"newFNT != NULL\0" as *const u8 as *const std::ffi::c_char,
             );
         }
-        exit(1);
+        exit(1 as std::ffi::c_int);
     }
     UTIL_freeFileNamesTable(*fnt);
     *fnt = newFNT;
 }
 #[no_mangle]
 pub unsafe extern "C" fn UTIL_createFNT_fromROTable(
-    mut filenames: *mut *const libc::c_char,
-    mut nbFilenames: libc::size_t,
+    mut filenames: *mut *const std::ffi::c_char,
+    mut nbFilenames: size_t,
 ) -> *mut FileNamesTable {
-    let sizeof_FNTable = nbFilenames.wrapping_mul(::core::mem::size_of::<*const libc::c_char>());
-    let newFNTable = malloc(sizeof_FNTable) as *mut *const libc::c_char;
+    let sizeof_FNTable = nbFilenames
+        .wrapping_mul(
+            ::core::mem::size_of::<*const std::ffi::c_char>() as std::ffi::c_ulong,
+        );
+    let newFNTable = malloc(sizeof_FNTable) as *mut *const std::ffi::c_char;
     if newFNTable.is_null() {
         return NULL as *mut FileNamesTable;
     }
     memcpy(
-        newFNTable as *mut libc::c_void,
-        filenames as *const libc::c_void,
+        newFNTable as *mut std::ffi::c_void,
+        filenames as *const std::ffi::c_void,
         sizeof_FNTable,
     );
-    return UTIL_assembleFileNamesTable(newFNTable, nbFilenames, NULL as *mut libc::c_char);
+    return UTIL_assembleFileNamesTable(
+        newFNTable,
+        nbFilenames,
+        NULL as *mut std::ffi::c_char,
+    );
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_int {
+pub unsafe extern "C" fn UTIL_countCores(
+    mut logical: std::ffi::c_int,
+) -> std::ffi::c_int {
     let mut current_block: u64;
-    static mut numCores: libc::c_int = 0 as libc::c_int;
-    if numCores != 0 {
+    static mut numCores: std::ffi::c_int = 0 as std::ffi::c_int;
+    if numCores != 0 as std::ffi::c_int {
         return numCores;
     }
-    numCores = sysconf(_SC_NPROCESSORS_ONLN_0) as libc::c_int;
-    if numCores == -(1) {
-        numCores = 1 as libc::c_int;
+    numCores = sysconf(_SC_NPROCESSORS_ONLN_0) as std::ffi::c_int;
+    if numCores == -(1 as std::ffi::c_int) {
+        numCores = 1 as std::ffi::c_int;
         return numCores;
     }
     let cpuinfo = fopen(
-        b"/proc/cpuinfo\0" as *const u8 as *const libc::c_char,
-        b"r\0" as *const u8 as *const libc::c_char,
+        b"/proc/cpuinfo\0" as *const u8 as *const std::ffi::c_char,
+        b"r\0" as *const u8 as *const std::ffi::c_char,
     );
-    let mut buff: [libc::c_char; 80] = [0; 80];
-    let mut siblings = 0 as libc::c_int;
-    let mut cpu_cores = 0 as libc::c_int;
-    let mut ratio = 1 as libc::c_int;
+    let mut buff: [std::ffi::c_char; 80] = [0; 80];
+    let mut siblings = 0 as std::ffi::c_int;
+    let mut cpu_cores = 0 as std::ffi::c_int;
+    let mut ratio = 1 as std::ffi::c_int;
     if cpuinfo.is_null() {
         return numCores;
     }
@@ -2542,35 +3297,35 @@ pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_in
         if !(fgets(buff.as_mut_ptr(), BUF_SIZE, cpuinfo)).is_null() {
             if strncmp(
                 buff.as_mut_ptr(),
-                b"siblings\0" as *const u8 as *const libc::c_char,
-                8 as libc::c_int as libc::c_ulong,
-            ) == 0
+                b"siblings\0" as *const u8 as *const std::ffi::c_char,
+                8 as std::ffi::c_int as std::ffi::c_ulong,
+            ) == 0 as std::ffi::c_int
             {
-                let sep: *const libc::c_char = strchr(buff.as_mut_ptr(), ':' as i32);
-                if sep.is_null() || *sep as libc::c_int == '\0' as i32 {
-                    current_block = 16443617707930808077;
+                let sep: *const std::ffi::c_char = strchr(buff.as_mut_ptr(), ':' as i32);
+                if sep.is_null() || *sep as std::ffi::c_int == '\0' as i32 {
+                    current_block = 4549535595577708426;
                     break;
                 } else {
-                    siblings = atoi(sep.offset(1));
+                    siblings = atoi(sep.offset(1 as std::ffi::c_int as isize));
                 }
             }
             if !(strncmp(
                 buff.as_mut_ptr(),
-                b"cpu cores\0" as *const u8 as *const libc::c_char,
-                9 as libc::c_int as libc::c_ulong,
-            ) == 0)
+                b"cpu cores\0" as *const u8 as *const std::ffi::c_char,
+                9 as std::ffi::c_int as std::ffi::c_ulong,
+            ) == 0 as std::ffi::c_int)
             {
                 continue;
             }
-            let sep_0: *const libc::c_char = strchr(buff.as_mut_ptr(), ':' as i32);
-            if sep_0.is_null() || *sep_0 as libc::c_int == '\0' as i32 {
-                current_block = 16443617707930808077;
+            let sep_0: *const std::ffi::c_char = strchr(buff.as_mut_ptr(), ':' as i32);
+            if sep_0.is_null() || *sep_0 as std::ffi::c_int == '\0' as i32 {
+                current_block = 4549535595577708426;
                 break;
             } else {
-                cpu_cores = atoi(sep_0.offset(1));
+                cpu_cores = atoi(sep_0.offset(1 as std::ffi::c_int as isize));
             }
         } else if ferror(cpuinfo) != 0 {
-            current_block = 16443617707930808077;
+            current_block = 4549535595577708426;
             break;
         }
     }
@@ -2588,12 +3343,12 @@ pub unsafe extern "C" fn UTIL_countCores(mut logical: libc::c_int) -> libc::c_in
     fclose(cpuinfo);
     return numCores;
 }
-pub const BUF_SIZE: libc::c_int = 80 as libc::c_int;
+pub const BUF_SIZE: std::ffi::c_int = 80 as std::ffi::c_int;
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_countPhysicalCores() -> libc::c_int {
-    return UTIL_countCores(0);
+pub unsafe extern "C" fn UTIL_countPhysicalCores() -> std::ffi::c_int {
+    return UTIL_countCores(0 as std::ffi::c_int);
 }
 #[no_mangle]
-pub unsafe extern "C" fn UTIL_countLogicalCores() -> libc::c_int {
-    return UTIL_countCores(1);
+pub unsafe extern "C" fn UTIL_countLogicalCores() -> std::ffi::c_int {
+    return UTIL_countCores(1 as std::ffi::c_int);
 }
