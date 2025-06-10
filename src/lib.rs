@@ -12,6 +12,9 @@
 #![feature(label_break_value)]
 #![feature(stdsimd)]
 
+/// `__m128i` with unaligned memory access
+pub type __m128i_u = [u64; 2];
+
 #[macro_use]
 extern crate c2rust_bitfields;
 extern crate libc;
