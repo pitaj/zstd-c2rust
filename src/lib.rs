@@ -15,8 +15,7 @@
 #[macro_use]
 extern crate c2rust_bitfields;
 extern crate libc;
-pub mod src {
-pub mod lib {
+
 pub mod common {
 pub mod debug;
 pub mod entropy_common;
@@ -49,33 +48,9 @@ pub mod zstd_ddict;
 pub mod zstd_decompress;
 pub mod zstd_decompress_block;
 } // mod decompress
-pub mod dictBuilder {
+pub mod dict_builder {
 pub mod cover;
 pub mod divsufsort;
 pub mod fastcover;
 pub mod zdict;
 } // mod dictBuilder
-pub mod legacy {
-pub mod zstd_v01;
-pub mod zstd_v02;
-pub mod zstd_v03;
-pub mod zstd_v04;
-pub mod zstd_v05;
-pub mod zstd_v06;
-pub mod zstd_v07;
-} // mod legacy
-} // mod lib
-pub mod programs {
-pub mod benchfn;
-pub mod benchzstd;
-pub mod datagen;
-pub mod dibio;
-pub mod fileio;
-pub mod fileio_asyncio;
-pub mod lorem;
-pub mod timefn;
-pub mod util;
-pub mod zstdcli;
-pub mod zstdcli_trace;
-} // mod programs
-} // mod src
