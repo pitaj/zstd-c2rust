@@ -177,7 +177,7 @@ unsafe extern "C" fn ZSTD_customCalloc(
         libc::memset(ptr, 0 as std::ffi::c_int, size as usize);
         return ptr;
     }
-    return calloc(1 as std::ffi::c_int as std::ffi::c_ulong, size);
+    return libc::calloc(1, size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(

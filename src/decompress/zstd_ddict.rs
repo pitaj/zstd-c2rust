@@ -282,7 +282,7 @@ unsafe extern "C" fn ZSTD_customMalloc(
         return (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
     }
-    return malloc(size);
+    return libc::malloc(size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(

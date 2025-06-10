@@ -381,10 +381,10 @@ pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
 pub const COVER_DEFAULT_SPLITPOINT: std::ffi::c_double = 1.0f64;
 pub const MAP_EMPTY_VALUE: std::ffi::c_int = -(1 as std::ffi::c_int);
 unsafe extern "C" fn COVER_map_clear(mut map: *mut COVER_map_t) {
-    memset(
+    libc::memset(
         (*map).data as *mut std::ffi::c_void,
         MAP_EMPTY_VALUE,
-        ((*map).size as std::ffi::c_ulong)
+        ((*map).size as usize)
             .wrapping_mul(
                 ::core::mem::size_of::<COVER_map_pair_t>(),
             ),
@@ -400,8 +400,8 @@ unsafe extern "C" fn COVER_map_init(
     (*map).size = (1 as std::ffi::c_int as u32) << (*map).sizeLog;
     (*map).sizeMask = ((*map).size).wrapping_sub(1 as std::ffi::c_int as u32);
     (*map)
-        .data = malloc(
-        ((*map).size as std::ffi::c_ulong)
+        .data = libc::malloc(
+        ((*map).size as usize)
             .wrapping_mul(
                 ::core::mem::size_of::<COVER_map_pair_t>(),
             ),
@@ -899,7 +899,7 @@ unsafe extern "C" fn COVER_ctx_init(
         }
         return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
     }
-    memset(
+    libc::memset(
         ctx as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
         ::core::mem::size_of::<COVER_ctx_t>(),
@@ -942,19 +942,19 @@ unsafe extern "C" fn COVER_ctx_init(
         )
         .wrapping_add(1 as std::ffi::c_int as std::ffi::c_ulong);
     (*ctx)
-        .suffix = malloc(
+        .suffix = libc::malloc(
         ((*ctx).suffixSize)
             .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     (*ctx)
-        .dmerAt = malloc(
+        .dmerAt = libc::malloc(
         ((*ctx).suffixSize)
             .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     (*ctx)
-        .offsets = malloc(
+        .offsets = libc::malloc(
         (nbSamples.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
-            as std::ffi::c_ulong)
+            as usize)
             .wrapping_mul(::core::mem::size_of::<usize>()),
     ) as *mut usize;
     if ((*ctx).suffix).is_null() || ((*ctx).dmerAt).is_null()
@@ -1177,7 +1177,7 @@ unsafe extern "C" fn COVER_buildDictionary(
                 break;
             }
             tail = tail.wrapping_sub(segmentSize);
-            memcpy(
+            libc::memcpy(
                 dict.offset(tail as isize) as *mut std::ffi::c_void,
                 ((*ctx).samples).offset(segment.begin as isize)
                     as *const std::ffi::c_void,
@@ -1384,7 +1384,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
         i;
     }
     dstCapacity = ZSTD_compressBound(maxSampleSize);
-    dst = malloc(dstCapacity);
+    dst = libc::malloc(dstCapacity);
     cctx = ZSTD_createCCtx();
     cdict = ZSTD_createCDict(
         dict as *const std::ffi::c_void,
@@ -1436,7 +1436,7 @@ pub unsafe extern "C" fn COVER_best_init(mut best: *mut COVER_best_t) {
     (*best).dict = NULL as *mut std::ffi::c_void;
     (*best).dictSize = 0 as std::ffi::c_int as usize;
     (*best).compressedSize = -(1 as std::ffi::c_int) as usize;
-    memset(
+    libc::memset(
         &mut (*best).parameters as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
@@ -1497,7 +1497,7 @@ pub unsafe extern "C" fn COVER_best_finish(
             if !((*best).dict).is_null() {
                 free((*best).dict);
             }
-            (*best).dict = malloc(dictSize);
+            (*best).dict = libc::malloc(dictSize);
             if ((*best).dict).is_null() {
                 (*best)
                     .compressedSize = -(ZSTD_error_GENERIC as std::ffi::c_int) as usize;
@@ -1508,7 +1508,7 @@ pub unsafe extern "C" fn COVER_best_finish(
             }
         }
         if !dict.is_null() {
-            memcpy((*best).dict, dict, dictSize);
+            libc::memcpy((*best).dict, dict, dictSize);
             (*best).dictSize = dictSize;
             (*best).parameters = parameters;
             (*best).compressedSize = compressedSize;
@@ -1568,8 +1568,8 @@ pub unsafe extern "C" fn COVER_selectDict(
     let mut largestDict = 0 as std::ffi::c_int as usize;
     let mut largestCompressed = 0 as std::ffi::c_int as usize;
     let mut customDictContentEnd = customDictContent.offset(dictContentSize as isize);
-    let mut largestDictbuffer = malloc(dictBufferCapacity) as *mut u8;
-    let mut candidateDictBuffer = malloc(dictBufferCapacity) as *mut u8;
+    let mut largestDictbuffer = libc::malloc(dictBufferCapacity) as *mut u8;
+    let mut candidateDictBuffer = libc::malloc(dictBufferCapacity) as *mut u8;
     let mut regressionTolerance = params.shrinkDictMaxRegression as std::ffi::c_double
         / 100.0f64 + 1.00f64;
     if largestDictbuffer.is_null() || candidateDictBuffer.is_null() {
@@ -1577,7 +1577,7 @@ pub unsafe extern "C" fn COVER_selectDict(
         free(candidateDictBuffer as *mut std::ffi::c_void);
         return COVER_dictSelectionError(dictContentSize);
     }
-    memcpy(
+    libc::memcpy(
         largestDictbuffer as *mut std::ffi::c_void,
         customDictContent as *const std::ffi::c_void,
         dictContentSize,
@@ -1620,7 +1620,7 @@ pub unsafe extern "C" fn COVER_selectDict(
     largestCompressed = totalCompressedSize;
     dictContentSize = ZDICT_DICTSIZE_MIN as usize;
     while dictContentSize < largestDict {
-        memcpy(
+        libc::memcpy(
             candidateDictBuffer as *mut std::ffi::c_void,
             largestDictbuffer as *const std::ffi::c_void,
             largestDict,
@@ -1685,11 +1685,11 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
         size: 0,
         sizeMask: 0,
     };
-    let dict = malloc(dictBufferCapacity) as *mut u8;
+    let dict = libc::malloc(dictBufferCapacity) as *mut u8;
     let mut selection = COVER_dictSelectionError(
         -(ZSTD_error_GENERIC as std::ffi::c_int) as usize,
     );
-    let freqs = malloc(
+    let freqs = libc::malloc(
         ((*ctx).suffixSize)
             .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
@@ -1719,7 +1719,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
             fflush(stderr);
         }
     } else {
-        memcpy(
+        libc::memcpy(
             freqs as *mut std::ffi::c_void,
             (*ctx).freqs as *const std::ffi::c_void,
             ((*ctx).suffixSize)
@@ -1994,7 +1994,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         }
         k = kMinK;
         while k <= kMaxK {
-            let mut data = malloc(
+            let mut data = libc::malloc(
                 ::core::mem::size_of::<COVER_tryParameters_data_t>(),
             ) as *mut COVER_tryParameters_data_t;
             if displayLevel >= 3 as std::ffi::c_int {
@@ -2095,7 +2095,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         return compressedSize;
     }
     *parameters = best.parameters;
-    memcpy(dictBuffer, best.dict, dictSize);
+    libc::memcpy(dictBuffer, best.dict, dictSize);
     COVER_best_destroy(&mut best);
     POOL_free(pool);
     return dictSize;

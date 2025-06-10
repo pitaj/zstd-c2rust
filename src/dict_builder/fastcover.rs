@@ -727,7 +727,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         }
         return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
     }
-    memset(
+    libc::memset(
         ctx as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
         ::core::mem::size_of::<FASTCOVER_ctx_t>(),
@@ -760,22 +760,22 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     (*ctx)
         .nbDmers = trainingSamplesSize
         .wrapping_sub(
-            (if d as std::ffi::c_ulong
+            (if d as usize
                 > ::core::mem::size_of::<u64>()
             {
-                d as std::ffi::c_ulong
+                d
             } else {
                 ::core::mem::size_of::<u64>()
             }),
         )
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_ulong);
+        .wrapping_add(1);
     (*ctx).d = d;
     (*ctx).f = f;
     (*ctx).accelParams = accelParams;
     (*ctx)
-        .offsets = calloc(
-        nbSamples.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
-            as std::ffi::c_ulong,
+        .offsets = libc::calloc(
+        nbSamples.wrapping_add(1)
+            as usize,
         ::core::mem::size_of::<usize>(),
     ) as *mut usize;
     if ((*ctx).offsets).is_null() {
@@ -808,8 +808,8 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         i;
     }
     (*ctx)
-        .freqs = calloc(
-        (1 as std::ffi::c_int as u64) << f,
+        .freqs = libc::calloc(
+        (1_usize) << f,
         ::core::mem::size_of::<u32>(),
     ) as *mut u32;
     if ((*ctx).freqs).is_null() {
@@ -901,7 +901,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
                 break;
             }
             tail = tail.wrapping_sub(segmentSize);
-            memcpy(
+            libc::memcpy(
                 dict.offset(tail as isize) as *mut std::ffi::c_void,
                 ((*ctx).samples).offset(segment.begin as isize)
                     as *const std::ffi::c_void,
@@ -945,16 +945,16 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
     let parameters = (*data).parameters;
     let mut dictBufferCapacity = (*data).dictBufferCapacity;
     let mut totalCompressedSize = -(ZSTD_error_GENERIC as std::ffi::c_int) as usize;
-    let mut segmentFreqs = calloc(
-        (1 as std::ffi::c_int as u64) << (*ctx).f,
+    let mut segmentFreqs = libc::calloc(
+        (1_usize) << (*ctx).f,
         ::core::mem::size_of::<u16>(),
     ) as *mut u16;
-    let dict = malloc(dictBufferCapacity) as *mut u8;
+    let dict = libc::malloc(dictBufferCapacity) as *mut u8;
     let mut selection = COVER_dictSelectionError(
         -(ZSTD_error_GENERIC as std::ffi::c_int) as usize,
     );
-    let mut freqs = malloc(
-        ((1 as std::ffi::c_int as u64) << (*ctx).f)
+    let mut freqs = libc::malloc(
+        (1_usize << (*ctx).f)
             .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     let displayLevel = (*ctx).displayLevel;
@@ -968,10 +968,10 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
             fflush(stderr);
         }
     } else {
-        memcpy(
+        libc::memcpy(
             freqs as *mut std::ffi::c_void,
             (*ctx).freqs as *const std::ffi::c_void,
-            ((1 as std::ffi::c_int as u64) << (*ctx).f)
+            ((1 as std::ffi::c_int as usize) << (*ctx).f)
                 .wrapping_mul(::core::mem::size_of::<u32>()),
         );
         let tail = FASTCOVER_buildDictionary(
@@ -1103,7 +1103,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
     } else {
         parameters.accel
     };
-    memset(
+    libc::memset(
         &mut coverParams as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
@@ -1180,8 +1180,8 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         );
         fflush(stderr);
     }
-    let mut segmentFreqs = calloc(
-        (1 as std::ffi::c_int as u64) << parameters.f,
+    let mut segmentFreqs = libc::calloc(
+        (1_usize) << parameters.f,
         ::core::mem::size_of::<u16>(),
     ) as *mut u16;
     let tail = FASTCOVER_buildDictionary(
@@ -1424,7 +1424,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         }
     }
     COVER_best_init(&mut best);
-    memset(
+    libc::memset(
         &mut coverParams as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
@@ -1498,9 +1498,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         }
         k = kMinK;
         while k <= kMaxK {
-            let mut data = malloc(
-                ::core::mem::size_of::<FASTCOVER_tryParameters_data_t>()
-                    as std::ffi::c_ulong,
+            let mut data = libc::malloc(
+                ::core::mem::size_of::<FASTCOVER_tryParameters_data_t>(),
             ) as *mut FASTCOVER_tryParameters_data_t;
             if displayLevel >= 3 as std::ffi::c_int {
                 fprintf(stderr, b"k=%u\n\0" as *const u8 as *const std::ffi::c_char, k);
@@ -1606,7 +1605,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         return compressedSize;
     }
     FASTCOVER_convertToFastCoverParams(best.parameters, parameters, f, accel);
-    memcpy(dictBuffer, best.dict, dictSize);
+    libc::memcpy(dictBuffer, best.dict, dictSize);
     COVER_best_destroy(&mut best);
     POOL_free(pool);
     return dictSize;

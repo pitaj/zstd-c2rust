@@ -6891,12 +6891,12 @@ pub unsafe extern "C" fn divsufsort(
         *SA.offset(m as isize) = 1 as std::ffi::c_int;
         return 0 as std::ffi::c_int;
     }
-    bucket_A = malloc(
-        (BUCKET_A_SIZE as std::ffi::c_ulong)
+    bucket_A = libc::malloc(
+        (BUCKET_A_SIZE as usize)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
-    bucket_B = malloc(
-        (BUCKET_B_SIZE as std::ffi::c_ulong)
+    bucket_B = libc::malloc(
+        (BUCKET_B_SIZE as usize)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     if !bucket_A.is_null() && !bucket_B.is_null() {
@@ -6938,19 +6938,19 @@ pub unsafe extern "C" fn divbwt(
     }
     B = A;
     if B.is_null() {
-        B = malloc(
+        B = libc::malloc(
             ((n + 1 as std::ffi::c_int) as usize)
                 .wrapping_mul(
                     ::core::mem::size_of::<std::ffi::c_int>(),
                 ),
         ) as *mut std::ffi::c_int;
     }
-    bucket_A = malloc(
-        (BUCKET_A_SIZE as std::ffi::c_ulong)
+    bucket_A = libc::malloc(
+        (BUCKET_A_SIZE as usize)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
-    bucket_B = malloc(
-        (BUCKET_B_SIZE as std::ffi::c_ulong)
+    bucket_B = libc::malloc(
+        (BUCKET_B_SIZE as usize)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     if !B.is_null() && !bucket_A.is_null() && !bucket_B.is_null() {
