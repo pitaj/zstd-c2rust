@@ -105,13 +105,13 @@ case $1 in
     perl -i -p0e 's/\npub type (u8|u16|u32|u64|usize|i8|i16|i32|i64|isize) = [^;]+;//gm' src/*/*.rs
     perl -i -p0e 's/\npub type (?:libc::)?size_t = [^;]+;//gm' src/*/*.rs
 
+    ;;
+
+  casts)
     # Remove redundant as casts
     perl -i -p0e 's/\b(as \w\S*) \1\b//gm' src/*/*.rs
     perl -i -p0e 's/(.wrapping_(?:sub|add|div|mul|rem)\(\d+)(?: as \w\S*?)+\)/$1)/gm' src/*/*.rs
 
-    ;;
-
-  casts)
     # Fix casting size_of from usize to c_ulong
     perl -i -p0e 's/(::core::mem::size_of::<[^>]*>\(\)) as libc::c_ulong\b/$1/gm' src/*/*.rs
     # Remove unnecessary casts where type can be inferred
