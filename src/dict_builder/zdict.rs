@@ -1008,7 +1008,7 @@ unsafe extern "C" fn ZDICT_count(
 unsafe extern "C" fn ZDICT_initDictItem(mut d: *mut dictItem) {
     (*d).pos = 1 as std::ffi::c_int as u32;
     (*d).length = 0 as std::ffi::c_int as u32;
-    (*d).savings = -(1 as std::ffi::c_int) as u32;
+    (*d).savings = u32::MAX;
 }
 pub const LLIMIT: std::ffi::c_int = 64 as std::ffi::c_int;
 pub const MINMATCHLENGTH: std::ffi::c_int = 7 as std::ffi::c_int;

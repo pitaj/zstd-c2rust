@@ -516,7 +516,7 @@ unsafe extern "C" fn COVER_cmp8(
     mut rp: *const std::ffi::c_void,
 ) -> std::ffi::c_int {
     let mask = if (*ctx).d == 8 as std::ffi::c_int as std::ffi::c_uint {
-        -(1 as std::ffi::c_int) as u64
+        u64::MAX
     } else {
         ((1 as std::ffi::c_int as u64)
             << (8 as std::ffi::c_int as std::ffi::c_uint).wrapping_mul((*ctx).d))

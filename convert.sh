@@ -72,6 +72,13 @@ case $1 in
 
     ;;
 
+  cast-neg1-max)
+    # -1 as uint => uint::MAX
+    # (-(1 as std::ffi::c_int) as u32)
+    perl -i -p0e 's/-\(1(?: as [\w\d:_]+)*\) as ([\w\d:_]*(?:uint\d+|u\d+))/$1::MAX/gm' src/*/*.rs
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs
