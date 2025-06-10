@@ -605,7 +605,7 @@ static mut ZSTD_defaultCMem: ZSTD_customMem = unsafe {
         init
     }
 };
-pub const ZSTD_d_format: std::ffi::c_int = 1000;
+pub const ZSTD_d_format: std::ffi::c_int = ZSTD_d_experimentalParam1 as std::ffi::c_int;
 pub const ZSTD_d_stableOutBuffer: std::ffi::c_int = 1001;
 pub const ZSTD_d_forceIgnoreChecksum: std::ffi::c_int = 1002;
 pub const ZSTD_d_refMultipleDDicts: std::ffi::c_int = 1003;

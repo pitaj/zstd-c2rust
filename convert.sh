@@ -3,6 +3,16 @@ set -e
 
 case $1 in
 
+  clean)
+    rm -rf src
+    rm -f Cargo.toml
+    rm -f Cargo.lock
+    rm -f build.rs
+    rm -f lib.rs
+    rm -f rust-toolchain.toml
+
+    ;;
+
   transpile)
     # Run cmake to produce a compilation database
     mkdir -p build/cmake/output
@@ -14,14 +24,18 @@ case $1 in
     c2rust transpile --emit-no-std --emit-build-files --overwrite-existing --reduce-type-annotations --translate-const-macros \
       --output-dir . build/cmake/output/compile_commands.json 2>&1 | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > c2rust.log)
 
-    mv -f src/lib/common/* src/common
-    mv -f src/lib/compress/* src/compress
-    mv -f src/lib/decompress/* src/decompress
-    mv -f src/lib/dictBuilder/* src/dict_builder
-    mv -f src/lib/legacy/* src/legacy
-    rmdir src/lib/*
-    rmdir src/lib
+    ;;
 
+  file-structure)
+    mv -f src/lib/common/ src/common
+    mv -f src/lib/compress/ src/compress
+    mv -f src/lib/decompress/ src/decompress
+    mv -f src/lib/dictBuilder/ src/dict_builder
+    mv lib.rs src/lib.rs
+    rm -rf src/lib
+    rm -rf src/programs
+    rm build.rs
+    sed -i '/path = "lib.rs"/d' Cargo.toml
     ;;
 
   missing-imports)
