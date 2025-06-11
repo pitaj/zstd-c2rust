@@ -680,7 +680,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             {
                 -(1 as std::ffi::c_int) as std::ffi::c_uint
             } else {
-                (1 as std::ffi::c_int as std::ffi::c_uint)
+                (1 as std::ffi::c_uint)
                     .wrapping_mul((1 as std::ffi::c_uint) << 30)
             }) as usize
     {
@@ -695,7 +695,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
                 {
                     -(1 as std::ffi::c_int) as std::ffi::c_uint
                 } else {
-                    (1 as std::ffi::c_int as std::ffi::c_uint)
+                    (1 as std::ffi::c_uint)
                         .wrapping_mul((1 as std::ffi::c_uint) << 30)
                 }) >> 20,
             );
@@ -1284,14 +1284,14 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     } else {
         1 as std::ffi::c_int as std::ffi::c_uint
     };
-    let kIterations = (1 as std::ffi::c_int as std::ffi::c_uint)
+    let kIterations = (1 as std::ffi::c_uint)
         .wrapping_add(
             kMaxD
                 .wrapping_sub(kMinD)
                 .wrapping_div(2),
         )
         .wrapping_mul(
-            (1 as std::ffi::c_int as std::ffi::c_uint)
+            (1 as std::ffi::c_uint)
                 .wrapping_add(kMaxK.wrapping_sub(kMinK).wrapping_div(kStepSize)),
         );
     let f = if (*parameters).f == 0 as std::ffi::c_int as std::ffi::c_uint {

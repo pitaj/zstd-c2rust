@@ -3024,7 +3024,7 @@ unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_int as std::ffi::c_uint)
+    return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -3487,7 +3487,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCCtx(
             8208 as std::ffi::c_int as std::ffi::c_ulong
         })
             .wrapping_add(
-                (2 as std::ffi::c_int as std::ffi::c_ulong)
+                (2 as std::ffi::c_ulong)
                     .wrapping_mul(
                         ::core::mem::size_of::<ZSTD_compressedBlockState_t>()
                             as std::ffi::c_ulong,
@@ -5452,7 +5452,7 @@ unsafe extern "C" fn ZSTD_sizeof_matchState(
     let hashLog3 = if forCCtx != 0
         && (*cParams).minMatch == 3 as std::ffi::c_int as std::ffi::c_uint
     {
-        if (17 as std::ffi::c_int as std::ffi::c_uint) < (*cParams).windowLog {
+        if (17 as std::ffi::c_uint) < (*cParams).windowLog {
             17 as std::ffi::c_int as std::ffi::c_uint
         } else {
             (*cParams).windowLog
@@ -5978,7 +5978,7 @@ unsafe extern "C" fn ZSTD_reset_matchState(
         == ZSTD_resetTarget_CCtx as std::ffi::c_int as std::ffi::c_uint
         && (*cParams).minMatch == 3 as std::ffi::c_int as std::ffi::c_uint
     {
-        if (17 as std::ffi::c_int as std::ffi::c_uint) < (*cParams).windowLog {
+        if (17 as std::ffi::c_uint) < (*cParams).windowLog {
             17 as std::ffi::c_int as std::ffi::c_uint
         } else {
             (*cParams).windowLog

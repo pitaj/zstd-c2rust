@@ -1224,7 +1224,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
             }
         } else {
             (*params)
-                .hashRateLog = (7 as std::ffi::c_int as std::ffi::c_uint)
+                .hashRateLog = (7 as std::ffi::c_uint)
                 .wrapping_sub(
                     ((*cParams).strategy as std::ffi::c_uint)
                         .wrapping_div(3),

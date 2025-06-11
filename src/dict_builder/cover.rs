@@ -372,7 +372,7 @@ unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint 
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_int as std::ffi::c_uint)
+    return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
@@ -519,7 +519,7 @@ unsafe extern "C" fn COVER_cmp8(
         u64::MAX
     } else {
         (1_u64
-            << (8 as std::ffi::c_int as std::ffi::c_uint).wrapping_mul((*ctx).d))
+            << (8 as std::ffi::c_uint).wrapping_mul((*ctx).d))
             .wrapping_sub(1)
     };
     let lhs = MEM_readLE64(
@@ -852,7 +852,7 @@ unsafe extern "C" fn COVER_ctx_init(
             {
                 -(1 as std::ffi::c_int) as std::ffi::c_uint
             } else {
-                (1 as std::ffi::c_int as std::ffi::c_uint)
+                (1 as std::ffi::c_uint)
                     .wrapping_mul((1 as std::ffi::c_uint) << 30)
             }) as usize
     {
@@ -867,7 +867,7 @@ unsafe extern "C" fn COVER_ctx_init(
                 {
                     -(1 as std::ffi::c_int) as std::ffi::c_uint
                 } else {
-                    (1 as std::ffi::c_int as std::ffi::c_uint)
+                    (1 as std::ffi::c_uint)
                         .wrapping_mul((1 as std::ffi::c_uint) << 30)
                 }) >> 20,
             );
@@ -1811,14 +1811,14 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     } else {
         1 as std::ffi::c_int as std::ffi::c_uint
     };
-    let kIterations = (1 as std::ffi::c_int as std::ffi::c_uint)
+    let kIterations = (1 as std::ffi::c_uint)
         .wrapping_add(
             kMaxD
                 .wrapping_sub(kMinD)
                 .wrapping_div(2),
         )
         .wrapping_mul(
-            (1 as std::ffi::c_int as std::ffi::c_uint)
+            (1 as std::ffi::c_uint)
                 .wrapping_add(kMaxK.wrapping_sub(kMinK).wrapping_div(kStepSize)),
         );
     let shrinkDict = 0 as std::ffi::c_int as std::ffi::c_uint;

@@ -43,7 +43,7 @@ unsafe extern "C" fn hash2(
         return *(p as *const u8).offset(0) as u32;
     }
     return (MEM_read16(p) as u32).wrapping_mul(KNUTH)
-        >> (32 as std::ffi::c_int as std::ffi::c_uint).wrapping_sub(hashLog);
+        >> (32 as std::ffi::c_uint).wrapping_sub(hashLog);
 }
 unsafe extern "C" fn initStats(mut fpstats: *mut FPStats) {
     libc::memset(
@@ -332,7 +332,7 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
     let fpstats = workspace as *mut FPStats;
     let mut middleEvents = (workspace as *mut std::ffi::c_char)
         .offset(
-            (512 as std::ffi::c_int as std::ffi::c_ulong)
+            (512 as std::ffi::c_ulong)
                 .wrapping_mul(
                     ::core::mem::size_of::<std::ffi::c_uint>(),
                 ) as isize,

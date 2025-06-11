@@ -1005,7 +1005,7 @@ unsafe extern "C" fn ss_mintrosort(
         if last.offset_from(first) as std::ffi::c_long
             <= SS_INSERTIONSORT_THRESHOLD as std::ffi::c_long
         {
-            if (1 as std::ffi::c_int as std::ffi::c_long)
+            if (1 as std::ffi::c_long)
                 < last.offset_from(first) as std::ffi::c_long
             {
                 ss_insertionsort(T, PA, first, last, depth);
@@ -1068,7 +1068,7 @@ unsafe extern "C" fn ss_mintrosort(
                 while a < last {
                     x = *Td.offset(*PA.offset(*a as isize) as isize) as std::ffi::c_int;
                     if x != v {
-                        if (1 as std::ffi::c_int as std::ffi::c_long)
+                        if (1 as std::ffi::c_long)
                             < a.offset_from(first) as std::ffi::c_long
                         {
                             break;
@@ -1089,7 +1089,7 @@ unsafe extern "C" fn ss_mintrosort(
                 if a.offset_from(first) as std::ffi::c_long
                     <= last.offset_from(a) as std::ffi::c_long
                 {
-                    if (1 as std::ffi::c_int as std::ffi::c_long)
+                    if (1 as std::ffi::c_long)
                         < a.offset_from(first) as std::ffi::c_long
                     {
                         if ssize < 16 as std::ffi::c_int {} else {
@@ -1141,7 +1141,7 @@ unsafe extern "C" fn ss_mintrosort(
                         first = a;
                         limit = -(1 as std::ffi::c_int);
                     }
-                } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                } else if (1 as std::ffi::c_long)
                     < last.offset_from(a) as std::ffi::c_long
                 {
                     if ssize < 16 as std::ffi::c_int {} else {
@@ -3600,7 +3600,7 @@ unsafe extern "C" fn tr_introsort(
                         c;
                     }
                 }
-                if (1 as std::ffi::c_int as std::ffi::c_long)
+                if (1 as std::ffi::c_long)
                     < b.offset_from(a) as std::ffi::c_long
                 {
                     if ssize < 64 as std::ffi::c_int {} else {
@@ -3690,7 +3690,7 @@ unsafe extern "C" fn tr_introsort(
                 if a.offset_from(first) as std::ffi::c_long
                     <= last.offset_from(b) as std::ffi::c_long
                 {
-                    if (1 as std::ffi::c_int as std::ffi::c_long)
+                    if (1 as std::ffi::c_long)
                         < a.offset_from(first) as std::ffi::c_long
                     {
                         if ssize < 64 as std::ffi::c_int {} else {
@@ -3741,7 +3741,7 @@ unsafe extern "C" fn tr_introsort(
                         limit = tr_ilg(
                             a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
                         );
-                    } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                    } else if (1 as std::ffi::c_long)
                         < last.offset_from(b) as std::ffi::c_long
                     {
                         first = b;
@@ -3791,7 +3791,7 @@ unsafe extern "C" fn tr_introsort(
                         limit = stack[ssize as usize].d;
                         trlink = stack[ssize as usize].e;
                     }
-                } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                } else if (1 as std::ffi::c_long)
                     < last.offset_from(b) as std::ffi::c_long
                 {
                     if ssize < 64 as std::ffi::c_int {} else {
@@ -3842,7 +3842,7 @@ unsafe extern "C" fn tr_introsort(
                     limit = tr_ilg(
                         last.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
                     );
-                } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                } else if (1 as std::ffi::c_long)
                     < a.offset_from(first) as std::ffi::c_long
                 {
                     last = a;
@@ -4058,7 +4058,7 @@ unsafe extern "C" fn tr_introsort(
                             ISAd = ISAd.offset(incr as isize);
                             last = a;
                             limit = next;
-                        } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                        } else if (1 as std::ffi::c_long)
                             < last.offset_from(a) as std::ffi::c_long
                         {
                             if ssize < 64 as std::ffi::c_int {} else {
@@ -4113,7 +4113,7 @@ unsafe extern "C" fn tr_introsort(
                         if 0 as std::ffi::c_int <= trlink {
                             stack[trlink as usize].d = -(1 as std::ffi::c_int);
                         }
-                        if (1 as std::ffi::c_int as std::ffi::c_long)
+                        if (1 as std::ffi::c_long)
                             < last.offset_from(a) as std::ffi::c_long
                         {
                             first = a;
@@ -4274,7 +4274,7 @@ unsafe extern "C" fn tr_introsort(
                             c;
                         }
                     }
-                    if (1 as std::ffi::c_int as std::ffi::c_long)
+                    if (1 as std::ffi::c_long)
                         < b.offset_from(a) as std::ffi::c_long
                         && trbudget_check(
                             budget,
@@ -4287,7 +4287,7 @@ unsafe extern "C" fn tr_introsort(
                             if last.offset_from(b) as std::ffi::c_long
                                 <= b.offset_from(a) as std::ffi::c_long
                             {
-                                if (1 as std::ffi::c_int as std::ffi::c_long)
+                                if (1 as std::ffi::c_long)
                                     < a.offset_from(first) as std::ffi::c_long
                                 {
                                     if ssize < 64 as std::ffi::c_int {} else {
@@ -4373,7 +4373,7 @@ unsafe extern "C" fn tr_introsort(
                                     ssize = ssize + 1;
                                     stack[fresh63 as usize].e = trlink;
                                     last = a;
-                                } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                                } else if (1 as std::ffi::c_long)
                                     < last.offset_from(b) as std::ffi::c_long
                                 {
                                     if ssize < 64 as std::ffi::c_int {} else {
@@ -4427,7 +4427,7 @@ unsafe extern "C" fn tr_introsort(
                             } else if a.offset_from(first) as std::ffi::c_long
                                 <= b.offset_from(a) as std::ffi::c_long
                             {
-                                if (1 as std::ffi::c_int as std::ffi::c_long)
+                                if (1 as std::ffi::c_long)
                                     < a.offset_from(first) as std::ffi::c_long
                                 {
                                     if ssize < 64 as std::ffi::c_int {} else {
@@ -4651,7 +4651,7 @@ unsafe extern "C" fn tr_introsort(
                         } else if a.offset_from(first) as std::ffi::c_long
                             <= b.offset_from(a) as std::ffi::c_long
                         {
-                            if (1 as std::ffi::c_int as std::ffi::c_long)
+                            if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
                             {
                                 if ssize < 64 as std::ffi::c_int {} else {
@@ -4737,7 +4737,7 @@ unsafe extern "C" fn tr_introsort(
                                 ssize = ssize + 1;
                                 stack[fresh71 as usize].e = trlink;
                                 first = b;
-                            } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                            } else if (1 as std::ffi::c_long)
                                 < a.offset_from(first) as std::ffi::c_long
                             {
                                 if ssize < 64 as std::ffi::c_int {} else {
@@ -4791,7 +4791,7 @@ unsafe extern "C" fn tr_introsort(
                         } else if last.offset_from(b) as std::ffi::c_long
                             <= b.offset_from(a) as std::ffi::c_long
                         {
-                            if (1 as std::ffi::c_int as std::ffi::c_long)
+                            if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
                             {
                                 if ssize < 64 as std::ffi::c_int {} else {
@@ -5013,7 +5013,7 @@ unsafe extern "C" fn tr_introsort(
                             limit = next;
                         }
                     } else {
-                        if (1 as std::ffi::c_int as std::ffi::c_long)
+                        if (1 as std::ffi::c_long)
                             < b.offset_from(a) as std::ffi::c_long
                             && 0 as std::ffi::c_int <= trlink
                         {
@@ -5022,7 +5022,7 @@ unsafe extern "C" fn tr_introsort(
                         if a.offset_from(first) as std::ffi::c_long
                             <= last.offset_from(b) as std::ffi::c_long
                         {
-                            if (1 as std::ffi::c_int as std::ffi::c_long)
+                            if (1 as std::ffi::c_long)
                                 < a.offset_from(first) as std::ffi::c_long
                             {
                                 if ssize < 64 as std::ffi::c_int {} else {
@@ -5067,7 +5067,7 @@ unsafe extern "C" fn tr_introsort(
                                 ssize = ssize + 1;
                                 stack[fresh78 as usize].e = trlink;
                                 last = a;
-                            } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                            } else if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
                             {
                                 first = b;
@@ -5114,7 +5114,7 @@ unsafe extern "C" fn tr_introsort(
                                 limit = stack[ssize as usize].d;
                                 trlink = stack[ssize as usize].e;
                             }
-                        } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                        } else if (1 as std::ffi::c_long)
                             < last.offset_from(b) as std::ffi::c_long
                         {
                             if ssize < 64 as std::ffi::c_int {} else {
@@ -5159,7 +5159,7 @@ unsafe extern "C" fn tr_introsort(
                             ssize = ssize + 1;
                             stack[fresh79 as usize].e = trlink;
                             first = b;
-                        } else if (1 as std::ffi::c_int as std::ffi::c_long)
+                        } else if (1 as std::ffi::c_long)
                             < a.offset_from(first) as std::ffi::c_long
                         {
                             last = a;
@@ -5307,7 +5307,7 @@ unsafe extern "C" fn trsort(
                 last = SA
                     .offset(*ISA.offset(t as isize) as isize)
                     .offset(1);
-                if (1 as std::ffi::c_int as std::ffi::c_long)
+                if (1 as std::ffi::c_long)
                     < last.offset_from(first) as std::ffi::c_long
                 {
                     budget.count = 0 as std::ffi::c_int;

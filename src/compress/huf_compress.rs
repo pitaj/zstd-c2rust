@@ -265,7 +265,7 @@ const extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
 }
 #[inline]
 const extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_int as std::ffi::c_uint)
+    return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 pub const HUF_BLOCKSIZE_MAX: std::ffi::c_int = 128 as std::ffi::c_int
@@ -528,7 +528,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
     *op
         .offset(
             0 as std::ffi::c_int as isize,
-        ) = (128 as std::ffi::c_int as std::ffi::c_uint)
+        ) = (128 as std::ffi::c_uint)
         .wrapping_add(
             maxSymbolValue.wrapping_sub(1),
         ) as u8;
