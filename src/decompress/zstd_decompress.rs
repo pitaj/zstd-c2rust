@@ -548,7 +548,7 @@ pub const ZSTD_dct_auto: ZSTD_dictContentType_e = 0;
 pub type ZSTD_dictLoadMethod_e = std::ffi::c_uint;
 pub const ZSTD_dlm_byRef: ZSTD_dictLoadMethod_e = 1;
 pub const ZSTD_dlm_byCopy: ZSTD_dictLoadMethod_e = 0;
-pub const ZSTD_MAXWINDOWSIZE_DEFAULT: u32 = ((1 as std::ffi::c_int as u32)
+pub const ZSTD_MAXWINDOWSIZE_DEFAULT: u32 = (1_u32
     << ZSTD_WINDOWLOG_LIMIT_DEFAULT)
     .wrapping_add(1);
 pub const ZSTD_NO_FORWARD_PROGRESS_MAX: std::ffi::c_int = 16 as std::ffi::c_int;
@@ -1836,7 +1836,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
             && format as std::ffi::c_uint
                 != ZSTD_f_zstd1_magicless as std::ffi::c_int as std::ffi::c_uint
         {
-            let toCopy = if (4 as std::ffi::c_int as usize) < srcSize {
+            let toCopy = if 4_usize < srcSize {
                 4 as std::ffi::c_int as usize
             } else {
                 srcSize
@@ -3136,7 +3136,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
                 ((*dctx).headerBuffer)
                     .as_mut_ptr()
                     .offset(
-                        (8 as std::ffi::c_int as usize).wrapping_sub(srcSize) as isize,
+                        8_usize.wrapping_sub(srcSize) as isize,
                     ) as *mut std::ffi::c_void,
                 src,
                 srcSize as usize,
@@ -3698,8 +3698,8 @@ pub unsafe extern "C" fn ZSTD_DCtx_setMaxWindowSize(
     mut maxWindowSize: usize,
 ) -> usize {
     let bounds = ZSTD_dParam_getBounds(ZSTD_d_windowLogMax);
-    let min = (1 as std::ffi::c_int as usize) << bounds.lowerBound;
-    let max = (1 as std::ffi::c_int as usize) << bounds.upperBound;
+    let min = 1_usize << bounds.lowerBound;
+    let max = 1_usize << bounds.upperBound;
     if (*dctx).streamStage as std::ffi::c_uint
         != zdss_init as std::ffi::c_int as std::ffi::c_uint
     {
@@ -3859,7 +3859,7 @@ pub unsafe extern "C" fn ZSTD_DCtx_setParameter(
             if ZSTD_dParam_withinBounds(ZSTD_d_windowLogMax, value) == 0 {
                 return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
             }
-            (*dctx).maxWindowSize = (1 as std::ffi::c_int as usize) << value;
+            (*dctx).maxWindowSize = 1_usize << value;
             return 0 as std::ffi::c_int as usize;
         }
         1000 => {

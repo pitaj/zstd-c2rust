@@ -339,7 +339,7 @@ unsafe extern "C" fn BIT_getMiddleBits(
         .wrapping_mul(8)
         .wrapping_sub(1) as u32;
     return bitContainer >> (start & regMask)
-        & ((1 as std::ffi::c_int as u64) << nbBits)
+        & (1_u64 << nbBits)
             .wrapping_sub(1);
 }
 #[inline(always)]
@@ -674,7 +674,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
     let ostart = dst as *mut u8;
     let mut op = ostart;
     let omax = op.offset(maxDstSize as isize);
-    let olimit = omax.offset(-(3 as std::ffi::c_int as isize));
+    let olimit = omax.offset(-3_isize);
     let mut bitD = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
@@ -766,7 +766,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         op = op.offset(4);
     }
     loop {
-        if op > omax.offset(-(2 as std::ffi::c_int as isize)) {
+        if op > omax.offset(-2_isize) {
             return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
         }
         let fresh3 = op;
@@ -788,7 +788,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
             }) as u8;
             break;
         } else {
-            if op > omax.offset(-(2 as std::ffi::c_int as isize)) {
+            if op > omax.offset(-2_isize) {
                 return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
             }
             let fresh5 = op;

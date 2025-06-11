@@ -86,7 +86,7 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: usize) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0 as std::ffi::c_int as usize).wrapping_sub(code) as ERR_enum;
+    return 0_usize.wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_getErrorName(mut code: usize) -> *const std::ffi::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
@@ -216,7 +216,7 @@ unsafe extern "C" fn FSE_readNCount_body(
                         (3 as std::ffi::c_int * 12 as std::ffi::c_int)
                             as std::ffi::c_uint,
                     );
-                if (ip <= iend.offset(-(7 as std::ffi::c_int as isize)))
+                if (ip <= iend.offset(-7_isize))
                     as std::ffi::c_int as std::ffi::c_long != 0
                 {
                     ip = ip.offset(3);
@@ -224,10 +224,10 @@ unsafe extern "C" fn FSE_readNCount_body(
                     bitCount
                         -= (8 as std::ffi::c_int as std::ffi::c_long
                             * iend
-                                .offset(-(7 as std::ffi::c_int as isize))
+                                .offset(-7_isize)
                                 .offset_from(ip) as std::ffi::c_long) as std::ffi::c_int;
                     bitCount &= 31 as std::ffi::c_int;
-                    ip = iend.offset(-(4 as std::ffi::c_int as isize));
+                    ip = iend.offset(-4_isize);
                 }
                 bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
                 repeats = (ZSTD_countTrailingZeros32(
@@ -243,20 +243,20 @@ unsafe extern "C" fn FSE_readNCount_body(
             if charnum >= maxSV1 {
                 break;
             }
-            if (ip <= iend.offset(-(7 as std::ffi::c_int as isize))) as std::ffi::c_int
+            if (ip <= iend.offset(-7_isize)) as std::ffi::c_int
                 as std::ffi::c_long != 0
                 || ip.offset((bitCount >> 3) as isize)
-                    <= iend.offset(-(4 as std::ffi::c_int as isize))
+                    <= iend.offset(-4_isize)
             {
                 ip = ip.offset((bitCount >> 3) as isize);
                 bitCount &= 7 as std::ffi::c_int;
             } else {
                 bitCount
                     -= (8 as std::ffi::c_int as std::ffi::c_long
-                        * iend.offset(-(4 as std::ffi::c_int as isize)).offset_from(ip)
+                        * iend.offset(-4_isize).offset_from(ip)
                             as std::ffi::c_long) as std::ffi::c_int;
                 bitCount &= 31 as std::ffi::c_int;
-                ip = iend.offset(-(4 as std::ffi::c_int as isize));
+                ip = iend.offset(-4_isize);
             }
             bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
         }
@@ -298,20 +298,20 @@ unsafe extern "C" fn FSE_readNCount_body(
         if charnum >= maxSV1 {
             break;
         }
-        if (ip <= iend.offset(-(7 as std::ffi::c_int as isize))) as std::ffi::c_int
+        if (ip <= iend.offset(-7_isize)) as std::ffi::c_int
             as std::ffi::c_long != 0
             || ip.offset((bitCount >> 3) as isize)
-                <= iend.offset(-(4 as std::ffi::c_int as isize))
+                <= iend.offset(-4_isize)
         {
             ip = ip.offset((bitCount >> 3) as isize);
             bitCount &= 7 as std::ffi::c_int;
         } else {
             bitCount
                 -= (8 as std::ffi::c_int as std::ffi::c_long
-                    * iend.offset(-(4 as std::ffi::c_int as isize)).offset_from(ip)
+                    * iend.offset(-4_isize).offset_from(ip)
                         as std::ffi::c_long) as std::ffi::c_int;
             bitCount &= 31 as std::ffi::c_int;
-            ip = iend.offset(-(4 as std::ffi::c_int as isize));
+            ip = iend.offset(-4_isize);
         }
         bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
     }

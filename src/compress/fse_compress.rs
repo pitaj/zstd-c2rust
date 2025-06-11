@@ -614,7 +614,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                     .wrapping_add((0xffff as std::ffi::c_uint) << bitCount) as u32
                     as u32;
                 if writeIsSafe == 0
-                    && out > oend.offset(-(2 as std::ffi::c_int as isize))
+                    && out > oend.offset(-2_isize)
                 {
                     return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
                 }
@@ -638,7 +638,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
             bitCount += 2 as std::ffi::c_int;
             if bitCount > 16 as std::ffi::c_int {
                 if writeIsSafe == 0
-                    && out > oend.offset(-(2 as std::ffi::c_int as isize))
+                    && out > oend.offset(-2_isize)
                 {
                     return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
                 }
@@ -675,7 +675,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
             threshold >>= 1;
         }
         if bitCount > 16 as std::ffi::c_int {
-            if writeIsSafe == 0 && out > oend.offset(-(2 as std::ffi::c_int as isize)) {
+            if writeIsSafe == 0 && out > oend.offset(-2_isize) {
                 return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
             }
             *out.offset(0) = bitStream as u8;
@@ -691,7 +691,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
     if remaining != 1 as std::ffi::c_int {
         return -(ZSTD_error_GENERIC as std::ffi::c_int) as usize;
     }
-    if writeIsSafe == 0 && out > oend.offset(-(2 as std::ffi::c_int as isize)) {
+    if writeIsSafe == 0 && out > oend.offset(-2_isize) {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     *out.offset(0) = bitStream as u8;
@@ -886,11 +886,11 @@ unsafe extern "C" fn FSE_normalizeM2(
         }
         return 0 as std::ffi::c_int as usize;
     }
-    let vStepLog = (62 as std::ffi::c_int as u32).wrapping_sub(tableLog) as u64;
+    let vStepLog = 62_u32.wrapping_sub(tableLog) as u64;
     let mid = ((1 as std::ffi::c_ulonglong)
         << vStepLog.wrapping_sub(1))
         .wrapping_sub(1) as u64;
-    let rStep = (((1 as std::ffi::c_int as u64) << vStepLog) * ToDistribute as u64)
+    let rStep = ((1_u64 << vStepLog) * ToDistribute as u64)
         .wrapping_add(mid) / total as u32 as u64;
     let mut tmpTotal = mid;
     s = 0 as std::ffi::c_int as u32;
@@ -951,7 +951,7 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     }) as std::ffi::c_short;
     let scale = (62 as std::ffi::c_int as std::ffi::c_uint).wrapping_sub(tableLog)
         as u64;
-    let step = ((1 as std::ffi::c_int as u64) << 62)
+    let step = (1_u64 << 62)
         / total as u32 as u64;
     let vStep = ((1 as std::ffi::c_ulonglong)
         << scale.wrapping_sub(20)) as u64;

@@ -397,7 +397,7 @@ unsafe extern "C" fn COVER_map_init(
     (*map)
         .sizeLog = (ZSTD_highbit32(size))
         .wrapping_add(2);
-    (*map).size = (1 as std::ffi::c_int as u32) << (*map).sizeLog;
+    (*map).size = 1_u32 << (*map).sizeLog;
     (*map).sizeMask = ((*map).size).wrapping_sub(1);
     (*map)
         .data = libc::malloc(
@@ -417,7 +417,7 @@ unsafe extern "C" fn COVER_map_init(
 static mut COVER_prime4bytes: u32 = 2654435761 as std::ffi::c_uint;
 unsafe extern "C" fn COVER_map_hash(mut map: *mut COVER_map_t, mut key: u32) -> u32 {
     return key * COVER_prime4bytes
-        >> (32 as std::ffi::c_int as u32).wrapping_sub((*map).sizeLog);
+        >> 32_u32.wrapping_sub((*map).sizeLog);
 }
 unsafe extern "C" fn COVER_map_index(mut map: *mut COVER_map_t, mut key: u32) -> u32 {
     let hash = COVER_map_hash(map, key);
@@ -518,7 +518,7 @@ unsafe extern "C" fn COVER_cmp8(
     let mask = if (*ctx).d == 8 as std::ffi::c_int as std::ffi::c_uint {
         u64::MAX
     } else {
-        ((1 as std::ffi::c_int as u64)
+        (1_u64
             << (8 as std::ffi::c_int as std::ffi::c_uint).wrapping_mul((*ctx).d))
             .wrapping_sub(1)
     };
@@ -1115,14 +1115,14 @@ unsafe extern "C" fn COVER_buildDictionary(
         4 as std::ffi::c_int as u32,
     );
     let maxZeroScoreRun = (if 10 as std::ffi::c_int as u32
-        > (if (100 as std::ffi::c_int as u32) < epochs.num >> 3 {
+        > (if 100_u32 < epochs.num >> 3 {
             100 as std::ffi::c_int as u32
         } else {
             epochs.num >> 3
         })
     {
         10 as std::ffi::c_int as u32
-    } else if (100 as std::ffi::c_int as u32) < epochs.num >> 3 {
+    } else if 100_u32 < epochs.num >> 3 {
         100 as std::ffi::c_int as u32
     } else {
         epochs.num >> 3

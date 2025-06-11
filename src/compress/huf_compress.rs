@@ -991,7 +991,7 @@ unsafe extern "C" fn HUF_buildTree(
     mut huffNode: *mut nodeElt,
     mut maxSymbolValue: u32,
 ) -> std::ffi::c_int {
-    let huffNode0 = huffNode.offset(-(1 as std::ffi::c_int as isize));
+    let huffNode0 = huffNode.offset(-1_isize);
     let mut nonNullRank: std::ffi::c_int = 0;
     let mut lowS: std::ffi::c_int = 0;
     let mut lowN: std::ffi::c_int = 0;
@@ -2034,7 +2034,7 @@ unsafe extern "C" fn HUF_compress_internal(
             &mut maxSymbolValueEnd,
             (src as *const u8)
                 .offset(srcSize as isize)
-                .offset(-(4096 as std::ffi::c_int as isize)) as *const std::ffi::c_void,
+                .offset(-4096_isize) as *const std::ffi::c_void,
             4096 as std::ffi::c_int as usize,
         ) as usize;
         if ERR_isError(largestEnd) != 0 {

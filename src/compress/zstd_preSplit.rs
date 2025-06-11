@@ -92,7 +92,7 @@ unsafe extern "C" fn recordFingerprint_generic(
         fp as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
         (::core::mem::size_of::<std::ffi::c_uint>())
-            .wrapping_mul((1 as std::ffi::c_int as usize) << hashLog) as usize,
+            .wrapping_mul(1_usize << hashLog) as usize,
     );
     (*fp).nbEvents = 0 as std::ffi::c_int as usize;
     addEvents_generic(fp, src, srcSize, samplingRate, hashLog);
@@ -160,7 +160,7 @@ unsafe extern "C" fn fpDistance(
     let mut distance: u64 = 0;
     let mut n: usize = 0;
     n = 0 as std::ffi::c_int as usize;
-    while n < (1 as std::ffi::c_int as usize) << hashLog {
+    while n < 1_usize << hashLog {
         distance = distance
             .wrapping_add(
                 abs64(

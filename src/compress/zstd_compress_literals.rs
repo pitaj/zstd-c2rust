@@ -312,7 +312,7 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     {
         6 as std::ffi::c_int as usize
     } else {
-        (8 as std::ffi::c_int as usize) << shift
+        8_usize << shift
     };
     return mintc;
 }
