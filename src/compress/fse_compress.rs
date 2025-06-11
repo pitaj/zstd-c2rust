@@ -259,15 +259,15 @@ unsafe extern "C" fn FSE_initCState(
     let tableLog = MEM_read16(ptr) as u32;
     (*statePtr).value = (1 as std::ffi::c_int as ptrdiff_t) << tableLog;
     (*statePtr)
-        .stateTable = u16ptr.offset(2 as std::ffi::c_int as isize)
+        .stateTable = u16ptr.offset(2)
         as *const std::ffi::c_void;
     (*statePtr)
         .symbolTT = ct
-        .offset(1 as std::ffi::c_int as isize)
+        .offset(1)
         .offset(
             (if tableLog != 0 {
                 (1 as std::ffi::c_int)
-                    << tableLog.wrapping_sub(1 as std::ffi::c_int as u32)
+                    << tableLog.wrapping_sub(1)
             } else {
                 1 as std::ffi::c_int
             }) as isize,
@@ -342,11 +342,11 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
     mut wkspSize: usize,
 ) -> usize {
     let tableSize = ((1 as std::ffi::c_int) << tableLog) as u32;
-    let tableMask = tableSize.wrapping_sub(1 as std::ffi::c_int as u32);
+    let tableMask = tableSize.wrapping_sub(1);
     let ptr = ct as *mut std::ffi::c_void;
-    let tableU16 = (ptr as *mut u16).offset(2 as std::ffi::c_int as isize);
+    let tableU16 = (ptr as *mut u16).offset(2);
     let FSCT = (ptr as *mut u32)
-        .offset(1 as std::ffi::c_int as isize)
+        .offset(1)
         .offset(
             (if tableLog != 0 {
                 tableSize >> 1
@@ -357,19 +357,19 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
     let symbolTT = FSCT as *mut FSE_symbolCompressionTransform;
     let step = (tableSize >> 1)
         .wrapping_add(tableSize >> 3)
-        .wrapping_add(3 as std::ffi::c_int as u32);
-    let maxSV1 = maxSymbolValue.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+        .wrapping_add(3);
+    let maxSV1 = maxSymbolValue.wrapping_add(1);
     let mut cumul = workSpace as *mut u16;
     let tableSymbol = cumul
-        .offset(maxSV1.wrapping_add(1 as std::ffi::c_int as u32) as isize) as *mut u8;
-    let mut highThreshold = tableSize.wrapping_sub(1 as std::ffi::c_int as u32);
+        .offset(maxSV1.wrapping_add(1) as isize) as *mut u8;
+    let mut highThreshold = tableSize.wrapping_sub(1);
     if (::core::mem::size_of::<std::ffi::c_uint>()
         as std::ffi::c_ulonglong)
         .wrapping_mul(
-            (maxSymbolValue.wrapping_add(2 as std::ffi::c_int as std::ffi::c_uint)
+            (maxSymbolValue.wrapping_add(2)
                 as std::ffi::c_ulonglong)
                 .wrapping_add((1 as std::ffi::c_ulonglong) << tableLog)
-                .wrapping_div(2 as std::ffi::c_int as std::ffi::c_ulonglong)
+                .wrapping_div(2)
                 .wrapping_add(
                     (::core::mem::size_of::<u64>())
                         .wrapping_div(::core::mem::size_of::<u32>())
@@ -382,32 +382,32 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
     *tableU16.offset(-(2 as std::ffi::c_int) as isize) = tableLog as u16;
     *tableU16.offset(-(1 as std::ffi::c_int) as isize) = maxSymbolValue as u16;
     let mut u: u32 = 0;
-    *cumul.offset(0 as std::ffi::c_int as isize) = 0 as std::ffi::c_int as u16;
+    *cumul.offset(0) = 0 as std::ffi::c_int as u16;
     u = 1 as std::ffi::c_int as u32;
     while u <= maxSV1 {
         if *normalizedCounter
-            .offset(u.wrapping_sub(1 as std::ffi::c_int as u32) as isize)
+            .offset(u.wrapping_sub(1) as isize)
             as std::ffi::c_int == -(1 as std::ffi::c_int)
         {
             *cumul
                 .offset(
                     u as isize,
-                ) = (*cumul.offset(u.wrapping_sub(1 as std::ffi::c_int as u32) as isize)
+                ) = (*cumul.offset(u.wrapping_sub(1) as isize)
                 as std::ffi::c_int + 1 as std::ffi::c_int) as u16;
             let fresh0 = highThreshold;
             highThreshold = highThreshold.wrapping_sub(1);
             *tableSymbol
                 .offset(
                     fresh0 as isize,
-                ) = u.wrapping_sub(1 as std::ffi::c_int as u32) as u8;
+                ) = u.wrapping_sub(1) as u8;
         } else {
             *cumul
                 .offset(
                     u as isize,
-                ) = (*cumul.offset(u.wrapping_sub(1 as std::ffi::c_int as u32) as isize)
+                ) = (*cumul.offset(u.wrapping_sub(1) as isize)
                 as std::ffi::c_int
                 + *normalizedCounter
-                    .offset(u.wrapping_sub(1 as std::ffi::c_int as u32) as isize) as u16
+                    .offset(u.wrapping_sub(1) as isize) as u16
                     as std::ffi::c_int) as u16;
         }
         u = u.wrapping_add(1);
@@ -416,8 +416,8 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
     *cumul
         .offset(
             maxSV1 as isize,
-        ) = tableSize.wrapping_add(1 as std::ffi::c_int as u32) as u16;
-    if highThreshold == tableSize.wrapping_sub(1 as std::ffi::c_int as u32) {
+        ) = tableSize.wrapping_add(1) as u16;
+    if highThreshold == tableSize.wrapping_sub(1) {
         let spread = tableSymbol.offset(tableSize as isize);
         let add = 0x101010101010101 as std::ffi::c_ulonglong as u64;
         let mut pos: usize = 0;
@@ -503,7 +503,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
             0 => {
                 (*symbolTT.offset(s_2 as isize))
                     .deltaNbBits = (tableLog
-                    .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+                    .wrapping_add(1)
                     << 16)
                     .wrapping_sub(
                         ((1 as std::ffi::c_int) << tableLog) as std::ffi::c_uint,
@@ -517,7 +517,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                     );
                 (*symbolTT.offset(s_2 as isize))
                     .deltaFindState = total
-                    .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint)
+                    .wrapping_sub(1)
                     as std::ffi::c_int;
                 total = total.wrapping_add(1);
                 total;
@@ -527,7 +527,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
                     .wrapping_sub(
                         ZSTD_highbit32(
                             (*normalizedCounter.offset(s_2 as isize) as u32)
-                                .wrapping_sub(1 as std::ffi::c_int as u32),
+                                .wrapping_sub(1),
                         ),
                     );
                 let minStatePlus = (*normalizedCounter.offset(s_2 as isize) as u32)
@@ -557,13 +557,13 @@ pub unsafe extern "C" fn FSE_NCountWriteBound(
     mut tableLog: std::ffi::c_uint,
 ) -> usize {
     let maxHeaderSize = maxSymbolValue
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+        .wrapping_add(1)
         .wrapping_mul(tableLog)
-        .wrapping_add(4 as std::ffi::c_int as std::ffi::c_uint)
-        .wrapping_add(2 as std::ffi::c_int as std::ffi::c_uint)
-        .wrapping_div(8 as std::ffi::c_int as std::ffi::c_uint)
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
-        .wrapping_add(2 as std::ffi::c_int as std::ffi::c_uint) as usize;
+        .wrapping_add(4)
+        .wrapping_add(2)
+        .wrapping_div(8)
+        .wrapping_add(1)
+        .wrapping_add(2) as usize;
     return if maxSymbolValue != 0 { maxHeaderSize } else { FSE_NCOUNTBOUND as usize };
 }
 unsafe extern "C" fn FSE_writeNCount_generic(
@@ -585,7 +585,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
     let mut bitCount: std::ffi::c_int = 0;
     let mut symbol: std::ffi::c_uint = 0;
     let alphabetSize = maxSymbolValue
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+        .wrapping_add(1);
     let mut previousIs0: std::ffi::c_int = 0;
     bitStream = (bitStream as std::ffi::c_uint)
         .wrapping_add(
@@ -607,9 +607,9 @@ unsafe extern "C" fn FSE_writeNCount_generic(
             if symbol == alphabetSize {
                 break;
             }
-            while symbol >= start.wrapping_add(24 as std::ffi::c_int as std::ffi::c_uint)
+            while symbol >= start.wrapping_add(24)
             {
-                start = start.wrapping_add(24 as std::ffi::c_int as std::ffi::c_uint);
+                start = start.wrapping_add(24);
                 bitStream = (bitStream as std::ffi::c_uint)
                     .wrapping_add((0xffff as std::ffi::c_uint) << bitCount) as u32
                     as u32;
@@ -618,17 +618,17 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                 {
                     return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
                 }
-                *out.offset(0 as std::ffi::c_int as isize) = bitStream as u8;
+                *out.offset(0) = bitStream as u8;
                 *out
                     .offset(
                         1 as std::ffi::c_int as isize,
                     ) = (bitStream >> 8) as u8;
-                out = out.offset(2 as std::ffi::c_int as isize);
+                out = out.offset(2);
                 bitStream >>= 16;
             }
-            while symbol >= start.wrapping_add(3 as std::ffi::c_int as std::ffi::c_uint)
+            while symbol >= start.wrapping_add(3)
             {
-                start = start.wrapping_add(3 as std::ffi::c_int as std::ffi::c_uint);
+                start = start.wrapping_add(3);
                 bitStream = (bitStream as std::ffi::c_uint)
                     .wrapping_add((3 as std::ffi::c_uint) << bitCount) as u32 as u32;
                 bitCount += 2 as std::ffi::c_int;
@@ -642,12 +642,12 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                 {
                     return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
                 }
-                *out.offset(0 as std::ffi::c_int as isize) = bitStream as u8;
+                *out.offset(0) = bitStream as u8;
                 *out
                     .offset(
                         1 as std::ffi::c_int as isize,
                     ) = (bitStream >> 8) as u8;
-                out = out.offset(2 as std::ffi::c_int as isize);
+                out = out.offset(2);
                 bitStream >>= 16;
                 bitCount -= 16 as std::ffi::c_int;
             }
@@ -678,12 +678,12 @@ unsafe extern "C" fn FSE_writeNCount_generic(
             if writeIsSafe == 0 && out > oend.offset(-(2 as std::ffi::c_int as isize)) {
                 return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
             }
-            *out.offset(0 as std::ffi::c_int as isize) = bitStream as u8;
+            *out.offset(0) = bitStream as u8;
             *out
                 .offset(
                     1 as std::ffi::c_int as isize,
                 ) = (bitStream >> 8) as u8;
-            out = out.offset(2 as std::ffi::c_int as isize);
+            out = out.offset(2);
             bitStream >>= 16;
             bitCount -= 16 as std::ffi::c_int;
         }
@@ -694,7 +694,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
     if writeIsSafe == 0 && out > oend.offset(-(2 as std::ffi::c_int as isize)) {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
-    *out.offset(0 as std::ffi::c_int as isize) = bitStream as u8;
+    *out.offset(0) = bitStream as u8;
     *out
         .offset(
             1 as std::ffi::c_int as isize,
@@ -741,9 +741,9 @@ unsafe extern "C" fn FSE_minTableLog(
     mut maxSymbolValue: std::ffi::c_uint,
 ) -> std::ffi::c_uint {
     let mut minBitsSrc = (ZSTD_highbit32(srcSize as u32))
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+        .wrapping_add(1);
     let mut minBitsSymbols = (ZSTD_highbit32(maxSymbolValue))
-        .wrapping_add(2 as std::ffi::c_int as std::ffi::c_uint);
+        .wrapping_add(2);
     let mut minBits = if minBitsSrc < minBitsSymbols {
         minBitsSrc
     } else {
@@ -759,7 +759,7 @@ pub unsafe extern "C" fn FSE_optimalTableLog_internal(
     mut minus: std::ffi::c_uint,
 ) -> std::ffi::c_uint {
     let mut maxBitsSrc = (ZSTD_highbit32(
-        srcSize.wrapping_sub(1 as std::ffi::c_int as usize) as u32,
+        srcSize.wrapping_sub(1) as u32,
     ))
         .wrapping_sub(minus);
     let mut tableLog = maxTableLog;
@@ -808,7 +808,7 @@ unsafe extern "C" fn FSE_normalizeM2(
     let mut ToDistribute: u32 = 0;
     let lowThreshold = (total >> tableLog) as u32;
     let mut lowOne = (total * 3 as std::ffi::c_int as usize
-        >> tableLog.wrapping_add(1 as std::ffi::c_int as u32)) as u32;
+        >> tableLog.wrapping_add(1)) as u32;
     s = 0 as std::ffi::c_int as u32;
     while s <= maxSymbolValue {
         if *count.offset(s as isize) == 0 as std::ffi::c_int as std::ffi::c_uint {
@@ -854,7 +854,7 @@ unsafe extern "C" fn FSE_normalizeM2(
         ToDistribute = (((1 as std::ffi::c_int) << tableLog) as u32)
             .wrapping_sub(distributed);
     }
-    if distributed == maxSymbolValue.wrapping_add(1 as std::ffi::c_int as u32) {
+    if distributed == maxSymbolValue.wrapping_add(1) {
         let mut maxV: u32 = 0;
         let mut maxC: u32 = 0;
         s = 0 as std::ffi::c_int as u32;
@@ -881,15 +881,15 @@ unsafe extern "C" fn FSE_normalizeM2(
                 *fresh5 += 1;
                 *fresh5;
             }
-            s = s.wrapping_add(1 as std::ffi::c_int as u32)
-                % maxSymbolValue.wrapping_add(1 as std::ffi::c_int as u32);
+            s = s.wrapping_add(1)
+                % maxSymbolValue.wrapping_add(1);
         }
         return 0 as std::ffi::c_int as usize;
     }
     let vStepLog = (62 as std::ffi::c_int as u32).wrapping_sub(tableLog) as u64;
     let mid = ((1 as std::ffi::c_ulonglong)
-        << vStepLog.wrapping_sub(1 as std::ffi::c_int as u64))
-        .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulonglong) as u64;
+        << vStepLog.wrapping_sub(1))
+        .wrapping_sub(1) as u64;
     let rStep = (((1 as std::ffi::c_int as u64) << vStepLog) * ToDistribute as u64)
         .wrapping_add(mid) / total as u32 as u64;
     let mut tmpTotal = mid;
@@ -954,7 +954,7 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     let step = ((1 as std::ffi::c_int as u64) << 62)
         / total as u32 as u64;
     let vStep = ((1 as std::ffi::c_ulonglong)
-        << scale.wrapping_sub(20 as std::ffi::c_int as u64)) as u64;
+        << scale.wrapping_sub(20)) as u64;
     let mut stillToDistribute = (1 as std::ffi::c_int) << tableLog;
     let mut s: std::ffi::c_uint = 0;
     let mut largest: std::ffi::c_uint = 0;
@@ -1021,14 +1021,14 @@ pub unsafe extern "C" fn FSE_buildCTable_rle(
     mut symbolValue: u8,
 ) -> usize {
     let mut ptr = ct as *mut std::ffi::c_void;
-    let mut tableU16 = (ptr as *mut u16).offset(2 as std::ffi::c_int as isize);
-    let mut FSCTptr = (ptr as *mut u32).offset(2 as std::ffi::c_int as isize)
+    let mut tableU16 = (ptr as *mut u16).offset(2);
+    let mut FSCTptr = (ptr as *mut u32).offset(2)
         as *mut std::ffi::c_void;
     let mut symbolTT = FSCTptr as *mut FSE_symbolCompressionTransform;
     *tableU16.offset(-(2 as std::ffi::c_int) as isize) = 0 as std::ffi::c_int as u16;
     *tableU16.offset(-(1 as std::ffi::c_int) as isize) = symbolValue as u16;
-    *tableU16.offset(0 as std::ffi::c_int as isize) = 0 as std::ffi::c_int as u16;
-    *tableU16.offset(1 as std::ffi::c_int as isize) = 0 as std::ffi::c_int as u16;
+    *tableU16.offset(0) = 0 as std::ffi::c_int as u16;
+    *tableU16.offset(1) = 0 as std::ffi::c_int as u16;
     (*symbolTT.offset(symbolValue as isize)).deltaNbBits = 0 as std::ffi::c_int as u32;
     (*symbolTT.offset(symbolValue as isize)).deltaFindState = 0 as std::ffi::c_int;
     return 0 as std::ffi::c_int as usize;
@@ -1088,9 +1088,9 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         ip = ip.offset(-1);
         FSE_initCState2(&mut CState1, ct, *ip as u32);
     }
-    srcSize = srcSize.wrapping_sub(2 as std::ffi::c_int as usize);
+    srcSize = srcSize.wrapping_sub(2);
     if (::core::mem::size_of::<BitContainerType>())
-        .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
+        .wrapping_mul(8)
         > (FSE_MAX_TABLELOG * 4 as std::ffi::c_int + 7 as std::ffi::c_int)
             as std::ffi::c_ulong && srcSize & 2 as std::ffi::c_int as usize != 0
     {
@@ -1108,7 +1108,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as std::ffi::c_uint);
         if (::core::mem::size_of::<BitContainerType>())
-            .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
+            .wrapping_mul(8)
             < (FSE_MAX_TABLELOG * 2 as std::ffi::c_int + 7 as std::ffi::c_int)
                 as std::ffi::c_ulong
         {
@@ -1121,7 +1121,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
         if (::core::mem::size_of::<BitContainerType>())
-            .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
+            .wrapping_mul(8)
             > (FSE_MAX_TABLELOG * 4 as std::ffi::c_int + 7 as std::ffi::c_int)
                 as std::ffi::c_ulong
         {
@@ -1151,7 +1151,7 @@ pub unsafe extern "C" fn FSE_compress_usingCTable(
     let fast = (dstSize
         >= srcSize
             .wrapping_add(srcSize >> 7)
-            .wrapping_add(4 as std::ffi::c_int as usize)
+            .wrapping_add(4)
             .wrapping_add(::core::mem::size_of::<usize>()))
         as std::ffi::c_int as std::ffi::c_uint;
     if fast != 0 {
@@ -1180,7 +1180,7 @@ pub unsafe extern "C" fn FSE_compressBound(mut size: usize) -> usize {
         .wrapping_add(
             size
                 .wrapping_add(size >> 7)
-                .wrapping_add(4 as std::ffi::c_int as usize)
+                .wrapping_add(4)
                 .wrapping_add(::core::mem::size_of::<usize>()),
         );
 }

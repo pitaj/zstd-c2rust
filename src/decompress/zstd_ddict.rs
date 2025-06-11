@@ -550,11 +550,11 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
         == ZSTD_dlm_byCopy as std::ffi::c_int as std::ffi::c_uint
     {
         libc::memcpy(
-            ddict.offset(1 as std::ffi::c_int as isize) as *mut std::ffi::c_void,
+            ddict.offset(1) as *mut std::ffi::c_void,
             dict,
             dictSize as usize,
         );
-        dict = ddict.offset(1 as std::ffi::c_int as isize) as *const std::ffi::c_void;
+        dict = ddict.offset(1) as *const std::ffi::c_void;
     }
     if ERR_isError(
         ZSTD_initDDict_internal(ddict, dict, dictSize, ZSTD_dlm_byRef, dictContentType),

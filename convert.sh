@@ -85,6 +85,12 @@ case $1 in
 
     ;;
 
+  cast-argument)
+    # .offset((c >> 16) as u8 as isize), .wrapping_add(1 as std::ffi::c_int as u64)
+    perl -i -p0e 's/(\.(?:wrapping_\w+|offset)\(\d+)(?: as [\w\d:_]*?)+\)/$1)/gm' src/*/*.rs
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs

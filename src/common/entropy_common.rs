@@ -150,7 +150,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     let mut bitStream: u32 = 0;
     let mut bitCount: std::ffi::c_int = 0;
     let mut charnum: std::ffi::c_uint = 0;
-    let maxSV1 = (*maxSVPtr).wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+    let maxSV1 = (*maxSVPtr).wrapping_add(1);
     let mut previous0: std::ffi::c_int = 0;
     if hbSize < 8 as std::ffi::c_int as usize {
         let mut buffer: [std::ffi::c_char; 8] = [
@@ -186,7 +186,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     libc::memset(
         normalizedCounter as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ((*maxSVPtr).wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+        ((*maxSVPtr).wrapping_add(1)
             as std::ffi::c_ulong)
             .wrapping_mul(
                 ::core::mem::size_of::<std::ffi::c_short>(),
@@ -219,7 +219,7 @@ unsafe extern "C" fn FSE_readNCount_body(
                 if (ip <= iend.offset(-(7 as std::ffi::c_int as isize)))
                     as std::ffi::c_int as std::ffi::c_long != 0
                 {
-                    ip = ip.offset(3 as std::ffi::c_int as isize);
+                    ip = ip.offset(3);
                 } else {
                     bitCount
                         -= (8 as std::ffi::c_int as std::ffi::c_long
@@ -291,7 +291,7 @@ unsafe extern "C" fn FSE_readNCount_body(
                 break;
             }
             nbBits = (ZSTD_highbit32(remaining as u32))
-                .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+                .wrapping_add(1)
                 as std::ffi::c_int;
             threshold = (1 as std::ffi::c_int) << nbBits - 1 as std::ffi::c_int;
         }
@@ -324,7 +324,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     if bitCount > 32 as std::ffi::c_int {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
-    *maxSVPtr = charnum.wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint);
+    *maxSVPtr = charnum.wrapping_sub(1);
     ip = ip.offset((bitCount + 7 as std::ffi::c_int >> 3) as isize);
     return ip.offset_from(istart) as std::ffi::c_long as usize;
 }
@@ -445,18 +445,18 @@ unsafe extern "C" fn HUF_readStats_body(
     if srcSize == 0 {
         return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
     }
-    iSize = *ip.offset(0 as std::ffi::c_int as isize) as usize;
+    iSize = *ip.offset(0) as usize;
     if iSize >= 128 as std::ffi::c_int as usize {
-        oSize = iSize.wrapping_sub(127 as std::ffi::c_int as usize);
-        iSize = oSize.wrapping_add(1 as std::ffi::c_int as usize)
+        oSize = iSize.wrapping_sub(127);
+        iSize = oSize.wrapping_add(1)
             / 2 as std::ffi::c_int as usize;
-        if iSize.wrapping_add(1 as std::ffi::c_int as usize) > srcSize {
+        if iSize.wrapping_add(1) > srcSize {
             return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
         }
         if oSize >= hwSize {
             return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
         }
-        ip = ip.offset(1 as std::ffi::c_int as isize);
+        ip = ip.offset(1);
         let mut n: u32 = 0;
         n = 0 as std::ffi::c_int as u32;
         while (n as usize) < oSize {
@@ -467,19 +467,19 @@ unsafe extern "C" fn HUF_readStats_body(
                 as std::ffi::c_int >> 4) as u8;
             *huffWeight
                 .offset(
-                    n.wrapping_add(1 as std::ffi::c_int as u32) as isize,
+                    n.wrapping_add(1) as isize,
                 ) = (*ip.offset((n / 2 as std::ffi::c_int as u32) as isize)
                 as std::ffi::c_int & 15 as std::ffi::c_int) as u8;
-            n = n.wrapping_add(2 as std::ffi::c_int as u32);
+            n = n.wrapping_add(2);
         }
     } else {
-        if iSize.wrapping_add(1 as std::ffi::c_int as usize) > srcSize {
+        if iSize.wrapping_add(1) > srcSize {
             return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
         }
         oSize = FSE_decompress_wksp_bmi2(
             huffWeight as *mut std::ffi::c_void,
-            hwSize.wrapping_sub(1 as std::ffi::c_int as usize),
-            ip.offset(1 as std::ffi::c_int as isize) as *const std::ffi::c_void,
+            hwSize.wrapping_sub(1),
+            ip.offset(1) as *const std::ffi::c_void,
             iSize,
             6 as std::ffi::c_int as std::ffi::c_uint,
             workSpace,
@@ -521,7 +521,7 @@ unsafe extern "C" fn HUF_readStats_body(
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
     let tableLog = (ZSTD_highbit32(weightTotal))
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+        .wrapping_add(1);
     if tableLog > HUF_TABLELOG_MAX as u32 {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
@@ -530,7 +530,7 @@ unsafe extern "C" fn HUF_readStats_body(
     let rest = total.wrapping_sub(weightTotal);
     let verif = ((1 as std::ffi::c_int) << ZSTD_highbit32(rest)) as u32;
     let lastWeight = (ZSTD_highbit32(rest))
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+        .wrapping_add(1);
     if verif != rest {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
@@ -538,14 +538,14 @@ unsafe extern "C" fn HUF_readStats_body(
     let ref mut fresh2 = *rankStats.offset(lastWeight as isize);
     *fresh2 = (*fresh2).wrapping_add(1);
     *fresh2;
-    if *rankStats.offset(1 as std::ffi::c_int as isize) < 2 as std::ffi::c_int as u32
-        || *rankStats.offset(1 as std::ffi::c_int as isize) & 1 as std::ffi::c_int as u32
+    if *rankStats.offset(1) < 2 as std::ffi::c_int as u32
+        || *rankStats.offset(1) & 1 as std::ffi::c_int as u32
             != 0
     {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
-    *nbSymbolsPtr = oSize.wrapping_add(1 as std::ffi::c_int as usize) as u32;
-    return iSize.wrapping_add(1 as std::ffi::c_int as usize);
+    *nbSymbolsPtr = oSize.wrapping_add(1) as u32;
+    return iSize.wrapping_add(1);
 }
 unsafe extern "C" fn HUF_readStats_body_default(
     mut huffWeight: *mut u8,

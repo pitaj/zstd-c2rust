@@ -384,9 +384,9 @@ unsafe extern "C" fn ZSTD_storeSeqOnly(
             .longLengthPos = ((*seqStorePtr).sequences)
             .offset_from((*seqStorePtr).sequencesStart) as std::ffi::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0 as std::ffi::c_int as isize))
+    (*((*seqStorePtr).sequences).offset(0))
         .litLength = litLength as u16;
-    (*((*seqStorePtr).sequences).offset(0 as std::ffi::c_int as isize))
+    (*((*seqStorePtr).sequences).offset(0))
         .offBase = offBase;
     let mlBase = matchLength.wrapping_sub(MINMATCH as usize);
     if (mlBase > 0xffff as std::ffi::c_int as usize) as std::ffi::c_int
@@ -397,7 +397,7 @@ unsafe extern "C" fn ZSTD_storeSeqOnly(
             .longLengthPos = ((*seqStorePtr).sequences)
             .offset_from((*seqStorePtr).sequencesStart) as std::ffi::c_long as u32;
     }
-    (*((*seqStorePtr).sequences).offset(0 as std::ffi::c_int as isize))
+    (*((*seqStorePtr).sequences).offset(0))
         .mlBase = mlBase as u16;
     (*seqStorePtr).sequences = ((*seqStorePtr).sequences).offset(1);
     (*seqStorePtr).sequences;
@@ -420,11 +420,11 @@ unsafe extern "C" fn ZSTD_storeSeq(
         );
         if litLength > 16 as std::ffi::c_int as usize {
             ZSTD_wildcopy(
-                ((*seqStorePtr).lit).offset(16 as std::ffi::c_int as isize)
+                ((*seqStorePtr).lit).offset(16)
                     as *mut std::ffi::c_void,
-                literals.offset(16 as std::ffi::c_int as isize)
+                literals.offset(16)
                     as *const std::ffi::c_void,
-                litLength.wrapping_sub(16 as std::ffi::c_int as usize),
+                litLength.wrapping_sub(16),
                 ZSTD_no_overlap,
             );
         }
@@ -444,7 +444,7 @@ unsafe extern "C" fn ZSTD_count(
     let pInLoopLimit = pInLimit
         .offset(
             -((::core::mem::size_of::<usize>())
-                .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulong) as isize),
+                .wrapping_sub(1) as isize),
         );
     if pIn < pInLoopLimit {
         let diff = MEM_readST(pMatch as *const std::ffi::c_void)
@@ -477,15 +477,15 @@ unsafe extern "C" fn ZSTD_count(
         && MEM_read32(pMatch as *const std::ffi::c_void)
             == MEM_read32(pIn as *const std::ffi::c_void)
     {
-        pIn = pIn.offset(4 as std::ffi::c_int as isize);
-        pMatch = pMatch.offset(4 as std::ffi::c_int as isize);
+        pIn = pIn.offset(4);
+        pMatch = pMatch.offset(4);
     }
     if pIn < pInLimit.offset(-(1 as std::ffi::c_int as isize))
         && MEM_read16(pMatch as *const std::ffi::c_void) as std::ffi::c_int
             == MEM_read16(pIn as *const std::ffi::c_void) as std::ffi::c_int
     {
-        pIn = pIn.offset(2 as std::ffi::c_int as isize);
-        pMatch = pMatch.offset(2 as std::ffi::c_int as isize);
+        pIn = pIn.offset(2);
+        pMatch = pMatch.offset(2);
     }
     if pIn < pInLimit && *pMatch as std::ffi::c_int == *pIn as std::ffi::c_int {
         pIn = pIn.offset(1);
@@ -551,7 +551,7 @@ unsafe extern "C" fn ZSTD_window_canOverflowCorrect(
         .wrapping_add((if maxDist > cycleSize { maxDist } else { cycleSize }))
         .wrapping_add(ZSTD_WINDOW_START_INDEX as u32);
     let adjustment = (window.nbOverflowCorrections)
-        .wrapping_add(1 as std::ffi::c_int as u32);
+        .wrapping_add(1);
     let adjustedIndex = if minIndexToOverflowCorrect * adjustment
         > minIndexToOverflowCorrect
     {
@@ -597,7 +597,7 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
     mut src: *const std::ffi::c_void,
 ) -> u32 {
     let cycleSize = (1 as std::ffi::c_uint) << cycleLog;
-    let cycleMask = cycleSize.wrapping_sub(1 as std::ffi::c_int as u32);
+    let cycleMask = cycleSize.wrapping_sub(1);
     let curr = (src as *const u8).offset_from((*window).base) as std::ffi::c_long
         as u32;
     let currentCycle = curr & cycleMask;
@@ -697,8 +697,8 @@ unsafe extern "C" fn ZSTD_wildcopy(
     {
         loop {
             ZSTD_copy8(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-            op = op.offset(8 as std::ffi::c_int as isize);
-            ip = ip.offset(8 as std::ffi::c_int as isize);
+            op = op.offset(8);
+            ip = ip.offset(8);
             if !(op < oend) {
                 break;
             }
@@ -708,15 +708,15 @@ unsafe extern "C" fn ZSTD_wildcopy(
         if 16 as std::ffi::c_int as usize >= length {
             return;
         }
-        op = op.offset(16 as std::ffi::c_int as isize);
-        ip = ip.offset(16 as std::ffi::c_int as isize);
+        op = op.offset(16);
+        ip = ip.offset(16);
         loop {
             ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-            op = op.offset(16 as std::ffi::c_int as isize);
-            ip = ip.offset(16 as std::ffi::c_int as isize);
+            op = op.offset(16);
+            ip = ip.offset(16);
             ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-            op = op.offset(16 as std::ffi::c_int as isize);
-            ip = ip.offset(16 as std::ffi::c_int as isize);
+            op = op.offset(16);
+            ip = ip.offset(16);
             if !(op < oend) {
                 break;
             }
@@ -1036,12 +1036,12 @@ unsafe extern "C" fn ZSTD_ldm_gear_init(
     {
         (*state)
             .stopMask = ((1 as std::ffi::c_int as u64) << hashRateLog)
-            .wrapping_sub(1 as std::ffi::c_int as u64)
+            .wrapping_sub(1)
             << maxBitsInMask.wrapping_sub(hashRateLog);
     } else {
         (*state)
             .stopMask = ((1 as std::ffi::c_int as u64) << hashRateLog)
-            .wrapping_sub(1 as std::ffi::c_int as u64);
+            .wrapping_sub(1);
     };
 }
 unsafe extern "C" fn ZSTD_ldm_gear_reset(
@@ -1051,31 +1051,31 @@ unsafe extern "C" fn ZSTD_ldm_gear_reset(
 ) {
     let mut hash = (*state).rolling;
     let mut n: usize = 0;
-    while n.wrapping_add(3 as std::ffi::c_int as usize) < minMatchLength {
+    while n.wrapping_add(3) < minMatchLength {
         hash = (hash << 1)
             .wrapping_add(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
         hash = (hash << 1)
             .wrapping_add(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
         hash = (hash << 1)
             .wrapping_add(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
         hash = (hash << 1)
             .wrapping_add(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
     }
     while n < minMatchLength {
         hash = (hash << 1)
@@ -1083,7 +1083,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_reset(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
     }
 }
 unsafe extern "C" fn ZSTD_ldm_gear_feed(
@@ -1101,7 +1101,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
     mask = (*state).stopMask;
     n = 0 as std::ffi::c_int as usize;
     loop {
-        if !(n.wrapping_add(3 as std::ffi::c_int as usize) < size) {
+        if !(n.wrapping_add(3) < size) {
             current_block = 5689316957504528238;
             break;
         }
@@ -1110,13 +1110,13 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
         if (hash & mask == 0 as std::ffi::c_int as u64) as std::ffi::c_int
             as std::ffi::c_long != 0
         {
             *splits.offset(*numSplits as isize) = n;
             *numSplits = (*numSplits)
-                .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+                .wrapping_add(1);
             if *numSplits == LDM_BATCH_SIZE as std::ffi::c_uint {
                 current_block = 4164951142438604009;
                 break;
@@ -1127,13 +1127,13 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
         if (hash & mask == 0 as std::ffi::c_int as u64) as std::ffi::c_int
             as std::ffi::c_long != 0
         {
             *splits.offset(*numSplits as isize) = n;
             *numSplits = (*numSplits)
-                .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+                .wrapping_add(1);
             if *numSplits == LDM_BATCH_SIZE as std::ffi::c_uint {
                 current_block = 4164951142438604009;
                 break;
@@ -1144,13 +1144,13 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
         if (hash & mask == 0 as std::ffi::c_int as u64) as std::ffi::c_int
             as std::ffi::c_long != 0
         {
             *splits.offset(*numSplits as isize) = n;
             *numSplits = (*numSplits)
-                .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+                .wrapping_add(1);
             if *numSplits == LDM_BATCH_SIZE as std::ffi::c_uint {
                 current_block = 4164951142438604009;
                 break;
@@ -1161,14 +1161,14 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
                 ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                     & 0xff as std::ffi::c_int) as usize],
             );
-        n = n.wrapping_add(1 as std::ffi::c_int as usize);
+        n = n.wrapping_add(1);
         if !((hash & mask == 0 as std::ffi::c_int as u64) as std::ffi::c_int
             as std::ffi::c_long != 0)
         {
             continue;
         }
         *splits.offset(*numSplits as isize) = n;
-        *numSplits = (*numSplits).wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+        *numSplits = (*numSplits).wrapping_add(1);
         if *numSplits == LDM_BATCH_SIZE as std::ffi::c_uint {
             current_block = 4164951142438604009;
             break;
@@ -1190,7 +1190,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
                         ZSTD_ldm_gearTab[(*data.offset(n as isize) as std::ffi::c_int
                             & 0xff as std::ffi::c_int) as usize],
                     );
-                n = n.wrapping_add(1 as std::ffi::c_int as usize);
+                n = n.wrapping_add(1);
                 if !((hash & mask == 0 as std::ffi::c_int as u64) as std::ffi::c_int
                     as std::ffi::c_long != 0)
                 {
@@ -1199,7 +1199,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
                 }
                 *splits.offset(*numSplits as isize) = n;
                 *numSplits = (*numSplits)
-                    .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint);
+                    .wrapping_add(1);
                 if *numSplits == LDM_BATCH_SIZE as std::ffi::c_uint {
                     current_block = 4164951142438604009;
                 } else {
@@ -1227,7 +1227,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
                 .hashRateLog = (7 as std::ffi::c_int as std::ffi::c_uint)
                 .wrapping_sub(
                     ((*cParams).strategy as std::ffi::c_uint)
-                        .wrapping_div(3 as std::ffi::c_int as std::ffi::c_uint),
+                        .wrapping_div(3),
                 );
         }
     }
@@ -1407,9 +1407,9 @@ unsafe extern "C" fn ZSTD_ldm_insertEntry(
     let pOffset = ((*ldmState).bucketOffsets).offset(hash as isize);
     let offset = *pOffset as std::ffi::c_uint;
     *(ZSTD_ldm_getBucket(ldmState, hash, bucketSizeLog)).offset(offset as isize) = entry;
-    *pOffset = (offset.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+    *pOffset = (offset.wrapping_add(1)
         & ((1 as std::ffi::c_uint) << bucketSizeLog)
-            .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint)) as u8;
+            .wrapping_sub(1)) as u8;
 }
 unsafe extern "C" fn ZSTD_ldm_countBackwardsMatch(
     mut pIn: *const u8,
@@ -1527,7 +1527,7 @@ pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
                 );
                 let hash = (xxhash
                     & ((1 as std::ffi::c_int as u32) << hBits)
-                        .wrapping_sub(1 as std::ffi::c_int as u32) as u64) as u32;
+                        .wrapping_sub(1) as u64) as u32;
                 let mut entry = ldmEntry_t {
                     offset: 0,
                     checksum: 0,
@@ -1552,19 +1552,19 @@ unsafe extern "C" fn ZSTD_ldm_limitTableUpdate(
     mut anchor: *const u8,
 ) {
     let curr = anchor.offset_from((*ms).window.base) as std::ffi::c_long as u32;
-    if curr > ((*ms).nextToUpdate).wrapping_add(1024 as std::ffi::c_int as u32) {
+    if curr > ((*ms).nextToUpdate).wrapping_add(1024) {
         (*ms)
             .nextToUpdate = curr
             .wrapping_sub(
                 (if (512 as std::ffi::c_int as u32)
                     < curr
                         .wrapping_sub((*ms).nextToUpdate)
-                        .wrapping_sub(1024 as std::ffi::c_int as u32)
+                        .wrapping_sub(1024)
                 {
                     512 as std::ffi::c_int as u32
                 } else {
                     curr.wrapping_sub((*ms).nextToUpdate)
-                        .wrapping_sub(1024 as std::ffi::c_int as u32)
+                        .wrapping_sub(1024)
                 }),
             );
     }
@@ -1640,7 +1640,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
             );
             let hash = (xxhash
                 & ((1 as std::ffi::c_int as u32) << hBits)
-                    .wrapping_sub(1 as std::ffi::c_int as u32) as u64) as u32;
+                    .wrapping_sub(1) as u64) as u32;
             let ref mut fresh2 = (*candidates.offset(n as isize)).split;
             *fresh2 = split;
             (*candidates.offset(n as isize)).hash = hash;
@@ -1924,14 +1924,14 @@ pub unsafe extern "C" fn ZSTD_ldm_skipSequences(
         if srcSize < (*seq).matchLength as usize {
             (*seq).matchLength = ((*seq).matchLength).wrapping_sub(srcSize as u32);
             if (*seq).matchLength < minMatch {
-                if ((*rawSeqStore).pos).wrapping_add(1 as std::ffi::c_int as usize)
+                if ((*rawSeqStore).pos).wrapping_add(1)
                     < (*rawSeqStore).size
                 {
-                    let ref mut fresh6 = (*seq.offset(1 as std::ffi::c_int as isize))
+                    let ref mut fresh6 = (*seq.offset(1))
                         .litLength;
                     *fresh6 = (*fresh6)
                         .wrapping_add(
-                            (*seq.offset(0 as std::ffi::c_int as isize)).matchLength,
+                            (*seq.offset(0)).matchLength,
                         );
                 }
                 (*rawSeqStore).pos = ((*rawSeqStore).pos).wrapping_add(1);
@@ -2050,7 +2050,7 @@ pub unsafe extern "C" fn ZSTD_ldm_blockCompress(
             i -= 1;
             i;
         }
-        *rep.offset(0 as std::ffi::c_int as isize) = sequence.offset;
+        *rep.offset(0) = sequence.offset;
         ZSTD_storeSeq(
             seqStore,
             newLitLength,
