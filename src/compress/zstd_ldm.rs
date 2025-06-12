@@ -605,10 +605,10 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
         if cycleSize > 2 {
             cycleSize
         } else {
-            2 as u32
+            2_u32
         }
     } else {
-        0 as u32
+        0_u32
     };
     let newCurrent = currentCycle
         .wrapping_add(currentCycleCorrection)
@@ -644,7 +644,7 @@ unsafe extern "C" fn ZSTD_window_enforceMaxDist(
     let loadedDictEnd = if !loadedDictEndPtr.is_null() {
         *loadedDictEndPtr
     } else {
-        0 as u32
+        0_u32
     };
     if blockEndIdx > maxDist.wrapping_add(loadedDictEnd) {
         let newLowLimit = blockEndIdx.wrapping_sub(maxDist);
@@ -705,7 +705,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as usize >= length {
+        if 16_usize >= length {
             return;
         }
         op = op.offset(16);
@@ -1027,7 +1027,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_init(
     let mut maxBitsInMask = if (*params).minMatchLength < 64 {
         (*params).minMatchLength
     } else {
-        64 as u32
+        64_u32
     };
     let mut hashRateLog = (*params).hashRateLog;
     (*state).rolling = !0_u32 as u64;
@@ -1233,7 +1233,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
     }
     if (*params).hashLog == 0 {
         (*params)
-            .hashLog = if 6 as u32
+            .hashLog = if 6_u32
             > (if ((*params).windowLog).wrapping_sub((*params).hashRateLog)
                 < (if (if ::core::mem::size_of::<usize>()
                     == 4
@@ -1276,7 +1276,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
                 }) as u32
             })
         {
-            6 as u32
+            6_u32
         } else if ((*params).windowLog).wrapping_sub((*params).hashRateLog)
             < (if (if ::core::mem::size_of::<usize>()
                 == 4
@@ -1330,18 +1330,18 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
     }
     if (*params).bucketSizeLog == 0 {
         (*params)
-            .bucketSizeLog = if 4 as u32
+            .bucketSizeLog = if 4_u32
             > (if ((*cParams).strategy as u32) < 8 {
                 (*cParams).strategy as u32
             } else {
-                8 as u32
+                8_u32
             })
         {
-            4 as u32
+            4_u32
         } else if ((*cParams).strategy as u32) < 8 {
             (*cParams).strategy as u32
         } else {
-            8 as u32
+            8_u32
         };
     }
     (*params)
@@ -1375,7 +1375,7 @@ pub unsafe extern "C" fn ZSTD_ldm_getTableSize(mut params: ldmParams_t) -> usize
     {
         totalSize
     } else {
-        0 as usize
+        0_usize
     };
 }
 #[no_mangle]
@@ -1388,7 +1388,7 @@ pub unsafe extern "C" fn ZSTD_ldm_getMaxNbSeq(
     {
         maxChunkSize / params.minMatchLength as usize
     } else {
-        0 as usize
+        0_usize
     };
 }
 unsafe extern "C" fn ZSTD_ldm_getBucket(
@@ -1561,7 +1561,7 @@ unsafe extern "C" fn ZSTD_ldm_limitTableUpdate(
                         .wrapping_sub((*ms).nextToUpdate)
                         .wrapping_sub(1024)
                 {
-                    512 as u32
+                    512_u32
                 } else {
                     curr.wrapping_sub((*ms).nextToUpdate)
                         .wrapping_sub(1024)

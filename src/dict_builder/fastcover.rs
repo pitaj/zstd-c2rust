@@ -919,7 +919,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
                         stderr,
                         b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
                         (dictBufferCapacity.wrapping_sub(tail)
-                            * 100 as usize / dictBufferCapacity)
+                            * 100_usize / dictBufferCapacity)
                             as std::ffi::c_uint,
                     );
                     fflush(stderr);
@@ -983,7 +983,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
             segmentFreqs,
         );
         let nbFinalizeSamples = ((*ctx).nbTrainSamples
-            * (*ctx).accelParams.finalize as usize / 100 as usize)
+            * (*ctx).accelParams.finalize as usize / 100_usize)
             as std::ffi::c_uint;
         selection = COVER_selectDict(
             dict.offset(tail as isize),
@@ -1193,7 +1193,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         segmentFreqs,
     );
     let nbFinalizeSamples = (ctx.nbTrainSamples * ctx.accelParams.finalize as usize
-        / 100 as usize) as std::ffi::c_uint;
+        / 100_usize) as std::ffi::c_uint;
     let dictionarySize = ZDICT_finalizeDictionary(
         dict as *mut std::ffi::c_void,
         dictBufferCapacity,

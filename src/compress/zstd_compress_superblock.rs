@@ -1425,7 +1425,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
     } else if (*hufMetadata).hType as std::ffi::c_uint
         == set_rle as std::ffi::c_int as std::ffi::c_uint
     {
-        return 1 as usize
+        return 1_usize
     } else if (*hufMetadata).hType as std::ffi::c_uint
         == set_compressed as std::ffi::c_int as std::ffi::c_uint
         || (*hufMetadata).hType as std::ffi::c_uint
@@ -1685,7 +1685,7 @@ unsafe extern "C" fn sizeBlockSequences(
     let mut n: usize = 0;
     let mut budget: usize = 0;
     let mut inSize: usize = 0;
-    let headerSize = firstSubBlock as usize * 120 as usize
+    let headerSize = firstSubBlock as usize * 120_usize
         * BYTESCALE as usize;
     budget = budget.wrapping_add(headerSize);
     budget = budget
@@ -1782,14 +1782,14 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
         let avgSeqCost = (ebs.estBlockSize).wrapping_sub(ebs.estLitSize)
             * BYTESCALE as usize / nbSeqs;
         let nbSubBlocks = if (ebs.estBlockSize)
-            .wrapping_add(targetCBlockSize / 2 as usize)
+            .wrapping_add(targetCBlockSize / 2_usize)
             / targetCBlockSize > 1
         {
             (ebs.estBlockSize)
-                .wrapping_add(targetCBlockSize / 2 as usize)
+                .wrapping_add(targetCBlockSize / 2_usize)
                 / targetCBlockSize
         } else {
-            1 as usize
+            1_usize
         };
         let mut n: usize = 0;
         let mut avgBlockBudget: usize = 0;

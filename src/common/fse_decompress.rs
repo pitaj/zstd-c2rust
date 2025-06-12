@@ -436,7 +436,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     (*bitD).ptr = ((*bitD).ptr).offset(-(nbBytes as isize));
     (*bitD)
         .bitsConsumed = ((*bitD).bitsConsumed)
-        .wrapping_sub(nbBytes * 8 as u32);
+        .wrapping_sub(nbBytes * 8_u32);
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return result;
 }

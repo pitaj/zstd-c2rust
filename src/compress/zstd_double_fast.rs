@@ -617,7 +617,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as usize >= length {
+        if 16_usize >= length {
             return;
         }
         op = op.offset(16);

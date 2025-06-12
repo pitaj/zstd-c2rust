@@ -1085,8 +1085,8 @@ pub unsafe extern "C" fn COVER_computeEpochs(
         size: 0,
     };
     epochs
-        .num = if 1 as u32 > maxDictSize / k / passes {
-        1 as u32
+        .num = if 1_u32 > maxDictSize / k / passes {
+        1_u32
     } else {
         maxDictSize / k / passes
     };
@@ -1114,16 +1114,16 @@ unsafe extern "C" fn COVER_buildDictionary(
         parameters.k,
         4,
     );
-    let maxZeroScoreRun = (if 10 as u32
+    let maxZeroScoreRun = (if 10_u32
         > (if 100_u32 < epochs.num >> 3 {
-            100 as u32
+            100_u32
         } else {
             epochs.num >> 3
         })
     {
-        10 as u32
+        10_u32
     } else if 100_u32 < epochs.num >> 3 {
-        100 as u32
+        100_u32
     } else {
         epochs.num >> 3
     }) as usize;
@@ -1195,7 +1195,7 @@ unsafe extern "C" fn COVER_buildDictionary(
                         stderr,
                         b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
                         (dictBufferCapacity.wrapping_sub(tail)
-                            * 100 as usize / dictBufferCapacity)
+                            * 100_usize / dictBufferCapacity)
                             as std::ffi::c_uint,
                     );
                     fflush(stderr);
@@ -1372,7 +1372,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
     i = if parameters.splitPoint < 1.0f64 {
         nbTrainSamples
     } else {
-        0 as usize
+        0_usize
     };
     while i < nbSamples {
         maxSampleSize = if *samplesSizes.offset(i as isize) > maxSampleSize {
@@ -1396,7 +1396,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
         i = if parameters.splitPoint < 1.0f64 {
             nbTrainSamples
         } else {
-            0 as usize
+            0_usize
         };
         while i < nbSamples {
             let size = ZSTD_compress_usingCDict(

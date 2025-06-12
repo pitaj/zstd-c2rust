@@ -640,7 +640,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as usize >= length {
+        if 16_usize >= length {
             return;
         }
         op = op.offset(16);
@@ -747,7 +747,7 @@ unsafe extern "C" fn ZSTD_updateDUBT(
         );
         let matchIndex = *hashTable.offset(h as isize);
         let nextCandidatePtr = bt
-            .offset((2 as u32 * (idx & btMask)) as isize);
+            .offset((2_u32 * (idx & btMask)) as isize);
         let sortMarkPtr = nextCandidatePtr.offset(1);
         *hashTable.offset(h as isize) = idx;
         *nextCandidatePtr = matchIndex;
@@ -789,7 +789,7 @@ unsafe extern "C" fn ZSTD_insertDUBT1(
     let prefixStart = base.offset(dictLimit as isize);
     let mut match_0 = 0 as *const u8;
     let mut smallerPtr = bt
-        .offset((2 as u32 * (curr & btMask)) as isize);
+        .offset((2_u32 * (curr & btMask)) as isize);
     let mut largerPtr = smallerPtr.offset(1);
     let mut matchIndex = *smallerPtr;
     let mut dummy32: u32 = 0;
@@ -802,7 +802,7 @@ unsafe extern "C" fn ZSTD_insertDUBT1(
     };
     while nbCompares != 0 && matchIndex > windowLow {
         let nextPtr = bt
-            .offset((2 as u32 * (matchIndex & btMask)) as isize);
+            .offset((2_u32 * (matchIndex & btMask)) as isize);
         let mut matchLength = if commonLengthSmaller < commonLengthLarger {
             commonLengthSmaller
         } else {
@@ -918,7 +918,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBetterDictMatch(
     let mut commonLengthLarger: usize = 0;
     while nbCompares != 0 && dictMatchIndex > dictLowLimit {
         let nextPtr = dictBt
-            .offset((2 as u32 * (dictMatchIndex & btMask)) as isize);
+            .offset((2_u32 * (dictMatchIndex & btMask)) as isize);
         let mut matchLength = if commonLengthSmaller < commonLengthLarger {
             commonLengthSmaller
         } else {
@@ -1012,15 +1012,15 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
         .wrapping_sub(1);
     let btMask = (((1 as std::ffi::c_int) << btLog) - 1 as std::ffi::c_int) as u32;
     let btLow = if btMask >= curr {
-        0 as u32
+        0_u32
     } else {
         curr.wrapping_sub(btMask)
     };
     let unsortLimit = if btLow > windowLow { btLow } else { windowLow };
     let mut nextCandidate = bt
-        .offset((2 as u32 * (matchIndex & btMask)) as isize);
+        .offset((2_u32 * (matchIndex & btMask)) as isize);
     let mut unsortedMark = bt
-        .offset((2 as u32 * (matchIndex & btMask)) as isize)
+        .offset((2_u32 * (matchIndex & btMask)) as isize)
         .offset(1);
     let mut nbCompares = (1 as std::ffi::c_uint) << (*cParams).searchLog;
     let mut nbCandidates = nbCompares;
@@ -1032,9 +1032,9 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
         previousCandidate = matchIndex;
         matchIndex = *nextCandidate;
         nextCandidate = bt
-            .offset((2 as u32 * (matchIndex & btMask)) as isize);
+            .offset((2_u32 * (matchIndex & btMask)) as isize);
         unsortedMark = bt
-            .offset((2 as u32 * (matchIndex & btMask)) as isize)
+            .offset((2_u32 * (matchIndex & btMask)) as isize)
             .offset(1);
         nbCandidates = nbCandidates.wrapping_sub(1);
         nbCandidates;
@@ -1046,7 +1046,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
     matchIndex = previousCandidate;
     while matchIndex != 0 {
         let nextCandidateIdxPtr = bt
-            .offset((2 as u32 * (matchIndex & btMask)) as isize)
+            .offset((2_u32 * (matchIndex & btMask)) as isize)
             .offset(1);
         let nextCandidateIdx = *nextCandidateIdxPtr;
         ZSTD_insertDUBT1(ms, matchIndex, iend, nbCandidates, unsortLimit, dictMode);
@@ -1061,9 +1061,9 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
     let dictEnd = dictBase.offset(dictLimit as isize);
     let prefixStart = base.offset(dictLimit as isize);
     let mut smallerPtr = bt
-        .offset((2 as u32 * (curr & btMask)) as isize);
+        .offset((2_u32 * (curr & btMask)) as isize);
     let mut largerPtr = bt
-        .offset((2 as u32 * (curr & btMask)) as isize)
+        .offset((2_u32 * (curr & btMask)) as isize)
         .offset(1);
     let mut matchEndIdx = curr
         .wrapping_add(8)
@@ -1074,7 +1074,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
     *hashTable.offset(h as isize) = curr;
     while nbCompares != 0 && matchIndex > windowLow {
         let nextPtr = bt
-            .offset((2 as u32 * (matchIndex & btMask)) as isize);
+            .offset((2_u32 * (matchIndex & btMask)) as isize);
         let mut matchLength = if commonLengthSmaller < commonLengthLarger {
             commonLengthSmaller
         } else {
@@ -1222,7 +1222,7 @@ pub unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_loadDictionary(
     let chainAttempts = (((1 as std::ffi::c_int) << (*ms).cParams.searchLog) as u32)
         .wrapping_sub(cacheSize);
     let chainLimit = if chainAttempts > 255 {
-        255 as u32
+        255_u32
     } else {
         chainAttempts
     };
@@ -1567,7 +1567,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch(
     let minChain = if curr > chainSize {
         curr.wrapping_sub(chainSize)
     } else {
-        0 as u32
+        0_u32
     };
     let mut nbAttempts = (1 as std::ffi::c_uint) << (*cParams).searchLog;
     let mut ml = (4 as std::ffi::c_int - 1 as std::ffi::c_int) as usize;
@@ -1586,7 +1586,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch(
         ZSTD_hashPtr(ip as *const std::ffi::c_void, ddsHashLog, mls)
             << ZSTD_LAZY_DDSS_BUCKET_LOG
     } else {
-        0 as usize
+        0_usize
     };
     let mut matchIndex: u32 = 0;
     if dictMode as std::ffi::c_uint
@@ -1681,7 +1681,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch(
         let dmsMinChain = if dmsSize > dmsChainSize {
             dmsSize.wrapping_sub(dmsChainSize)
         } else {
-            0 as u32
+            0_u32
         };
         matchIndex = *((*dms).hashTable)
             .offset(
@@ -1741,7 +1741,7 @@ unsafe extern "C" fn ZSTD_row_nextIndex(tagRow: *mut u8, rowMask: u32) -> u32 {
             if next == 0 {
                 rowMask
             } else {
-                0 as u32
+                0_u32
             },
         );
     *tagRow = next as u8;
@@ -1770,7 +1770,7 @@ unsafe extern "C" fn ZSTD_row_fillHashCache(
     let tagTable: *const u8 = (*ms).tagTable;
     let hashLog = (*ms).rowHashLog;
     let maxElemsToPrefetch = if base.offset(idx as isize) > iLimit {
-        0 as u32
+        0_u32
     } else {
         (iLimit.offset_from(base.offset(idx as isize)) as std::ffi::c_long
             + 1 as std::ffi::c_long) as u32
@@ -1778,7 +1778,7 @@ unsafe extern "C" fn ZSTD_row_fillHashCache(
     let lim = idx
         .wrapping_add(
             (if 8_u32 < maxElemsToPrefetch {
-                8 as u32
+                8_u32
             } else {
                 maxElemsToPrefetch
             }),
@@ -1982,7 +1982,7 @@ unsafe extern "C" fn ZSTD_row_getMatchMask(
 ) -> ZSTD_VecMask {
     let src = tagRow;
     return ZSTD_row_getSSEMask(
-        (rowEntries / 16 as u32) as std::ffi::c_int,
+        (rowEntries / 16_u32) as std::ffi::c_int,
         src,
         tag,
         headGrouped,
@@ -3899,7 +3899,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
     let dictLowestIndex = if isDxS != 0 {
         (*dms).window.dictLimit
     } else {
-        0 as u32
+        0_u32
     };
     let dictBase = if isDxS != 0 { (*dms).window.base } else { NULL as *const u8 };
     let dictLowest = if isDxS != 0 {
@@ -3912,7 +3912,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
         prefixLowestIndex
             .wrapping_sub(dictEnd.offset_from(dictBase) as std::ffi::c_long as u32)
     } else {
-        0 as u32
+        0_u32
     };
     let dictAndPrefixLength = (ip.offset_from(prefixLowest) as std::ffi::c_long
         + dictEnd.offset_from(dictLowest) as std::ffi::c_long) as u32;
@@ -4079,9 +4079,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                             iend,
                                         ))
                                             .wrapping_add(4);
-                                        let gain2 = (mlRep * 3 as usize)
+                                        let gain2 = (mlRep * 3_usize)
                                             as std::ffi::c_int;
-                                        let gain1 = (matchLength * 3 as usize)
+                                        let gain1 = (matchLength * 3_usize)
                                             .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                             .wrapping_add(1)
                                             as std::ffi::c_int;
@@ -4120,9 +4120,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                                 prefixLowest,
                                             ))
                                                 .wrapping_add(4);
-                                            let gain2_0 = (mlRep_0 * 3 as usize)
+                                            let gain2_0 = (mlRep_0 * 3_usize)
                                                 as std::ffi::c_int;
-                                            let gain1_0 = (matchLength * 3 as usize)
+                                            let gain1_0 = (matchLength * 3_usize)
                                                 .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                                 .wrapping_add(1)
                                                 as std::ffi::c_int;
@@ -4147,10 +4147,10 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                         searchMethod,
                                         dictMode,
                                     );
-                                    let gain2_1 = (ml2_0 * 4 as usize)
+                                    let gain2_1 = (ml2_0 * 4_usize)
                                         .wrapping_sub(ZSTD_highbit32(ofbCandidate as u32) as usize)
                                         as std::ffi::c_int;
-                                    let gain1_1 = (matchLength * 4 as usize)
+                                    let gain1_1 = (matchLength * 4_usize)
                                         .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                         .wrapping_add(4)
                                         as std::ffi::c_int;
@@ -4184,9 +4184,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                                 iend,
                                             ))
                                                 .wrapping_add(4);
-                                            let gain2_2 = (mlRep_1 * 4 as usize)
+                                            let gain2_2 = (mlRep_1 * 4_usize)
                                                 as std::ffi::c_int;
-                                            let gain1_2 = (matchLength * 4 as usize)
+                                            let gain1_2 = (matchLength * 4_usize)
                                                 .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                                 .wrapping_add(1)
                                                 as std::ffi::c_int;
@@ -4226,9 +4226,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                                     prefixLowest,
                                                 ))
                                                     .wrapping_add(4);
-                                                let gain2_3 = (mlRep_2 * 4 as usize)
+                                                let gain2_3 = (mlRep_2 * 4_usize)
                                                     as std::ffi::c_int;
-                                                let gain1_3 = (matchLength * 4 as usize)
+                                                let gain1_3 = (matchLength * 4_usize)
                                                     .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                                     .wrapping_add(1)
                                                     as std::ffi::c_int;
@@ -4253,11 +4253,11 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                             searchMethod,
                                             dictMode,
                                         );
-                                        let gain2_4 = (ml2_1 * 4 as usize)
+                                        let gain2_4 = (ml2_1 * 4_usize)
                                             .wrapping_sub(
                                                 ZSTD_highbit32(ofbCandidate_0 as u32) as usize,
                                             ) as std::ffi::c_int;
-                                        let gain1_4 = (matchLength * 4 as usize)
+                                        let gain1_4 = (matchLength * 4_usize)
                                             .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                             .wrapping_add(7)
                                             as std::ffi::c_int;
@@ -5013,9 +5013,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
                                             prefixStart,
                                         ))
                                             .wrapping_add(4);
-                                        let gain2 = (repLength * 3 as usize)
+                                        let gain2 = (repLength * 3_usize)
                                             as std::ffi::c_int;
-                                        let gain1 = (matchLength * 3 as usize)
+                                        let gain1 = (matchLength * 3_usize)
                                             .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                             .wrapping_add(1)
                                             as std::ffi::c_int;
@@ -5041,11 +5041,11 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
                                 searchMethod,
                                 ZSTD_extDict,
                             );
-                            let gain2_0 = (ml2_0 * 4 as usize)
+                            let gain2_0 = (ml2_0 * 4_usize)
                                 .wrapping_sub(
                                     ZSTD_highbit32(ofbCandidate_0 as u32) as usize,
                                 ) as std::ffi::c_int;
-                            let gain1_0 = (matchLength * 4 as usize)
+                            let gain1_0 = (matchLength * 4_usize)
                                 .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                 .wrapping_add(4)
                                 as std::ffi::c_int;
@@ -5096,9 +5096,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
                                                 prefixStart,
                                             ))
                                                 .wrapping_add(4);
-                                            let gain2_1 = (repLength_0 * 4 as usize)
+                                            let gain2_1 = (repLength_0 * 4_usize)
                                                 as std::ffi::c_int;
-                                            let gain1_1 = (matchLength * 4 as usize)
+                                            let gain1_1 = (matchLength * 4_usize)
                                                 .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                                 .wrapping_add(1)
                                                 as std::ffi::c_int;
@@ -5124,11 +5124,11 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
                                     searchMethod,
                                     ZSTD_extDict,
                                 );
-                                let gain2_2 = (ml2_1 * 4 as usize)
+                                let gain2_2 = (ml2_1 * 4_usize)
                                     .wrapping_sub(
                                         ZSTD_highbit32(ofbCandidate_1 as u32) as usize,
                                     ) as std::ffi::c_int;
-                                let gain1_2 = (matchLength * 4 as usize)
+                                let gain1_2 = (matchLength * 4_usize)
                                     .wrapping_sub(ZSTD_highbit32(offBase as u32) as usize)
                                     .wrapping_add(7)
                                     as std::ffi::c_int;
