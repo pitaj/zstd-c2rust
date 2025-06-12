@@ -272,7 +272,7 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
     };
 }
 pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
-pub const ZSTD_FRAMEIDSIZE: std::ffi::c_int = 4 as std::ffi::c_int;
+pub const ZSTD_FRAMEIDSIZE: std::ffi::c_int = 4;
 #[inline]
 unsafe extern "C" fn ZSTD_customMalloc(
     mut size: usize,
@@ -307,7 +307,7 @@ unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,
     mut args: ...
 ) {}
-pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
+pub const NULL: std::ffi::c_int = 0;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_DDict_dictContent(
     mut ddict: *const ZSTD_DDict,
@@ -331,8 +331,8 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
         .offset((*ddict).dictSize as isize) as *const std::ffi::c_void;
     (*dctx).previousDstEnd = (*dctx).dictEnd;
     if (*ddict).entropyPresent != 0 {
-        (*dctx).litEntropy = 1 as std::ffi::c_int as u32;
-        (*dctx).fseEntropy = 1 as std::ffi::c_int as u32;
+        (*dctx).litEntropy = 1;
+        (*dctx).fseEntropy = 1;
         (*dctx).LLTptr = ((*ddict).entropy.LLTable).as_ptr();
         (*dctx).MLTptr = ((*ddict).entropy.MLTable).as_ptr();
         (*dctx).OFTptr = ((*ddict).entropy.OFTable).as_ptr();
@@ -350,16 +350,16 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
             .rep[2 as std::ffi::c_int
             as usize] = (*ddict).entropy.rep[2 as std::ffi::c_int as usize];
     } else {
-        (*dctx).litEntropy = 0 as std::ffi::c_int as u32;
-        (*dctx).fseEntropy = 0 as std::ffi::c_int as u32;
+        (*dctx).litEntropy = 0;
+        (*dctx).fseEntropy = 0;
     };
 }
 unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
     mut ddict: *mut ZSTD_DDict,
     mut dictContentType: ZSTD_dictContentType_e,
 ) -> usize {
-    (*ddict).dictID = 0 as std::ffi::c_int as u32;
-    (*ddict).entropyPresent = 0 as std::ffi::c_int as u32;
+    (*ddict).dictID = 0;
+    (*ddict).entropyPresent = 0;
     if dictContentType as std::ffi::c_uint
         == ZSTD_dct_rawContent as std::ffi::c_int as std::ffi::c_uint
     {
@@ -393,7 +393,7 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
     {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
-    (*ddict).entropyPresent = 1 as std::ffi::c_int as u32;
+    (*ddict).entropyPresent = 1;
     return 0 as std::ffi::c_int as usize;
 }
 unsafe extern "C" fn ZSTD_initDDict_internal(
@@ -410,7 +410,7 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
         (*ddict).dictBuffer = NULL as *mut std::ffi::c_void;
         (*ddict).dictContent = dict;
         if dict.is_null() {
-            dictSize = 0 as std::ffi::c_int as usize;
+            dictSize = 0;
         }
     } else {
         let internalBuffer = ZSTD_customMalloc(dictSize, (*ddict).cMem);

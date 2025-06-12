@@ -26,12 +26,12 @@ pub type RecordEvents_f = Option::<
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
     return *(ptr as *const unalign16);
 }
-pub const THRESHOLD_PENALTY_RATE: std::ffi::c_int = 16 as std::ffi::c_int;
+pub const THRESHOLD_PENALTY_RATE: std::ffi::c_int = 16;
 pub const THRESHOLD_BASE: std::ffi::c_int = THRESHOLD_PENALTY_RATE
     - 2 as std::ffi::c_int;
-pub const THRESHOLD_PENALTY: std::ffi::c_int = 3 as std::ffi::c_int;
-pub const HASHLENGTH: std::ffi::c_int = 2 as std::ffi::c_int;
-pub const HASHLOG_MAX: std::ffi::c_int = 10 as std::ffi::c_int;
+pub const THRESHOLD_PENALTY: std::ffi::c_int = 3;
+pub const HASHLENGTH: std::ffi::c_int = 2;
+pub const HASHLOG_MAX: std::ffi::c_int = 10;
 pub const HASHTABLESIZE: std::ffi::c_int = (1 as std::ffi::c_int) << HASHLOG_MAX;
 pub const KNUTH: std::ffi::c_uint = 0x9e3779b9 as std::ffi::c_uint;
 #[inline(always)]
@@ -65,7 +65,7 @@ unsafe extern "C" fn addEvents_generic(
         .wrapping_sub(HASHLENGTH as usize)
         .wrapping_add(1);
     let mut n: usize = 0;
-    n = 0 as std::ffi::c_int as usize;
+    n = 0;
     while n < limit {
         (*fp)
             .events[hash2(p.offset(n as isize) as *const std::ffi::c_void, hashLog)
@@ -94,7 +94,7 @@ unsafe extern "C" fn recordFingerprint_generic(
         (::core::mem::size_of::<std::ffi::c_uint>())
             .wrapping_mul(1_usize << hashLog) as usize,
     );
-    (*fp).nbEvents = 0 as std::ffi::c_int as usize;
+    (*fp).nbEvents = 0;
     addEvents_generic(fp, src, srcSize, samplingRate, hashLog);
 }
 unsafe extern "C" fn ZSTD_recordFingerprint_1(
@@ -159,7 +159,7 @@ unsafe extern "C" fn fpDistance(
 ) -> u64 {
     let mut distance: u64 = 0;
     let mut n: usize = 0;
-    n = 0 as std::ffi::c_int as usize;
+    n = 0;
     while n < 1_usize << hashLog {
         distance = distance
             .wrapping_add(
@@ -190,7 +190,7 @@ unsafe extern "C" fn mergeEvents(
     mut newfp: *const Fingerprint,
 ) {
     let mut n: usize = 0;
-    n = 0 as std::ffi::c_int as usize;
+    n = 0;
     while n < HASHTABLESIZE as usize {
         (*acc)
             .events[n
@@ -203,7 +203,7 @@ unsafe extern "C" fn mergeEvents(
 }
 unsafe extern "C" fn flushEvents(mut fpstats: *mut FPStats) {
     let mut n: usize = 0;
-    n = 0 as std::ffi::c_int as usize;
+    n = 0;
     while n < HASHTABLESIZE as usize {
         (*fpstats)
             .pastEvents
@@ -223,7 +223,7 @@ unsafe extern "C" fn removeEvents(
     mut slice: *const Fingerprint,
 ) {
     let mut n: usize = 0;
-    n = 0 as std::ffi::c_int as usize;
+    n = 0;
     while n < HASHTABLESIZE as usize {
         (*acc)
             .events[n
@@ -391,7 +391,7 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
         96 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10)
     }) as usize;
 }
-pub const SEGMENT_SIZE: std::ffi::c_int = 512 as std::ffi::c_int;
+pub const SEGMENT_SIZE: std::ffi::c_int = 512;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_splitBlock(
     mut blockStart: *const std::ffi::c_void,

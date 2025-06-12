@@ -205,7 +205,7 @@ pub const ZSTD_tfp_forCCtx: ZSTD_tableFillPurpose_e = 0;
 pub type ZSTD_match4Found = Option::<
     unsafe extern "C" fn(*const u8, *const u8, u32, u32) -> std::ffi::c_int,
 >;
-pub const CACHELINE_SIZE: std::ffi::c_int = 64 as std::ffi::c_int;
+pub const CACHELINE_SIZE: std::ffi::c_int = 64;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
@@ -256,8 +256,8 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
         return MEM_swap64(MEM_read64(memPtr))
     };
 }
-pub const kSearchStrength: std::ffi::c_int = 8 as std::ffi::c_int;
-pub const HASH_READ_SIZE: std::ffi::c_int = 8 as std::ffi::c_int;
+pub const kSearchStrength: std::ffi::c_int = 8;
+pub const HASH_READ_SIZE: std::ffi::c_int = 8;
 #[inline]
 unsafe extern "C" fn ZSTD_selectAddr(
     mut index: u32,
@@ -296,7 +296,7 @@ unsafe extern "C" fn ZSTD_safecopyLiterals(
         *fresh1 = *fresh0;
     }
 }
-pub const REPCODE1_TO_OFFBASE: std::ffi::c_int = 1 as std::ffi::c_int;
+pub const REPCODE1_TO_OFFBASE: std::ffi::c_int = 1;
 #[inline(always)]
 unsafe extern "C" fn ZSTD_storeSeqOnly(
     mut seqStorePtr: *mut SeqStore_t,
@@ -443,7 +443,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
     return matchLength
         .wrapping_add(ZSTD_count(ip.offset(matchLength as isize), iStart, iEnd));
 }
-static mut prime4bytes: u32 = 2654435761 as std::ffi::c_uint;
+static mut prime4bytes: u32 = 2654435761;
 unsafe extern "C" fn ZSTD_hash4(mut u: u32, mut h: u32, mut s: u32) -> u32 {
     return (u * prime4bytes ^ s) >> 32_u32.wrapping_sub(h);
 }
@@ -453,7 +453,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
 ) -> usize {
     return ZSTD_hash4(MEM_readLE32(ptr), h, 0 as std::ffi::c_int as u32) as usize;
 }
-static mut prime5bytes: u64 = 889523592379 as std::ffi::c_ulonglong as u64;
+static mut prime5bytes: u64 = 889523592379;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 40 as std::ffi::c_int) * prime5bytes ^ s)
         >> 64_u32.wrapping_sub(h);
@@ -464,7 +464,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
 ) -> usize {
     return ZSTD_hash5(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
 }
-static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
+static mut prime6bytes: u64 = 227718039650203;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
         >> 64_u32.wrapping_sub(h);
@@ -475,7 +475,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
 ) -> usize {
     return ZSTD_hash6(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
 }
-static mut prime7bytes: u64 = 58295818150454627 as std::ffi::c_ulonglong as u64;
+static mut prime7bytes: u64 = 58295818150454627;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 56 as std::ffi::c_int) * prime7bytes ^ s)
         >> 64_u32.wrapping_sub(h);
@@ -555,7 +555,7 @@ unsafe extern "C" fn ZSTD_index_overlap_check(
         .wrapping_sub(1)
         .wrapping_sub(repIndex) >= 3 as std::ffi::c_int as u32) as std::ffi::c_int;
 }
-pub const ZSTD_SHORT_CACHE_TAG_BITS: std::ffi::c_int = 8 as std::ffi::c_int;
+pub const ZSTD_SHORT_CACHE_TAG_BITS: std::ffi::c_int = 8;
 pub const ZSTD_SHORT_CACHE_TAG_MASK: std::ffi::c_uint = ((1 as std::ffi::c_uint)
     << ZSTD_SHORT_CACHE_TAG_BITS)
     .wrapping_sub(1);
@@ -578,8 +578,8 @@ unsafe extern "C" fn ZSTD_comparePackedTags(
     let tag2 = (packedTag2 & ZSTD_SHORT_CACHE_TAG_MASK as usize) as u32;
     return (tag1 == tag2) as std::ffi::c_int;
 }
-pub const ZSTD_REP_NUM: std::ffi::c_int = 3 as std::ffi::c_int;
-pub const MINMATCH: std::ffi::c_int = 3 as std::ffi::c_int;
+pub const ZSTD_REP_NUM: std::ffi::c_int = 3;
+pub const MINMATCH: std::ffi::c_int = 3;
 unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
@@ -592,8 +592,8 @@ unsafe extern "C" fn ZSTD_copy16(
 ) {
     _mm_storeu_si128(dst as *mut __m128i, _mm_loadu_si128(src as *const __m128i));
 }
-pub const WILDCOPY_OVERLENGTH: std::ffi::c_int = 32 as std::ffi::c_int;
-pub const WILDCOPY_VECLEN: std::ffi::c_int = 16 as std::ffi::c_int;
+pub const WILDCOPY_OVERLENGTH: std::ffi::c_int = 32;
+pub const WILDCOPY_VECLEN: std::ffi::c_int = 16;
 #[inline(always)]
 unsafe extern "C" fn ZSTD_wildcopy(
     mut dst: *mut std::ffi::c_void,
@@ -681,7 +681,7 @@ unsafe extern "C" fn ZSTD_fillHashTableForCDict(
     let base = (*ms).window.base;
     let mut ip = base.offset((*ms).nextToUpdate as isize);
     let iend = (end as *const u8).offset(-(HASH_READ_SIZE as isize));
-    let fastHashFillStep = 3 as std::ffi::c_int as u32;
+    let fastHashFillStep = 3;
     while ip.offset(fastHashFillStep as isize)
         < iend.offset(2)
     {
@@ -692,7 +692,7 @@ unsafe extern "C" fn ZSTD_fillHashTableForCDict(
             == ZSTD_dtlm_fast as std::ffi::c_int as std::ffi::c_uint)
         {
             let mut p: u32 = 0;
-            p = 1 as std::ffi::c_int as u32;
+            p = 1;
             while p < fastHashFillStep {
                 let hashAndTag_0 = ZSTD_hashPtr(
                     ip.offset(p as isize) as *const std::ffi::c_void,
@@ -724,7 +724,7 @@ unsafe extern "C" fn ZSTD_fillHashTableForCCtx(
     let base = (*ms).window.base;
     let mut ip = base.offset((*ms).nextToUpdate as isize);
     let iend = (end as *const u8).offset(-(HASH_READ_SIZE as isize));
-    let fastHashFillStep = 3 as std::ffi::c_int as u32;
+    let fastHashFillStep = 3;
     while ip.offset(fastHashFillStep as isize)
         < iend.offset(2)
     {
@@ -735,7 +735,7 @@ unsafe extern "C" fn ZSTD_fillHashTableForCCtx(
             == ZSTD_dtlm_fast as std::ffi::c_int as std::ffi::c_uint)
         {
             let mut p: u32 = 0;
-            p = 1 as std::ffi::c_int as u32;
+            p = 1;
             while p < fastHashFillStep {
                 let hash = ZSTD_hashPtr(
                     ip.offset(p as isize) as *const std::ffi::c_void,
@@ -883,11 +883,11 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
     let maxRep = curr.wrapping_sub(windowLow);
     if rep_offset2 > maxRep {
         offsetSaved2 = rep_offset2;
-        rep_offset2 = 0 as std::ffi::c_int as u32;
+        rep_offset2 = 0;
     }
     if rep_offset1 > maxRep {
         offsetSaved1 = rep_offset1;
-        rep_offset1 = 0 as std::ffi::c_int as u32;
+        rep_offset1 = 0;
     }
     '__start: loop {
         step = stepSize;
@@ -985,7 +985,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
                 rep_offset2 = rep_offset1;
                 rep_offset1 = ip0.offset_from(match0) as std::ffi::c_long as u32;
                 offcode = rep_offset1.wrapping_add(ZSTD_REP_NUM as u32);
-                mLength = 4 as std::ffi::c_int as usize;
+                mLength = 4;
                 while (ip0 > anchor) as std::ffi::c_int
                     & (match0 > prefixStart) as std::ffi::c_int != 0
                     && *ip0.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
@@ -1375,7 +1375,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_dictMatchState_generic(
         let _ptr = dictHashTable as *const std::ffi::c_char;
         let _size = hashTableBytes;
         let mut _pos: usize = 0;
-        _pos = 0 as std::ffi::c_int as usize;
+        _pos = 0;
         while _pos < _size {
             _pos = _pos.wrapping_add(CACHELINE_SIZE as usize);
         }
@@ -1809,11 +1809,11 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
     let maxRep = curr.wrapping_sub(dictStartIndex);
     if offset_2 >= maxRep {
         offsetSaved2 = offset_2;
-        offset_2 = 0 as std::ffi::c_int as u32;
+        offset_2 = 0;
     }
     if offset_1 >= maxRep {
         offsetSaved1 = offset_1;
-        offset_1 = 0 as std::ffi::c_int as u32;
+        offset_1 = 0;
     }
     '__start: loop {
         step = stepSize;
@@ -1924,7 +1924,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
                 offset_2 = offset_1;
                 offset_1 = offset;
                 offcode = offset.wrapping_add(ZSTD_REP_NUM as u32);
-                mLength = 4 as std::ffi::c_int as usize;
+                mLength = 4;
                 while (ip0 > anchor) as std::ffi::c_int
                     & (match0 > lowMatchPtr) as std::ffi::c_int != 0
                     && *ip0.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int

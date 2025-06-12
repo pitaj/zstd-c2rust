@@ -180,8 +180,8 @@ unsafe extern "C" fn ZSTD_minGain(
     };
     return (srcSize >> minlog).wrapping_add(2);
 }
-pub const LitHufLog: std::ffi::c_int = 11 as std::ffi::c_int;
-pub const HUF_SYMBOLVALUE_MAX: std::ffi::c_int = 255 as std::ffi::c_int;
+pub const LitHufLog: std::ffi::c_int = 11;
+pub const HUF_SYMBOLVALUE_MAX: std::ffi::c_int = 255;
 pub const HUF_OPTIMAL_DEPTH_THRESHOLD: std::ffi::c_int = ZSTD_btultra as std::ffi::c_int;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_noCompressLiterals(
@@ -240,7 +240,7 @@ unsafe extern "C" fn allBytesIdentical(
 ) -> std::ffi::c_int {
     let b = *(src as *const u8).offset(0);
     let mut p: usize = 0;
-    p = 1 as std::ffi::c_int as usize;
+    p = 1;
     while p < srcSize {
         if *(src as *const u8).offset(p as isize) as std::ffi::c_int
             != b as std::ffi::c_int
@@ -390,7 +390,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         == HUF_repeat_valid as std::ffi::c_int as std::ffi::c_uint
         && lhSize == 3 as std::ffi::c_int as usize
     {
-        singleStream = 1 as std::ffi::c_int as u32;
+        singleStream = 1;
     }
     huf_compress = if singleStream != 0 {
         Some(
