@@ -139,6 +139,12 @@ case $1 in
 
     ;;
 
+  cast-index)
+    # [0 as usize]
+    perl -i -p0e 's/\[(\d+)(?: as [\w\d:_]+)+\]/[$1]/gm' src/*/*.rs
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs

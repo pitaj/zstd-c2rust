@@ -1491,7 +1491,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
     if maxLength < MINMATCHLENGTH as usize {
         return solution;
     }
-    savings[5 as usize] = 0;
+    savings[5] = 0;
     let mut u_1: std::ffi::c_uint = 0;
     u_1 = MINMATCHLENGTH as std::ffi::c_uint;
     while u_1 as usize <= maxLength {
@@ -2274,11 +2274,11 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
             0,
             ::core::mem::size_of::<[u32; 1024]>(),
         );
-        repOffset[8 as usize] = 1;
+        repOffset[8] = 1;
         repOffset[4 as std::ffi::c_int
-            as usize] = repOffset[8 as usize];
+            as usize] = repOffset[8];
         repOffset[1 as std::ffi::c_int
-            as usize] = repOffset[4 as usize];
+            as usize] = repOffset[4];
         libc::memset(
             bestRepOffset.as_mut_ptr() as *mut std::ffi::c_void,
             0,
@@ -2604,17 +2604,17 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                                 MEM_writeLE32(
                                                     dstPtr.offset(0)
                                                         as *mut std::ffi::c_void,
-                                                    repStartValue[0 as usize],
+                                                    repStartValue[0],
                                                 );
                                                 MEM_writeLE32(
                                                     dstPtr.offset(4)
                                                         as *mut std::ffi::c_void,
-                                                    repStartValue[1 as usize],
+                                                    repStartValue[1],
                                                 );
                                                 MEM_writeLE32(
                                                     dstPtr.offset(8)
                                                         as *mut std::ffi::c_void,
-                                                    repStartValue[2 as usize],
+                                                    repStartValue[2],
                                                 );
                                                 eSize = eSize.wrapping_add(12);
                                             }

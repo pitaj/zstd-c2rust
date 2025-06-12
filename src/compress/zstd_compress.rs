@@ -7915,7 +7915,7 @@ unsafe extern "C" fn ZSTD_copyBlockSequences(
                 rawOffset = repcodes
                     .rep[repcode.wrapping_sub(1) as usize];
             } else if repcode == 3 {
-                rawOffset = (repcodes.rep[0 as usize])
+                rawOffset = (repcodes.rep[0])
                     .wrapping_sub(1);
             } else {
                 rawOffset = repcodes.rep[repcode as usize];

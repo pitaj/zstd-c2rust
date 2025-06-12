@@ -340,15 +340,15 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
         (*dctx)
             .entropy
             .rep[0 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[0 as usize];
+            as usize] = (*ddict).entropy.rep[0];
         (*dctx)
             .entropy
             .rep[1 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[1 as usize];
+            as usize] = (*ddict).entropy.rep[1];
         (*dctx)
             .entropy
             .rep[2 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[2 as usize];
+            as usize] = (*ddict).entropy.rep[2];
     } else {
         (*dctx).litEntropy = 0;
         (*dctx).fseEntropy = 0;
