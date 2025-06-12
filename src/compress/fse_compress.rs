@@ -351,7 +351,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
             (if tableLog != 0 {
                 tableSize >> 1
             } else {
-                1 as std::ffi::c_int as u32
+                1 as u32
             }) as isize,
         ) as *mut std::ffi::c_void;
     let symbolTT = FSCT as *mut FSE_symbolCompressionTransform;
@@ -807,7 +807,7 @@ unsafe extern "C" fn FSE_normalizeM2(
     let mut distributed: u32 = 0;
     let mut ToDistribute: u32 = 0;
     let lowThreshold = (total >> tableLog) as u32;
-    let mut lowOne = (total * 3 as std::ffi::c_int as usize
+    let mut lowOne = (total * 3 as usize
         >> tableLog.wrapping_add(1)) as u32;
     s = 0;
     while s <= maxSymbolValue {
@@ -835,8 +835,8 @@ unsafe extern "C" fn FSE_normalizeM2(
         return 0;
     }
     if total / ToDistribute as usize > lowOne as usize {
-        lowOne = (total * 3 as std::ffi::c_int as usize
-            / (ToDistribute * 2 as std::ffi::c_int as u32) as usize) as u32;
+        lowOne = (total * 3 as usize
+            / (ToDistribute * 2 as u32) as usize) as u32;
         s = 0;
         while s <= maxSymbolValue {
             if *norm.offset(s as isize) as std::ffi::c_int
@@ -1070,7 +1070,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
     if ERR_isError(initError) != 0 {
         return 0;
     }
-    if srcSize & 1 as std::ffi::c_int as usize != 0 {
+    if srcSize & 1 as usize != 0 {
         ip = ip.offset(-1);
         FSE_initCState2(&mut CState1, ct, *ip as u32);
         ip = ip.offset(-1);
@@ -1092,7 +1092,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
     if (::core::mem::size_of::<BitContainerType>())
         .wrapping_mul(8)
         > (FSE_MAX_TABLELOG * 4 as std::ffi::c_int + 7 as std::ffi::c_int)
-            as std::ffi::c_ulong && srcSize & 2 as std::ffi::c_int as usize != 0
+            as std::ffi::c_ulong && srcSize & 2 as usize != 0
     {
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as std::ffi::c_uint);

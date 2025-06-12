@@ -364,7 +364,7 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
     HIST_add(
         ((*middleEvents).events).as_mut_ptr(),
         (blockStart as *const std::ffi::c_char)
-            .offset((blockSize / 2 as std::ffi::c_int as usize) as isize)
+            .offset((blockSize / 2 as usize) as isize)
             .offset(-((SEGMENT_SIZE / 2 as std::ffi::c_int) as isize))
             as *const std::ffi::c_void,
         SEGMENT_SIZE as usize,

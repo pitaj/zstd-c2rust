@@ -960,7 +960,7 @@ static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64
 unsafe extern "C" fn ZSTD_ipow(mut base: u64, mut exponent: u64) -> u64 {
     let mut power: u64 = 1;
     while exponent != 0 {
-        if exponent & 1 as std::ffi::c_int as u64 != 0 {
+        if exponent & 1 as u64 != 0 {
             power = power * base;
         }
         exponent >>= 1;
@@ -1305,7 +1305,7 @@ unsafe extern "C" fn ZSTDMT_getBuffer(mut bufPool: *mut ZSTDMT_bufferPool) -> Bu
     let start = ZSTD_customMalloc(bSize, (*bufPool).cMem);
     buffer.start = start;
     buffer
-        .capacity = if start.is_null() { 0 as std::ffi::c_int as usize } else { bSize };
+        .capacity = if start.is_null() { 0 as usize } else { bSize };
     start.is_null();
     return buffer;
 }
@@ -1375,7 +1375,7 @@ unsafe extern "C" fn ZSTDMT_createSeqPool(
     if seqPool.is_null() {
         return NULL_0 as *mut ZSTDMT_seqPool;
     }
-    ZSTDMT_setNbSeq(seqPool, 0 as std::ffi::c_int as usize);
+    ZSTDMT_setNbSeq(seqPool, 0 as usize);
     return seqPool;
 }
 unsafe extern "C" fn ZSTDMT_freeSeqPool(mut seqPool: *mut ZSTDMT_seqPool) {
@@ -1606,7 +1606,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
                 (*serialState)
                     .ldmState
                     .loadedDictEnd = if params.forceWindow != 0 {
-                    0 as std::ffi::c_int as u32
+                    0 as u32
                 } else {
                     dictEnd.offset_from((*serialState).ldmState.window.base)
                         as std::ffi::c_long as u32
@@ -1992,7 +1992,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                                 16775483362577223979 => {}
                                                 _ => {
                                                     (*job).firstJob == 0;
-                                                    ZSTD_CCtx_trace(cctx, 0 as std::ffi::c_int as usize);
+                                                    ZSTD_CCtx_trace(cctx, 0 as usize);
                                                 }
                                             }
                                         }
@@ -2384,12 +2384,12 @@ pub unsafe extern "C" fn ZSTDMT_getFrameProgression(
         pthread_mutex_lock(&mut (*jobPtr).job_mutex);
         let cResult = (*jobPtr).cSize;
         let produced = if ERR_isError(cResult) != 0 {
-            0 as std::ffi::c_int as usize
+            0 as usize
         } else {
             cResult
         };
         let flushed = if ERR_isError(cResult) != 0 {
-            0 as std::ffi::c_int as usize
+            0 as usize
         } else {
             (*jobPtr).dstFlushed
         };
@@ -2426,12 +2426,12 @@ pub unsafe extern "C" fn ZSTDMT_toFlushNow(mut mtctx: *mut ZSTDMT_CCtx) -> usize
     pthread_mutex_lock(&mut (*jobPtr).job_mutex);
     let cResult = (*jobPtr).cSize;
     let produced = if ERR_isError(cResult) != 0 {
-        0 as std::ffi::c_int as usize
+        0 as usize
     } else {
         cResult
     };
     let flushed = if ERR_isError(cResult) != 0 {
-        0 as std::ffi::c_int as usize
+        0 as usize
     } else {
         (*jobPtr).dstFlushed
     };
@@ -2447,21 +2447,21 @@ unsafe extern "C" fn ZSTDMT_computeTargetJobLog(
     if (*params).ldmParams.enableLdm as std::ffi::c_uint
         == ZSTD_ps_enable as std::ffi::c_int as std::ffi::c_uint
     {
-        jobLog = if 21 as std::ffi::c_int as u32
+        jobLog = if 21 as u32
             > (ZSTD_cycleLog((*params).cParams.chainLog, (*params).cParams.strategy))
                 .wrapping_add(3)
         {
-            21 as std::ffi::c_int as u32
+            21 as u32
         } else {
             (ZSTD_cycleLog((*params).cParams.chainLog, (*params).cParams.strategy))
                 .wrapping_add(3)
         };
     } else {
-        jobLog = if 20 as std::ffi::c_int as std::ffi::c_uint
+        jobLog = if 20 as std::ffi::c_uint
             > ((*params).cParams.windowLog)
                 .wrapping_add(2)
         {
-            20 as std::ffi::c_int as std::ffi::c_uint
+            20 as std::ffi::c_uint
         } else {
             ((*params).cParams.windowLog)
                 .wrapping_add(2)
@@ -2503,7 +2503,7 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
     let overlapRLog = 9 as std::ffi::c_int
         - ZSTDMT_overlapLog((*params).overlapLog, (*params).cParams.strategy);
     let mut ovLog = (if overlapRLog >= 8 {
-        0 as std::ffi::c_int as std::ffi::c_uint
+        0 as std::ffi::c_uint
     } else {
         ((*params).cParams.windowLog).wrapping_sub(overlapRLog as std::ffi::c_uint)
     }) as std::ffi::c_int;
@@ -2522,7 +2522,7 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
             .wrapping_sub(overlapRLog as std::ffi::c_uint) as std::ffi::c_int;
     }
     return if ovLog == 0 {
-        0 as std::ffi::c_int as usize
+        0 as usize
     } else {
         1_usize << ovLog
     };
@@ -2618,7 +2618,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     {
         (1 as std::ffi::c_uint) << (*mtctx).params.cParams.windowLog
     } else {
-        0 as std::ffi::c_int as std::ffi::c_uint
+        0 as std::ffi::c_uint
     }) as usize;
     let nbSlackBuffers = (2 as std::ffi::c_int
         + ((*mtctx).targetPrefixSize > 0)
@@ -3216,7 +3216,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
         return if remainingToFlush > 1 {
             remainingToFlush
         } else {
-            1 as std::ffi::c_int as usize
+            1 as usize
         };
     }
     return remainingToFlush;
