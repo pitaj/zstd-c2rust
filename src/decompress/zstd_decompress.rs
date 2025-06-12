@@ -2198,7 +2198,7 @@ unsafe extern "C" fn ZSTD_decodeFrameHeader(
         0 as std::ffi::c_int
     }) as u32;
     if (*dctx).validateChecksum != 0 {
-        ZSTD_XXH64_reset(&mut (*dctx).xxhState, 0 as XXH64_hash_t);
+        ZSTD_XXH64_reset(&mut (*dctx).xxhState, 0);
     }
     (*dctx)
         .processedCSize = ((*dctx).processedCSize as std::ffi::c_ulong)

@@ -1375,7 +1375,7 @@ unsafe extern "C" fn ZSTDMT_createSeqPool(
     if seqPool.is_null() {
         return NULL_0 as *mut ZSTDMT_seqPool;
     }
-    ZSTDMT_setNbSeq(seqPool, 0 as usize);
+    ZSTDMT_setNbSeq(seqPool, 0);
     return seqPool;
 }
 unsafe extern "C" fn ZSTDMT_freeSeqPool(mut seqPool: *mut ZSTDMT_seqPool) {
@@ -1992,7 +1992,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                                 16775483362577223979 => {}
                                                 _ => {
                                                     (*job).firstJob == 0;
-                                                    ZSTD_CCtx_trace(cctx, 0 as usize);
+                                                    ZSTD_CCtx_trace(cctx, 0);
                                                 }
                                             }
                                         }

@@ -669,7 +669,7 @@ unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
 ) {
-    libc::memcpy(dst, src, 8 as usize);
+    libc::memcpy(dst, src, 8);
 }
 unsafe extern "C" fn ZSTD_copy16(
     mut dst: *mut std::ffi::c_void,

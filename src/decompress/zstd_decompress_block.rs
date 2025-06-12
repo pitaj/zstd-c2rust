@@ -1068,7 +1068,7 @@ unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
 ) {
-    libc::memcpy(dst, src, 8 as usize);
+    libc::memcpy(dst, src, 8);
 }
 unsafe extern "C" fn ZSTD_copy16(
     mut dst: *mut std::ffi::c_void,
@@ -1127,7 +1127,7 @@ unsafe extern "C" fn ZSTD_copy4(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
 ) {
-    libc::memcpy(dst, src, 4 as usize);
+    libc::memcpy(dst, src, 4);
 }
 unsafe extern "C" fn ZSTD_blockSizeMax(mut dctx: *const ZSTD_DCtx) -> usize {
     let blockSizeMax = (if (*dctx).isFrameDecompression != 0 {

@@ -1332,13 +1332,13 @@ unsafe extern "C" fn HUF_flushBits(
 }
 unsafe extern "C" fn HUF_endMark() -> HUF_CElt {
     let mut endMark: HUF_CElt = 0;
-    HUF_setNbBits(&mut endMark, 1 as usize);
-    HUF_setValue(&mut endMark, 1 as usize);
+    HUF_setNbBits(&mut endMark, 1);
+    HUF_setValue(&mut endMark, 1);
     return endMark;
 }
 unsafe extern "C" fn HUF_closeCStream(mut bitC: *mut HUF_CStream_t) -> usize {
-    HUF_addBits(bitC, HUF_endMark(), 0, 0 as std::ffi::c_int);
-    HUF_flushBits(bitC, 0 as std::ffi::c_int);
+    HUF_addBits(bitC, HUF_endMark(), 0, 0);
+    HUF_flushBits(bitC, 0);
     let nbBits = (*bitC).bitPos[0 as usize]
         & 0xff as std::ffi::c_int as usize;
     if (*bitC).ptr >= (*bitC).endPtr {

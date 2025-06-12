@@ -1926,7 +1926,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if nbThreads > 1 {
-        pool = POOL_create(nbThreads as usize, 1 as usize);
+        pool = POOL_create(nbThreads as usize, 1);
         if pool.is_null() {
             return -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
         }

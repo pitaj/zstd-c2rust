@@ -444,7 +444,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
     mut ptr: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash4(MEM_readLE32(ptr), h, 0 as u32) as usize;
+    return ZSTD_hash4(MEM_readLE32(ptr), h, 0) as usize;
 }
 unsafe extern "C" fn ZSTD_hash4PtrS(
     mut ptr: *const std::ffi::c_void,
@@ -462,7 +462,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash5(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash5(MEM_readLE64(p), h, 0);
 }
 unsafe extern "C" fn ZSTD_hash5PtrS(
     mut p: *const std::ffi::c_void,
@@ -480,7 +480,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash6(MEM_readLE64(p), h, 0);
 }
 unsafe extern "C" fn ZSTD_hash6PtrS(
     mut p: *const std::ffi::c_void,
@@ -498,7 +498,7 @@ unsafe extern "C" fn ZSTD_hash7Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash7(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash7(MEM_readLE64(p), h, 0);
 }
 unsafe extern "C" fn ZSTD_hash7PtrS(
     mut p: *const std::ffi::c_void,
@@ -515,7 +515,7 @@ unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash8(MEM_readLE64(p), h, 0);
 }
 unsafe extern "C" fn ZSTD_hash8PtrS(
     mut p: *const std::ffi::c_void,
@@ -604,7 +604,7 @@ unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
 ) {
-    libc::memcpy(dst, src, 8 as usize);
+    libc::memcpy(dst, src, 8);
 }
 unsafe extern "C" fn ZSTD_copy16(
     mut dst: *mut std::ffi::c_void,
@@ -1927,7 +1927,7 @@ pub unsafe extern "C" fn ZSTD_row_update(
     } else {
         6 as std::ffi::c_uint
     };
-    ZSTD_row_update_internal(ms, ip, mls, rowLog, rowMask, 0 as u32);
+    ZSTD_row_update_internal(ms, ip, mls, rowLog, rowMask, 0);
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_row_matchMaskGroupWidth(rowEntries: u32) -> u32 {
