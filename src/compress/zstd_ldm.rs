@@ -1419,8 +1419,8 @@ unsafe extern "C" fn ZSTD_ldm_countBackwardsMatch(
 ) -> usize {
     let mut matchLength: usize = 0;
     while pIn > pAnchor && pMatch > pMatchBase
-        && *pIn.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
-            == *pMatch.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
+        && *pIn.offset(-1) as std::ffi::c_int
+            == *pMatch.offset(-1) as std::ffi::c_int
     {
         pIn = pIn.offset(-1);
         pIn;

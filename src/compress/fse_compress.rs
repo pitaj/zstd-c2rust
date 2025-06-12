@@ -379,8 +379,8 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
     {
         return -(ZSTD_error_tableLog_tooLarge as std::ffi::c_int) as usize;
     }
-    *tableU16.offset(-(2 as std::ffi::c_int) as isize) = tableLog as u16;
-    *tableU16.offset(-(1 as std::ffi::c_int) as isize) = maxSymbolValue as u16;
+    *tableU16.offset(-2) = tableLog as u16;
+    *tableU16.offset(-1) = maxSymbolValue as u16;
     let mut u: u32 = 0;
     *cumul.offset(0) = 0;
     u = 1;
@@ -1025,8 +1025,8 @@ pub unsafe extern "C" fn FSE_buildCTable_rle(
     let mut FSCTptr = (ptr as *mut u32).offset(2)
         as *mut std::ffi::c_void;
     let mut symbolTT = FSCTptr as *mut FSE_symbolCompressionTransform;
-    *tableU16.offset(-(2 as std::ffi::c_int) as isize) = 0;
-    *tableU16.offset(-(1 as std::ffi::c_int) as isize) = symbolValue as u16;
+    *tableU16.offset(-2) = 0;
+    *tableU16.offset(-1) = symbolValue as u16;
     *tableU16.offset(0) = 0;
     *tableU16.offset(1) = 0;
     (*symbolTT.offset(symbolValue as isize)).deltaNbBits = 0;

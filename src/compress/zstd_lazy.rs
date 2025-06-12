@@ -4281,13 +4281,13 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                             .offset(
                                                 -(offBase.wrapping_sub(ZSTD_REP_NUM as usize) as isize),
                                             ) > prefixLowest) as std::ffi::c_int != 0
-                                        && *start.offset(-(1 as std::ffi::c_int) as isize)
+                                        && *start.offset(-1)
                                             as std::ffi::c_int
                                             == *start
                                                 .offset(
                                                     -(offBase.wrapping_sub(ZSTD_REP_NUM as usize) as isize),
                                                 )
-                                                .offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
+                                                .offset(-1) as std::ffi::c_int
                                     {
                                         start = start.offset(-1);
                                         start;
@@ -4313,9 +4313,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                         prefixLowest
                                     };
                                     while start > anchor && match_0 > mStart
-                                        && *start.offset(-(1 as std::ffi::c_int) as isize)
+                                        && *start.offset(-1)
                                             as std::ffi::c_int
-                                            == *match_0.offset(-(1 as std::ffi::c_int) as isize)
+                                            == *match_0.offset(-1)
                                                 as std::ffi::c_int
                                     {
                                         start = start.offset(-1);
@@ -5159,9 +5159,9 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
                             prefixStart
                         };
                         while start > anchor && match_0 > mStart
-                            && *start.offset(-(1 as std::ffi::c_int) as isize)
+                            && *start.offset(-1)
                                 as std::ffi::c_int
-                                == *match_0.offset(-(1 as std::ffi::c_int) as isize)
+                                == *match_0.offset(-1)
                                     as std::ffi::c_int
                         {
                             start = start.offset(-1);
