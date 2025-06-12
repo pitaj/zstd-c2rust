@@ -211,7 +211,7 @@ unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
@@ -697,7 +697,7 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCDict(
             let lgHashAndTag = ZSTD_hashPtr(
                 ip.offset(i as isize) as *const std::ffi::c_void,
                 hBitsL,
-                8 as std::ffi::c_int as u32,
+                8,
             );
             if i == 0 {
                 ZSTD_writeTaggedIndex(hashSmall, smHashAndTag, curr.wrapping_add(i));
@@ -750,7 +750,7 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCCtx(
             let lgHash = ZSTD_hashPtr(
                 ip.offset(i as isize) as *const std::ffi::c_void,
                 hBitsL,
-                8 as std::ffi::c_int as u32,
+                8,
             );
             if i == 0 {
                 *hashSmall.offset(smHash as isize) = curr.wrapping_add(i);
@@ -871,7 +871,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                 hl0 = ZSTD_hashPtr(
                     ip as *const std::ffi::c_void,
                     hBitsL,
-                    8 as std::ffi::c_int as u32,
+                    8,
                 );
                 idxl0 = *hashLong.offset(hl0 as isize);
                 matchl0 = base.offset(idxl0 as isize);
@@ -921,7 +921,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                         hl1 = ZSTD_hashPtr(
                             ip1 as *const std::ffi::c_void,
                             hBitsL,
-                            8 as std::ffi::c_int as u32,
+                            8,
                         );
                         let matchl0_safe = ZSTD_selectAddr(
                             idxl0,
@@ -1068,7 +1068,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                         base.offset(indexToInsert as isize)
                                             as *const std::ffi::c_void,
                                         hBitsL,
-                                        8 as std::ffi::c_int as u32,
+                                        8,
                                     ) as isize,
                                 ) = indexToInsert;
                             *hashLong
@@ -1077,7 +1077,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                         ip.offset(-2_isize)
                                             as *const std::ffi::c_void,
                                         hBitsL,
-                                        8 as std::ffi::c_int as u32,
+                                        8,
                                     ) as isize,
                                 ) = ip
                                 .offset(-2_isize)
@@ -1131,12 +1131,12 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                         ZSTD_hashPtr(
                                             ip as *const std::ffi::c_void,
                                             hBitsL,
-                                            8 as std::ffi::c_int as u32,
+                                            8,
                                         ) as isize,
                                     ) = ip.offset_from(base) as std::ffi::c_long as u32;
                                 ZSTD_storeSeq(
                                     seqStore,
-                                    0 as std::ffi::c_int as usize,
+                                    0,
                                     anchor,
                                     iend,
                                     REPCODE1_TO_OFFBASE as u32,
@@ -1159,11 +1159,11 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
             };
             *rep
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = if offset_1 != 0 { offset_1 } else { offsetSaved1 };
             *rep
                 .offset(
-                    1 as std::ffi::c_int as isize,
+                    1,
                 ) = if offset_2 != 0 { offset_2 } else { offsetSaved2 };
             return iend.offset_from(anchor) as std::ffi::c_long as usize;
         }
@@ -1248,13 +1248,13 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
         let h2 = ZSTD_hashPtr(
             ip as *const std::ffi::c_void,
             hBitsL,
-            8 as std::ffi::c_int as u32,
+            8,
         );
         let h = ZSTD_hashPtr(ip as *const std::ffi::c_void, hBitsS, mls);
         let dictHashAndTagL = ZSTD_hashPtr(
             ip as *const std::ffi::c_void,
             dictHBitsL,
-            8 as std::ffi::c_int as u32,
+            8,
         );
         let dictHashAndTagS = ZSTD_hashPtr(
             ip as *const std::ffi::c_void,
@@ -1428,13 +1428,13 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                     ip.offset(1)
                                         as *const std::ffi::c_void,
                                     hBitsL,
-                                    8 as std::ffi::c_int as u32,
+                                    8,
                                 );
                                 let dictHashAndTagL3 = ZSTD_hashPtr(
                                     ip.offset(1)
                                         as *const std::ffi::c_void,
                                     dictHBitsL,
-                                    8 as std::ffi::c_int as u32,
+                                    8,
                                 );
                                 let matchIndexL3 = *hashLong.offset(hl3 as isize);
                                 let dictMatchIndexAndTagL3 = *dictHashLong
@@ -1608,7 +1608,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                     ZSTD_hashPtr(
                         base.offset(indexToInsert as isize) as *const std::ffi::c_void,
                         hBitsL,
-                        8 as std::ffi::c_int as u32,
+                        8,
                     ) as isize,
                 ) = indexToInsert;
             *hashLong
@@ -1617,7 +1617,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                         ip.offset(-2_isize)
                             as *const std::ffi::c_void,
                         hBitsL,
-                        8 as std::ffi::c_int as u32,
+                        8,
                     ) as isize,
                 ) = ip.offset(-2_isize).offset_from(base)
                 as std::ffi::c_long as u32;
@@ -1669,7 +1669,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                 offset_1 = tmpOffset;
                 ZSTD_storeSeq(
                     seqStore,
-                    0 as std::ffi::c_int as usize,
+                    0,
                     anchor,
                     iend,
                     REPCODE1_TO_OFFBASE as u32,
@@ -1684,7 +1684,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                         ZSTD_hashPtr(
                             ip as *const std::ffi::c_void,
                             hBitsL,
-                            8 as std::ffi::c_int as u32,
+                            8,
                         ) as isize,
                     ) = current2;
                 ip = ip.offset(repLength2 as isize);
@@ -1709,7 +1709,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_4(
         rep,
         src,
         srcSize,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_5(
@@ -1725,7 +1725,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_5(
         rep,
         src,
         srcSize,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_6(
@@ -1741,7 +1741,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_6(
         rep,
         src,
         srcSize,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_7(
@@ -1757,7 +1757,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_7(
         rep,
         src,
         srcSize,
-        7 as std::ffi::c_int as u32,
+        7,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_4(
@@ -1773,7 +1773,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_4(
         rep,
         src,
         srcSize,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_5(
@@ -1789,7 +1789,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_5(
         rep,
         src,
         srcSize,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_6(
@@ -1805,7 +1805,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_6(
         rep,
         src,
         srcSize,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_7(
@@ -1821,7 +1821,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_7(
         rep,
         src,
         srcSize,
-        7 as std::ffi::c_int as u32,
+        7,
     );
 }
 #[no_mangle]
@@ -1962,7 +1962,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
         let hLong = ZSTD_hashPtr(
             ip as *const std::ffi::c_void,
             hBitsL,
-            8 as std::ffi::c_int as u32,
+            8,
         );
         let matchLongIndex = *hashLong.offset(hLong as isize);
         let matchLongBase = if matchLongIndex < prefixStartIndex {
@@ -2070,7 +2070,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
             let h3 = ZSTD_hashPtr(
                 ip.offset(1) as *const std::ffi::c_void,
                 hBitsL,
-                8 as std::ffi::c_int as u32,
+                8,
             );
             let matchIndex3 = *hashLong.offset(h3 as isize);
             let match3Base = if matchIndex3 < prefixStartIndex {
@@ -2186,7 +2186,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                     ZSTD_hashPtr(
                         base.offset(indexToInsert as isize) as *const std::ffi::c_void,
                         hBitsL,
-                        8 as std::ffi::c_int as u32,
+                        8,
                     ) as isize,
                 ) = indexToInsert;
             *hashLong
@@ -2195,7 +2195,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                         ip.offset(-2_isize)
                             as *const std::ffi::c_void,
                         hBitsL,
-                        8 as std::ffi::c_int as u32,
+                        8,
                     ) as isize,
                 ) = ip.offset(-2_isize).offset_from(base)
                 as std::ffi::c_long as u32;
@@ -2247,7 +2247,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 offset_1 = tmpOffset;
                 ZSTD_storeSeq(
                     seqStore,
-                    0 as std::ffi::c_int as usize,
+                    0,
                     anchor,
                     iend,
                     REPCODE1_TO_OFFBASE as u32,
@@ -2262,7 +2262,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                         ZSTD_hashPtr(
                             ip as *const std::ffi::c_void,
                             hBitsL,
-                            8 as std::ffi::c_int as u32,
+                            8,
                         ) as isize,
                     ) = current2;
                 ip = ip.offset(repLength2 as isize);
@@ -2287,7 +2287,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_4(
         rep,
         src,
         srcSize,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_5(
@@ -2303,7 +2303,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_5(
         rep,
         src,
         srcSize,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_6(
@@ -2319,7 +2319,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_6(
         rep,
         src,
         srcSize,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_7(
@@ -2335,7 +2335,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_7(
         rep,
         src,
         srcSize,
-        7 as std::ffi::c_int as u32,
+        7,
     );
 }
 #[no_mangle]

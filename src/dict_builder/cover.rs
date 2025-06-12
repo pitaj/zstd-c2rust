@@ -344,7 +344,7 @@ pub struct COVER_dictSelection {
 pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
@@ -409,10 +409,10 @@ unsafe extern "C" fn COVER_map_init(
     if ((*map).data).is_null() {
         (*map).sizeLog = 0;
         (*map).size = 0;
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     COVER_map_clear(map);
-    return 1 as std::ffi::c_int;
+    return 1;
 }
 static mut COVER_prime4bytes: u32 = 2654435761;
 unsafe extern "C" fn COVER_map_hash(mut map: *mut COVER_map_t, mut key: u32) -> u32 {
@@ -589,7 +589,7 @@ unsafe extern "C" fn COVER_lower_bound(
 ) -> *const usize {
     let mut count = last.offset_from(first) as std::ffi::c_long as usize;
     while count != 0 {
-        let mut step = count / 2 as std::ffi::c_int as usize;
+        let mut step = count / 2;
         let mut ptr = first;
         ptr = ptr.offset(step as isize);
         if *ptr < value {
@@ -692,9 +692,9 @@ unsafe extern "C" fn COVER_selectSegment(
     let dmersInK = k.wrapping_sub(d).wrapping_add(1);
     let mut bestSegment = {
         let mut init = COVER_segment_t {
-            begin: 0 as std::ffi::c_int as u32,
-            end: 0 as std::ffi::c_int as u32,
-            score: 0 as std::ffi::c_int as u32,
+            begin: 0,
+            end: 0,
+            score: 0,
         };
         init
     };
@@ -771,20 +771,20 @@ unsafe extern "C" fn COVER_checkParameters(
     if parameters.d == 0
         || parameters.k == 0
     {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if parameters.k as usize > maxDictSize {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if parameters.d > parameters.k {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if parameters.splitPoint <= 0
         || parameters.splitPoint > 1
     {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
-    return 1 as std::ffi::c_int;
+    return 1;
 }
 unsafe extern "C" fn COVER_ctx_destroy(mut ctx: *mut COVER_ctx_t) {
     if ctx.is_null() {
@@ -901,7 +901,7 @@ unsafe extern "C" fn COVER_ctx_init(
     }
     libc::memset(
         ctx as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<COVER_ctx_t>(),
     );
     if displayLevel >= 2 {
@@ -1048,7 +1048,7 @@ unsafe extern "C" fn COVER_ctx_init(
     );
     (*ctx).freqs = (*ctx).suffix;
     (*ctx).suffix = NULL as *mut u32;
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 #[no_mangle]
 pub unsafe extern "C" fn COVER_warnOnSmallCorpus(
@@ -1079,7 +1079,7 @@ pub unsafe extern "C" fn COVER_computeEpochs(
     mut k: u32,
     mut passes: u32,
 ) -> COVER_epoch_info_t {
-    let minEpochSize = k * 10 as std::ffi::c_int as u32;
+    let minEpochSize = k * 10;
     let mut epochs = COVER_epoch_info_t {
         num: 0,
         size: 0,
@@ -1112,7 +1112,7 @@ unsafe extern "C" fn COVER_buildDictionary(
         dictBufferCapacity as u32,
         (*ctx).suffixSize as u32,
         parameters.k,
-        4 as std::ffi::c_int as u32,
+        4,
     );
     let maxZeroScoreRun = (if 10 as std::ffi::c_int as u32
         > (if 100_u32 < epochs.num >> 3 {
@@ -1186,7 +1186,7 @@ unsafe extern "C" fn COVER_buildDictionary(
             if displayLevel >= 2 {
                 let refreshRate = CLOCKS_PER_SEC as __clock_t
                     * 15 as std::ffi::c_int as __clock_t
-                    / 100 as std::ffi::c_int as __clock_t;
+                    / 100;
                 if clock() - lastUpdateTime > refreshRate
                     || displayLevel >= 4
                 {
@@ -1274,7 +1274,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
                 stderr,
                 b"dictBufferCapacity must be at least %u\n\0" as *const u8
                     as *const std::ffi::c_char,
-                256 as std::ffi::c_int,
+                256,
             );
             fflush(stderr);
         }
@@ -1438,7 +1438,7 @@ pub unsafe extern "C" fn COVER_best_init(mut best: *mut COVER_best_t) {
     (*best).compressedSize = -(1 as std::ffi::c_int) as usize;
     libc::memset(
         &mut (*best).parameters as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
     );
 }
@@ -1538,7 +1538,7 @@ unsafe extern "C" fn setDictSelection(
 pub unsafe extern "C" fn COVER_dictSelectionError(
     mut error: usize,
 ) -> COVER_dictSelection_t {
-    return setDictSelection(NULL as *mut u8, 0 as std::ffi::c_int as usize, error);
+    return setDictSelection(NULL as *mut u8, 0, error);
 }
 #[no_mangle]
 pub unsafe extern "C" fn COVER_dictSelectionIsError(
@@ -1666,7 +1666,7 @@ pub unsafe extern "C" fn COVER_selectDict(
                 totalCompressedSize,
             );
         }
-        dictContentSize = dictContentSize * 2 as std::ffi::c_int as usize;
+        dictContentSize = dictContentSize * 2;
     }
     dictContentSize = largestDict;
     totalCompressedSize = largestCompressed;
@@ -1919,7 +1919,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                 stderr,
                 b"dictBufferCapacity must be at least %u\n\0" as *const u8
                     as *const std::ffi::c_char,
-                256 as std::ffi::c_int,
+                256,
             );
             fflush(stderr);
         }
@@ -2055,7 +2055,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                 if displayLevel >= 2 {
                     let refreshRate = CLOCKS_PER_SEC as __clock_t
                         * 15 as std::ffi::c_int as __clock_t
-                        / 100 as std::ffi::c_int as __clock_t;
+                        / 100;
                     if clock() - lastUpdateTime > refreshRate
                         || displayLevel >= 4
                     {

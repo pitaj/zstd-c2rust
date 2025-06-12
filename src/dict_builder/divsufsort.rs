@@ -52,261 +52,261 @@ pub const SS_BLOCKSIZE: std::ffi::c_int = 1024;
 pub const TR_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8;
 static mut lg_table: [std::ffi::c_int; 256] = [
     -(1 as std::ffi::c_int),
-    0 as std::ffi::c_int,
-    1 as std::ffi::c_int,
-    1 as std::ffi::c_int,
-    2 as std::ffi::c_int,
-    2 as std::ffi::c_int,
-    2 as std::ffi::c_int,
-    2 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    3 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    4 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    5 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    6 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
-    7 as std::ffi::c_int,
+    0,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
 ];
 #[inline]
 unsafe extern "C" fn ss_ilg(mut n: std::ffi::c_int) -> std::ffi::c_int {
@@ -319,262 +319,262 @@ unsafe extern "C" fn ss_ilg(mut n: std::ffi::c_int) -> std::ffi::c_int {
     };
 }
 static mut sqq_table: [std::ffi::c_int; 256] = [
-    0 as std::ffi::c_int,
-    16 as std::ffi::c_int,
-    22 as std::ffi::c_int,
-    27 as std::ffi::c_int,
-    32 as std::ffi::c_int,
-    35 as std::ffi::c_int,
-    39 as std::ffi::c_int,
-    42 as std::ffi::c_int,
-    45 as std::ffi::c_int,
-    48 as std::ffi::c_int,
-    50 as std::ffi::c_int,
-    53 as std::ffi::c_int,
-    55 as std::ffi::c_int,
-    57 as std::ffi::c_int,
-    59 as std::ffi::c_int,
-    61 as std::ffi::c_int,
-    64 as std::ffi::c_int,
-    65 as std::ffi::c_int,
-    67 as std::ffi::c_int,
-    69 as std::ffi::c_int,
-    71 as std::ffi::c_int,
-    73 as std::ffi::c_int,
-    75 as std::ffi::c_int,
-    76 as std::ffi::c_int,
-    78 as std::ffi::c_int,
-    80 as std::ffi::c_int,
-    81 as std::ffi::c_int,
-    83 as std::ffi::c_int,
-    84 as std::ffi::c_int,
-    86 as std::ffi::c_int,
-    87 as std::ffi::c_int,
-    89 as std::ffi::c_int,
-    90 as std::ffi::c_int,
-    91 as std::ffi::c_int,
-    93 as std::ffi::c_int,
-    94 as std::ffi::c_int,
-    96 as std::ffi::c_int,
-    97 as std::ffi::c_int,
-    98 as std::ffi::c_int,
-    99 as std::ffi::c_int,
-    101 as std::ffi::c_int,
-    102 as std::ffi::c_int,
-    103 as std::ffi::c_int,
-    104 as std::ffi::c_int,
-    106 as std::ffi::c_int,
-    107 as std::ffi::c_int,
-    108 as std::ffi::c_int,
-    109 as std::ffi::c_int,
-    110 as std::ffi::c_int,
-    112 as std::ffi::c_int,
-    113 as std::ffi::c_int,
-    114 as std::ffi::c_int,
-    115 as std::ffi::c_int,
-    116 as std::ffi::c_int,
-    117 as std::ffi::c_int,
-    118 as std::ffi::c_int,
-    119 as std::ffi::c_int,
-    120 as std::ffi::c_int,
-    121 as std::ffi::c_int,
-    122 as std::ffi::c_int,
-    123 as std::ffi::c_int,
-    124 as std::ffi::c_int,
-    125 as std::ffi::c_int,
-    126 as std::ffi::c_int,
-    128 as std::ffi::c_int,
-    128 as std::ffi::c_int,
-    129 as std::ffi::c_int,
-    130 as std::ffi::c_int,
-    131 as std::ffi::c_int,
-    132 as std::ffi::c_int,
-    133 as std::ffi::c_int,
-    134 as std::ffi::c_int,
-    135 as std::ffi::c_int,
-    136 as std::ffi::c_int,
-    137 as std::ffi::c_int,
-    138 as std::ffi::c_int,
-    139 as std::ffi::c_int,
-    140 as std::ffi::c_int,
-    141 as std::ffi::c_int,
-    142 as std::ffi::c_int,
-    143 as std::ffi::c_int,
-    144 as std::ffi::c_int,
-    144 as std::ffi::c_int,
-    145 as std::ffi::c_int,
-    146 as std::ffi::c_int,
-    147 as std::ffi::c_int,
-    148 as std::ffi::c_int,
-    149 as std::ffi::c_int,
-    150 as std::ffi::c_int,
-    150 as std::ffi::c_int,
-    151 as std::ffi::c_int,
-    152 as std::ffi::c_int,
-    153 as std::ffi::c_int,
-    154 as std::ffi::c_int,
-    155 as std::ffi::c_int,
-    155 as std::ffi::c_int,
-    156 as std::ffi::c_int,
-    157 as std::ffi::c_int,
-    158 as std::ffi::c_int,
-    159 as std::ffi::c_int,
-    160 as std::ffi::c_int,
-    160 as std::ffi::c_int,
-    161 as std::ffi::c_int,
-    162 as std::ffi::c_int,
-    163 as std::ffi::c_int,
-    163 as std::ffi::c_int,
-    164 as std::ffi::c_int,
-    165 as std::ffi::c_int,
-    166 as std::ffi::c_int,
-    167 as std::ffi::c_int,
-    167 as std::ffi::c_int,
-    168 as std::ffi::c_int,
-    169 as std::ffi::c_int,
-    170 as std::ffi::c_int,
-    170 as std::ffi::c_int,
-    171 as std::ffi::c_int,
-    172 as std::ffi::c_int,
-    173 as std::ffi::c_int,
-    173 as std::ffi::c_int,
-    174 as std::ffi::c_int,
-    175 as std::ffi::c_int,
-    176 as std::ffi::c_int,
-    176 as std::ffi::c_int,
-    177 as std::ffi::c_int,
-    178 as std::ffi::c_int,
-    178 as std::ffi::c_int,
-    179 as std::ffi::c_int,
-    180 as std::ffi::c_int,
-    181 as std::ffi::c_int,
-    181 as std::ffi::c_int,
-    182 as std::ffi::c_int,
-    183 as std::ffi::c_int,
-    183 as std::ffi::c_int,
-    184 as std::ffi::c_int,
-    185 as std::ffi::c_int,
-    185 as std::ffi::c_int,
-    186 as std::ffi::c_int,
-    187 as std::ffi::c_int,
-    187 as std::ffi::c_int,
-    188 as std::ffi::c_int,
-    189 as std::ffi::c_int,
-    189 as std::ffi::c_int,
-    190 as std::ffi::c_int,
-    191 as std::ffi::c_int,
-    192 as std::ffi::c_int,
-    192 as std::ffi::c_int,
-    193 as std::ffi::c_int,
-    193 as std::ffi::c_int,
-    194 as std::ffi::c_int,
-    195 as std::ffi::c_int,
-    195 as std::ffi::c_int,
-    196 as std::ffi::c_int,
-    197 as std::ffi::c_int,
-    197 as std::ffi::c_int,
-    198 as std::ffi::c_int,
-    199 as std::ffi::c_int,
-    199 as std::ffi::c_int,
-    200 as std::ffi::c_int,
-    201 as std::ffi::c_int,
-    201 as std::ffi::c_int,
-    202 as std::ffi::c_int,
-    203 as std::ffi::c_int,
-    203 as std::ffi::c_int,
-    204 as std::ffi::c_int,
-    204 as std::ffi::c_int,
-    205 as std::ffi::c_int,
-    206 as std::ffi::c_int,
-    206 as std::ffi::c_int,
-    207 as std::ffi::c_int,
-    208 as std::ffi::c_int,
-    208 as std::ffi::c_int,
-    209 as std::ffi::c_int,
-    209 as std::ffi::c_int,
-    210 as std::ffi::c_int,
-    211 as std::ffi::c_int,
-    211 as std::ffi::c_int,
-    212 as std::ffi::c_int,
-    212 as std::ffi::c_int,
-    213 as std::ffi::c_int,
-    214 as std::ffi::c_int,
-    214 as std::ffi::c_int,
-    215 as std::ffi::c_int,
-    215 as std::ffi::c_int,
-    216 as std::ffi::c_int,
-    217 as std::ffi::c_int,
-    217 as std::ffi::c_int,
-    218 as std::ffi::c_int,
-    218 as std::ffi::c_int,
-    219 as std::ffi::c_int,
-    219 as std::ffi::c_int,
-    220 as std::ffi::c_int,
-    221 as std::ffi::c_int,
-    221 as std::ffi::c_int,
-    222 as std::ffi::c_int,
-    222 as std::ffi::c_int,
-    223 as std::ffi::c_int,
-    224 as std::ffi::c_int,
-    224 as std::ffi::c_int,
-    225 as std::ffi::c_int,
-    225 as std::ffi::c_int,
-    226 as std::ffi::c_int,
-    226 as std::ffi::c_int,
-    227 as std::ffi::c_int,
-    227 as std::ffi::c_int,
-    228 as std::ffi::c_int,
-    229 as std::ffi::c_int,
-    229 as std::ffi::c_int,
-    230 as std::ffi::c_int,
-    230 as std::ffi::c_int,
-    231 as std::ffi::c_int,
-    231 as std::ffi::c_int,
-    232 as std::ffi::c_int,
-    232 as std::ffi::c_int,
-    233 as std::ffi::c_int,
-    234 as std::ffi::c_int,
-    234 as std::ffi::c_int,
-    235 as std::ffi::c_int,
-    235 as std::ffi::c_int,
-    236 as std::ffi::c_int,
-    236 as std::ffi::c_int,
-    237 as std::ffi::c_int,
-    237 as std::ffi::c_int,
-    238 as std::ffi::c_int,
-    238 as std::ffi::c_int,
-    239 as std::ffi::c_int,
-    240 as std::ffi::c_int,
-    240 as std::ffi::c_int,
-    241 as std::ffi::c_int,
-    241 as std::ffi::c_int,
-    242 as std::ffi::c_int,
-    242 as std::ffi::c_int,
-    243 as std::ffi::c_int,
-    243 as std::ffi::c_int,
-    244 as std::ffi::c_int,
-    244 as std::ffi::c_int,
-    245 as std::ffi::c_int,
-    245 as std::ffi::c_int,
-    246 as std::ffi::c_int,
-    246 as std::ffi::c_int,
-    247 as std::ffi::c_int,
-    247 as std::ffi::c_int,
-    248 as std::ffi::c_int,
-    248 as std::ffi::c_int,
-    249 as std::ffi::c_int,
-    249 as std::ffi::c_int,
-    250 as std::ffi::c_int,
-    250 as std::ffi::c_int,
-    251 as std::ffi::c_int,
-    251 as std::ffi::c_int,
-    252 as std::ffi::c_int,
-    252 as std::ffi::c_int,
-    253 as std::ffi::c_int,
-    253 as std::ffi::c_int,
-    254 as std::ffi::c_int,
-    254 as std::ffi::c_int,
-    255 as std::ffi::c_int,
+    0,
+    16,
+    22,
+    27,
+    32,
+    35,
+    39,
+    42,
+    45,
+    48,
+    50,
+    53,
+    55,
+    57,
+    59,
+    61,
+    64,
+    65,
+    67,
+    69,
+    71,
+    73,
+    75,
+    76,
+    78,
+    80,
+    81,
+    83,
+    84,
+    86,
+    87,
+    89,
+    90,
+    91,
+    93,
+    94,
+    96,
+    97,
+    98,
+    99,
+    101,
+    102,
+    103,
+    104,
+    106,
+    107,
+    108,
+    109,
+    110,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    128,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    160,
+    161,
+    162,
+    163,
+    163,
+    164,
+    165,
+    166,
+    167,
+    167,
+    168,
+    169,
+    170,
+    170,
+    171,
+    172,
+    173,
+    173,
+    174,
+    175,
+    176,
+    176,
+    177,
+    178,
+    178,
+    179,
+    180,
+    181,
+    181,
+    182,
+    183,
+    183,
+    184,
+    185,
+    185,
+    186,
+    187,
+    187,
+    188,
+    189,
+    189,
+    190,
+    191,
+    192,
+    192,
+    193,
+    193,
+    194,
+    195,
+    195,
+    196,
+    197,
+    197,
+    198,
+    199,
+    199,
+    200,
+    201,
+    201,
+    202,
+    203,
+    203,
+    204,
+    204,
+    205,
+    206,
+    206,
+    207,
+    208,
+    208,
+    209,
+    209,
+    210,
+    211,
+    211,
+    212,
+    212,
+    213,
+    214,
+    214,
+    215,
+    215,
+    216,
+    217,
+    217,
+    218,
+    218,
+    219,
+    219,
+    220,
+    221,
+    221,
+    222,
+    222,
+    223,
+    224,
+    224,
+    225,
+    225,
+    226,
+    226,
+    227,
+    227,
+    228,
+    229,
+    229,
+    230,
+    230,
+    231,
+    231,
+    232,
+    232,
+    233,
+    234,
+    234,
+    235,
+    235,
+    236,
+    236,
+    237,
+    237,
+    238,
+    238,
+    239,
+    240,
+    240,
+    241,
+    241,
+    242,
+    242,
+    243,
+    243,
+    244,
+    244,
+    245,
+    245,
+    246,
+    246,
+    247,
+    247,
+    248,
+    248,
+    249,
+    249,
+    250,
+    250,
+    251,
+    251,
+    252,
+    252,
+    253,
+    253,
+    254,
+    254,
+    255,
 ];
 #[inline]
 unsafe extern "C" fn ss_isqrt(mut x: std::ffi::c_int) -> std::ffi::c_int {
@@ -602,7 +602,7 @@ unsafe extern "C" fn ss_isqrt(mut x: std::ffi::c_int) -> std::ffi::c_int {
     };
     if e >= 16 {
         y = sqq_table[(x >> e - 6 as std::ffi::c_int - (e & 1 as std::ffi::c_int))
-            as usize] << (e >> 1) - 7 as std::ffi::c_int;
+            as usize] << (e >> 1) - 7;
         if e >= 24 {
             y = y + 1 as std::ffi::c_int + x / y >> 1;
         }
@@ -610,7 +610,7 @@ unsafe extern "C" fn ss_isqrt(mut x: std::ffi::c_int) -> std::ffi::c_int {
     } else if e >= 8 {
         y = (sqq_table[(x >> e - 6 as std::ffi::c_int - (e & 1 as std::ffi::c_int))
             as usize] >> 7 - (e >> 1))
-            + 1 as std::ffi::c_int;
+            + 1;
     } else {
         return sqq_table[x as usize] >> 4
     }
@@ -709,7 +709,7 @@ unsafe extern "C" fn ss_fixdown(
     v = *SA.offset(i as isize);
     c = *Td.offset(*PA.offset(v as isize) as isize) as std::ffi::c_int;
     loop {
-        j = 2 as std::ffi::c_int * i + 1 as std::ffi::c_int;
+        j = 2 as std::ffi::c_int * i + 1;
         if !(j < size) {
             break;
         }
@@ -758,7 +758,7 @@ unsafe extern "C" fn ss_heapsort(
             *SA.offset((m / 2 as std::ffi::c_int) as isize) = t;
         }
     }
-    i = m / 2 as std::ffi::c_int - 1 as std::ffi::c_int;
+    i = m / 2 as std::ffi::c_int - 1;
     while 0 as std::ffi::c_int <= i {
         ss_fixdown(Td, PA, SA, i, m);
         i -= 1;
@@ -768,13 +768,13 @@ unsafe extern "C" fn ss_heapsort(
         t = *SA.offset(0);
         *SA.offset(0) = *SA.offset(m as isize);
         *SA.offset(m as isize) = t;
-        ss_fixdown(Td, PA, SA, 0 as std::ffi::c_int, m);
+        ss_fixdown(Td, PA, SA, 0, m);
     }
-    i = m - 1 as std::ffi::c_int;
+    i = m - 1;
     while (0 as std::ffi::c_int) < i {
         t = *SA.offset(0);
         *SA.offset(0) = *SA.offset(i as isize);
-        ss_fixdown(Td, PA, SA, 0 as std::ffi::c_int, i);
+        ss_fixdown(Td, PA, SA, 0, i);
         *SA.offset(i as isize) = t;
         i -= 1;
         i;
@@ -1015,7 +1015,7 @@ unsafe extern "C" fn ss_mintrosort(
                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    418 as std::ffi::c_int as std::ffi::c_uint,
+                    418,
                     (*::core::mem::transmute::<
                         &[u8; 74],
                         &[std::ffi::c_char; 74],
@@ -1031,7 +1031,7 @@ unsafe extern "C" fn ss_mintrosort(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        418 as std::ffi::c_int as std::ffi::c_uint,
+                        418,
                         (*::core::mem::transmute::<
                             &[u8; 74],
                             &[std::ffi::c_char; 74],
@@ -1098,7 +1098,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                437 as std::ffi::c_int as std::ffi::c_uint,
+                                437,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1115,7 +1115,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    437 as std::ffi::c_int as std::ffi::c_uint,
+                                    437,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1150,7 +1150,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            444 as std::ffi::c_int as std::ffi::c_uint,
+                            444,
                             (*::core::mem::transmute::<
                                 &[u8; 74],
                                 &[std::ffi::c_char; 74],
@@ -1167,7 +1167,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                444 as std::ffi::c_int as std::ffi::c_uint,
+                                444,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1180,7 +1180,7 @@ unsafe extern "C" fn ss_mintrosort(
                     };
                     stack[ssize as usize].a = first;
                     stack[ssize as usize].b = a;
-                    stack[ssize as usize].c = depth + 1 as std::ffi::c_int;
+                    stack[ssize as usize].c = depth + 1;
                     let fresh3 = ssize;
                     ssize = ssize + 1;
                     stack[fresh3 as usize]
@@ -1378,7 +1378,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    494 as std::ffi::c_int as std::ffi::c_uint,
+                                    494,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1395,7 +1395,7 @@ unsafe extern "C" fn ss_mintrosort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        494 as std::ffi::c_int as std::ffi::c_uint,
+                                        494,
                                         (*::core::mem::transmute::<
                                             &[u8; 74],
                                             &[std::ffi::c_char; 74],
@@ -1408,7 +1408,7 @@ unsafe extern "C" fn ss_mintrosort(
                             };
                             stack[ssize as usize].a = b;
                             stack[ssize as usize].b = c;
-                            stack[ssize as usize].c = depth + 1 as std::ffi::c_int;
+                            stack[ssize as usize].c = depth + 1;
                             let fresh4 = ssize;
                             ssize = ssize + 1;
                             stack[fresh4 as usize]
@@ -1421,7 +1421,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    495 as std::ffi::c_int as std::ffi::c_uint,
+                                    495,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1438,7 +1438,7 @@ unsafe extern "C" fn ss_mintrosort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        495 as std::ffi::c_int as std::ffi::c_uint,
+                                        495,
                                         (*::core::mem::transmute::<
                                             &[u8; 74],
                                             &[std::ffi::c_char; 74],
@@ -1465,7 +1465,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    498 as std::ffi::c_int as std::ffi::c_uint,
+                                    498,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1482,7 +1482,7 @@ unsafe extern "C" fn ss_mintrosort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        498 as std::ffi::c_int as std::ffi::c_uint,
+                                        498,
                                         (*::core::mem::transmute::<
                                             &[u8; 74],
                                             &[std::ffi::c_char; 74],
@@ -1505,7 +1505,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    499 as std::ffi::c_int as std::ffi::c_uint,
+                                    499,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1522,7 +1522,7 @@ unsafe extern "C" fn ss_mintrosort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        499 as std::ffi::c_int as std::ffi::c_uint,
+                                        499,
                                         (*::core::mem::transmute::<
                                             &[u8; 74],
                                             &[std::ffi::c_char; 74],
@@ -1535,7 +1535,7 @@ unsafe extern "C" fn ss_mintrosort(
                             };
                             stack[ssize as usize].a = b;
                             stack[ssize as usize].b = c;
-                            stack[ssize as usize].c = depth + 1 as std::ffi::c_int;
+                            stack[ssize as usize].c = depth + 1;
                             let fresh7 = ssize;
                             ssize = ssize + 1;
                             stack[fresh7 as usize]
@@ -1550,7 +1550,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    502 as std::ffi::c_int as std::ffi::c_uint,
+                                    502,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1567,7 +1567,7 @@ unsafe extern "C" fn ss_mintrosort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        502 as std::ffi::c_int as std::ffi::c_uint,
+                                        502,
                                         (*::core::mem::transmute::<
                                             &[u8; 74],
                                             &[std::ffi::c_char; 74],
@@ -1590,7 +1590,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    503 as std::ffi::c_int as std::ffi::c_uint,
+                                    503,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1607,7 +1607,7 @@ unsafe extern "C" fn ss_mintrosort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        503 as std::ffi::c_int as std::ffi::c_uint,
+                                        503,
                                         (*::core::mem::transmute::<
                                             &[u8; 74],
                                             &[std::ffi::c_char; 74],
@@ -1640,7 +1640,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                508 as std::ffi::c_int as std::ffi::c_uint,
+                                508,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1657,7 +1657,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    508 as std::ffi::c_int as std::ffi::c_uint,
+                                    508,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1670,7 +1670,7 @@ unsafe extern "C" fn ss_mintrosort(
                         };
                         stack[ssize as usize].a = b;
                         stack[ssize as usize].b = c;
-                        stack[ssize as usize].c = depth + 1 as std::ffi::c_int;
+                        stack[ssize as usize].c = depth + 1;
                         let fresh10 = ssize;
                         ssize = ssize + 1;
                         stack[fresh10 as usize]
@@ -1683,7 +1683,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                509 as std::ffi::c_int as std::ffi::c_uint,
+                                509,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1700,7 +1700,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    509 as std::ffi::c_int as std::ffi::c_uint,
+                                    509,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1727,7 +1727,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                512 as std::ffi::c_int as std::ffi::c_uint,
+                                512,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1744,7 +1744,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    512 as std::ffi::c_int as std::ffi::c_uint,
+                                    512,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1767,7 +1767,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                513 as std::ffi::c_int as std::ffi::c_uint,
+                                513,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1784,7 +1784,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    513 as std::ffi::c_int as std::ffi::c_uint,
+                                    513,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1797,7 +1797,7 @@ unsafe extern "C" fn ss_mintrosort(
                         };
                         stack[ssize as usize].a = b;
                         stack[ssize as usize].b = c;
-                        stack[ssize as usize].c = depth + 1 as std::ffi::c_int;
+                        stack[ssize as usize].c = depth + 1;
                         let fresh13 = ssize;
                         ssize = ssize + 1;
                         stack[fresh13 as usize]
@@ -1812,7 +1812,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                516 as std::ffi::c_int as std::ffi::c_uint,
+                                516,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1829,7 +1829,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    516 as std::ffi::c_int as std::ffi::c_uint,
+                                    516,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1852,7 +1852,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                517 as std::ffi::c_int as std::ffi::c_uint,
+                                517,
                                 (*::core::mem::transmute::<
                                     &[u8; 74],
                                     &[std::ffi::c_char; 74],
@@ -1869,7 +1869,7 @@ unsafe extern "C" fn ss_mintrosort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    517 as std::ffi::c_int as std::ffi::c_uint,
+                                    517,
                                     (*::core::mem::transmute::<
                                         &[u8; 74],
                                         &[std::ffi::c_char; 74],
@@ -1964,7 +1964,7 @@ unsafe extern "C" fn ss_rotate(
                 }
                 *a = t;
                 last = a;
-                r -= l + 1 as std::ffi::c_int;
+                r -= l + 1;
                 if r <= l {
                     break;
                 }
@@ -1988,7 +1988,7 @@ unsafe extern "C" fn ss_rotate(
                 }
                 *a = t;
                 first = a.offset(1);
-                l -= r + 1 as std::ffi::c_int;
+                l -= r + 1;
                 if l <= r {
                     break;
                 }
@@ -2037,7 +2037,7 @@ unsafe extern "C" fn ss_inplacemerge(
             );
             if q < 0 {
                 a = b.offset(1);
-                half -= len & 1 as std::ffi::c_int ^ 1 as std::ffi::c_int;
+                half -= len & 1 as std::ffi::c_int ^ 1;
             } else {
                 r = q;
             }
@@ -2452,7 +2452,7 @@ unsafe extern "C" fn ss_swapmerge(
                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    771 as std::ffi::c_int as std::ffi::c_uint,
+                    771,
                     (*::core::mem::transmute::<
                         &[u8; 92],
                         &[std::ffi::c_char; 92],
@@ -2468,7 +2468,7 @@ unsafe extern "C" fn ss_swapmerge(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        771 as std::ffi::c_int as std::ffi::c_uint,
+                        771,
                         (*::core::mem::transmute::<
                             &[u8; 92],
                             &[std::ffi::c_char; 92],
@@ -2537,7 +2537,7 @@ unsafe extern "C" fn ss_swapmerge(
                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    780 as std::ffi::c_int as std::ffi::c_uint,
+                    780,
                     (*::core::mem::transmute::<
                         &[u8; 92],
                         &[std::ffi::c_char; 92],
@@ -2553,7 +2553,7 @@ unsafe extern "C" fn ss_swapmerge(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        780 as std::ffi::c_int as std::ffi::c_uint,
+                        780,
                         (*::core::mem::transmute::<
                             &[u8; 92],
                             &[std::ffi::c_char; 92],
@@ -2617,8 +2617,8 @@ unsafe extern "C" fn ss_swapmerge(
                     depth,
                 ) < 0
                 {
-                    m += half + 1 as std::ffi::c_int;
-                    half -= len & 1 as std::ffi::c_int ^ 1 as std::ffi::c_int;
+                    m += half + 1;
+                    half -= len & 1 as std::ffi::c_int ^ 1;
                 }
                 len = half;
                 half >>= 1;
@@ -2660,7 +2660,7 @@ unsafe extern "C" fn ss_swapmerge(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            810 as std::ffi::c_int as std::ffi::c_uint,
+                            810,
                             (*::core::mem::transmute::<
                                 &[u8; 92],
                                 &[std::ffi::c_char; 92],
@@ -2677,7 +2677,7 @@ unsafe extern "C" fn ss_swapmerge(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                810 as std::ffi::c_int as std::ffi::c_uint,
+                                810,
                                 (*::core::mem::transmute::<
                                     &[u8; 92],
                                     &[std::ffi::c_char; 92],
@@ -2694,10 +2694,10 @@ unsafe extern "C" fn ss_swapmerge(
                     let fresh52 = ssize;
                     ssize = ssize + 1;
                     stack[fresh52 as usize]
-                        .d = next & 3 as std::ffi::c_int | check & 4 as std::ffi::c_int;
+                        .d = next & 3 as std::ffi::c_int | check & 4;
                     middle = lm;
                     last = l;
-                    check = check & 3 as std::ffi::c_int | next & 4 as std::ffi::c_int;
+                    check = check & 3 as std::ffi::c_int | next & 4;
                 } else {
                     if next & 2 as std::ffi::c_int != 0 && r == middle {
                         next ^= 6;
@@ -2708,7 +2708,7 @@ unsafe extern "C" fn ss_swapmerge(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            814 as std::ffi::c_int as std::ffi::c_uint,
+                            814,
                             (*::core::mem::transmute::<
                                 &[u8; 92],
                                 &[std::ffi::c_char; 92],
@@ -2725,7 +2725,7 @@ unsafe extern "C" fn ss_swapmerge(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                814 as std::ffi::c_int as std::ffi::c_uint,
+                                814,
                                 (*::core::mem::transmute::<
                                     &[u8; 92],
                                     &[std::ffi::c_char; 92],
@@ -2742,10 +2742,10 @@ unsafe extern "C" fn ss_swapmerge(
                     let fresh53 = ssize;
                     ssize = ssize + 1;
                     stack[fresh53 as usize]
-                        .d = check & 3 as std::ffi::c_int | next & 4 as std::ffi::c_int;
+                        .d = check & 3 as std::ffi::c_int | next & 4;
                     first = r;
                     middle = rm;
-                    check = next & 3 as std::ffi::c_int | check & 4 as std::ffi::c_int;
+                    check = next & 3 as std::ffi::c_int | check & 4;
                 }
             } else {
                 if ss_compare(
@@ -2810,7 +2810,7 @@ unsafe extern "C" fn ss_swapmerge(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        822 as std::ffi::c_int as std::ffi::c_uint,
+                        822,
                         (*::core::mem::transmute::<
                             &[u8; 92],
                             &[std::ffi::c_char; 92],
@@ -2826,7 +2826,7 @@ unsafe extern "C" fn ss_swapmerge(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            822 as std::ffi::c_int as std::ffi::c_uint,
+                            822,
                             (*::core::mem::transmute::<
                                 &[u8; 92],
                                 &[std::ffi::c_char; 92],
@@ -2945,7 +2945,7 @@ unsafe extern "C" fn sssort(
         PAi[0 as std::ffi::c_int
             as usize] = *PA
             .offset(*first.offset(-1_isize) as isize);
-        PAi[1 as std::ffi::c_int as usize] = n - 2 as std::ffi::c_int;
+        PAi[1 as std::ffi::c_int as usize] = n - 2;
         a = first;
         i = *first.offset(-1_isize);
         while a < last
@@ -3038,7 +3038,7 @@ unsafe extern "C" fn tr_fixdown(
     v = *SA.offset(i as isize);
     c = *ISAd.offset(v as isize);
     loop {
-        j = 2 as std::ffi::c_int * i + 1 as std::ffi::c_int;
+        j = 2 as std::ffi::c_int * i + 1;
         if !(j < size) {
             break;
         }
@@ -3079,7 +3079,7 @@ unsafe extern "C" fn tr_heapsort(
             *SA.offset((m / 2 as std::ffi::c_int) as isize) = t;
         }
     }
-    i = m / 2 as std::ffi::c_int - 1 as std::ffi::c_int;
+    i = m / 2 as std::ffi::c_int - 1;
     while 0 as std::ffi::c_int <= i {
         tr_fixdown(ISAd, SA, i, m);
         i -= 1;
@@ -3089,13 +3089,13 @@ unsafe extern "C" fn tr_heapsort(
         t = *SA.offset(0);
         *SA.offset(0) = *SA.offset(m as isize);
         *SA.offset(m as isize) = t;
-        tr_fixdown(ISAd, SA, 0 as std::ffi::c_int, m);
+        tr_fixdown(ISAd, SA, 0, m);
     }
-    i = m - 1 as std::ffi::c_int;
+    i = m - 1;
     while (0 as std::ffi::c_int) < i {
         t = *SA.offset(0);
         *SA.offset(0) = *SA.offset(i as isize);
-        tr_fixdown(ISAd, SA, 0 as std::ffi::c_int, i);
+        tr_fixdown(ISAd, SA, 0, i);
         *SA.offset(i as isize) = t;
         i -= 1;
         i;
@@ -3239,15 +3239,15 @@ unsafe extern "C" fn trbudget_check(
 ) -> std::ffi::c_int {
     if size <= (*budget).remain {
         (*budget).remain -= size;
-        return 1 as std::ffi::c_int;
+        return 1;
     }
     if (*budget).chance == 0 {
         (*budget).count += size;
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     (*budget).remain += (*budget).incval - size;
     (*budget).chance -= 1;
-    return 1 as std::ffi::c_int;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn tr_partition(
@@ -3609,7 +3609,7 @@ unsafe extern "C" fn tr_introsort(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1204 as std::ffi::c_int as std::ffi::c_uint,
+                            1204,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
                                 &[std::ffi::c_char; 73],
@@ -3626,7 +3626,7 @@ unsafe extern "C" fn tr_introsort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1204 as std::ffi::c_int as std::ffi::c_uint,
+                                1204,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -3650,7 +3650,7 @@ unsafe extern "C" fn tr_introsort(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1205 as std::ffi::c_int as std::ffi::c_uint,
+                            1205,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
                                 &[std::ffi::c_char; 73],
@@ -3667,7 +3667,7 @@ unsafe extern "C" fn tr_introsort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1205 as std::ffi::c_int as std::ffi::c_uint,
+                                1205,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -3685,7 +3685,7 @@ unsafe extern "C" fn tr_introsort(
                     let fresh56 = ssize;
                     ssize = ssize + 1;
                     stack[fresh56 as usize].e = trlink;
-                    trlink = ssize - 2 as std::ffi::c_int;
+                    trlink = ssize - 2;
                 }
                 if a.offset_from(first) as std::ffi::c_long
                     <= last.offset_from(b) as std::ffi::c_long
@@ -3699,7 +3699,7 @@ unsafe extern "C" fn tr_introsort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1210 as std::ffi::c_int as std::ffi::c_uint,
+                                1210,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -3716,7 +3716,7 @@ unsafe extern "C" fn tr_introsort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1210 as std::ffi::c_int as std::ffi::c_uint,
+                                    1210,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -3754,7 +3754,7 @@ unsafe extern "C" fn tr_introsort(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1215 as std::ffi::c_int as std::ffi::c_uint,
+                                1215,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -3770,7 +3770,7 @@ unsafe extern "C" fn tr_introsort(
                                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1215 as std::ffi::c_int as std::ffi::c_uint,
+                                    1215,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -3800,7 +3800,7 @@ unsafe extern "C" fn tr_introsort(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1219 as std::ffi::c_int as std::ffi::c_uint,
+                            1219,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
                                 &[std::ffi::c_char; 73],
@@ -3817,7 +3817,7 @@ unsafe extern "C" fn tr_introsort(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1219 as std::ffi::c_int as std::ffi::c_uint,
+                                1219,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -3855,7 +3855,7 @@ unsafe extern "C" fn tr_introsort(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1224 as std::ffi::c_int as std::ffi::c_uint,
+                            1224,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
                                 &[std::ffi::c_char; 73],
@@ -3871,7 +3871,7 @@ unsafe extern "C" fn tr_introsort(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1224 as std::ffi::c_int as std::ffi::c_uint,
+                                1224,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -3925,7 +3925,7 @@ unsafe extern "C" fn tr_introsort(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1236 as std::ffi::c_int as std::ffi::c_uint,
+                        1236,
                         (*::core::mem::transmute::<
                             &[u8; 73],
                             &[std::ffi::c_char; 73],
@@ -3941,7 +3941,7 @@ unsafe extern "C" fn tr_introsort(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1236 as std::ffi::c_int as std::ffi::c_uint,
+                            1236,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
                                 &[std::ffi::c_char; 73],
@@ -4020,7 +4020,7 @@ unsafe extern "C" fn tr_introsort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1252 as std::ffi::c_int as std::ffi::c_uint,
+                                    1252,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -4037,7 +4037,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1252 as std::ffi::c_int as std::ffi::c_uint,
+                                        1252,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4067,7 +4067,7 @@ unsafe extern "C" fn tr_introsort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1256 as std::ffi::c_int as std::ffi::c_uint,
+                                    1256,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -4084,7 +4084,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1256 as std::ffi::c_int as std::ffi::c_uint,
+                                        1256,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4124,7 +4124,7 @@ unsafe extern "C" fn tr_introsort(
                                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1267 as std::ffi::c_int as std::ffi::c_uint,
+                                    1267,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -4140,7 +4140,7 @@ unsafe extern "C" fn tr_introsort(
                                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1267 as std::ffi::c_int as std::ffi::c_uint,
+                                        1267,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4168,7 +4168,7 @@ unsafe extern "C" fn tr_introsort(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1271 as std::ffi::c_int as std::ffi::c_uint,
+                            1271,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
                                 &[std::ffi::c_char; 73],
@@ -4184,7 +4184,7 @@ unsafe extern "C" fn tr_introsort(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1271 as std::ffi::c_int as std::ffi::c_uint,
+                                1271,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -4296,7 +4296,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1311 as std::ffi::c_int as std::ffi::c_uint,
+                                            1311,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4313,7 +4313,7 @@ unsafe extern "C" fn tr_introsort(
                                                     as *const std::ffi::c_char,
                                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                     as *const u8 as *const std::ffi::c_char,
-                                                1311 as std::ffi::c_int as std::ffi::c_uint,
+                                                1311,
                                                 (*::core::mem::transmute::<
                                                     &[u8; 73],
                                                     &[std::ffi::c_char; 73],
@@ -4337,7 +4337,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1312 as std::ffi::c_int as std::ffi::c_uint,
+                                            1312,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4354,7 +4354,7 @@ unsafe extern "C" fn tr_introsort(
                                                     as *const std::ffi::c_char,
                                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                     as *const u8 as *const std::ffi::c_char,
-                                                1312 as std::ffi::c_int as std::ffi::c_uint,
+                                                1312,
                                                 (*::core::mem::transmute::<
                                                     &[u8; 73],
                                                     &[std::ffi::c_char; 73],
@@ -4382,7 +4382,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1315 as std::ffi::c_int as std::ffi::c_uint,
+                                            1315,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4399,7 +4399,7 @@ unsafe extern "C" fn tr_introsort(
                                                     as *const std::ffi::c_char,
                                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                     as *const u8 as *const std::ffi::c_char,
-                                                1315 as std::ffi::c_int as std::ffi::c_uint,
+                                                1315,
                                                 (*::core::mem::transmute::<
                                                     &[u8; 73],
                                                     &[std::ffi::c_char; 73],
@@ -4436,7 +4436,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1322 as std::ffi::c_int as std::ffi::c_uint,
+                                            1322,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4453,7 +4453,7 @@ unsafe extern "C" fn tr_introsort(
                                                     as *const std::ffi::c_char,
                                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                     as *const u8 as *const std::ffi::c_char,
-                                                1322 as std::ffi::c_int as std::ffi::c_uint,
+                                                1322,
                                                 (*::core::mem::transmute::<
                                                     &[u8; 73],
                                                     &[std::ffi::c_char; 73],
@@ -4477,7 +4477,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1323 as std::ffi::c_int as std::ffi::c_uint,
+                                            1323,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4494,7 +4494,7 @@ unsafe extern "C" fn tr_introsort(
                                                     as *const std::ffi::c_char,
                                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                     as *const u8 as *const std::ffi::c_char,
-                                                1323 as std::ffi::c_int as std::ffi::c_uint,
+                                                1323,
                                                 (*::core::mem::transmute::<
                                                     &[u8; 73],
                                                     &[std::ffi::c_char; 73],
@@ -4520,7 +4520,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1326 as std::ffi::c_int as std::ffi::c_uint,
+                                            1326,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4537,7 +4537,7 @@ unsafe extern "C" fn tr_introsort(
                                                     as *const std::ffi::c_char,
                                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                     as *const u8 as *const std::ffi::c_char,
-                                                1326 as std::ffi::c_int as std::ffi::c_uint,
+                                                1326,
                                                 (*::core::mem::transmute::<
                                                     &[u8; 73],
                                                     &[std::ffi::c_char; 73],
@@ -4567,7 +4567,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1330 as std::ffi::c_int as std::ffi::c_uint,
+                                        1330,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4584,7 +4584,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1330 as std::ffi::c_int as std::ffi::c_uint,
+                                            1330,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4608,7 +4608,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1331 as std::ffi::c_int as std::ffi::c_uint,
+                                        1331,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4625,7 +4625,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1331 as std::ffi::c_int as std::ffi::c_uint,
+                                            1331,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4660,7 +4660,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1337 as std::ffi::c_int as std::ffi::c_uint,
+                                        1337,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4677,7 +4677,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1337 as std::ffi::c_int as std::ffi::c_uint,
+                                            1337,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4701,7 +4701,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1338 as std::ffi::c_int as std::ffi::c_uint,
+                                        1338,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4718,7 +4718,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1338 as std::ffi::c_int as std::ffi::c_uint,
+                                            1338,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4746,7 +4746,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1341 as std::ffi::c_int as std::ffi::c_uint,
+                                        1341,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4763,7 +4763,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1341 as std::ffi::c_int as std::ffi::c_uint,
+                                            1341,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4800,7 +4800,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1348 as std::ffi::c_int as std::ffi::c_uint,
+                                        1348,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4817,7 +4817,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1348 as std::ffi::c_int as std::ffi::c_uint,
+                                            1348,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4841,7 +4841,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1349 as std::ffi::c_int as std::ffi::c_uint,
+                                        1349,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4858,7 +4858,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1349 as std::ffi::c_int as std::ffi::c_uint,
+                                            1349,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4884,7 +4884,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1352 as std::ffi::c_int as std::ffi::c_uint,
+                                        1352,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4901,7 +4901,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1352 as std::ffi::c_int as std::ffi::c_uint,
+                                            1352,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -4931,7 +4931,7 @@ unsafe extern "C" fn tr_introsort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1356 as std::ffi::c_int as std::ffi::c_uint,
+                                    1356,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -4948,7 +4948,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1356 as std::ffi::c_int as std::ffi::c_uint,
+                                        1356,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -4972,7 +4972,7 @@ unsafe extern "C" fn tr_introsort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1357 as std::ffi::c_int as std::ffi::c_uint,
+                                    1357,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -4989,7 +4989,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1357 as std::ffi::c_int as std::ffi::c_uint,
+                                        1357,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -5031,7 +5031,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1365 as std::ffi::c_int as std::ffi::c_uint,
+                                        1365,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -5048,7 +5048,7 @@ unsafe extern "C" fn tr_introsort(
                                                 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1365 as std::ffi::c_int as std::ffi::c_uint,
+                                            1365,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -5077,7 +5077,7 @@ unsafe extern "C" fn tr_introsort(
                                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1370 as std::ffi::c_int as std::ffi::c_uint,
+                                        1370,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -5093,7 +5093,7 @@ unsafe extern "C" fn tr_introsort(
                                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                                 as *const u8 as *const std::ffi::c_char,
-                                            1370 as std::ffi::c_int as std::ffi::c_uint,
+                                            1370,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
                                                 &[std::ffi::c_char; 73],
@@ -5123,7 +5123,7 @@ unsafe extern "C" fn tr_introsort(
                                         as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1374 as std::ffi::c_int as std::ffi::c_uint,
+                                    1374,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -5140,7 +5140,7 @@ unsafe extern "C" fn tr_introsort(
                                             as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1374 as std::ffi::c_int as std::ffi::c_uint,
+                                        1374,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -5169,7 +5169,7 @@ unsafe extern "C" fn tr_introsort(
                                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                         as *const u8 as *const std::ffi::c_char,
-                                    1379 as std::ffi::c_int as std::ffi::c_uint,
+                                    1379,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
                                         &[std::ffi::c_char; 73],
@@ -5185,7 +5185,7 @@ unsafe extern "C" fn tr_introsort(
                                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                             as *const u8 as *const std::ffi::c_char,
-                                        1379 as std::ffi::c_int as std::ffi::c_uint,
+                                        1379,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
                                             &[std::ffi::c_char; 73],
@@ -5225,7 +5225,7 @@ unsafe extern "C" fn tr_introsort(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1388 as std::ffi::c_int as std::ffi::c_uint,
+                            1388,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
                                 &[std::ffi::c_char; 73],
@@ -5241,7 +5241,7 @@ unsafe extern "C" fn tr_introsort(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1388 as std::ffi::c_int as std::ffi::c_uint,
+                                1388,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
                                     &[std::ffi::c_char; 73],
@@ -5286,7 +5286,7 @@ unsafe extern "C" fn trsort(
     let mut unsorted: std::ffi::c_int = 0;
     trbudget_init(
         &mut budget,
-        tr_ilg(n) * 2 as std::ffi::c_int / 3 as std::ffi::c_int,
+        tr_ilg(n) * 2 as std::ffi::c_int / 3,
         n,
     );
     ISAd = ISA.offset(depth as isize);
@@ -5369,7 +5369,7 @@ unsafe extern "C" fn sort_typeBstar(
         i += 1;
         i;
     }
-    i = n - 1 as std::ffi::c_int;
+    i = n - 1;
     m = n;
     c0 = *T.offset((n - 1 as std::ffi::c_int) as isize) as std::ffi::c_int;
     while 0 as std::ffi::c_int <= i {
@@ -5422,7 +5422,7 @@ unsafe extern "C" fn sort_typeBstar(
         t = i + *bucket_A.offset(c0 as isize);
         *bucket_A.offset(c0 as isize) = i + j;
         i = t + *bucket_B.offset((c0 << 8 | c0) as isize);
-        c1 = c0 + 1 as std::ffi::c_int;
+        c1 = c0 + 1;
         while c1 < ALPHABET_SIZE {
             j += *bucket_B.offset((c0 << 8 | c1) as isize);
             *bucket_B.offset((c0 << 8 | c1) as isize) = j;
@@ -5436,7 +5436,7 @@ unsafe extern "C" fn sort_typeBstar(
     if (0 as std::ffi::c_int) < m {
         PAb = SA.offset(n as isize).offset(-(m as isize));
         ISAb = SA.offset(m as isize);
-        i = m - 2 as std::ffi::c_int;
+        i = m - 2;
         while 0 as std::ffi::c_int <= i {
             t = *PAb.offset(i as isize);
             c0 = *T.offset(t as isize) as std::ffi::c_int;
@@ -5454,13 +5454,13 @@ unsafe extern "C" fn sort_typeBstar(
         let ref mut fresh84 = *bucket_B
             .offset((c0 << 8 | c1) as isize);
         *fresh84 -= 1;
-        *SA.offset(*fresh84 as isize) = m - 1 as std::ffi::c_int;
+        *SA.offset(*fresh84 as isize) = m - 1;
         buf = SA.offset(m as isize);
         bufsize = n - 2 as std::ffi::c_int * m;
-        c0 = ALPHABET_SIZE - 2 as std::ffi::c_int;
+        c0 = ALPHABET_SIZE - 2;
         j = m;
         while (0 as std::ffi::c_int) < j {
-            c1 = ALPHABET_SIZE - 1 as std::ffi::c_int;
+            c1 = ALPHABET_SIZE - 1;
             while c0 < c1 {
                 i = *bucket_B.offset((c0 << 8 | c1) as isize);
                 if (1 as std::ffi::c_int) < j - i {
@@ -5471,7 +5471,7 @@ unsafe extern "C" fn sort_typeBstar(
                         SA.offset(j as isize),
                         buf,
                         bufsize,
-                        2 as std::ffi::c_int,
+                        2,
                         n,
                         (*SA.offset(i as isize) == m - 1 as std::ffi::c_int)
                             as std::ffi::c_int,
@@ -5484,7 +5484,7 @@ unsafe extern "C" fn sort_typeBstar(
             c0 -= 1;
             c0;
         }
-        i = m - 1 as std::ffi::c_int;
+        i = m - 1;
         while 0 as std::ffi::c_int <= i {
             if 0 as std::ffi::c_int <= *SA.offset(i as isize) {
                 j = i;
@@ -5517,7 +5517,7 @@ unsafe extern "C" fn sort_typeBstar(
             i;
         }
         trsort(ISAb, SA, m, 1 as std::ffi::c_int);
-        i = n - 1 as std::ffi::c_int;
+        i = n - 1;
         j = m;
         c0 = *T.offset((n - 1 as std::ffi::c_int) as isize) as std::ffi::c_int;
         while 0 as std::ffi::c_int <= i {
@@ -5565,12 +5565,12 @@ unsafe extern "C" fn sort_typeBstar(
                 ((256 as std::ffi::c_int - 1 as std::ffi::c_int) << 8
                     | 256 as std::ffi::c_int - 1 as std::ffi::c_int) as isize,
             ) = n;
-        c0 = ALPHABET_SIZE - 2 as std::ffi::c_int;
-        k = m - 1 as std::ffi::c_int;
+        c0 = ALPHABET_SIZE - 2;
+        k = m - 1;
         while 0 as std::ffi::c_int <= c0 {
             i = *bucket_A.offset((c0 + 1 as std::ffi::c_int) as isize)
-                - 1 as std::ffi::c_int;
-            c1 = ALPHABET_SIZE - 1 as std::ffi::c_int;
+                - 1;
+            c1 = ALPHABET_SIZE - 1;
             while c0 < c1 {
                 t = i - *bucket_B.offset((c1 << 8 | c0) as isize);
                 *bucket_B.offset((c1 << 8 | c0) as isize) = i;
@@ -5590,7 +5590,7 @@ unsafe extern "C" fn sort_typeBstar(
                 .offset(
                     (c0 << 8 | c0 + 1 as std::ffi::c_int) as isize,
                 ) = i - *bucket_B.offset((c0 << 8 | c0) as isize)
-                + 1 as std::ffi::c_int;
+                + 1;
             *bucket_B.offset((c0 << 8 | c0) as isize) = i;
             c0 -= 1;
             c0;
@@ -5614,7 +5614,7 @@ unsafe extern "C" fn construct_SA(
     let mut c1: std::ffi::c_int = 0;
     let mut c2: std::ffi::c_int = 0;
     if (0 as std::ffi::c_int) < m {
-        c1 = ALPHABET_SIZE - 2 as std::ffi::c_int;
+        c1 = ALPHABET_SIZE - 2;
         while 0 as std::ffi::c_int <= c1 {
             i = SA
                 .offset(
@@ -5637,7 +5637,7 @@ unsafe extern "C" fn construct_SA(
                             b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1630 as std::ffi::c_int as std::ffi::c_uint,
+                            1630,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -5653,7 +5653,7 @@ unsafe extern "C" fn construct_SA(
                                 b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1630 as std::ffi::c_int as std::ffi::c_uint,
+                                1630,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -5674,7 +5674,7 @@ unsafe extern "C" fn construct_SA(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1631 as std::ffi::c_int as std::ffi::c_uint,
+                            1631,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -5695,7 +5695,7 @@ unsafe extern "C" fn construct_SA(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1631 as std::ffi::c_int as std::ffi::c_uint,
+                                1631,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -5714,7 +5714,7 @@ unsafe extern "C" fn construct_SA(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1632 as std::ffi::c_int as std::ffi::c_uint,
+                            1632,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -5734,7 +5734,7 @@ unsafe extern "C" fn construct_SA(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1632 as std::ffi::c_int as std::ffi::c_uint,
+                                1632,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -5774,7 +5774,7 @@ unsafe extern "C" fn construct_SA(
                             b"k < j\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1640 as std::ffi::c_int as std::ffi::c_uint,
+                            1640,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -5790,7 +5790,7 @@ unsafe extern "C" fn construct_SA(
                                 b"k < j\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1640 as std::ffi::c_int as std::ffi::c_uint,
+                                1640,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -5806,7 +5806,7 @@ unsafe extern "C" fn construct_SA(
                             b"k != NULL\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1640 as std::ffi::c_int as std::ffi::c_uint,
+                            1640,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -5822,7 +5822,7 @@ unsafe extern "C" fn construct_SA(
                                 b"k != NULL\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1640 as std::ffi::c_int as std::ffi::c_uint,
+                                1640,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -5846,7 +5846,7 @@ unsafe extern "C" fn construct_SA(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1643 as std::ffi::c_int as std::ffi::c_uint,
+                            1643,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -5866,7 +5866,7 @@ unsafe extern "C" fn construct_SA(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1643 as std::ffi::c_int as std::ffi::c_uint,
+                                1643,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -5909,7 +5909,7 @@ unsafe extern "C" fn construct_SA(
                     b"T[s - 1] >= T[s]\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    1657 as std::ffi::c_int as std::ffi::c_uint,
+                    1657,
                     (*::core::mem::transmute::<
                         &[u8; 72],
                         &[std::ffi::c_char; 72],
@@ -5927,7 +5927,7 @@ unsafe extern "C" fn construct_SA(
                         b"T[s - 1] >= T[s]\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1657 as std::ffi::c_int as std::ffi::c_uint,
+                        1657,
                         (*::core::mem::transmute::<
                             &[u8; 72],
                             &[std::ffi::c_char; 72],
@@ -5959,7 +5959,7 @@ unsafe extern "C" fn construct_SA(
                     b"i < k\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    1664 as std::ffi::c_int as std::ffi::c_uint,
+                    1664,
                     (*::core::mem::transmute::<
                         &[u8; 72],
                         &[std::ffi::c_char; 72],
@@ -5975,7 +5975,7 @@ unsafe extern "C" fn construct_SA(
                         b"i < k\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1664 as std::ffi::c_int as std::ffi::c_uint,
+                        1664,
                         (*::core::mem::transmute::<
                             &[u8; 72],
                             &[std::ffi::c_char; 72],
@@ -5995,7 +5995,7 @@ unsafe extern "C" fn construct_SA(
                     b"s < 0\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    1667 as std::ffi::c_int as std::ffi::c_uint,
+                    1667,
                     (*::core::mem::transmute::<
                         &[u8; 72],
                         &[std::ffi::c_char; 72],
@@ -6011,7 +6011,7 @@ unsafe extern "C" fn construct_SA(
                         b"s < 0\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1667 as std::ffi::c_int as std::ffi::c_uint,
+                        1667,
                         (*::core::mem::transmute::<
                             &[u8; 72],
                             &[std::ffi::c_char; 72],
@@ -6045,7 +6045,7 @@ unsafe extern "C" fn construct_BWT(
     let mut c1: std::ffi::c_int = 0;
     let mut c2: std::ffi::c_int = 0;
     if (0 as std::ffi::c_int) < m {
-        c1 = ALPHABET_SIZE - 2 as std::ffi::c_int;
+        c1 = ALPHABET_SIZE - 2;
         while 0 as std::ffi::c_int <= c1 {
             i = SA
                 .offset(
@@ -6068,7 +6068,7 @@ unsafe extern "C" fn construct_BWT(
                             b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1694 as std::ffi::c_int as std::ffi::c_uint,
+                            1694,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -6084,7 +6084,7 @@ unsafe extern "C" fn construct_BWT(
                                 b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1694 as std::ffi::c_int as std::ffi::c_uint,
+                                1694,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -6105,7 +6105,7 @@ unsafe extern "C" fn construct_BWT(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1695 as std::ffi::c_int as std::ffi::c_uint,
+                            1695,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -6126,7 +6126,7 @@ unsafe extern "C" fn construct_BWT(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1695 as std::ffi::c_int as std::ffi::c_uint,
+                                1695,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -6145,7 +6145,7 @@ unsafe extern "C" fn construct_BWT(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1696 as std::ffi::c_int as std::ffi::c_uint,
+                            1696,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -6165,7 +6165,7 @@ unsafe extern "C" fn construct_BWT(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1696 as std::ffi::c_int as std::ffi::c_uint,
+                                1696,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -6205,7 +6205,7 @@ unsafe extern "C" fn construct_BWT(
                             b"k < j\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1704 as std::ffi::c_int as std::ffi::c_uint,
+                            1704,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -6221,7 +6221,7 @@ unsafe extern "C" fn construct_BWT(
                                 b"k < j\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1704 as std::ffi::c_int as std::ffi::c_uint,
+                                1704,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -6237,7 +6237,7 @@ unsafe extern "C" fn construct_BWT(
                             b"k != NULL\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1704 as std::ffi::c_int as std::ffi::c_uint,
+                            1704,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -6253,7 +6253,7 @@ unsafe extern "C" fn construct_BWT(
                                 b"k != NULL\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1704 as std::ffi::c_int as std::ffi::c_uint,
+                                1704,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -6275,7 +6275,7 @@ unsafe extern "C" fn construct_BWT(
                             b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1710 as std::ffi::c_int as std::ffi::c_uint,
+                            1710,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
                                 &[std::ffi::c_char; 72],
@@ -6291,7 +6291,7 @@ unsafe extern "C" fn construct_BWT(
                                 b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1710 as std::ffi::c_int as std::ffi::c_uint,
+                                1710,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
                                     &[std::ffi::c_char; 72],
@@ -6334,7 +6334,7 @@ unsafe extern "C" fn construct_BWT(
                     b"T[s - 1] >= T[s]\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    1724 as std::ffi::c_int as std::ffi::c_uint,
+                    1724,
                     (*::core::mem::transmute::<
                         &[u8; 72],
                         &[std::ffi::c_char; 72],
@@ -6352,7 +6352,7 @@ unsafe extern "C" fn construct_BWT(
                         b"T[s - 1] >= T[s]\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1724 as std::ffi::c_int as std::ffi::c_uint,
+                        1724,
                         (*::core::mem::transmute::<
                             &[u8; 72],
                             &[std::ffi::c_char; 72],
@@ -6385,7 +6385,7 @@ unsafe extern "C" fn construct_BWT(
                     b"i < k\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    1732 as std::ffi::c_int as std::ffi::c_uint,
+                    1732,
                     (*::core::mem::transmute::<
                         &[u8; 72],
                         &[std::ffi::c_char; 72],
@@ -6401,7 +6401,7 @@ unsafe extern "C" fn construct_BWT(
                         b"i < k\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1732 as std::ffi::c_int as std::ffi::c_uint,
+                        1732,
                         (*::core::mem::transmute::<
                             &[u8; 72],
                             &[std::ffi::c_char; 72],
@@ -6443,7 +6443,7 @@ unsafe extern "C" fn construct_BWT_indexes(
     let mut c0: std::ffi::c_int = 0;
     let mut c1: std::ffi::c_int = 0;
     let mut c2: std::ffi::c_int = 0;
-    let mut mod_0 = n / 8 as std::ffi::c_int;
+    let mut mod_0 = n / 8;
     mod_0 |= mod_0 >> 1;
     mod_0 |= mod_0 >> 2;
     mod_0 |= mod_0 >> 4;
@@ -6453,7 +6453,7 @@ unsafe extern "C" fn construct_BWT_indexes(
     *num_indexes = ((n - 1 as std::ffi::c_int) / (mod_0 + 1 as std::ffi::c_int))
         as std::ffi::c_uchar;
     if (0 as std::ffi::c_int) < m {
-        c1 = ALPHABET_SIZE - 2 as std::ffi::c_int;
+        c1 = ALPHABET_SIZE - 2;
         while 0 as std::ffi::c_int <= c1 {
             i = SA
                 .offset(
@@ -6476,7 +6476,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                             b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1775 as std::ffi::c_int as std::ffi::c_uint,
+                            1775,
                             (*::core::mem::transmute::<
                                 &[u8; 104],
                                 &[std::ffi::c_char; 104],
@@ -6492,7 +6492,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                 b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1775 as std::ffi::c_int as std::ffi::c_uint,
+                                1775,
                                 (*::core::mem::transmute::<
                                     &[u8; 104],
                                     &[std::ffi::c_char; 104],
@@ -6513,7 +6513,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1776 as std::ffi::c_int as std::ffi::c_uint,
+                            1776,
                             (*::core::mem::transmute::<
                                 &[u8; 104],
                                 &[std::ffi::c_char; 104],
@@ -6534,7 +6534,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1776 as std::ffi::c_int as std::ffi::c_uint,
+                                1776,
                                 (*::core::mem::transmute::<
                                     &[u8; 104],
                                     &[std::ffi::c_char; 104],
@@ -6553,7 +6553,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1777 as std::ffi::c_int as std::ffi::c_uint,
+                            1777,
                             (*::core::mem::transmute::<
                                 &[u8; 104],
                                 &[std::ffi::c_char; 104],
@@ -6573,7 +6573,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                     as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1777 as std::ffi::c_int as std::ffi::c_uint,
+                                1777,
                                 (*::core::mem::transmute::<
                                     &[u8; 104],
                                     &[std::ffi::c_char; 104],
@@ -6620,7 +6620,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                             b"k < j\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1788 as std::ffi::c_int as std::ffi::c_uint,
+                            1788,
                             (*::core::mem::transmute::<
                                 &[u8; 104],
                                 &[std::ffi::c_char; 104],
@@ -6636,7 +6636,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                 b"k < j\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1788 as std::ffi::c_int as std::ffi::c_uint,
+                                1788,
                                 (*::core::mem::transmute::<
                                     &[u8; 104],
                                     &[std::ffi::c_char; 104],
@@ -6652,7 +6652,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                             b"k != NULL\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1788 as std::ffi::c_int as std::ffi::c_uint,
+                            1788,
                             (*::core::mem::transmute::<
                                 &[u8; 104],
                                 &[std::ffi::c_char; 104],
@@ -6668,7 +6668,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                 b"k != NULL\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1788 as std::ffi::c_int as std::ffi::c_uint,
+                                1788,
                                 (*::core::mem::transmute::<
                                     &[u8; 104],
                                     &[std::ffi::c_char; 104],
@@ -6690,7 +6690,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                             b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                 as *const u8 as *const std::ffi::c_char,
-                            1794 as std::ffi::c_int as std::ffi::c_uint,
+                            1794,
                             (*::core::mem::transmute::<
                                 &[u8; 104],
                                 &[std::ffi::c_char; 104],
@@ -6706,7 +6706,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                                 b"T[s] == c1\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                                     as *const u8 as *const std::ffi::c_char,
-                                1794 as std::ffi::c_int as std::ffi::c_uint,
+                                1794,
                                 (*::core::mem::transmute::<
                                     &[u8; 104],
                                     &[std::ffi::c_char; 104],
@@ -6741,7 +6741,7 @@ unsafe extern "C" fn construct_BWT_indexes(
     } else {
         let fresh94 = k;
         k = k.offset(1);
-        *fresh94 = n - 1 as std::ffi::c_int;
+        *fresh94 = n - 1;
     }
     i = SA;
     j = SA.offset(n as isize);
@@ -6756,7 +6756,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                     b"T[s - 1] >= T[s]\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    1815 as std::ffi::c_int as std::ffi::c_uint,
+                    1815,
                     (*::core::mem::transmute::<
                         &[u8; 104],
                         &[std::ffi::c_char; 104],
@@ -6774,7 +6774,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                         b"T[s - 1] >= T[s]\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1815 as std::ffi::c_int as std::ffi::c_uint,
+                        1815,
                         (*::core::mem::transmute::<
                             &[u8; 104],
                             &[std::ffi::c_char; 104],
@@ -6808,7 +6808,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                     b"i < k\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                         as *const u8 as *const std::ffi::c_char,
-                    1825 as std::ffi::c_int as std::ffi::c_uint,
+                    1825,
                     (*::core::mem::transmute::<
                         &[u8; 104],
                         &[std::ffi::c_char; 104],
@@ -6824,7 +6824,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                         b"i < k\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
                             as *const u8 as *const std::ffi::c_char,
-                        1825 as std::ffi::c_int as std::ffi::c_uint,
+                        1825,
                         (*::core::mem::transmute::<
                             &[u8; 104],
                             &[std::ffi::c_char; 104],
@@ -6882,14 +6882,14 @@ pub unsafe extern "C" fn divsufsort(
         return 0 as std::ffi::c_int
     } else if n == 1 {
         *SA.offset(0) = 0;
-        return 0 as std::ffi::c_int;
+        return 0;
     } else if n == 2 {
         m = ((*T.offset(0) as std::ffi::c_int)
             < *T.offset(1) as std::ffi::c_int)
             as std::ffi::c_int;
         *SA.offset((m ^ 1 as std::ffi::c_int) as isize) = 0;
         *SA.offset(m as isize) = 1;
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     bucket_A = libc::malloc(
         (BUCKET_A_SIZE as usize)
@@ -6931,7 +6931,7 @@ pub unsafe extern "C" fn divbwt(
         if n == 1 {
             *U
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = *T.offset(0);
         }
         return n;
@@ -6971,7 +6971,7 @@ pub unsafe extern "C" fn divbwt(
         }
         *U
             .offset(
-                0 as std::ffi::c_int as isize,
+                0,
             ) = *T.offset((n - 1 as std::ffi::c_int) as isize);
         i = 0;
         while i < pidx {

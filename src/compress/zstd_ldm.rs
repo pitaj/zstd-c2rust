@@ -324,7 +324,7 @@ unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
@@ -726,7 +726,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
 #[inline]
 unsafe extern "C" fn ZSTD_cwksp_alloc_size(mut size: usize) -> usize {
     if size == 0 {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     return size;
 }
@@ -1325,7 +1325,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
             >= ZSTD_btultra as std::ffi::c_int as std::ffi::c_uint
         {
             (*params)
-                .minMatchLength = (*params).minMatchLength / 2 as std::ffi::c_int as u32;
+                .minMatchLength = (*params).minMatchLength / 2;
         }
     }
     if (*params).bucketSizeLog == 0 {
@@ -1480,7 +1480,7 @@ unsafe extern "C" fn ZSTD_ldm_fillFastTables(
         }
         3 | 4 | 5 | 6 | 7 | 8 | 9 | _ => {}
     }
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
@@ -1523,7 +1523,7 @@ pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
                 let xxhash = ZSTD_XXH64(
                     split as *const std::ffi::c_void,
                     minMatchLength as usize,
-                    0 as std::ffi::c_int as XXH64_hash_t,
+                    0,
                 );
                 let hash = (xxhash
                     & (1_u32 << hBits)
@@ -1636,7 +1636,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
             let xxhash = ZSTD_XXH64(
                 split as *const std::ffi::c_void,
                 minMatchLength as usize,
-                0 as std::ffi::c_int as XXH64_hash_t,
+                0,
             );
             let hash = (xxhash
                 & (1_u32 << hBits)
@@ -1858,7 +1858,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
         let prevSize = (*sequences).size;
         if ZSTD_window_needOverflowCorrection(
             (*ldmState).window,
-            0 as std::ffi::c_int as u32,
+            0,
             maxDist,
             (*ldmState).loadedDictEnd,
             chunkStart as *const std::ffi::c_void,
@@ -1868,7 +1868,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
             let ldmHSize = (1 as std::ffi::c_uint) << (*params).hashLog;
             let correction = ZSTD_window_correctOverflow(
                 &mut (*ldmState).window,
-                0 as std::ffi::c_int as u32,
+                0,
                 maxDist,
                 chunkStart as *const std::ffi::c_void,
             );
@@ -1903,7 +1903,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
         chunk = chunk.wrapping_add(1);
         chunk;
     }
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_ldm_skipSequences(
@@ -2044,7 +2044,7 @@ pub unsafe extern "C" fn ZSTD_ldm_blockCompress(
             sequence.litLength as usize,
         );
         ip = ip.offset(sequence.litLength as isize);
-        i = ZSTD_REP_NUM - 1 as std::ffi::c_int;
+        i = ZSTD_REP_NUM - 1;
         while i > 0 {
             *rep.offset(i as isize) = *rep.offset((i - 1 as std::ffi::c_int) as isize);
             i -= 1;

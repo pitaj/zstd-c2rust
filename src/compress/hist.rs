@@ -84,7 +84,7 @@ pub unsafe extern "C" fn HIST_count_simple(
     let mut largestCount: std::ffi::c_uint = 0;
     libc::memset(
         count as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         (maxSymbolValue.wrapping_add(1)
             as std::ffi::c_ulong)
             .wrapping_mul(
@@ -93,7 +93,7 @@ pub unsafe extern "C" fn HIST_count_simple(
     );
     if srcSize == 0 {
         *maxSymbolValuePtr = 0;
-        return 0 as std::ffi::c_int as std::ffi::c_uint;
+        return 0;
     }
     while ip < end {
         let fresh2 = ip;
@@ -139,15 +139,15 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     if sourceSize == 0 {
         libc::memset(
             count as *mut std::ffi::c_void,
-            0 as std::ffi::c_int,
+            0,
             countSize as usize,
         );
         *maxSymbolValuePtr = 0;
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     libc::memset(
         workSpace as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ((4 as std::ffi::c_int * 256 as std::ffi::c_int) as std::ffi::c_ulong)
             .wrapping_mul(
                 ::core::mem::size_of::<std::ffi::c_uint>(),

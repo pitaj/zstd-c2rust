@@ -121,6 +121,12 @@ case $1 in
 
     ;;
 
+  cast-terminated)
+    # return 0 as std::ffi::c_int; 473195 as std::ffi::c_int as u32,
+    perl -i -p0e 's/\b(\d+)(?: as [\w\d:_]+)+([,;])/$1$2/gm' src/*/*.rs
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs
