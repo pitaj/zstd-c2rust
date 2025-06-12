@@ -1435,7 +1435,7 @@ pub unsafe extern "C" fn COVER_best_init(mut best: *mut COVER_best_t) {
     (*best).liveJobs = 0;
     (*best).dict = NULL as *mut std::ffi::c_void;
     (*best).dictSize = 0;
-    (*best).compressedSize = -(1 as std::ffi::c_int) as usize;
+    (*best).compressedSize = -1;
     libc::memset(
         &mut (*best).parameters as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
         0,

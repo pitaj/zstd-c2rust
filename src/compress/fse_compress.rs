@@ -802,7 +802,7 @@ unsafe extern "C" fn FSE_normalizeM2(
     mut maxSymbolValue: u32,
     mut lowProbCount: std::ffi::c_short,
 ) -> usize {
-    let NOT_YET_ASSIGNED = -(2 as std::ffi::c_int) as std::ffi::c_short;
+    let NOT_YET_ASSIGNED = -2;
     let mut s: u32 = 0;
     let mut distributed: u32 = 0;
     let mut ToDistribute: u32 = 0;
