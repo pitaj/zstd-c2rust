@@ -192,8 +192,8 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
 ) -> usize {
     let ostart = dst as *mut u8;
     let flSize = (1 as std::ffi::c_int
-        + (srcSize > 31 as std::ffi::c_int as usize) as std::ffi::c_int
-        + (srcSize > 4095 as std::ffi::c_int as usize) as std::ffi::c_int) as u32;
+        + (srcSize > 31) as std::ffi::c_int
+        + (srcSize > 4095) as std::ffi::c_int) as u32;
     if srcSize.wrapping_add(flSize as usize) > dstCapacity {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
@@ -261,8 +261,8 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
 ) -> usize {
     let ostart = dst as *mut u8;
     let flSize = (1 as std::ffi::c_int
-        + (srcSize > 31 as std::ffi::c_int as usize) as std::ffi::c_int
-        + (srcSize > 4095 as std::ffi::c_int as usize) as std::ffi::c_int) as u32;
+        + (srcSize > 31) as std::ffi::c_int
+        + (srcSize > 4095) as std::ffi::c_int) as u32;
     match flSize {
         1 => {
             *ostart
@@ -301,7 +301,7 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     mut huf_repeat: HUF_repeat,
 ) -> usize {
     let shift = if (9 as std::ffi::c_int - strategy as std::ffi::c_int)
-        < 3 as std::ffi::c_int
+        < 3
     {
         9 as std::ffi::c_int - strategy as std::ffi::c_int
     } else {
@@ -340,7 +340,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
                 * ((1 as std::ffi::c_int) << 10)) as usize)
             as std::ffi::c_int) as usize;
     let ostart = dst as *mut u8;
-    let mut singleStream = (srcSize < 256 as std::ffi::c_int as usize)
+    let mut singleStream = (srcSize < 256)
         as std::ffi::c_int as u32;
     let mut hType = set_compressed;
     let mut cLitSize: usize = 0;
@@ -367,7 +367,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         })
         | (if (strategy as std::ffi::c_uint)
             < ZSTD_lazy as std::ffi::c_int as std::ffi::c_uint
-            && srcSize <= 1024 as std::ffi::c_int as usize
+            && srcSize <= 1024
         {
             HUF_flags_preferRepeat as std::ffi::c_int
         } else {
@@ -388,7 +388,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     let mut huf_compress: huf_compress_f = None;
     if repeat as std::ffi::c_uint
         == HUF_repeat_valid as std::ffi::c_int as std::ffi::c_uint
-        && lhSize == 3 as std::ffi::c_int as usize
+        && lhSize == 3
     {
         singleStream = 1;
     }
@@ -449,7 +449,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         hType = set_repeat;
     }
     let minGain = ZSTD_minGain(srcSize, strategy);
-    if cLitSize == 0 as std::ffi::c_int as usize
+    if cLitSize == 0
         || cLitSize >= srcSize.wrapping_sub(minGain) || ERR_isError(cLitSize) != 0
     {
         libc::memcpy(
@@ -460,8 +460,8 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         );
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
     }
-    if cLitSize == 1 as std::ffi::c_int as usize {
-        if srcSize >= 8 as std::ffi::c_int as usize
+    if cLitSize == 1 {
+        if srcSize >= 8
             || allBytesIdentical(src, srcSize) != 0
         {
             libc::memcpy(

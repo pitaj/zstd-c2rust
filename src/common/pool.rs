@@ -351,7 +351,7 @@ pub unsafe extern "C" fn POOL_free(mut ctx: *mut POOL_ctx) {
 pub unsafe extern "C" fn POOL_joinJobs(mut ctx: *mut POOL_ctx) {
     pthread_mutex_lock(&mut (*ctx).queueMutex);
     while (*ctx).queueEmpty == 0
-        || (*ctx).numThreadsBusy > 0 as std::ffi::c_int as usize
+        || (*ctx).numThreadsBusy > 0
     {
         pthread_cond_wait(&mut (*ctx).queuePushCond, &mut (*ctx).queueMutex);
     }
@@ -445,7 +445,7 @@ pub unsafe extern "C" fn POOL_resize(
     return result;
 }
 unsafe extern "C" fn isQueueFull(mut ctx: *const POOL_ctx) -> std::ffi::c_int {
-    if (*ctx).queueSize > 1 as std::ffi::c_int as usize {
+    if (*ctx).queueSize > 1 {
         return ((*ctx).queueHead
             == ((*ctx).queueTail).wrapping_add(1)
                 % (*ctx).queueSize) as std::ffi::c_int

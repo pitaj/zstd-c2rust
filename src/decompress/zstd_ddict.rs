@@ -365,7 +365,7 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
     {
         return 0 as std::ffi::c_int as usize;
     }
-    if (*ddict).dictSize < 8 as std::ffi::c_int as usize {
+    if (*ddict).dictSize < 8 {
         if dictContentType as std::ffi::c_uint
             == ZSTD_dct_fullDict as std::ffi::c_int as std::ffi::c_uint
         {

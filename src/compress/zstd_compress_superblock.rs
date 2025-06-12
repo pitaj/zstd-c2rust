@@ -724,7 +724,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
         let repCode = offBase
             .wrapping_sub(1)
             .wrapping_add(ll0);
-        if repCode > 0 as std::ffi::c_int as u32 {
+        if repCode > 0 {
             let currentOffset = if repCode == ZSTD_REP_NUM as u32 {
                 (*rep.offset(0))
                     .wrapping_sub(1)
@@ -734,7 +734,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
             *rep
                 .offset(
                     2 as std::ffi::c_int as isize,
-                ) = if repCode >= 2 as std::ffi::c_int as u32 {
+                ) = if repCode >= 2 {
                 *rep.offset(1)
             } else {
                 *rep.offset(2)
@@ -750,7 +750,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
-        == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
+        == 4) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
@@ -1069,7 +1069,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
     let mut op = ostart.offset(lhSize as isize);
-    let singleStream = (lhSize == 3 as std::ffi::c_int as usize) as std::ffi::c_int
+    let singleStream = (lhSize == 3) as std::ffi::c_int
         as u32;
     let mut hType = (if writeEntropy != 0 {
         (*hufMetadata).hType as std::ffi::c_uint
@@ -1078,7 +1078,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
     }) as SymbolEncodingType_e;
     let mut cLitSize: usize = 0;
     *entropyWritten = 0;
-    if litSize == 0 as std::ffi::c_int as usize
+    if litSize == 0
         || (*hufMetadata).hType as std::ffi::c_uint
             == set_basic as std::ffi::c_int as std::ffi::c_uint
     {
@@ -1136,7 +1136,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
     };
     op = op.offset(cSize as isize);
     cLitSize = cLitSize.wrapping_add(cSize);
-    if cSize == 0 as std::ffi::c_int as usize || ERR_isError(cSize) != 0 {
+    if cSize == 0 || ERR_isError(cSize) != 0 {
         return 0 as std::ffi::c_int as usize;
     }
     if writeEntropy == 0 && cLitSize >= litSize {
@@ -1255,7 +1255,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
     {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
-    if nbSeq < 128 as std::ffi::c_int as usize {
+    if nbSeq < 128 {
         let fresh0 = op;
         op = op.offset(1);
         *fresh0 = nbSeq as u8;
@@ -1275,7 +1275,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
         );
         op = op.offset(3);
     }
-    if nbSeq == 0 as std::ffi::c_int as usize {
+    if nbSeq == 0 {
         return op.offset_from(ostart) as std::ffi::c_long as usize;
     }
     let fresh1 = op;
@@ -1321,12 +1321,12 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
     op = op.offset(bitstreamSize as isize);
     if writeEntropy != 0 && (*fseMetadata).lastCountSize != 0
         && ((*fseMetadata).lastCountSize).wrapping_add(bitstreamSize)
-            < 4 as std::ffi::c_int as usize
+            < 4
     {
         return 0 as std::ffi::c_int as usize;
     }
     if (op.offset_from(seqHead) as std::ffi::c_long)
-        < 4 as std::ffi::c_int as std::ffi::c_long
+        < 4
     {
         return 0 as std::ffi::c_int as usize;
     }
@@ -1371,7 +1371,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
     if ERR_isError(err_code) != 0 {
         return err_code;
     }
-    if cLitSize == 0 as std::ffi::c_int as usize {
+    if cLitSize == 0 {
         return 0 as std::ffi::c_int as usize;
     }
     op = op.offset(cLitSize as isize);
@@ -1394,7 +1394,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
     if ERR_isError(err_code_0) != 0 {
         return err_code_0;
     }
-    if cSeqSize == 0 as std::ffi::c_int as usize {
+    if cSeqSize == 0 {
         return 0 as std::ffi::c_int as usize;
     }
     op = op.offset(cSeqSize as isize);
@@ -1527,7 +1527,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_sequences(
 ) -> usize {
     let sequencesSectionHeaderSize = 3;
     let mut cSeqSizeEstimate: usize = 0;
-    if nbSeq == 0 as std::ffi::c_int as usize {
+    if nbSeq == 0 {
         return sequencesSectionHeaderSize;
     }
     cSeqSizeEstimate = cSeqSizeEstimate
@@ -1759,7 +1759,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
     let mut writeLitEntropy = ((*entropyMetadata).hufMetadata.hType as std::ffi::c_uint
         == set_compressed as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_int;
     let mut writeSeqEntropy: std::ffi::c_int = 1;
-    if nbSeqs > 0 as std::ffi::c_int as usize {
+    if nbSeqs > 0 {
         let ebs = ZSTD_estimateSubBlockSize(
             lp,
             nbLiterals,
@@ -1783,7 +1783,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             * BYTESCALE as usize / nbSeqs;
         let nbSubBlocks = if (ebs.estBlockSize)
             .wrapping_add(targetCBlockSize / 2 as std::ffi::c_int as usize)
-            / targetCBlockSize > 1 as std::ffi::c_int as usize
+            / targetCBlockSize > 1
         {
             (ebs.estBlockSize)
                 .wrapping_add(targetCBlockSize / 2 as std::ffi::c_int as usize)
@@ -1806,7 +1806,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
                 avgBlockBudget.wrapping_add(blockBudgetSupp),
                 avgLitCost,
                 avgSeqCost,
-                (n == 0 as std::ffi::c_int as usize) as std::ffi::c_int,
+                (n == 0) as std::ffi::c_int,
             );
             if sp.offset(seqCount as isize) == send {
                 break;
@@ -1845,7 +1845,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             if ERR_isError(err_code) != 0 {
                 return err_code;
             }
-            if cSize > 0 as std::ffi::c_int as usize && cSize < decompressedSize {
+            if cSize > 0 && cSize < decompressedSize {
                 ip = ip.offset(decompressedSize as isize);
                 lp = lp.offset(litSize as isize);
                 op = op.offset(cSize as isize);
@@ -1900,7 +1900,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
     if ERR_isError(err_code_0) != 0 {
         return err_code_0;
     }
-    if cSize_0 > 0 as std::ffi::c_int as usize && cSize_0 < decompressedSize_0 {
+    if cSize_0 > 0 && cSize_0 < decompressedSize_0 {
         ip = ip.offset(decompressedSize_0 as isize);
         lp = lp.offset(litSize_0 as isize);
         op = op.offset(cSize_0 as isize);
@@ -1958,7 +1958,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
                     (rep.rep).as_mut_ptr(),
                     (*seq).offBase,
                     ((ZSTD_getSequenceLength(seqStorePtr, seq)).litLength
-                        == 0 as std::ffi::c_int as u32) as std::ffi::c_int as u32,
+                        == 0) as std::ffi::c_int as u32,
                 );
                 seq = seq.offset(1);
                 seq;

@@ -757,7 +757,7 @@ pub const ZDICT_MIN_SAMPLES_SIZE: std::ffi::c_int = ZDICT_CONTENTSIZE_MIN * MINR
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
-        == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
+        == 8) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
@@ -912,8 +912,8 @@ unsafe extern "C" fn ZDICT_printHex(
     u = 0;
     while u < length {
         let mut c = *b.offset(u as isize);
-        if (c as std::ffi::c_int) < 32 as std::ffi::c_int
-            || c as std::ffi::c_int > 126 as std::ffi::c_int
+        if (c as std::ffi::c_int) < 32
+            || c as std::ffi::c_int > 126
         {
             c = '.' as i32 as u8;
         }
@@ -942,7 +942,7 @@ pub unsafe extern "C" fn ZDICT_getDictID(
     mut dictBuffer: *const std::ffi::c_void,
     mut dictSize: usize,
 ) -> std::ffi::c_uint {
-    if dictSize < 8 as std::ffi::c_int as usize {
+    if dictSize < 8 {
         return 0 as std::ffi::c_int as std::ffi::c_uint;
     }
     if MEM_readLE32(dictBuffer) != ZSTD_MAGIC_DICTIONARY {
@@ -959,7 +959,7 @@ pub unsafe extern "C" fn ZDICT_getDictHeaderSize(
     mut dictSize: usize,
 ) -> usize {
     let mut headerSize: usize = 0;
-    if dictSize <= 8 as std::ffi::c_int as usize
+    if dictSize <= 8
         || MEM_readLE32(dictBuffer) != ZSTD_MAGIC_DICTIONARY
     {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
@@ -1340,11 +1340,11 @@ unsafe extern "C" fn ZDICT_analyzePos(
     let mut mml: u32 = 0;
     let mut refinedStart = start;
     let mut refinedEnd = end;
-    if notificationLevel >= 4 as std::ffi::c_int as u32 {
+    if notificationLevel >= 4 {
         fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         fflush(stderr);
     }
-    if notificationLevel >= 4 as std::ffi::c_int as u32 {
+    if notificationLevel >= 4 {
         fprintf(
             stderr,
             b"found %3u matches of length >= %i at pos %7u  \0" as *const u8
@@ -1355,7 +1355,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
         );
         fflush(stderr);
     }
-    if notificationLevel >= 4 as std::ffi::c_int as u32 {
+    if notificationLevel >= 4 {
         fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
         fflush(stderr);
     }
@@ -1425,7 +1425,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
     }
     let mut length_2 = MINMATCHLENGTH as usize;
     while (length_2 >= MINMATCHLENGTH as usize) as std::ffi::c_int
-        & (start > 0 as std::ffi::c_int as u32) as std::ffi::c_int != 0
+        & (start > 0) as std::ffi::c_int != 0
     {
         length_2 = ZDICT_count(
             b.offset(pos as isize) as *const std::ffi::c_void,
@@ -1455,7 +1455,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
         as usize] = lengthList[maxLength.wrapping_sub(1)
         as usize];
     i = maxLength.wrapping_sub(2) as std::ffi::c_int;
-    while i >= 0 as std::ffi::c_int {
+    while i >= 0 {
         cumulLength[i
             as usize] = (cumulLength[(i + 1 as std::ffi::c_int) as usize])
             .wrapping_add(lengthList[i as usize]);
@@ -1507,7 +1507,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
         u_1 = u_1.wrapping_add(1);
         u_1;
     }
-    if notificationLevel >= 4 as std::ffi::c_int as u32 {
+    if notificationLevel >= 4 {
         fprintf(
             stderr,
             b"Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n\0"
@@ -1600,7 +1600,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                 *fresh2 = (*fresh2)
                     .wrapping_add(elt.length / 8 as std::ffi::c_int as u32);
                 elt = *table.offset(u as isize);
-                while u > 1 as std::ffi::c_int as u32
+                while u > 1
                     && (*table
                         .offset(u.wrapping_sub(1) as isize))
                         .savings < elt.savings
@@ -1634,7 +1634,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                 let ref mut fresh3 = (*table.offset(u as isize)).savings;
                 *fresh3 = (*fresh3)
                     .wrapping_add(elt.length / 8 as std::ffi::c_int as u32);
-                if addedLength_0 > 0 as std::ffi::c_int {
+                if addedLength_0 > 0 {
                     let ref mut fresh4 = (*table.offset(u as isize)).length;
                     *fresh4 = (*fresh4 as std::ffi::c_uint)
                         .wrapping_add(addedLength_0 as std::ffi::c_uint) as u32 as u32;
@@ -1647,7 +1647,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                         ) as u32 as u32;
                 }
                 elt = *table.offset(u as isize);
-                while u > 1 as std::ffi::c_int as u32
+                while u > 1
                     && (*table
                         .offset(u.wrapping_sub(1) as isize))
                         .savings < elt.savings
@@ -1682,7 +1682,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                 {
                     let addedLength_1 = (if (elt.length)
                         .wrapping_sub((*table.offset(u as isize)).length)
-                        > 1 as std::ffi::c_int as u32
+                        > 1
                     {
                         (elt.length).wrapping_sub((*table.offset(u as isize)).length)
                     } else {
@@ -1817,7 +1817,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
     let mut displayClock: clock_t = 0;
     let refreshRate = CLOCKS_PER_SEC as __clock_t * 3 as std::ffi::c_int as __clock_t
         / 10 as std::ffi::c_int as __clock_t;
-    if notificationLevel >= 2 as std::ffi::c_int as u32 {
+    if notificationLevel >= 2 {
         fprintf(
             stderr,
             b"\r%70s\r\0" as *const u8 as *const std::ffi::c_char,
@@ -1839,7 +1839,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             bufferSize.wrapping_add(16),
         );
         if bufferSize > ZDICT_MAX_SAMPLES_SIZE as usize {
-            if notificationLevel >= 3 as std::ffi::c_int as u32 {
+            if notificationLevel >= 3 {
                 fprintf(
                     stderr,
                     b"sample set too large : reduced to %u MB ...\n\0" as *const u8
@@ -1854,7 +1854,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             nbFiles = nbFiles.wrapping_sub(1);
             bufferSize = bufferSize.wrapping_sub(*fileSizes.offset(nbFiles as isize));
         }
-        if notificationLevel >= 2 as std::ffi::c_int as u32 {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"sorting %u files of total size %u MB ...\n\0" as *const u8
@@ -1870,7 +1870,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             bufferSize as std::ffi::c_int,
             0 as std::ffi::c_int,
         );
-        if divSuftSortResult != 0 as std::ffi::c_int {
+        if divSuftSortResult != 0 {
             result = -(ZSTD_error_GENERIC as std::ffi::c_int) as usize;
         } else {
             *suffix.offset(bufferSize as isize) = bufferSize as std::ffi::c_uint;
@@ -1902,14 +1902,14 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                 pos = pos.wrapping_add(1);
                 pos;
             }
-            if notificationLevel >= 2 as std::ffi::c_int as u32 {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"finding patterns ... \n\0" as *const u8 as *const std::ffi::c_char,
                 );
                 fflush(stderr);
             }
-            if notificationLevel >= 3 as std::ffi::c_int as u32 {
+            if notificationLevel >= 3 {
                 fprintf(
                     stderr,
                     b"minimum ratio : %u \n\0" as *const u8 as *const std::ffi::c_char,
@@ -1937,13 +1937,13 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                         minRatio,
                         notificationLevel,
                     );
-                    if solution.length == 0 as std::ffi::c_int as u32 {
+                    if solution.length == 0 {
                         cursor = cursor.wrapping_add(1);
                         cursor;
                     } else {
                         ZDICT_insertDictItem(dictList, dictListSize, solution, buffer);
                         cursor = cursor.wrapping_add(solution.length);
-                        if notificationLevel >= 2 as std::ffi::c_int as u32 {
+                        if notificationLevel >= 2 {
                             if ZDICT_clockSpan(displayClock) > refreshRate {
                                 displayClock = clock();
                                 fprintf(
@@ -1954,7 +1954,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                                 );
                                 fflush(stderr);
                             }
-                            if notificationLevel >= 4 as std::ffi::c_int as u32 {
+                            if notificationLevel >= 4 {
                                 fflush(stderr);
                             }
                         }
@@ -2012,7 +2012,7 @@ unsafe extern "C" fn ZDICT_countEStats(
     }
     let errorCode = ZSTD_compressBegin_usingCDict_deprecated(esr.zc, esr.dict);
     if ERR_isError(errorCode) != 0 {
-        if notificationLevel >= 1 as std::ffi::c_int as u32 {
+        if notificationLevel >= 1 {
             fprintf(
                 stderr,
                 b"warning : ZSTD_compressBegin_usingCDict failed \n\0" as *const u8
@@ -2030,7 +2030,7 @@ unsafe extern "C" fn ZDICT_countEStats(
         srcSize,
     );
     if ERR_isError(cSize) != 0 {
-        if notificationLevel >= 3 as std::ffi::c_int as u32 {
+        if notificationLevel >= 3 {
             fprintf(
                 stderr,
                 b"warning : could not compress sample size %u \n\0" as *const u8
@@ -2088,7 +2088,7 @@ unsafe extern "C" fn ZDICT_countEStats(
             u_1 = u_1.wrapping_add(1);
             u_1;
         }
-        if nbSeq >= 2 as std::ffi::c_int as u32 {
+        if nbSeq >= 2 {
             let seq: *const SeqDef = (*seqStorePtr).sequencesStart;
             let mut offset1 = ((*seq.offset(0)).offBase)
                 .wrapping_sub(ZSTD_REP_NUM as u32);
@@ -2130,7 +2130,7 @@ unsafe extern "C" fn ZDICT_insertSortCount(
     (*table.offset(ZSTD_REP_NUM as isize)).offset = val;
     (*table.offset(ZSTD_REP_NUM as isize)).count = count;
     u = ZSTD_REP_NUM as u32;
-    while u > 0 as std::ffi::c_int as u32 {
+    while u > 0 {
         let mut tmp = offsetCount_t {
             offset: 0,
             count: 0,
@@ -2153,7 +2153,7 @@ unsafe extern "C" fn ZDICT_insertSortCount(
 unsafe extern "C" fn ZDICT_flatLit(mut countLit: *mut std::ffi::c_uint) {
     let mut u: std::ffi::c_int = 0;
     u = 1;
-    while u < 256 as std::ffi::c_int {
+    while u < 256 {
         *countLit.offset(u as isize) = 2;
         u += 1;
         u;
@@ -2246,7 +2246,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         eSize = -(ZSTD_error_dictionaryCreation_failed as std::ffi::c_int) as usize;
     } else {
         u = 0;
-        while u < 256 as std::ffi::c_int as u32 {
+        while u < 256 {
             countLit[u as usize] = 1;
             u = u.wrapping_add(1);
             u;
@@ -2284,7 +2284,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
             0 as std::ffi::c_int,
             ::core::mem::size_of::<[offsetCount_t; 4]>(),
         );
-        if compressionLevel == 0 as std::ffi::c_int {
+        if compressionLevel == 0 {
             compressionLevel = ZSTD_CLEVEL_DEFAULT;
         }
         params = ZSTD_getParams(
@@ -2305,7 +2305,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         esr.workPlace = libc::malloc(ZSTD_BLOCKSIZE_MAX as usize);
         if (esr.dict).is_null() || (esr.zc).is_null() || (esr.workPlace).is_null() {
             eSize = -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
-            if notificationLevel >= 1 as std::ffi::c_int as std::ffi::c_uint {
+            if notificationLevel >= 1 {
                 fprintf(
                     stderr,
                     b"Not enough memory \n\0" as *const u8 as *const std::ffi::c_char,
@@ -2332,8 +2332,8 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 u = u.wrapping_add(1);
                 u;
             }
-            if notificationLevel >= 4 as std::ffi::c_int as std::ffi::c_uint {
-                if notificationLevel >= 4 as std::ffi::c_int as std::ffi::c_uint {
+            if notificationLevel >= 4 {
+                if notificationLevel >= 4 {
                     fprintf(
                         stderr,
                         b"Offset Code Frequencies : \n\0" as *const u8
@@ -2343,7 +2343,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 }
                 u = 0;
                 while u <= offcodeMax {
-                    if notificationLevel >= 4 as std::ffi::c_int as std::ffi::c_uint {
+                    if notificationLevel >= 4 {
                         fprintf(
                             stderr,
                             b"%2u :%7u \n\0" as *const u8 as *const std::ffi::c_char,
@@ -2366,7 +2366,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
             );
             if ERR_isError(maxNbBits) != 0 {
                 eSize = maxNbBits;
-                if notificationLevel >= 1 as std::ffi::c_int as std::ffi::c_uint {
+                if notificationLevel >= 1 {
                     fprintf(
                         stderr,
                         b" HUF_buildCTable error \n\0" as *const u8
@@ -2375,8 +2375,8 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     fflush(stderr);
                 }
             } else {
-                if maxNbBits == 8 as std::ffi::c_int as usize {
-                    if notificationLevel >= 2 as std::ffi::c_int as std::ffi::c_uint {
+                if maxNbBits == 8 {
+                    if notificationLevel >= 2 {
                         fprintf(
                             stderr,
                             b"warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n\0"
@@ -2424,7 +2424,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 );
                 if ERR_isError(errorCode) != 0 {
                     eSize = errorCode;
-                    if notificationLevel >= 1 as std::ffi::c_int as std::ffi::c_uint {
+                    if notificationLevel >= 1 {
                         fprintf(
                             stderr,
                             b"FSE_normalizeCount error with offcodeCount \n\0"
@@ -2452,7 +2452,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     );
                     if ERR_isError(errorCode) != 0 {
                         eSize = errorCode;
-                        if notificationLevel >= 1 as std::ffi::c_int as std::ffi::c_uint
+                        if notificationLevel >= 1
                         {
                             fprintf(
                                 stderr,
@@ -2482,7 +2482,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         if ERR_isError(errorCode) != 0 {
                             eSize = errorCode;
                             if notificationLevel
-                                >= 1 as std::ffi::c_int as std::ffi::c_uint
+                                >= 1
                             {
                                 fprintf(
                                     stderr,
@@ -2505,7 +2505,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                             if ERR_isError(hhSize) != 0 {
                                 eSize = hhSize;
                                 if notificationLevel
-                                    >= 1 as std::ffi::c_int as std::ffi::c_uint
+                                    >= 1
                                 {
                                     fprintf(
                                         stderr,
@@ -2528,7 +2528,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                 if ERR_isError(ohSize) != 0 {
                                     eSize = ohSize;
                                     if notificationLevel
-                                        >= 1 as std::ffi::c_int as std::ffi::c_uint
+                                        >= 1
                                     {
                                         fprintf(
                                             stderr,
@@ -2551,7 +2551,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                     if ERR_isError(mhSize) != 0 {
                                         eSize = mhSize;
                                         if notificationLevel
-                                            >= 1 as std::ffi::c_int as std::ffi::c_uint
+                                            >= 1
                                         {
                                             fprintf(
                                                 stderr,
@@ -2574,7 +2574,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                         if ERR_isError(lhSize) != 0 {
                                             eSize = lhSize;
                                             if notificationLevel
-                                                >= 1 as std::ffi::c_int as std::ffi::c_uint
+                                                >= 1
                                             {
                                                 fprintf(
                                                     stderr,
@@ -2587,11 +2587,11 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                             dstPtr = dstPtr.offset(lhSize as isize);
                                             maxDstSize = maxDstSize.wrapping_sub(lhSize);
                                             eSize = eSize.wrapping_add(lhSize);
-                                            if maxDstSize < 12 as std::ffi::c_int as usize {
+                                            if maxDstSize < 12 {
                                                 eSize = -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int)
                                                     as usize;
                                                 if notificationLevel
-                                                    >= 1 as std::ffi::c_int as std::ffi::c_uint
+                                                    >= 1
                                                 {
                                                     fprintf(
                                                         stderr,
@@ -2661,7 +2661,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
 ) -> usize {
     let mut hSize: usize = 0;
     let mut header: [u8; 256] = [0; 256];
-    let compressionLevel = if params.compressionLevel == 0 as std::ffi::c_int {
+    let compressionLevel = if params.compressionLevel == 0 {
         ZSTD_CLEVEL_DEFAULT
     } else {
         params.compressionLevel
@@ -2692,7 +2692,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
         dictID,
     );
     hSize = 8;
-    if notificationLevel >= 2 as std::ffi::c_int as u32 {
+    if notificationLevel >= 2 {
         fprintf(
             stderr,
             b"\r%70s\r\0" as *const u8 as *const std::ffi::c_char,
@@ -2700,7 +2700,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
         );
         fflush(stderr);
     }
-    if notificationLevel >= 2 as std::ffi::c_int as u32 {
+    if notificationLevel >= 2 {
         fprintf(stderr, b"statistics ... \n\0" as *const u8 as *const std::ffi::c_char);
         fflush(stderr);
     }
@@ -2753,14 +2753,14 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
     mut nbSamples: std::ffi::c_uint,
     mut params: ZDICT_params_t,
 ) -> usize {
-    let compressionLevel = if params.compressionLevel == 0 as std::ffi::c_int {
+    let compressionLevel = if params.compressionLevel == 0 {
         ZSTD_CLEVEL_DEFAULT
     } else {
         params.compressionLevel
     };
     let notificationLevel = params.notificationLevel;
     let mut hSize: usize = 8;
-    if notificationLevel >= 2 as std::ffi::c_int as u32 {
+    if notificationLevel >= 2 {
         fprintf(
             stderr,
             b"\r%70s\r\0" as *const u8 as *const std::ffi::c_char,
@@ -2768,7 +2768,7 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
         );
         fflush(stderr);
     }
-    if notificationLevel >= 2 as std::ffi::c_int as u32 {
+    if notificationLevel >= 2 {
         fprintf(stderr, b"statistics ... \n\0" as *const u8 as *const std::ffi::c_char);
         fflush(stderr);
     }
@@ -2851,13 +2851,13 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             .wrapping_mul(::core::mem::size_of::<dictItem>()),
     ) as *mut dictItem;
     let selectivity = if params.selectivityLevel
-        == 0 as std::ffi::c_int as std::ffi::c_uint
+        == 0
     {
         g_selectivity_default
     } else {
         params.selectivityLevel
     };
-    let minRep = if selectivity > 30 as std::ffi::c_int as std::ffi::c_uint {
+    let minRep = if selectivity > 30 {
         MINRATIO as std::ffi::c_uint
     } else {
         nbSamples >> selectivity
@@ -2888,7 +2888,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         minRep,
         notificationLevel,
     );
-    if params.zParams.notificationLevel >= 3 as std::ffi::c_int as std::ffi::c_uint {
+    if params.zParams.notificationLevel >= 3 {
         let nb = if 25_u32
             < (*dictList.offset(0)).pos
         {
@@ -2898,7 +2898,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         };
         let dictContentSize = ZDICT_dictSize(dictList);
         let mut u: std::ffi::c_uint = 0;
-        if notificationLevel >= 3 as std::ffi::c_int as u32 {
+        if notificationLevel >= 3 {
             fprintf(
                 stderr,
                 b"\n %u segments found, of total size %u \n\0" as *const u8
@@ -2909,7 +2909,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             );
             fflush(stderr);
         }
-        if notificationLevel >= 3 as std::ffi::c_int as u32 {
+        if notificationLevel >= 3 {
             fprintf(
                 stderr,
                 b"list %u best segments \n\0" as *const u8 as *const std::ffi::c_char,
@@ -2932,7 +2932,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                 free(dictList as *mut std::ffi::c_void);
                 return -(ZSTD_error_GENERIC as std::ffi::c_int) as usize;
             }
-            if notificationLevel >= 3 as std::ffi::c_int as u32 {
+            if notificationLevel >= 3 {
                 fprintf(
                     stderr,
                     b"%3u:%3u bytes at pos %8u, savings %7u bytes |\0" as *const u8
@@ -2949,7 +2949,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                     as *const std::ffi::c_void,
                 printedLength as usize,
             );
-            if notificationLevel >= 3 as std::ffi::c_int as u32 {
+            if notificationLevel >= 3 {
                 fprintf(stderr, b"| \n\0" as *const u8 as *const std::ffi::c_char);
                 fflush(stderr);
             }
@@ -2963,7 +2963,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         return -(ZSTD_error_dictionaryCreation_failed as std::ffi::c_int) as usize;
     }
     if (dictContentSize_0 as usize) < targetDictSize / 4 as std::ffi::c_int as usize {
-        if notificationLevel >= 2 as std::ffi::c_int as u32 {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  warning : selected content significantly smaller than requested (%u < %u) \n\0"
@@ -2973,8 +2973,8 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             );
             fflush(stderr);
         }
-        if samplesBuffSize < 10 as std::ffi::c_int as usize * targetDictSize {
-            if notificationLevel >= 2 as std::ffi::c_int as u32 {
+        if samplesBuffSize < 10 * targetDictSize {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"!  consider increasing the number of samples (total size : %u MB)\n\0"
@@ -2985,7 +2985,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             }
         }
         if minRep > MINRATIO as std::ffi::c_uint {
-            if notificationLevel >= 2 as std::ffi::c_int as u32 {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"!  consider increasing selectivity to produce larger dictionary (-s%u) \n\0"
@@ -2994,7 +2994,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                 );
                 fflush(stderr);
             }
-            if notificationLevel >= 2 as std::ffi::c_int as u32 {
+            if notificationLevel >= 2 {
                 fprintf(
                     stderr,
                     b"!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n\0"
@@ -3006,7 +3006,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     }
     if dictContentSize_0 as usize > targetDictSize * 3 as std::ffi::c_int as usize
         && nbSamples > (2 as std::ffi::c_int * MINRATIO) as std::ffi::c_uint
-        && selectivity > 1 as std::ffi::c_int as std::ffi::c_uint
+        && selectivity > 1
     {
         let mut proposedSelectivity = selectivity
             .wrapping_sub(1);
@@ -3014,7 +3014,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             proposedSelectivity = proposedSelectivity.wrapping_sub(1);
             proposedSelectivity;
         }
-        if notificationLevel >= 2 as std::ffi::c_int as u32 {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  note : calculated dictionary significantly larger than requested (%u > %u) \n\0"
@@ -3024,7 +3024,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             );
             fflush(stderr);
         }
-        if notificationLevel >= 2 as std::ffi::c_int as u32 {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n\0"
@@ -3033,7 +3033,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             );
             fflush(stderr);
         }
-        if notificationLevel >= 2 as std::ffi::c_int as u32 {
+        if notificationLevel >= 2 {
             fprintf(
                 stderr,
                 b"!  always test dictionary efficiency on real samples \n\0" as *const u8

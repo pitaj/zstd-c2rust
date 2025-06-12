@@ -39,7 +39,7 @@ unsafe extern "C" fn hash2(
     mut p: *const std::ffi::c_void,
     mut hashLog: std::ffi::c_uint,
 ) -> std::ffi::c_uint {
-    if hashLog == 8 as std::ffi::c_int as std::ffi::c_uint {
+    if hashLog == 8 {
         return *(p as *const u8).offset(0) as u32;
     }
     return (MEM_read16(p) as u32).wrapping_mul(KNUTH)
@@ -150,7 +150,7 @@ unsafe extern "C" fn ZSTD_recordFingerprint_43(
     );
 }
 unsafe extern "C" fn abs64(mut s64: i64) -> u64 {
-    return (if s64 < 0 as std::ffi::c_int as i64 { -s64 } else { s64 }) as u64;
+    return (if s64 < 0 { -s64 } else { s64 }) as u64;
 }
 unsafe extern "C" fn fpDistance(
     mut fp1: *const Fingerprint,
@@ -314,7 +314,7 @@ unsafe extern "C" fn ZSTD_splitBlock_byChunks(
             return pos
         } else {
             mergeEvents(&mut (*fpstats).pastEvents, &mut (*fpstats).newEvents);
-            if penalty > 0 as std::ffi::c_int {
+            if penalty > 0 {
                 penalty -= 1;
                 penalty;
             }
@@ -400,7 +400,7 @@ pub unsafe extern "C" fn ZSTD_splitBlock(
     mut workspace: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) -> usize {
-    if level == 0 as std::ffi::c_int {
+    if level == 0 {
         return ZSTD_splitBlock_fromBorders(blockStart, blockSize, workspace, wkspSize);
     }
     return ZSTD_splitBlock_byChunks(

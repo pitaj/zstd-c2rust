@@ -368,7 +368,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_digest(
     mut state: *const XXH64_state_t,
 ) -> XXH64_hash_t {
     let mut h64: xxh_u64 = 0;
-    if (*state).total_len >= 32 as std::ffi::c_int as XXH64_hash_t {
+    if (*state).total_len >= 32 {
         h64 = (::core::intrinsics::rotate_left(
             (*state).v[0 as std::ffi::c_int as usize],
             1 as std::ffi::c_int as std::ffi::c_ulong,
