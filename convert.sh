@@ -163,6 +163,14 @@ case $1 in
 
     ;;
 
+  min-max)
+    # MIN!(ofBits, STREAM_ACCUMULATOR_MIN - 1)
+    # MAX!(minIndexToOverflowCorrect * adjustment, minIndexToOverflowCorrect)
+    perl -i -p0e 's/\bMIN!\(/std::cmp::min(/gm'  src/*/*.rs
+    perl -i -p0e 's/\bMAX!\(/std::cmp::max(/gm'  src/*/*.rs
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs
