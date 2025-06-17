@@ -169,6 +169,23 @@ case $1 in
     perl -i -p0e 's/\bMIN!\(/std::cmp::min(/gm'  src/*/*.rs
     perl -i -p0e 's/\bMAX!\(/std::cmp::max(/gm'  src/*/*.rs
 
+    # std::cmp::max(minTarget, cctxParams -> targetCBlockSize)
+    # std::cmp::max(
+    #     21, ZSTD_cycleLog(params -> cParams.chainLog, params -> cParams.strategy) + 3
+    # )
+    # jobLog = std::cmp::max(20, params -> cParams.windowLog + 2);
+    # std::cmp::max(
+    #     (usize) ZSTD_FRAMEHEADERSIZE_MIN(zds -> format), hSize
+    # )
+    perl -i -p0e 's/(std::cmp::(?:min|max)\(\n?.*?)\b([\w_\d]+) -> (.*?)\b([\w_\d]+) -> /$1(*$2).$3(*$4)./gm'  src/*/*.rs
+    perl -i -p0e 's/(std::cmp::(?:min|max)\(\n?.*?)\b([\w_\d]+) -> /$1(*$2)./gm'  src/*/*.rs
+
+    # std::cmp::max(elt.length - table[u].length, 1)
+    # std::cmp::max(
+    #     info.maxNbAdditionalBits, table[u].nbAdditionalBits
+    # )
+    perl -i -p0e 's/(std::cmp::(?:min|max)\(\n?.*?)\b([\w_\d]+)\[([\w_\d]+)\]/$1(*$2.offset($3 as isize))/gm'  src/*/*.rs
+
     ;;
 
   libc-alloc-mem)
