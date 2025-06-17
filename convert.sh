@@ -188,6 +188,39 @@ case $1 in
 
     ;;
 
+  reset)
+    ./convert.sh clean
+    ./convert.sh transpile
+    ./convert.sh file-structure
+    git restore src/lib.rs
+    git restore Cargo.lock
+    ;;
+
+  redo)
+    ./convert.sh missing-m128i_u
+    ./convert.sh integers
+    ./convert.sh cast-sizeof
+    ./convert.sh cast-var-decl
+    ./convert.sh cast-neg1-max
+    ./convert.sh cast-shift-rhs
+    ./convert.sh cast-argument
+    ./convert.sh cast-constant
+    ./convert.sh cast-constant-c
+    ./convert.sh cast-rhs
+    ./convert.sh cast-constant-neg
+    ./convert.sh cast-compare
+    ./convert.sh cast-terminated
+    ./convert.sh cast-multi
+    ./convert.sh cast-term-paren
+    ./convert.sh cast-index
+    ./convert.sh cast-neg-term
+    ./convert.sh cast-primitive
+    ./convert.sh error
+    ./convert.sh min-max
+    ./convert.sh malloc-calloc-free-memset-memcpy
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs
