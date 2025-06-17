@@ -186,7 +186,7 @@ unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: u
     if MEM_32bits() != 0 {
         MEM_writeLE32(memPtr, val as u32);
     } else {
-        MEM_writeLE64(memPtr, val);
+        MEM_writeLE64(memPtr, val as u64);
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {

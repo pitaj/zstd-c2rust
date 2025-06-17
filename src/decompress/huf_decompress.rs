@@ -239,7 +239,7 @@ unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize 
     if MEM_32bits() != 0 {
         return MEM_readLE32(memPtr) as usize
     } else {
-        return MEM_readLE64(memPtr)
+        return MEM_readLE64(memPtr) as usize
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
@@ -473,10 +473,9 @@ unsafe extern "C" fn BIT_reloadDStreamFast(
 unsafe extern "C" fn BIT_reloadDStream(
     mut bitD: *mut BIT_DStream_t,
 ) -> BIT_DStream_status {
-    if ((*bitD).bitsConsumed as std::ffi::c_ulong
+    if (*bitD).bitsConsumed as usize
         > (::core::mem::size_of::<BitContainerType>())
-            .wrapping_mul(8)) as std::ffi::c_int
-        as std::ffi::c_long != 0
+            .wrapping_mul(8)
     {
         static mut zeroFilled: BitContainerType = 0 as std::ffi::c_int
             as BitContainerType;
@@ -487,7 +486,7 @@ unsafe extern "C" fn BIT_reloadDStream(
         return BIT_reloadDStream_internal(bitD);
     }
     if (*bitD).ptr == (*bitD).start {
-        if ((*bitD).bitsConsumed as std::ffi::c_ulong)
+        if ((*bitD).bitsConsumed as usize)
             < (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8)
         {
@@ -513,7 +512,7 @@ unsafe extern "C" fn BIT_endOfDStream(
     mut DStream: *const BIT_DStream_t,
 ) -> std::ffi::c_uint {
     return ((*DStream).ptr == (*DStream).start
-        && (*DStream).bitsConsumed as std::ffi::c_ulong
+        && (*DStream).bitsConsumed as usize
             == (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8))
         as std::ffi::c_int as std::ffi::c_uint;
@@ -588,19 +587,15 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
                 .wrapping_add(6),
         );
     (*args)
-        .iend[0 as std::ffi::c_int
-        as usize] = istart.offset(6);
+        .iend[0] = istart.offset(6);
     (*args)
-        .iend[1 as std::ffi::c_int
-        as usize] = ((*args).iend[0])
+        .iend[1] = ((*args).iend[0])
         .offset(length1 as isize);
     (*args)
-        .iend[2 as std::ffi::c_int
-        as usize] = ((*args).iend[1])
+        .iend[2] = ((*args).iend[1])
         .offset(length2 as isize);
     (*args)
-        .iend[3 as std::ffi::c_int
-        as usize] = ((*args).iend[2])
+        .iend[3] = ((*args).iend[2])
         .offset(length3 as isize);
     if length1 < 8
         || length2 < 8
@@ -613,40 +608,33 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
     (*args)
-        .ip[0 as std::ffi::c_int
-        as usize] = ((*args).iend[1])
+        .ip[0] = ((*args).iend[1])
         .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args)
-        .ip[1 as std::ffi::c_int
-        as usize] = ((*args).iend[2])
+        .ip[1] = ((*args).iend[2])
         .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args)
-        .ip[2 as std::ffi::c_int
-        as usize] = ((*args).iend[3])
+        .ip[2] = ((*args).iend[3])
         .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args)
-        .ip[3 as std::ffi::c_int
-        as usize] = (src as *const u8)
+        .ip[3] = (src as *const u8)
         .offset(srcSize as isize)
         .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args).op[0] = dst as *mut u8;
     (*args)
-        .op[1 as std::ffi::c_int
-        as usize] = ((*args).op[0])
+        .op[1] = ((*args).op[0])
         .offset(
             (dstSize.wrapping_add(3)
                 / 4_usize) as isize,
         );
     (*args)
-        .op[2 as std::ffi::c_int
-        as usize] = ((*args).op[1])
+        .op[2] = ((*args).op[1])
         .offset(
             (dstSize.wrapping_add(3)
                 / 4_usize) as isize,
         );
     (*args)
-        .op[3 as std::ffi::c_int
-        as usize] = ((*args).op[2])
+        .op[3] = ((*args).op[2])
         .offset(
             (dstSize.wrapping_add(3)
                 / 4_usize) as isize,
@@ -655,17 +643,13 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
         return 0;
     }
     (*args)
-        .bits[0 as std::ffi::c_int
-        as usize] = HUF_initFastDStream((*args).ip[0]);
+        .bits[0] = HUF_initFastDStream((*args).ip[0]) as u64;
     (*args)
-        .bits[1 as std::ffi::c_int
-        as usize] = HUF_initFastDStream((*args).ip[1]);
+        .bits[1] = HUF_initFastDStream((*args).ip[1]) as u64;
     (*args)
-        .bits[2 as std::ffi::c_int
-        as usize] = HUF_initFastDStream((*args).ip[2]);
+        .bits[2] = HUF_initFastDStream((*args).ip[2]) as u64;
     (*args)
-        .bits[3 as std::ffi::c_int
-        as usize] = HUF_initFastDStream((*args).ip[3]);
+        .bits[3] = HUF_initFastDStream((*args).ip[3]) as u64;
     (*args).ilowest = istart;
     (*args).oend = oend;
     (*args).dt = dt;
@@ -2402,18 +2386,17 @@ unsafe extern "C" fn HUF_decodeLastSymbolX2(
     );
     if (*dt.offset(val as isize)).length as std::ffi::c_int == 1 {
         BIT_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
-    } else if ((*DStream).bitsConsumed as std::ffi::c_ulong)
+    } else if ((*DStream).bitsConsumed as usize)
         < (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8)
     {
         BIT_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
-        if (*DStream).bitsConsumed as std::ffi::c_ulong
+        if (*DStream).bitsConsumed as usize
             > (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8)
         {
             (*DStream)
-                .bitsConsumed = (::core::mem::size_of::<BitContainerType>()
-                as std::ffi::c_ulong)
+                .bitsConsumed = (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8)
                 as std::ffi::c_uint;
         }

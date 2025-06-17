@@ -779,8 +779,8 @@ unsafe extern "C" fn COVER_checkParameters(
     if parameters.d > parameters.k {
         return 0;
     }
-    if parameters.splitPoint <= 0
-        || parameters.splitPoint > 1
+    if parameters.splitPoint <= 0.0
+        || parameters.splitPoint > 1.0
     {
         return 0;
     }
@@ -840,9 +840,9 @@ unsafe extern "C" fn COVER_ctx_init(
     };
     (*ctx).displayLevel = displayLevel;
     if totalSamplesSize
-        < (if d as std::ffi::c_ulong > ::core::mem::size_of::<u64>()
+        < (if d as usize > ::core::mem::size_of::<u64>()
         {
-            d as std::ffi::c_ulong
+            d as usize
         } else {
             ::core::mem::size_of::<u64>()
         })
@@ -932,10 +932,10 @@ unsafe extern "C" fn COVER_ctx_init(
     (*ctx)
         .suffixSize = trainingSamplesSize
         .wrapping_sub(
-            (if d as std::ffi::c_ulong
+            (if d as usize
                 > ::core::mem::size_of::<u64>()
             {
-                d as std::ffi::c_ulong
+                d as usize
             } else {
                 ::core::mem::size_of::<u64>()
             }),
@@ -1057,7 +1057,7 @@ pub unsafe extern "C" fn COVER_warnOnSmallCorpus(
     mut displayLevel: std::ffi::c_int,
 ) {
     let ratio = nbDmers as std::ffi::c_double / maxDictSize as std::ffi::c_double;
-    if ratio >= 10 {
+    if ratio >= 10.0 {
         return;
     }
     if displayLevel >= 1 {
@@ -1435,7 +1435,7 @@ pub unsafe extern "C" fn COVER_best_init(mut best: *mut COVER_best_t) {
     (*best).liveJobs = 0;
     (*best).dict = NULL as *mut std::ffi::c_void;
     (*best).dictSize = 0;
-    (*best).compressedSize = -1;
+    (*best).compressedSize = usize::MAX;
     libc::memset(
         &mut (*best).parameters as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
         0,
@@ -1880,8 +1880,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     let mut pool = NULL as *mut POOL_ctx;
     let mut warned: std::ffi::c_int = 0;
     let mut lastUpdateTime: clock_t = 0;
-    if splitPoint <= 0
-        || splitPoint > 1
+    if splitPoint <= 0.0
+        || splitPoint > 1.0
     {
         if displayLevel >= 1 {
             fprintf(

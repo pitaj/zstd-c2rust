@@ -278,8 +278,8 @@ pub const bt_raw: blockType_e = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_FrameHeader {
-    pub frameContentSize: std::ffi::c_ulonglong,
-    pub windowSize: std::ffi::c_ulonglong,
+    pub frameContentSize: usize,
+    pub windowSize: usize,
     pub blockSizeMax: std::ffi::c_uint,
     pub frameType: ZSTD_FrameType_e,
     pub headerSize: std::ffi::c_uint,
@@ -473,7 +473,7 @@ unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize 
     if MEM_32bits() != 0 {
         return MEM_readLE32(memPtr) as usize
     } else {
-        return MEM_readLE64(memPtr)
+        return MEM_readLE64(memPtr) as usize
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
@@ -675,7 +675,7 @@ unsafe extern "C" fn BIT_getMiddleBits(
         .wrapping_mul(8)
         .wrapping_sub(1) as u32;
     return bitContainer >> (start & regMask)
-        & (1_u64 << nbBits)
+        & (1_usize << nbBits)
             .wrapping_sub(1);
 }
 #[inline(always)]
@@ -687,8 +687,8 @@ unsafe extern "C" fn BIT_lookBits(
         (*bitD).bitContainer,
         (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8)
-            .wrapping_sub((*bitD).bitsConsumed as std::ffi::c_ulong)
-            .wrapping_sub(nbBits as std::ffi::c_ulong) as u32,
+            .wrapping_sub((*bitD).bitsConsumed as usize)
+            .wrapping_sub(nbBits as usize) as u32,
         nbBits,
     );
 }
@@ -741,10 +741,9 @@ unsafe extern "C" fn BIT_reloadDStream_internal(
 unsafe extern "C" fn BIT_reloadDStream(
     mut bitD: *mut BIT_DStream_t,
 ) -> BIT_DStream_status {
-    if ((*bitD).bitsConsumed as std::ffi::c_ulong
+    if ((*bitD).bitsConsumed as usize)
         > (::core::mem::size_of::<BitContainerType>())
-            .wrapping_mul(8)) as std::ffi::c_int
-        as std::ffi::c_long != 0
+            .wrapping_mul(8)
     {
         static mut zeroFilled: BitContainerType = 0 as std::ffi::c_int
             as BitContainerType;
@@ -755,7 +754,7 @@ unsafe extern "C" fn BIT_reloadDStream(
         return BIT_reloadDStream_internal(bitD);
     }
     if (*bitD).ptr == (*bitD).start {
-        if ((*bitD).bitsConsumed as std::ffi::c_ulong)
+        if ((*bitD).bitsConsumed as usize)
             < (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8)
         {
@@ -781,10 +780,9 @@ unsafe extern "C" fn BIT_endOfDStream(
     mut DStream: *const BIT_DStream_t,
 ) -> std::ffi::c_uint {
     return ((*DStream).ptr == (*DStream).start
-        && (*DStream).bitsConsumed as std::ffi::c_ulong
+        && (*DStream).bitsConsumed as usize
             == (::core::mem::size_of::<BitContainerType>())
-                .wrapping_mul(8))
-        as std::ffi::c_int as std::ffi::c_uint;
+                .wrapping_mul(8)) as _;
 }
 pub const ZSTD_BLOCKSIZELOG_MAX: std::ffi::c_int = 17;
 pub const ZSTD_BLOCKSIZE_MAX: std::ffi::c_int = (1 as std::ffi::c_int)
@@ -3603,11 +3601,9 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
             }
             if ddictIsCold != 0 && nbSeq > 24 {
                 let pStart = *DTablePtr as *const std::ffi::c_void;
-                let pSize = (::core::mem::size_of::<ZSTD_seqSymbol>()
-                    as std::ffi::c_ulong)
+                let pSize = ::core::mem::size_of::<ZSTD_seqSymbol>()
                     .wrapping_mul(
-                        (1 as std::ffi::c_int + ((1 as std::ffi::c_int) << maxLog))
-                            as std::ffi::c_ulong,
+                        1 + (1_usize << maxLog),
                     );
                 let _ptr = pStart as *const std::ffi::c_char;
                 let _size = pSize;

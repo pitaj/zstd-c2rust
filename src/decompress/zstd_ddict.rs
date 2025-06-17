@@ -228,8 +228,8 @@ pub const bt_raw: blockType_e = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_FrameHeader {
-    pub frameContentSize: std::ffi::c_ulonglong,
-    pub windowSize: std::ffi::c_ulonglong,
+    pub frameContentSize: usize,
+    pub windowSize: usize,
     pub blockSizeMax: std::ffi::c_uint,
     pub frameType: ZSTD_FrameType_e,
     pub headerSize: std::ffi::c_uint,

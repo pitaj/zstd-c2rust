@@ -181,7 +181,7 @@ unsafe extern "C" fn compareFingerprints(
 ) -> std::ffi::c_int {
     let mut p50 = (*ref_0).nbEvents * (*newfp).nbEvents;
     let mut deviation = fpDistance(ref_0, newfp, hashLog);
-    let mut threshold = p50 * (THRESHOLD_BASE + penalty) as u64
+    let mut threshold = (p50 as u64) * (THRESHOLD_BASE + penalty) as u64
         / THRESHOLD_PENALTY_RATE as u64;
     return (deviation >= threshold) as std::ffi::c_int;
 }
@@ -332,7 +332,7 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
     let fpstats = workspace as *mut FPStats;
     let mut middleEvents = (workspace as *mut std::ffi::c_char)
         .offset(
-            (512 as std::ffi::c_ulong)
+            (512_usize)
                 .wrapping_mul(
                     ::core::mem::size_of::<std::ffi::c_uint>(),
                 ) as isize,

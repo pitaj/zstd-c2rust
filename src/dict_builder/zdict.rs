@@ -1973,9 +1973,9 @@ unsafe extern "C" fn ZDICT_fillNoise(
     mut buffer: *mut std::ffi::c_void,
     mut length: usize,
 ) {
-    let prime1 = 2654435761;
-    let prime2 = 2246822519;
-    let mut acc = prime1;
+    let prime1: u32 = 2654435761;
+    let prime2: u32 = 2246822519;
+    let mut acc: u32 = prime1;
     let mut p: usize = 0;
     p = 0;
     while p < length {
