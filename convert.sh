@@ -171,7 +171,7 @@ case $1 in
 
     ;;
 
-  malloc-calloc-free-memset-memcpy)
+  libc-alloc-mem)
     # fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
     # fn calloc(_: std::ffi::c_ulong, _: std::ffi::c_ulong) -> *mut std::ffi::c_void;
     # fn memset(
@@ -179,12 +179,12 @@ case $1 in
     #     _: std::ffi::c_int,
     #     _: std::ffi::c_ulong,
     # ) -> *mut std::ffi::c_void;
-    perl -i -p0e 's/\n\s*fn (?:malloc|calloc|free|memset|memcpy)\([^;]*?;//gm' src/*/*.rs
+    perl -i -p0e 's/\n\s*fn (?:malloc|calloc|free|memset|memcpy|memmove)\([^;]*?;//gm' src/*/*.rs
 
     # newBuff = malloc(sBuffSize.wrapping_add(NOISELENGTH as usize));
     # memcpy(newBuff, samplesBuffer, sBuffSize);
     # memset(
-    perl -i -p0e 's/([^:\w_\d])(malloc|calloc|free|memset|memcpy)\(/$1libc::$2(/gm' src/*/*.rs
+    perl -i -p0e 's/([^:\w_\d])(malloc|calloc|free|memset|memcpy|memmove)\(/$1libc::$2(/gm' src/*/*.rs
 
     ;;
 
@@ -217,7 +217,7 @@ case $1 in
     ./convert.sh cast-primitive
     ./convert.sh error
     ./convert.sh min-max
-    ./convert.sh malloc-calloc-free-memset-memcpy
+    ./convert.sh libc-alloc-mem
 
     ;;
 
