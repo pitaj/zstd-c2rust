@@ -21,7 +21,7 @@ case $1 in
 
     # Transpile with c2rust
     cd ../../..
-    c2rust transpile --emit-no-std --emit-build-files --overwrite-existing --reduce-type-annotations --translate-const-macros \
+    c2rust transpile --emit-no-std --emit-build-files --overwrite-existing --reduce-type-annotations --translate-const-macros --translate-fn-macros \
       --output-dir . build/cmake/output/compile_commands.json 2>&1 | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > c2rust.log)
 
     ;;
@@ -154,6 +154,12 @@ case $1 in
   cast-primitive)
     # 0 as usize
     perl -i -p0e 's/\b(\d+) as ([ui]size|[ui]\d+)/$1_$2/gm' src/*/*.rs
+
+    ;;
+
+  error)
+    # ERROR!(maxCode)
+    perl -i -p0e 's/ERROR!\((\w+)\)/ERROR(ZSTD_error_$1)/gm'  src/*/*.rs
 
     ;;
 
