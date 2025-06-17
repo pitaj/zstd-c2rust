@@ -141,7 +141,7 @@ case $1 in
 
   cast-index)
     # [0 as usize]
-    perl -i -p0e 's/\[(\d+)(?: as [\w\d:_]+)+\]/[$1]/gm' src/*/*.rs
+    perl -i -p0e 's/\[(\d+)(?:[\s\n]* as [\w\d:_]+)+\]/[$1]/gm' src/*/*.rs
 
     ;;
 
