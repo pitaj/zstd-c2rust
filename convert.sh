@@ -171,6 +171,14 @@ case $1 in
 
     ;;
 
+  malloc-memset-memcpy)
+    # newBuff = malloc(sBuffSize.wrapping_add(NOISELENGTH as usize));
+    # memcpy(newBuff, samplesBuffer, sBuffSize);
+    # memset(
+    perl -i -p0e 's/\b([^:])(malloc|memcpy|memset)\(/$1libc::$2(/gm'  src/*/*.rs
+
+    ;;
+
   missing-imports)
     # Fix missing imports
     sed -i "2 s/use ::c2rust_bitfields;/use ::c2rust_bitfields::BitfieldStruct;/" src/compress/zstdmt_compress.rs
