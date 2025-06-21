@@ -212,6 +212,31 @@ case $1 in
 
     ;;
 
+  displaylevel)
+    # if DISPLAYLEVEL!(1, "FASTCOVER parameters incorrect\n") >= 1 {
+    #     fprintf(
+    #         stderr,
+    #         b"FASTCOVER parameters incorrect\n\0" as *const u8
+    #             as *const std::ffi::c_char,
+    #     );
+    #     fflush(stderr);
+    # }
+    # if DISPLAYLEVEL!(
+    #     1, "dictBufferCapacity must be at least %u\n", ZDICT_DICTSIZE_MIN
+    # ) >= 1
+    # {
+    #     fprintf(
+    #         stderr,
+    #         b"dictBufferCapacity must be at least %u\n\0" as *const u8
+    #             as *const std::ffi::c_char,
+    #         256,
+    #     );
+    #     fflush(stderr);
+    # }
+    perl -i -p0e 's/if DISPLAYLEVEL!\([\s\n]*([^,]+),[\s\n]*((?:"(?:\\"|[^"])+"[\s\n*]*?)+)(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?[\s\n]*\)[^\{]+\{[^\}]+\}/display_level!($1, $2$3$4$5$6);/gm' src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
