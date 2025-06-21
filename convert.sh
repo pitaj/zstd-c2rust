@@ -205,6 +205,13 @@ case $1 in
 
     ;;
 
+  splitpoint-float)
+    # parameters.splitPoint <= 0
+    # parameters.splitPoint > 1
+    perl -i -p0e 's/(splitPoint [><=]+ \d+)(^\.)/$1.0$2/gm' src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -235,6 +242,7 @@ case $1 in
     ./convert.sh error
     ./convert.sh min-max
     ./convert.sh libc-alloc-mem
+    ./convert.sh splitpoint-float
 
     ;;
 
