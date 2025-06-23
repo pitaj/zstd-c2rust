@@ -237,6 +237,79 @@ case $1 in
 
     ;;
 
+  zstd-alloc-mem)
+    # ZSTD_calloc!(1, size)
+    # ZSTD_malloc!(size)
+    perl -i -p0e 's/\bZSTD_(malloc|calloc)!\(/libc::$1(/gm' src/*/*.rs
+
+    # ZSTD_ALIGNOF!(u32)
+    perl -i -p0e 's/\bZSTD_ALIGNOF!\(([^\)]+)\)/std::mem::align_of::<$1>()/gm' src/*/*.rs
+
+    # ZSTD_free!(ptr)(ZSTD_free!(ptr))
+    perl -i -p0e 's/\bZSTD_free!(ptr)(ZSTD_free!(ptr))/libc::free(ptr)/gm' src/*/*.rs
+
+    # libc::memset(
+    #     ZSTD_memset!(ptr, 0, size),
+    #     ZSTD_memset!(ptr, 0, size),
+    #     ZSTD_memset!(ptr, 0, size) as usize,
+    # );
+    # libc::memset(
+    #     ZSTD_memset!(rankPosition, 0, sizeof(* rankPosition) * RANK_POSITION_TABLE_SIZE),
+    #     ZSTD_memset!(rankPosition, 0, sizeof(* rankPosition) * RANK_POSITION_TABLE_SIZE),
+    #     ZSTD_memset!(rankPosition, 0, sizeof(* rankPosition) * RANK_POSITION_TABLE_SIZE)
+    #         as usize,
+    # );
+    # libc::memset(
+    #     ZSTD_memset!(ms -> tagTable, 0, tagTableSize),
+    #     ZSTD_memset!(ms -> tagTable, 0, tagTableSize),
+    #     ZSTD_memset!(ms -> tagTable, 0, tagTableSize) as usize,
+    # );
+    # libc::memset(
+    #     ZSTD_memset!(dst, * (const u8 *) cSrc, dstSize),
+    #     ZSTD_memset!(dst, * (const u8 *) cSrc, dstSize),
+    #     ZSTD_memset!(dst, * (const u8 *) cSrc, dstSize) as usize,
+    # );
+    # libc::memset(
+    #     ZSTD_memset!(
+    #         dctx -> litBuffer, istart[lhSize], litSize -
+    #         ZSTD_LITBUFFEREXTRASIZE
+    #     ),
+    #     ZSTD_memset!(
+    #         dctx -> litBuffer, istart[lhSize], litSize -
+    #         ZSTD_LITBUFFEREXTRASIZE
+    #     ),
+    #     ZSTD_memset!(
+    #         dctx -> litBuffer, istart[lhSize], litSize -
+    #         ZSTD_LITBUFFEREXTRASIZE
+    #     ) as usize,
+    # );
+    # libc::memcpy(
+    #     ZSTD_memcpy!(buffer, headerBuffer, hbSize),
+    #     ZSTD_memcpy!(buffer, headerBuffer, hbSize),
+    #     ZSTD_memcpy!(buffer, headerBuffer, hbSize) as usize,
+    # );
+    # libc::memcpy(
+    #     ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize),
+    #     ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize),
+    #     ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize) as usize,
+    # );
+    # libc::memcpy(
+    #     ZSTD_memcpy!(op, hufMetadata -> hufDesBuffer, hufMetadata -> hufDesSize),
+    #     ZSTD_memcpy!(op, hufMetadata -> hufDesBuffer, hufMetadata -> hufDesSize),
+    #     ZSTD_memcpy!(op, hufMetadata -> hufDesBuffer, hufMetadata -> hufDesSize)
+    #         as usize,
+    # );
+    perl -i -p0e 's/\blibc::(memset|memcpy|memmove)\([\s\n]*ZSTD_(?:memset|memcpy|memmove)!\([\s\n]*([^,]+),[\s\n]*([^,]+),[\s\n]*((?:\([^\)]+\)|[^\)])+?)[\s\n]*\)[^;]+;/libc::$1($2, $3, ($4) as usize);/gm' src/*/*.rs
+
+    # fix -> in memset and memcpy
+    perl -i -p0e 's/(libc::(?:memcpy|memset|memmove)\(\n?.*?)\b([\w_\d]+) -> (.*?)\b([\w_\d]+) -> /$1(*$2).$3(*$4)./gm'  src/*/*.rs
+    perl -i -p0e 's/(libc::(?:memcpy|memset|memmove)\(\n?.*?)\b([\w_\d]+) -> /$1(*$2)./gm'  src/*/*.rs
+
+    # fix x[y] in memset and memcpy
+    perl -i -p0e 's/(libc::(?:memcpy|memset|memmove)\(\n?.*?)\b([\w_\d]+)\[([\w_\d]+)\]/$1(*$2.offset($3 as isize))/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
