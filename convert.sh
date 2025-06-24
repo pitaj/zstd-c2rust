@@ -320,6 +320,20 @@ case $1 in
 
     ;;
 
+  copy8-16)
+    # COPY8!(op, ip)(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
+    # op = op.offset(COPY8!(op, ip) as isize);
+    # ip = ip.offset(COPY8!(op, ip) as isize);
+    # COPY16!(op, ip)(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
+    # op = op.offset(COPY16!(op, ip) as isize);
+    # ip = ip.offset(COPY16!(op, ip) as isize);
+    # COPY16!(op, ip)(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
+    # op = op.offset(COPY16!(op, ip) as isize);
+    # ip = ip.offset(COPY16!(op, ip) as isize);
+    perl -i -p0e 's/\bCOPY(8|16)!\(op, ip\)\([^;]*;[^;]*;[^;]*;/COPY$1!(op, ip);/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -353,6 +367,7 @@ case $1 in
     ./convert.sh splitpoint-float
     ./convert.sh zstd-alloc-mem
     ./convert.sh likely-unlikely
+    ./convert.sh copy8-16
 
     ;;
 
