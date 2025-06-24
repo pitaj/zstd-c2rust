@@ -310,6 +310,16 @@ case $1 in
 
     ;;
 
+  likely-unlikely)
+    # fix -> in LIKELY and UNLIKELY
+    perl -i -p0e 's/\b((?:UN)?LIKELY!\(\n?.*?)\b([\w_\d]+) -> (.*?)\b([\w_\d]+) -> /$1(*$2).$3(*$4)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b((?:UN)?LIKELY!\(\n?.*?)\b([\w_\d]+) -> /$1(*$2)./gm'  src/*/*.rs
+
+    # fix x[y] in LIKELY and UNLIKELY
+    perl -i -p0e 's/\b((?:UN)?LIKELY!\(\n?.*?)\b([\w_\d]+)\[([\w_\d]+)\]/$1(*$2.offset($3 as isize))/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -341,6 +351,8 @@ case $1 in
     ./convert.sh min-max
     ./convert.sh libc-alloc-mem
     ./convert.sh splitpoint-float
+    ./convert.sh zstd-alloc-mem
+    ./convert.sh likely-unlikely
 
     ;;
 
