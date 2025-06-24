@@ -334,6 +334,19 @@ case $1 in
 
     ;;
 
+  swap)
+    # let ref mut fresh132 = SWAP!(v1, v4);
+    # *fresh132 = SWAP!(v1, v4);
+    # let ref mut fresh106 = SWAP!(SA[m], SA[m / 2]);
+    # *fresh106 = SWAP!(SA[m], SA[m / 2]);
+    perl -i -p0e 's/let ref mut \w[\w\d_]* = (SWAP!\([^\)]+\);)[^;]*;/$1/gm'  src/*/*.rs
+
+    # fix x[y] in SWAP
+    perl -i -p0e 's/\b(SWAP!\(\n?.*?)\b([\w_\d]+)\[([^\]]+)\]/$1(*$2.offset($3 as isize))/gm'  src/*/*.rs
+    perl -i -p0e 's/\b(SWAP!\(\n?.*?)\b([\w_\d]+)\[([^\]]+)\]/$1(*$2.offset($3 as isize))/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -368,6 +381,7 @@ case $1 in
     ./convert.sh zstd-alloc-mem
     ./convert.sh likely-unlikely
     ./convert.sh copy8-16
+    ./convert.sh swap
 
     ;;
 
