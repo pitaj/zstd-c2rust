@@ -402,6 +402,14 @@ case $1 in
 
     ;;
 
+  swap3)
+    # SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
+    # SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
+    # SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
+    perl -i -p0e 's/\b(SWAP!\([^;]*\);)[\n\s]*\1[\n\s]*\1/$1/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -439,6 +447,7 @@ case $1 in
     ./convert.sh swap
     ./convert.sh forward-if-error
     ./convert.sh stack-pop
+    ./convert.sh swap3
 
     ;;
 
