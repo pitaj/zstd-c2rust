@@ -347,6 +347,53 @@ case $1 in
 
     ;;
 
+  forward-if-error)
+    # let err_code = FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
+    # if FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "") != 0 {
+    #     return FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
+    # }
+
+    # let err_code = FORWARD_IF_ERROR!(
+    #     FSE_normalizeCount(norm, tableLog, count, nbSeq, max,
+    #     ZSTD_useLowProbCount(nbSeq)), ""
+    # );
+    # if FORWARD_IF_ERROR!(
+    #     FSE_normalizeCount(norm, tableLog, count, nbSeq, max,
+    #     ZSTD_useLowProbCount(nbSeq)), ""
+    # ) != 0
+    # {
+    #     return FORWARD_IF_ERROR!(
+    #         FSE_normalizeCount(norm, tableLog, count, nbSeq, max,
+    #         ZSTD_useLowProbCount(nbSeq)), ""
+    #     );
+    # }
+    perl -i -p0e 's/let \w[\w\d_]* = (FORWARD_IF_ERROR!\([^;]*\);)[^;]*;[\s\n]*}/$1/gm'  src/*/*.rs
+
+    # fix ->
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?[ \(])((?:\([^\(\)&,]*\)|[^->\(\)&,])+) ->[\s\n]+/$1(*$2)./gm'  src/*/*.rs
+    
+    # fix (int) cast
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?)\((int|long)\) ([^,\)]+)/$1($3 as std::ffi::c_$2)/gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?)\((int|long)\) ([^,\)]+)/$1($3 as std::ffi::c_$2)/gm'  src/*/*.rs
+
+    # fix addr-of &
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?)&[\s\n]+((?:\((?:\([^\)]*\)|[^\)])*\)|[^,\(\)])+)/$1addr_of!($2)/gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?)&[\s\n]+((?:\((?:\([^\)]*\)|[^\)])*\)|[^,\(\)])+)/$1addr_of!($2)/gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?)&[\s\n]+((?:\((?:\([^\)]*\)|[^\)])*\)|[^,\(\)])+)/$1addr_of!($2)/gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?)&[\s\n]+((?:\((?:\([^\)]*\)|[^\)])*\)|[^,\(\)])+)/$1addr_of!($2)/gm'  src/*/*.rs
+    perl -i -p0e 's/\b(FORWARD_IF_ERROR!\([^;]*?)&[\s\n]+((?:\((?:\([^\)]*\)|[^\)])*\)|[^,\(\)])+)/$1addr_of!($2)/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -382,6 +429,7 @@ case $1 in
     ./convert.sh likely-unlikely
     ./convert.sh copy8-16
     ./convert.sh swap
+    ./convert.sh forward-if-error
 
     ;;
 
