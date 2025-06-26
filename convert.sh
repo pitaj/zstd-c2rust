@@ -394,6 +394,14 @@ case $1 in
 
     ;;
 
+  stack-pop)
+    # if STACK_POP!(first, last, depth, limit) != 0 {
+    #     return;
+    # }
+    perl -i -p0e 's/\bif (STACK_POP5?!)\(([^\)]+)\) != 0 {[^\}]*}/$1(stack, $2);/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -430,6 +438,7 @@ case $1 in
     ./convert.sh copy8-16
     ./convert.sh swap
     ./convert.sh forward-if-error
+    ./convert.sh stack-pop
 
     ;;
 
