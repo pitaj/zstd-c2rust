@@ -410,6 +410,15 @@ case $1 in
 
     ;;
 
+  stack-push)
+    # if ssize < 64 {} else {
+    #    __assert_fail(
+    perl -i -p0e 's/\bif ssize < \d+ {} else {[^}]*__assert_fail[^}]*divsufsort\.c[^,]*,[\n\s]*(\d+),[^}]*}[\s\n]*.[\w\d_]*: {[\s\n]*if ssize < \d+ {} else {[^}]*__assert_fail[^}]*divsufsort\.c[^,]*,[\n\s]*\1,[^}]*}[^}]*};/STACK_PUSH!(???, #L$1);/gm'  src/*/*.rs
+
+    perl -i -p0e 's/\bSTACK_PUSH!\(\?\?\?, #L(\d+)\);[\s\n]*stack\[ssize as usize\].a = ([^;]*);[\s\n]*stack\[ssize as usize\].b = ([^;]*);[\s\n]*stack\[ssize as usize\].c = ([^;]*);[^;]*;[^;]*;[\s\n]*stack\[[^\]]*\][\s\n]*.d = ([^;]*);/STACK_PUSH!($2, $3, $4, $5); \/\/ #L$1/gm'  src/*/*.rs
+    
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -448,6 +457,7 @@ case $1 in
     ./convert.sh forward-if-error
     ./convert.sh stack-pop
     ./convert.sh swap3
+    ./convert.sh stack-push
 
     ;;
 
