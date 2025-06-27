@@ -10,9 +10,6 @@ extern "C" {
     pub type ZSTDv07_DCtx_s;
     pub type ZSTDv06_DCtx_s;
     pub type ZSTDv05_DCtx_s;
-    fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn calloc(_: std::ffi::c_ulong, _: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn free(_: *mut std::ffi::c_void);
     fn ZSTD_getErrorCode(functionResult: usize) -> ZSTD_ErrorCode;
     fn ZSTD_freeDDict(ddict: *mut ZSTD_DDict) -> usize;
     fn ZSTD_getDictID_fromDDict(ddict: *const ZSTD_DDict) -> std::ffi::c_uint;

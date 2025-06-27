@@ -3,9 +3,6 @@ use ::c2rust_bitfields;
 extern "C" {
     pub type ZSTD_CDict_s;
     pub type POOL_ctx_s;
-    fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn calloc(_: std::ffi::c_ulong, _: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn free(_: *mut std::ffi::c_void);
     fn ZSTD_compressBound(srcSize: usize) -> usize;
     fn ZSTD_freeCCtx(cctx: *mut ZSTD_CCtx) -> usize;
     fn ZSTD_freeCDict(CDict: *mut ZSTD_CDict) -> usize;

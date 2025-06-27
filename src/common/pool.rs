@@ -1,7 +1,5 @@
 use ::libc;
 extern "C" {
-    fn calloc(_: std::ffi::c_ulong, _: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn free(_: *mut std::ffi::c_void);
     fn pthread_create(
         __newthread: *mut pthread_t,
         __attr: *const pthread_attr_t,

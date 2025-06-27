@@ -10,9 +10,6 @@ extern "C" {
     pub type ZSTDMT_CCtx_s;
     pub type POOL_ctx_s;
     pub type ZSTD_DCtx_s;
-    fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn calloc(_: std::ffi::c_ulong, _: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn free(_: *mut std::ffi::c_void);
     fn ZSTD_XXH64_reset(
         statePtr: *mut XXH64_state_t,
         seed: XXH64_hash_t,

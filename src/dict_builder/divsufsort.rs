@@ -6,8 +6,6 @@ extern "C" {
         __line: std::ffi::c_uint,
         __function: *const std::ffi::c_char,
     ) -> !;
-    fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn free(_: *mut std::ffi::c_void);
 }
 pub type trbudget_t = _trbudget_t;
 #[derive(Copy, Clone)]
@@ -5834,11 +5832,11 @@ pub unsafe extern "C" fn divsufsort(
         *SA.offset(m as isize) = 1;
         return 0;
     }
-    bucket_A = malloc(
+    bucket_A = libc::malloc(
         (BUCKET_A_SIZE as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
-    bucket_B = malloc(
+    bucket_B = libc::malloc(
         (BUCKET_B_SIZE as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
@@ -5848,8 +5846,8 @@ pub unsafe extern "C" fn divsufsort(
     } else {
         err = -(2 as std::ffi::c_int);
     }
-    free(bucket_B as *mut std::ffi::c_void);
-    free(bucket_A as *mut std::ffi::c_void);
+    libc::free(bucket_B as *mut std::ffi::c_void);
+    libc::free(bucket_A as *mut std::ffi::c_void);
     return err;
 }
 #[no_mangle]
@@ -5881,18 +5879,18 @@ pub unsafe extern "C" fn divbwt(
     }
     B = A;
     if B.is_null() {
-        B = malloc(
+        B = libc::malloc(
             ((n + 1 as std::ffi::c_int) as usize)
                 .wrapping_mul(
                     ::core::mem::size_of::<std::ffi::c_int>(),
                 ),
         ) as *mut std::ffi::c_int;
     }
-    bucket_A = malloc(
+    bucket_A = libc::malloc(
         (BUCKET_A_SIZE as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
-    bucket_B = malloc(
+    bucket_B = libc::malloc(
         (BUCKET_B_SIZE as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
@@ -5935,10 +5933,10 @@ pub unsafe extern "C" fn divbwt(
     } else {
         pidx = -(2 as std::ffi::c_int);
     }
-    free(bucket_B as *mut std::ffi::c_void);
-    free(bucket_A as *mut std::ffi::c_void);
+    libc::free(bucket_B as *mut std::ffi::c_void);
+    libc::free(bucket_A as *mut std::ffi::c_void);
     if A.is_null() {
-        free(B as *mut std::ffi::c_void);
+        libc::free(B as *mut std::ffi::c_void);
     }
     return pidx;
 }

@@ -1,17 +1,5 @@
 use ::libc;
 extern "C" {
-    fn memcpy(
-        _: *mut std::ffi::c_void,
-        _: *const std::ffi::c_void,
-        _: std::ffi::c_ulong,
-    ) -> *mut std::ffi::c_void;
-    fn memset(
-        _: *mut std::ffi::c_void,
-        _: std::ffi::c_int,
-        _: std::ffi::c_ulong,
-    ) -> *mut std::ffi::c_void;
-    fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn free(_: *mut std::ffi::c_void);
 }
 pub type XXH_errorcode = std::ffi::c_uint;
 pub const XXH_ERROR: XXH_errorcode = 1;
@@ -67,17 +55,17 @@ pub const XXH_VERSION_NUMBER: std::ffi::c_int = XXH_VERSION_MAJOR
 pub const XXH_FORCE_ALIGN_CHECK: std::ffi::c_int = 0;
 pub const XXH32_ENDJMP: std::ffi::c_int = 0;
 unsafe extern "C" fn XXH_malloc(mut s: usize) -> *mut std::ffi::c_void {
-    return malloc(s);
+    return libc::malloc(s);
 }
 unsafe extern "C" fn XXH_free(mut p: *mut std::ffi::c_void) {
-    free(p);
+    libc::free(p);
 }
 unsafe extern "C" fn XXH_memcpy(
     mut dest: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
     mut size: usize,
 ) -> *mut std::ffi::c_void {
-    return memcpy(dest, src, size);
+    return libc::memcpy(dest, src, size);
 }
 unsafe extern "C" fn XXH_read32(mut ptr: *const std::ffi::c_void) -> xxh_u32 {
     return *(ptr as *const xxh_unalign32);

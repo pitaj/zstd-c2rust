@@ -1,7 +1,5 @@
 use ::libc;
 extern "C" {
-    fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
-    fn free(_: *mut std::ffi::c_void);
     fn ZSTD_loadDEntropy(
         entropy: *mut ZSTD_entropyDTables_t,
         dict: *const std::ffi::c_void,
