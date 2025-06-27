@@ -424,6 +424,14 @@ case $1 in
 
     ;;
 
+  zstd-gen-fn)
+    # ZSTD_GEN_DFAST_FN!
+    perl -i -p0e 's/unsafe extern "C" fn (ZSTD_compressBlock_doubleFast_[^_]+)_(\d)\([^{]*{[^{]*ZSTD_GEN_DFAST_FN![^}]*}/ZSTD_GEN_DFAST_FN!($1_generic, $1_$2);/gm'  src/*/*.rs
+    # ZSTD_GEN_FAST_FN!
+    perl -i -p0e 's/unsafe extern "C" fn (ZSTD_compressBlock_fast_[^_]+)_(\d)_(\d)\([^{]*{[^{]*ZSTD_GEN_FAST_FN![^}]*}/ZSTD_GEN_FAST_FN!($1_generic, cmov=$3, $1_$2_$3);/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -464,6 +472,7 @@ case $1 in
     ./convert.sh swap3
     ./convert.sh stack-push
     ./convert.sh prefetch-area
+    ./convert.sh zstd-gen-fn
 
     ;;
 
@@ -544,8 +553,7 @@ case $1 in
     ;;
 
   *)
-    echo "Unknown stage `$1`. Available stages:"
-    echo "  transpile, missing-imports, asserts, integers"
+    echo "Unknown stage `$1`."
     exit 1
 
     ;;
