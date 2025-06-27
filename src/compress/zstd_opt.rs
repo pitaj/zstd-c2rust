@@ -1114,11 +1114,11 @@ unsafe extern "C" fn ZSTD_setBasePrices(
     mut optLevel: std::ffi::c_int,
 ) {
     if ZSTD_compressedLiterals(optPtr) != 0 {
-        (*optPtr).litSumBasePrice = WEIGHT!(optPtr -> litSum, optLevel);
+        (*optPtr).litSumBasePrice = WEIGHT!((*optPtr).litSum, optLevel);
     }
-    (*optPtr).litLengthSumBasePrice = WEIGHT!(optPtr -> litLengthSum, optLevel);
-    (*optPtr).matchLengthSumBasePrice = WEIGHT!(optPtr -> matchLengthSum, optLevel);
-    (*optPtr).offCodeSumBasePrice = WEIGHT!(optPtr -> offCodeSum, optLevel);
+    (*optPtr).litLengthSumBasePrice = WEIGHT!((*optPtr).litLengthSum, optLevel);
+    (*optPtr).matchLengthSumBasePrice = WEIGHT!((*optPtr).matchLengthSum, optLevel);
+    (*optPtr).offCodeSumBasePrice = WEIGHT!((*optPtr).offCodeSum, optLevel);
 }
 unsafe extern "C" fn sum_u32(
     mut table: *const std::ffi::c_uint,
@@ -1488,7 +1488,7 @@ unsafe extern "C" fn ZSTD_rawLiteralsCost(
     let mut u: u32 = 0;
     u = 0;
     while u < litLength {
-        let mut litPrice = WEIGHT!(optPtr -> litFreq[literals[u]], optLevel);
+        let mut litPrice = WEIGHT!(*(*optPtr).litFreq.offset(*literals.offset(u as isize) as isize), optLevel);
         if UNLIKELY!(litPrice > litPriceMax) != 0 {
             litPrice = litPriceMax;
         }
@@ -1521,7 +1521,7 @@ unsafe extern "C" fn ZSTD_litLengthPrice(
     let llCode = ZSTD_LLcode(litLength);
     return ((LL_bits[llCode as usize] as std::ffi::c_int * BITCOST_MULTIPLIER) as u32)
         .wrapping_add((*optPtr).litLengthSumBasePrice)
-        .wrapping_sub(WEIGHT!(optPtr -> litLengthFreq[llCode], optLevel));
+        .wrapping_sub(WEIGHT!(*(*optPtr).litLengthFreq.offset(llCode as isize), optLevel));
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_getMatchPrice(
@@ -1545,7 +1545,7 @@ unsafe extern "C" fn ZSTD_getMatchPrice(
     price = (offCode * BITCOST_MULTIPLIER as u32)
         .wrapping_add(
             ((*optPtr).offCodeSumBasePrice)
-                .wrapping_sub(WEIGHT!(optPtr -> offCodeFreq[offCode], optLevel)),
+                .wrapping_sub(WEIGHT!(*(*optPtr).offCodeFreq.offset(offCode as isize), optLevel)),
         );
     if optLevel < 2 && offCode >= 20 {
         price = price
@@ -1561,7 +1561,7 @@ unsafe extern "C" fn ZSTD_getMatchPrice(
                 .wrapping_add(
                     ((*optPtr).matchLengthSumBasePrice)
                         .wrapping_sub(
-                            WEIGHT!(optPtr -> matchLengthFreq[mlCode], optLevel),
+                            WEIGHT!(*(*optPtr).matchLengthFreq.offset(mlCode as isize), optLevel),
                         ),
                 ),
         );
