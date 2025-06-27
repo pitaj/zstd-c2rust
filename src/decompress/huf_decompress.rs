@@ -983,23 +983,10 @@ unsafe extern "C" fn HUF_decodeStreamX1(
             as std::ffi::c_int
             & (p < pEnd.offset(-3_isize)) as std::ffi::c_int != 0
         {
-            if HUF_DECODE_SYMBOLX1_2!(p, bitDPtr) != 0 {
-                let fresh3 = p;
-                p = p.offset(1);
-                *fresh3 = HUF_decodeSymbolX1(bitDPtr, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_1!(p, bitDPtr) != 0 {
-                let fresh4 = p;
-                p = p.offset(1);
-                *fresh4 = HUF_decodeSymbolX1(bitDPtr, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(p, bitDPtr) != 0 {
-                let fresh5 = p;
-                p = p.offset(1);
-                *fresh5 = HUF_decodeSymbolX1(bitDPtr, dt, dtLog);
-            }
-            let ref mut fresh6 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
-            *fresh6 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
+            HUF_DECODE_SYMBOLX1_2!(p, bitDPtr);
+            HUF_DECODE_SYMBOLX1_1!(p, bitDPtr);
+            HUF_DECODE_SYMBOLX1_2!(p, bitDPtr);
+            HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
         }
     } else {
         BIT_reloadDStream(bitDPtr);
@@ -1009,13 +996,11 @@ unsafe extern "C" fn HUF_decodeStreamX1(
             == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
             as std::ffi::c_int & (p < pEnd) as std::ffi::c_int != 0
         {
-            let ref mut fresh7 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
-            *fresh7 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
+            HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
         }
     }
     while p < pEnd {
-        let ref mut fresh8 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
-        *fresh8 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
+        HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
     }
     return pEnd.offset_from(pStart) as std::ffi::c_long as usize;
 }
@@ -1172,74 +1157,22 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
         >= ::core::mem::size_of::<usize>()
     {
         while endSignal & (op4 < olimit) as std::ffi::c_int as u32 != 0 {
-            if HUF_DECODE_SYMBOLX1_2!(op1, & bitD1) != 0 {
-                let fresh9 = op1;
-                op1 = op1.offset(1);
-                *fresh9 = HUF_decodeSymbolX1(&mut bitD1, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(op2, & bitD2) != 0 {
-                let fresh10 = op2;
-                op2 = op2.offset(1);
-                *fresh10 = HUF_decodeSymbolX1(&mut bitD2, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(op3, & bitD3) != 0 {
-                let fresh11 = op3;
-                op3 = op3.offset(1);
-                *fresh11 = HUF_decodeSymbolX1(&mut bitD3, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(op4, & bitD4) != 0 {
-                let fresh12 = op4;
-                op4 = op4.offset(1);
-                *fresh12 = HUF_decodeSymbolX1(&mut bitD4, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_1!(op1, & bitD1) != 0 {
-                let fresh13 = op1;
-                op1 = op1.offset(1);
-                *fresh13 = HUF_decodeSymbolX1(&mut bitD1, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_1!(op2, & bitD2) != 0 {
-                let fresh14 = op2;
-                op2 = op2.offset(1);
-                *fresh14 = HUF_decodeSymbolX1(&mut bitD2, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_1!(op3, & bitD3) != 0 {
-                let fresh15 = op3;
-                op3 = op3.offset(1);
-                *fresh15 = HUF_decodeSymbolX1(&mut bitD3, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_1!(op4, & bitD4) != 0 {
-                let fresh16 = op4;
-                op4 = op4.offset(1);
-                *fresh16 = HUF_decodeSymbolX1(&mut bitD4, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(op1, & bitD1) != 0 {
-                let fresh17 = op1;
-                op1 = op1.offset(1);
-                *fresh17 = HUF_decodeSymbolX1(&mut bitD1, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(op2, & bitD2) != 0 {
-                let fresh18 = op2;
-                op2 = op2.offset(1);
-                *fresh18 = HUF_decodeSymbolX1(&mut bitD2, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(op3, & bitD3) != 0 {
-                let fresh19 = op3;
-                op3 = op3.offset(1);
-                *fresh19 = HUF_decodeSymbolX1(&mut bitD3, dt, dtLog);
-            }
-            if HUF_DECODE_SYMBOLX1_2!(op4, & bitD4) != 0 {
-                let fresh20 = op4;
-                op4 = op4.offset(1);
-                *fresh20 = HUF_decodeSymbolX1(&mut bitD4, dt, dtLog);
-            }
-            let ref mut fresh21 = HUF_DECODE_SYMBOLX1_0!(op1, & bitD1);
-            *fresh21 = HUF_DECODE_SYMBOLX1_0!(op1, & bitD1);
-            let ref mut fresh22 = HUF_DECODE_SYMBOLX1_0!(op2, & bitD2);
-            *fresh22 = HUF_DECODE_SYMBOLX1_0!(op2, & bitD2);
-            let ref mut fresh23 = HUF_DECODE_SYMBOLX1_0!(op3, & bitD3);
-            *fresh23 = HUF_DECODE_SYMBOLX1_0!(op3, & bitD3);
-            let ref mut fresh24 = HUF_DECODE_SYMBOLX1_0!(op4, & bitD4);
-            *fresh24 = HUF_DECODE_SYMBOLX1_0!(op4, & bitD4);
+            HUF_DECODE_SYMBOLX1_2!(op1, addr_of!(bitD1));
+            HUF_DECODE_SYMBOLX1_2!(op2, addr_of!(bitD2));
+            HUF_DECODE_SYMBOLX1_2!(op3, addr_of!(bitD3));
+            HUF_DECODE_SYMBOLX1_2!(op4, addr_of!(bitD4));
+            HUF_DECODE_SYMBOLX1_1!(op1, addr_of!(bitD1));
+            HUF_DECODE_SYMBOLX1_1!(op2, addr_of!(bitD2));
+            HUF_DECODE_SYMBOLX1_1!(op3, addr_of!(bitD3));
+            HUF_DECODE_SYMBOLX1_1!(op4, addr_of!(bitD4));
+            HUF_DECODE_SYMBOLX1_2!(op1, addr_of!(bitD1));
+            HUF_DECODE_SYMBOLX1_2!(op2, addr_of!(bitD2));
+            HUF_DECODE_SYMBOLX1_2!(op3, addr_of!(bitD3));
+            HUF_DECODE_SYMBOLX1_2!(op4, addr_of!(bitD4));
+            HUF_DECODE_SYMBOLX1_0!(op1, addr_of!(bitD1));
+            HUF_DECODE_SYMBOLX1_0!(op2, addr_of!(bitD2));
+            HUF_DECODE_SYMBOLX1_0!(op3, addr_of!(bitD3));
+            HUF_DECODE_SYMBOLX1_0!(op4, addr_of!(bitD4));
             endSignal
                 &= (BIT_reloadDStreamFast(&mut bitD1) as std::ffi::c_uint
                     == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
@@ -2407,15 +2340,9 @@ unsafe extern "C" fn HUF_decodeStreamX2(
                                 as isize),
                         )) as std::ffi::c_int != 0
             {
-                if HUF_DECODE_SYMBOLX2_2!(p, bitDPtr) != 0 {
-                    p = p.offset(HUF_DECODE_SYMBOLX2_2!(p, bitDPtr) as isize);
-                }
-                if HUF_DECODE_SYMBOLX2_1!(p, bitDPtr) != 0 {
-                    p = p.offset(HUF_DECODE_SYMBOLX2_1!(p, bitDPtr) as isize);
-                }
-                if HUF_DECODE_SYMBOLX2_2!(p, bitDPtr) != 0 {
-                    p = p.offset(HUF_DECODE_SYMBOLX2_2!(p, bitDPtr) as isize);
-                }
+                HUF_DECODE_SYMBOLX2_2!(p, bitDPtr);
+                HUF_DECODE_SYMBOLX2_1!(p, bitDPtr);
+                HUF_DECODE_SYMBOLX2_2!(p, bitDPtr);
                 p = p.offset(HUF_DECODE_SYMBOLX2_0!(p, bitDPtr) as isize);
             }
         }
@@ -2603,26 +2530,14 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
         >= ::core::mem::size_of::<usize>()
     {
         while endSignal & (op4 < olimit) as std::ffi::c_int as u32 != 0 {
-            if HUF_DECODE_SYMBOLX2_2!(op1, & bitD1) != 0 {
-                op1 = op1.offset(HUF_DECODE_SYMBOLX2_2!(op1, & bitD1) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_1!(op1, & bitD1) != 0 {
-                op1 = op1.offset(HUF_DECODE_SYMBOLX2_1!(op1, & bitD1) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_2!(op1, & bitD1) != 0 {
-                op1 = op1.offset(HUF_DECODE_SYMBOLX2_2!(op1, & bitD1) as isize);
-            }
-            op1 = op1.offset(HUF_DECODE_SYMBOLX2_0!(op1, & bitD1) as isize);
-            if HUF_DECODE_SYMBOLX2_2!(op2, & bitD2) != 0 {
-                op2 = op2.offset(HUF_DECODE_SYMBOLX2_2!(op2, & bitD2) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_1!(op2, & bitD2) != 0 {
-                op2 = op2.offset(HUF_DECODE_SYMBOLX2_1!(op2, & bitD2) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_2!(op2, & bitD2) != 0 {
-                op2 = op2.offset(HUF_DECODE_SYMBOLX2_2!(op2, & bitD2) as isize);
-            }
-            op2 = op2.offset(HUF_DECODE_SYMBOLX2_0!(op2, & bitD2) as isize);
+            HUF_DECODE_SYMBOLX2_2!(op1, addr_of!(bitD1));
+            HUF_DECODE_SYMBOLX2_1!(op1, addr_of!(bitD1));
+            HUF_DECODE_SYMBOLX2_2!(op1, addr_of!(bitD1));
+            op1 = op1.offset(HUF_DECODE_SYMBOLX2_0!(op1, addr_of!(bitD1)) as isize);
+            HUF_DECODE_SYMBOLX2_2!(op2, addr_of!(bitD2));
+            HUF_DECODE_SYMBOLX2_1!(op2, addr_of!(bitD2));
+            HUF_DECODE_SYMBOLX2_2!(op2, addr_of!(bitD2));
+            op2 = op2.offset(HUF_DECODE_SYMBOLX2_0!(op2, addr_of!(bitD2)) as isize);
             endSignal
                 &= (BIT_reloadDStreamFast(&mut bitD1) as std::ffi::c_uint
                     == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
@@ -2631,26 +2546,14 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
                 &= (BIT_reloadDStreamFast(&mut bitD2) as std::ffi::c_uint
                     == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
                     as std::ffi::c_int as u32;
-            if HUF_DECODE_SYMBOLX2_2!(op3, & bitD3) != 0 {
-                op3 = op3.offset(HUF_DECODE_SYMBOLX2_2!(op3, & bitD3) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_1!(op3, & bitD3) != 0 {
-                op3 = op3.offset(HUF_DECODE_SYMBOLX2_1!(op3, & bitD3) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_2!(op3, & bitD3) != 0 {
-                op3 = op3.offset(HUF_DECODE_SYMBOLX2_2!(op3, & bitD3) as isize);
-            }
-            op3 = op3.offset(HUF_DECODE_SYMBOLX2_0!(op3, & bitD3) as isize);
-            if HUF_DECODE_SYMBOLX2_2!(op4, & bitD4) != 0 {
-                op4 = op4.offset(HUF_DECODE_SYMBOLX2_2!(op4, & bitD4) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_1!(op4, & bitD4) != 0 {
-                op4 = op4.offset(HUF_DECODE_SYMBOLX2_1!(op4, & bitD4) as isize);
-            }
-            if HUF_DECODE_SYMBOLX2_2!(op4, & bitD4) != 0 {
-                op4 = op4.offset(HUF_DECODE_SYMBOLX2_2!(op4, & bitD4) as isize);
-            }
-            op4 = op4.offset(HUF_DECODE_SYMBOLX2_0!(op4, & bitD4) as isize);
+            HUF_DECODE_SYMBOLX2_2!(op3, addr_of!(bitD3));
+            HUF_DECODE_SYMBOLX2_1!(op3, addr_of!(bitD3));
+            HUF_DECODE_SYMBOLX2_2!(op3, addr_of!(bitD3));
+            op3 = op3.offset(HUF_DECODE_SYMBOLX2_0!(op3, addr_of!(bitD3)) as isize);
+            HUF_DECODE_SYMBOLX2_2!(op4, addr_of!(bitD4));
+            HUF_DECODE_SYMBOLX2_1!(op4, addr_of!(bitD4));
+            HUF_DECODE_SYMBOLX2_2!(op4, addr_of!(bitD4));
+            op4 = op4.offset(HUF_DECODE_SYMBOLX2_0!(op4, addr_of!(bitD4)) as isize);
             endSignal
                 &= (BIT_reloadDStreamFast(&mut bitD3) as std::ffi::c_uint
                     == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
