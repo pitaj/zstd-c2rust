@@ -419,6 +419,11 @@ case $1 in
     
     ;;
 
+  prefetch-area)
+    perl -i -p0e 's/let [^=]*= (PREFETCH_AREA!\([^\)]*\);)[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;[^}]*}/$1/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -458,6 +463,7 @@ case $1 in
     ./convert.sh stack-pop
     ./convert.sh swap3
     ./convert.sh stack-push
+    ./convert.sh prefetch-area
 
     ;;
 
