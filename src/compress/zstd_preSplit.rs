@@ -97,66 +97,10 @@ unsafe extern "C" fn recordFingerprint_generic(
     (*fp).nbEvents = 0;
     addEvents_generic(fp, src, srcSize, samplingRate, hashLog);
 }
-unsafe extern "C" fn ZSTD_recordFingerprint_1(
-    mut fp: *mut Fingerprint,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) {
-    ZSTD_GEN_RECORD_FINGERPRINT!(
-        1, 10
-    )(
-        ZSTD_GEN_RECORD_FINGERPRINT!(1, 10),
-        ZSTD_GEN_RECORD_FINGERPRINT!(1, 10),
-        ZSTD_GEN_RECORD_FINGERPRINT!(1, 10),
-        1,
-        10,
-    );
-}
-unsafe extern "C" fn ZSTD_recordFingerprint_5(
-    mut fp: *mut Fingerprint,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) {
-    ZSTD_GEN_RECORD_FINGERPRINT!(
-        5, 10
-    )(
-        ZSTD_GEN_RECORD_FINGERPRINT!(5, 10),
-        ZSTD_GEN_RECORD_FINGERPRINT!(5, 10),
-        ZSTD_GEN_RECORD_FINGERPRINT!(5, 10),
-        5,
-        10,
-    );
-}
-unsafe extern "C" fn ZSTD_recordFingerprint_11(
-    mut fp: *mut Fingerprint,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) {
-    ZSTD_GEN_RECORD_FINGERPRINT!(
-        11, 9
-    )(
-        ZSTD_GEN_RECORD_FINGERPRINT!(11, 9),
-        ZSTD_GEN_RECORD_FINGERPRINT!(11, 9),
-        ZSTD_GEN_RECORD_FINGERPRINT!(11, 9),
-        11,
-        9,
-    );
-}
-unsafe extern "C" fn ZSTD_recordFingerprint_43(
-    mut fp: *mut Fingerprint,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) {
-    ZSTD_GEN_RECORD_FINGERPRINT!(
-        43, 8
-    )(
-        ZSTD_GEN_RECORD_FINGERPRINT!(43, 8),
-        ZSTD_GEN_RECORD_FINGERPRINT!(43, 8),
-        ZSTD_GEN_RECORD_FINGERPRINT!(43, 8),
-        43,
-        8,
-    );
-}
+ZSTD_GEN_RECORD_FINGERPRINT!(ZSTD_recordFingerprint_1, 10);
+ZSTD_GEN_RECORD_FINGERPRINT!(ZSTD_recordFingerprint_5, 10);
+ZSTD_GEN_RECORD_FINGERPRINT!(ZSTD_recordFingerprint_11, 9);
+ZSTD_GEN_RECORD_FINGERPRINT!(ZSTD_recordFingerprint_43, 8);
 unsafe extern "C" fn abs64(mut s64: i64) -> u64 {
     return (if s64 < 0 { -s64 } else { s64 }) as u64;
 }
