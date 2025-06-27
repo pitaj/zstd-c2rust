@@ -165,13 +165,13 @@ unsafe extern "C" fn ZSTD_maybeNullPtrAdd(
 }
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -273,7 +273,7 @@ unsafe extern "C" fn BIT_initDStream(
         libc::memset(
             bitD as *mut std::ffi::c_void,
             0 as std::ffi::c_int,
-            ::core::mem::size_of::<BIT_DStream_t>() as std::ffi::c_ulong as usize,
+            ::core::mem::size_of::<BIT_DStream_t>() as usize,
         );
         return ERROR!(srcSize_wrong);
     }
@@ -281,14 +281,14 @@ unsafe extern "C" fn BIT_initDStream(
     (*bitD)
         .limitPtr = ((*bitD).start)
         .offset(
-            ::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong as isize,
+            ::core::mem::size_of::<BitContainerType>() as isize,
         );
-    if srcSize >= ::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong {
+    if srcSize >= ::core::mem::size_of::<BitContainerType>() {
         (*bitD)
             .ptr = (srcBuffer as *const std::ffi::c_char)
             .offset(srcSize as isize)
             .offset(
-                -(::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong
+                -(::core::mem::size_of::<BitContainerType>()
                     as isize),
             );
         (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
@@ -426,7 +426,7 @@ unsafe extern "C" fn BIT_initDStream(
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
-                (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+                (::core::mem::size_of::<BitContainerType>())
                     .wrapping_sub(srcSize) as u32 * 8 as std::ffi::c_int as u32,
             );
     }
@@ -437,7 +437,7 @@ unsafe extern "C" fn BIT_lookBitsFast(
     mut bitD: *const BIT_DStream_t,
     mut nbBits: u32,
 ) -> BitContainerType {
-    let regMask = (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+    let regMask = (::core::mem::size_of::<BitContainerType>())
         .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
         .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulong) as u32;
     return (*bitD).bitContainer << ((*bitD).bitsConsumed & regMask)
@@ -473,7 +473,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     mut bitD: *mut BIT_DStream_t,
 ) -> BIT_DStream_status {
     if ((*bitD).bitsConsumed as std::ffi::c_ulong
-        > (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+        > (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)) as std::ffi::c_int
         as std::ffi::c_long != 0
     {
@@ -487,7 +487,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     }
     if (*bitD).ptr == (*bitD).start {
         if ((*bitD).bitsConsumed as std::ffi::c_ulong)
-            < (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+            < (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
         {
             return BIT_DStream_endOfBuffer;
@@ -513,7 +513,7 @@ unsafe extern "C" fn BIT_endOfDStream(
 ) -> std::ffi::c_uint {
     return ((*DStream).ptr == (*DStream).start
         && (*DStream).bitsConsumed as std::ffi::c_ulong
-            == (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+            == (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong))
         as std::ffi::c_int as std::ffi::c_uint;
 }
@@ -532,7 +532,7 @@ unsafe extern "C" fn HUF_getDTableDesc(mut table: *const HUF_DTable) -> DTableDe
     libc::memcpy(
         &mut dtd as *mut DTableDesc as *mut std::ffi::c_void,
         table as *const std::ffi::c_void,
-        ::core::mem::size_of::<DTableDesc>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<DTableDesc>() as usize,
     );
     return dtd;
 }
@@ -614,20 +614,20 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
     (*args)
         .ip[0 as std::ffi::c_int
         as usize] = ((*args).iend[1 as std::ffi::c_int as usize])
-        .offset(-(::core::mem::size_of::<u64>() as std::ffi::c_ulong as isize));
+        .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args)
         .ip[1 as std::ffi::c_int
         as usize] = ((*args).iend[2 as std::ffi::c_int as usize])
-        .offset(-(::core::mem::size_of::<u64>() as std::ffi::c_ulong as isize));
+        .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args)
         .ip[2 as std::ffi::c_int
         as usize] = ((*args).iend[3 as std::ffi::c_int as usize])
-        .offset(-(::core::mem::size_of::<u64>() as std::ffi::c_ulong as isize));
+        .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args)
         .ip[3 as std::ffi::c_int
         as usize] = (src as *const u8)
         .offset(srcSize as isize)
-        .offset(-(::core::mem::size_of::<u64>() as std::ffi::c_ulong as isize));
+        .offset(-(::core::mem::size_of::<u64>() as isize));
     (*args).op[0 as std::ffi::c_int as usize] = dst as *mut u8;
     (*args)
         .op[1 as std::ffi::c_int
@@ -692,7 +692,7 @@ unsafe extern "C" fn HUF_initRemainingDStream(
     (*bit).start = (*args).ilowest as *const std::ffi::c_char;
     (*bit)
         .limitPtr = ((*bit).start)
-        .offset(::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize);
+        .offset(::core::mem::size_of::<usize>() as isize);
     (*bit).ptr = (*args).ip[stream as usize] as *const std::ffi::c_char;
     return 0 as std::ffi::c_int as usize;
 }
@@ -767,7 +767,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     let dtPtr = DTable.offset(1 as std::ffi::c_int as isize) as *mut std::ffi::c_void;
     let dt = dtPtr as *mut HUF_DEltX1;
     let mut wksp = workSpace as *mut HUF_ReadDTableX1_Workspace;
-    if ::core::mem::size_of::<HUF_ReadDTableX1_Workspace>() as std::ffi::c_ulong
+    if ::core::mem::size_of::<HUF_ReadDTableX1_Workspace>()
         > wkspSize
     {
         return ERROR!(tableLog_tooLarge);
@@ -781,7 +781,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
         src,
         srcSize,
         ((*wksp).statsWksp).as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 219]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 219]>(),
         flags,
     );
     if ERR_isError(iSize) != 0 {
@@ -805,7 +805,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     libc::memcpy(
         DTable as *mut std::ffi::c_void,
         &mut dtd as *mut DTableDesc as *const std::ffi::c_void,
-        ::core::mem::size_of::<DTableDesc>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<DTableDesc>() as usize,
     );
     let mut n: std::ffi::c_int = 0;
     let mut nextRankStart = 0 as std::ffi::c_int as u32;
@@ -1184,7 +1184,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
         return _var_err___2;
     }
     if oend.offset_from(op4) as std::ffi::c_long as usize
-        >= ::core::mem::size_of::<usize>() as std::ffi::c_ulong
+        >= ::core::mem::size_of::<usize>()
     {
         while endSignal & (op4 < olimit) as std::ffi::c_int as u32 != 0 {
             if HUF_DECODE_SYMBOLX1_2!(op1, & bitD1) != 0 {
@@ -1335,17 +1335,17 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
     libc::memcpy(
         &mut bits as *mut [u64; 4] as *mut std::ffi::c_void,
         &mut (*args).bits as *mut [u64; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[u64; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u64; 4]>() as usize,
     );
     libc::memcpy(
         &mut ip as *mut [*const u8; 4] as *mut std::ffi::c_void,
         &mut (*args).ip as *mut [*const u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*const u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*const u8; 4]>() as usize,
     );
     libc::memcpy(
         &mut op as *mut [*mut u8; 4] as *mut std::ffi::c_void,
         &mut (*args).op as *mut [*mut u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*mut u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*mut u8; 4]>() as usize,
     );
     's_33: loop {
         let mut olimit = 0 as *mut u8;
@@ -1607,17 +1607,17 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
     libc::memcpy(
         &mut (*args).bits as *mut [u64; 4] as *mut std::ffi::c_void,
         &mut bits as *mut [u64; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[u64; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u64; 4]>() as usize,
     );
     libc::memcpy(
         &mut (*args).ip as *mut [*const u8; 4] as *mut std::ffi::c_void,
         &mut ip as *mut [*const u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*const u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*const u8; 4]>() as usize,
     );
     libc::memcpy(
         &mut (*args).op as *mut [*mut u8; 4] as *mut std::ffi::c_void,
         &mut op as *mut [*mut u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*mut u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*mut u8; 4]>() as usize,
     );
 }
 unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
@@ -1886,7 +1886,7 @@ unsafe extern "C" fn HUF_buildDEltX2(
     libc::memcpy(
         &mut DElt as *mut HUF_DEltX2 as *mut std::ffi::c_void,
         &val as *const u32 as *const std::ffi::c_void,
-        ::core::mem::size_of::<u32>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<u32>() as usize,
     );
     return DElt;
 }
@@ -1957,13 +1957,13 @@ unsafe extern "C" fn HUF_fillDTableX2ForWeight(
                     DTableRank.offset(0 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
                 libc::memcpy(
                     DTableRank.offset(2 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
                 DTableRank = DTableRank.offset(4 as std::ffi::c_int as isize);
                 ptr = ptr.offset(1);
@@ -1983,25 +1983,25 @@ unsafe extern "C" fn HUF_fillDTableX2ForWeight(
                     DTableRank.offset(0 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2_0 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
                 libc::memcpy(
                     DTableRank.offset(2 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2_0 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
                 libc::memcpy(
                     DTableRank.offset(4 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2_0 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
                 libc::memcpy(
                     DTableRank.offset(6 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2_0 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
                 DTableRank = DTableRank.offset(8 as std::ffi::c_int as isize);
                 ptr = ptr.offset(1);
@@ -2023,28 +2023,28 @@ unsafe extern "C" fn HUF_fillDTableX2ForWeight(
                         DTableRank.offset(0 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2_1 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     libc::memcpy(
                         DTableRank.offset(2 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2_1 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     libc::memcpy(
                         DTableRank.offset(4 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2_1 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     libc::memcpy(
                         DTableRank.offset(6 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2_1 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     DTableRank = DTableRank.offset(8 as std::ffi::c_int as isize);
@@ -2082,7 +2082,7 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
                 libc::memcpy(
                     DTable as *mut std::ffi::c_void,
                     &DEltX2 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
             }
             4 => {
@@ -2090,13 +2090,13 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
                     DTable.offset(0 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
                 libc::memcpy(
                     DTable.offset(2 as std::ffi::c_int as isize)
                         as *mut std::ffi::c_void,
                     &DEltX2 as *const u64 as *const std::ffi::c_void,
-                    ::core::mem::size_of::<u64>() as std::ffi::c_ulong as usize,
+                    ::core::mem::size_of::<u64>() as usize,
                 );
             }
             _ => {
@@ -2107,28 +2107,28 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
                         DTable.offset(i as isize).offset(0 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     libc::memcpy(
                         DTable.offset(i as isize).offset(2 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     libc::memcpy(
                         DTable.offset(i as isize).offset(4 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     libc::memcpy(
                         DTable.offset(i as isize).offset(6 as std::ffi::c_int as isize)
                             as *mut std::ffi::c_void,
                         &DEltX2 as *const u64 as *const std::ffi::c_void,
-                        ::core::mem::size_of::<u64>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<u64>()
                             as usize,
                     );
                     i += 8 as std::ffi::c_int;
@@ -2240,7 +2240,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     let dt = dtPtr as *mut HUF_DEltX2;
     let mut rankStart = 0 as *mut u32;
     let wksp = workSpace as *mut HUF_ReadDTableX2_Workspace;
-    if ::core::mem::size_of::<HUF_ReadDTableX2_Workspace>() as std::ffi::c_ulong
+    if ::core::mem::size_of::<HUF_ReadDTableX2_Workspace>()
         > wkspSize
     {
         return ERROR!(GENERIC);
@@ -2249,12 +2249,12 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     libc::memset(
         ((*wksp).rankStats).as_mut_ptr() as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<[u32; 13]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u32; 13]>() as usize,
     );
     libc::memset(
         ((*wksp).rankStart0).as_mut_ptr() as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<[u32; 15]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u32; 15]>() as usize,
     );
     if maxTableLog > HUF_TABLELOG_MAX as u32 {
         return ERROR!(tableLog_tooLarge);
@@ -2268,7 +2268,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
         src,
         srcSize,
         ((*wksp).calleeWksp).as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 219]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 219]>(),
         flags,
     );
     if ERR_isError(iSize) != 0 {
@@ -2362,7 +2362,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     libc::memcpy(
         DTable as *mut std::ffi::c_void,
         &mut dtd as *mut DTableDesc as *const std::ffi::c_void,
-        ::core::mem::size_of::<DTableDesc>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<DTableDesc>() as usize,
     );
     return iSize;
 }
@@ -2398,12 +2398,12 @@ unsafe extern "C" fn HUF_decodeLastSymbolX2(
     if (*dt.offset(val as isize)).length as std::ffi::c_int == 1 as std::ffi::c_int {
         BIT_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
     } else if ((*DStream).bitsConsumed as std::ffi::c_ulong)
-        < (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+        < (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
     {
         BIT_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
         if (*DStream).bitsConsumed as std::ffi::c_ulong
-            > (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+            > (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
         {
             (*DStream)
@@ -2425,7 +2425,7 @@ unsafe extern "C" fn HUF_decodeStreamX2(
 ) -> usize {
     let pStart = p;
     if pEnd.offset_from(p) as std::ffi::c_long as usize
-        >= ::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong
+        >= ::core::mem::size_of::<BitContainerType>()
     {
         if dtLog <= 11 as std::ffi::c_int as u32 && MEM_64bits() != 0 {
             while (BIT_reloadDStream(bitDPtr) as std::ffi::c_uint
@@ -2544,7 +2544,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
     let oend = ostart.offset(dstSize as isize);
     let olimit = oend
         .offset(
-            -((::core::mem::size_of::<usize>() as std::ffi::c_ulong)
+            -((::core::mem::size_of::<usize>())
                 .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulong) as isize),
         );
     let dtPtr = DTable.offset(1 as std::ffi::c_int as isize) as *const std::ffi::c_void;
@@ -2646,7 +2646,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
         return _var_err___2;
     }
     if oend.offset_from(op4) as std::ffi::c_long as usize
-        >= ::core::mem::size_of::<usize>() as std::ffi::c_ulong
+        >= ::core::mem::size_of::<usize>()
     {
         while endSignal & (op4 < olimit) as std::ffi::c_int as u32 != 0 {
             if HUF_DECODE_SYMBOLX2_2!(op1, & bitD1) != 0 {
@@ -2769,17 +2769,17 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
     libc::memcpy(
         &mut bits as *mut [u64; 4] as *mut std::ffi::c_void,
         &mut (*args).bits as *mut [u64; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[u64; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u64; 4]>() as usize,
     );
     libc::memcpy(
         &mut ip as *mut [*const u8; 4] as *mut std::ffi::c_void,
         &mut (*args).ip as *mut [*const u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*const u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*const u8; 4]>() as usize,
     );
     libc::memcpy(
         &mut op as *mut [*mut u8; 4] as *mut std::ffi::c_void,
         &mut (*args).op as *mut [*mut u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*mut u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*mut u8; 4]>() as usize,
     );
     oend[0 as std::ffi::c_int as usize] = op[1 as std::ffi::c_int as usize];
     oend[1 as std::ffi::c_int as usize] = op[2 as std::ffi::c_int as usize];
@@ -3249,17 +3249,17 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
     libc::memcpy(
         &mut (*args).bits as *mut [u64; 4] as *mut std::ffi::c_void,
         &mut bits as *mut [u64; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[u64; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u64; 4]>() as usize,
     );
     libc::memcpy(
         &mut (*args).ip as *mut [*const u8; 4] as *mut std::ffi::c_void,
         &mut ip as *mut [*const u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*const u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*const u8; 4]>() as usize,
     );
     libc::memcpy(
         &mut (*args).op as *mut [*mut u8; 4] as *mut std::ffi::c_void,
         &mut op as *mut [*mut u8; 4] as *const std::ffi::c_void,
-        ::core::mem::size_of::<[*mut u8; 4]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[*mut u8; 4]>() as usize,
     );
 }
 unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(

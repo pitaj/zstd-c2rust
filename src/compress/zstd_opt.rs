@@ -255,7 +255,7 @@ pub const base_1guaranteed: base_directive_e = 1;
 pub const base_0possible: base_directive_e = 0;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -664,7 +664,7 @@ unsafe extern "C" fn ZSTD_newRep(
     libc::memcpy(
         &mut newReps as *mut Repcodes_t as *mut std::ffi::c_void,
         rep as *const std::ffi::c_void,
-        ::core::mem::size_of::<Repcodes_t>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<Repcodes_t>() as usize,
     );
     ZSTD_updateRep((newReps.rep).as_mut_ptr(), offBase, ll0);
     return newReps;
@@ -678,7 +678,7 @@ unsafe extern "C" fn ZSTD_count(
     let pStart = pIn;
     let pInLoopLimit = pInLimit
         .offset(
-            -((::core::mem::size_of::<usize>() as std::ffi::c_ulong)
+            -((::core::mem::size_of::<usize>())
                 .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulong) as isize),
         );
     if pIn < pInLoopLimit {
@@ -687,20 +687,20 @@ unsafe extern "C" fn ZSTD_count(
         if diff != 0 {
             return ZSTD_NbCommonBytes(diff) as usize;
         }
-        pIn = pIn.offset(::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize);
+        pIn = pIn.offset(::core::mem::size_of::<usize>() as isize);
         pMatch = pMatch
-            .offset(::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize);
+            .offset(::core::mem::size_of::<usize>() as isize);
         while pIn < pInLoopLimit {
             let diff_0 = MEM_readST(pMatch as *const std::ffi::c_void)
                 ^ MEM_readST(pIn as *const std::ffi::c_void);
             if diff_0 == 0 {
                 pIn = pIn
                     .offset(
-                        ::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize,
+                        ::core::mem::size_of::<usize>() as isize,
                     );
                 pMatch = pMatch
                     .offset(
-                        ::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize,
+                        ::core::mem::size_of::<usize>() as isize,
                     );
             } else {
                 pIn = pIn.offset(ZSTD_NbCommonBytes(diff_0) as isize);
@@ -1381,7 +1381,7 @@ unsafe extern "C" fn ZSTD_rescaleFreqs(
             libc::memcpy(
                 (*optPtr).litLengthFreq as *mut std::ffi::c_void,
                 baseLLfreqs.as_ptr() as *const std::ffi::c_void,
-                ::core::mem::size_of::<[std::ffi::c_uint; 36]>() as std::ffi::c_ulong
+                ::core::mem::size_of::<[std::ffi::c_uint; 36]>()
                     as usize,
             );
             (*optPtr)
@@ -1435,7 +1435,7 @@ unsafe extern "C" fn ZSTD_rescaleFreqs(
             libc::memcpy(
                 (*optPtr).offCodeFreq as *mut std::ffi::c_void,
                 baseOFCfreqs.as_ptr() as *const std::ffi::c_void,
-                ::core::mem::size_of::<[std::ffi::c_uint; 32]>() as std::ffi::c_ulong
+                ::core::mem::size_of::<[std::ffi::c_uint; 32]>()
                     as usize,
             );
             (*optPtr)
@@ -2749,7 +2749,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
     libc::memset(
         &mut lastStretch as *mut ZSTD_optimal_t as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<ZSTD_optimal_t>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<ZSTD_optimal_t>() as usize,
     );
     optLdm
         .seqStore = if !((*ms).ldmSeqStore).is_null() {
@@ -2805,7 +2805,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                 &mut (*opt.offset(0 as std::ffi::c_int as isize)).rep as *mut [u32; 3]
                     as *mut std::ffi::c_void,
                 rep as *const std::ffi::c_void,
-                ::core::mem::size_of::<[u32; 3]>() as std::ffi::c_ulong as usize,
+                ::core::mem::size_of::<[u32; 3]>() as usize,
             );
             let maxML = (*matches
                 .offset(nbMatches.wrapping_sub(1 as std::ffi::c_int as u32) as isize))
@@ -2917,7 +2917,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                                         .rep)
                                         .as_mut_ptr() as *mut std::ffi::c_void,
                                     &newReps as *const Repcodes_t as *const std::ffi::c_void,
-                                    ::core::mem::size_of::<Repcodes_t>() as std::ffi::c_ulong
+                                    ::core::mem::size_of::<Repcodes_t>()
                                         as usize,
                                 );
                                 (*opt
@@ -2951,7 +2951,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                             ((*opt.offset(cur as isize)).rep).as_mut_ptr()
                                 as *mut std::ffi::c_void,
                             &newReps_0 as *const Repcodes_t as *const std::ffi::c_void,
-                            ::core::mem::size_of::<Repcodes_t>() as std::ffi::c_ulong
+                            ::core::mem::size_of::<Repcodes_t>()
                                 as usize,
                         );
                     }
@@ -3100,14 +3100,14 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                     libc::memcpy(
                         rep as *mut std::ffi::c_void,
                         &reps as *const Repcodes_t as *const std::ffi::c_void,
-                        ::core::mem::size_of::<Repcodes_t>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<Repcodes_t>()
                             as usize,
                     );
                 } else {
                     libc::memcpy(
                         rep as *mut std::ffi::c_void,
                         (lastStretch.rep).as_mut_ptr() as *const std::ffi::c_void,
-                        ::core::mem::size_of::<Repcodes_t>() as std::ffi::c_ulong
+                        ::core::mem::size_of::<Repcodes_t>()
                             as usize,
                     );
                     cur = cur.wrapping_sub(lastStretch.litlen);
@@ -3225,7 +3225,7 @@ unsafe extern "C" fn ZSTD_initStats_ultra(
     libc::memcpy(
         tmpRep.as_mut_ptr() as *mut std::ffi::c_void,
         rep as *const std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 3]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u32; 3]>() as usize,
     );
     ZSTD_compressBlock_opt2(
         ms,

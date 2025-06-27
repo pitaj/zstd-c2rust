@@ -49,7 +49,7 @@ unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
 }
 pub const HIST_WKSP_SIZE_U32: std::ffi::c_int = 1024 as std::ffi::c_int;
 pub const HIST_WKSP_SIZE: std::ffi::c_ulong = (HIST_WKSP_SIZE_U32 as std::ffi::c_ulong)
-    .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong);
+    .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>());
 #[no_mangle]
 pub unsafe extern "C" fn HIST_isError(mut code: usize) -> std::ffi::c_uint {
     return ERR_isError(code);
@@ -87,7 +87,7 @@ pub unsafe extern "C" fn HIST_count_simple(
         (maxSymbolValue.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
             as std::ffi::c_ulong)
             .wrapping_mul(
-                ::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong,
+                ::core::mem::size_of::<std::ffi::c_uint>(),
             ) as usize,
     );
     if srcSize == 0 as std::ffi::c_int as usize {
@@ -129,7 +129,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     let iend = ip.offset(sourceSize as isize);
     let countSize = ((*maxSymbolValuePtr)
         .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_ulong)
-        .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong);
+        .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>());
     let mut max = 0 as std::ffi::c_int as std::ffi::c_uint;
     let Counting1 = workSpace;
     let Counting2 = Counting1.offset(256 as std::ffi::c_int as isize);
@@ -149,7 +149,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         0 as std::ffi::c_int,
         ((4 as std::ffi::c_int * 256 as std::ffi::c_int) as std::ffi::c_ulong)
             .wrapping_mul(
-                ::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong,
+                ::core::mem::size_of::<std::ffi::c_uint>(),
             ) as usize,
     );
     let mut cached = MEM_read32(ip as *const std::ffi::c_void);
@@ -340,7 +340,7 @@ pub unsafe extern "C" fn HIST_countFast(
         source,
         sourceSize,
         tmpCounters.as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[std::ffi::c_uint; 1024]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[std::ffi::c_uint; 1024]>(),
     );
 }
 #[no_mangle]
@@ -357,6 +357,6 @@ pub unsafe extern "C" fn HIST_count(
         src,
         srcSize,
         tmpCounters.as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[std::ffi::c_uint; 1024]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[std::ffi::c_uint; 1024]>(),
     );
 }

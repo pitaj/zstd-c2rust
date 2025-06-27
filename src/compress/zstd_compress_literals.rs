@@ -340,7 +340,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     libc::memcpy(
         nextHuf as *mut std::ffi::c_void,
         prevHuf as *const std::ffi::c_void,
-        ::core::mem::size_of::<ZSTD_hufCTables_t>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<ZSTD_hufCTables_t>() as usize,
     );
     if disableLiteralCompression != 0 {
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
@@ -448,7 +448,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         libc::memcpy(
             nextHuf as *mut std::ffi::c_void,
             prevHuf as *const std::ffi::c_void,
-            ::core::mem::size_of::<ZSTD_hufCTables_t>() as std::ffi::c_ulong
+            ::core::mem::size_of::<ZSTD_hufCTables_t>()
                 as usize,
         );
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
@@ -460,7 +460,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             libc::memcpy(
                 nextHuf as *mut std::ffi::c_void,
                 prevHuf as *const std::ffi::c_void,
-                ::core::mem::size_of::<ZSTD_hufCTables_t>() as std::ffi::c_ulong
+                ::core::mem::size_of::<ZSTD_hufCTables_t>()
                     as usize,
             );
             return ZSTD_compressRleLiteralsBlock(dst, dstCapacity, src, srcSize);

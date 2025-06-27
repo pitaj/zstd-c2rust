@@ -205,7 +205,7 @@ pub const ZSTD_tfp_forCCtx: ZSTD_tableFillPurpose_e = 0;
 pub const CACHELINE_SIZE: std::ffi::c_int = 64 as std::ffi::c_int;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -364,7 +364,7 @@ unsafe extern "C" fn ZSTD_count(
     let pStart = pIn;
     let pInLoopLimit = pInLimit
         .offset(
-            -((::core::mem::size_of::<usize>() as std::ffi::c_ulong)
+            -((::core::mem::size_of::<usize>())
                 .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulong) as isize),
         );
     if pIn < pInLoopLimit {
@@ -373,20 +373,20 @@ unsafe extern "C" fn ZSTD_count(
         if diff != 0 {
             return ZSTD_NbCommonBytes(diff) as usize;
         }
-        pIn = pIn.offset(::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize);
+        pIn = pIn.offset(::core::mem::size_of::<usize>() as isize);
         pMatch = pMatch
-            .offset(::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize);
+            .offset(::core::mem::size_of::<usize>() as isize);
         while pIn < pInLoopLimit {
             let diff_0 = MEM_readST(pMatch as *const std::ffi::c_void)
                 ^ MEM_readST(pIn as *const std::ffi::c_void);
             if diff_0 == 0 {
                 pIn = pIn
                     .offset(
-                        ::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize,
+                        ::core::mem::size_of::<usize>() as isize,
                     );
                 pMatch = pMatch
                     .offset(
-                        ::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize,
+                        ::core::mem::size_of::<usize>() as isize,
                     );
             } else {
                 pIn = pIn.offset(ZSTD_NbCommonBytes(diff_0) as isize);
@@ -1212,10 +1212,10 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
         + dictEnd.offset_from(dictStart) as std::ffi::c_long) as u32;
     if (*ms).prefetchCDictTables != 0 {
         let hashTableBytes = ((1 as std::ffi::c_int as usize) << (*dictCParams).hashLog)
-            .wrapping_mul(::core::mem::size_of::<u32>() as std::ffi::c_ulong);
+            .wrapping_mul(::core::mem::size_of::<u32>());
         let chainTableBytes = ((1 as std::ffi::c_int as usize)
             << (*dictCParams).chainLog)
-            .wrapping_mul(::core::mem::size_of::<u32>() as std::ffi::c_ulong);
+            .wrapping_mul(::core::mem::size_of::<u32>());
         let _ptr = PREFETCH_AREA!(dictHashLong, hashTableBytes);
         let _size = PREFETCH_AREA!(dictHashLong, hashTableBytes);
         let mut _pos: usize = 0;

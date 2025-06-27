@@ -745,7 +745,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
 }
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -1914,7 +1914,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
                 as *mut std::ffi::c_void,
             &(*prevCBlock).entropy.huf as *const ZSTD_hufCTables_t
                 as *const std::ffi::c_void,
-            ::core::mem::size_of::<ZSTD_hufCTables_t>() as std::ffi::c_ulong
+            ::core::mem::size_of::<ZSTD_hufCTables_t>()
                 as usize,
         );
     }
@@ -1943,7 +1943,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             libc::memcpy(
                 &mut rep as *mut Repcodes_t as *mut std::ffi::c_void,
                 ((*prevCBlock).rep).as_ptr() as *const std::ffi::c_void,
-                ::core::mem::size_of::<Repcodes_t>() as std::ffi::c_ulong as usize,
+                ::core::mem::size_of::<Repcodes_t>() as usize,
             );
             seq = sstart;
             while seq < sp {
@@ -1959,7 +1959,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             libc::memcpy(
                 ((*nextCBlock).rep).as_mut_ptr() as *mut std::ffi::c_void,
                 &mut rep as *mut Repcodes_t as *const std::ffi::c_void,
-                ::core::mem::size_of::<Repcodes_t>() as std::ffi::c_ulong as usize,
+                ::core::mem::size_of::<Repcodes_t>() as usize,
             );
         }
     }

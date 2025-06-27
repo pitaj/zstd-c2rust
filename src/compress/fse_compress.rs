@@ -67,7 +67,7 @@ pub struct FSE_symbolCompressionTransform {
 }
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -179,9 +179,9 @@ unsafe extern "C" fn BIT_initCStream(
         .endPtr = ((*bitC).startPtr)
         .offset(dstCapacity as isize)
         .offset(
-            -(::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong as isize),
+            -(::core::mem::size_of::<BitContainerType>() as isize),
         );
-    if dstCapacity <= ::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong {
+    if dstCapacity <= ::core::mem::size_of::<BitContainerType>() {
         return ERROR!(dstSize_tooSmall);
     }
     return 0 as std::ffi::c_int as usize;
@@ -1069,7 +1069,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         FSE_initCState2(&mut CState1, ct, *ip as u32);
     }
     srcSize = srcSize.wrapping_sub(2 as std::ffi::c_int as usize);
-    if (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+    if (::core::mem::size_of::<BitContainerType>())
         .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
         > (FSE_MAX_TABLELOG * 4 as std::ffi::c_int + 7 as std::ffi::c_int)
             as std::ffi::c_ulong && srcSize & 2 as std::ffi::c_int as usize != 0
@@ -1083,7 +1083,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
     while ip > istart {
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as std::ffi::c_uint);
-        if (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+        if (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
             < (FSE_MAX_TABLELOG * 2 as std::ffi::c_int + 7 as std::ffi::c_int)
                 as std::ffi::c_ulong
@@ -1092,7 +1092,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         }
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
-        if (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+        if (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
             > (FSE_MAX_TABLELOG * 4 as std::ffi::c_int + 7 as std::ffi::c_int)
                 as std::ffi::c_ulong

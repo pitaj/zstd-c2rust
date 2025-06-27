@@ -395,13 +395,13 @@ unsafe extern "C" fn ZSTD_maybeNullPtrAdd(
 }
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -505,7 +505,7 @@ unsafe extern "C" fn BIT_initDStream(
         libc::memset(
             bitD as *mut std::ffi::c_void,
             0 as std::ffi::c_int,
-            ::core::mem::size_of::<BIT_DStream_t>() as std::ffi::c_ulong as usize,
+            ::core::mem::size_of::<BIT_DStream_t>() as usize,
         );
         return ERROR!(srcSize_wrong);
     }
@@ -513,14 +513,14 @@ unsafe extern "C" fn BIT_initDStream(
     (*bitD)
         .limitPtr = ((*bitD).start)
         .offset(
-            ::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong as isize,
+            ::core::mem::size_of::<BitContainerType>() as isize,
         );
-    if srcSize >= ::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong {
+    if srcSize >= ::core::mem::size_of::<BitContainerType>() {
         (*bitD)
             .ptr = (srcBuffer as *const std::ffi::c_char)
             .offset(srcSize as isize)
             .offset(
-                -(::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong
+                -(::core::mem::size_of::<BitContainerType>()
                     as isize),
             );
         (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
@@ -658,7 +658,7 @@ unsafe extern "C" fn BIT_initDStream(
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
-                (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+                (::core::mem::size_of::<BitContainerType>())
                     .wrapping_sub(srcSize) as u32 * 8 as std::ffi::c_int as u32,
             );
     }
@@ -670,7 +670,7 @@ unsafe extern "C" fn BIT_getMiddleBits(
     start: u32,
     nbBits: u32,
 ) -> BitContainerType {
-    let regMask = (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+    let regMask = (::core::mem::size_of::<BitContainerType>())
         .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
         .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulong) as u32;
     return bitContainer >> (start & regMask)
@@ -684,7 +684,7 @@ unsafe extern "C" fn BIT_lookBits(
 ) -> BitContainerType {
     return BIT_getMiddleBits(
         (*bitD).bitContainer,
-        (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+        (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
             .wrapping_sub((*bitD).bitsConsumed as std::ffi::c_ulong)
             .wrapping_sub(nbBits as std::ffi::c_ulong) as u32,
@@ -696,7 +696,7 @@ unsafe extern "C" fn BIT_lookBitsFast(
     mut bitD: *const BIT_DStream_t,
     mut nbBits: u32,
 ) -> BitContainerType {
-    let regMask = (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+    let regMask = (::core::mem::size_of::<BitContainerType>())
         .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
         .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_ulong) as u32;
     return (*bitD).bitContainer << ((*bitD).bitsConsumed & regMask)
@@ -741,7 +741,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     mut bitD: *mut BIT_DStream_t,
 ) -> BIT_DStream_status {
     if ((*bitD).bitsConsumed as std::ffi::c_ulong
-        > (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+        > (::core::mem::size_of::<BitContainerType>())
             .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)) as std::ffi::c_int
         as std::ffi::c_long != 0
     {
@@ -755,7 +755,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     }
     if (*bitD).ptr == (*bitD).start {
         if ((*bitD).bitsConsumed as std::ffi::c_ulong)
-            < (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+            < (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
         {
             return BIT_DStream_endOfBuffer;
@@ -781,7 +781,7 @@ unsafe extern "C" fn BIT_endOfDStream(
 ) -> std::ffi::c_uint {
     return ((*DStream).ptr == (*DStream).start
         && (*DStream).bitsConsumed as std::ffi::c_ulong
-            == (::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong)
+            == (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong))
         as std::ffi::c_int as std::ffi::c_uint;
 }
@@ -1576,7 +1576,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     );
     if (*dctx).ddictIsCold != 0 && litSize > 768 as std::ffi::c_int as usize {
         let _ptr = (*dctx).HUFptr as *const std::ffi::c_char;
-        let _size = ::core::mem::size_of::<[HUF_DTable; 4097]>() as std::ffi::c_ulong;
+        let _size = ::core::mem::size_of::<[HUF_DTable; 4097]>();
         let mut _pos: usize = 0;
         _pos = 0 as std::ffi::c_int as usize;
         while _pos < _size {
@@ -1613,7 +1613,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             istart.offset(lhSize as isize) as *const std::ffi::c_void,
             litCSize,
             ((*dctx).workspace).as_mut_ptr() as *mut std::ffi::c_void,
-            ::core::mem::size_of::<[u32; 640]>() as std::ffi::c_ulong,
+            ::core::mem::size_of::<[u32; 640]>(),
             flags,
         );
     } else {
@@ -1624,7 +1624,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             istart.offset(lhSize as isize) as *const std::ffi::c_void,
             litCSize,
             ((*dctx).workspace).as_mut_ptr() as *mut std::ffi::c_void,
-            ::core::mem::size_of::<[u32; 640]>() as std::ffi::c_ulong,
+            ::core::mem::size_of::<[u32; 640]>(),
             flags,
         );
     }
@@ -3256,7 +3256,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
     libc::memcpy(
         dt as *mut std::ffi::c_void,
         &mut DTableH as *mut ZSTD_seqSymbol_header as *const std::ffi::c_void,
-        ::core::mem::size_of::<ZSTD_seqSymbol_header>() as std::ffi::c_ulong
+        ::core::mem::size_of::<ZSTD_seqSymbol_header>()
             as usize,
     );
     if highThreshold == tableSize.wrapping_sub(1 as std::ffi::c_int as u32) {
@@ -3590,7 +3590,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         (*dctx).ddictIsCold,
         nbSeq,
         ((*dctx).workspace).as_mut_ptr(),
-        ::core::mem::size_of::<[u32; 640]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 640]>(),
         ZSTD_DCtx_get_bmi2(dctx),
     );
     if ERR_isError(llhSize) != 0 {
@@ -3612,7 +3612,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         (*dctx).ddictIsCold,
         nbSeq,
         ((*dctx).workspace).as_mut_ptr(),
-        ::core::mem::size_of::<[u32; 640]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 640]>(),
         ZSTD_DCtx_get_bmi2(dctx),
     );
     if ERR_isError(ofhSize) != 0 {
@@ -3634,7 +3634,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         (*dctx).ddictIsCold,
         nbSeq,
         ((*dctx).workspace).as_mut_ptr(),
-        ::core::mem::size_of::<[u32; 640]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 640]>(),
         ZSTD_DCtx_get_bmi2(dctx),
     );
     if ERR_isError(mlhSize) != 0 {
@@ -5398,8 +5398,8 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if MEM_64bits() != 0
-        && ::core::mem::size_of::<usize>() as std::ffi::c_ulong
-            == ::core::mem::size_of::<*mut std::ffi::c_void>() as std::ffi::c_ulong
+        && ::core::mem::size_of::<usize>()
+            == ::core::mem::size_of::<*mut std::ffi::c_void>()
         && (-(1 as std::ffi::c_int) as usize).wrapping_sub(dst as usize)
             < ((1 as std::ffi::c_int) << 20 as std::ffi::c_int) as usize
     {

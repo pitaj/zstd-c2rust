@@ -190,7 +190,7 @@ pub union C2RustUnnamed_1 {
 }
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -312,7 +312,7 @@ unsafe extern "C" fn HUF_compressWeights(
         ZSTD_ALIGNOF!(u32),
     ) as *mut HUF_CompressWeightsWksp;
     if workspaceSize
-        < ::core::mem::size_of::<HUF_CompressWeightsWksp>() as std::ffi::c_ulong
+        < ::core::mem::size_of::<HUF_CompressWeightsWksp>()
     {
         return ERROR!(GENERIC);
     }
@@ -364,7 +364,7 @@ unsafe extern "C" fn HUF_compressWeights(
         maxSymbolValue,
         tableLog,
         ((*wksp).scratchBuffer).as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 41]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 41]>(),
     );
     if ERR_isError(_var_err___0) != 0 {
         return _var_err___0;
@@ -409,7 +409,7 @@ unsafe extern "C" fn HUF_setValue(mut elt: *mut HUF_CElt, mut value: usize) {
     if nbBits > 0 as std::ffi::c_int as usize {
         *elt
             |= value
-                << (::core::mem::size_of::<HUF_CElt>() as std::ffi::c_ulong)
+                << (::core::mem::size_of::<HUF_CElt>())
                     .wrapping_mul(8 as std::ffi::c_int as std::ffi::c_ulong)
                     .wrapping_sub(nbBits);
     }
@@ -426,7 +426,7 @@ pub unsafe extern "C" fn HUF_readCTableHeader(
     libc::memcpy(
         &mut header as *mut HUF_CTableHeader as *mut std::ffi::c_void,
         ctable as *const std::ffi::c_void,
-        ::core::mem::size_of::<HUF_CTableHeader>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<HUF_CTableHeader>() as usize,
     );
     return header;
 }
@@ -443,14 +443,14 @@ unsafe extern "C" fn HUF_writeCTableHeader(
     libc::memset(
         &mut header as *mut HUF_CTableHeader as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<HUF_CTableHeader>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<HUF_CTableHeader>() as usize,
     );
     header.tableLog = tableLog as u8;
     header.maxSymbolValue = maxSymbolValue as u8;
     libc::memcpy(
         ctable as *mut std::ffi::c_void,
         &mut header as *mut HUF_CTableHeader as *const std::ffi::c_void,
-        ::core::mem::size_of::<HUF_CTableHeader>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<HUF_CTableHeader>() as usize,
     );
 }
 #[no_mangle]
@@ -471,7 +471,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
         &mut workspaceSize,
         ZSTD_ALIGNOF!(u32),
     ) as *mut HUF_WriteCTableWksp;
-    if workspaceSize < ::core::mem::size_of::<HUF_WriteCTableWksp>() as std::ffi::c_ulong
+    if workspaceSize < ::core::mem::size_of::<HUF_WriteCTableWksp>()
     {
         return ERROR!(GENERIC);
     }
@@ -507,7 +507,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
         ((*wksp).huffWeight).as_mut_ptr() as *const std::ffi::c_void,
         maxSymbolValue as usize,
         &mut (*wksp).wksp as *mut HUF_CompressWeightsWksp as *mut std::ffi::c_void,
-        ::core::mem::size_of::<HUF_CompressWeightsWksp>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<HUF_CompressWeightsWksp>(),
     );
     if CHECK_V_F!(
         hSize, HUF_compressWeights(op + 1, maxDstSize - 1, wksp -> huffWeight,
@@ -741,7 +741,7 @@ unsafe extern "C" fn HUF_setMaxHeight(
     libc::memset(
         rankLast.as_mut_ptr() as *mut std::ffi::c_void,
         0xf0 as std::ffi::c_int,
-        ::core::mem::size_of::<[u32; 14]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u32; 14]>() as usize,
     );
     let mut currentNbBits = targetNbBits;
     let mut pos: std::ffi::c_int = 0;
@@ -1182,7 +1182,7 @@ pub unsafe extern "C" fn HUF_buildCTable_wksp(
     let huffNode = huffNode0.offset(1 as std::ffi::c_int as isize);
     let mut nonNullRank: std::ffi::c_int = 0;
     if wkspSize
-        < ::core::mem::size_of::<HUF_buildCTable_wksp_tables>() as std::ffi::c_ulong
+        < ::core::mem::size_of::<HUF_buildCTable_wksp_tables>()
     {
         return ERROR!(workSpace_tooSmall);
     }
@@ -1195,7 +1195,7 @@ pub unsafe extern "C" fn HUF_buildCTable_wksp(
     libc::memset(
         huffNode0 as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<huffNodeTable>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<huffNodeTable>() as usize,
     );
     HUF_sort(
         huffNode,
@@ -1272,15 +1272,15 @@ unsafe extern "C" fn HUF_initCStream(
     libc::memset(
         bitC as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<HUF_CStream_t>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<HUF_CStream_t>() as usize,
     );
     (*bitC).startPtr = startPtr as *mut u8;
     (*bitC).ptr = (*bitC).startPtr;
     (*bitC)
         .endPtr = ((*bitC).startPtr)
         .offset(dstCapacity as isize)
-        .offset(-(::core::mem::size_of::<usize>() as std::ffi::c_ulong as isize));
-    if dstCapacity <= ::core::mem::size_of::<usize>() as std::ffi::c_ulong {
+        .offset(-(::core::mem::size_of::<usize>() as isize));
+    if dstCapacity <= ::core::mem::size_of::<usize>() {
         return ERROR!(dstSize_tooSmall);
     }
     return 0 as std::ffi::c_int as usize;
@@ -1915,11 +1915,11 @@ pub unsafe extern "C" fn HUF_optimalTableLog(
     }
     let mut dst = (workSpace as *mut u8)
         .offset(
-            ::core::mem::size_of::<HUF_WriteCTableWksp>() as std::ffi::c_ulong as isize,
+            ::core::mem::size_of::<HUF_WriteCTableWksp>() as isize,
         );
     let mut dstSize = wkspSize
         .wrapping_sub(
-            ::core::mem::size_of::<HUF_WriteCTableWksp>() as std::ffi::c_ulong,
+            ::core::mem::size_of::<HUF_WriteCTableWksp>(),
         );
     let mut hSize: usize = 0;
     let mut newSize: usize = 0;
@@ -1988,7 +1988,7 @@ unsafe extern "C" fn HUF_compress_internal(
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
     let mut op = ostart;
-    if wkspSize < ::core::mem::size_of::<HUF_compress_tables_t>() as std::ffi::c_ulong {
+    if wkspSize < ::core::mem::size_of::<HUF_compress_tables_t>() {
         return ERROR!(workSpace_tooSmall);
     }
     if srcSize == 0 {
@@ -2079,7 +2079,7 @@ unsafe extern "C" fn HUF_compress_internal(
         src as *const u8 as *const std::ffi::c_void,
         srcSize,
         ((*table).wksps.hist_wksp).as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 1024]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 1024]>(),
     );
     if CHECK_V_F!(
         largest, HIST_count_wksp(table -> count, & maxSymbolValue, (const u8 *) src,
@@ -2125,7 +2125,7 @@ unsafe extern "C" fn HUF_compress_internal(
         srcSize,
         maxSymbolValue,
         &mut (*table).wksps as *mut C2RustUnnamed_1 as *mut std::ffi::c_void,
-        ::core::mem::size_of::<C2RustUnnamed_1>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<C2RustUnnamed_1>(),
         ((*table).CTable).as_mut_ptr(),
         ((*table).count).as_mut_ptr(),
         flags,
@@ -2137,7 +2137,7 @@ unsafe extern "C" fn HUF_compress_internal(
         huffLog,
         &mut (*table).wksps.buildCTable_wksp as *mut HUF_buildCTable_wksp_tables
             as *mut std::ffi::c_void,
-        ::core::mem::size_of::<HUF_buildCTable_wksp_tables>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<HUF_buildCTable_wksp_tables>(),
     );
     let _var_err__ = maxBits;
     if ERR_isError(_var_err__) != 0 {
@@ -2152,7 +2152,7 @@ unsafe extern "C" fn HUF_compress_internal(
         huffLog,
         &mut (*table).wksps.writeCTable_wksp as *mut HUF_WriteCTableWksp
             as *mut std::ffi::c_void,
-        ::core::mem::size_of::<HUF_WriteCTableWksp>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<HUF_WriteCTableWksp>(),
     );
     if CHECK_V_F!(
         hSize, HUF_writeCTable_wksp(op, dstSize, table -> CTable, maxSymbolValue,
@@ -2202,7 +2202,7 @@ unsafe extern "C" fn HUF_compress_internal(
         libc::memcpy(
             oldHufTable as *mut std::ffi::c_void,
             ((*table).CTable).as_mut_ptr() as *const std::ffi::c_void,
-            ::core::mem::size_of::<[HUF_CElt; 257]>() as std::ffi::c_ulong
+            ::core::mem::size_of::<[HUF_CElt; 257]>()
                 as usize,
         );
     }

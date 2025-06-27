@@ -1033,7 +1033,7 @@ unsafe extern "C" fn ZSTD_window_init(mut window: *mut ZSTD_window_t) {
     libc::memset(
         window as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<ZSTD_window_t>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<ZSTD_window_t>() as usize,
     );
     (*window).base = b" \0" as *const u8 as *const std::ffi::c_char as *const u8;
     (*window).dictBase = b" \0" as *const u8 as *const std::ffi::c_char as *const u8;
@@ -1086,7 +1086,7 @@ unsafe extern "C" fn ZSTD_window_update(
 }
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -1208,7 +1208,7 @@ unsafe extern "C" fn ZSTDMT_createBufferPool(
     mut cMem: ZSTD_customMem,
 ) -> *mut ZSTDMT_bufferPool {
     let bufPool = ZSTD_customCalloc(
-        ::core::mem::size_of::<ZSTDMT_bufferPool>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<ZSTDMT_bufferPool>(),
         cMem,
     ) as *mut ZSTDMT_bufferPool;
     if bufPool.is_null() {
@@ -1221,7 +1221,7 @@ unsafe extern "C" fn ZSTDMT_createBufferPool(
     (*bufPool)
         .buffers = ZSTD_customCalloc(
         (maxNbBuffers as std::ffi::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<Buffer>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<Buffer>()),
         cMem,
     ) as *mut Buffer;
     if ((*bufPool).buffers).is_null() {
@@ -1239,9 +1239,9 @@ unsafe extern "C" fn ZSTDMT_createBufferPool(
 unsafe extern "C" fn ZSTDMT_sizeof_bufferPool(
     mut bufPool: *mut ZSTDMT_bufferPool,
 ) -> usize {
-    let poolSize = ::core::mem::size_of::<ZSTDMT_bufferPool>() as std::ffi::c_ulong;
+    let poolSize = ::core::mem::size_of::<ZSTDMT_bufferPool>();
     let arraySize = ((*bufPool).totalBuffers as std::ffi::c_ulong)
-        .wrapping_mul(::core::mem::size_of::<Buffer>() as std::ffi::c_ulong);
+        .wrapping_mul(::core::mem::size_of::<Buffer>());
     let mut u: std::ffi::c_uint = 0;
     let mut totalBufferSize = 0 as std::ffi::c_int as usize;
     ZSTD_pthread_mutex_lock!(
@@ -1358,7 +1358,7 @@ unsafe extern "C" fn bufferToSeq(mut buffer: Buffer) -> RawSeqStore_t {
     seq.seq = buffer.start as *mut rawSeq;
     seq
         .capacity = (buffer.capacity)
-        .wrapping_div(::core::mem::size_of::<rawSeq>() as std::ffi::c_ulong);
+        .wrapping_div(::core::mem::size_of::<rawSeq>());
     return seq;
 }
 unsafe extern "C" fn seqToBuffer(mut seq: RawSeqStore_t) -> Buffer {
@@ -1369,7 +1369,7 @@ unsafe extern "C" fn seqToBuffer(mut seq: RawSeqStore_t) -> Buffer {
     buffer.start = seq.seq as *mut std::ffi::c_void;
     buffer
         .capacity = (seq.capacity)
-        .wrapping_mul(::core::mem::size_of::<rawSeq>() as std::ffi::c_ulong);
+        .wrapping_mul(::core::mem::size_of::<rawSeq>());
     return buffer;
 }
 unsafe extern "C" fn ZSTDMT_getSeq(mut seqPool: *mut ZSTDMT_seqPool) -> RawSeqStore_t {
@@ -1387,7 +1387,7 @@ unsafe extern "C" fn ZSTDMT_releaseSeq(
 unsafe extern "C" fn ZSTDMT_setNbSeq(seqPool: *mut ZSTDMT_seqPool, nbSeq: usize) {
     ZSTDMT_setBufferSize(
         seqPool,
-        nbSeq.wrapping_mul(::core::mem::size_of::<rawSeq>() as std::ffi::c_ulong),
+        nbSeq.wrapping_mul(::core::mem::size_of::<rawSeq>()),
     );
 }
 unsafe extern "C" fn ZSTDMT_createSeqPool(
@@ -1434,7 +1434,7 @@ unsafe extern "C" fn ZSTDMT_createCCtxPool(
     mut cMem: ZSTD_customMem,
 ) -> *mut ZSTDMT_CCtxPool {
     let cctxPool = ZSTD_customCalloc(
-        ::core::mem::size_of::<ZSTDMT_CCtxPool>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<ZSTDMT_CCtxPool>(),
         cMem,
     ) as *mut ZSTDMT_CCtxPool;
     if cctxPool.is_null() {
@@ -1448,7 +1448,7 @@ unsafe extern "C" fn ZSTDMT_createCCtxPool(
     (*cctxPool)
         .cctxs = ZSTD_customCalloc(
         (nbWorkers as std::ffi::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<*mut ZSTD_CCtx>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<*mut ZSTD_CCtx>()),
         cMem,
     ) as *mut *mut ZSTD_CCtx;
     if ((*cctxPool).cctxs).is_null() {
@@ -1486,9 +1486,9 @@ unsafe extern "C" fn ZSTDMT_sizeof_CCtxPool(
         & cctxPool -> poolMutex
     )(ZSTD_pthread_mutex_lock!(& cctxPool -> poolMutex));
     let nbWorkers = (*cctxPool).totalCCtx as std::ffi::c_uint;
-    let poolSize = ::core::mem::size_of::<ZSTDMT_CCtxPool>() as std::ffi::c_ulong;
+    let poolSize = ::core::mem::size_of::<ZSTDMT_CCtxPool>();
     let arraySize = ((*cctxPool).totalCCtx as std::ffi::c_ulong)
-        .wrapping_mul(::core::mem::size_of::<*mut ZSTD_CCtx>() as std::ffi::c_ulong);
+        .wrapping_mul(::core::mem::size_of::<*mut ZSTD_CCtx>());
     let mut totalCCtxSize = 0 as std::ffi::c_int as usize;
     let mut u: std::ffi::c_uint = 0;
     u = 0 as std::ffi::c_int as std::ffi::c_uint;
@@ -1562,7 +1562,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
         libc::memset(
             &mut params.ldmParams as *mut ldmParams_t as *mut std::ffi::c_void,
             0 as std::ffi::c_int,
-            ::core::mem::size_of::<ldmParams_t>() as std::ffi::c_ulong as usize,
+            ::core::mem::size_of::<ldmParams_t>() as usize,
         );
     }
     (*serialState).nextJobID = 0 as std::ffi::c_int as std::ffi::c_uint;
@@ -1578,7 +1578,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
         let mut cMem = params.customMem;
         let hashLog = params.ldmParams.hashLog;
         let hashSize = ((1 as std::ffi::c_int as usize) << hashLog)
-            .wrapping_mul(::core::mem::size_of::<ldmEntry_t>() as std::ffi::c_ulong);
+            .wrapping_mul(::core::mem::size_of::<ldmEntry_t>());
         let bucketLog = (params.ldmParams.hashLog)
             .wrapping_sub(params.ldmParams.bucketSizeLog);
         let prevBucketLog = ((*serialState).params.ldmParams.hashLog)
@@ -1664,7 +1664,7 @@ unsafe extern "C" fn ZSTDMT_serialState_init(
     libc::memset(
         serialState as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<SerialState>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<SerialState>() as usize,
     );
     initError |= ZSTD_pthread_mutex_init!(& serialState -> mutex, NULL);
     initError |= ZSTD_pthread_cond_init!(& serialState -> cond, NULL);
@@ -1976,7 +1976,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                     let mut op = ostart;
                                     let mut oend = op.offset(dstBuff.capacity as isize);
                                     let mut chunkNb: std::ffi::c_int = 0;
-                                    ::core::mem::size_of::<usize>() as std::ffi::c_ulong
+                                    ::core::mem::size_of::<usize>()
                                         > ::core::mem::size_of::<std::ffi::c_int>()
                                             as std::ffi::c_ulong;
                                     chunkNb = 1 as std::ffi::c_int;
@@ -2142,7 +2142,7 @@ unsafe extern "C" fn ZSTDMT_createJobsTable(
     let jobTable = ZSTD_customCalloc(
         (nbJobs as std::ffi::c_ulong)
             .wrapping_mul(
-                ::core::mem::size_of::<ZSTDMT_jobDescription>() as std::ffi::c_ulong,
+                ::core::mem::size_of::<ZSTDMT_jobDescription>(),
             ),
         cMem,
     ) as *mut ZSTDMT_jobDescription;
@@ -2215,7 +2215,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
         return NULL_0 as *mut ZSTDMT_CCtx;
     }
     mtctx = ZSTD_customCalloc(
-        ::core::mem::size_of::<ZSTDMT_CCtx>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<ZSTDMT_CCtx>(),
         cMem,
     ) as *mut ZSTDMT_CCtx;
     if mtctx.is_null() {
@@ -2277,7 +2277,7 @@ unsafe extern "C" fn ZSTDMT_releaseAllJobResources(mut mtctx: *mut ZSTDMT_CCtx) 
             &mut *((*mtctx).jobs).offset(jobID as isize) as *mut ZSTDMT_jobDescription
                 as *mut std::ffi::c_void,
             0 as std::ffi::c_int,
-            ::core::mem::size_of::<ZSTDMT_jobDescription>() as std::ffi::c_ulong
+            ::core::mem::size_of::<ZSTDMT_jobDescription>()
                 as usize,
         );
         (*((*mtctx).jobs).offset(jobID as isize)).job_mutex = mutex;
@@ -2349,14 +2349,14 @@ pub unsafe extern "C" fn ZSTDMT_sizeof_CCtx(mut mtctx: *mut ZSTDMT_CCtx) -> usiz
     if mtctx.is_null() {
         return 0 as std::ffi::c_int as usize;
     }
-    return (::core::mem::size_of::<ZSTDMT_CCtx>() as std::ffi::c_ulong)
+    return (::core::mem::size_of::<ZSTDMT_CCtx>())
         .wrapping_add(POOL_sizeof((*mtctx).factory))
         .wrapping_add(ZSTDMT_sizeof_bufferPool((*mtctx).bufPool))
         .wrapping_add(
             (((*mtctx).jobIDMask).wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
                 as std::ffi::c_ulong)
                 .wrapping_mul(
-                    ::core::mem::size_of::<ZSTDMT_jobDescription>() as std::ffi::c_ulong,
+                    ::core::mem::size_of::<ZSTDMT_jobDescription>(),
                 ),
         )
         .wrapping_add(ZSTDMT_sizeof_CCtxPool((*mtctx).cctxPool))

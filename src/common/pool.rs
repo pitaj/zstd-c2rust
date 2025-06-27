@@ -275,7 +275,7 @@ pub unsafe extern "C" fn POOL_create_advanced(
         return NULL_0 as *mut POOL_ctx;
     }
     ctx = ZSTD_customCalloc(
-        ::core::mem::size_of::<POOL_ctx>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<POOL_ctx>(),
         customMem,
     ) as *mut POOL_ctx;
     if ctx.is_null() {
@@ -285,7 +285,7 @@ pub unsafe extern "C" fn POOL_create_advanced(
     (*ctx)
         .queue = ZSTD_customCalloc(
         ((*ctx).queueSize)
-            .wrapping_mul(::core::mem::size_of::<POOL_job>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<POOL_job>()),
         customMem,
     ) as *mut POOL_job;
     (*ctx).queueHead = 0 as std::ffi::c_int as usize;
@@ -304,7 +304,7 @@ pub unsafe extern "C" fn POOL_create_advanced(
     (*ctx)
         .threads = ZSTD_customCalloc(
         numThreads
-            .wrapping_mul(::core::mem::size_of::<pthread_t>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<pthread_t>()),
         customMem,
     ) as *mut pthread_t;
     (*ctx).threadCapacity = 0 as std::ffi::c_int as usize;
@@ -399,14 +399,14 @@ pub unsafe extern "C" fn POOL_sizeof(mut ctx: *const POOL_ctx) -> usize {
     if ctx.is_null() {
         return 0 as std::ffi::c_int as usize;
     }
-    return (::core::mem::size_of::<POOL_ctx>() as std::ffi::c_ulong)
+    return (::core::mem::size_of::<POOL_ctx>())
         .wrapping_add(
             ((*ctx).queueSize)
-                .wrapping_mul(::core::mem::size_of::<POOL_job>() as std::ffi::c_ulong),
+                .wrapping_mul(::core::mem::size_of::<POOL_job>()),
         )
         .wrapping_add(
             ((*ctx).threadCapacity)
-                .wrapping_mul(::core::mem::size_of::<pthread_t>() as std::ffi::c_ulong),
+                .wrapping_mul(::core::mem::size_of::<pthread_t>()),
         );
 }
 unsafe extern "C" fn POOL_resize_internal(
@@ -422,7 +422,7 @@ unsafe extern "C" fn POOL_resize_internal(
     }
     let threadPool = ZSTD_customCalloc(
         numThreads
-            .wrapping_mul(::core::mem::size_of::<pthread_t>() as std::ffi::c_ulong),
+            .wrapping_mul(::core::mem::size_of::<pthread_t>()),
         (*ctx).customMem,
     ) as *mut pthread_t;
     if threadPool.is_null() {
@@ -432,7 +432,7 @@ unsafe extern "C" fn POOL_resize_internal(
         threadPool as *mut std::ffi::c_void,
         (*ctx).threads as *const std::ffi::c_void,
         ((*ctx).threadCapacity)
-            .wrapping_mul(::core::mem::size_of::<pthread_t>() as std::ffi::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<pthread_t>())
             as usize,
     );
     ZSTD_customFree((*ctx).threads as *mut std::ffi::c_void, (*ctx).customMem);

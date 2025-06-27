@@ -49,7 +49,7 @@ unsafe extern "C" fn initStats(mut fpstats: *mut FPStats) {
     libc::memset(
         fpstats as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<FPStats>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<FPStats>() as usize,
     );
 }
 #[inline(always)]
@@ -91,7 +91,7 @@ unsafe extern "C" fn recordFingerprint_generic(
     libc::memset(
         fp as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        (::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong)
+        (::core::mem::size_of::<std::ffi::c_uint>())
             .wrapping_mul((1 as std::ffi::c_int as usize) << hashLog) as usize,
     );
     (*fp).nbEvents = 0 as std::ffi::c_int as usize;
@@ -223,7 +223,7 @@ unsafe extern "C" fn flushEvents(mut fpstats: *mut FPStats) {
     libc::memset(
         &mut (*fpstats).newEvents as *mut Fingerprint as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<Fingerprint>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<Fingerprint>() as usize,
     );
 }
 unsafe extern "C" fn removeEvents(
@@ -309,7 +309,7 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
         .offset(
             (512 as std::ffi::c_int as std::ffi::c_ulong)
                 .wrapping_mul(
-                    ::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong,
+                    ::core::mem::size_of::<std::ffi::c_uint>(),
                 ) as isize,
         ) as *mut std::ffi::c_void as *mut Fingerprint;
     initStats(fpstats);

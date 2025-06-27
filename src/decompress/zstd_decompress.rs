@@ -1440,7 +1440,7 @@ unsafe extern "C" fn ZSTD_DDictHashSet_getIndex(
 ) -> usize {
     let hash = ZSTD_XXH64(
         &mut dictID as *mut u32 as *const std::ffi::c_void,
-        ::core::mem::size_of::<u32>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<u32>(),
         0 as std::ffi::c_int as XXH64_hash_t,
     );
     return hash
@@ -1482,7 +1482,7 @@ unsafe extern "C" fn ZSTD_DDictHashSet_expand(
     let mut newTableSize = (*hashSet).ddictPtrTableSize
         * DDICT_HASHSET_RESIZE_FACTOR as usize;
     let mut newTable = ZSTD_customCalloc(
-        (::core::mem::size_of::<*mut ZSTD_DDict>() as std::ffi::c_ulong)
+        (::core::mem::size_of::<*mut ZSTD_DDict>())
             .wrapping_mul(newTableSize),
         customMem,
     ) as *mut *const ZSTD_DDict;
@@ -1541,7 +1541,7 @@ unsafe extern "C" fn ZSTD_createDDictHashSet(
     mut customMem: ZSTD_customMem,
 ) -> *mut ZSTD_DDictHashSet {
     let mut ret = ZSTD_customMalloc(
-        ::core::mem::size_of::<ZSTD_DDictHashSet>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<ZSTD_DDictHashSet>(),
         customMem,
     ) as *mut ZSTD_DDictHashSet;
     if ret.is_null() {
@@ -1551,7 +1551,7 @@ unsafe extern "C" fn ZSTD_createDDictHashSet(
         .ddictPtrTable = ZSTD_customCalloc(
         (DDICT_HASHSET_TABLE_BASE_SIZE as std::ffi::c_ulong)
             .wrapping_mul(
-                ::core::mem::size_of::<*mut ZSTD_DDict>() as std::ffi::c_ulong,
+                ::core::mem::size_of::<*mut ZSTD_DDict>(),
             ),
         customMem,
     ) as *mut *const ZSTD_DDict;
@@ -1604,14 +1604,14 @@ pub unsafe extern "C" fn ZSTD_sizeof_DCtx(mut dctx: *const ZSTD_DCtx) -> usize {
     if dctx.is_null() {
         return 0 as std::ffi::c_int as usize;
     }
-    return (::core::mem::size_of::<ZSTD_DCtx>() as std::ffi::c_ulong)
+    return (::core::mem::size_of::<ZSTD_DCtx>())
         .wrapping_add(ZSTD_sizeof_DDict((*dctx).ddictLocal))
         .wrapping_add((*dctx).inBuffSize)
         .wrapping_add((*dctx).outBuffSize);
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_estimateDCtxSize() -> usize {
-    return ::core::mem::size_of::<ZSTD_DCtx>() as std::ffi::c_ulong;
+    return ::core::mem::size_of::<ZSTD_DCtx>();
 }
 unsafe extern "C" fn ZSTD_startingInputLength(mut format: ZSTD_format_e) -> usize {
     let startingInputLength = ZSTD_FRAMEHEADERSIZE_PREFIX!(format);
@@ -1655,7 +1655,7 @@ pub unsafe extern "C" fn ZSTD_initStaticDCtx(
     if workspace as usize & 7 as std::ffi::c_int as usize != 0 {
         return NULL as *mut ZSTD_DCtx;
     }
-    if workspaceSize < ::core::mem::size_of::<ZSTD_DCtx>() as std::ffi::c_ulong {
+    if workspaceSize < ::core::mem::size_of::<ZSTD_DCtx>() {
         return NULL as *mut ZSTD_DCtx;
     }
     ZSTD_initDCtx_internal(dctx);
@@ -1672,7 +1672,7 @@ unsafe extern "C" fn ZSTD_createDCtx_internal(
         return NULL as *mut ZSTD_DCtx;
     }
     let dctx = ZSTD_customMalloc(
-        ::core::mem::size_of::<ZSTD_DCtx>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<ZSTD_DCtx>(),
         customMem,
     ) as *mut ZSTD_DCtx;
     if dctx.is_null() {
@@ -1869,7 +1869,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
     libc::memset(
         zfhPtr as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<ZSTD_FrameHeader>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<ZSTD_FrameHeader>() as usize,
     );
     if format as std::ffi::c_uint
         != ZSTD_f_zstd1_magicless as std::ffi::c_int as std::ffi::c_uint
@@ -1884,7 +1884,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
             libc::memset(
                 zfhPtr as *mut std::ffi::c_void,
                 0 as std::ffi::c_int,
-                ::core::mem::size_of::<ZSTD_FrameHeader>() as std::ffi::c_ulong
+                ::core::mem::size_of::<ZSTD_FrameHeader>()
                     as usize,
             );
             (*zfhPtr).frameType = ZSTD_skippableFrame;
@@ -1928,7 +1928,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
         let windowLog = ((wlByte as std::ffi::c_int >> 3 as std::ffi::c_int)
             + ZSTD_WINDOWLOG_ABSOLUTEMIN) as u32;
         if windowLog
-            > (if ::core::mem::size_of::<usize>() as std::ffi::c_ulong
+            > (if ::core::mem::size_of::<usize>()
                 == 4 as std::ffi::c_int as std::ffi::c_ulong
             {
                 30 as std::ffi::c_int
@@ -2222,7 +2222,7 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfo(
     libc::memset(
         &mut frameSizeInfo as *mut ZSTD_frameSizeInfo as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        ::core::mem::size_of::<ZSTD_frameSizeInfo>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<ZSTD_frameSizeInfo>() as usize,
     );
     if format as std::ffi::c_uint == ZSTD_f_zstd1 as std::ffi::c_int as std::ffi::c_uint
         && ZSTD_isLegacy(src, srcSize) != 0
@@ -2483,7 +2483,7 @@ unsafe extern "C" fn ZSTD_DCtx_trace_end(
         libc::memset(
             &mut trace as *mut ZSTD_Trace as *mut std::ffi::c_void,
             0 as std::ffi::c_int,
-            ::core::mem::size_of::<ZSTD_Trace>() as std::ffi::c_ulong as usize,
+            ::core::mem::size_of::<ZSTD_Trace>() as usize,
         );
         trace.version = ZSTD_VERSION_NUMBER as std::ffi::c_uint;
         trace.streaming = streaming;
@@ -3198,10 +3198,10 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
     let workspaceSize = (::core::mem::size_of::<[ZSTD_seqSymbol; 513]>()
         as std::ffi::c_ulong)
         .wrapping_add(
-            ::core::mem::size_of::<[ZSTD_seqSymbol; 257]>() as std::ffi::c_ulong,
+            ::core::mem::size_of::<[ZSTD_seqSymbol; 257]>(),
         )
         .wrapping_add(
-            ::core::mem::size_of::<[ZSTD_seqSymbol; 513]>() as std::ffi::c_ulong,
+            ::core::mem::size_of::<[ZSTD_seqSymbol; 513]>(),
         );
     let hSize = HUF_readDTableX2_wksp(
         ((*entropy).hufTable).as_mut_ptr(),
@@ -3242,7 +3242,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
         OF_bits.as_ptr(),
         offcodeLog,
         ((*entropy).workspace).as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 157]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 157]>(),
         0 as std::ffi::c_int,
     );
     dictPtr = dictPtr.offset(offcodeHeaderSize as isize);
@@ -3273,7 +3273,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
         ML_bits.as_ptr(),
         matchlengthLog,
         ((*entropy).workspace).as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 157]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 157]>(),
         0 as std::ffi::c_int,
     );
     dictPtr = dictPtr.offset(matchlengthHeaderSize as isize);
@@ -3304,7 +3304,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
         LL_bits.as_ptr(),
         litlengthLog,
         ((*entropy).workspace).as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 157]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 157]>(),
         0 as std::ffi::c_int,
     );
     dictPtr = dictPtr.offset(litlengthHeaderSize as isize);
@@ -3389,7 +3389,7 @@ pub unsafe extern "C" fn ZSTD_decompressBegin(mut dctx: *mut ZSTD_DCtx) -> usize
     libc::memcpy(
         ((*dctx).entropy.rep).as_mut_ptr() as *mut std::ffi::c_void,
         repStartValue.as_ptr() as *const std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 3]>() as std::ffi::c_ulong as usize,
+        ::core::mem::size_of::<[u32; 3]>() as usize,
     );
     (*dctx).LLTptr = ((*dctx).entropy.LLTable).as_mut_ptr();
     (*dctx).MLTptr = ((*dctx).entropy.MLTable).as_mut_ptr();
@@ -3758,7 +3758,7 @@ pub unsafe extern "C" fn ZSTD_dParam_getBounds(
         100 => {
             bounds.lowerBound = ZSTD_WINDOWLOG_ABSOLUTEMIN;
             bounds
-                .upperBound = if ::core::mem::size_of::<usize>() as std::ffi::c_ulong
+                .upperBound = if ::core::mem::size_of::<usize>()
                 == 4 as std::ffi::c_int as std::ffi::c_ulong
             {
                 ZSTD_WINDOWLOG_MAX_32
@@ -4011,7 +4011,7 @@ pub unsafe extern "C" fn ZSTD_estimateDStreamSize_fromFrame(
     mut srcSize: usize,
 ) -> usize {
     let windowSizeMax = (1 as std::ffi::c_uint)
-        << (if ::core::mem::size_of::<usize>() as std::ffi::c_ulong
+        << (if ::core::mem::size_of::<usize>()
             == 4 as std::ffi::c_int as std::ffi::c_ulong
         {
             ZSTD_WINDOWLOG_MAX_32
@@ -4520,7 +4520,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                     if bufferSize
                                         > ((*zds).staticSize)
                                             .wrapping_sub(
-                                                ::core::mem::size_of::<ZSTD_DCtx>() as std::ffi::c_ulong,
+                                                ::core::mem::size_of::<ZSTD_DCtx>(),
                                             )
                                     {
                                         return -(ZSTD_error_memory_allocation as std::ffi::c_int)

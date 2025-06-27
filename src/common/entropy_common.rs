@@ -172,7 +172,7 @@ unsafe extern "C" fn FSE_readNCount_body(
             maxSVPtr,
             tableLogPtr,
             buffer.as_mut_ptr() as *const std::ffi::c_void,
-            ::core::mem::size_of::<[std::ffi::c_char; 8]>() as std::ffi::c_ulong,
+            ::core::mem::size_of::<[std::ffi::c_char; 8]>(),
         );
         if FSE_isError(countSize) != 0 {
             return countSize;
@@ -188,7 +188,7 @@ unsafe extern "C" fn FSE_readNCount_body(
         ((*maxSVPtr).wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
             as std::ffi::c_ulong)
             .wrapping_mul(
-                ::core::mem::size_of::<std::ffi::c_short>() as std::ffi::c_ulong,
+                ::core::mem::size_of::<std::ffi::c_short>(),
             ) as usize,
     );
     bitStream = MEM_readLE32(ip as *const std::ffi::c_void);
@@ -416,7 +416,7 @@ pub unsafe extern "C" fn HUF_readStats(
         src,
         srcSize,
         wksp.as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u32; 219]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u32; 219]>(),
         0 as std::ffi::c_int,
     );
 }
@@ -489,7 +489,7 @@ unsafe extern "C" fn HUF_readStats_body(
         rankStats as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
         ((12 as std::ffi::c_int + 1 as std::ffi::c_int) as std::ffi::c_ulong)
-            .wrapping_mul(::core::mem::size_of::<u32>() as std::ffi::c_ulong)
+            .wrapping_mul(::core::mem::size_of::<u32>())
             as usize,
     );
     weightTotal = 0 as std::ffi::c_int as u32;

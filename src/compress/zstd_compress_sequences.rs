@@ -137,7 +137,7 @@ pub struct ZSTD_BuildCTableWksp {
 }
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>() as std::ffi::c_ulong
+    return (::core::mem::size_of::<usize>()
         == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
         as std::ffi::c_uint;
 }
@@ -439,9 +439,9 @@ unsafe extern "C" fn BIT_initCStream(
         .endPtr = ((*bitC).startPtr)
         .offset(dstCapacity as isize)
         .offset(
-            -(::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong as isize),
+            -(::core::mem::size_of::<BitContainerType>() as isize),
         );
-    if dstCapacity <= ::core::mem::size_of::<BitContainerType>() as std::ffi::c_ulong {
+    if dstCapacity <= ::core::mem::size_of::<BitContainerType>() {
         return ERROR!(dstSize_tooSmall);
     }
     return 0 as std::ffi::c_int as usize;
@@ -796,7 +796,7 @@ unsafe extern "C" fn ZSTD_NCountCost(
     }
     return FSE_writeNCount(
         wksp.as_mut_ptr() as *mut std::ffi::c_void,
-        ::core::mem::size_of::<[u8; 512]>() as std::ffi::c_ulong,
+        ::core::mem::size_of::<[u8; 512]>(),
         norm.as_mut_ptr(),
         max,
         tableLog,
