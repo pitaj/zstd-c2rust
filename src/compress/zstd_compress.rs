@@ -6,6 +6,7 @@ pub use core::arch::x86::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 #[cfg(target_arch = "x86_64")]
 pub use core::arch::x86_64::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 use core::arch::asm;
+use crate::zstd_h::*;
 extern "C" {
     pub type ZSTDMT_CCtx_s;
     pub type POOL_ctx_s;
@@ -12370,7 +12371,7 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
             (*cctx)
                 .stableIn_notConsumed = ((*cctx).stableIn_notConsumed)
                 .wrapping_add(inputSize);
-            return ZSTD_FRAMEHEADERSIZE_MIN!(cctx -> requestedParams.format);
+            return ZSTD_FRAMEHEADERSIZE_MIN((*cctx).requestedParams.format);
         }
         FORWARD_IF_ERROR!(
             ZSTD_CCtx_init_compressStream2(cctx, endOp, totalInputSize),

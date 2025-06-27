@@ -1,5 +1,6 @@
 use ::libc;
 use core::arch::asm;
+use crate::zstd_h::*;
 extern "C" {
     pub type ZSTD_DDict_s;
     pub type ZBUFFv07_DCtx_s;
@@ -1589,7 +1590,7 @@ pub unsafe extern "C" fn ZSTD_estimateDCtxSize() -> usize {
     return ::core::mem::size_of::<ZSTD_DCtx>();
 }
 unsafe extern "C" fn ZSTD_startingInputLength(mut format: ZSTD_format_e) -> usize {
-    let startingInputLength = ZSTD_FRAMEHEADERSIZE_PREFIX!(format);
+    let startingInputLength = ZSTD_FRAMEHEADERSIZE_PREFIX(format);
     return startingInputLength;
 }
 unsafe extern "C" fn ZSTD_DCtx_resetParameters(mut dctx: *mut ZSTD_DCtx) {
@@ -2471,7 +2472,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
     }
     let frameHeaderSize = ZSTD_frameHeaderSize_internal(
         ip as *const std::ffi::c_void,
-        ZSTD_FRAMEHEADERSIZE_PREFIX!(dctx -> format),
+        ZSTD_FRAMEHEADERSIZE_PREFIX((*dctx).format),
         (*dctx).format,
     );
     if ERR_isError(frameHeaderSize) != 0 {
@@ -4133,7 +4134,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             "First few bytes detected incorrect"
                         );
                         return std::cmp::max(
-                            (usize) ZSTD_FRAMEHEADERSIZE_MIN((*zds).format), hSize
+                            ZSTD_FRAMEHEADERSIZE_MIN((*zds).format), hSize
                         )
                             .wrapping_sub((*zds).lhSize)
                             .wrapping_add(ZSTD_blockHeaderSize);

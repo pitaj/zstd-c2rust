@@ -20,6 +20,8 @@ pub type __m128i_u = [u64; 2];
 extern crate c2rust_bitfields;
 extern crate libc;
 
+pub mod zstd_h;
+
 pub mod common {
 pub mod debug;
 pub mod entropy_common;
