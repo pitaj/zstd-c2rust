@@ -907,9 +907,9 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
             {
                 ip0 = ip2;
                 match0 = ip0.offset(-(rep_offset1 as isize));
-                mLength = (*ip0.offset(-(1 as std::ffi::c_int) as isize)
+                mLength = (*ip0.offset(-1)
                     as std::ffi::c_int
-                    == *match0.offset(-(1 as std::ffi::c_int) as isize)
+                    == *match0.offset(-1)
                         as std::ffi::c_int) as std::ffi::c_int as usize;
                 ip0 = ip0.offset(-(mLength as isize));
                 match0 = match0.offset(-(mLength as isize));
@@ -983,8 +983,8 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
                 mLength = 4;
                 while (ip0 > anchor) as std::ffi::c_int
                     & (match0 > prefixStart) as std::ffi::c_int != 0
-                    && *ip0.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
-                        == *match0.offset(-(1 as std::ffi::c_int) as isize)
+                    && *ip0.offset(-1) as std::ffi::c_int
+                        == *match0.offset(-1)
                             as std::ffi::c_int
                 {
                     ip0 = ip0.offset(-1);
@@ -1474,9 +1474,9 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_dictMatchState_generic(
                                 .wrapping_add(4);
                             while (ip0 > anchor) as std::ffi::c_int
                                 & (dictMatch > dictStart) as std::ffi::c_int != 0
-                                && *ip0.offset(-(1 as std::ffi::c_int) as isize)
+                                && *ip0.offset(-1)
                                     as std::ffi::c_int
-                                    == *dictMatch.offset(-(1 as std::ffi::c_int) as isize)
+                                    == *dictMatch.offset(-1)
                                         as std::ffi::c_int
                             {
                                 ip0 = ip0.offset(-1);
@@ -1511,9 +1511,9 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_dictMatchState_generic(
                         .wrapping_add(4);
                     while (ip0 > anchor) as std::ffi::c_int
                         & (match_0 > prefixStart) as std::ffi::c_int != 0
-                        && *ip0.offset(-(1 as std::ffi::c_int) as isize)
+                        && *ip0.offset(-1)
                             as std::ffi::c_int
-                            == *match_0.offset(-(1 as std::ffi::c_int) as isize)
+                            == *match_0.offset(-1)
                                 as std::ffi::c_int
                     {
                         ip0 = ip0.offset(-1);
@@ -1847,9 +1847,9 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
                 ip0 = ip2;
                 match0 = repBase.offset(repIndex as isize);
                 matchEnd = if repIndex < prefixStartIndex { dictEnd } else { iend };
-                mLength = (*ip0.offset(-(1 as std::ffi::c_int) as isize)
+                mLength = (*ip0.offset(-1)
                     as std::ffi::c_int
-                    == *match0.offset(-(1 as std::ffi::c_int) as isize)
+                    == *match0.offset(-1)
                         as std::ffi::c_int) as std::ffi::c_int as usize;
                 ip0 = ip0.offset(-(mLength as isize));
                 match0 = match0.offset(-(mLength as isize));
@@ -1924,8 +1924,8 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
                 mLength = 4;
                 while (ip0 > anchor) as std::ffi::c_int
                     & (match0 > lowMatchPtr) as std::ffi::c_int != 0
-                    && *ip0.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
-                        == *match0.offset(-(1 as std::ffi::c_int) as isize)
+                    && *ip0.offset(-1) as std::ffi::c_int
+                        == *match0.offset(-1)
                             as std::ffi::c_int
                 {
                     ip0 = ip0.offset(-1);

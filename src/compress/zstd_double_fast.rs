@@ -937,9 +937,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                             offset = ip.offset_from(matchl0) as std::ffi::c_long as u32;
                             while (ip > anchor) as std::ffi::c_int
                                 & (matchl0 > prefixLowest) as std::ffi::c_int != 0
-                                && *ip.offset(-(1 as std::ffi::c_int) as isize)
+                                && *ip.offset(-1)
                                     as std::ffi::c_int
-                                    == *matchl0.offset(-(1 as std::ffi::c_int) as isize)
+                                    == *matchl0.offset(-1)
                                         as std::ffi::c_int
                             {
                                 ip = ip.offset(-1);
@@ -1015,9 +1015,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                 }
                                 while (ip > anchor) as std::ffi::c_int
                                     & (matchs0 > prefixLowest) as std::ffi::c_int != 0
-                                    && *ip.offset(-(1 as std::ffi::c_int) as isize)
+                                    && *ip.offset(-1)
                                         as std::ffi::c_int
-                                        == *matchs0.offset(-(1 as std::ffi::c_int) as isize)
+                                        == *matchs0.offset(-1)
                                             as std::ffi::c_int
                                 {
                                     ip = ip.offset(-1);
@@ -1333,8 +1333,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                 offset = ip.offset_from(matchLong) as std::ffi::c_long as u32;
                 while (ip > anchor) as std::ffi::c_int
                     & (matchLong > prefixLowest) as std::ffi::c_int != 0
-                    && *ip.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
-                        == *matchLong.offset(-(1 as std::ffi::c_int) as isize)
+                    && *ip.offset(-1) as std::ffi::c_int
+                        == *matchLong.offset(-1)
                             as std::ffi::c_int
                 {
                     ip = ip.offset(-1);
@@ -1366,9 +1366,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                             .wrapping_sub(dictIndexDelta);
                         while (ip > anchor) as std::ffi::c_int
                             & (dictMatchL > dictStart) as std::ffi::c_int != 0
-                            && *ip.offset(-(1 as std::ffi::c_int) as isize)
+                            && *ip.offset(-1)
                                 as std::ffi::c_int
-                                == *dictMatchL.offset(-(1 as std::ffi::c_int) as isize)
+                                == *dictMatchL.offset(-1)
                                     as std::ffi::c_int
                         {
                             ip = ip.offset(-1);
@@ -1467,9 +1467,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                     offset = ip.offset_from(matchL3) as std::ffi::c_long as u32;
                                     while (ip > anchor) as std::ffi::c_int
                                         & (matchL3 > prefixLowest) as std::ffi::c_int != 0
-                                        && *ip.offset(-(1 as std::ffi::c_int) as isize)
+                                        && *ip.offset(-1)
                                             as std::ffi::c_int
-                                            == *matchL3.offset(-(1 as std::ffi::c_int) as isize)
+                                            == *matchL3.offset(-1)
                                                 as std::ffi::c_int
                                     {
                                         ip = ip.offset(-1);
@@ -1510,9 +1510,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                                 .wrapping_sub(dictIndexDelta);
                                             while (ip > anchor) as std::ffi::c_int
                                                 & (dictMatchL3 > dictStart) as std::ffi::c_int != 0
-                                                && *ip.offset(-(1 as std::ffi::c_int) as isize)
+                                                && *ip.offset(-1)
                                                     as std::ffi::c_int
-                                                    == *dictMatchL3.offset(-(1 as std::ffi::c_int) as isize)
+                                                    == *dictMatchL3.offset(-1)
                                                         as std::ffi::c_int
                                             {
                                                 ip = ip.offset(-1);
@@ -1544,9 +1544,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                                 offset = curr.wrapping_sub(matchIndexS);
                                                 while (ip > anchor) as std::ffi::c_int
                                                     & (match_0 > dictStart) as std::ffi::c_int != 0
-                                                    && *ip.offset(-(1 as std::ffi::c_int) as isize)
+                                                    && *ip.offset(-1)
                                                         as std::ffi::c_int
-                                                        == *match_0.offset(-(1 as std::ffi::c_int) as isize)
+                                                        == *match_0.offset(-1)
                                                             as std::ffi::c_int
                                                 {
                                                     ip = ip.offset(-1);
@@ -1566,9 +1566,9 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
                                                 offset = ip.offset_from(match_0) as std::ffi::c_long as u32;
                                                 while (ip > anchor) as std::ffi::c_int
                                                     & (match_0 > prefixLowest) as std::ffi::c_int != 0
-                                                    && *ip.offset(-(1 as std::ffi::c_int) as isize)
+                                                    && *ip.offset(-1)
                                                         as std::ffi::c_int
-                                                        == *match_0.offset(-(1 as std::ffi::c_int) as isize)
+                                                        == *match_0.offset(-1)
                                                             as std::ffi::c_int
                                                 {
                                                     ip = ip.offset(-1);
@@ -2041,8 +2041,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
             offset = curr.wrapping_sub(matchLongIndex);
             while (ip > anchor) as std::ffi::c_int
                 & (matchLong > lowMatchPtr) as std::ffi::c_int != 0
-                && *ip.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
-                    == *matchLong.offset(-(1 as std::ffi::c_int) as isize)
+                && *ip.offset(-1) as std::ffi::c_int
+                    == *matchLong.offset(-1)
                         as std::ffi::c_int
             {
                 ip = ip.offset(-1);
@@ -2113,8 +2113,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                     .wrapping_sub(matchIndex3);
                 while (ip > anchor) as std::ffi::c_int
                     & (match3 > lowMatchPtr_0) as std::ffi::c_int != 0
-                    && *ip.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
-                        == *match3.offset(-(1 as std::ffi::c_int) as isize)
+                    && *ip.offset(-1) as std::ffi::c_int
+                        == *match3.offset(-1)
                             as std::ffi::c_int
                 {
                     ip = ip.offset(-1);
@@ -2146,8 +2146,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
                 offset_0 = curr.wrapping_sub(matchIndex);
                 while (ip > anchor) as std::ffi::c_int
                     & (match_0 > lowMatchPtr_1) as std::ffi::c_int != 0
-                    && *ip.offset(-(1 as std::ffi::c_int) as isize) as std::ffi::c_int
-                        == *match_0.offset(-(1 as std::ffi::c_int) as isize)
+                    && *ip.offset(-1) as std::ffi::c_int
+                        == *match_0.offset(-1)
                             as std::ffi::c_int
                 {
                     ip = ip.offset(-1);
