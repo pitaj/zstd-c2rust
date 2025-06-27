@@ -397,7 +397,7 @@ pub unsafe extern "C" fn ZSTD_freeThreadPool(mut pool: *mut ZSTD_threadPool) {
 #[no_mangle]
 pub unsafe extern "C" fn POOL_sizeof(mut ctx: *const POOL_ctx) -> usize {
     if ctx.is_null() {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     return (::core::mem::size_of::<POOL_ctx>())
         .wrapping_add(
@@ -415,10 +415,10 @@ unsafe extern "C" fn POOL_resize_internal(
 ) -> std::ffi::c_int {
     if numThreads <= (*ctx).threadCapacity {
         if numThreads == 0 {
-            return 1 as std::ffi::c_int;
+            return 1;
         }
         (*ctx).threadLimit = numThreads;
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     let threadPool = ZSTD_customCalloc(
         numThreads
@@ -426,7 +426,7 @@ unsafe extern "C" fn POOL_resize_internal(
         (*ctx).customMem,
     ) as *mut pthread_t;
     if threadPool.is_null() {
-        return 1 as std::ffi::c_int;
+        return 1;
     }
     libc::memcpy(
         threadPool as *mut std::ffi::c_void,
@@ -442,14 +442,14 @@ unsafe extern "C" fn POOL_resize_internal(
     while threadId < numThreads {
         if ZSTD_pthread_create!(& threadPool[threadId], NULL, & POOL_thread, ctx) != 0 {
             (*ctx).threadCapacity = threadId;
-            return 1 as std::ffi::c_int;
+            return 1;
         }
         threadId = threadId.wrapping_add(1);
         threadId;
     }
     (*ctx).threadCapacity = numThreads;
     (*ctx).threadLimit = numThreads;
-    return 0 as std::ffi::c_int;
+    return 0;
 }
 #[no_mangle]
 pub unsafe extern "C" fn POOL_resize(
@@ -458,7 +458,7 @@ pub unsafe extern "C" fn POOL_resize(
 ) -> std::ffi::c_int {
     let mut result: std::ffi::c_int = 0;
     if ctx.is_null() {
-        return 1 as std::ffi::c_int;
+        return 1;
     }
     ZSTD_pthread_mutex_lock!(
         & ctx -> queueMutex
@@ -540,11 +540,11 @@ pub unsafe extern "C" fn POOL_tryAdd(
         ZSTD_pthread_mutex_unlock!(
             & ctx -> queueMutex
         )(ZSTD_pthread_mutex_unlock!(& ctx -> queueMutex));
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     POOL_add_internal(ctx, function, opaque);
     ZSTD_pthread_mutex_unlock!(
         & ctx -> queueMutex
     )(ZSTD_pthread_mutex_unlock!(& ctx -> queueMutex));
-    return 1 as std::ffi::c_int;
+    return 1;
 }

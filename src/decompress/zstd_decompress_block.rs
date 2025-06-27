@@ -408,7 +408,7 @@ unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
@@ -505,7 +505,7 @@ unsafe extern "C" fn BIT_initDStream(
     if srcSize < 1 {
         libc::memset(
             bitD as *mut std::ffi::c_void,
-            0 as std::ffi::c_int,
+            0,
             ::core::mem::size_of::<BIT_DStream_t>() as usize,
         );
         return ERROR!(srcSize_wrong);
@@ -660,7 +660,7 @@ unsafe extern "C" fn BIT_initDStream(
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
                 (::core::mem::size_of::<BitContainerType>())
-                    .wrapping_sub(srcSize) as u32 * 8 as std::ffi::c_int as u32,
+                    .wrapping_sub(srcSize) as u32 * 8,
             );
     }
     return srcSize;
@@ -791,32 +791,32 @@ pub const ZSTD_BLOCKSIZE_MAX: std::ffi::c_int = (1 as std::ffi::c_int)
     << ZSTD_BLOCKSIZELOG_MAX;
 pub const ZSTD_WINDOWLOG_MAX_32: std::ffi::c_int = 30;
 static mut LL_base: [u32; 36] = [
-    0 as std::ffi::c_int as u32,
-    1 as std::ffi::c_int as u32,
-    2 as std::ffi::c_int as u32,
-    3 as std::ffi::c_int as u32,
-    4 as std::ffi::c_int as u32,
-    5 as std::ffi::c_int as u32,
-    6 as std::ffi::c_int as u32,
-    7 as std::ffi::c_int as u32,
-    8 as std::ffi::c_int as u32,
-    9 as std::ffi::c_int as u32,
-    10 as std::ffi::c_int as u32,
-    11 as std::ffi::c_int as u32,
-    12 as std::ffi::c_int as u32,
-    13 as std::ffi::c_int as u32,
-    14 as std::ffi::c_int as u32,
-    15 as std::ffi::c_int as u32,
-    16 as std::ffi::c_int as u32,
-    18 as std::ffi::c_int as u32,
-    20 as std::ffi::c_int as u32,
-    22 as std::ffi::c_int as u32,
-    24 as std::ffi::c_int as u32,
-    28 as std::ffi::c_int as u32,
-    32 as std::ffi::c_int as u32,
-    40 as std::ffi::c_int as u32,
-    48 as std::ffi::c_int as u32,
-    64 as std::ffi::c_int as u32,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+    20,
+    22,
+    24,
+    28,
+    32,
+    40,
+    48,
+    64,
     0x80 as std::ffi::c_int as u32,
     0x100 as std::ffi::c_int as u32,
     0x200 as std::ffi::c_int as u32,
@@ -829,10 +829,10 @@ static mut LL_base: [u32; 36] = [
     0x10000 as std::ffi::c_int as u32,
 ];
 static mut OF_base: [u32; 32] = [
-    0 as std::ffi::c_int as u32,
-    1 as std::ffi::c_int as u32,
-    1 as std::ffi::c_int as u32,
-    5 as std::ffi::c_int as u32,
+    0,
+    1,
+    1,
+    5,
     0xd as std::ffi::c_int as u32,
     0x1d as std::ffi::c_int as u32,
     0x3d as std::ffi::c_int as u32,
@@ -863,83 +863,83 @@ static mut OF_base: [u32; 32] = [
     0x7ffffffd as std::ffi::c_int as u32,
 ];
 static mut OF_bits: [u8; 32] = [
-    0 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    2 as std::ffi::c_int as u8,
-    3 as std::ffi::c_int as u8,
-    4 as std::ffi::c_int as u8,
-    5 as std::ffi::c_int as u8,
-    6 as std::ffi::c_int as u8,
-    7 as std::ffi::c_int as u8,
-    8 as std::ffi::c_int as u8,
-    9 as std::ffi::c_int as u8,
-    10 as std::ffi::c_int as u8,
-    11 as std::ffi::c_int as u8,
-    12 as std::ffi::c_int as u8,
-    13 as std::ffi::c_int as u8,
-    14 as std::ffi::c_int as u8,
-    15 as std::ffi::c_int as u8,
-    16 as std::ffi::c_int as u8,
-    17 as std::ffi::c_int as u8,
-    18 as std::ffi::c_int as u8,
-    19 as std::ffi::c_int as u8,
-    20 as std::ffi::c_int as u8,
-    21 as std::ffi::c_int as u8,
-    22 as std::ffi::c_int as u8,
-    23 as std::ffi::c_int as u8,
-    24 as std::ffi::c_int as u8,
-    25 as std::ffi::c_int as u8,
-    26 as std::ffi::c_int as u8,
-    27 as std::ffi::c_int as u8,
-    28 as std::ffi::c_int as u8,
-    29 as std::ffi::c_int as u8,
-    30 as std::ffi::c_int as u8,
-    31 as std::ffi::c_int as u8,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
 ];
 static mut ML_base: [u32; 53] = [
-    3 as std::ffi::c_int as u32,
-    4 as std::ffi::c_int as u32,
-    5 as std::ffi::c_int as u32,
-    6 as std::ffi::c_int as u32,
-    7 as std::ffi::c_int as u32,
-    8 as std::ffi::c_int as u32,
-    9 as std::ffi::c_int as u32,
-    10 as std::ffi::c_int as u32,
-    11 as std::ffi::c_int as u32,
-    12 as std::ffi::c_int as u32,
-    13 as std::ffi::c_int as u32,
-    14 as std::ffi::c_int as u32,
-    15 as std::ffi::c_int as u32,
-    16 as std::ffi::c_int as u32,
-    17 as std::ffi::c_int as u32,
-    18 as std::ffi::c_int as u32,
-    19 as std::ffi::c_int as u32,
-    20 as std::ffi::c_int as u32,
-    21 as std::ffi::c_int as u32,
-    22 as std::ffi::c_int as u32,
-    23 as std::ffi::c_int as u32,
-    24 as std::ffi::c_int as u32,
-    25 as std::ffi::c_int as u32,
-    26 as std::ffi::c_int as u32,
-    27 as std::ffi::c_int as u32,
-    28 as std::ffi::c_int as u32,
-    29 as std::ffi::c_int as u32,
-    30 as std::ffi::c_int as u32,
-    31 as std::ffi::c_int as u32,
-    32 as std::ffi::c_int as u32,
-    33 as std::ffi::c_int as u32,
-    34 as std::ffi::c_int as u32,
-    35 as std::ffi::c_int as u32,
-    37 as std::ffi::c_int as u32,
-    39 as std::ffi::c_int as u32,
-    41 as std::ffi::c_int as u32,
-    43 as std::ffi::c_int as u32,
-    47 as std::ffi::c_int as u32,
-    51 as std::ffi::c_int as u32,
-    59 as std::ffi::c_int as u32,
-    67 as std::ffi::c_int as u32,
-    83 as std::ffi::c_int as u32,
-    99 as std::ffi::c_int as u32,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    37,
+    39,
+    41,
+    43,
+    47,
+    51,
+    59,
+    67,
+    83,
+    99,
     0x83 as std::ffi::c_int as u32,
     0x103 as std::ffi::c_int as u32,
     0x203 as std::ffi::c_int as u32,
@@ -969,98 +969,98 @@ pub const MLFSELog: std::ffi::c_int = 9;
 pub const LLFSELog: std::ffi::c_int = 9;
 pub const OffFSELog: std::ffi::c_int = 8;
 static mut LL_bits: [u8; 36] = [
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    2 as std::ffi::c_int as u8,
-    2 as std::ffi::c_int as u8,
-    3 as std::ffi::c_int as u8,
-    3 as std::ffi::c_int as u8,
-    4 as std::ffi::c_int as u8,
-    6 as std::ffi::c_int as u8,
-    7 as std::ffi::c_int as u8,
-    8 as std::ffi::c_int as u8,
-    9 as std::ffi::c_int as u8,
-    10 as std::ffi::c_int as u8,
-    11 as std::ffi::c_int as u8,
-    12 as std::ffi::c_int as u8,
-    13 as std::ffi::c_int as u8,
-    14 as std::ffi::c_int as u8,
-    15 as std::ffi::c_int as u8,
-    16 as std::ffi::c_int as u8,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
 ];
 pub const LL_DEFAULTNORMLOG: std::ffi::c_int = 6;
 static mut ML_bits: [u8; 53] = [
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    0 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    1 as std::ffi::c_int as u8,
-    2 as std::ffi::c_int as u8,
-    2 as std::ffi::c_int as u8,
-    3 as std::ffi::c_int as u8,
-    3 as std::ffi::c_int as u8,
-    4 as std::ffi::c_int as u8,
-    4 as std::ffi::c_int as u8,
-    5 as std::ffi::c_int as u8,
-    7 as std::ffi::c_int as u8,
-    8 as std::ffi::c_int as u8,
-    9 as std::ffi::c_int as u8,
-    10 as std::ffi::c_int as u8,
-    11 as std::ffi::c_int as u8,
-    12 as std::ffi::c_int as u8,
-    13 as std::ffi::c_int as u8,
-    14 as std::ffi::c_int as u8,
-    15 as std::ffi::c_int as u8,
-    16 as std::ffi::c_int as u8,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
 ];
 pub const ML_DEFAULTNORMLOG: std::ffi::c_int = 6;
 pub const OF_DEFAULTNORMLOG: std::ffi::c_int = 5;
@@ -1156,7 +1156,7 @@ pub unsafe extern "C" fn ZSTD_getcBlockSize(
     }
     let cBlockHeader = MEM_readLE24(src);
     let cSize = cBlockHeader >> 3;
-    (*bpPtr).lastBlock = cBlockHeader & 1 as std::ffi::c_int as u32;
+    (*bpPtr).lastBlock = cBlockHeader & 1;
     (*bpPtr)
         .blockType = (cBlockHeader >> 1 & 3 as std::ffi::c_int as u32)
         as blockType_e;
@@ -1164,7 +1164,7 @@ pub unsafe extern "C" fn ZSTD_getcBlockSize(
     if (*bpPtr).blockType as std::ffi::c_uint
         == bt_rle as std::ffi::c_int as std::ffi::c_uint
     {
-        return 1 as std::ffi::c_int as usize;
+        return 1;
     }
     if (*bpPtr).blockType as std::ffi::c_uint
         == bt_reserved as std::ffi::c_int as std::ffi::c_uint
@@ -1349,7 +1349,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 litSize_0,
                 streaming,
                 expectedWriteSize_0,
-                1 as std::ffi::c_int as std::ffi::c_uint,
+                1,
             );
             if lhSize_0
                 .wrapping_add(litSize_0)
@@ -1456,7 +1456,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 litSize_1,
                 streaming,
                 expectedWriteSize_1,
-                1 as std::ffi::c_int as std::ffi::c_uint,
+                1,
             );
             if (*dctx).litBufferLocation as std::ffi::c_uint
                 == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
@@ -1573,7 +1573,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
         litSize,
         streaming,
         expectedWriteSize,
-        0 as std::ffi::c_int as std::ffi::c_uint,
+        0,
     );
     if (*dctx).ddictIsCold != 0 && litSize > 768 {
         let _ptr = (*dctx).HUFptr as *const std::ffi::c_char;
@@ -1714,586 +1714,586 @@ pub unsafe extern "C" fn ZSTD_decodeLiteralsBlock_wrapper(
 static mut LL_defaultDTable: [ZSTD_seqSymbol; 65] = [
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 1 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 1 as std::ffi::c_int as u8,
+            nextState: 1,
+            nbAdditionalBits: 1,
+            nbBits: 1,
             baseValue: LL_DEFAULTNORMLOG as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 0 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 0,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 0 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 0,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 1 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 1,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 3 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 3,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 4 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 4,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 6 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 6,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 7 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 7,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 9 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 9,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 10 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 10,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 12 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 12,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 14 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 14,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 16 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 16,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 20 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 20,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 22 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 22,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 2 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 28 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 2,
+            nbBits: 5,
+            baseValue: 28,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 3 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 32 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 3,
+            nbBits: 5,
+            baseValue: 32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 4 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 48 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 4,
+            nbBits: 5,
+            baseValue: 48,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 6 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 64 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 6,
+            nbBits: 5,
+            baseValue: 64,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 7 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 128 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 7,
+            nbBits: 5,
+            baseValue: 128,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 8 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 256 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 8,
+            nbBits: 6,
+            baseValue: 256,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 10 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 1024 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 10,
+            nbBits: 6,
+            baseValue: 1024,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 12 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 4096 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 12,
+            nbBits: 6,
+            baseValue: 4096,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 0 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 0,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 1 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 1,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 2 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 2,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 4 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 4,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 5 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 5,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 7 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 7,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 8 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 8,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 10 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 10,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 11 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 11,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 13 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 13,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 16 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 16,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 18 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 18,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 22 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 22,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 2 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 24 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 2,
+            nbBits: 5,
+            baseValue: 24,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 3 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 32 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 3,
+            nbBits: 5,
+            baseValue: 32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 3 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 40 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 3,
+            nbBits: 5,
+            baseValue: 40,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 6 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 64 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 6,
+            nbBits: 4,
+            baseValue: 64,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 6 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 64 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 6,
+            nbBits: 4,
+            baseValue: 64,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 7 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 128 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 7,
+            nbBits: 5,
+            baseValue: 128,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 9 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 512 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 9,
+            nbBits: 6,
+            baseValue: 512,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 11 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 2048 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 11,
+            nbBits: 6,
+            baseValue: 2048,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 48 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 0 as std::ffi::c_int as u32,
+            nextState: 48,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 0,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 1 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 1,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 2 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 2,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 3 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 3,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 5 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 5,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 6 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 6,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 8 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 8,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 9 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 9,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 11 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 11,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 12 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 12,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 15 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 15,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 18 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 18,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 20 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 20,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 2 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 24 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 2,
+            nbBits: 5,
+            baseValue: 24,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 2 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 28 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 2,
+            nbBits: 5,
+            baseValue: 28,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 3 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 40 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 3,
+            nbBits: 5,
+            baseValue: 40,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 4 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 48 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 4,
+            nbBits: 5,
+            baseValue: 48,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 16 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 65536 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 16,
+            nbBits: 6,
+            baseValue: 65536,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 15 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 32768 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 15,
+            nbBits: 6,
+            baseValue: 32768,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 14 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 16384 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 14,
+            nbBits: 6,
+            baseValue: 16384,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 13 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 8192 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 13,
+            nbBits: 6,
+            baseValue: 8192,
         };
         init
     },
@@ -2301,298 +2301,298 @@ static mut LL_defaultDTable: [ZSTD_seqSymbol; 65] = [
 static mut OF_defaultDTable: [ZSTD_seqSymbol; 33] = [
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 1 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 1 as std::ffi::c_int as u8,
+            nextState: 1,
+            nbAdditionalBits: 1,
+            nbBits: 1,
             baseValue: OF_DEFAULTNORMLOG as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 0 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 0,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 6 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 61 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 6,
+            nbBits: 4,
+            baseValue: 61,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 9 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 509 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 9,
+            nbBits: 5,
+            baseValue: 509,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 15 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 32765 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 15,
+            nbBits: 5,
+            baseValue: 32765,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 21 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 2097149 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 21,
+            nbBits: 5,
+            baseValue: 2097149,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 3 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 5 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 3,
+            nbBits: 5,
+            baseValue: 5,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 7 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 125 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 7,
+            nbBits: 4,
+            baseValue: 125,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 12 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 4093 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 12,
+            nbBits: 5,
+            baseValue: 4093,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 18 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 262141 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 18,
+            nbBits: 5,
+            baseValue: 262141,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 23 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 8388605 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 23,
+            nbBits: 5,
+            baseValue: 8388605,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 5 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 29 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 5,
+            nbBits: 5,
+            baseValue: 29,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 8 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 253 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 8,
+            nbBits: 4,
+            baseValue: 253,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 14 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 16381 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 14,
+            nbBits: 5,
+            baseValue: 16381,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 20 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 1048573 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 20,
+            nbBits: 5,
+            baseValue: 1048573,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 2 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 1 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 2,
+            nbBits: 5,
+            baseValue: 1,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 7 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 125 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 7,
+            nbBits: 4,
+            baseValue: 125,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 11 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 2045 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 11,
+            nbBits: 5,
+            baseValue: 2045,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 17 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 131069 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 17,
+            nbBits: 5,
+            baseValue: 131069,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 22 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 4194301 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 22,
+            nbBits: 5,
+            baseValue: 4194301,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 4 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 13 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 4,
+            nbBits: 5,
+            baseValue: 13,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 8 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 253 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 8,
+            nbBits: 4,
+            baseValue: 253,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 13 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 8189 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 13,
+            nbBits: 5,
+            baseValue: 8189,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 19 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 524285 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 19,
+            nbBits: 5,
+            baseValue: 524285,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 1 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 5,
+            baseValue: 1,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 6 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 61 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 6,
+            nbBits: 4,
+            baseValue: 61,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 10 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 1021 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 10,
+            nbBits: 5,
+            baseValue: 1021,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 16 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 65533 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 16,
+            nbBits: 5,
+            baseValue: 65533,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 28 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 268435453 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 28,
+            nbBits: 5,
+            baseValue: 268435453,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 27 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 134217725 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 27,
+            nbBits: 5,
+            baseValue: 134217725,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 26 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 67108861 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 26,
+            nbBits: 5,
+            baseValue: 67108861,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 25 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 33554429 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 25,
+            nbBits: 5,
+            baseValue: 33554429,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 24 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 16777213 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 24,
+            nbBits: 5,
+            baseValue: 16777213,
         };
         init
     },
@@ -2600,586 +2600,586 @@ static mut OF_defaultDTable: [ZSTD_seqSymbol; 33] = [
 static mut ML_defaultDTable: [ZSTD_seqSymbol; 65] = [
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 1 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 1 as std::ffi::c_int as u8,
+            nextState: 1,
+            nbAdditionalBits: 1,
+            nbBits: 1,
             baseValue: ML_DEFAULTNORMLOG as u32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 3 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 3,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 4 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 4,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 5 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 5,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 6 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 6,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 8 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 8,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 9 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 9,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 11 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 11,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 13 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 13,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 16 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 16,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 19 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 19,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 22 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 22,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 25 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 25,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 28 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 28,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 31 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 31,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 34 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 34,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 37 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 6,
+            baseValue: 37,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 41 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 6,
+            baseValue: 41,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 2 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 47 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 2,
+            nbBits: 6,
+            baseValue: 47,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 3 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 59 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 3,
+            nbBits: 6,
+            baseValue: 59,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 4 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 83 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 4,
+            nbBits: 6,
+            baseValue: 83,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 7 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 131 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 7,
+            nbBits: 6,
+            baseValue: 131,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 9 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 515 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 9,
+            nbBits: 6,
+            baseValue: 515,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 4 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 4,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 5 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 5,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 6 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 6,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 7 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 7,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 9 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 9,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 10 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 10,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 12 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 12,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 15 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 15,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 18 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 18,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 21 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 21,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 24 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 24,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 27 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 27,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 30 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 30,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 33 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 33,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 35 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 6,
+            baseValue: 35,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 1 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 39 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 1,
+            nbBits: 6,
+            baseValue: 39,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 2 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 43 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 2,
+            nbBits: 6,
+            baseValue: 43,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 3 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 51 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 3,
+            nbBits: 6,
+            baseValue: 51,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 4 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 67 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 4,
+            nbBits: 6,
+            baseValue: 67,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 5 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 99 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 5,
+            nbBits: 6,
+            baseValue: 99,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 8 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 259 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 8,
+            nbBits: 6,
+            baseValue: 259,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 4 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 4,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 48 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 4 as std::ffi::c_int as u32,
+            nextState: 48,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 4,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 16 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 4 as std::ffi::c_int as u8,
-            baseValue: 5 as std::ffi::c_int as u32,
+            nextState: 16,
+            nbAdditionalBits: 0,
+            nbBits: 4,
+            baseValue: 5,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 7 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 7,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 8 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 8,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 10 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 10,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 32 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 5 as std::ffi::c_int as u8,
-            baseValue: 11 as std::ffi::c_int as u32,
+            nextState: 32,
+            nbAdditionalBits: 0,
+            nbBits: 5,
+            baseValue: 11,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 14 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 14,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 17 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 17,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 20 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 20,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 23 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 23,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 26 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 26,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 29 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 29,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 0 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 32 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 0,
+            nbBits: 6,
+            baseValue: 32,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 16 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 65539 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 16,
+            nbBits: 6,
+            baseValue: 65539,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 15 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 32771 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 15,
+            nbBits: 6,
+            baseValue: 32771,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 14 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 16387 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 14,
+            nbBits: 6,
+            baseValue: 16387,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 13 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 8195 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 13,
+            nbBits: 6,
+            baseValue: 8195,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 12 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 4099 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 12,
+            nbBits: 6,
+            baseValue: 4099,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 11 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 2051 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 11,
+            nbBits: 6,
+            baseValue: 2051,
         };
         init
     },
     {
         let mut init = ZSTD_seqSymbol {
-            nextState: 0 as std::ffi::c_int as u16,
-            nbAdditionalBits: 10 as std::ffi::c_int as u8,
-            nbBits: 6 as std::ffi::c_int as u8,
-            baseValue: 1027 as std::ffi::c_int as u32,
+            nextState: 0,
+            nbAdditionalBits: 10,
+            nbBits: 6,
+            baseValue: 1027,
         };
         init
     },
@@ -3457,11 +3457,11 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
             let nbBits = *nbAdditionalBits.offset(symbol as isize);
             ZSTD_buildSeqTable_rle(DTableSpace, baseline, nbBits);
             *DTablePtr = DTableSpace;
-            return 1 as std::ffi::c_int as usize;
+            return 1;
         }
         0 => {
             *DTablePtr = defaultTable;
-            return 0 as std::ffi::c_int as usize;
+            return 0;
         }
         3 => {
             if flagRepeatTable == 0 {
@@ -3485,7 +3485,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
                     *fresh4 = (*fresh4).wrapping_add(CACHELINE_SIZE as usize);
                 }
             }
-            return 0 as std::ffi::c_int as usize;
+            return 0;
         }
         2 => {
             let mut tableLog: std::ffi::c_uint = 0;
@@ -3652,41 +3652,41 @@ unsafe extern "C" fn ZSTD_overlapCopy8(
 ) {
     if offset < 8 {
         static mut dec32table: [u32; 8] = [
-            0 as std::ffi::c_int as u32,
-            1 as std::ffi::c_int as u32,
-            2 as std::ffi::c_int as u32,
-            1 as std::ffi::c_int as u32,
-            4 as std::ffi::c_int as u32,
-            4 as std::ffi::c_int as u32,
-            4 as std::ffi::c_int as u32,
-            4 as std::ffi::c_int as u32,
+            0,
+            1,
+            2,
+            1,
+            4,
+            4,
+            4,
+            4,
         ];
         static mut dec64table: [std::ffi::c_int; 8] = [
-            8 as std::ffi::c_int,
-            8 as std::ffi::c_int,
-            8 as std::ffi::c_int,
-            7 as std::ffi::c_int,
-            8 as std::ffi::c_int,
-            9 as std::ffi::c_int,
-            10 as std::ffi::c_int,
-            11 as std::ffi::c_int,
+            8,
+            8,
+            8,
+            7,
+            8,
+            9,
+            10,
+            11,
         ];
         let sub2 = dec64table[offset as usize];
         *(*op)
             .offset(
-                0 as std::ffi::c_int as isize,
+                0,
             ) = *(*ip).offset(0);
         *(*op)
             .offset(
-                1 as std::ffi::c_int as isize,
+                1,
             ) = *(*ip).offset(1);
         *(*op)
             .offset(
-                2 as std::ffi::c_int as isize,
+                2,
             ) = *(*ip).offset(2);
         *(*op)
             .offset(
-                3 as std::ffi::c_int as isize,
+                3,
             ) = *(*ip).offset(3);
         *ip = (*ip).offset(dec32table[offset as usize] as isize);
         ZSTD_copy4(
@@ -4216,7 +4216,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                 .wrapping_add(
                     BIT_readBitsFast(
                         &mut (*seqState).DStream,
-                        1 as std::ffi::c_int as std::ffi::c_uint,
+                        1,
                     ),
                 );
             let mut temp = if offset == 3 {
@@ -4365,9 +4365,9 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
         ZSTD_initFseState(&mut seqState.stateML, &mut seqState.DStream, (*dctx).MLTptr);
         let mut sequence = {
             let mut init = seq_t {
-                litLength: 0 as std::ffi::c_int as usize,
-                matchLength: 0 as std::ffi::c_int as usize,
-                offset: 0 as std::ffi::c_int as usize,
+                litLength: 0,
+                matchLength: 0,
+                offset: 0,
             };
             init
         };
@@ -4728,7 +4728,7 @@ unsafe extern "C" fn ZSTD_prefetchMatch(
     ) as *const u8;
     ZSTD_wrappedPtrAdd(
         match_0 as *const std::ffi::c_void,
-        64 as std::ffi::c_int as ptrdiff_t,
+        64,
     );
     return prefetchPos.wrapping_add(sequence.matchLength);
 }
@@ -5111,7 +5111,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
     return op.offset_from(ostart) as std::ffi::c_long as usize;
 }
 pub const STORED_SEQS: std::ffi::c_int = 8;
-pub const STORED_SEQS_MASK: std::ffi::c_int = STORED_SEQS - 1 as std::ffi::c_int;
+pub const STORED_SEQS_MASK: std::ffi::c_int = STORED_SEQS - 1;
 pub const ADVANCED_SEQS: std::ffi::c_int = STORED_SEQS;
 unsafe extern "C" fn ZSTD_decompressSequencesLong_default(
     mut dctx: *mut ZSTD_DCtx,
@@ -5293,8 +5293,8 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
 ) -> ZSTD_OffsetInfo {
     let mut info = {
         let mut init = ZSTD_OffsetInfo {
-            longOffsetShare: 0 as std::ffi::c_int as std::ffi::c_uint,
-            maxNbAdditionalBits: 0 as std::ffi::c_int as std::ffi::c_uint,
+            longOffsetShare: 0,
+            maxNbAdditionalBits: 0,
         };
         init
     };

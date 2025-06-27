@@ -314,7 +314,7 @@ pub struct COVER_dictSelection {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
@@ -378,78 +378,78 @@ unsafe extern "C" fn FASTCOVER_hashPtrToIndex(
 static mut FASTCOVER_defaultAccelParameters: [FASTCOVER_accel_t; 11] = [
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 100 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 0 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 100,
+            skip: 0,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 100 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 0 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 100,
+            skip: 0,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 50 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 1 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 50,
+            skip: 1,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 34 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 2 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 34,
+            skip: 2,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 25 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 3 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 25,
+            skip: 3,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 20 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 4 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 20,
+            skip: 4,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 17 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 5 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 17,
+            skip: 5,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 14 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 6 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 14,
+            skip: 6,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 13 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 7 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 13,
+            skip: 7,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 11 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 8 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 11,
+            skip: 8,
         };
         init
     },
     {
         let mut init = FASTCOVER_accel_t {
-            finalize: 10 as std::ffi::c_int as std::ffi::c_uint,
-            skip: 9 as std::ffi::c_int as std::ffi::c_uint,
+            finalize: 10,
+            skip: 9,
         };
         init
     },
@@ -468,9 +468,9 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
     let dmersInK = k.wrapping_sub(d).wrapping_add(1);
     let mut bestSegment = {
         let mut init = COVER_segment_t {
-            begin: 0 as std::ffi::c_int as u32,
-            end: 0 as std::ffi::c_int as u32,
-            score: 0 as std::ffi::c_int as u32,
+            begin: 0,
+            end: 0,
+            score: 0,
         };
         init
     };
@@ -558,35 +558,35 @@ unsafe extern "C" fn FASTCOVER_checkParameters(
     if parameters.d == 0
         || parameters.k == 0
     {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if parameters.d != 6
         && parameters.d != 8
     {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if parameters.k as usize > maxDictSize {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if parameters.d > parameters.k {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if f > FASTCOVER_MAX_F as std::ffi::c_uint
         || f == 0
     {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if parameters.splitPoint <= 0
         || parameters.splitPoint > 1
     {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     if accel > 10
         || accel == 0
     {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
-    return 1 as std::ffi::c_int;
+    return 1;
 }
 unsafe extern "C" fn FASTCOVER_ctx_destroy(mut ctx: *mut FASTCOVER_ctx_t) {
     if ctx.is_null() {
@@ -730,7 +730,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     }
     memset(
         ctx as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<FASTCOVER_ctx_t>(),
     );
     if DISPLAYLEVEL!(
@@ -845,7 +845,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         fflush(stderr);
     }
     FASTCOVER_computeFrequency((*ctx).freqs, ctx);
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 unsafe extern "C" fn FASTCOVER_buildDictionary(
     mut ctx: *const FASTCOVER_ctx_t,
@@ -861,7 +861,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
         dictBufferCapacity as u32,
         (*ctx).nbDmers as u32,
         parameters.k,
-        1 as std::ffi::c_int as u32,
+        1,
     );
     let maxZeroScoreRun = 10;
     let displayLevel = (*ctx).displayLevel;
@@ -916,7 +916,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
             if displayLevel >= 2 {
                 let refreshRate = CLOCKS_PER_SEC as __clock_t
                     * 15 as std::ffi::c_int as __clock_t
-                    / 100 as std::ffi::c_int as __clock_t;
+                    / 100;
                 if clock() - lastUpdateTime > refreshRate
                     || displayLevel >= 4
                 {
@@ -1112,7 +1112,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
     };
     memset(
         &mut coverParams as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
     );
     FASTCOVER_convertToCoverParams(parameters, &mut coverParams);
@@ -1155,7 +1155,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
                 stderr,
                 b"dictBufferCapacity must be at least %u\n\0" as *const u8
                     as *const std::ffi::c_char,
-                256 as std::ffi::c_int,
+                256,
             );
             fflush(stderr);
         }
@@ -1425,7 +1425,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 stderr,
                 b"dictBufferCapacity must be at least %u\n\0" as *const u8
                     as *const std::ffi::c_char,
-                256 as std::ffi::c_int,
+                256,
             );
             fflush(stderr);
         }
@@ -1440,7 +1440,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     COVER_best_init(&mut best);
     memset(
         &mut coverParams as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
     );
     FASTCOVER_convertToCoverParams(*parameters, &mut coverParams);
@@ -1587,7 +1587,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 if displayLevel >= 2 {
                     let refreshRate = CLOCKS_PER_SEC as __clock_t
                         * 15 as std::ffi::c_int as __clock_t
-                        / 100 as std::ffi::c_int as __clock_t;
+                        / 100;
                     if clock() - lastUpdateTime > refreshRate
                         || displayLevel >= 4
                     {

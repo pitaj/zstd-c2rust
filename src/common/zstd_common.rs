@@ -86,5 +86,5 @@ pub unsafe extern "C" fn ZSTD_getErrorString(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_isDeterministicBuild() -> std::ffi::c_int {
-    return 1 as std::ffi::c_int;
+    return 1;
 }

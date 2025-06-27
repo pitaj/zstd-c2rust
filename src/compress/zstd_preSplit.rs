@@ -28,7 +28,7 @@ unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
 }
 pub const THRESHOLD_PENALTY_RATE: std::ffi::c_int = 16;
 pub const THRESHOLD_BASE: std::ffi::c_int = THRESHOLD_PENALTY_RATE
-    - 2 as std::ffi::c_int;
+    - 2;
 pub const THRESHOLD_PENALTY: std::ffi::c_int = 3;
 pub const HASHLENGTH: std::ffi::c_int = 2;
 pub const HASHLOG_MAX: std::ffi::c_int = 10;
@@ -48,7 +48,7 @@ unsafe extern "C" fn hash2(
 unsafe extern "C" fn initStats(mut fpstats: *mut FPStats) {
     libc::memset(
         fpstats as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<FPStats>() as usize,
     );
 }
@@ -90,7 +90,7 @@ unsafe extern "C" fn recordFingerprint_generic(
 ) {
     libc::memset(
         fp as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         (::core::mem::size_of::<std::ffi::c_uint>())
             .wrapping_mul(1_usize << hashLog) as usize,
     );
@@ -108,8 +108,8 @@ unsafe extern "C" fn ZSTD_recordFingerprint_1(
         ZSTD_GEN_RECORD_FINGERPRINT!(1, 10),
         ZSTD_GEN_RECORD_FINGERPRINT!(1, 10),
         ZSTD_GEN_RECORD_FINGERPRINT!(1, 10),
-        1 as std::ffi::c_int as usize,
-        10 as std::ffi::c_int as std::ffi::c_uint,
+        1,
+        10,
     );
 }
 unsafe extern "C" fn ZSTD_recordFingerprint_5(
@@ -123,8 +123,8 @@ unsafe extern "C" fn ZSTD_recordFingerprint_5(
         ZSTD_GEN_RECORD_FINGERPRINT!(5, 10),
         ZSTD_GEN_RECORD_FINGERPRINT!(5, 10),
         ZSTD_GEN_RECORD_FINGERPRINT!(5, 10),
-        5 as std::ffi::c_int as usize,
-        10 as std::ffi::c_int as std::ffi::c_uint,
+        5,
+        10,
     );
 }
 unsafe extern "C" fn ZSTD_recordFingerprint_11(
@@ -138,8 +138,8 @@ unsafe extern "C" fn ZSTD_recordFingerprint_11(
         ZSTD_GEN_RECORD_FINGERPRINT!(11, 9),
         ZSTD_GEN_RECORD_FINGERPRINT!(11, 9),
         ZSTD_GEN_RECORD_FINGERPRINT!(11, 9),
-        11 as std::ffi::c_int as usize,
-        9 as std::ffi::c_int as std::ffi::c_uint,
+        11,
+        9,
     );
 }
 unsafe extern "C" fn ZSTD_recordFingerprint_43(
@@ -153,8 +153,8 @@ unsafe extern "C" fn ZSTD_recordFingerprint_43(
         ZSTD_GEN_RECORD_FINGERPRINT!(43, 8),
         ZSTD_GEN_RECORD_FINGERPRINT!(43, 8),
         ZSTD_GEN_RECORD_FINGERPRINT!(43, 8),
-        43 as std::ffi::c_int as usize,
-        8 as std::ffi::c_int as std::ffi::c_uint,
+        43,
+        8,
     );
 }
 unsafe extern "C" fn abs64(mut s64: i64) -> u64 {
@@ -222,7 +222,7 @@ unsafe extern "C" fn flushEvents(mut fpstats: *mut FPStats) {
     (*fpstats).pastEvents.nbEvents = (*fpstats).newEvents.nbEvents;
     libc::memset(
         &mut (*fpstats).newEvents as *mut Fingerprint as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<Fingerprint>() as usize,
     );
 }
@@ -254,10 +254,10 @@ unsafe extern "C" fn ZSTD_splitBlock_byChunks(
         [FP_RECORD!(43), FP_RECORD!(11), FP_RECORD!(5), FP_RECORD!(1)]
     };
     static mut hashParams: [std::ffi::c_uint; 4] = [
-        8 as std::ffi::c_int as std::ffi::c_uint,
-        9 as std::ffi::c_int as std::ffi::c_uint,
-        10 as std::ffi::c_int as std::ffi::c_uint,
-        10 as std::ffi::c_int as std::ffi::c_uint,
+        8,
+        9,
+        10,
+        10,
     ];
     let record_f: RecordEvents_f = records_fs[level as usize];
     let fpstats = workspace as *mut FPStats;
@@ -330,8 +330,8 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
     if compareFingerprints(
         &mut (*fpstats).pastEvents,
         &mut (*fpstats).newEvents,
-        0 as std::ffi::c_int,
-        8 as std::ffi::c_int as std::ffi::c_uint,
+        0,
+        8,
     ) == 0
     {
         return blockSize;
@@ -348,12 +348,12 @@ unsafe extern "C" fn ZSTD_splitBlock_fromBorders(
     let distFromBegin = fpDistance(
         &mut (*fpstats).pastEvents,
         middleEvents,
-        8 as std::ffi::c_int as std::ffi::c_uint,
+        8,
     );
     let distFromEnd = fpDistance(
         &mut (*fpstats).newEvents,
         middleEvents,
-        8 as std::ffi::c_int as std::ffi::c_uint,
+        8,
     );
     let minDistance = (SEGMENT_SIZE * SEGMENT_SIZE / 3 as std::ffi::c_int) as u64;
     if abs64(distFromBegin as i64 - distFromEnd as i64) < minDistance {
@@ -381,7 +381,7 @@ pub unsafe extern "C" fn ZSTD_splitBlock(
     return ZSTD_splitBlock_byChunks(
         blockStart,
         blockSize,
-        level - 1 as std::ffi::c_int,
+        level - 1,
         workspace,
         wkspSize,
     );

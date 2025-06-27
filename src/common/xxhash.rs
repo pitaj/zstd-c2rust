@@ -140,7 +140,7 @@ unsafe extern "C" fn XXH32_round(mut acc: xxh_u32, mut input: xxh_u32) -> xxh_u3
         as xxh_u32 as xxh_u32;
     acc = ::core::intrinsics::rotate_left(
         acc,
-        13 as std::ffi::c_int as std::ffi::c_uint,
+        13,
     );
     acc = (acc as std::ffi::c_uint).wrapping_mul(XXH_PRIME32_1) as xxh_u32 as xxh_u32;
     return acc;
@@ -192,24 +192,24 @@ pub unsafe extern "C" fn ZSTD_XXH32_digest(
     if (*state).large_len != 0 {
         h32 = (::core::intrinsics::rotate_left(
             (*state).v[0 as std::ffi::c_int as usize],
-            1 as std::ffi::c_int as std::ffi::c_uint,
+            1,
         ))
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
                     (*state).v[1 as std::ffi::c_int as usize],
-                    7 as std::ffi::c_int as std::ffi::c_uint,
+                    7,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
                     (*state).v[2 as std::ffi::c_int as usize],
-                    12 as std::ffi::c_int as std::ffi::c_uint,
+                    12,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
                     (*state).v[3 as std::ffi::c_int as usize],
-                    18 as std::ffi::c_int as std::ffi::c_uint,
+                    18,
                 ),
             );
     } else {
@@ -308,14 +308,14 @@ unsafe extern "C" fn XXH64_round(mut acc: xxh_u64, mut input: xxh_u64) -> xxh_u6
         as xxh_u64 as xxh_u64;
     acc = ::core::intrinsics::rotate_left(
         acc,
-        31 as std::ffi::c_int as std::ffi::c_ulong,
+        31,
     );
     acc = (acc as std::ffi::c_ulonglong).wrapping_mul(XXH_PRIME64_1) as xxh_u64
         as xxh_u64;
     return acc;
 }
 unsafe extern "C" fn XXH64_mergeRound(mut acc: xxh_u64, mut val: xxh_u64) -> xxh_u64 {
-    val = XXH64_round(0 as std::ffi::c_int as xxh_u64, val);
+    val = XXH64_round(0, val);
     acc ^= val;
     acc = (acc as std::ffi::c_ulonglong)
         .wrapping_mul(XXH_PRIME64_1)
@@ -371,24 +371,24 @@ pub unsafe extern "C" fn ZSTD_XXH64_digest(
     if (*state).total_len >= 32 {
         h64 = (::core::intrinsics::rotate_left(
             (*state).v[0 as std::ffi::c_int as usize],
-            1 as std::ffi::c_int as std::ffi::c_ulong,
+            1,
         ))
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
                     (*state).v[1 as std::ffi::c_int as usize],
-                    7 as std::ffi::c_int as std::ffi::c_ulong,
+                    7,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
                     (*state).v[2 as std::ffi::c_int as usize],
-                    12 as std::ffi::c_int as std::ffi::c_ulong,
+                    12,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
                     (*state).v[3 as std::ffi::c_int as usize],
-                    18 as std::ffi::c_int as std::ffi::c_ulong,
+                    18,
                 ),
             );
         h64 = XXH64_mergeRound(h64, (*state).v[0 as std::ffi::c_int as usize]);

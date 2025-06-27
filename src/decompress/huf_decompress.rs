@@ -177,7 +177,7 @@ unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
@@ -272,7 +272,7 @@ unsafe extern "C" fn BIT_initDStream(
     if srcSize < 1 {
         libc::memset(
             bitD as *mut std::ffi::c_void,
-            0 as std::ffi::c_int,
+            0,
             ::core::mem::size_of::<BIT_DStream_t>() as usize,
         );
         return ERROR!(srcSize_wrong);
@@ -427,7 +427,7 @@ unsafe extern "C" fn BIT_initDStream(
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
                 (::core::mem::size_of::<BitContainerType>())
-                    .wrapping_sub(srcSize) as u32 * 8 as std::ffi::c_int as u32,
+                    .wrapping_sub(srcSize) as u32 * 8,
             );
     }
     return srcSize;
@@ -545,7 +545,7 @@ unsafe extern "C" fn HUF_initFastDStream(mut ip: *const u8) -> usize {
         0 as std::ffi::c_int as std::ffi::c_uint
     }) as usize;
     let value = MEM_readLEST(ip as *const std::ffi::c_void)
-        | 1 as std::ffi::c_int as usize;
+        | 1;
     return value << bitsConsumed;
 }
 unsafe extern "C" fn HUF_DecompressFastArgs_init(
@@ -561,16 +561,16 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
     let istart = src as *const u8;
     let oend = ZSTD_maybeNullPtrAdd(dst, dstSize as ptrdiff_t) as *mut u8;
     if MEM_isLittleEndian() == 0 || MEM_32bits() != 0 {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     if dstSize == 0 {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     if srcSize < 10 {
         return ERROR!(corruption_detected);
     }
     if dtLog != HUF_DECODER_FAST_TABLELOG as u32 {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     let length1 = MEM_readLE16(istart as *const std::ffi::c_void) as usize;
     let length2 = MEM_readLE16(
@@ -606,7 +606,7 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
         || length3 < 8
         || length4 < 8
     {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     if length4 > srcSize {
         return ERROR!(corruption_detected);
@@ -651,7 +651,7 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
                 / 4 as std::ffi::c_int as usize) as isize,
         );
     if (*args).op[3 as std::ffi::c_int as usize] >= oend {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     (*args)
         .bits[0 as std::ffi::c_int
@@ -668,7 +668,7 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
     (*args).ilowest = istart;
     (*args).oend = oend;
     (*args).dt = dt;
-    return 1 as std::ffi::c_int as usize;
+    return 1;
 }
 unsafe extern "C" fn HUF_initRemainingDStream(
     mut bit: *mut BIT_DStream_t,
@@ -694,7 +694,7 @@ unsafe extern "C" fn HUF_initRemainingDStream(
         .limitPtr = ((*bit).start)
         .offset(::core::mem::size_of::<usize>() as isize);
     (*bit).ptr = (*args).ip[stream as usize] as *const std::ffi::c_char;
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 unsafe extern "C" fn HUF_DEltX1_set4(mut symbol: u8, mut nbBits: u8) -> u64 {
     let mut D4: u64 = 0;
@@ -810,7 +810,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     let mut n: std::ffi::c_int = 0;
     let mut nextRankStart: u32 = 0;
     let unroll = 4;
-    let nLimit = nbSymbols as std::ffi::c_int - unroll + 1 as std::ffi::c_int;
+    let nLimit = nbSymbols as std::ffi::c_int - unroll + 1;
     n = 0;
     while n < tableLog as std::ffi::c_int + 1 as std::ffi::c_int {
         let curr = nextRankStart;
@@ -1134,7 +1134,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
     let istart3 = istart2.offset(length2 as isize);
     let istart4 = istart3.offset(length3 as isize);
     let segmentSize = dstSize.wrapping_add(3)
-        / 4 as std::ffi::c_int as usize;
+        / 4;
     let opStart2 = ostart.offset(segmentSize as isize);
     let opStart3 = opStart2.offset(segmentSize as isize);
     let opStart4 = opStart3.offset(segmentSize as isize);
@@ -1356,11 +1356,11 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             stream;
         }
         let oiters = oend.offset_from(op[3 as std::ffi::c_int as usize])
-            as std::ffi::c_long as usize / 5 as std::ffi::c_int as usize;
+            as std::ffi::c_long as usize / 5;
         let iiters = (ip[0 as std::ffi::c_int as usize]).offset_from(ilowest)
-            as std::ffi::c_long as usize / 7 as std::ffi::c_int as usize;
+            as std::ffi::c_long as usize / 7;
         let iters = MIN!(oiters, iiters);
-        let symbols = iters * 5 as std::ffi::c_int as usize;
+        let symbols = iters * 5;
         olimit = (op[3 as std::ffi::c_int as usize]).offset(symbols as isize);
         if op[3 as std::ffi::c_int as usize] == olimit {
             break;
@@ -1385,7 +1385,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[0 as std::ffi::c_int as usize] <<= entry & 0x3f as std::ffi::c_int;
             *(op[0 as std::ffi::c_int as usize])
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = (entry >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_0 = (bits[1 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1393,7 +1393,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[1 as std::ffi::c_int as usize] <<= entry_0 & 0x3f as std::ffi::c_int;
             *(op[1 as std::ffi::c_int as usize])
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = (entry_0 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_1 = (bits[2 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1401,7 +1401,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[2 as std::ffi::c_int as usize] <<= entry_1 & 0x3f as std::ffi::c_int;
             *(op[2 as std::ffi::c_int as usize])
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = (entry_1 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_2 = (bits[3 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1409,7 +1409,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[3 as std::ffi::c_int as usize] <<= entry_2 & 0x3f as std::ffi::c_int;
             *(op[3 as std::ffi::c_int as usize])
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = (entry_2 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_3 = (bits[0 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1417,7 +1417,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[0 as std::ffi::c_int as usize] <<= entry_3 & 0x3f as std::ffi::c_int;
             *(op[0 as std::ffi::c_int as usize])
                 .offset(
-                    1 as std::ffi::c_int as isize,
+                    1,
                 ) = (entry_3 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_4 = (bits[1 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1425,7 +1425,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[1 as std::ffi::c_int as usize] <<= entry_4 & 0x3f as std::ffi::c_int;
             *(op[1 as std::ffi::c_int as usize])
                 .offset(
-                    1 as std::ffi::c_int as isize,
+                    1,
                 ) = (entry_4 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_5 = (bits[2 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1433,7 +1433,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[2 as std::ffi::c_int as usize] <<= entry_5 & 0x3f as std::ffi::c_int;
             *(op[2 as std::ffi::c_int as usize])
                 .offset(
-                    1 as std::ffi::c_int as isize,
+                    1,
                 ) = (entry_5 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_6 = (bits[3 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1441,7 +1441,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[3 as std::ffi::c_int as usize] <<= entry_6 & 0x3f as std::ffi::c_int;
             *(op[3 as std::ffi::c_int as usize])
                 .offset(
-                    1 as std::ffi::c_int as isize,
+                    1,
                 ) = (entry_6 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_7 = (bits[0 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1449,7 +1449,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[0 as std::ffi::c_int as usize] <<= entry_7 & 0x3f as std::ffi::c_int;
             *(op[0 as std::ffi::c_int as usize])
                 .offset(
-                    2 as std::ffi::c_int as isize,
+                    2,
                 ) = (entry_7 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_8 = (bits[1 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1457,7 +1457,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[1 as std::ffi::c_int as usize] <<= entry_8 & 0x3f as std::ffi::c_int;
             *(op[1 as std::ffi::c_int as usize])
                 .offset(
-                    2 as std::ffi::c_int as isize,
+                    2,
                 ) = (entry_8 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_9 = (bits[2 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1465,7 +1465,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[2 as std::ffi::c_int as usize] <<= entry_9 & 0x3f as std::ffi::c_int;
             *(op[2 as std::ffi::c_int as usize])
                 .offset(
-                    2 as std::ffi::c_int as isize,
+                    2,
                 ) = (entry_9 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_10 = (bits[3 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1473,7 +1473,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[3 as std::ffi::c_int as usize] <<= entry_10 & 0x3f as std::ffi::c_int;
             *(op[3 as std::ffi::c_int as usize])
                 .offset(
-                    2 as std::ffi::c_int as isize,
+                    2,
                 ) = (entry_10 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_11 = (bits[0 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1481,7 +1481,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[0 as std::ffi::c_int as usize] <<= entry_11 & 0x3f as std::ffi::c_int;
             *(op[0 as std::ffi::c_int as usize])
                 .offset(
-                    3 as std::ffi::c_int as isize,
+                    3,
                 ) = (entry_11 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_12 = (bits[1 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1489,7 +1489,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[1 as std::ffi::c_int as usize] <<= entry_12 & 0x3f as std::ffi::c_int;
             *(op[1 as std::ffi::c_int as usize])
                 .offset(
-                    3 as std::ffi::c_int as isize,
+                    3,
                 ) = (entry_12 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_13 = (bits[2 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1497,7 +1497,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[2 as std::ffi::c_int as usize] <<= entry_13 & 0x3f as std::ffi::c_int;
             *(op[2 as std::ffi::c_int as usize])
                 .offset(
-                    3 as std::ffi::c_int as isize,
+                    3,
                 ) = (entry_13 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_14 = (bits[3 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1505,7 +1505,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[3 as std::ffi::c_int as usize] <<= entry_14 & 0x3f as std::ffi::c_int;
             *(op[3 as std::ffi::c_int as usize])
                 .offset(
-                    3 as std::ffi::c_int as isize,
+                    3,
                 ) = (entry_14 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_15 = (bits[0 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1513,7 +1513,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[0 as std::ffi::c_int as usize] <<= entry_15 & 0x3f as std::ffi::c_int;
             *(op[0 as std::ffi::c_int as usize])
                 .offset(
-                    4 as std::ffi::c_int as isize,
+                    4,
                 ) = (entry_15 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_16 = (bits[1 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1521,7 +1521,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[1 as std::ffi::c_int as usize] <<= entry_16 & 0x3f as std::ffi::c_int;
             *(op[1 as std::ffi::c_int as usize])
                 .offset(
-                    4 as std::ffi::c_int as isize,
+                    4,
                 ) = (entry_16 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_17 = (bits[2 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1529,7 +1529,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[2 as std::ffi::c_int as usize] <<= entry_17 & 0x3f as std::ffi::c_int;
             *(op[2 as std::ffi::c_int as usize])
                 .offset(
-                    4 as std::ffi::c_int as isize,
+                    4,
                 ) = (entry_17 >> 8 & 0xff as std::ffi::c_int) as u8;
             let index_18 = (bits[3 as std::ffi::c_int as usize] >> 53)
                 as std::ffi::c_int;
@@ -1537,11 +1537,11 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[3 as std::ffi::c_int as usize] <<= entry_18 & 0x3f as std::ffi::c_int;
             *(op[3 as std::ffi::c_int as usize])
                 .offset(
-                    4 as std::ffi::c_int as isize,
+                    4,
                 ) = (entry_18 >> 8 & 0xff as std::ffi::c_int) as u8;
             let ctz = ZSTD_countTrailingZeros64(bits[0 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits = ctz & 7 as std::ffi::c_int;
+            let nbBits = ctz & 7;
             let nbBytes = ctz >> 3;
             op[0 as std::ffi::c_int
                 as usize] = (op[0 as std::ffi::c_int as usize])
@@ -1552,11 +1552,11 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[0 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[0 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[0 as std::ffi::c_int as usize] <<= nbBits;
             let ctz_0 = ZSTD_countTrailingZeros64(bits[1 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits_0 = ctz_0 & 7 as std::ffi::c_int;
+            let nbBits_0 = ctz_0 & 7;
             let nbBytes_0 = ctz_0 >> 3;
             op[1 as std::ffi::c_int
                 as usize] = (op[1 as std::ffi::c_int as usize])
@@ -1567,11 +1567,11 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[1 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[1 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[1 as std::ffi::c_int as usize] <<= nbBits_0;
             let ctz_1 = ZSTD_countTrailingZeros64(bits[2 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits_1 = ctz_1 & 7 as std::ffi::c_int;
+            let nbBits_1 = ctz_1 & 7;
             let nbBytes_1 = ctz_1 >> 3;
             op[2 as std::ffi::c_int
                 as usize] = (op[2 as std::ffi::c_int as usize])
@@ -1582,11 +1582,11 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[2 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[2 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[2 as std::ffi::c_int as usize] <<= nbBits_1;
             let ctz_2 = ZSTD_countTrailingZeros64(bits[3 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits_2 = ctz_2 & 7 as std::ffi::c_int;
+            let nbBits_2 = ctz_2 & 7;
             let nbBytes_2 = ctz_2 >> 3;
             op[3 as std::ffi::c_int
                 as usize] = (op[3 as std::ffi::c_int as usize])
@@ -1597,7 +1597,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             bits[3 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[3 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[3 as std::ffi::c_int as usize] <<= nbBits_2;
             if !(op[3 as std::ffi::c_int as usize] < olimit) {
                 break;
@@ -1653,11 +1653,11 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
         return FORWARD_IF_ERROR!(ret, "Failed to init fast loop args");
     }
     if ret == 0 {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     loopFn.expect("non-null function pointer")(&mut args);
     let segmentSize = dstSize.wrapping_add(3)
-        / 4 as std::ffi::c_int as usize;
+        / 4;
     let mut segmentEnd = dst as *mut u8;
     let mut i: std::ffi::c_int = 0;
     i = 0;
@@ -2073,8 +2073,8 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
         let DEltX2 = HUF_buildDEltX2U64(
             baseSeq as u32,
             consumedBits,
-            0 as std::ffi::c_int as u16,
-            1 as std::ffi::c_int,
+            0,
+            1,
         );
         let skipSize = *rankVal.offset(minWeight as isize) as std::ffi::c_int;
         match length {
@@ -2151,7 +2151,7 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
             totalBits,
             targetLog,
             baseSeq,
-            2 as std::ffi::c_int,
+            2,
         );
         w += 1;
         w;
@@ -2170,7 +2170,7 @@ unsafe extern "C" fn HUF_fillDTableX2(
     let scaleLog = nbBitsBaseline.wrapping_sub(targetLog) as std::ffi::c_int;
     let minBits = nbBitsBaseline.wrapping_sub(maxWeight);
     let mut w: std::ffi::c_int = 0;
-    let wEnd = maxWeight as std::ffi::c_int + 1 as std::ffi::c_int;
+    let wEnd = maxWeight as std::ffi::c_int + 1;
     w = 1;
     while w < wEnd {
         let begin = *rankStart.offset(w as isize) as std::ffi::c_int;
@@ -2212,8 +2212,8 @@ unsafe extern "C" fn HUF_fillDTableX2(
                 sortedList.offset(end as isize),
                 nbBits,
                 targetLog,
-                0 as std::ffi::c_int as u16,
-                1 as std::ffi::c_int,
+                0,
+                1,
             );
         }
         w += 1;
@@ -2248,12 +2248,12 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     rankStart = ((*wksp).rankStart0).as_mut_ptr().offset(1);
     libc::memset(
         ((*wksp).rankStats).as_mut_ptr() as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<[u32; 13]>() as usize,
     );
     libc::memset(
         ((*wksp).rankStart0).as_mut_ptr() as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<[u32; 15]>() as usize,
     );
     if maxTableLog > HUF_TABLELOG_MAX as u32 {
@@ -2413,7 +2413,7 @@ unsafe extern "C" fn HUF_decodeLastSymbolX2(
                 as std::ffi::c_uint;
         }
     }
-    return 1 as std::ffi::c_int as u32;
+    return 1;
 }
 #[inline(always)]
 unsafe extern "C" fn HUF_decodeStreamX2(
@@ -2596,7 +2596,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
     let istart3 = istart2.offset(length2 as isize);
     let istart4 = istart3.offset(length3 as isize);
     let segmentSize = dstSize.wrapping_add(3)
-        / 4 as std::ffi::c_int as usize;
+        / 4;
     let opStart2 = ostart.offset(segmentSize as isize);
     let opStart3 = opStart2.offset(segmentSize as isize);
     let opStart4 = opStart3.offset(segmentSize as isize);
@@ -2794,11 +2794,11 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             stream;
         }
         let mut iters = (ip[0 as std::ffi::c_int as usize]).offset_from(ilowest)
-            as std::ffi::c_long as usize / 7 as std::ffi::c_int as usize;
+            as std::ffi::c_long as usize / 7;
         stream = 0;
         while stream < 4 {
             let oiters = (oend[stream as usize]).offset_from(op[stream as usize])
-                as std::ffi::c_long as usize / 10 as std::ffi::c_int as usize;
+                as std::ffi::c_long as usize / 10;
             iters = MIN!(iters, oiters);
             stream += 1;
             stream;
@@ -3150,7 +3150,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             }
             let ctz = ZSTD_countTrailingZeros64(bits[0 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits = ctz & 7 as std::ffi::c_int;
+            let nbBits = ctz & 7;
             let nbBytes = ctz >> 3;
             ip[0 as std::ffi::c_int
                 as usize] = (ip[0 as std::ffi::c_int as usize])
@@ -3158,7 +3158,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             bits[0 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[0 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[0 as std::ffi::c_int as usize] <<= nbBits;
             if 1 as std::ffi::c_int != 0 || 3 as std::ffi::c_int != 3
             {
@@ -3177,7 +3177,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             }
             let ctz_0 = ZSTD_countTrailingZeros64(bits[1 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits_0 = ctz_0 & 7 as std::ffi::c_int;
+            let nbBits_0 = ctz_0 & 7;
             let nbBytes_0 = ctz_0 >> 3;
             ip[1 as std::ffi::c_int
                 as usize] = (ip[1 as std::ffi::c_int as usize])
@@ -3185,7 +3185,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             bits[1 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[1 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[1 as std::ffi::c_int as usize] <<= nbBits_0;
             if 1 as std::ffi::c_int != 0 || 3 as std::ffi::c_int != 3
             {
@@ -3204,7 +3204,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             }
             let ctz_1 = ZSTD_countTrailingZeros64(bits[2 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits_1 = ctz_1 & 7 as std::ffi::c_int;
+            let nbBits_1 = ctz_1 & 7;
             let nbBytes_1 = ctz_1 >> 3;
             ip[2 as std::ffi::c_int
                 as usize] = (ip[2 as std::ffi::c_int as usize])
@@ -3212,7 +3212,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             bits[2 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[2 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[2 as std::ffi::c_int as usize] <<= nbBits_1;
             if 1 as std::ffi::c_int != 0 || 3 as std::ffi::c_int != 3
             {
@@ -3231,7 +3231,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             }
             let ctz_2 = ZSTD_countTrailingZeros64(bits[3 as std::ffi::c_int as usize])
                 as std::ffi::c_int;
-            let nbBits_2 = ctz_2 & 7 as std::ffi::c_int;
+            let nbBits_2 = ctz_2 & 7;
             let nbBytes_2 = ctz_2 >> 3;
             ip[3 as std::ffi::c_int
                 as usize] = (ip[3 as std::ffi::c_int as usize])
@@ -3239,7 +3239,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             bits[3 as std::ffi::c_int
                 as usize] = MEM_read64(
                 ip[3 as std::ffi::c_int as usize] as *const std::ffi::c_void,
-            ) | 1 as std::ffi::c_int as u64;
+            ) | 1;
             bits[3 as std::ffi::c_int as usize] <<= nbBits_2;
             if !(op[3 as std::ffi::c_int as usize] < olimit) {
                 break;
@@ -3295,11 +3295,11 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
         return FORWARD_IF_ERROR!(ret, "Failed to init asm args");
     }
     if ret == 0 {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     loopFn.expect("non-null function pointer")(&mut args);
     let segmentSize = dstSize.wrapping_add(3)
-        / 4 as std::ffi::c_int as usize;
+        / 4;
     let mut segmentEnd = dst as *mut u8;
     let mut i: std::ffi::c_int = 0;
     i = 0;
@@ -3527,31 +3527,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 0 as std::ffi::c_int as u32,
-                decode256Time: 0 as std::ffi::c_int as u32,
+                tableTime: 0,
+                decode256Time: 0,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 1 as std::ffi::c_int as u32,
-                decode256Time: 1 as std::ffi::c_int as u32,
-            };
-            init
-        },
-    ],
-    [
-        {
-            let mut init = algo_time_t {
-                tableTime: 0 as std::ffi::c_int as u32,
-                decode256Time: 0 as std::ffi::c_int as u32,
-            };
-            init
-        },
-        {
-            let mut init = algo_time_t {
-                tableTime: 1 as std::ffi::c_int as u32,
-                decode256Time: 1 as std::ffi::c_int as u32,
+                tableTime: 1,
+                decode256Time: 1,
             };
             init
         },
@@ -3559,31 +3543,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 150 as std::ffi::c_int as u32,
-                decode256Time: 216 as std::ffi::c_int as u32,
+                tableTime: 0,
+                decode256Time: 0,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 381 as std::ffi::c_int as u32,
-                decode256Time: 119 as std::ffi::c_int as u32,
-            };
-            init
-        },
-    ],
-    [
-        {
-            let mut init = algo_time_t {
-                tableTime: 170 as std::ffi::c_int as u32,
-                decode256Time: 205 as std::ffi::c_int as u32,
-            };
-            init
-        },
-        {
-            let mut init = algo_time_t {
-                tableTime: 514 as std::ffi::c_int as u32,
-                decode256Time: 112 as std::ffi::c_int as u32,
+                tableTime: 1,
+                decode256Time: 1,
             };
             init
         },
@@ -3591,31 +3559,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 177 as std::ffi::c_int as u32,
-                decode256Time: 199 as std::ffi::c_int as u32,
+                tableTime: 150,
+                decode256Time: 216,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 539 as std::ffi::c_int as u32,
-                decode256Time: 110 as std::ffi::c_int as u32,
-            };
-            init
-        },
-    ],
-    [
-        {
-            let mut init = algo_time_t {
-                tableTime: 197 as std::ffi::c_int as u32,
-                decode256Time: 194 as std::ffi::c_int as u32,
-            };
-            init
-        },
-        {
-            let mut init = algo_time_t {
-                tableTime: 644 as std::ffi::c_int as u32,
-                decode256Time: 107 as std::ffi::c_int as u32,
+                tableTime: 381,
+                decode256Time: 119,
             };
             init
         },
@@ -3623,31 +3575,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 221 as std::ffi::c_int as u32,
-                decode256Time: 192 as std::ffi::c_int as u32,
+                tableTime: 170,
+                decode256Time: 205,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 735 as std::ffi::c_int as u32,
-                decode256Time: 107 as std::ffi::c_int as u32,
-            };
-            init
-        },
-    ],
-    [
-        {
-            let mut init = algo_time_t {
-                tableTime: 256 as std::ffi::c_int as u32,
-                decode256Time: 189 as std::ffi::c_int as u32,
-            };
-            init
-        },
-        {
-            let mut init = algo_time_t {
-                tableTime: 881 as std::ffi::c_int as u32,
-                decode256Time: 106 as std::ffi::c_int as u32,
+                tableTime: 514,
+                decode256Time: 112,
             };
             init
         },
@@ -3655,31 +3591,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 359 as std::ffi::c_int as u32,
-                decode256Time: 188 as std::ffi::c_int as u32,
+                tableTime: 177,
+                decode256Time: 199,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 1167 as std::ffi::c_int as u32,
-                decode256Time: 109 as std::ffi::c_int as u32,
-            };
-            init
-        },
-    ],
-    [
-        {
-            let mut init = algo_time_t {
-                tableTime: 582 as std::ffi::c_int as u32,
-                decode256Time: 187 as std::ffi::c_int as u32,
-            };
-            init
-        },
-        {
-            let mut init = algo_time_t {
-                tableTime: 1570 as std::ffi::c_int as u32,
-                decode256Time: 114 as std::ffi::c_int as u32,
+                tableTime: 539,
+                decode256Time: 110,
             };
             init
         },
@@ -3687,31 +3607,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 688 as std::ffi::c_int as u32,
-                decode256Time: 187 as std::ffi::c_int as u32,
+                tableTime: 197,
+                decode256Time: 194,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 1712 as std::ffi::c_int as u32,
-                decode256Time: 122 as std::ffi::c_int as u32,
-            };
-            init
-        },
-    ],
-    [
-        {
-            let mut init = algo_time_t {
-                tableTime: 825 as std::ffi::c_int as u32,
-                decode256Time: 186 as std::ffi::c_int as u32,
-            };
-            init
-        },
-        {
-            let mut init = algo_time_t {
-                tableTime: 1965 as std::ffi::c_int as u32,
-                decode256Time: 136 as std::ffi::c_int as u32,
+                tableTime: 644,
+                decode256Time: 107,
             };
             init
         },
@@ -3719,31 +3623,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 976 as std::ffi::c_int as u32,
-                decode256Time: 185 as std::ffi::c_int as u32,
+                tableTime: 221,
+                decode256Time: 192,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 2131 as std::ffi::c_int as u32,
-                decode256Time: 150 as std::ffi::c_int as u32,
-            };
-            init
-        },
-    ],
-    [
-        {
-            let mut init = algo_time_t {
-                tableTime: 1180 as std::ffi::c_int as u32,
-                decode256Time: 186 as std::ffi::c_int as u32,
-            };
-            init
-        },
-        {
-            let mut init = algo_time_t {
-                tableTime: 2070 as std::ffi::c_int as u32,
-                decode256Time: 175 as std::ffi::c_int as u32,
+                tableTime: 735,
+                decode256Time: 107,
             };
             init
         },
@@ -3751,15 +3639,15 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 1377 as std::ffi::c_int as u32,
-                decode256Time: 185 as std::ffi::c_int as u32,
+                tableTime: 256,
+                decode256Time: 189,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 1731 as std::ffi::c_int as u32,
-                decode256Time: 202 as std::ffi::c_int as u32,
+                tableTime: 881,
+                decode256Time: 106,
             };
             init
         },
@@ -3767,15 +3655,127 @@ static mut algoTime: [[algo_time_t; 2]; 16] = [
     [
         {
             let mut init = algo_time_t {
-                tableTime: 1412 as std::ffi::c_int as u32,
-                decode256Time: 185 as std::ffi::c_int as u32,
+                tableTime: 359,
+                decode256Time: 188,
             };
             init
         },
         {
             let mut init = algo_time_t {
-                tableTime: 1695 as std::ffi::c_int as u32,
-                decode256Time: 202 as std::ffi::c_int as u32,
+                tableTime: 1167,
+                decode256Time: 109,
+            };
+            init
+        },
+    ],
+    [
+        {
+            let mut init = algo_time_t {
+                tableTime: 582,
+                decode256Time: 187,
+            };
+            init
+        },
+        {
+            let mut init = algo_time_t {
+                tableTime: 1570,
+                decode256Time: 114,
+            };
+            init
+        },
+    ],
+    [
+        {
+            let mut init = algo_time_t {
+                tableTime: 688,
+                decode256Time: 187,
+            };
+            init
+        },
+        {
+            let mut init = algo_time_t {
+                tableTime: 1712,
+                decode256Time: 122,
+            };
+            init
+        },
+    ],
+    [
+        {
+            let mut init = algo_time_t {
+                tableTime: 825,
+                decode256Time: 186,
+            };
+            init
+        },
+        {
+            let mut init = algo_time_t {
+                tableTime: 1965,
+                decode256Time: 136,
+            };
+            init
+        },
+    ],
+    [
+        {
+            let mut init = algo_time_t {
+                tableTime: 976,
+                decode256Time: 185,
+            };
+            init
+        },
+        {
+            let mut init = algo_time_t {
+                tableTime: 2131,
+                decode256Time: 150,
+            };
+            init
+        },
+    ],
+    [
+        {
+            let mut init = algo_time_t {
+                tableTime: 1180,
+                decode256Time: 186,
+            };
+            init
+        },
+        {
+            let mut init = algo_time_t {
+                tableTime: 2070,
+                decode256Time: 175,
+            };
+            init
+        },
+    ],
+    [
+        {
+            let mut init = algo_time_t {
+                tableTime: 1377,
+                decode256Time: 185,
+            };
+            init
+        },
+        {
+            let mut init = algo_time_t {
+                tableTime: 1731,
+                decode256Time: 202,
+            };
+            init
+        },
+    ],
+    [
+        {
+            let mut init = algo_time_t {
+                tableTime: 1412,
+                decode256Time: 185,
+            };
+            init
+        },
+        {
+            let mut init = algo_time_t {
+                tableTime: 1695,
+                decode256Time: 202,
             };
             init
         },

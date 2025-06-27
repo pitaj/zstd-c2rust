@@ -96,7 +96,7 @@ unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
@@ -168,7 +168,7 @@ unsafe extern "C" fn BIT_initDStream(
     if srcSize < 1 {
         libc::memset(
             bitD as *mut std::ffi::c_void,
-            0 as std::ffi::c_int,
+            0,
             ::core::mem::size_of::<BIT_DStream_t>() as usize,
         );
         return ERROR!(srcSize_wrong);
@@ -323,7 +323,7 @@ unsafe extern "C" fn BIT_initDStream(
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
                 (::core::mem::size_of::<BitContainerType>())
-                    .wrapping_sub(srcSize) as u32 * 8 as std::ffi::c_int as u32,
+                    .wrapping_sub(srcSize) as u32 * 8,
             );
     }
     return srcSize;
@@ -481,7 +481,7 @@ unsafe extern "C" fn FSE_decodeSymbolFast(
 pub const FSE_MAX_MEMORY_USAGE: std::ffi::c_int = 14;
 pub const FSE_MAX_SYMBOL_VALUE: std::ffi::c_int = 255;
 pub const FSE_MAX_TABLELOG: std::ffi::c_int = FSE_MAX_MEMORY_USAGE
-    - 2 as std::ffi::c_int;
+    - 2;
 pub const FSE_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 unsafe extern "C" fn FSE_buildDTable_internal(
     mut dt: *mut FSE_DTable,
@@ -631,7 +631,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
         u_0 = u_0.wrapping_add(1);
         u_0;
     }
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 #[no_mangle]
 pub unsafe extern "C" fn FSE_buildDTable_wksp(
@@ -834,7 +834,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
             ip as *const std::ffi::c_void,
             cSrcSize,
             dtable,
-            1 as std::ffi::c_int as std::ffi::c_uint,
+            1,
         );
     }
     return FSE_decompress_usingDTable_generic(
@@ -843,7 +843,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         ip as *const std::ffi::c_void,
         cSrcSize,
         dtable,
-        0 as std::ffi::c_int as std::ffi::c_uint,
+        0,
     );
 }
 unsafe extern "C" fn FSE_decompress_wksp_body_default(
@@ -863,7 +863,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body_default(
         maxLog,
         workSpace,
         wkspSize,
-        0 as std::ffi::c_int,
+        0,
     );
 }
 unsafe extern "C" fn FSE_decompress_wksp_body_bmi2(
@@ -883,7 +883,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body_bmi2(
         maxLog,
         workSpace,
         wkspSize,
-        1 as std::ffi::c_int,
+        1,
     );
 }
 #[no_mangle]

@@ -60,7 +60,7 @@ pub const HUF_flags_optimalDepth: C2RustUnnamed = 2;
 pub const HUF_flags_bmi2: C2RustUnnamed = 1;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
@@ -153,7 +153,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     let mut previous0: std::ffi::c_int = 0;
     if hbSize < 8 {
         let mut buffer: [std::ffi::c_char; 8] = [
-            0 as std::ffi::c_int as std::ffi::c_char,
+            0,
             0,
             0,
             0,
@@ -184,7 +184,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     }
     libc::memset(
         normalizedCounter as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ((*maxSVPtr).wrapping_add(1)
             as std::ffi::c_ulong)
             .wrapping_mul(
@@ -200,7 +200,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     bitStream >>= 4;
     bitCount = 4;
     *tableLogPtr = nbBits as std::ffi::c_uint;
-    remaining = ((1 as std::ffi::c_int) << nbBits) + 1 as std::ffi::c_int;
+    remaining = ((1 as std::ffi::c_int) << nbBits) + 1;
     threshold = (1 as std::ffi::c_int) << nbBits;
     nbBits += 1;
     nbBits;
@@ -261,7 +261,7 @@ unsafe extern "C" fn FSE_readNCount_body(
         if (bitStream & (threshold - 1 as std::ffi::c_int) as u32) < max as u32 {
             count = (bitStream & (threshold - 1 as std::ffi::c_int) as u32)
                 as std::ffi::c_int;
-            bitCount += nbBits - 1 as std::ffi::c_int;
+            bitCount += nbBits - 1;
         } else {
             count = (bitStream
                 & (2 as std::ffi::c_int * threshold - 1 as std::ffi::c_int) as u32)
@@ -289,7 +289,7 @@ unsafe extern "C" fn FSE_readNCount_body(
             nbBits = (ZSTD_highbit32(remaining as u32))
                 .wrapping_add(1)
                 as std::ffi::c_int;
-            threshold = (1 as std::ffi::c_int) << nbBits - 1 as std::ffi::c_int;
+            threshold = (1 as std::ffi::c_int) << nbBits - 1;
         }
         if charnum >= maxSV1 {
             break;
@@ -393,7 +393,7 @@ pub unsafe extern "C" fn FSE_readNCount(
         tableLogPtr,
         headerBuffer,
         hbSize,
-        0 as std::ffi::c_int,
+        0,
     );
 }
 #[no_mangle]
@@ -417,7 +417,7 @@ pub unsafe extern "C" fn HUF_readStats(
         srcSize,
         wksp.as_mut_ptr() as *mut std::ffi::c_void,
         ::core::mem::size_of::<[u32; 219]>(),
-        0 as std::ffi::c_int,
+        0,
     );
 }
 #[inline(always)]
@@ -444,7 +444,7 @@ unsafe extern "C" fn HUF_readStats_body(
     if iSize >= 128 {
         oSize = iSize.wrapping_sub(127);
         iSize = oSize.wrapping_add(1)
-            / 2 as std::ffi::c_int as usize;
+            / 2;
         if iSize.wrapping_add(1) > srcSize {
             return ERROR!(srcSize_wrong);
         }
@@ -476,7 +476,7 @@ unsafe extern "C" fn HUF_readStats_body(
             hwSize.wrapping_sub(1),
             ip.offset(1) as *const std::ffi::c_void,
             iSize,
-            6 as std::ffi::c_int as std::ffi::c_uint,
+            6,
             workSpace,
             wkspSize,
             bmi2,
@@ -487,7 +487,7 @@ unsafe extern "C" fn HUF_readStats_body(
     }
     libc::memset(
         rankStats as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ((12 as std::ffi::c_int + 1 as std::ffi::c_int) as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<u32>())
             as usize,
@@ -563,7 +563,7 @@ unsafe extern "C" fn HUF_readStats_body_default(
         srcSize,
         workSpace,
         wkspSize,
-        0 as std::ffi::c_int,
+        0,
     );
 }
 unsafe extern "C" fn HUF_readStats_body_bmi2(
@@ -587,7 +587,7 @@ unsafe extern "C" fn HUF_readStats_body_bmi2(
         srcSize,
         workSpace,
         wkspSize,
-        1 as std::ffi::c_int,
+        1,
     );
 }
 #[no_mangle]

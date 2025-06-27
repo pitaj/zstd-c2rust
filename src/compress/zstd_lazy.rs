@@ -221,7 +221,7 @@ unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
@@ -1173,7 +1173,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch(
     dictMode: ZSTD_dictMode_e,
 ) -> usize {
     if ip < ((*ms).window.base).offset((*ms).nextToUpdate as isize) {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     ZSTD_updateDUBT(ms, ip, iLimit, mls);
     return ZSTD_DUBT_findBestMatch(ms, ip, iLimit, offBasePtr, mls, dictMode);
@@ -1509,7 +1509,7 @@ pub unsafe extern "C" fn ZSTD_insertAndFindFirstIndex(
         cParams,
         ip,
         (*ms).cParams.minMatch,
-        0 as std::ffi::c_int as u32,
+        0,
     );
 }
 #[inline(always)]
@@ -1704,7 +1704,7 @@ pub const ZSTD_ROW_HASH_TAG_MASK: std::ffi::c_uint = ((1 as std::ffi::c_uint)
     << ZSTD_ROW_HASH_TAG_BITS)
     .wrapping_sub(1);
 pub const ZSTD_ROW_HASH_CACHE_MASK: std::ffi::c_int = ZSTD_ROW_HASH_CACHE_SIZE
-    - 1 as std::ffi::c_int;
+    - 1;
 #[inline]
 unsafe extern "C" fn ZSTD_VecMask_next(mut val: ZSTD_VecMask) -> u32 {
     return ZSTD_countTrailingZeros64(val);
@@ -1882,7 +1882,7 @@ pub unsafe extern "C" fn ZSTD_row_update(
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_row_matchMaskGroupWidth(rowEntries: u32) -> u32 {
-    return 1 as std::ffi::c_int as u32;
+    return 1;
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_row_getSSEMask(
@@ -1892,7 +1892,7 @@ unsafe extern "C" fn ZSTD_row_getSSEMask(
     head: u32,
 ) -> ZSTD_VecMask {
     let comparisonMask = _mm_set1_epi8(tag as std::ffi::c_char);
-    let mut matches: [std::ffi::c_int; 4] = [0 as std::ffi::c_int, 0, 0, 0];
+    let mut matches: [std::ffi::c_int; 4] = [0, 0, 0, 0];
     let mut i: std::ffi::c_int = 0;
     i = 0;
     while i < nbChunks {
@@ -2020,7 +2020,7 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
             mls,
             rowLog,
             rowMask,
-            1 as std::ffi::c_int as u32,
+            1,
         );
         hash = ZSTD_row_nextCachedHash(
             hashCache,
@@ -2221,9 +2221,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_4_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_noDict,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2238,9 +2238,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_6_5(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_extDict,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2255,9 +2255,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_6_4(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_extDict,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2272,9 +2272,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_5_6(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_extDict,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2289,9 +2289,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_5_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_extDict,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2306,9 +2306,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_5_4(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_extDict,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2323,9 +2323,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_4_6(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_extDict,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2340,9 +2340,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_4_5(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_extDict,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2357,9 +2357,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_4_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_extDict,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2374,9 +2374,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_6_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_noDict,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2391,9 +2391,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_6_5(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_noDict,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2408,9 +2408,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_6_4(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_noDict,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2425,9 +2425,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_5_6(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_noDict,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2442,9 +2442,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_5_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_noDict,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2459,9 +2459,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_5_4(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_noDict,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2476,9 +2476,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_4_6(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_noDict,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2493,9 +2493,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_noDict_4_5(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_noDict,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2510,9 +2510,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_6_4(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dedicatedDictSearch,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2527,9 +2527,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_5_6(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dedicatedDictSearch,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2544,9 +2544,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_5_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dedicatedDictSearch,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2561,9 +2561,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_5_4(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dedicatedDictSearch,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2578,9 +2578,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_4_6(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dedicatedDictSearch,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2595,9 +2595,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_4_5(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dedicatedDictSearch,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2612,9 +2612,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_4_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dedicatedDictSearch,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2629,9 +2629,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_6_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dictMatchState,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2646,9 +2646,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_6_5(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dictMatchState,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2663,9 +2663,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_6_4(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dictMatchState,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2680,9 +2680,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_5_6(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dictMatchState,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2697,9 +2697,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_6_5(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dedicatedDictSearch,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2714,9 +2714,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_5_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dictMatchState,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2731,9 +2731,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_5_4(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dictMatchState,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2748,9 +2748,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dedicatedDictSearch_6_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dedicatedDictSearch,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2765,9 +2765,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_4_6(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dictMatchState,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2782,9 +2782,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_4_5(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dictMatchState,
-        5 as std::ffi::c_int as u32,
+        5,
     );
 }
 #[inline(never)]
@@ -2799,9 +2799,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_dictMatchState_4_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dictMatchState,
-        4 as std::ffi::c_int as u32,
+        4,
     );
 }
 #[inline(never)]
@@ -2816,9 +2816,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch_extDict_6_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_extDict,
-        6 as std::ffi::c_int as u32,
+        6,
     );
 }
 #[inline(never)]
@@ -2833,7 +2833,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_extDict_5(
         ip,
         iLimit,
         offBasePtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_extDict,
     );
 }
@@ -2849,7 +2849,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dedicatedDictSearch_6(
         ip,
         iLimit,
         offBasePtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -2865,7 +2865,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_noDict_6(
         ip,
         iLimit,
         offBasePtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_noDict,
     );
 }
@@ -2881,7 +2881,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_noDict_5(
         ip,
         iLimit,
         offBasePtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_noDict,
     );
 }
@@ -2897,7 +2897,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dedicatedDictSearch_5(
         ip,
         iLimit,
         offBasePtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -2913,7 +2913,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dedicatedDictSearch_4(
         ip,
         iLimit,
         offBasePtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -2929,7 +2929,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_noDict_4(
         ip,
         iLimit,
         offBasePtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_noDict,
     );
 }
@@ -2945,7 +2945,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_extDict_4(
         ip,
         iLimit,
         offBasePtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_extDict,
     );
 }
@@ -2961,7 +2961,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_extDict_6(
         ip,
         iLimit,
         offBasePtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_extDict,
     );
 }
@@ -2977,7 +2977,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dictMatchState_6(
         ip,
         iLimit,
         offBasePtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dictMatchState,
     );
 }
@@ -2993,7 +2993,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dictMatchState_5(
         ip,
         iLimit,
         offBasePtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dictMatchState,
     );
 }
@@ -3009,7 +3009,7 @@ unsafe extern "C" fn ZSTD_BtFindBestMatch_dictMatchState_4(
         ip,
         iLimit,
         offBasePtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dictMatchState,
     );
 }
@@ -3025,7 +3025,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_noDict_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_noDict,
     );
 }
@@ -3041,7 +3041,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_extDict_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_extDict,
     );
 }
@@ -3057,7 +3057,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dedicatedDictSearch_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -3073,7 +3073,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_extDict_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_extDict,
     );
 }
@@ -3089,7 +3089,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dedicatedDictSearch_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -3105,7 +3105,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dedicatedDictSearch_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -3121,7 +3121,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dictMatchState_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_dictMatchState,
     );
 }
@@ -3137,7 +3137,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_noDict_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_noDict,
     );
 }
@@ -3153,7 +3153,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_noDict_4(
         ip,
         iLimit,
         offsetPtr,
-        4 as std::ffi::c_int as u32,
+        4,
         ZSTD_noDict,
     );
 }
@@ -3169,7 +3169,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_extDict_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_extDict,
     );
 }
@@ -3185,7 +3185,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dictMatchState_6(
         ip,
         iLimit,
         offsetPtr,
-        6 as std::ffi::c_int as u32,
+        6,
         ZSTD_dictMatchState,
     );
 }
@@ -3201,7 +3201,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch_dictMatchState_5(
         ip,
         iLimit,
         offsetPtr,
-        5 as std::ffi::c_int as u32,
+        5,
         ZSTD_dictMatchState,
     );
 }
@@ -3773,7 +3773,7 @@ unsafe extern "C" fn ZSTD_searchMax(
         unreachable!();
     }
     unreachable!();
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
@@ -4304,7 +4304,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                 offset_1 = offBase as u32;
                 ZSTD_storeSeq(
                     seqStore,
-                    0 as std::ffi::c_int as usize,
+                    0,
                     anchor,
                     iend,
                     REPCODE1_TO_OFFBASE as u32,
@@ -4337,7 +4337,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                 offset_1 = offBase as u32;
                 ZSTD_storeSeq(
                     seqStore,
-                    0 as std::ffi::c_int as usize,
+                    0,
                     anchor,
                     iend,
                     REPCODE1_TO_OFFBASE as u32,
@@ -4357,11 +4357,11 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
     };
     *rep
         .offset(
-            0 as std::ffi::c_int as isize,
+            0,
         ) = if offset_1 != 0 { offset_1 } else { offsetSaved1 };
     *rep
         .offset(
-            1 as std::ffi::c_int as isize,
+            1,
         ) = if offset_2 != 0 { offset_2 } else { offsetSaved2 };
     return iend.offset_from(anchor) as std::ffi::c_long as usize;
 }
@@ -4380,7 +4380,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy(
         src,
         srcSize,
         search_hashChain,
-        0 as std::ffi::c_int as u32,
+        0,
         ZSTD_noDict,
     );
 }
@@ -4399,7 +4399,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy_dictMatchState(
         src,
         srcSize,
         search_hashChain,
-        0 as std::ffi::c_int as u32,
+        0,
         ZSTD_dictMatchState,
     );
 }
@@ -4418,7 +4418,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy_dedicatedDictSearch(
         src,
         srcSize,
         search_hashChain,
-        0 as std::ffi::c_int as u32,
+        0,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -4437,7 +4437,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy_row(
         src,
         srcSize,
         search_rowHash,
-        0 as std::ffi::c_int as u32,
+        0,
         ZSTD_noDict,
     );
 }
@@ -4456,7 +4456,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy_dictMatchState_row(
         src,
         srcSize,
         search_rowHash,
-        0 as std::ffi::c_int as u32,
+        0,
         ZSTD_dictMatchState,
     );
 }
@@ -4475,7 +4475,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy_dedicatedDictSearch_row(
         src,
         srcSize,
         search_rowHash,
-        0 as std::ffi::c_int as u32,
+        0,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -4494,7 +4494,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy(
         src,
         srcSize,
         search_hashChain,
-        1 as std::ffi::c_int as u32,
+        1,
         ZSTD_noDict,
     );
 }
@@ -4513,7 +4513,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy_dictMatchState(
         src,
         srcSize,
         search_hashChain,
-        1 as std::ffi::c_int as u32,
+        1,
         ZSTD_dictMatchState,
     );
 }
@@ -4532,7 +4532,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy_dedicatedDictSearch(
         src,
         srcSize,
         search_hashChain,
-        1 as std::ffi::c_int as u32,
+        1,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -4551,7 +4551,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy_row(
         src,
         srcSize,
         search_rowHash,
-        1 as std::ffi::c_int as u32,
+        1,
         ZSTD_noDict,
     );
 }
@@ -4570,7 +4570,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy_dictMatchState_row(
         src,
         srcSize,
         search_rowHash,
-        1 as std::ffi::c_int as u32,
+        1,
         ZSTD_dictMatchState,
     );
 }
@@ -4589,7 +4589,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy_dedicatedDictSearch_row(
         src,
         srcSize,
         search_rowHash,
-        1 as std::ffi::c_int as u32,
+        1,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -4608,7 +4608,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2(
         src,
         srcSize,
         search_hashChain,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_noDict,
     );
 }
@@ -4627,7 +4627,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2_dictMatchState(
         src,
         srcSize,
         search_hashChain,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_dictMatchState,
     );
 }
@@ -4646,7 +4646,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2_dedicatedDictSearch(
         src,
         srcSize,
         search_hashChain,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -4665,7 +4665,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2_row(
         src,
         srcSize,
         search_rowHash,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_noDict,
     );
 }
@@ -4684,7 +4684,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2_dictMatchState_row(
         src,
         srcSize,
         search_rowHash,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_dictMatchState,
     );
 }
@@ -4703,7 +4703,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2_dedicatedDictSearch_row(
         src,
         srcSize,
         search_rowHash,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_dedicatedDictSearch,
     );
 }
@@ -4722,7 +4722,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_btlazy2(
         src,
         srcSize,
         search_binaryTree,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_noDict,
     );
 }
@@ -4741,7 +4741,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_btlazy2_dictMatchState(
         src,
         srcSize,
         search_binaryTree,
-        2 as std::ffi::c_int as u32,
+        2,
         ZSTD_dictMatchState,
     );
 }
@@ -5117,7 +5117,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
             offset_1 = offBase as u32;
             ZSTD_storeSeq(
                 seqStore,
-                0 as std::ffi::c_int as usize,
+                0,
                 anchor,
                 iend,
                 REPCODE1_TO_OFFBASE as u32,
@@ -5146,7 +5146,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy_extDict(
         src,
         srcSize,
         search_hashChain,
-        0 as std::ffi::c_int as u32,
+        0,
     );
 }
 #[no_mangle]
@@ -5164,7 +5164,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_greedy_extDict_row(
         src,
         srcSize,
         search_rowHash,
-        0 as std::ffi::c_int as u32,
+        0,
     );
 }
 #[no_mangle]
@@ -5182,7 +5182,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict(
         src,
         srcSize,
         search_hashChain,
-        1 as std::ffi::c_int as u32,
+        1,
     );
 }
 #[no_mangle]
@@ -5200,7 +5200,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_row(
         src,
         srcSize,
         search_rowHash,
-        1 as std::ffi::c_int as u32,
+        1,
     );
 }
 #[no_mangle]
@@ -5218,7 +5218,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2_extDict(
         src,
         srcSize,
         search_hashChain,
-        2 as std::ffi::c_int as u32,
+        2,
     );
 }
 #[no_mangle]
@@ -5236,7 +5236,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_lazy2_extDict_row(
         src,
         srcSize,
         search_rowHash,
-        2 as std::ffi::c_int as u32,
+        2,
     );
 }
 #[no_mangle]
@@ -5254,6 +5254,6 @@ pub unsafe extern "C" fn ZSTD_compressBlock_btlazy2_extDict(
         src,
         srcSize,
         search_binaryTree,
-        2 as std::ffi::c_int as u32,
+        2,
     );
 }

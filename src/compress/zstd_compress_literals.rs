@@ -116,7 +116,7 @@ pub type huf_compress_f = Option::<
 >;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_write16(mut memPtr: *mut std::ffi::c_void, mut value: u16) {
@@ -139,7 +139,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u
         *p.offset(0) = val as u8;
         *p
             .offset(
-                1 as std::ffi::c_int as isize,
+                1,
             ) = (val as std::ffi::c_int >> 8) as u8;
     };
 }
@@ -200,7 +200,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
         1 => {
             *ostart
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = (set_basic as std::ffi::c_int as u32 as usize)
                 .wrapping_add(srcSize << 3) as u8;
         }
@@ -244,12 +244,12 @@ unsafe extern "C" fn allBytesIdentical(
         if *(src as *const u8).offset(p as isize) as std::ffi::c_int
             != b as std::ffi::c_int
         {
-            return 0 as std::ffi::c_int;
+            return 0;
         }
         p = p.wrapping_add(1);
         p;
     }
-    return 1 as std::ffi::c_int;
+    return 1;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
@@ -266,7 +266,7 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
         1 => {
             *ostart
                 .offset(
-                    0 as std::ffi::c_int as isize,
+                    0,
                 ) = (set_rle as std::ffi::c_int as u32 as usize)
                 .wrapping_add(srcSize << 3) as u8;
         }
@@ -501,7 +501,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_1);
             *ostart
                 .offset(
-                    4 as std::ffi::c_int as isize,
+                    4,
                 ) = (cLitSize >> 10) as u8;
         }
         _ => {}

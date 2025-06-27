@@ -948,10 +948,10 @@ pub const HASH_READ_SIZE: std::ffi::c_int = 8;
 static mut kNullRawSeqStore: RawSeqStore_t = {
     let mut init = RawSeqStore_t {
         seq: NULL_0 as *mut rawSeq,
-        pos: 0 as std::ffi::c_int as usize,
-        posInSequence: 0 as std::ffi::c_int as usize,
-        size: 0 as std::ffi::c_int as usize,
-        capacity: 0 as std::ffi::c_int as usize,
+        pos: 0,
+        posInSequence: 0,
+        size: 0,
+        capacity: 0,
     };
     init
 };
@@ -994,7 +994,7 @@ unsafe extern "C" fn ZSTD_rollingHash_compute(
     mut buf: *const std::ffi::c_void,
     mut size: usize,
 ) -> u64 {
-    return ZSTD_rollingHash_append(0 as std::ffi::c_int as u64, buf, size);
+    return ZSTD_rollingHash_append(0, buf, size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_rollingHash_primePower(mut length: u32) -> u64 {
@@ -1032,7 +1032,7 @@ unsafe extern "C" fn ZSTD_window_clear(mut window: *mut ZSTD_window_t) {
 unsafe extern "C" fn ZSTD_window_init(mut window: *mut ZSTD_window_t) {
     libc::memset(
         window as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<ZSTD_window_t>() as usize,
     );
     (*window).base = b" \0" as *const u8 as *const std::ffi::c_char as *const u8;
@@ -1092,7 +1092,7 @@ unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1 as std::ffi::c_int as std::ffi::c_uint;
+    return 1;
 }
 #[inline]
 unsafe extern "C" fn MEM_write32(mut memPtr: *mut std::ffi::c_void, mut value: u32) {
@@ -1177,7 +1177,7 @@ pub const NULL_0: std::ffi::c_int = 0;
 static mut g_nullBuffer: Buffer = {
     let mut init = buffer_s {
         start: NULL_0 as *mut std::ffi::c_void,
-        capacity: 0 as std::ffi::c_int as usize,
+        capacity: 0,
     };
     init
 };
@@ -1561,7 +1561,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
     } else {
         libc::memset(
             &mut params.ldmParams as *mut ldmParams_t as *mut std::ffi::c_void,
-            0 as std::ffi::c_int,
+            0,
             ::core::mem::size_of::<ldmParams_t>() as usize,
         );
     }
@@ -1569,7 +1569,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
     if params.fParams.checksumFlag != 0 {
         ZSTD_XXH64_reset(
             &mut (*serialState).xxhState,
-            0 as std::ffi::c_int as XXH64_hash_t,
+            0,
         );
     }
     if params.ldmParams.enableLdm as std::ffi::c_uint
@@ -1610,7 +1610,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
         if ((*serialState).ldmState.hashTable).is_null()
             || ((*serialState).ldmState.bucketOffsets).is_null()
         {
-            return 1 as std::ffi::c_int;
+            return 1;
         }
         libc::memset(
             ZSTD_memset!(serialState -> ldmState.hashTable, 0, hashSize),
@@ -1633,7 +1633,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
                     &mut (*serialState).ldmState.window,
                     dict,
                     dictSize,
-                    0 as std::ffi::c_int,
+                    0,
                 );
                 ZSTD_ldm_fillHashTable(
                     &mut (*serialState).ldmState,
@@ -1655,7 +1655,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
     }
     (*serialState).params = params;
     (*serialState).params.jobSize = jobSize as u32 as usize;
-    return 0 as std::ffi::c_int;
+    return 0;
 }
 unsafe extern "C" fn ZSTDMT_serialState_init(
     mut serialState: *mut SerialState,
@@ -1663,7 +1663,7 @@ unsafe extern "C" fn ZSTDMT_serialState_init(
     let mut initError: std::ffi::c_int = 0;
     libc::memset(
         serialState as *mut std::ffi::c_void,
-        0 as std::ffi::c_int,
+        0,
         ::core::mem::size_of::<SerialState>() as usize,
     );
     initError |= ZSTD_pthread_mutex_init!(& serialState -> mutex, NULL);
@@ -1718,7 +1718,7 @@ unsafe extern "C" fn ZSTDMT_serialState_genSequences(
                 &mut (*serialState).ldmState.window,
                 src.start,
                 src.size,
-                0 as std::ffi::c_int,
+                0,
             );
             error = ZSTD_ldm_generateSequences(
                 &mut (*serialState).ldmState,
@@ -1794,7 +1794,7 @@ unsafe extern "C" fn ZSTDMT_serialState_ensureFinished(
 static mut kNullRange: Range = {
     let mut init = Range {
         start: NULL_0 as *const std::ffi::c_void,
-        size: 0 as std::ffi::c_int as usize,
+        size: 0,
     };
     init
 };
@@ -1855,7 +1855,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                         let initError = ZSTD_compressBegin_advanced_internal(
                             cctx,
                             NULL_0 as *const std::ffi::c_void,
-                            0 as std::ffi::c_int as usize,
+                            0,
                             ZSTD_dct_auto,
                             ZSTD_dtlm_fast,
                             (*job).cdict,
@@ -1893,7 +1893,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                 let err = ZSTD_CCtxParams_setParameter(
                                     &mut jobParams,
                                     ZSTD_c_deterministicRefPrefix as ZSTD_cParameter,
-                                    0 as std::ffi::c_int,
+                                    0,
                                 );
                                 if ERR_isError(err) != 0 {
                                     pthread_mutex_lock(&mut (*job).job_mutex);
@@ -1947,7 +1947,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                     dstBuff.start,
                                     dstBuff.capacity,
                                     (*job).src.start,
-                                    0 as std::ffi::c_int as usize,
+                                    0,
                                 );
                                 if ERR_isError(hSize) != 0 {
                                     pthread_mutex_lock(&mut (*job).job_mutex);
@@ -2100,8 +2100,8 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
 static mut kNullRoundBuff: RoundBuff_t = {
     let mut init = RoundBuff_t {
         buffer: NULL_0 as *mut u8,
-        capacity: 0 as std::ffi::c_int as usize,
-        pos: 0 as std::ffi::c_int as usize,
+        capacity: 0,
+        pos: 0,
     };
     init
 };
@@ -2184,7 +2184,7 @@ unsafe extern "C" fn ZSTDMT_expandJobsTable(
         }
         (*mtctx).jobIDMask = nbJobs.wrapping_sub(1);
     }
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 unsafe extern "C" fn ZSTDMT_CCtxParam_setNbWorkers(
     mut params: *mut ZSTD_CCtx_params,
@@ -2231,7 +2231,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
         (*mtctx)
             .factory = POOL_create_advanced(
             nbWorkers as usize,
-            0 as std::ffi::c_int as usize,
+            0,
             cMem,
         );
         (*mtctx).set_providedFactory(0 as std::ffi::c_uint);
@@ -2276,7 +2276,7 @@ unsafe extern "C" fn ZSTDMT_releaseAllJobResources(mut mtctx: *mut ZSTDMT_CCtx) 
         libc::memset(
             &mut *((*mtctx).jobs).offset(jobID as isize) as *mut ZSTDMT_jobDescription
                 as *mut std::ffi::c_void,
-            0 as std::ffi::c_int,
+            0,
             ::core::mem::size_of::<ZSTDMT_jobDescription>()
                 as usize,
         );
@@ -2319,7 +2319,7 @@ unsafe extern "C" fn ZSTDMT_waitForAllJobsCompleted(mut mtctx: *mut ZSTDMT_CCtx)
 #[no_mangle]
 pub unsafe extern "C" fn ZSTDMT_freeCCtx(mut mtctx: *mut ZSTDMT_CCtx) -> usize {
     if mtctx.is_null() {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     if (*mtctx).providedFactory() == 0 {
         POOL_free((*mtctx).factory);
@@ -2342,12 +2342,12 @@ pub unsafe extern "C" fn ZSTDMT_freeCCtx(mut mtctx: *mut ZSTDMT_CCtx) -> usize {
         );
     }
     ZSTD_customFree(mtctx as *mut std::ffi::c_void, (*mtctx).cMem);
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTDMT_sizeof_CCtx(mut mtctx: *mut ZSTDMT_CCtx) -> usize {
     if mtctx.is_null() {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     return (::core::mem::size_of::<ZSTDMT_CCtx>())
         .wrapping_add(POOL_sizeof((*mtctx).factory))
@@ -2396,7 +2396,7 @@ unsafe extern "C" fn ZSTDMT_resize(
         return ERROR!(memory_allocation);
     }
     ZSTDMT_CCtxParam_setNbWorkers(&mut (*mtctx).params, nbWorkers);
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTDMT_updateCParams_whileCompressing(
@@ -2409,7 +2409,7 @@ pub unsafe extern "C" fn ZSTDMT_updateCParams_whileCompressing(
     let mut cParams = ZSTD_getCParamsFromCCtxParams(
         cctxParams,
         ZSTD_CONTENTSIZE_UNKNOWN as u64,
-        0 as std::ffi::c_int as usize,
+        0,
         ZSTD_cpm_noAttachDict,
     );
     cParams.windowLog = saved_wlog;
@@ -2484,7 +2484,7 @@ pub unsafe extern "C" fn ZSTDMT_toFlushNow(mut mtctx: *mut ZSTDMT_CCtx) -> usize
     let mut toFlush: usize = 0;
     let jobID = (*mtctx).doneJobID;
     if jobID == (*mtctx).nextJobID {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     let wJobID = jobID & (*mtctx).jobIDMask;
     let jobPtr: *mut ZSTDMT_jobDescription = &mut *((*mtctx).jobs)
@@ -2529,12 +2529,12 @@ unsafe extern "C" fn ZSTDMT_overlapLog_default(
     mut strat: ZSTD_strategy,
 ) -> std::ffi::c_int {
     match strat as std::ffi::c_uint {
-        9 => return 9 as std::ffi::c_int,
-        8 | 7 => return 8 as std::ffi::c_int,
-        6 | 5 => return 7 as std::ffi::c_int,
+        9 => return 9,
+        8 | 7 => return 8,
+        6 | 5 => return 7,
         4 | 3 | 2 | 1 | _ => {}
     }
-    return 6 as std::ffi::c_int;
+    return 6;
 }
 unsafe extern "C" fn ZSTDMT_overlapLog(
     mut ovlog: std::ffi::c_int,
@@ -2740,7 +2740,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     {
         return ERROR!(memory_allocation);
     }
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 unsafe extern "C" fn ZSTDMT_writeLastEmptyBlock(mut job: *mut ZSTDMT_jobDescription) {
     (*job).dstBuff = ZSTDMT_getBuffer((*job).bufPool);
@@ -2761,7 +2761,7 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
     let endFrame = (endOp as std::ffi::c_uint
         == ZSTD_e_end as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_int;
     if (*mtctx).nextJobID > ((*mtctx).doneJobID).wrapping_add((*mtctx).jobIDMask) {
-        return 0 as std::ffi::c_int as usize;
+        return 0;
     }
     if (*mtctx).jobReady == 0 {
         let mut src = (*mtctx).inBuff.buffer.start as *const u8;
@@ -2826,7 +2826,7 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
             ZSTDMT_writeLastEmptyBlock(((*mtctx).jobs).offset(jobID as isize));
             (*mtctx).nextJobID = ((*mtctx).nextJobID).wrapping_add(1);
             (*mtctx).nextJobID;
-            return 0 as std::ffi::c_int as usize;
+            return 0;
         }
     }
     if POOL_tryAdd(
@@ -2842,7 +2842,7 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
     } else {
         (*mtctx).jobReady = 1;
     }
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 unsafe extern "C" fn ZSTDMT_flushProduced(
     mut mtctx: *mut ZSTDMT_CCtx,
@@ -2953,22 +2953,22 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
         return cSize.wrapping_sub((*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed);
     }
     if srcSize > srcConsumed {
-        return 1 as std::ffi::c_int as usize;
+        return 1;
     }
     if (*mtctx).doneJobID < (*mtctx).nextJobID {
-        return 1 as std::ffi::c_int as usize;
+        return 1;
     }
     if (*mtctx).jobReady != 0 {
-        return 1 as std::ffi::c_int as usize;
+        return 1;
     }
     if (*mtctx).inBuff.filled > 0 {
-        return 1 as std::ffi::c_int as usize;
+        return 1;
     }
     (*mtctx).allJobsCompleted = (*mtctx).frameEnded;
     if end as std::ffi::c_uint == ZSTD_e_end as std::ffi::c_int as std::ffi::c_uint {
         return ((*mtctx).frameEnded == 0) as std::ffi::c_int as usize;
     }
-    return 0 as std::ffi::c_int as usize;
+    return 0;
 }
 unsafe extern "C" fn ZSTDMT_getInputDataInUse(mut mtctx: *mut ZSTDMT_CCtx) -> Range {
     let firstJobID = (*mtctx).doneJobID;
@@ -3009,12 +3009,12 @@ unsafe extern "C" fn ZSTDMT_isOverlapped(
     let bufferStart = buffer.start as *const u8;
     let rangeStart = range.start as *const u8;
     if rangeStart.is_null() || bufferStart.is_null() {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     let bufferEnd = bufferStart.offset(buffer.capacity as isize);
     let rangeEnd = rangeStart.offset(range.size as isize);
     if bufferStart == bufferEnd || rangeStart == rangeEnd {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     return (bufferStart < rangeEnd && rangeStart < bufferEnd) as std::ffi::c_int;
 }
@@ -3080,7 +3080,7 @@ unsafe extern "C" fn ZSTDMT_tryGetInputRange(
         buffer.start = start as *mut std::ffi::c_void;
         buffer.capacity = prefixSize;
         if ZSTDMT_isOverlapped(buffer, inUse) != 0 {
-            return 0 as std::ffi::c_int;
+            return 0;
         }
         ZSTDMT_waitForLdmComplete(mtctx, buffer);
         libc::memmove(
@@ -3097,12 +3097,12 @@ unsafe extern "C" fn ZSTDMT_tryGetInputRange(
         as *mut std::ffi::c_void;
     buffer.capacity = spaceNeeded;
     if ZSTDMT_isOverlapped(buffer, inUse) != 0 {
-        return 0 as std::ffi::c_int;
+        return 0;
     }
     ZSTDMT_waitForLdmComplete(mtctx, buffer);
     (*mtctx).inBuff.buffer = buffer;
     (*mtctx).inBuff.filled = 0;
-    return 1 as std::ffi::c_int;
+    return 1;
 }
 unsafe extern "C" fn findSynchronizationPoint(
     mut mtctx: *const ZSTDMT_CCtx,
