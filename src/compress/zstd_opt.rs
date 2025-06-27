@@ -2540,9 +2540,9 @@ unsafe extern "C" fn ZSTD_selectBtGetAllMatches(
     dictMode: ZSTD_dictMode_e,
 ) -> ZSTD_getAllMatchesFn {
     let getAllMatchesFns: [[ZSTD_getAllMatchesFn; 4]; 3] = [
-        ZSTD_BT_GET_ALL_MATCHES_ARRAY!(noDict),
-        ZSTD_BT_GET_ALL_MATCHES_ARRAY!(extDict),
-        ZSTD_BT_GET_ALL_MATCHES_ARRAY!(dictMatchState),
+        [ZSTD_btGetAllMatches_noDict_3, ZSTD_btGetAllMatches_noDict_4, ZSTD_btGetAllMatches_noDict_5, ZSTD_btGetAllMatches_noDict_6],
+        [ZSTD_btGetAllMatches_extDict_3, ZSTD_btGetAllMatches_extDict_4, ZSTD_btGetAllMatches_extDict_5, ZSTD_btGetAllMatches_extDict_6],
+        [ZSTD_btGetAllMatches_dictMatchState_3, ZSTD_btGetAllMatches_dictMatchState_4, ZSTD_btGetAllMatches_dictMatchState_5, ZSTD_btGetAllMatches_dictMatchState_6],
     ];
     let mls = BOUNDED!(3, (*ms).cParams.minMatch, 6);
     return getAllMatchesFns[dictMode as std::ffi::c_int
