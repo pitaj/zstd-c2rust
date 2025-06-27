@@ -752,8 +752,6 @@ unsafe extern "C" fn ss_heapsort(
                 as std::ffi::c_int
         {
             SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
-            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
-            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
         }
     }
     i = m / 2 as std::ffi::c_int - 1;
@@ -763,8 +761,6 @@ unsafe extern "C" fn ss_heapsort(
         i;
     }
     if size % 2 as std::ffi::c_int == 0 {
-        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
-        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         ss_fixdown(Td, PA, SA, 0, m);
     }
@@ -790,8 +786,6 @@ unsafe extern "C" fn ss_median3(
     if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
     {
-        SWAP!(v1, v2);
-        SWAP!(v1, v2);
         SWAP!(v1, v2);
     }
     if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
@@ -822,41 +816,27 @@ unsafe extern "C" fn ss_median5(
         > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
     {
         SWAP!(v2, v3);
-        SWAP!(v2, v3);
-        SWAP!(v2, v3);
     }
     if *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v5 as isize) as isize) as std::ffi::c_int
     {
-        SWAP!(v4, v5);
-        SWAP!(v4, v5);
         SWAP!(v4, v5);
     }
     if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
     {
         SWAP!(v2, v4);
-        SWAP!(v2, v4);
-        SWAP!(v2, v4);
-        SWAP!(v3, v5);
-        SWAP!(v3, v5);
         SWAP!(v3, v5);
     }
     if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
     {
         SWAP!(v1, v3);
-        SWAP!(v1, v3);
-        SWAP!(v1, v3);
     }
     if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
     {
         SWAP!(v1, v4);
-        SWAP!(v1, v4);
-        SWAP!(v1, v4);
-        SWAP!(v3, v5);
-        SWAP!(v3, v5);
         SWAP!(v3, v5);
     }
     if *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
@@ -1185,8 +1165,6 @@ unsafe extern "C" fn ss_mintrosort(
                 a = ss_pivot(Td, PA, first, last);
                 v = *Td.offset(*PA.offset(*a as isize) as isize) as std::ffi::c_int;
                 SWAP!(* first, * a);
-                SWAP!(* first, * a);
-                SWAP!(* first, * a);
                 b = first;
                 loop {
                     b = b.offset(1);
@@ -1214,8 +1192,6 @@ unsafe extern "C" fn ss_mintrosort(
                             break;
                         }
                         if x == v {
-                            SWAP!(* b, * a);
-                            SWAP!(* b, * a);
                             SWAP!(* b, * a);
                             a = a.offset(1);
                             a;
@@ -1250,16 +1226,12 @@ unsafe extern "C" fn ss_mintrosort(
                         }
                         if x == v {
                             SWAP!(* c, * d);
-                            SWAP!(* c, * d);
-                            SWAP!(* c, * d);
                             d = d.offset(-1);
                             d;
                         }
                     }
                 }
                 while b < c {
-                    SWAP!(* b, * c);
-                    SWAP!(* b, * c);
                     SWAP!(* b, * c);
                     loop {
                         b = b.offset(1);
@@ -1273,8 +1245,6 @@ unsafe extern "C" fn ss_mintrosort(
                             break;
                         }
                         if x == v {
-                            SWAP!(* b, * a);
-                            SWAP!(* b, * a);
                             SWAP!(* b, * a);
                             a = a.offset(1);
                             a;
@@ -1293,8 +1263,6 @@ unsafe extern "C" fn ss_mintrosort(
                         }
                         if x == v {
                             SWAP!(* c, * d);
-                            SWAP!(* c, * d);
-                            SWAP!(* c, * d);
                             d = d.offset(-1);
                             d;
                         }
@@ -1310,8 +1278,6 @@ unsafe extern "C" fn ss_mintrosort(
                     e = first;
                     f = b.offset(-(s as isize));
                     while (0 as std::ffi::c_int) < s {
-                        SWAP!(* e, * f);
-                        SWAP!(* e, * f);
                         SWAP!(* e, * f);
                         s -= 1;
                         s;
@@ -1329,8 +1295,6 @@ unsafe extern "C" fn ss_mintrosort(
                     e = b;
                     f = last.offset(-(s as isize));
                     while (0 as std::ffi::c_int) < s {
-                        SWAP!(* e, * f);
-                        SWAP!(* e, * f);
                         SWAP!(* e, * f);
                         s -= 1;
                         s;
@@ -2891,8 +2855,6 @@ unsafe extern "C" fn tr_heapsort(
             < *ISAd.offset(*SA.offset(m as isize) as isize)
         {
             SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
-            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
-            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
         }
     }
     i = m / 2 as std::ffi::c_int - 1;
@@ -2902,8 +2864,6 @@ unsafe extern "C" fn tr_heapsort(
         i;
     }
     if size % 2 as std::ffi::c_int == 0 {
-        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
-        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         tr_fixdown(ISAd, SA, 0, m);
     }
@@ -2927,8 +2887,6 @@ unsafe extern "C" fn tr_median3(
     let mut t = 0 as *mut std::ffi::c_int;
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v2 as isize) {
         SWAP!(v1, v2);
-        SWAP!(v1, v2);
-        SWAP!(v1, v2);
     }
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v3 as isize) {
         if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v3 as isize) {
@@ -2951,33 +2909,19 @@ unsafe extern "C" fn tr_median5(
     let mut t = 0 as *mut std::ffi::c_int;
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v3 as isize) {
         SWAP!(v2, v3);
-        SWAP!(v2, v3);
-        SWAP!(v2, v3);
     }
     if *ISAd.offset(*v4 as isize) > *ISAd.offset(*v5 as isize) {
-        SWAP!(v4, v5);
-        SWAP!(v4, v5);
         SWAP!(v4, v5);
     }
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v4 as isize) {
         SWAP!(v2, v4);
-        SWAP!(v2, v4);
-        SWAP!(v2, v4);
-        SWAP!(v3, v5);
-        SWAP!(v3, v5);
         SWAP!(v3, v5);
     }
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v3 as isize) {
         SWAP!(v1, v3);
-        SWAP!(v1, v3);
-        SWAP!(v1, v3);
     }
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v4 as isize) {
         SWAP!(v1, v4);
-        SWAP!(v1, v4);
-        SWAP!(v1, v4);
-        SWAP!(v3, v5);
-        SWAP!(v3, v5);
         SWAP!(v3, v5);
     }
     if *ISAd.offset(*v3 as isize) > *ISAd.offset(*v4 as isize) {
@@ -3110,8 +3054,6 @@ unsafe extern "C" fn tr_partition(
             }
             if x == v {
                 SWAP!(* b, * a);
-                SWAP!(* b, * a);
-                SWAP!(* b, * a);
                 a = a.offset(1);
                 a;
             }
@@ -3143,16 +3085,12 @@ unsafe extern "C" fn tr_partition(
             }
             if x == v {
                 SWAP!(* c, * d);
-                SWAP!(* c, * d);
-                SWAP!(* c, * d);
                 d = d.offset(-1);
                 d;
             }
         }
     }
     while b < c {
-        SWAP!(* b, * c);
-        SWAP!(* b, * c);
         SWAP!(* b, * c);
         loop {
             b = b.offset(1);
@@ -3165,8 +3103,6 @@ unsafe extern "C" fn tr_partition(
                 break;
             }
             if x == v {
-                SWAP!(* b, * a);
-                SWAP!(* b, * a);
                 SWAP!(* b, * a);
                 a = a.offset(1);
                 a;
@@ -3184,8 +3120,6 @@ unsafe extern "C" fn tr_partition(
             }
             if x == v {
                 SWAP!(* c, * d);
-                SWAP!(* c, * d);
-                SWAP!(* c, * d);
                 d = d.offset(-1);
                 d;
             }
@@ -3201,8 +3135,6 @@ unsafe extern "C" fn tr_partition(
         e = first;
         f = b.offset(-(s as isize));
         while (0 as std::ffi::c_int) < s {
-            SWAP!(* e, * f);
-            SWAP!(* e, * f);
             SWAP!(* e, * f);
             s -= 1;
             s;
@@ -3220,8 +3152,6 @@ unsafe extern "C" fn tr_partition(
         e = b;
         f = last.offset(-(s as isize));
         while (0 as std::ffi::c_int) < s {
-            SWAP!(* e, * f);
-            SWAP!(* e, * f);
             SWAP!(* e, * f);
             s -= 1;
             s;
@@ -3962,8 +3892,6 @@ unsafe extern "C" fn tr_introsort(
                 limit = -(3 as std::ffi::c_int);
             } else {
                 a = tr_pivot(ISAd, first, last);
-                SWAP!(* first, * a);
-                SWAP!(* first, * a);
                 SWAP!(* first, * a);
                 v = *ISAd.offset(*first as isize);
                 tr_partition(
