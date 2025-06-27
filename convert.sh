@@ -475,6 +475,12 @@ case $1 in
 
     ;;
 
+  bt-get-all-matches)
+    # ZSTD_BT_GET_ALL_MATCHES_ARRAY!
+    perl -i -p0e 's/\b(ZSTD_BT_GET_ALL_MATCHES_ARRAY!)\((\w+)\)/[ZSTD_btGetAllMatches_$2_3, ZSTD_btGetAllMatches_$2_4, ZSTD_btGetAllMatches_$2_5, ZSTD_btGetAllMatches_$2_6]/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -520,6 +526,7 @@ case $1 in
     ./convert.sh huf-decode-symbol
     ./convert.sh zstd-gen-record-fingerprint
     ./convert.sh weight
+    ./convert.sh bt-get-all-matches
 
     ;;
 
