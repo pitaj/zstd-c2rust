@@ -1669,134 +1669,14 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
     *rep.offset(1) = offset_2;
     return iend.offset_from(anchor) as std::ffi::c_long as usize;
 }
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_4(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_noDict_generic(
-        ZSTD_GEN_DFAST_FN!(noDict, 4),
-        ZSTD_GEN_DFAST_FN!(noDict, 4),
-        ZSTD_GEN_DFAST_FN!(noDict, 4),
-        ZSTD_GEN_DFAST_FN!(noDict, 4),
-        ZSTD_GEN_DFAST_FN!(noDict, 4),
-        4,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_5(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_noDict_generic(
-        ZSTD_GEN_DFAST_FN!(noDict, 5),
-        ZSTD_GEN_DFAST_FN!(noDict, 5),
-        ZSTD_GEN_DFAST_FN!(noDict, 5),
-        ZSTD_GEN_DFAST_FN!(noDict, 5),
-        ZSTD_GEN_DFAST_FN!(noDict, 5),
-        5,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_6(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_noDict_generic(
-        ZSTD_GEN_DFAST_FN!(noDict, 6),
-        ZSTD_GEN_DFAST_FN!(noDict, 6),
-        ZSTD_GEN_DFAST_FN!(noDict, 6),
-        ZSTD_GEN_DFAST_FN!(noDict, 6),
-        ZSTD_GEN_DFAST_FN!(noDict, 6),
-        6,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_7(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_noDict_generic(
-        ZSTD_GEN_DFAST_FN!(noDict, 7),
-        ZSTD_GEN_DFAST_FN!(noDict, 7),
-        ZSTD_GEN_DFAST_FN!(noDict, 7),
-        ZSTD_GEN_DFAST_FN!(noDict, 7),
-        ZSTD_GEN_DFAST_FN!(noDict, 7),
-        7,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_4(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_dictMatchState_generic(
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 4),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 4),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 4),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 4),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 4),
-        4,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_5(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_dictMatchState_generic(
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 5),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 5),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 5),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 5),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 5),
-        5,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_6(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_dictMatchState_generic(
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 6),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 6),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 6),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 6),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 6),
-        6,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_7(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_dictMatchState_generic(
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 7),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 7),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 7),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 7),
-        ZSTD_GEN_DFAST_FN!(dictMatchState, 7),
-        7,
-    );
-}
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_noDict_generic, ZSTD_compressBlock_doubleFast_noDict_4);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_noDict_generic, ZSTD_compressBlock_doubleFast_noDict_5);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_noDict_generic, ZSTD_compressBlock_doubleFast_noDict_6);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_noDict_generic, ZSTD_compressBlock_doubleFast_noDict_7);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_dictMatchState_generic, ZSTD_compressBlock_doubleFast_dictMatchState_4);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_dictMatchState_generic, ZSTD_compressBlock_doubleFast_dictMatchState_5);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_dictMatchState_generic, ZSTD_compressBlock_doubleFast_dictMatchState_6);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_dictMatchState_generic, ZSTD_compressBlock_doubleFast_dictMatchState_7);
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_compressBlock_doubleFast(
     mut ms: *mut ZSTD_MatchState_t,
@@ -2247,70 +2127,10 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_generic(
     *rep.offset(1) = offset_2;
     return iend.offset_from(anchor) as std::ffi::c_long as usize;
 }
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_4(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_extDict_generic(
-        ZSTD_GEN_DFAST_FN!(extDict, 4),
-        ZSTD_GEN_DFAST_FN!(extDict, 4),
-        ZSTD_GEN_DFAST_FN!(extDict, 4),
-        ZSTD_GEN_DFAST_FN!(extDict, 4),
-        ZSTD_GEN_DFAST_FN!(extDict, 4),
-        4,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_5(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_extDict_generic(
-        ZSTD_GEN_DFAST_FN!(extDict, 5),
-        ZSTD_GEN_DFAST_FN!(extDict, 5),
-        ZSTD_GEN_DFAST_FN!(extDict, 5),
-        ZSTD_GEN_DFAST_FN!(extDict, 5),
-        ZSTD_GEN_DFAST_FN!(extDict, 5),
-        5,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_6(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_extDict_generic(
-        ZSTD_GEN_DFAST_FN!(extDict, 6),
-        ZSTD_GEN_DFAST_FN!(extDict, 6),
-        ZSTD_GEN_DFAST_FN!(extDict, 6),
-        ZSTD_GEN_DFAST_FN!(extDict, 6),
-        ZSTD_GEN_DFAST_FN!(extDict, 6),
-        6,
-    );
-}
-unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict_7(
-    mut ms: *mut ZSTD_MatchState_t,
-    mut seqStore: *mut SeqStore_t,
-    mut rep: *mut u32,
-    mut src: *const std::ffi::c_void,
-    mut srcSize: usize,
-) -> usize {
-    return ZSTD_compressBlock_doubleFast_extDict_generic(
-        ZSTD_GEN_DFAST_FN!(extDict, 7),
-        ZSTD_GEN_DFAST_FN!(extDict, 7),
-        ZSTD_GEN_DFAST_FN!(extDict, 7),
-        ZSTD_GEN_DFAST_FN!(extDict, 7),
-        ZSTD_GEN_DFAST_FN!(extDict, 7),
-        7,
-    );
-}
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_extDict_generic, ZSTD_compressBlock_doubleFast_extDict_4);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_extDict_generic, ZSTD_compressBlock_doubleFast_extDict_5);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_extDict_generic, ZSTD_compressBlock_doubleFast_extDict_6);
+ZSTD_GEN_DFAST_FN!(ZSTD_compressBlock_doubleFast_extDict_generic, ZSTD_compressBlock_doubleFast_extDict_7);
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_compressBlock_doubleFast_extDict(
     mut ms: *mut ZSTD_MatchState_t,
