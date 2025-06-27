@@ -6099,7 +6099,7 @@ unsafe extern "C" fn ZSTD_indexTooCloseToMax(mut w: ZSTD_window_t) -> std::ffi::
 }
 unsafe extern "C" fn ZSTD_dictTooBig(loadedDictSize: usize) -> std::ffi::c_int {
     return (loadedDictSize
-        > (-(1 as std::ffi::c_int) as u32)
+        > (u32::MAX)
             .wrapping_sub(
                 (if MEM_64bits() != 0 {
                     (3500 as std::ffi::c_uint)
@@ -9981,7 +9981,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
         srcSize = maxDictSize as usize;
     }
     if srcSize
-        > (-(1 as std::ffi::c_int) as u32)
+        > (u32::MAX)
             .wrapping_sub(
                 (if MEM_64bits() != 0 {
                     (3500 as std::ffi::c_uint)
@@ -10256,7 +10256,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     let dictContentSize = dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize;
     let mut offcodeMax = MaxOff as u32;
     if dictContentSize
-        <= (-(1 as std::ffi::c_int) as u32)
+        <= (u32::MAX)
             .wrapping_sub(
                 (128 as std::ffi::c_int
                     * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as u32,
