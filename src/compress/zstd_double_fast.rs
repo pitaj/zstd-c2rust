@@ -207,7 +207,7 @@ pub const CACHELINE_SIZE: std::ffi::c_int = 64;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
-        == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
+        == 8) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
@@ -340,7 +340,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
             (*seqStorePtr).lit as *mut std::ffi::c_void,
             literals as *const std::ffi::c_void,
         );
-        if litLength > 16 as std::ffi::c_int as usize {
+        if litLength > 16 {
             ZSTD_wildcopy(
                 ((*seqStorePtr).lit).offset(16)
                     as *mut std::ffi::c_void,
@@ -511,7 +511,7 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     } else {
         lowestValid
     };
-    let isDictionary = ((*ms).loadedDictEnd != 0 as std::ffi::c_int as u32)
+    let isDictionary = ((*ms).loadedDictEnd != 0)
         as std::ffi::c_int as u32;
     let matchLowest = if isDictionary != 0 { lowestValid } else { withinWindow };
     return matchLowest;
@@ -529,7 +529,7 @@ unsafe extern "C" fn ZSTD_getLowestPrefixIndex(
     } else {
         lowestValid
     };
-    let isDictionary = ((*ms).loadedDictEnd != 0 as std::ffi::c_int as u32)
+    let isDictionary = ((*ms).loadedDictEnd != 0)
         as std::ffi::c_int as u32;
     let matchLowest = if isDictionary != 0 { lowestValid } else { withinWindow };
     return matchLowest;
@@ -541,7 +541,7 @@ unsafe extern "C" fn ZSTD_index_overlap_check(
 ) -> std::ffi::c_int {
     return (prefixLowestIndex
         .wrapping_sub(1)
-        .wrapping_sub(repIndex) >= 3 as std::ffi::c_int as u32) as std::ffi::c_int;
+        .wrapping_sub(repIndex) >= 3) as std::ffi::c_int;
 }
 pub const ZSTD_SHORT_CACHE_TAG_BITS: std::ffi::c_int = 8;
 pub const ZSTD_SHORT_CACHE_TAG_MASK: std::ffi::c_uint = ((1 as std::ffi::c_uint)
@@ -694,13 +694,13 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCDict(
                 hBitsL,
                 8 as std::ffi::c_int as u32,
             );
-            if i == 0 as std::ffi::c_int as u32 {
+            if i == 0 {
                 ZSTD_writeTaggedIndex(hashSmall, smHashAndTag, curr.wrapping_add(i));
             }
-            if i == 0 as std::ffi::c_int as u32
+            if i == 0
                 || *hashLarge
                     .offset((lgHashAndTag >> ZSTD_SHORT_CACHE_TAG_BITS) as isize)
-                    == 0 as std::ffi::c_int as u32
+                    == 0
             {
                 ZSTD_writeTaggedIndex(hashLarge, lgHashAndTag, curr.wrapping_add(i));
             }
@@ -747,11 +747,11 @@ unsafe extern "C" fn ZSTD_fillDoubleHashTableForCCtx(
                 hBitsL,
                 8 as std::ffi::c_int as u32,
             );
-            if i == 0 as std::ffi::c_int as u32 {
+            if i == 0 {
                 *hashSmall.offset(smHash as isize) = curr.wrapping_add(i);
             }
-            if i == 0 as std::ffi::c_int as u32
-                || *hashLarge.offset(lgHash as isize) == 0 as std::ffi::c_int as u32
+            if i == 0
+                || *hashLarge.offset(lgHash as isize) == 0
             {
                 *hashLarge.offset(lgHash as isize) = curr.wrapping_add(i);
             }
@@ -843,7 +843,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
     ip = ip
         .offset(
             (ip.offset_from(prefixLowest) as std::ffi::c_long
-                == 0 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int as isize,
+                == 0) as std::ffi::c_int as isize,
         );
     let current = ip.offset_from(base) as std::ffi::c_long as u32;
     let windowLow = ZSTD_getLowestPrefixIndex(ms, current, (*cParams).windowLog);
@@ -878,7 +878,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                     let ref mut fresh2 = *hashSmall.offset(hs0 as isize);
                     *fresh2 = curr;
                     *hashLong.offset(hl0 as isize) = *fresh2;
-                    if (offset_1 > 0 as std::ffi::c_int as u32) as std::ffi::c_int
+                    if (offset_1 > 0) as std::ffi::c_int
                         & (MEM_read32(
                             ip
                                 .offset(1)
@@ -1035,7 +1035,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                             9285665692634906365 => {
                                 offset_2 = offset_1;
                                 offset_1 = offset;
-                                if step < 4 as std::ffi::c_int as usize {
+                                if step < 4 {
                                     *hashLong
                                         .offset(
                                             hl1 as isize,
@@ -1098,7 +1098,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                                 .offset(-1_isize)
                                 .offset_from(base) as std::ffi::c_long as u32;
                             while ip <= ilimit
-                                && (offset_2 > 0 as std::ffi::c_int as u32)
+                                && (offset_2 > 0)
                                     as std::ffi::c_int
                                     & (MEM_read32(ip as *const std::ffi::c_void)
                                         == MEM_read32(
@@ -1145,8 +1145,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
                     }
                 }
             }
-            offsetSaved2 = if offsetSaved1 != 0 as std::ffi::c_int as u32
-                && offset_1 != 0 as std::ffi::c_int as u32
+            offsetSaved2 = if offsetSaved1 != 0
+                && offset_1 != 0
             {
                 offsetSaved1
             } else {
@@ -1238,7 +1238,7 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
     }
     ip = ip
         .offset(
-            (dictAndPrefixLength == 0 as std::ffi::c_int as u32) as std::ffi::c_int
+            (dictAndPrefixLength == 0) as std::ffi::c_int
                 as isize,
         );
     while ip < ilimit {

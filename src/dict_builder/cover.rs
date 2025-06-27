@@ -514,7 +514,7 @@ unsafe extern "C" fn COVER_cmp8(
     mut lp: *const std::ffi::c_void,
     mut rp: *const std::ffi::c_void,
 ) -> std::ffi::c_int {
-    let mask = if (*ctx).d == 8 as std::ffi::c_int as std::ffi::c_uint {
+    let mask = if (*ctx).d == 8 {
         u64::MAX
     } else {
         (1_u64
@@ -538,7 +538,7 @@ unsafe extern "C" fn COVER_strict_cmp(
     mut g_coverCtx: *mut std::ffi::c_void,
 ) -> std::ffi::c_int {
     let mut result = COVER_cmp(g_coverCtx as *mut COVER_ctx_t, lp, rp);
-    if result == 0 as std::ffi::c_int {
+    if result == 0 {
         result = if lp < rp { -(1 as std::ffi::c_int) } else { 1 as std::ffi::c_int };
     }
     return result;
@@ -549,7 +549,7 @@ unsafe extern "C" fn COVER_strict_cmp8(
     mut g_coverCtx: *mut std::ffi::c_void,
 ) -> std::ffi::c_int {
     let mut result = COVER_cmp8(g_coverCtx as *mut COVER_ctx_t, lp, rp);
-    if result == 0 as std::ffi::c_int {
+    if result == 0 {
         result = if lp < rp { -(1 as std::ffi::c_int) } else { 1 as std::ffi::c_int };
     }
     return result;
@@ -559,7 +559,7 @@ unsafe extern "C" fn stableSort(mut ctx: *mut COVER_ctx_t) {
         (*ctx).suffix as *mut std::ffi::c_void,
         (*ctx).suffixSize,
         ::core::mem::size_of::<u32>(),
-        if (*ctx).d <= 8 as std::ffi::c_int as std::ffi::c_uint {
+        if (*ctx).d <= 8 {
             Some(
                 COVER_strict_cmp8
                     as unsafe extern "C" fn(
@@ -587,7 +587,7 @@ unsafe extern "C" fn COVER_lower_bound(
     mut value: usize,
 ) -> *const usize {
     let mut count = last.offset_from(first) as std::ffi::c_long as usize;
-    while count != 0 as std::ffi::c_int as usize {
+    while count != 0 {
         let mut step = count / 2 as std::ffi::c_int as usize;
         let mut ptr = first;
         ptr = ptr.offset(step as isize);
@@ -633,7 +633,7 @@ unsafe extern "C" fn COVER_groupBy(
                 .expect(
                     "non-null function pointer",
                 )(ctx, ptr as *const std::ffi::c_void, grpEnd as *const std::ffi::c_void)
-                == 0 as std::ffi::c_int
+                == 0
         {
             grpEnd = grpEnd.offset(size as isize);
             num = num.wrapping_add(1);
@@ -709,7 +709,7 @@ unsafe extern "C" fn COVER_selectSegment(
     while activeSegment.end < end {
         let mut newDmer = *((*ctx).dmerAt).offset(activeSegment.end as isize);
         let mut newDmerOcc = COVER_map_at(activeDmers, newDmer);
-        if *newDmerOcc == 0 as std::ffi::c_int as u32 {
+        if *newDmerOcc == 0 {
             activeSegment
                 .score = (activeSegment.score)
                 .wrapping_add(*freqs.offset(newDmer as isize));
@@ -725,7 +725,7 @@ unsafe extern "C" fn COVER_selectSegment(
             activeSegment
                 .begin = (activeSegment.begin).wrapping_add(1);
             *delDmerOcc = (*delDmerOcc).wrapping_sub(1);
-            if *delDmerOcc == 0 as std::ffi::c_int as u32 {
+            if *delDmerOcc == 0 {
                 COVER_map_remove(activeDmers, delDmer);
                 activeSegment
                     .score = (activeSegment.score)
@@ -742,7 +742,7 @@ unsafe extern "C" fn COVER_selectSegment(
     pos = bestSegment.begin;
     while pos != bestSegment.end {
         let mut freq = *freqs.offset(*((*ctx).dmerAt).offset(pos as isize) as isize);
-        if freq != 0 as std::ffi::c_int as u32 {
+        if freq != 0 {
             newBegin = MIN!(newBegin, pos);
             newEnd = pos.wrapping_add(1);
         }
@@ -767,8 +767,8 @@ unsafe extern "C" fn COVER_checkParameters(
     mut parameters: ZDICT_cover_params_t,
     mut maxDictSize: usize,
 ) -> std::ffi::c_int {
-    if parameters.d == 0 as std::ffi::c_int as std::ffi::c_uint
-        || parameters.k == 0 as std::ffi::c_int as std::ffi::c_uint
+    if parameters.d == 0
+        || parameters.k == 0
     {
         return 0 as std::ffi::c_int;
     }
@@ -778,8 +778,8 @@ unsafe extern "C" fn COVER_checkParameters(
     if parameters.d > parameters.k {
         return 0 as std::ffi::c_int;
     }
-    if parameters.splitPoint <= 0 as std::ffi::c_int as std::ffi::c_double
-        || parameters.splitPoint > 1 as std::ffi::c_int as std::ffi::c_double
+    if parameters.splitPoint <= 0
+        || parameters.splitPoint > 1
     {
         return 0 as std::ffi::c_int;
     }
@@ -847,7 +847,7 @@ unsafe extern "C" fn COVER_ctx_init(
         })
         || totalSamplesSize
             >= (if ::core::mem::size_of::<usize>()
-                == 8 as std::ffi::c_int as std::ffi::c_ulong
+                == 8
             {
                 -(1 as std::ffi::c_int) as std::ffi::c_uint
             } else {
@@ -855,14 +855,14 @@ unsafe extern "C" fn COVER_ctx_init(
                     .wrapping_mul((1 as std::ffi::c_uint) << 30)
             }) as usize
     {
-        if displayLevel >= 1 as std::ffi::c_int {
+        if displayLevel >= 1 {
             fprintf(
                 stderr,
                 b"Total samples size is too large (%u MB), maximum size is %u MB\n\0"
                     as *const u8 as *const std::ffi::c_char,
                 (totalSamplesSize >> 20) as std::ffi::c_uint,
                 (if ::core::mem::size_of::<usize>()
-                    == 8 as std::ffi::c_int as std::ffi::c_ulong
+                    == 8
                 {
                     -(1 as std::ffi::c_int) as std::ffi::c_uint
                 } else {
@@ -874,10 +874,10 @@ unsafe extern "C" fn COVER_ctx_init(
         }
         return ERROR!(srcSize_wrong);
     }
-    if nbTrainSamples < 5 as std::ffi::c_int as std::ffi::c_uint {
+    if nbTrainSamples < 5 {
         if DISPLAYLEVEL!(
             1, "Total number of training samples is %u and is invalid.", nbTrainSamples
-        ) >= 1 as std::ffi::c_int
+        ) >= 1
         {
             fprintf(
                 stderr,
@@ -889,10 +889,10 @@ unsafe extern "C" fn COVER_ctx_init(
         }
         return ERROR!(srcSize_wrong);
     }
-    if nbTestSamples < 1 as std::ffi::c_int as std::ffi::c_uint {
+    if nbTestSamples < 1 {
         if DISPLAYLEVEL!(
             1, "Total number of testing samples is %u and is invalid.", nbTestSamples
-        ) >= 1 as std::ffi::c_int
+        ) >= 1
         {
             fprintf(
                 stderr,
@@ -912,7 +912,7 @@ unsafe extern "C" fn COVER_ctx_init(
     if DISPLAYLEVEL!(
         2, "Training on %u samples of total size %u\n", nbTrainSamples, (unsigned)
         trainingSamplesSize
-    ) >= 2 as std::ffi::c_int
+    ) >= 2
     {
         fprintf(
             stderr,
@@ -926,7 +926,7 @@ unsafe extern "C" fn COVER_ctx_init(
     if DISPLAYLEVEL!(
         2, "Testing on %u samples of total size %u\n", nbTestSamples, (unsigned)
         testSamplesSize
-    ) >= 2 as std::ffi::c_int
+    ) >= 2
     {
         fprintf(
             stderr,
@@ -974,7 +974,7 @@ unsafe extern "C" fn COVER_ctx_init(
         || ((*ctx).offsets).is_null()
     {
         if DISPLAYLEVEL!(1, "Failed to allocate scratch buffers\n")
-            >= 1 as std::ffi::c_int
+            >= 1
         {
             fprintf(
                 stderr,
@@ -1005,7 +1005,7 @@ unsafe extern "C" fn COVER_ctx_init(
         i = i.wrapping_add(1);
         i;
     }
-    if DISPLAYLEVEL!(2, "Constructing partial suffix array\n") >= 2 as std::ffi::c_int {
+    if DISPLAYLEVEL!(2, "Constructing partial suffix array\n") >= 2 {
         fprintf(
             stderr,
             b"Constructing partial suffix array\n\0" as *const u8
@@ -1021,7 +1021,7 @@ unsafe extern "C" fn COVER_ctx_init(
         i_0;
     }
     stableSort(ctx);
-    if DISPLAYLEVEL!(2, "Computing frequencies\n") >= 2 as std::ffi::c_int {
+    if DISPLAYLEVEL!(2, "Computing frequencies\n") >= 2 {
         fprintf(
             stderr,
             b"Computing frequencies\n\0" as *const u8 as *const std::ffi::c_char,
@@ -1033,7 +1033,7 @@ unsafe extern "C" fn COVER_ctx_init(
         (*ctx).suffixSize,
         ::core::mem::size_of::<u32>(),
         ctx,
-        if (*ctx).d <= 8 as std::ffi::c_int as std::ffi::c_uint {
+        if (*ctx).d <= 8 {
             Some(
                 COVER_cmp8
                     as unsafe extern "C" fn(
@@ -1072,7 +1072,7 @@ pub unsafe extern "C" fn COVER_warnOnSmallCorpus(
     mut displayLevel: std::ffi::c_int,
 ) {
     let ratio = nbDmers as std::ffi::c_double / maxDictSize as std::ffi::c_double;
-    if ratio >= 10 as std::ffi::c_int as std::ffi::c_double {
+    if ratio >= 10 {
         return;
     }
     if DISPLAYLEVEL!(
@@ -1082,7 +1082,7 @@ pub unsafe extern "C" fn COVER_warnOnSmallCorpus(
         "10! This may lead to a subpar dictionary! We recommend "
         "training on sources at least 10x, and preferably 100x "
         "the size of the dictionary! \n", (u32) maxDictSize, (u32) nbDmers, ratio
-    ) >= 1 as std::ffi::c_int
+    ) >= 1
     {
         fprintf(
             stderr,
@@ -1152,7 +1152,7 @@ unsafe extern "C" fn COVER_buildDictionary(
     if DISPLAYLEVEL!(
         2, "Breaking content into %u epochs of size %u\n", (u32) epochs.num, (u32) epochs
         .size
-    ) >= 2 as std::ffi::c_int
+    ) >= 2
     {
         fprintf(
             stderr,
@@ -1164,7 +1164,7 @@ unsafe extern "C" fn COVER_buildDictionary(
         fflush(stderr);
     }
     epoch = 0;
-    while tail > 0 as std::ffi::c_int as usize {
+    while tail > 0 {
         let epochBegin = (epoch * epochs.size as usize) as u32;
         let epochEnd = epochBegin.wrapping_add(epochs.size);
         let mut segmentSize: usize = 0;
@@ -1176,7 +1176,7 @@ unsafe extern "C" fn COVER_buildDictionary(
             epochEnd,
             parameters,
         );
-        if segment.score == 0 as std::ffi::c_int as u32 {
+        if segment.score == 0 {
             zeroScoreRun = zeroScoreRun.wrapping_add(1);
             if zeroScoreRun >= maxZeroScoreRun {
                 break;
@@ -1194,12 +1194,12 @@ unsafe extern "C" fn COVER_buildDictionary(
                     as *const std::ffi::c_void,
                 segmentSize,
             );
-            if displayLevel >= 2 as std::ffi::c_int {
+            if displayLevel >= 2 {
                 let refreshRate = CLOCKS_PER_SEC as __clock_t
                     * 15 as std::ffi::c_int as __clock_t
                     / 100 as std::ffi::c_int as __clock_t;
                 if clock() - lastUpdateTime > refreshRate
-                    || displayLevel >= 4 as std::ffi::c_int
+                    || displayLevel >= 4
                 {
                     lastUpdateTime = clock();
                     fprintf(
@@ -1216,7 +1216,7 @@ unsafe extern "C" fn COVER_buildDictionary(
         epoch = epoch.wrapping_add(1)
             % epochs.num as usize;
     }
-    if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 as std::ffi::c_int {
+    if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 {
         fprintf(
             stderr,
             b"\r%79s\r\0" as *const u8 as *const std::ffi::c_char,
@@ -1259,7 +1259,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
     let displayLevel = parameters.zParams.notificationLevel as std::ffi::c_int;
     parameters.splitPoint = 1.0f64;
     if COVER_checkParameters(parameters, dictBufferCapacity) == 0 {
-        if DISPLAYLEVEL!(1, "Cover parameters incorrect\n") >= 1 as std::ffi::c_int {
+        if DISPLAYLEVEL!(1, "Cover parameters incorrect\n") >= 1 {
             fprintf(
                 stderr,
                 b"Cover parameters incorrect\n\0" as *const u8 as *const std::ffi::c_char,
@@ -1268,9 +1268,9 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
         }
         return ERROR!(parameter_outOfBound);
     }
-    if nbSamples == 0 as std::ffi::c_int as std::ffi::c_uint {
+    if nbSamples == 0 {
         if DISPLAYLEVEL!(1, "Cover must have at least one input file\n")
-            >= 1 as std::ffi::c_int
+            >= 1
         {
             fprintf(
                 stderr,
@@ -1284,7 +1284,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
         if DISPLAYLEVEL!(
             1, "dictBufferCapacity must be at least %u\n", ZDICT_DICTSIZE_MIN
-        ) >= 1 as std::ffi::c_int
+        ) >= 1
         {
             fprintf(
                 stderr,
@@ -1317,7 +1317,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
     ) == 0
     {
         if DISPLAYLEVEL!(1, "Failed to allocate dmer map: out of memory\n")
-            >= 1 as std::ffi::c_int
+            >= 1
         {
             fprintf(
                 stderr,
@@ -1329,7 +1329,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
         COVER_ctx_destroy(&mut ctx);
         return ERROR!(memory_allocation);
     }
-    if DISPLAYLEVEL!(2, "Building dictionary\n") >= 2 as std::ffi::c_int {
+    if DISPLAYLEVEL!(2, "Building dictionary\n") >= 2 {
         fprintf(
             stderr,
             b"Building dictionary\n\0" as *const u8 as *const std::ffi::c_char,
@@ -1357,7 +1357,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
     if ERR_isError(dictionarySize) == 0 {
         if DISPLAYLEVEL!(
             2, "Constructed dictionary of size %u\n", (unsigned) dictionarySize
-        ) >= 2 as std::ffi::c_int
+        ) >= 2
         {
             fprintf(
                 stderr,
@@ -1463,7 +1463,7 @@ pub unsafe extern "C" fn COVER_best_wait(mut best: *mut COVER_best_t) {
         return;
     }
     ZSTD_pthread_mutex_lock!(& best -> mutex)(ZSTD_pthread_mutex_lock!(& best -> mutex));
-    while (*best).liveJobs != 0 as std::ffi::c_int as usize {
+    while (*best).liveJobs != 0 {
         ZSTD_pthread_cond_wait!(
             & best -> cond, & best -> mutex
         )(
@@ -1545,7 +1545,7 @@ pub unsafe extern "C" fn COVER_best_finish(
             (*best).compressedSize = compressedSize;
         }
     }
-    if liveJobs == 0 as std::ffi::c_int as usize {
+    if liveJobs == 0 {
         ZSTD_pthread_cond_broadcast!(
             & best -> cond
         )(ZSTD_pthread_cond_broadcast!(& best -> cond));
@@ -1647,7 +1647,7 @@ pub unsafe extern "C" fn COVER_selectDict(
         free(candidateDictBuffer as *mut std::ffi::c_void);
         return COVER_dictSelectionError(totalCompressedSize);
     }
-    if params.shrinkDict == 0 as std::ffi::c_int as std::ffi::c_uint {
+    if params.shrinkDict == 0 {
         free(candidateDictBuffer as *mut std::ffi::c_void);
         return setDictSelection(largestDictbuffer, dictContentSize, totalCompressedSize);
     }
@@ -1735,7 +1735,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
     ) == 0
     {
         if DISPLAYLEVEL!(1, "Failed to allocate dmer map: out of memory\n")
-            >= 1 as std::ffi::c_int
+            >= 1
         {
             fprintf(
                 stderr,
@@ -1746,7 +1746,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
         }
     } else if dict.is_null() || freqs.is_null() {
         if DISPLAYLEVEL!(1, "Failed to allocate buffers: out of memory\n")
-            >= 1 as std::ffi::c_int
+            >= 1
         {
             fprintf(
                 stderr,
@@ -1784,7 +1784,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
             totalCompressedSize,
         );
         if COVER_dictSelectionIsError(selection) != 0 {
-            if DISPLAYLEVEL!(1, "Failed to select dictionary\n") >= 1 as std::ffi::c_int
+            if DISPLAYLEVEL!(1, "Failed to select dictionary\n") >= 1
             {
                 fprintf(
                     stderr,
@@ -1817,27 +1817,27 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     } else {
         (*parameters).splitPoint
     };
-    let kMinD = if (*parameters).d == 0 as std::ffi::c_int as std::ffi::c_uint {
+    let kMinD = if (*parameters).d == 0 {
         6 as std::ffi::c_int as std::ffi::c_uint
     } else {
         (*parameters).d
     };
-    let kMaxD = if (*parameters).d == 0 as std::ffi::c_int as std::ffi::c_uint {
+    let kMaxD = if (*parameters).d == 0 {
         8 as std::ffi::c_int as std::ffi::c_uint
     } else {
         (*parameters).d
     };
-    let kMinK = if (*parameters).k == 0 as std::ffi::c_int as std::ffi::c_uint {
+    let kMinK = if (*parameters).k == 0 {
         50 as std::ffi::c_int as std::ffi::c_uint
     } else {
         (*parameters).k
     };
-    let kMaxK = if (*parameters).k == 0 as std::ffi::c_int as std::ffi::c_uint {
+    let kMaxK = if (*parameters).k == 0 {
         2000 as std::ffi::c_int as std::ffi::c_uint
     } else {
         (*parameters).k
     };
-    let kSteps = if (*parameters).steps == 0 as std::ffi::c_int as std::ffi::c_uint {
+    let kSteps = if (*parameters).steps == 0 {
         40 as std::ffi::c_int as std::ffi::c_uint
     } else {
         (*parameters).steps
@@ -1912,10 +1912,10 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     let mut pool = NULL as *mut POOL_ctx;
     let mut warned: std::ffi::c_int = 0;
     let mut lastUpdateTime: clock_t = 0;
-    if splitPoint <= 0 as std::ffi::c_int as std::ffi::c_double
-        || splitPoint > 1 as std::ffi::c_int as std::ffi::c_double
+    if splitPoint <= 0
+        || splitPoint > 1
     {
-        if DISPLAYLEVEL!(1, "Incorrect parameters\n") >= 1 as std::ffi::c_int {
+        if DISPLAYLEVEL!(1, "Incorrect parameters\n") >= 1 {
             fprintf(
                 stderr,
                 b"Incorrect parameters\n\0" as *const u8 as *const std::ffi::c_char,
@@ -1925,7 +1925,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         return ERROR!(parameter_outOfBound);
     }
     if kMinK < kMaxD || kMaxK < kMinK {
-        if DISPLAYLEVEL!(1, "Incorrect parameters\n") >= 1 as std::ffi::c_int {
+        if DISPLAYLEVEL!(1, "Incorrect parameters\n") >= 1 {
             fprintf(
                 stderr,
                 b"Incorrect parameters\n\0" as *const u8 as *const std::ffi::c_char,
@@ -1934,9 +1934,9 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         }
         return ERROR!(parameter_outOfBound);
     }
-    if nbSamples == 0 as std::ffi::c_int as std::ffi::c_uint {
+    if nbSamples == 0 {
         if DISPLAYLEVEL!(1, "Cover must have at least one input file\n")
-            >= 1 as std::ffi::c_int
+            >= 1
         {
             fprintf(
                 stderr,
@@ -1950,7 +1950,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
         if DISPLAYLEVEL!(
             1, "dictBufferCapacity must be at least %u\n", ZDICT_DICTSIZE_MIN
-        ) >= 1 as std::ffi::c_int
+        ) >= 1
         {
             fprintf(
                 stderr,
@@ -1962,7 +1962,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         }
         return ERROR!(dstSize_tooSmall);
     }
-    if nbThreads > 1 as std::ffi::c_int as std::ffi::c_uint {
+    if nbThreads > 1 {
         pool = POOL_create(nbThreads as usize, 1 as std::ffi::c_int as usize);
         if pool.is_null() {
             return ERROR!(memory_allocation);
@@ -1970,7 +1970,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     }
     COVER_best_init(&mut best);
     if DISPLAYLEVEL!(2, "Trying %u different sets of parameters\n", kIterations)
-        >= 2 as std::ffi::c_int
+        >= 2
     {
         fprintf(
             stderr,
@@ -1996,11 +1996,11 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             d: 0,
             displayLevel: 0,
         };
-        if DISPLAYLEVEL!(3, "d=%u\n", d) >= 3 as std::ffi::c_int {
+        if DISPLAYLEVEL!(3, "d=%u\n", d) >= 3 {
             fprintf(stderr, b"d=%u\n\0" as *const u8 as *const std::ffi::c_char, d);
             fflush(stderr);
         }
-        let childDisplayLevel = if displayLevel == 0 as std::ffi::c_int {
+        let childDisplayLevel = if displayLevel == 0 {
             0 as std::ffi::c_int
         } else {
             displayLevel - 1 as std::ffi::c_int
@@ -2015,7 +2015,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             childDisplayLevel,
         );
         if ERR_isError(initVal) != 0 {
-            if DISPLAYLEVEL!(1, "Failed to initialize context\n") >= 1 as std::ffi::c_int
+            if DISPLAYLEVEL!(1, "Failed to initialize context\n") >= 1
             {
                 fprintf(
                     stderr,
@@ -2037,13 +2037,13 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             let mut data = malloc(
                 ::core::mem::size_of::<COVER_tryParameters_data_t>(),
             ) as *mut COVER_tryParameters_data_t;
-            if DISPLAYLEVEL!(3, "k=%u\n", k) >= 3 as std::ffi::c_int {
+            if DISPLAYLEVEL!(3, "k=%u\n", k) >= 3 {
                 fprintf(stderr, b"k=%u\n\0" as *const u8 as *const std::ffi::c_char, k);
                 fflush(stderr);
             }
             if data.is_null() {
                 if DISPLAYLEVEL!(1, "Failed to allocate parameters\n")
-                    >= 1 as std::ffi::c_int
+                    >= 1
                 {
                     fprintf(
                         stderr,
@@ -2072,7 +2072,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                 .notificationLevel = ctx.displayLevel as std::ffi::c_uint;
             if COVER_checkParameters((*data).parameters, dictBufferCapacity) == 0 {
                 if DISPLAYLEVEL!(1, "Cover parameters incorrect\n")
-                    >= 1 as std::ffi::c_int
+                    >= 1
                 {
                     fprintf(
                         stderr,
@@ -2096,12 +2096,12 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                 } else {
                     COVER_tryParameters(data as *mut std::ffi::c_void);
                 }
-                if displayLevel >= 2 as std::ffi::c_int {
+                if displayLevel >= 2 {
                     let refreshRate = CLOCKS_PER_SEC as __clock_t
                         * 15 as std::ffi::c_int as __clock_t
                         / 100 as std::ffi::c_int as __clock_t;
                     if clock() - lastUpdateTime > refreshRate
-                        || displayLevel >= 4 as std::ffi::c_int
+                        || displayLevel >= 4
                     {
                         lastUpdateTime = clock();
                         fprintf(
@@ -2123,7 +2123,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         COVER_ctx_destroy(&mut ctx);
         d = d.wrapping_add(2);
     }
-    if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 as std::ffi::c_int {
+    if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 {
         fprintf(
             stderr,
             b"\r%79s\r\0" as *const u8 as *const std::ffi::c_char,

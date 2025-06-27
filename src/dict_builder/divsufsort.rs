@@ -600,14 +600,14 @@ unsafe extern "C" fn ss_isqrt(mut x: std::ffi::c_int) -> std::ffi::c_int {
         0 as std::ffi::c_int
             + lg_table[(x >> 0 & 0xff as std::ffi::c_int) as usize]
     };
-    if e >= 16 as std::ffi::c_int {
+    if e >= 16 {
         y = sqq_table[(x >> e - 6 as std::ffi::c_int - (e & 1 as std::ffi::c_int))
             as usize] << (e >> 1) - 7 as std::ffi::c_int;
-        if e >= 24 as std::ffi::c_int {
+        if e >= 24 {
             y = y + 1 as std::ffi::c_int + x / y >> 1;
         }
         y = y + 1 as std::ffi::c_int + x / y >> 1;
-    } else if e >= 8 as std::ffi::c_int {
+    } else if e >= 8 {
         y = (sqq_table[(x >> e - 6 as std::ffi::c_int - (e & 1 as std::ffi::c_int))
             as usize] >> 7 - (e >> 1))
             + 1 as std::ffi::c_int;
@@ -676,7 +676,7 @@ unsafe extern "C" fn ss_insertionsort(
             loop {
                 *j.offset(-1_isize) = *j;
                 j = j.offset(1);
-                if !(j < last && *j < 0 as std::ffi::c_int) {
+                if !(j < last && *j < 0) {
                     break;
                 }
             }
@@ -684,7 +684,7 @@ unsafe extern "C" fn ss_insertionsort(
                 break;
             }
         }
-        if r == 0 as std::ffi::c_int {
+        if r == 0 {
             *j = !*j;
         }
         *j.offset(-1_isize) = t;
@@ -742,7 +742,7 @@ unsafe extern "C" fn ss_heapsort(
     let mut m: std::ffi::c_int = 0;
     let mut t: std::ffi::c_int = 0;
     m = size;
-    if size % 2 as std::ffi::c_int == 0 as std::ffi::c_int {
+    if size % 2 as std::ffi::c_int == 0 {
         m -= 1;
         m;
         if (*Td
@@ -767,7 +767,7 @@ unsafe extern "C" fn ss_heapsort(
         i -= 1;
         i;
     }
-    if size % 2 as std::ffi::c_int == 0 as std::ffi::c_int {
+    if size % 2 as std::ffi::c_int == 0 {
         let ref mut fresh4 = SWAP!(SA[0], SA[m]);
         *fresh4 = SWAP!(SA[0], SA[m]);
         let ref mut fresh5 = SWAP!(SA[0], SA[m]);
@@ -909,8 +909,8 @@ unsafe extern "C" fn ss_pivot(
     let mut t: std::ffi::c_int = 0;
     t = last.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
     middle = first.offset((t / 2 as std::ffi::c_int) as isize);
-    if t <= 512 as std::ffi::c_int {
-        if t <= 32 as std::ffi::c_int {
+    if t <= 512 {
+        if t <= 32 {
             return ss_median3(
                 Td,
                 PA,
@@ -1079,7 +1079,7 @@ unsafe extern "C" fn ss_mintrosort(
             Td = T.offset(depth as isize);
             let fresh31 = limit;
             limit = limit - 1;
-            if fresh31 == 0 as std::ffi::c_int {
+            if fresh31 == 0 {
                 ss_heapsort(
                     Td,
                     PA,
@@ -1087,7 +1087,7 @@ unsafe extern "C" fn ss_mintrosort(
                     last.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
                 );
             }
-            if limit < 0 as std::ffi::c_int {
+            if limit < 0 {
                 a = first.offset(1);
                 v = *Td.offset(*PA.offset(*first as isize) as isize) as std::ffi::c_int;
                 while a < last {
@@ -1117,7 +1117,7 @@ unsafe extern "C" fn ss_mintrosort(
                     if (1 as std::ffi::c_long)
                         < a.offset_from(first) as std::ffi::c_long
                     {
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1134,7 +1134,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                         }
                         'c_14736: {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1163,7 +1163,7 @@ unsafe extern "C" fn ss_mintrosort(
                 } else if (1 as std::ffi::c_long)
                     < last.offset_from(a) as std::ffi::c_long
                 {
-                    if ssize < 16 as std::ffi::c_int {} else {
+                    if ssize < 16 {} else {
                         __assert_fail(
                             b"ssize < STACK_SIZE\0" as *const u8
                                 as *const std::ffi::c_char,
@@ -1180,7 +1180,7 @@ unsafe extern "C" fn ss_mintrosort(
                         );
                     }
                     'c_14607: {
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1415,7 +1415,7 @@ unsafe extern "C" fn ss_mintrosort(
                         if last.offset_from(c) as std::ffi::c_long
                             <= c.offset_from(b) as std::ffi::c_long
                         {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1432,7 +1432,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                             'c_13070: {
-                                if ssize < 16 as std::ffi::c_int {} else {
+                                if ssize < 16 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -1458,7 +1458,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 .d = ss_ilg(
                                 c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
                             );
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1475,7 +1475,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                             'c_12976: {
-                                if ssize < 16 as std::ffi::c_int {} else {
+                                if ssize < 16 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -1496,7 +1496,7 @@ unsafe extern "C" fn ss_mintrosort(
                         } else if a.offset_from(first) as std::ffi::c_long
                             <= c.offset_from(b) as std::ffi::c_long
                         {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1513,7 +1513,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                             'c_12872: {
-                                if ssize < 16 as std::ffi::c_int {} else {
+                                if ssize < 16 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -1530,7 +1530,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     );
                                 }
                             };
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1547,7 +1547,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                             'c_12787: {
-                                if ssize < 16 as std::ffi::c_int {} else {
+                                if ssize < 16 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -1575,7 +1575,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                             last = a;
                         } else {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1592,7 +1592,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                             'c_12686: {
-                                if ssize < 16 as std::ffi::c_int {} else {
+                                if ssize < 16 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -1609,7 +1609,7 @@ unsafe extern "C" fn ss_mintrosort(
                                     );
                                 }
                             };
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1626,7 +1626,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                             'c_12601: {
-                                if ssize < 16 as std::ffi::c_int {} else {
+                                if ssize < 16 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -1653,7 +1653,7 @@ unsafe extern "C" fn ss_mintrosort(
                     } else if a.offset_from(first) as std::ffi::c_long
                         <= c.offset_from(b) as std::ffi::c_long
                     {
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1670,7 +1670,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                         }
                         'c_12469: {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1696,7 +1696,7 @@ unsafe extern "C" fn ss_mintrosort(
                             .d = ss_ilg(
                             c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
                         );
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1713,7 +1713,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                         }
                         'c_12375: {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1734,7 +1734,7 @@ unsafe extern "C" fn ss_mintrosort(
                     } else if last.offset_from(c) as std::ffi::c_long
                         <= c.offset_from(b) as std::ffi::c_long
                     {
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1751,7 +1751,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                         }
                         'c_12271: {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1768,7 +1768,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                         };
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1785,7 +1785,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                         }
                         'c_12186: {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1813,7 +1813,7 @@ unsafe extern "C" fn ss_mintrosort(
                         );
                         first = c;
                     } else {
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1830,7 +1830,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                         }
                         'c_12085: {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -1847,7 +1847,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 );
                             }
                         };
-                        if ssize < 16 as std::ffi::c_int {} else {
+                        if ssize < 16 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -1864,7 +1864,7 @@ unsafe extern "C" fn ss_mintrosort(
                             );
                         }
                         'c_11998: {
-                            if ssize < 16 as std::ffi::c_int {} else {
+                            if ssize < 16 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -2011,7 +2011,7 @@ unsafe extern "C" fn ss_inplacemerge(
     let mut r: std::ffi::c_int = 0;
     let mut x: std::ffi::c_int = 0;
     loop {
-        if *last.offset(-1_isize) < 0 as std::ffi::c_int {
+        if *last.offset(-1_isize) < 0 {
             x = 1;
             p = PA.offset(!*last.offset(-1_isize) as isize);
         } else {
@@ -2030,7 +2030,7 @@ unsafe extern "C" fn ss_inplacemerge(
                 p,
                 depth,
             );
-            if q < 0 as std::ffi::c_int {
+            if q < 0 {
                 a = b.offset(1);
                 half -= len & 1 as std::ffi::c_int ^ 1 as std::ffi::c_int;
             } else {
@@ -2040,7 +2040,7 @@ unsafe extern "C" fn ss_inplacemerge(
             half >>= 1;
         }
         if a < middle {
-            if r == 0 as std::ffi::c_int {
+            if r == 0 {
                 *a = !*a;
             }
             ss_rotate(a, middle, last);
@@ -2052,10 +2052,10 @@ unsafe extern "C" fn ss_inplacemerge(
         }
         last = last.offset(-1);
         last;
-        if x != 0 as std::ffi::c_int {
+        if x != 0 {
             loop {
                 last = last.offset(-1);
-                if !(*last < 0 as std::ffi::c_int) {
+                if !(*last < 0) {
                     break;
                 }
             }
@@ -2094,7 +2094,7 @@ unsafe extern "C" fn ss_mergeforward(
     c = middle;
     loop {
         r = ss_compare(T, PA.offset(*b as isize), PA.offset(*c as isize), depth);
-        if r < 0 as std::ffi::c_int {
+        if r < 0 {
             loop {
                 let fresh65 = a;
                 a = a.offset(1);
@@ -2106,11 +2106,11 @@ unsafe extern "C" fn ss_mergeforward(
                 let fresh66 = b;
                 b = b.offset(1);
                 *fresh66 = *a;
-                if !(*b < 0 as std::ffi::c_int) {
+                if !(*b < 0) {
                     break;
                 }
             }
-        } else if r > 0 as std::ffi::c_int {
+        } else if r > 0 {
             loop {
                 let fresh67 = a;
                 a = a.offset(1);
@@ -2131,7 +2131,7 @@ unsafe extern "C" fn ss_mergeforward(
                     *b = t;
                     return;
                 }
-                if !(*c < 0 as std::ffi::c_int) {
+                if !(*c < 0) {
                     break;
                 }
             }
@@ -2148,7 +2148,7 @@ unsafe extern "C" fn ss_mergeforward(
                 let fresh72 = b;
                 b = b.offset(1);
                 *fresh72 = *a;
-                if !(*b < 0 as std::ffi::c_int) {
+                if !(*b < 0) {
                     break;
                 }
             }
@@ -2172,7 +2172,7 @@ unsafe extern "C" fn ss_mergeforward(
                     *b = t;
                     return;
                 }
-                if !(*c < 0 as std::ffi::c_int) {
+                if !(*c < 0) {
                     break;
                 }
             }
@@ -2206,13 +2206,13 @@ unsafe extern "C" fn ss_mergebackward(
         last.offset_from(middle) as std::ffi::c_long as std::ffi::c_int,
     );
     x = 0;
-    if *bufend < 0 as std::ffi::c_int {
+    if *bufend < 0 {
         p1 = PA.offset(!*bufend as isize);
         x |= 1;
     } else {
         p1 = PA.offset(*bufend as isize);
     }
-    if *middle.offset(-1_isize) < 0 as std::ffi::c_int {
+    if *middle.offset(-1_isize) < 0 {
         p2 = PA.offset(!*middle.offset(-1_isize) as isize);
         x |= 2;
     } else {
@@ -2233,7 +2233,7 @@ unsafe extern "C" fn ss_mergebackward(
                     let fresh78 = b;
                     b = b.offset(-1);
                     *fresh78 = *a;
-                    if !(*b < 0 as std::ffi::c_int) {
+                    if !(*b < 0) {
                         break;
                     }
                 }
@@ -2249,14 +2249,14 @@ unsafe extern "C" fn ss_mergebackward(
                 let fresh80 = b;
                 b = b.offset(-1);
                 *fresh80 = *a;
-                if *b < 0 as std::ffi::c_int {
+                if *b < 0 {
                     p1 = PA.offset(!*b as isize);
                     x |= 1;
                 } else {
                     p1 = PA.offset(*b as isize);
                 }
             }
-        } else if r < 0 as std::ffi::c_int {
+        } else if r < 0 {
             if x & 2 as std::ffi::c_int != 0 {
                 loop {
                     let fresh81 = a;
@@ -2265,7 +2265,7 @@ unsafe extern "C" fn ss_mergebackward(
                     let fresh82 = c;
                     c = c.offset(-1);
                     *fresh82 = *a;
-                    if !(*c < 0 as std::ffi::c_int) {
+                    if !(*c < 0) {
                         break;
                     }
                 }
@@ -2289,7 +2289,7 @@ unsafe extern "C" fn ss_mergebackward(
                 *a = *b;
                 *b = t;
                 break;
-            } else if *c < 0 as std::ffi::c_int {
+            } else if *c < 0 {
                 p2 = PA.offset(!*c as isize);
                 x |= 2;
             } else {
@@ -2304,7 +2304,7 @@ unsafe extern "C" fn ss_mergebackward(
                     let fresh88 = b;
                     b = b.offset(-1);
                     *fresh88 = *a;
-                    if !(*b < 0 as std::ffi::c_int) {
+                    if !(*b < 0) {
                         break;
                     }
                 }
@@ -2328,7 +2328,7 @@ unsafe extern "C" fn ss_mergebackward(
                         let fresh92 = c;
                         c = c.offset(-1);
                         *fresh92 = *a;
-                        if !(*c < 0 as std::ffi::c_int) {
+                        if !(*c < 0) {
                             break;
                         }
                     }
@@ -2353,13 +2353,13 @@ unsafe extern "C" fn ss_mergebackward(
                     *b = t;
                     break;
                 } else {
-                    if *b < 0 as std::ffi::c_int {
+                    if *b < 0 {
                         p1 = PA.offset(!*b as isize);
                         x |= 1;
                     } else {
                         p1 = PA.offset(*b as isize);
                     }
-                    if *c < 0 as std::ffi::c_int {
+                    if *c < 0 {
                         p2 = PA.offset(!*c as isize);
                         x |= 2;
                     } else {
@@ -2532,7 +2532,7 @@ unsafe extern "C" fn ss_swapmerge(
                             }) as isize,
                         ),
                     depth,
-                ) < 0 as std::ffi::c_int
+                ) < 0
                 {
                     m += half + 1 as std::ffi::c_int;
                     half -= len & 1 as std::ffi::c_int ^ 1 as std::ffi::c_int;
@@ -2548,12 +2548,12 @@ unsafe extern "C" fn ss_swapmerge(
                 l = r;
                 next = 0;
                 if rm < last {
-                    if *rm < 0 as std::ffi::c_int {
+                    if *rm < 0 {
                         *rm = !*rm;
                         if first < lm {
                             loop {
                                 l = l.offset(-1);
-                                if !(*l < 0 as std::ffi::c_int) {
+                                if !(*l < 0) {
                                     break;
                                 }
                             }
@@ -2561,7 +2561,7 @@ unsafe extern "C" fn ss_swapmerge(
                         }
                         next |= 1;
                     } else if first < lm {
-                        while *r < 0 as std::ffi::c_int {
+                        while *r < 0 {
                             r = r.offset(1);
                             r;
                         }
@@ -2571,7 +2571,7 @@ unsafe extern "C" fn ss_swapmerge(
                 if l.offset_from(first) as std::ffi::c_long
                     <= last.offset_from(r) as std::ffi::c_long
                 {
-                    if ssize < 32 as std::ffi::c_int {} else {
+                    if ssize < 32 {} else {
                         __assert_fail(
                             b"ssize < STACK_SIZE\0" as *const u8
                                 as *const std::ffi::c_char,
@@ -2588,7 +2588,7 @@ unsafe extern "C" fn ss_swapmerge(
                         );
                     }
                     'c_16232: {
-                        if ssize < 32 as std::ffi::c_int {} else {
+                        if ssize < 32 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -2619,7 +2619,7 @@ unsafe extern "C" fn ss_swapmerge(
                     if next & 2 as std::ffi::c_int != 0 && r == middle {
                         next ^= 6;
                     }
-                    if ssize < 32 as std::ffi::c_int {} else {
+                    if ssize < 32 {} else {
                         __assert_fail(
                             b"ssize < STACK_SIZE\0" as *const u8
                                 as *const std::ffi::c_char,
@@ -2636,7 +2636,7 @@ unsafe extern "C" fn ss_swapmerge(
                         );
                     }
                     'c_16096: {
-                        if ssize < 32 as std::ffi::c_int {} else {
+                        if ssize < 32 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -2679,7 +2679,7 @@ unsafe extern "C" fn ss_swapmerge(
                         ),
                     PA.offset(*middle as isize),
                     depth,
-                ) == 0 as std::ffi::c_int
+                ) == 0
                 {
                     *middle = !*middle;
                 }
@@ -2750,7 +2750,7 @@ unsafe extern "C" fn sssort(
     let mut curbufsize: std::ffi::c_int = 0;
     let mut limit: std::ffi::c_int = 0;
     let mut i: std::ffi::c_int = 0;
-    if lastsuffix != 0 as std::ffi::c_int {
+    if lastsuffix != 0 {
         first = first.offset(1);
         first;
     }
@@ -2809,7 +2809,7 @@ unsafe extern "C" fn sssort(
     }
     ss_mintrosort(T, PA, a, middle, depth);
     k = SS_BLOCKSIZE;
-    while i != 0 as std::ffi::c_int {
+    while i != 0 {
         if i & 1 as std::ffi::c_int != 0 {
             ss_swapmerge(T, PA, a.offset(-(k as isize)), a, middle, buf, bufsize, depth);
             a = a.offset(-(k as isize));
@@ -2817,11 +2817,11 @@ unsafe extern "C" fn sssort(
         k <<= 1;
         i >>= 1;
     }
-    if limit != 0 as std::ffi::c_int {
+    if limit != 0 {
         ss_mintrosort(T, PA, middle, last, depth);
         ss_inplacemerge(T, PA, first, middle, last, depth);
     }
-    if lastsuffix != 0 as std::ffi::c_int {
+    if lastsuffix != 0 {
         let mut PAi: [std::ffi::c_int; 2] = [0; 2];
         PAi[0 as std::ffi::c_int
             as usize] = *PA
@@ -2830,7 +2830,7 @@ unsafe extern "C" fn sssort(
         a = first;
         i = *first.offset(-1_isize);
         while a < last
-            && (*a < 0 as std::ffi::c_int
+            && (*a < 0
                 || (0 as std::ffi::c_int)
                     < ss_compare(
                         T,
@@ -2887,7 +2887,7 @@ unsafe extern "C" fn tr_insertionsort(
             loop {
                 *b.offset(1) = *b;
                 b = b.offset(-1);
-                if !(first <= b && *b < 0 as std::ffi::c_int) {
+                if !(first <= b && *b < 0) {
                     break;
                 }
             }
@@ -2895,7 +2895,7 @@ unsafe extern "C" fn tr_insertionsort(
                 break;
             }
         }
-        if r == 0 as std::ffi::c_int {
+        if r == 0 {
             *b = !*b;
         }
         *b.offset(1) = t;
@@ -2949,7 +2949,7 @@ unsafe extern "C" fn tr_heapsort(
     let mut m: std::ffi::c_int = 0;
     let mut t: std::ffi::c_int = 0;
     m = size;
-    if size % 2 as std::ffi::c_int == 0 as std::ffi::c_int {
+    if size % 2 as std::ffi::c_int == 0 {
         m -= 1;
         m;
         if *ISAd.offset(*SA.offset((m / 2 as std::ffi::c_int) as isize) as isize)
@@ -2969,7 +2969,7 @@ unsafe extern "C" fn tr_heapsort(
         i -= 1;
         i;
     }
-    if size % 2 as std::ffi::c_int == 0 as std::ffi::c_int {
+    if size % 2 as std::ffi::c_int == 0 {
         let ref mut fresh109 = SWAP!(SA[0], SA[m]);
         *fresh109 = SWAP!(SA[0], SA[m]);
         let ref mut fresh110 = SWAP!(SA[0], SA[m]);
@@ -3090,8 +3090,8 @@ unsafe extern "C" fn tr_pivot(
     let mut t: std::ffi::c_int = 0;
     t = last.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
     middle = first.offset((t / 2 as std::ffi::c_int) as isize);
-    if t <= 512 as std::ffi::c_int {
-        if t <= 32 as std::ffi::c_int {
+    if t <= 512 {
+        if t <= 32 {
             return tr_median3(
                 ISAd,
                 first,
@@ -3152,7 +3152,7 @@ unsafe extern "C" fn trbudget_check(
         (*budget).remain -= size;
         return 1 as std::ffi::c_int;
     }
-    if (*budget).chance == 0 as std::ffi::c_int {
+    if (*budget).chance == 0 {
         (*budget).count += size;
         return 0 as std::ffi::c_int;
     }
@@ -3500,7 +3500,7 @@ unsafe extern "C" fn tr_introsort(
     ssize = 0;
     limit = tr_ilg(last.offset_from(first) as std::ffi::c_long as std::ffi::c_int);
     loop {
-        if limit < 0 as std::ffi::c_int {
+        if limit < 0 {
             if limit == -(1 as std::ffi::c_int) {
                 tr_partition(
                     ISAd.offset(-(incr as isize)),
@@ -3535,7 +3535,7 @@ unsafe extern "C" fn tr_introsort(
                 if (1 as std::ffi::c_long)
                     < b.offset_from(a) as std::ffi::c_long
                 {
-                    if ssize < 64 as std::ffi::c_int {} else {
+                    if ssize < 64 {} else {
                         __assert_fail(
                             b"ssize < STACK_SIZE\0" as *const u8
                                 as *const std::ffi::c_char,
@@ -3552,7 +3552,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     }
                     'c_10233: {
-                        if ssize < 64 as std::ffi::c_int {} else {
+                        if ssize < 64 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -3569,7 +3569,7 @@ unsafe extern "C" fn tr_introsort(
                             );
                         }
                     };
-                    if ssize < 64 as std::ffi::c_int {} else {
+                    if ssize < 64 {} else {
                         __assert_fail(
                             b"ssize < STACK_SIZE\0" as *const u8
                                 as *const std::ffi::c_char,
@@ -3586,7 +3586,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     }
                     'c_10137: {
-                        if ssize < 64 as std::ffi::c_int {} else {
+                        if ssize < 64 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -3611,7 +3611,7 @@ unsafe extern "C" fn tr_introsort(
                     if (1 as std::ffi::c_long)
                         < a.offset_from(first) as std::ffi::c_long
                     {
-                        if ssize < 64 as std::ffi::c_int {} else {
+                        if ssize < 64 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -3628,7 +3628,7 @@ unsafe extern "C" fn tr_introsort(
                             );
                         }
                         'c_10007: {
-                            if ssize < 64 as std::ffi::c_int {} else {
+                            if ssize < 64 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -3696,7 +3696,7 @@ unsafe extern "C" fn tr_introsort(
                 } else if (1 as std::ffi::c_long)
                     < last.offset_from(b) as std::ffi::c_long
                 {
-                    if ssize < 64 as std::ffi::c_int {} else {
+                    if ssize < 64 {} else {
                         __assert_fail(
                             b"ssize < STACK_SIZE\0" as *const u8
                                 as *const std::ffi::c_char,
@@ -3713,7 +3713,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     }
                     'c_9744: {
-                        if ssize < 64 as std::ffi::c_int {} else {
+                        if ssize < 64 {} else {
                             __assert_fail(
                                 b"ssize < STACK_SIZE\0" as *const u8
                                     as *const std::ffi::c_char,
@@ -3782,7 +3782,7 @@ unsafe extern "C" fn tr_introsort(
                 ssize -= 1;
                 a = stack[ssize as usize].b;
                 b = stack[ssize as usize].c;
-                if stack[ssize as usize].d == 0 as std::ffi::c_int {
+                if stack[ssize as usize].d == 0 {
                     tr_copy(
                         ISA,
                         SA,
@@ -3861,7 +3861,7 @@ unsafe extern "C" fn tr_introsort(
                     loop {
                         *a = !*a;
                         a = a.offset(1);
-                        if !(*a < 0 as std::ffi::c_int) {
+                        if !(*a < 0) {
                             break;
                         }
                     }
@@ -3894,7 +3894,7 @@ unsafe extern "C" fn tr_introsort(
                         if a.offset_from(first) as std::ffi::c_long
                             <= last.offset_from(a) as std::ffi::c_long
                         {
-                            if ssize < 64 as std::ffi::c_int {} else {
+                            if ssize < 64 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -3911,7 +3911,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                             'c_8625: {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -3934,7 +3934,7 @@ unsafe extern "C" fn tr_introsort(
                         } else if (1 as std::ffi::c_long)
                             < last.offset_from(a) as std::ffi::c_long
                         {
-                            if ssize < 64 as std::ffi::c_int {} else {
+                            if ssize < 64 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -3951,7 +3951,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                             'c_8505: {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4068,7 +4068,7 @@ unsafe extern "C" fn tr_introsort(
         } else {
             let fresh157 = limit;
             limit = limit - 1;
-            if fresh157 == 0 as std::ffi::c_int {
+            if fresh157 == 0 {
                 tr_heapsort(
                     ISAd,
                     first,
@@ -4147,7 +4147,7 @@ unsafe extern "C" fn tr_introsort(
                                 if (1 as std::ffi::c_long)
                                     < a.offset_from(first) as std::ffi::c_long
                                 {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4164,7 +4164,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                     'c_6062: {
-                                        if ssize < 64 as std::ffi::c_int {} else {
+                                        if ssize < 64 {} else {
                                             __assert_fail(
                                                 b"ssize < STACK_SIZE\0" as *const u8
                                                     as *const std::ffi::c_char,
@@ -4181,7 +4181,7 @@ unsafe extern "C" fn tr_introsort(
                                             );
                                         }
                                     };
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4198,7 +4198,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                     'c_5963: {
-                                        if ssize < 64 as std::ffi::c_int {} else {
+                                        if ssize < 64 {} else {
                                             __assert_fail(
                                                 b"ssize < STACK_SIZE\0" as *const u8
                                                     as *const std::ffi::c_char,
@@ -4219,7 +4219,7 @@ unsafe extern "C" fn tr_introsort(
                                 } else if (1 as std::ffi::c_long)
                                     < last.offset_from(b) as std::ffi::c_long
                                 {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4236,7 +4236,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                     'c_5852: {
-                                        if ssize < 64 as std::ffi::c_int {} else {
+                                        if ssize < 64 {} else {
                                             __assert_fail(
                                                 b"ssize < STACK_SIZE\0" as *const u8
                                                     as *const std::ffi::c_char,
@@ -4266,7 +4266,7 @@ unsafe extern "C" fn tr_introsort(
                                 if (1 as std::ffi::c_long)
                                     < a.offset_from(first) as std::ffi::c_long
                                 {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4283,7 +4283,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                     'c_5700: {
-                                        if ssize < 64 as std::ffi::c_int {} else {
+                                        if ssize < 64 {} else {
                                             __assert_fail(
                                                 b"ssize < STACK_SIZE\0" as *const u8
                                                     as *const std::ffi::c_char,
@@ -4300,7 +4300,7 @@ unsafe extern "C" fn tr_introsort(
                                             );
                                         }
                                     };
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4317,7 +4317,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                     'c_5604: {
-                                        if ssize < 64 as std::ffi::c_int {} else {
+                                        if ssize < 64 {} else {
                                             __assert_fail(
                                                 b"ssize < STACK_SIZE\0" as *const u8
                                                     as *const std::ffi::c_char,
@@ -4336,7 +4336,7 @@ unsafe extern "C" fn tr_introsort(
                                     };
                                     last = a;
                                 } else {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4353,7 +4353,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                     'c_5498: {
-                                        if ssize < 64 as std::ffi::c_int {} else {
+                                        if ssize < 64 {} else {
                                             __assert_fail(
                                                 b"ssize < STACK_SIZE\0" as *const u8
                                                     as *const std::ffi::c_char,
@@ -4376,7 +4376,7 @@ unsafe extern "C" fn tr_introsort(
                                     limit = next;
                                 }
                             } else {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4393,7 +4393,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_5377: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4410,7 +4410,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                 };
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4427,7 +4427,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_5281: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4455,7 +4455,7 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
                             {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4472,7 +4472,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_5136: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4489,7 +4489,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                 };
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4506,7 +4506,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_5037: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4527,7 +4527,7 @@ unsafe extern "C" fn tr_introsort(
                             } else if (1 as std::ffi::c_long)
                                 < a.offset_from(first) as std::ffi::c_long
                             {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4544,7 +4544,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_4926: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4574,7 +4574,7 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
                             {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4591,7 +4591,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_4774: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4608,7 +4608,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                 };
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4625,7 +4625,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_4678: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4644,7 +4644,7 @@ unsafe extern "C" fn tr_introsort(
                                 };
                                 first = b;
                             } else {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4661,7 +4661,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_4572: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4684,7 +4684,7 @@ unsafe extern "C" fn tr_introsort(
                                 limit = next;
                             }
                         } else {
-                            if ssize < 64 as std::ffi::c_int {} else {
+                            if ssize < 64 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -4701,7 +4701,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                             'c_4451: {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4718,7 +4718,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                             };
-                            if ssize < 64 as std::ffi::c_int {} else {
+                            if ssize < 64 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -4735,7 +4735,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                             'c_4355: {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4770,7 +4770,7 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as std::ffi::c_long)
                                 < a.offset_from(first) as std::ffi::c_long
                             {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -4787,7 +4787,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_4178: {
-                                    if ssize < 64 as std::ffi::c_int {} else {
+                                    if ssize < 64 {} else {
                                         __assert_fail(
                                             b"ssize < STACK_SIZE\0" as *const u8
                                                 as *const std::ffi::c_char,
@@ -4849,7 +4849,7 @@ unsafe extern "C" fn tr_introsort(
                         } else if (1 as std::ffi::c_long)
                             < last.offset_from(b) as std::ffi::c_long
                         {
-                            if ssize < 64 as std::ffi::c_int {} else {
+                            if ssize < 64 {} else {
                                 __assert_fail(
                                     b"ssize < STACK_SIZE\0" as *const u8
                                         as *const std::ffi::c_char,
@@ -4866,7 +4866,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                             'c_3945: {
-                                if ssize < 64 as std::ffi::c_int {} else {
+                                if ssize < 64 {} else {
                                     __assert_fail(
                                         b"ssize < STACK_SIZE\0" as *const u8
                                             as *const std::ffi::c_char,
@@ -5009,11 +5009,11 @@ unsafe extern "C" fn trsort(
         unsorted = 0;
         loop {
             t = *first;
-            if t < 0 as std::ffi::c_int {
+            if t < 0 {
                 first = first.offset(-(t as isize));
                 skip += t;
             } else {
-                if skip != 0 as std::ffi::c_int {
+                if skip != 0 {
                     *first.offset(skip as isize) = skip;
                     skip = 0;
                 }
@@ -5025,14 +5025,14 @@ unsafe extern "C" fn trsort(
                 {
                     budget.count = 0;
                     tr_introsort(ISA, ISAd, SA, first, last, &mut budget);
-                    if budget.count != 0 as std::ffi::c_int {
+                    if budget.count != 0 {
                         unsorted += budget.count;
                     } else {
                         skip = first.offset_from(last) as std::ffi::c_long
                             as std::ffi::c_int;
                     }
                 } else if last.offset_from(first) as std::ffi::c_long
-                    == 1 as std::ffi::c_int as std::ffi::c_long
+                    == 1
                 {
                     skip = -(1 as std::ffi::c_int);
                 }
@@ -5042,10 +5042,10 @@ unsafe extern "C" fn trsort(
                 break;
             }
         }
-        if skip != 0 as std::ffi::c_int {
+        if skip != 0 {
             *first.offset(skip as isize) = skip;
         }
-        if unsorted == 0 as std::ffi::c_int {
+        if unsorted == 0 {
             break;
         }
         ISAd = ISAd.offset(ISAd.offset_from(ISA) as std::ffi::c_long as isize);
@@ -5208,7 +5208,7 @@ unsafe extern "C" fn sort_typeBstar(
                     }
                 }
                 *SA.offset((i + 1 as std::ffi::c_int) as isize) = i - j;
-                if i <= 0 as std::ffi::c_int {
+                if i <= 0 {
                     break;
                 }
             }
@@ -5218,7 +5218,7 @@ unsafe extern "C" fn sort_typeBstar(
                 *fresh168 = !*SA.offset(i as isize);
                 *ISAb.offset(*fresh168 as isize) = j;
                 i -= 1;
-                if !(*SA.offset(i as isize) < 0 as std::ffi::c_int) {
+                if !(*SA.offset(i as isize) < 0) {
                     break;
                 }
             }
@@ -5263,7 +5263,7 @@ unsafe extern "C" fn sort_typeBstar(
                 *SA
                     .offset(
                         *ISAb.offset(j as isize) as isize,
-                    ) = if t == 0 as std::ffi::c_int || (1 as std::ffi::c_int) < t - i {
+                    ) = if t == 0 || (1 as std::ffi::c_int) < t - i {
                     t
                 } else {
                     !t
@@ -5393,9 +5393,9 @@ unsafe extern "C" fn construct_SA(
                     k = k.offset(-1);
                     *fresh174 = s;
                 } else {
-                    if s == 0 as std::ffi::c_int
+                    if s == 0
                         && *T.offset(s as isize) as std::ffi::c_int == c1
-                        || s < 0 as std::ffi::c_int
+                        || s < 0
                     {} else {
                         __assert_fail(
                             b"((s == 0) && (T[s] == c1)) || (s < 0)\0" as *const u8
@@ -5413,9 +5413,9 @@ unsafe extern "C" fn construct_SA(
                         );
                     }
                     'c_2011: {
-                        if s == 0 as std::ffi::c_int
+                        if s == 0
                             && *T.offset(s as isize) as std::ffi::c_int == c1
-                            || s < 0 as std::ffi::c_int
+                            || s < 0
                         {} else {
                             __assert_fail(
                                 b"((s == 0) && (T[s] == c1)) || (s < 0)\0" as *const u8
@@ -5459,7 +5459,7 @@ unsafe extern "C" fn construct_SA(
         if (0 as std::ffi::c_int) < s {
             s -= 1;
             c0 = *T.offset(s as isize) as std::ffi::c_int;
-            if s == 0 as std::ffi::c_int
+            if s == 0
                 || (*T.offset((s - 1 as std::ffi::c_int) as isize) as std::ffi::c_int)
                     < c0
             {
@@ -5570,7 +5570,7 @@ unsafe extern "C" fn construct_BWT(
                     let fresh179 = k;
                     k = k.offset(-1);
                     *fresh179 = s;
-                } else if s != 0 as std::ffi::c_int {
+                } else if s != 0 {
                     *j = !s;
                 }
                 j = j.offset(-1);
@@ -5613,7 +5613,7 @@ unsafe extern "C" fn construct_BWT(
             let fresh182 = k;
             k = k.offset(1);
             *fresh182 = s;
-        } else if s != 0 as std::ffi::c_int {
+        } else if s != 0 {
             *i = !s;
         } else {
             orig = i;
@@ -5704,7 +5704,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                             );
                         }
                     };
-                    if s & mod_0 == 0 as std::ffi::c_int {
+                    if s & mod_0 == 0 {
                         *indexes
                             .offset(
                                 (s / (mod_0 + 1 as std::ffi::c_int) - 1 as std::ffi::c_int)
@@ -5731,7 +5731,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                     let fresh184 = k;
                     k = k.offset(-1);
                     *fresh184 = s;
-                } else if s != 0 as std::ffi::c_int {
+                } else if s != 0 {
                     *j = !s;
                 }
                 j = j.offset(-1);
@@ -5743,7 +5743,7 @@ unsafe extern "C" fn construct_BWT_indexes(
     }
     k = SA.offset(BUCKET_A!(c2 = T[n - 1]) as isize);
     if (*T.offset((n - 2 as std::ffi::c_int) as isize) as std::ffi::c_int) < c2 {
-        if n - 1 as std::ffi::c_int & mod_0 == 0 as std::ffi::c_int {
+        if n - 1 as std::ffi::c_int & mod_0 == 0 {
             *indexes
                 .offset(
                     ((n - 1 as std::ffi::c_int) / (mod_0 + 1 as std::ffi::c_int)
@@ -5764,7 +5764,7 @@ unsafe extern "C" fn construct_BWT_indexes(
     while i < j {
         s = *i;
         if (0 as std::ffi::c_int) < s {
-            if s & mod_0 == 0 as std::ffi::c_int {
+            if s & mod_0 == 0 {
                 *indexes
                     .offset(
                         (s / (mod_0 + 1 as std::ffi::c_int) - 1 as std::ffi::c_int)
@@ -5783,7 +5783,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                 && (*T.offset((s - 1 as std::ffi::c_int) as isize) as std::ffi::c_int)
                     < c0
             {
-                if s & mod_0 == 0 as std::ffi::c_int {
+                if s & mod_0 == 0 {
                     *indexes
                         .offset(
                             (s / (mod_0 + 1 as std::ffi::c_int) - 1 as std::ffi::c_int)
@@ -5799,7 +5799,7 @@ unsafe extern "C" fn construct_BWT_indexes(
                 k = k.offset(1);
                 *fresh189 = s;
             }
-        } else if s != 0 as std::ffi::c_int {
+        } else if s != 0 {
             *i = !s;
         } else {
             orig = i;
@@ -5820,14 +5820,14 @@ pub unsafe extern "C" fn divsufsort(
     let mut bucket_B = 0 as *mut std::ffi::c_int;
     let mut m: std::ffi::c_int = 0;
     let mut err: std::ffi::c_int = 0;
-    if T.is_null() || SA.is_null() || n < 0 as std::ffi::c_int {
+    if T.is_null() || SA.is_null() || n < 0 {
         return -(1 as std::ffi::c_int)
-    } else if n == 0 as std::ffi::c_int {
+    } else if n == 0 {
         return 0 as std::ffi::c_int
-    } else if n == 1 as std::ffi::c_int {
+    } else if n == 1 {
         *SA.offset(0) = 0;
         return 0 as std::ffi::c_int;
-    } else if n == 2 as std::ffi::c_int {
+    } else if n == 2 {
         m = ((*T.offset(0) as std::ffi::c_int)
             < *T.offset(1) as std::ffi::c_int)
             as std::ffi::c_int;
@@ -5869,10 +5869,10 @@ pub unsafe extern "C" fn divbwt(
     let mut m: std::ffi::c_int = 0;
     let mut pidx: std::ffi::c_int = 0;
     let mut i: std::ffi::c_int = 0;
-    if T.is_null() || U.is_null() || n < 0 as std::ffi::c_int {
+    if T.is_null() || U.is_null() || n < 0 {
         return -(1 as std::ffi::c_int)
-    } else if n <= 1 as std::ffi::c_int {
-        if n == 1 as std::ffi::c_int {
+    } else if n <= 1 {
+        if n == 1 {
             *U
                 .offset(
                     0 as std::ffi::c_int as isize,

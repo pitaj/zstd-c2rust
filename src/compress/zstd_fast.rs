@@ -210,7 +210,7 @@ pub const CACHELINE_SIZE: std::ffi::c_int = 64;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
-        == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
+        == 8) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
@@ -343,7 +343,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
             (*seqStorePtr).lit as *mut std::ffi::c_void,
             literals as *const std::ffi::c_void,
         );
-        if litLength > 16 as std::ffi::c_int as usize {
+        if litLength > 16 {
             ZSTD_wildcopy(
                 ((*seqStorePtr).lit).offset(16)
                     as *mut std::ffi::c_void,
@@ -514,7 +514,7 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     } else {
         lowestValid
     };
-    let isDictionary = ((*ms).loadedDictEnd != 0 as std::ffi::c_int as u32)
+    let isDictionary = ((*ms).loadedDictEnd != 0)
         as std::ffi::c_int as u32;
     let matchLowest = if isDictionary != 0 { lowestValid } else { withinWindow };
     return matchLowest;
@@ -532,7 +532,7 @@ unsafe extern "C" fn ZSTD_getLowestPrefixIndex(
     } else {
         lowestValid
     };
-    let isDictionary = ((*ms).loadedDictEnd != 0 as std::ffi::c_int as u32)
+    let isDictionary = ((*ms).loadedDictEnd != 0)
         as std::ffi::c_int as u32;
     let matchLowest = if isDictionary != 0 { lowestValid } else { withinWindow };
     return matchLowest;
@@ -544,7 +544,7 @@ unsafe extern "C" fn ZSTD_index_overlap_check(
 ) -> std::ffi::c_int {
     return (prefixLowestIndex
         .wrapping_sub(1)
-        .wrapping_sub(repIndex) >= 3 as std::ffi::c_int as u32) as std::ffi::c_int;
+        .wrapping_sub(repIndex) >= 3) as std::ffi::c_int;
 }
 pub const ZSTD_SHORT_CACHE_TAG_BITS: std::ffi::c_int = 8;
 pub const ZSTD_SHORT_CACHE_TAG_MASK: std::ffi::c_uint = ((1 as std::ffi::c_uint)
@@ -696,7 +696,7 @@ unsafe extern "C" fn ZSTD_fillHashTableForCDict(
                 );
                 if *hashTable
                     .offset((hashAndTag_0 >> ZSTD_SHORT_CACHE_TAG_BITS) as isize)
-                    == 0 as std::ffi::c_int as u32
+                    == 0
                 {
                     ZSTD_writeTaggedIndex(hashTable, hashAndTag_0, curr.wrapping_add(p));
                 }
@@ -737,7 +737,7 @@ unsafe extern "C" fn ZSTD_fillHashTableForCCtx(
                     hBits,
                     mls,
                 );
-                if *hashTable.offset(hash as isize) == 0 as std::ffi::c_int as u32 {
+                if *hashTable.offset(hash as isize) == 0 {
                     *hashTable.offset(hash as isize) = curr.wrapping_add(p);
                 }
                 p = p.wrapping_add(1);
@@ -903,7 +903,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
             current0 = ip0.offset_from(base) as std::ffi::c_long as u32;
             *hashTable.offset(hash0 as isize) = current0;
             if (MEM_read32(ip2 as *const std::ffi::c_void) == rval) as std::ffi::c_int
-                & (rep_offset1 > 0 as std::ffi::c_int as u32) as std::ffi::c_int != 0
+                & (rep_offset1 > 0) as std::ffi::c_int != 0
             {
                 ip0 = ip2;
                 match0 = ip0.offset(-(rep_offset1 as isize));
@@ -947,7 +947,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
                     )(ip0, base.offset(matchIdx as isize), matchIdx, prefixStartIndex)
                     != 0
                 {
-                    if step <= 4 as std::ffi::c_int as usize {
+                    if step <= 4 {
                         *hashTable
                             .offset(
                                 hash1 as isize,
@@ -1037,7 +1037,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
                     ) as isize,
                 ) = ip0.offset(-2_isize).offset_from(base)
                 as std::ffi::c_long as u32;
-            if rep_offset2 > 0 as std::ffi::c_int as u32 {
+            if rep_offset2 > 0 {
                 while ip0 <= ilimit
                     && MEM_read32(ip0 as *const std::ffi::c_void)
                         == MEM_read32(
@@ -1075,8 +1075,8 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
             }
         }
     }
-    offsetSaved2 = if offsetSaved1 != 0 as std::ffi::c_int as u32
-        && rep_offset1 != 0 as std::ffi::c_int as u32
+    offsetSaved2 = if offsetSaved1 != 0
+        && rep_offset1 != 0
     {
         offsetSaved1
     } else {
@@ -1237,7 +1237,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_fast(
     mut srcSize: usize,
 ) -> usize {
     let mml = (*ms).cParams.minMatch;
-    let useCmov = ((*ms).cParams.windowLog < 19 as std::ffi::c_int as std::ffi::c_uint)
+    let useCmov = ((*ms).cParams.windowLog < 19)
         as std::ffi::c_int;
     if useCmov != 0 {
         match mml {
@@ -1379,7 +1379,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_dictMatchState_generic(
     }
     ip0 = ip0
         .offset(
-            (dictAndPrefixLength == 0 as std::ffi::c_int as u32) as std::ffi::c_int
+            (dictAndPrefixLength == 0) as std::ffi::c_int
                 as isize,
         );
     's_135: while ip1 <= ilimit {
@@ -1830,9 +1830,9 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
             let repIndex = current2.wrapping_sub(offset_1);
             let repBase = if repIndex < prefixStartIndex { dictBase } else { base };
             let mut rval: u32 = 0;
-            if (prefixStartIndex.wrapping_sub(repIndex) >= 4 as std::ffi::c_int as u32)
+            if (prefixStartIndex.wrapping_sub(repIndex) >= 4)
                 as std::ffi::c_int
-                & (offset_1 > 0 as std::ffi::c_int as u32) as std::ffi::c_int != 0
+                & (offset_1 > 0) as std::ffi::c_int != 0
             {
                 rval = MEM_read32(
                     repBase.offset(repIndex as isize) as *const std::ffi::c_void,
@@ -1995,7 +1995,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
                     base.offset(repIndex2 as isize)
                 };
                 if !(ZSTD_index_overlap_check(prefixStartIndex, repIndex2)
-                    & (offset_2 > 0 as std::ffi::c_int as u32) as std::ffi::c_int != 0
+                    & (offset_2 > 0) as std::ffi::c_int != 0
                     && MEM_read32(repMatch2 as *const std::ffi::c_void)
                         == MEM_read32(ip0 as *const std::ffi::c_void))
                 {
@@ -2030,8 +2030,8 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
             }
         }
     }
-    offsetSaved2 = if offsetSaved1 != 0 as std::ffi::c_int as u32
-        && offset_1 != 0 as std::ffi::c_int as u32
+    offsetSaved2 = if offsetSaved1 != 0
+        && offset_1 != 0
     {
         offsetSaved1
     } else {

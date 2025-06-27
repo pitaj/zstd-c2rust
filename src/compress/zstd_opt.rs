@@ -257,7 +257,7 @@ pub const base_0possible: base_directive_e = 0;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
-        == 8 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
+        == 8) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
@@ -386,7 +386,7 @@ unsafe extern "C" fn ZSTD_LLcode(mut litLength: u32) -> u32 {
         24 as std::ffi::c_int as u8,
     ];
     static mut LL_deltaCode: u32 = 19;
-    return if litLength > 63 as std::ffi::c_int as u32 {
+    return if litLength > 63 {
         (ZSTD_highbit32(litLength)).wrapping_add(LL_deltaCode)
     } else {
         LL_Code[litLength as usize] as std::ffi::c_uint
@@ -525,7 +525,7 @@ unsafe extern "C" fn ZSTD_MLcode(mut mlBase: u32) -> u32 {
         42 as std::ffi::c_int as u8,
     ];
     static mut ML_deltaCode: u32 = 36;
-    return if mlBase > 127 as std::ffi::c_int as u32 {
+    return if mlBase > 127 {
         (ZSTD_highbit32(mlBase)).wrapping_add(ML_deltaCode)
     } else {
         ML_Code[mlBase as usize] as std::ffi::c_uint
@@ -600,7 +600,7 @@ unsafe extern "C" fn ZSTD_storeSeq(
             (*seqStorePtr).lit as *mut std::ffi::c_void,
             literals as *const std::ffi::c_void,
         );
-        if litLength > 16 as std::ffi::c_int as usize {
+        if litLength > 16 {
             ZSTD_wildcopy(
                 ((*seqStorePtr).lit).offset(16)
                     as *mut std::ffi::c_void,
@@ -632,7 +632,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
         let repCode = OFFBASE_TO_REPCODE!(offBase)
             .wrapping_sub(1)
             .wrapping_add(ll0);
-        if repCode > 0 as std::ffi::c_int as u32 {
+        if repCode > 0 {
             let currentOffset = if repCode == ZSTD_REP_NUM as u32 {
                 (*rep.offset(0))
                     .wrapping_sub(1)
@@ -642,7 +642,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
             *rep
                 .offset(
                     2 as std::ffi::c_int as isize,
-                ) = if repCode >= 2 as std::ffi::c_int as u32 {
+                ) = if repCode >= 2 {
                 *rep.offset(1)
             } else {
                 *rep.offset(2)
@@ -837,7 +837,7 @@ unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     } else {
         lowestValid
     };
-    let isDictionary = ((*ms).loadedDictEnd != 0 as std::ffi::c_int as u32)
+    let isDictionary = ((*ms).loadedDictEnd != 0)
         as std::ffi::c_int as u32;
     let matchLowest = if isDictionary != 0 { lowestValid } else { withinWindow };
     return matchLowest;
@@ -849,7 +849,7 @@ unsafe extern "C" fn ZSTD_index_overlap_check(
 ) -> std::ffi::c_int {
     return (prefixLowestIndex
         .wrapping_sub(1)
-        .wrapping_sub(repIndex) >= 3 as std::ffi::c_int as u32) as std::ffi::c_int;
+        .wrapping_sub(repIndex) >= 3) as std::ffi::c_int;
 }
 pub const ZSTD_OPT_NUM: std::ffi::c_int = (1 as std::ffi::c_int)
     << 12;
@@ -1158,7 +1158,7 @@ unsafe extern "C" fn ZSTD_downscaleStats(
         let base = (if base1 as std::ffi::c_uint != 0 {
             1 as std::ffi::c_int
         } else {
-            (*table.offset(s as isize) > 0 as std::ffi::c_int as std::ffi::c_uint)
+            (*table.offset(s as isize) > 0)
                 as std::ffi::c_int
         }) as std::ffi::c_uint;
         let newStat = base.wrapping_add(*table.offset(s as isize) >> shift);
@@ -1179,7 +1179,7 @@ unsafe extern "C" fn ZSTD_scaleStats(
         lastEltIndex.wrapping_add(1) as usize,
     );
     let factor = prevsum >> logTarget;
-    if factor <= 1 as std::ffi::c_int as u32 {
+    if factor <= 1 {
         return prevsum;
     }
     return ZSTD_downscaleStats(
@@ -1197,7 +1197,7 @@ unsafe extern "C" fn ZSTD_rescaleFreqs(
 ) {
     let compressedLiterals = ZSTD_compressedLiterals(optPtr);
     (*optPtr).priceType = zop_dynamic;
-    if (*optPtr).litLengthSum == 0 as std::ffi::c_int as u32 {
+    if (*optPtr).litLengthSum == 0 {
         if srcSize <= ZSTD_PREDEF_THRESHOLD as usize {
             (*optPtr).priceType = zop_predef;
         }
@@ -1481,7 +1481,7 @@ unsafe extern "C" fn ZSTD_rawLiteralsCost(
     optPtr: *const optState_t,
     mut optLevel: std::ffi::c_int,
 ) -> u32 {
-    if litLength == 0 as std::ffi::c_int as u32 {
+    if litLength == 0 {
         return 0 as std::ffi::c_int as u32;
     }
     if ZSTD_compressedLiterals(optPtr) == 0 {
@@ -1557,7 +1557,7 @@ unsafe extern "C" fn ZSTD_getMatchPrice(
             ((*optPtr).offCodeSumBasePrice)
                 .wrapping_sub(WEIGHT!(optPtr -> offCodeFreq[offCode], optLevel)),
         );
-    if optLevel < 2 as std::ffi::c_int && offCode >= 20 as std::ffi::c_int as u32 {
+    if optLevel < 2 && offCode >= 20 {
         price = price
             .wrapping_add(
                 offCode.wrapping_sub(19)
@@ -1773,7 +1773,7 @@ unsafe extern "C" fn ZSTD_insertBt1(
     *largerPtr = 0;
     *smallerPtr = *largerPtr;
     let mut positions: u32 = 0;
-    if bestLength > 384 as std::ffi::c_int as usize {
+    if bestLength > 384 {
         positions = if 192_u32
             < bestLength.wrapping_sub(384) as u32
         {
@@ -1842,7 +1842,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
     let base = (*ms).window.base;
     let curr = ip.offset_from(base) as std::ffi::c_long as u32;
     let hashLog = (*cParams).hashLog;
-    let minMatch = (if mls == 3 as std::ffi::c_int as u32 {
+    let minMatch = (if mls == 3 {
         3 as std::ffi::c_int
     } else {
         4 as std::ffi::c_int
@@ -2049,7 +2049,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
         repCode = repCode.wrapping_add(1);
         repCode;
     }
-    if mls == 3 as std::ffi::c_int as u32 && bestLength < mls as usize {
+    if mls == 3 && bestLength < mls as usize {
         let matchIndex3 = ZSTD_insertAndFindFirstIndexHash3(ms, nextToUpdate3, ip);
         if (matchIndex3 >= matchLow) as std::ffi::c_int
             & (curr.wrapping_sub(matchIndex3)
@@ -2575,7 +2575,7 @@ unsafe extern "C" fn ZSTD_optLdm_skipRawSeqStoreBytes(
             break;
         }
     }
-    if currPos == 0 as std::ffi::c_int as u32
+    if currPos == 0
         || (*rawSeqStore).pos == (*rawSeqStore).size
     {
         (*rawSeqStore).posInSequence = 0;
@@ -2594,7 +2594,7 @@ unsafe extern "C" fn ZSTD_opt_getNextMatchAndUpdateSeqStore(
     let mut currBlockEndPos: u32 = 0;
     let mut literalsBytesRemaining: u32 = 0;
     let mut matchBytesRemaining: u32 = 0;
-    if (*optLdm).seqStore.size == 0 as std::ffi::c_int as usize
+    if (*optLdm).seqStore.size == 0
         || (*optLdm).seqStore.pos >= (*optLdm).seqStore.size
     {
         (*optLdm).startPosInBlock = UINT_MAX;
@@ -2610,7 +2610,7 @@ unsafe extern "C" fn ZSTD_opt_getNextMatchAndUpdateSeqStore(
     } else {
         0 as std::ffi::c_int as u32
     };
-    matchBytesRemaining = if literalsBytesRemaining == 0 as std::ffi::c_int as u32 {
+    matchBytesRemaining = if literalsBytesRemaining == 0 {
         (currSeq.matchLength)
             .wrapping_sub(
                 ((*optLdm).seqStore.posInSequence as u32).wrapping_sub(currSeq.litLength),
@@ -2660,7 +2660,7 @@ unsafe extern "C" fn ZSTD_optLdm_maybeAddMatch(
     {
         return;
     }
-    if *nbMatches == 0 as std::ffi::c_int as u32
+    if *nbMatches == 0
         || candidateMatchLength
             > (*matches
                 .offset((*nbMatches).wrapping_sub(1) as isize))
@@ -2681,7 +2681,7 @@ unsafe extern "C" fn ZSTD_optLdm_processMatchCandidate(
     mut remainingBytes: u32,
     mut minMatch: u32,
 ) {
-    if (*optLdm).seqStore.size == 0 as std::ffi::c_int as usize
+    if (*optLdm).seqStore.size == 0
         || (*optLdm).seqStore.pos >= (*optLdm).seqStore.size
     {
         return;
@@ -2720,7 +2720,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
     let cParams: *const ZSTD_compressionParameters = &mut (*ms).cParams;
     let mut getAllMatches = ZSTD_selectBtGetAllMatches(ms, dictMode);
     let sufficient_len = MIN!(cParams -> targetLength, ZSTD_OPT_NUM - 1);
-    let minMatch = (if (*cParams).minMatch == 3 as std::ffi::c_int as std::ffi::c_uint {
+    let minMatch = (if (*cParams).minMatch == 3 {
         3 as std::ffi::c_int
     } else {
         4 as std::ffi::c_int
@@ -2881,9 +2881,9 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                             );
                         (*opt.offset(cur as isize)).litlen = litlen_0;
                         (*opt.offset(cur as isize)).price = price;
-                        if optLevel >= 1 as std::ffi::c_int
-                            && prevMatch.litlen == 0 as std::ffi::c_int as u32
-                            && LL_INCPRICE!(1) < 0 as std::ffi::c_int
+                        if optLevel >= 1
+                            && prevMatch.litlen == 0
+                            && LL_INCPRICE!(1) < 0
                             && LIKELY!(ip + cur < iend) != 0
                         {
                             let mut with1literal = prevMatch.price + LIT_PRICE!(ip + cur)
@@ -2904,7 +2904,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                                         as *const u32,
                                     prevMatch.off,
                                     ((*opt.offset(prev as isize)).litlen
-                                        == 0 as std::ffi::c_int as u32) as std::ffi::c_int as u32,
+                                        == 0) as std::ffi::c_int as u32,
                                 );
                                 *opt
                                     .offset(
@@ -2938,7 +2938,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                             }
                         }
                     }
-                    if (*opt.offset(cur as isize)).litlen == 0 as std::ffi::c_int as u32
+                    if (*opt.offset(cur as isize)).litlen == 0
                     {
                         let prev_0 = cur.wrapping_sub((*opt.offset(cur as isize)).mlen);
                         let newReps_0 = ZSTD_newRep(
@@ -2946,7 +2946,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                                 as *const u32,
                             (*opt.offset(cur as isize)).off,
                             ((*opt.offset(prev_0 as isize)).litlen
-                                == 0 as std::ffi::c_int as u32) as std::ffi::c_int as u32,
+                                == 0) as std::ffi::c_int as u32,
                         );
                         libc::memcpy(
                             ((*opt.offset(cur as isize)).rep).as_mut_ptr()
@@ -2961,7 +2961,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                             current_block = 10357520176418200368;
                             break;
                         }
-                        if !(optLevel == 0 as std::ffi::c_int
+                        if !(optLevel == 0
                             && (*opt
                                 .offset(
                                     cur.wrapping_add(1) as isize,
@@ -2971,7 +2971,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                                     + BITCOST_MULTIPLIER / 2 as std::ffi::c_int)
                         {
                             let ll0_0 = ((*opt.offset(cur as isize)).litlen
-                                == 0 as std::ffi::c_int as u32) as std::ffi::c_int as u32;
+                                == 0) as std::ffi::c_int as u32;
                             let previousPrice = (*opt.offset(cur as isize)).price;
                             let basePrice = previousPrice + LL_PRICE!(0);
                             let mut nbMatches_0 = getAllMatches
@@ -3026,7 +3026,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                                     while matchNb_0 < nbMatches_0 {
                                         let offset = (*matches.offset(matchNb_0 as isize)).off;
                                         let lastML = (*matches.offset(matchNb_0 as isize)).len;
-                                        let startML = if matchNb_0 > 0 as std::ffi::c_int as u32 {
+                                        let startML = if matchNb_0 > 0 {
                                             ((*matches
                                                 .offset(
                                                     matchNb_0.wrapping_sub(1) as isize,
@@ -3059,7 +3059,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                                                 (*opt.offset(pos_0 as isize))
                                                     .litlen = 0;
                                                 (*opt.offset(pos_0 as isize)).price = price_0;
-                                            } else if optLevel == 0 as std::ffi::c_int {
+                                            } else if optLevel == 0 {
                                                 break;
                                             }
                                             mlen = mlen.wrapping_sub(1);
@@ -3088,15 +3088,15 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                     }
                 }
             }
-            if lastStretch.mlen == 0 as std::ffi::c_int as u32 {
+            if lastStretch.mlen == 0 {
                 ip = ip.offset(last_pos as isize);
             } else {
-                if lastStretch.litlen == 0 as std::ffi::c_int as u32 {
+                if lastStretch.litlen == 0 {
                     let reps = ZSTD_newRep(
                         ((*opt.offset(cur as isize)).rep).as_mut_ptr() as *const u32,
                         lastStretch.off,
                         ((*opt.offset(cur as isize)).litlen
-                            == 0 as std::ffi::c_int as u32) as std::ffi::c_int as u32,
+                            == 0) as std::ffi::c_int as u32,
                     );
                     libc::memcpy(
                         rep as *mut std::ffi::c_void,
@@ -3116,7 +3116,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                 let storeEnd = cur.wrapping_add(2);
                 let mut storeStart = storeEnd;
                 let mut stretchPos = cur;
-                if lastStretch.litlen > 0 as std::ffi::c_int as u32 {
+                if lastStretch.litlen > 0 {
                     (*opt.offset(storeEnd as isize)).litlen = lastStretch.litlen;
                     (*opt.offset(storeEnd as isize)).mlen = 0;
                     storeStart = storeEnd.wrapping_sub(1);
@@ -3127,7 +3127,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                 loop {
                     let mut nextStretch = *opt.offset(stretchPos as isize);
                     (*opt.offset(storeStart as isize)).litlen = nextStretch.litlen;
-                    if nextStretch.mlen == 0 as std::ffi::c_int as u32 {
+                    if nextStretch.mlen == 0 {
                         break;
                     }
                     storeStart = storeStart.wrapping_sub(1);
@@ -3145,7 +3145,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
                     let mlen_0 = (*opt.offset(storePos as isize)).mlen;
                     let offBase_0 = (*opt.offset(storePos as isize)).off;
                     let advance = llen.wrapping_add(mlen_0);
-                    if mlen_0 == 0 as std::ffi::c_int as u32 {
+                    if mlen_0 == 0 {
                         ip = anchor.offset(llen as isize);
                     } else {
                         ZSTD_updateStats(optStatePtr, llen, anchor, offBase_0, mlen_0);
@@ -3262,7 +3262,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_btultra2(
 ) -> usize {
     let curr = (src as *const u8).offset_from((*ms).window.base) as std::ffi::c_long
         as u32;
-    if (*ms).opt.litLengthSum == 0 as std::ffi::c_int as u32
+    if (*ms).opt.litLengthSum == 0
         && (*seqStore).sequences == (*seqStore).sequencesStart
         && (*ms).window.dictLimit == (*ms).window.lowLimit
         && curr == (*ms).window.dictLimit && srcSize > ZSTD_PREDEF_THRESHOLD as usize

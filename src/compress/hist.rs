@@ -90,7 +90,7 @@ pub unsafe extern "C" fn HIST_count_simple(
                 ::core::mem::size_of::<std::ffi::c_uint>(),
             ) as usize,
     );
-    if srcSize == 0 as std::ffi::c_int as usize {
+    if srcSize == 0 {
         *maxSymbolValuePtr = 0;
         return 0 as std::ffi::c_int as std::ffi::c_uint;
     }
@@ -234,7 +234,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     }
     let mut s: u32 = 0;
     s = 0;
-    while s < 256 as std::ffi::c_int as u32 {
+    while s < 256 {
         let ref mut fresh22 = *Counting1.offset(s as isize);
         *fresh22 = (*fresh22)
             .wrapping_add(
@@ -273,7 +273,7 @@ pub unsafe extern "C" fn HIST_countFast_wksp(
     mut workSpace: *mut std::ffi::c_void,
     mut workSpaceSize: usize,
 ) -> usize {
-    if sourceSize < 1500 as std::ffi::c_int as usize {
+    if sourceSize < 1500 {
         return HIST_count_simple(count, maxSymbolValuePtr, source, sourceSize) as usize;
     }
     if workSpace as usize & 3 as std::ffi::c_int as usize != 0 {
@@ -306,7 +306,7 @@ pub unsafe extern "C" fn HIST_count_wksp(
     if workSpaceSize < HIST_WKSP_SIZE {
         return ERROR!(workSpace_tooSmall);
     }
-    if *maxSymbolValuePtr < 255 as std::ffi::c_int as std::ffi::c_uint {
+    if *maxSymbolValuePtr < 255 {
         return HIST_count_parallel_wksp(
             count,
             maxSymbolValuePtr,

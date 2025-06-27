@@ -91,7 +91,7 @@ pub struct FSE_DState_t {
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
-        == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
+        == 4) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
@@ -165,7 +165,7 @@ unsafe extern "C" fn BIT_initDStream(
     mut srcBuffer: *const std::ffi::c_void,
     mut srcSize: usize,
 ) -> usize {
-    if srcSize < 1 as std::ffi::c_int as usize {
+    if srcSize < 1 {
         libc::memset(
             bitD as *mut std::ffi::c_void,
             0 as std::ffi::c_int,
@@ -197,7 +197,7 @@ unsafe extern "C" fn BIT_initDStream(
         } else {
             0 as std::ffi::c_int as std::ffi::c_uint
         };
-        if lastByte as std::ffi::c_int == 0 as std::ffi::c_int {
+        if lastByte as std::ffi::c_int == 0 {
             return ERROR!(GENERIC);
         }
     } else {
@@ -316,7 +316,7 @@ unsafe extern "C" fn BIT_initDStream(
         } else {
             0 as std::ffi::c_int as std::ffi::c_uint
         };
-        if lastByte_0 as std::ffi::c_int == 0 as std::ffi::c_int {
+        if lastByte_0 as std::ffi::c_int == 0 {
             return ERROR!(corruption_detected);
         }
         (*bitD)
@@ -610,7 +610,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
             s_2 = s_2.wrapping_add(1);
             s_2;
         }
-        if position_0 != 0 as std::ffi::c_int as u32 {
+        if position_0 != 0 {
             return ERROR!(GENERIC);
         }
     }

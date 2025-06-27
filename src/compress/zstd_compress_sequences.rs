@@ -138,7 +138,7 @@ pub struct ZSTD_BuildCTableWksp {
 #[inline]
 unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
-        == 4 as std::ffi::c_int as std::ffi::c_ulong) as std::ffi::c_int
+        == 4) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 #[inline]
@@ -495,7 +495,7 @@ unsafe extern "C" fn BIT_closeCStream(mut bitC: *mut BIT_CStream_t) -> usize {
     }
     return (((*bitC).ptr).offset_from((*bitC).startPtr) as std::ffi::c_long as usize)
         .wrapping_add(
-            ((*bitC).bitPos > 0 as std::ffi::c_int as std::ffi::c_uint)
+            ((*bitC).bitPos > 0)
                 as std::ffi::c_int as usize,
         );
 }
@@ -768,7 +768,7 @@ unsafe extern "C" fn ZSTD_getFSEMaxSymbolValue(
     return maxSymbolValue;
 }
 unsafe extern "C" fn ZSTD_useLowProbCount(nbSeq: usize) -> std::ffi::c_uint {
-    return (nbSeq >= 2048 as std::ffi::c_int as usize) as std::ffi::c_int
+    return (nbSeq >= 2048) as std::ffi::c_int
         as std::ffi::c_uint;
 }
 unsafe extern "C" fn ZSTD_NCountCost(
@@ -814,8 +814,8 @@ unsafe extern "C" fn ZSTD_entropyCost(
         let mut norm = ((256 as std::ffi::c_uint)
             .wrapping_mul(*count.offset(s as isize)) as usize / total)
             as std::ffi::c_uint;
-        if *count.offset(s as isize) != 0 as std::ffi::c_int as std::ffi::c_uint
-            && norm == 0 as std::ffi::c_int as std::ffi::c_uint
+        if *count.offset(s as isize) != 0
+            && norm == 0
         {
             norm = 1;
         }
@@ -854,7 +854,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
         let badCost = tableLog.wrapping_add(1)
             << kAccuracyLog;
         let bitCost = FSE_bitCost(cstate.symbolTT, tableLog, s, kAccuracyLog);
-        if !(*count.offset(s as isize) == 0 as std::ffi::c_int as std::ffi::c_uint) {
+        if !(*count.offset(s as isize) == 0) {
             if bitCost >= badCost {
                 return ERROR!(GENERIC);
             }
@@ -913,7 +913,7 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
     if mostFrequent == nbSeq {
         *repeatMode = FSE_repeat_none;
         if isDefaultAllowed as std::ffi::c_uint != 0
-            && nbSeq <= 2 as std::ffi::c_int as usize
+            && nbSeq <= 2
         {
             return set_basic;
         }
@@ -1001,7 +1001,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
                     FSE_buildCTable_rle(nextCTable, (u8) max), ""
                 );
             }
-            if dstCapacity == 0 as std::ffi::c_int as usize {
+            if dstCapacity == 0 {
                 return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
             }
             *op = *codeTable.offset(0);
@@ -1042,7 +1042,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
                         .offset(
                             nbSeq.wrapping_sub(1) as isize,
                         ) as isize,
-                ) > 1 as std::ffi::c_int as std::ffi::c_uint
+                ) > 1
             {
                 let ref mut fresh0 = *count
                     .offset(
@@ -1255,7 +1255,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
             llBits,
         );
         if MEM_32bits() != 0
-            && llBits.wrapping_add(mlBits) > 24 as std::ffi::c_int as u32
+            && llBits.wrapping_add(mlBits) > 24
         {
             BIT_flushBits(&mut blockStream);
         }
@@ -1266,7 +1266,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
         );
         if MEM_32bits() != 0
             || ofBits_0.wrapping_add(mlBits).wrapping_add(llBits)
-                > 56 as std::ffi::c_int as u32
+                > 56
         {
             BIT_flushBits(&mut blockStream);
         }
@@ -1302,7 +1302,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
     FSE_flushCState(&mut blockStream, &mut stateOffsetBits);
     FSE_flushCState(&mut blockStream, &mut stateLitLength);
     let streamSize = BIT_closeCStream(&mut blockStream);
-    if streamSize == 0 as std::ffi::c_int as usize {
+    if streamSize == 0 {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     return streamSize;
