@@ -2823,10 +2823,9 @@ unsafe extern "C" fn sssort(
     }
     if lastsuffix != 0 {
         let mut PAi: [std::ffi::c_int; 2] = [0; 2];
-        PAi[0 as std::ffi::c_int
-            as usize] = *PA
+        PAi[0] = *PA
             .offset(*first.offset(-1_isize) as isize);
-        PAi[1 as usize] = n - 2;
+        PAi[1] = n - 2;
         a = first;
         i = *first.offset(-1_isize);
         while a < last

@@ -338,16 +338,13 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
         (*dctx).HUFptr = ((*ddict).entropy.hufTable).as_ptr();
         (*dctx)
             .entropy
-            .rep[0 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[0 as usize];
+            .rep[0] = (*ddict).entropy.rep[0];
         (*dctx)
             .entropy
-            .rep[1 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[1 as usize];
+            .rep[1] = (*ddict).entropy.rep[1];
         (*dctx)
             .entropy
-            .rep[2 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[2 as usize];
+            .rep[2] = (*ddict).entropy.rep[2];
     } else {
         (*dctx).litEntropy = 0;
         (*dctx).fseEntropy = 0;
@@ -427,8 +424,7 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
     (*ddict).dictSize = dictSize;
     (*ddict)
         .entropy
-        .hufTable[0 as std::ffi::c_int
-        as usize] = (12 as std::ffi::c_int * 0x1000001 as std::ffi::c_int) as HUF_DTable;
+        .hufTable[0] = (12 as std::ffi::c_int * 0x1000001 as std::ffi::c_int) as HUF_DTable;
     let err_code = FORWARD_IF_ERROR!(
         ZSTD_loadEntropy_intoDDict(ddict, dictContentType), ""
     );

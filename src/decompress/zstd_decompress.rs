@@ -3379,8 +3379,7 @@ pub unsafe extern "C" fn ZSTD_decompressBegin(mut dctx: *mut ZSTD_DCtx) -> usize
     (*dctx).dictEnd = NULL as *const std::ffi::c_void;
     (*dctx)
         .entropy
-        .hufTable[0 as std::ffi::c_int
-        as usize] = (12 as std::ffi::c_int * 0x1000001 as std::ffi::c_int) as HUF_DTable;
+        .hufTable[0] = (12 as std::ffi::c_int * 0x1000001 as std::ffi::c_int) as HUF_DTable;
     (*dctx).fseEntropy = 0;
     (*dctx).litEntropy = (*dctx).fseEntropy;
     (*dctx).dictID = 0;

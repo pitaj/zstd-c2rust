@@ -7904,7 +7904,7 @@ unsafe extern "C" fn ZSTD_copyBlockSequences(
                 rawOffset = repcodes
                     .rep[repcode.wrapping_sub(1) as usize];
             } else if repcode == 3 {
-                rawOffset = (repcodes.rep[0 as usize])
+                rawOffset = (repcodes.rep[0])
                     .wrapping_sub(1);
             } else {
                 rawOffset = repcodes.rep[repcode as usize];
@@ -10238,18 +10238,15 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     (*bs)
-        .rep[0 as std::ffi::c_int
-        as usize] = MEM_readLE32(
+        .rep[0] = MEM_readLE32(
         dictPtr.offset(0) as *const std::ffi::c_void,
     );
     (*bs)
-        .rep[1 as std::ffi::c_int
-        as usize] = MEM_readLE32(
+        .rep[1] = MEM_readLE32(
         dictPtr.offset(4) as *const std::ffi::c_void,
     );
     (*bs)
-        .rep[2 as std::ffi::c_int
-        as usize] = MEM_readLE32(
+        .rep[2] = MEM_readLE32(
         dictPtr.offset(8) as *const std::ffi::c_void,
     );
     dictPtr = dictPtr.offset(12);

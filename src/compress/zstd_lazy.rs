@@ -1906,21 +1906,21 @@ unsafe extern "C" fn ZSTD_row_getSSEMask(
         i;
     }
     if nbChunks == 1 {
-        return ZSTD_rotateRight_U16(matches[0 as usize] as u16, head)
+        return ZSTD_rotateRight_U16(matches[0] as u16, head)
             as ZSTD_VecMask;
     }
     if nbChunks == 2 {
         return ZSTD_rotateRight_U32(
-            (matches[1 as usize] as u32) << 16
-                | matches[0 as usize] as u32,
+            (matches[1] as u32) << 16
+                | matches[0] as u32,
             head,
         ) as ZSTD_VecMask;
     }
     return ZSTD_rotateRight_U64(
-        (matches[3 as usize] as u64) << 48
-            | (matches[2 as usize] as u64) << 32
-            | (matches[1 as usize] as u64) << 16
-            | matches[0 as usize] as u64,
+        (matches[3] as u64) << 48
+            | (matches[2] as u64) << 32
+            | (matches[1] as u64) << 16
+            | matches[0] as u64,
         head,
     );
 }
