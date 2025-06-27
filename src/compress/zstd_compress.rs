@@ -13990,10 +13990,10 @@ unsafe extern "C" fn convertSequences_noRepcodes(
         (*dstSeqs.offset(n as isize))
             .mlBase = ((*inSeqs.offset(n as isize)).matchLength)
             .wrapping_sub(MINMATCH as std::ffi::c_uint) as u16;
-        if UNLIKELY!(inSeqs[n].matchLength > 65535 + MINMATCH) != 0 {
+        if UNLIKELY!((*inSeqs.offset(n as isize)).matchLength > 65535 + MINMATCH) != 0 {
             longLen = n.wrapping_add(1);
         }
-        if UNLIKELY!(inSeqs[n].litLength > 65535) != 0 {
+        if UNLIKELY!((*inSeqs.offset(n as isize)).litLength > 65535) != 0 {
             longLen = n
                 .wrapping_add(nbSequences)
                 .wrapping_add(1);

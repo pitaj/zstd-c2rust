@@ -463,7 +463,7 @@ unsafe extern "C" fn BIT_reloadDStream_internal(
 unsafe extern "C" fn BIT_reloadDStreamFast(
     mut bitD: *mut BIT_DStream_t,
 ) -> BIT_DStream_status {
-    if UNLIKELY!(bitD -> ptr < bitD -> limitPtr) != 0 {
+    if UNLIKELY!((*bitD).ptr < (*bitD).limitPtr) != 0 {
         return BIT_DStream_overflow;
     }
     return BIT_reloadDStream_internal(bitD);
