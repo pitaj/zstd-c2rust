@@ -329,10 +329,10 @@ unsafe extern "C" fn FSE_initCState2(
         .offset(symbol as isize);
     let mut stateTable = (*statePtr).stateTable as *const u16;
     let mut nbBitsOut = (symbolTT.deltaNbBits)
-        .wrapping_add(((1 as std::ffi::c_int) << 15 as std::ffi::c_int) as u32)
-        >> 16 as std::ffi::c_int;
+        .wrapping_add(((1 as std::ffi::c_int) << 15) as u32)
+        >> 16;
     (*statePtr)
-        .value = (nbBitsOut << 16 as std::ffi::c_int).wrapping_sub(symbolTT.deltaNbBits)
+        .value = (nbBitsOut << 16).wrapping_sub(symbolTT.deltaNbBits)
         as ptrdiff_t;
     (*statePtr)
         .value = *stateTable
@@ -351,7 +351,7 @@ unsafe extern "C" fn FSE_encodeSymbol(
         .offset(symbol as isize);
     let stateTable = (*statePtr).stateTable as *const u16;
     let nbBitsOut = ((*statePtr).value + symbolTT.deltaNbBits as ptrdiff_t
-        >> 16 as std::ffi::c_int) as u32;
+        >> 16) as u32;
     BIT_addBits(bitC, (*statePtr).value as BitContainerType, nbBitsOut);
     (*statePtr)
         .value = *stateTable
@@ -377,9 +377,9 @@ unsafe extern "C" fn FSE_bitCost(
 ) -> u32 {
     let mut symbolTT = symbolTTPtr as *const FSE_symbolCompressionTransform;
     let minNbBits = (*symbolTT.offset(symbolValue as isize)).deltaNbBits
-        >> 16 as std::ffi::c_int;
+        >> 16;
     let threshold = minNbBits.wrapping_add(1 as std::ffi::c_int as u32)
-        << 16 as std::ffi::c_int;
+        << 16;
     let tableSize = ((1 as std::ffi::c_int) << tableLog) as u32;
     let deltaFromThreshold = threshold
         .wrapping_sub(
@@ -473,7 +473,7 @@ unsafe extern "C" fn BIT_addBitsFast(
 }
 #[inline]
 unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
-    let nbBytes = ((*bitC).bitPos >> 3 as std::ffi::c_int) as usize;
+    let nbBytes = ((*bitC).bitPos >> 3) as usize;
     MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
     if (*bitC).ptr > (*bitC).endPtr {
@@ -827,7 +827,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
         s = s.wrapping_add(1);
         s;
     }
-    return (cost >> 8 as std::ffi::c_int) as usize;
+    return (cost >> 8) as usize;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_fseBitCost(
@@ -894,7 +894,7 @@ pub unsafe extern "C" fn ZSTD_crossEntropyCost(
         s = s.wrapping_add(1);
         s;
     }
-    return cost >> 8 as std::ffi::c_int;
+    return cost >> 8;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_selectEncodingType(
@@ -956,7 +956,7 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
             ERROR!(GENERIC)
         };
         let NCountCost = ZSTD_NCountCost(count, max, nbSeq, FSELog);
-        let compressedCost = (NCountCost << 3 as std::ffi::c_int)
+        let compressedCost = (NCountCost << 3)
             .wrapping_add(ZSTD_entropyCost(count, max, nbSeq));
         isDefaultAllowed as u64 != 0;
         if basicCost <= repeatCost && basicCost <= compressedCost {

@@ -162,14 +162,14 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh4 = (*fresh4).wrapping_add(1);
         *fresh4;
         let ref mut fresh5 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 8) as u8 as isize);
         *fresh5 = (*fresh5).wrapping_add(1);
         *fresh5;
         let ref mut fresh6 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 16) as u8 as isize);
         *fresh6 = (*fresh6).wrapping_add(1);
         *fresh6;
-        let ref mut fresh7 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
+        let ref mut fresh7 = *Counting4.offset((c >> 24) as isize);
         *fresh7 = (*fresh7).wrapping_add(1);
         *fresh7;
         c = cached;
@@ -179,14 +179,14 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh8 = (*fresh8).wrapping_add(1);
         *fresh8;
         let ref mut fresh9 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 8) as u8 as isize);
         *fresh9 = (*fresh9).wrapping_add(1);
         *fresh9;
         let ref mut fresh10 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 16) as u8 as isize);
         *fresh10 = (*fresh10).wrapping_add(1);
         *fresh10;
-        let ref mut fresh11 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
+        let ref mut fresh11 = *Counting4.offset((c >> 24) as isize);
         *fresh11 = (*fresh11).wrapping_add(1);
         *fresh11;
         c = cached;
@@ -196,14 +196,14 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh12 = (*fresh12).wrapping_add(1);
         *fresh12;
         let ref mut fresh13 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 8) as u8 as isize);
         *fresh13 = (*fresh13).wrapping_add(1);
         *fresh13;
         let ref mut fresh14 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 16) as u8 as isize);
         *fresh14 = (*fresh14).wrapping_add(1);
         *fresh14;
-        let ref mut fresh15 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
+        let ref mut fresh15 = *Counting4.offset((c >> 24) as isize);
         *fresh15 = (*fresh15).wrapping_add(1);
         *fresh15;
         c = cached;
@@ -213,14 +213,14 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh16 = (*fresh16).wrapping_add(1);
         *fresh16;
         let ref mut fresh17 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 8) as u8 as isize);
         *fresh17 = (*fresh17).wrapping_add(1);
         *fresh17;
         let ref mut fresh18 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
+            .offset((c >> 16) as u8 as isize);
         *fresh18 = (*fresh18).wrapping_add(1);
         *fresh18;
-        let ref mut fresh19 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
+        let ref mut fresh19 = *Counting4.offset((c >> 24) as isize);
         *fresh19 = (*fresh19).wrapping_add(1);
         *fresh19;
     }

@@ -747,7 +747,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
 }
 static mut prime3bytes: u32 = 506832829 as std::ffi::c_uint;
 unsafe extern "C" fn ZSTD_hash3(mut u: u32, mut h: u32, mut s: u32) -> u32 {
-    return ((u << 32 as std::ffi::c_int - 24 as std::ffi::c_int) * prime3bytes ^ s)
+    return ((u << 32 - 24 as std::ffi::c_int) * prime3bytes ^ s)
         >> (32 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 #[inline]
@@ -769,7 +769,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
 }
 static mut prime5bytes: u64 = 889523592379 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 40 as std::ffi::c_int) * prime5bytes ^ s)
+    return ((u << 64 - 40 as std::ffi::c_int) * prime5bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash5Ptr(
@@ -780,7 +780,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
 }
 static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 48 as std::ffi::c_int) * prime6bytes ^ s)
+    return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash6Ptr(
@@ -791,7 +791,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
 }
 static mut prime7bytes: u64 = 58295818150454627 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 56 as std::ffi::c_int) * prime7bytes ^ s)
+    return ((u << 64 - 56 as std::ffi::c_int) * prime7bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash7Ptr(
@@ -852,7 +852,7 @@ unsafe extern "C" fn ZSTD_index_overlap_check(
         .wrapping_sub(repIndex) >= 3 as std::ffi::c_int as u32) as std::ffi::c_int;
 }
 pub const ZSTD_OPT_NUM: std::ffi::c_int = (1 as std::ffi::c_int)
-    << 12 as std::ffi::c_int;
+    << 12;
 pub const ZSTD_REP_NUM: std::ffi::c_int = 3 as std::ffi::c_int;
 pub const MINMATCH: std::ffi::c_int = 3 as std::ffi::c_int;
 pub const Litbits: std::ffi::c_int = 8 as std::ffi::c_int;
@@ -1049,9 +1049,9 @@ unsafe extern "C" fn FSE_getMaxNbBits(
     let mut symbolTT = symbolTTPtr as *const FSE_symbolCompressionTransform;
     return ((*symbolTT.offset(symbolValue as isize)).deltaNbBits)
         .wrapping_add(
-            (((1 as std::ffi::c_int) << 16 as std::ffi::c_int) - 1 as std::ffi::c_int)
+            (((1 as std::ffi::c_int) << 16) - 1 as std::ffi::c_int)
                 as u32,
-        ) >> 16 as std::ffi::c_int;
+        ) >> 16;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> std::ffi::c_uint {
@@ -1073,14 +1073,14 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
     if MEM_isLittleEndian() != 0 {
         if MEM_64bits() != 0 {
-            return ZSTD_countTrailingZeros64(val) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros64(val) >> 3
         } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
     } else if MEM_64bits() != 0 {
-        return ZSTD_countLeadingZeros64(val) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros64(val) >> 3
     } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros32(val as u32) >> 3
     };
 }
 #[inline]
@@ -1094,7 +1094,7 @@ pub const UINT_MAX: std::ffi::c_uint = (__INT_MAX__ as std::ffi::c_uint)
 pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
 pub const ZSTD_LITFREQ_ADD: std::ffi::c_int = 2 as std::ffi::c_int;
 pub const ZSTD_MAX_PRICE: std::ffi::c_int = (1 as std::ffi::c_int)
-    << 30 as std::ffi::c_int;
+    << 30;
 pub const ZSTD_PREDEF_THRESHOLD: std::ffi::c_int = 8 as std::ffi::c_int;
 pub const BITCOST_ACCURACY: std::ffi::c_int = 8 as std::ffi::c_int;
 pub const BITCOST_MULTIPLIER: std::ffi::c_int = (1 as std::ffi::c_int)
@@ -1485,7 +1485,7 @@ unsafe extern "C" fn ZSTD_rawLiteralsCost(
         return 0 as std::ffi::c_int as u32;
     }
     if ZSTD_compressedLiterals(optPtr) == 0 {
-        return (litLength << 3 as std::ffi::c_int) * BITCOST_MULTIPLIER as u32;
+        return (litLength << 3) * BITCOST_MULTIPLIER as u32;
     }
     if (*optPtr).priceType as std::ffi::c_uint
         == zop_predef as std::ffi::c_int as std::ffi::c_uint
@@ -1627,9 +1627,9 @@ unsafe extern "C" fn ZSTD_readMINMATCH(
     match length {
         3 => {
             if MEM_isLittleEndian() != 0 {
-                return MEM_read32(memPtr) << 8 as std::ffi::c_int
+                return MEM_read32(memPtr) << 8
             } else {
-                return MEM_read32(memPtr) >> 8 as std::ffi::c_int
+                return MEM_read32(memPtr) >> 8
             }
         }
         4 | _ => return MEM_read32(memPtr),
@@ -2053,7 +2053,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
         let matchIndex3 = ZSTD_insertAndFindFirstIndexHash3(ms, nextToUpdate3, ip);
         if (matchIndex3 >= matchLow) as std::ffi::c_int
             & (curr.wrapping_sub(matchIndex3)
-                < ((1 as std::ffi::c_int) << 18 as std::ffi::c_int) as u32)
+                < ((1 as std::ffi::c_int) << 18) as u32)
                 as std::ffi::c_int != 0
         {
             let mut mlen: usize = 0;

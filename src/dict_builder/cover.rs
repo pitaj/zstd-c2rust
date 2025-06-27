@@ -852,7 +852,7 @@ unsafe extern "C" fn COVER_ctx_init(
                 -(1 as std::ffi::c_int) as std::ffi::c_uint
             } else {
                 (1 as std::ffi::c_int as std::ffi::c_uint)
-                    .wrapping_mul((1 as std::ffi::c_uint) << 30 as std::ffi::c_int)
+                    .wrapping_mul((1 as std::ffi::c_uint) << 30)
             }) as usize
     {
         if displayLevel >= 1 as std::ffi::c_int {
@@ -860,15 +860,15 @@ unsafe extern "C" fn COVER_ctx_init(
                 stderr,
                 b"Total samples size is too large (%u MB), maximum size is %u MB\n\0"
                     as *const u8 as *const std::ffi::c_char,
-                (totalSamplesSize >> 20 as std::ffi::c_int) as std::ffi::c_uint,
+                (totalSamplesSize >> 20) as std::ffi::c_uint,
                 (if ::core::mem::size_of::<usize>()
                     == 8 as std::ffi::c_int as std::ffi::c_ulong
                 {
                     -(1 as std::ffi::c_int) as std::ffi::c_uint
                 } else {
                     (1 as std::ffi::c_int as std::ffi::c_uint)
-                        .wrapping_mul((1 as std::ffi::c_uint) << 30 as std::ffi::c_int)
-                }) >> 20 as std::ffi::c_int,
+                        .wrapping_mul((1 as std::ffi::c_uint) << 30)
+                }) >> 20,
             );
             fflush(stderr);
         }
@@ -1133,17 +1133,17 @@ unsafe extern "C" fn COVER_buildDictionary(
         4 as std::ffi::c_int as u32,
     );
     let maxZeroScoreRun = (if 10 as std::ffi::c_int as u32
-        > (if (100 as std::ffi::c_int as u32) < epochs.num >> 3 as std::ffi::c_int {
+        > (if (100 as std::ffi::c_int as u32) < epochs.num >> 3 {
             100 as std::ffi::c_int as u32
         } else {
-            epochs.num >> 3 as std::ffi::c_int
+            epochs.num >> 3
         })
     {
         10 as std::ffi::c_int as u32
-    } else if (100 as std::ffi::c_int as u32) < epochs.num >> 3 as std::ffi::c_int {
+    } else if (100 as std::ffi::c_int as u32) < epochs.num >> 3 {
         100 as std::ffi::c_int as u32
     } else {
-        epochs.num >> 3 as std::ffi::c_int
+        epochs.num >> 3
     }) as usize;
     let mut zeroScoreRun: usize = 0;
     let mut epoch: usize = 0;

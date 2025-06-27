@@ -752,7 +752,7 @@ pub struct dictItem {
 }
 pub const MINRATIO: std::ffi::c_int = 4 as std::ffi::c_int;
 pub const ZDICT_MAX_SAMPLES_SIZE: std::ffi::c_uint = (2000 as std::ffi::c_uint)
-    << 20 as std::ffi::c_int;
+    << 20;
 pub const ZDICT_MIN_SAMPLES_SIZE: std::ffi::c_int = ZDICT_CONTENTSIZE_MIN * MINRATIO;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
@@ -841,14 +841,14 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
     if MEM_isLittleEndian() != 0 {
         if MEM_64bits() != 0 {
-            return ZSTD_countTrailingZeros64(val) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros64(val) >> 3
         } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
     } else if MEM_64bits() != 0 {
-        return ZSTD_countLeadingZeros64(val) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros64(val) >> 3
     } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros32(val as u32) >> 3
     };
 }
 #[inline]
@@ -857,7 +857,7 @@ unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 pub const HUF_WORKSPACE_SIZE: std::ffi::c_int = ((8 as std::ffi::c_int)
-    << 10 as std::ffi::c_int) + 512 as std::ffi::c_int;
+    << 10) + 512 as std::ffi::c_int;
 pub const ZSTD_CLEVEL_DEFAULT: std::ffi::c_int = 3 as std::ffi::c_int;
 pub const ZSTD_MAGIC_DICTIONARY: std::ffi::c_uint = 0xec30a437 as std::ffi::c_uint;
 pub const ZSTD_BLOCKSIZELOG_MAX: std::ffi::c_int = 17 as std::ffi::c_int;
@@ -1835,8 +1835,8 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                     stderr,
                     b"sample set too large : reduced to %u MB ...\n\0" as *const u8
                         as *const std::ffi::c_char,
-                    (2000 as std::ffi::c_uint) << 20 as std::ffi::c_int
-                        >> 20 as std::ffi::c_int,
+                    (2000 as std::ffi::c_uint) << 20
+                        >> 20,
                 );
                 fflush(stderr);
             }
@@ -1851,7 +1851,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                 b"sorting %u files of total size %u MB ...\n\0" as *const u8
                     as *const std::ffi::c_char,
                 nbFiles,
-                (bufferSize >> 20 as std::ffi::c_int) as std::ffi::c_uint,
+                (bufferSize >> 20) as std::ffi::c_uint,
             );
             fflush(stderr);
         }
@@ -1997,7 +1997,7 @@ unsafe extern "C" fn ZDICT_fillNoise(
     while p < length {
         acc = acc.wrapping_mul(prime2);
         *(buffer as *mut std::ffi::c_uchar)
-            .offset(p as isize) = (acc >> 21 as std::ffi::c_int) as std::ffi::c_uchar;
+            .offset(p as isize) = (acc >> 21) as std::ffi::c_uchar;
         p = p.wrapping_add(1);
         p;
     }
@@ -2206,7 +2206,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         dictBufferSize
             .wrapping_add(
                 (128 as std::ffi::c_int
-                    * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as usize,
+                    * ((1 as std::ffi::c_int) << 10)) as usize,
             ) as u32,
     );
     let mut matchLengthCount: [std::ffi::c_uint; 53] = [0; 53];
@@ -2713,7 +2713,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
         0 as std::ffi::c_int as XXH64_hash_t,
     );
     let compliantID = (randomID
-        % ((1 as std::ffi::c_uint) << 31 as std::ffi::c_int)
+        % ((1 as std::ffi::c_uint) << 31)
             .wrapping_sub(32768 as std::ffi::c_int as std::ffi::c_uint) as u64)
         .wrapping_add(32768 as std::ffi::c_int as u64) as u32;
     let dictID = if params.dictID != 0 { params.dictID } else { compliantID };
@@ -2830,7 +2830,7 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
         0 as std::ffi::c_int as XXH64_hash_t,
     );
     let compliantID = (randomID
-        % ((1 as std::ffi::c_uint) << 31 as std::ffi::c_int)
+        % ((1 as std::ffi::c_uint) << 31)
             .wrapping_sub(32768 as std::ffi::c_int as std::ffi::c_uint) as u64)
         .wrapping_add(32768 as std::ffi::c_int as u64) as u32;
     let dictID = if params.dictID != 0 { params.dictID } else { compliantID };
@@ -3011,7 +3011,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                     stderr,
                     b"!  consider increasing the number of samples (total size : %u MB)\n\0"
                         as *const u8 as *const std::ffi::c_char,
-                    (samplesBuffSize >> 20 as std::ffi::c_int) as std::ffi::c_uint,
+                    (samplesBuffSize >> 20) as std::ffi::c_uint,
                 );
                 fflush(stderr);
             }

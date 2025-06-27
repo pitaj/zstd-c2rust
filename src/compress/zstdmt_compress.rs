@@ -963,7 +963,7 @@ unsafe extern "C" fn ZSTD_ipow(mut base: u64, mut exponent: u64) -> u64 {
         if exponent & 1 as std::ffi::c_int as u64 != 0 {
             power = power * base;
         }
-        exponent >>= 1 as std::ffi::c_int;
+        exponent >>= 1;
         base = base * base;
     }
     return power;
@@ -1112,7 +1112,7 @@ unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32:
 }
 pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 pub const ZSTDMT_JOBSIZE_MIN: std::ffi::c_int = 512 as std::ffi::c_int
-    * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int);
+    * ((1 as std::ffi::c_int) << 10);
 #[inline]
 unsafe extern "C" fn ZSTD_customMalloc(
     mut size: usize,
@@ -1230,7 +1230,7 @@ unsafe extern "C" fn ZSTDMT_createBufferPool(
     }
     (*bufPool)
         .bufferSize = (64 as std::ffi::c_int
-        * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as usize;
+        * ((1 as std::ffi::c_int) << 10)) as usize;
     (*bufPool).totalBuffers = maxNbBuffers;
     (*bufPool).nbBuffers = 0 as std::ffi::c_int as std::ffi::c_uint;
     (*bufPool).cMem = cMem;
@@ -1303,7 +1303,7 @@ unsafe extern "C" fn ZSTDMT_getBuffer(mut bufPool: *mut ZSTDMT_bufferPool) -> Bu
         let availBufferSize = buf.capacity;
         *((*bufPool).buffers).offset((*bufPool).nbBuffers as isize) = g_nullBuffer;
         if (availBufferSize >= bSize) as std::ffi::c_int
-            & (availBufferSize >> 3 as std::ffi::c_int <= bSize) as std::ffi::c_int != 0
+            & (availBufferSize >> 3 <= bSize) as std::ffi::c_int != 0
         {
             ZSTD_pthread_mutex_unlock!(
                 & bufPool -> poolMutex
@@ -2595,16 +2595,16 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     }
     if params.jobSize
         > (if MEM_32bits() != 0 {
-            512 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20 as std::ffi::c_int)
+            512 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)
         } else {
-            1024 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20 as std::ffi::c_int)
+            1024 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)
         }) as usize
     {
         params
             .jobSize = (if MEM_32bits() != 0 {
-            512 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20 as std::ffi::c_int)
+            512 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)
         } else {
-            1024 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20 as std::ffi::c_int)
+            1024 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)
         }) as usize;
     }
     if (*mtctx).allJobsCompleted == 0 as std::ffi::c_int as std::ffi::c_uint {
@@ -2641,7 +2641,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
             << ZSTDMT_computeTargetJobLog(&mut params)) as usize;
     }
     if params.rsyncable != 0 {
-        let jobSizeKB = ((*mtctx).targetSectionSize >> 10 as std::ffi::c_int) as u32;
+        let jobSizeKB = ((*mtctx).targetSectionSize >> 10) as u32;
         let rsyncBits = (ZSTD_highbit32(jobSizeKB))
             .wrapping_add(10 as std::ffi::c_int as std::ffi::c_uint);
         (*mtctx).rsync.hash = 0 as std::ffi::c_int as u64;

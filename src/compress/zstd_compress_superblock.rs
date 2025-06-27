@@ -691,8 +691,8 @@ unsafe extern "C" fn ZSTD_noCompressBlock(
     mut lastBlock: u32,
 ) -> usize {
     let cBlockHeader24 = lastBlock
-        .wrapping_add((bt_raw as std::ffi::c_int as u32) << 1 as std::ffi::c_int)
-        .wrapping_add((srcSize << 3 as std::ffi::c_int) as u32);
+        .wrapping_add((bt_raw as std::ffi::c_int as u32) << 1)
+        .wrapping_add((srcSize << 3) as u32);
     if srcSize.wrapping_add(ZSTD_blockHeaderSize) > dstCapacity {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
@@ -775,14 +775,14 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u
         *p
             .offset(
                 1 as std::ffi::c_int as isize,
-            ) = (val as std::ffi::c_int >> 8 as std::ffi::c_int) as u8;
+            ) = (val as std::ffi::c_int >> 8) as u8;
     };
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE24(mut memPtr: *mut std::ffi::c_void, mut val: u32) {
     MEM_writeLE16(memPtr, val as u16);
     *(memPtr as *mut u8)
-        .offset(2 as std::ffi::c_int as isize) = (val >> 16 as std::ffi::c_int) as u8;
+        .offset(2 as std::ffi::c_int as isize) = (val >> 16) as u8;
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
@@ -1055,11 +1055,11 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
     let lhSize = (3 as std::ffi::c_int
         + (litSize
             >= ((1 as std::ffi::c_int
-                * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as usize)
+                * ((1 as std::ffi::c_int) << 10)) as usize)
                 .wrapping_sub(header)) as std::ffi::c_int
         + (litSize
             >= ((16 as std::ffi::c_int
-                * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as usize)
+                * ((1 as std::ffi::c_int) << 10)) as usize)
                 .wrapping_sub(header)) as std::ffi::c_int) as usize;
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
@@ -1147,11 +1147,11 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
         < (3 as std::ffi::c_int
             + (cLitSize
                 >= (1 as std::ffi::c_int
-                    * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as usize)
+                    * ((1 as std::ffi::c_int) << 10)) as usize)
                 as std::ffi::c_int
             + (cLitSize
                 >= (16 as std::ffi::c_int
-                    * ((1 as std::ffi::c_int) << 10 as std::ffi::c_int)) as usize)
+                    * ((1 as std::ffi::c_int) << 10)) as usize)
                 as std::ffi::c_int) as usize
     {
         return ZSTD_noCompressLiterals(
@@ -1166,33 +1166,33 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
             let lhc = (hType as std::ffi::c_uint)
                 .wrapping_add(
                     ((singleStream == 0) as std::ffi::c_int as u32)
-                        << 2 as std::ffi::c_int,
+                        << 2,
                 )
-                .wrapping_add((litSize as u32) << 4 as std::ffi::c_int)
-                .wrapping_add((cLitSize as u32) << 14 as std::ffi::c_int);
+                .wrapping_add((litSize as u32) << 4)
+                .wrapping_add((cLitSize as u32) << 14);
             MEM_writeLE24(ostart as *mut std::ffi::c_void, lhc);
         }
         4 => {
             let lhc_0 = (hType as std::ffi::c_uint)
                 .wrapping_add(
-                    ((2 as std::ffi::c_int) << 2 as std::ffi::c_int) as std::ffi::c_uint,
+                    ((2 as std::ffi::c_int) << 2) as std::ffi::c_uint,
                 )
-                .wrapping_add((litSize as u32) << 4 as std::ffi::c_int)
-                .wrapping_add((cLitSize as u32) << 18 as std::ffi::c_int);
+                .wrapping_add((litSize as u32) << 4)
+                .wrapping_add((cLitSize as u32) << 18);
             MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_0);
         }
         5 => {
             let lhc_1 = (hType as std::ffi::c_uint)
                 .wrapping_add(
-                    ((3 as std::ffi::c_int) << 2 as std::ffi::c_int) as std::ffi::c_uint,
+                    ((3 as std::ffi::c_int) << 2) as std::ffi::c_uint,
                 )
-                .wrapping_add((litSize as u32) << 4 as std::ffi::c_int)
-                .wrapping_add((cLitSize as u32) << 22 as std::ffi::c_int);
+                .wrapping_add((litSize as u32) << 4)
+                .wrapping_add((cLitSize as u32) << 22);
             MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_1);
             *ostart
                 .offset(
                     4 as std::ffi::c_int as isize,
-                ) = (cLitSize >> 10 as std::ffi::c_int) as u8;
+                ) = (cLitSize >> 10) as u8;
         }
         _ => {}
     }
@@ -1259,7 +1259,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
         *op
             .offset(
                 0 as std::ffi::c_int as isize,
-            ) = (nbSeq >> 8 as std::ffi::c_int)
+            ) = (nbSeq >> 8)
             .wrapping_add(0x80 as std::ffi::c_int as usize) as u8;
         *op.offset(1 as std::ffi::c_int as isize) = nbSeq as u8;
         op = op.offset(2 as std::ffi::c_int as isize);
@@ -1281,9 +1281,9 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
         let LLtype = (*fseMetadata).llType as u32;
         let Offtype = (*fseMetadata).ofType as u32;
         let MLtype = (*fseMetadata).mlType as u32;
-        *seqHead = (LLtype << 6 as std::ffi::c_int)
-            .wrapping_add(Offtype << 4 as std::ffi::c_int)
-            .wrapping_add(MLtype << 2 as std::ffi::c_int) as u8;
+        *seqHead = (LLtype << 6)
+            .wrapping_add(Offtype << 4)
+            .wrapping_add(MLtype << 2) as u8;
         libc::memcpy(
             ZSTD_memcpy!(
                 op, fseMetadata -> fseTablesBuffer, fseMetadata -> fseTablesSize
@@ -1298,9 +1298,9 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
         op = op.offset((*fseMetadata).fseTablesSize as isize);
     } else {
         let repeat = set_repeat as std::ffi::c_int as u32;
-        *seqHead = (repeat << 6 as std::ffi::c_int)
-            .wrapping_add(repeat << 4 as std::ffi::c_int)
-            .wrapping_add(repeat << 2 as std::ffi::c_int) as u8;
+        *seqHead = (repeat << 6)
+            .wrapping_add(repeat << 4)
+            .wrapping_add(repeat << 2) as u8;
     }
     let bitstreamSize = ZSTD_encodeSequences(
         op as *mut std::ffi::c_void,
@@ -1405,8 +1405,8 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
     let mut cSize = (op.offset_from(ostart) as std::ffi::c_long as usize)
         .wrapping_sub(ZSTD_blockHeaderSize);
     let cBlockHeader24 = lastBlock
-        .wrapping_add((bt_compressed as std::ffi::c_int as u32) << 1 as std::ffi::c_int)
-        .wrapping_add((cSize << 3 as std::ffi::c_int) as u32);
+        .wrapping_add((bt_compressed as std::ffi::c_int as u32) << 1)
+        .wrapping_add((cSize << 3) as u32);
     MEM_writeLE24(ostart as *mut std::ffi::c_void, cBlockHeader24);
     return op.offset_from(ostart) as std::ffi::c_long as usize;
 }

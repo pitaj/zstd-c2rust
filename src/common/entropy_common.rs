@@ -197,7 +197,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     if nbBits > FSE_TABLELOG_ABSOLUTE_MAX {
         return ERROR!(tableLog_tooLarge);
     }
-    bitStream >>= 4 as std::ffi::c_int;
+    bitStream >>= 4;
     bitCount = 4 as std::ffi::c_int;
     *tableLogPtr = nbBits as std::ffi::c_uint;
     remaining = ((1 as std::ffi::c_int) << nbBits) + 1 as std::ffi::c_int;
@@ -208,7 +208,7 @@ unsafe extern "C" fn FSE_readNCount_body(
         if previous0 != 0 {
             let mut repeats = (ZSTD_countTrailingZeros32(
                 !bitStream | 0x80000000 as std::ffi::c_uint,
-            ) >> 1 as std::ffi::c_int) as std::ffi::c_int;
+            ) >> 1) as std::ffi::c_int;
             while repeats >= 12 as std::ffi::c_int {
                 charnum = charnum
                     .wrapping_add(
@@ -229,11 +229,11 @@ unsafe extern "C" fn FSE_readNCount_body(
                 bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
                 repeats = (ZSTD_countTrailingZeros32(
                     !bitStream | 0x80000000 as std::ffi::c_uint,
-                ) >> 1 as std::ffi::c_int) as std::ffi::c_int;
+                ) >> 1) as std::ffi::c_int;
             }
             charnum = charnum
                 .wrapping_add((3 as std::ffi::c_int * repeats) as std::ffi::c_uint);
-            bitStream >>= 2 as std::ffi::c_int * repeats;
+            bitStream >>= 2 * repeats;
             bitCount += 2 as std::ffi::c_int * repeats;
             charnum = charnum.wrapping_add(bitStream & 3 as std::ffi::c_int as u32);
             bitCount += 2 as std::ffi::c_int;
@@ -241,10 +241,10 @@ unsafe extern "C" fn FSE_readNCount_body(
                 break;
             }
             if LIKELY!(ip <= iend - 7) != 0
-                || ip.offset((bitCount >> 3 as std::ffi::c_int) as isize)
+                || ip.offset((bitCount >> 3) as isize)
                     <= iend.offset(-(4 as std::ffi::c_int as isize))
             {
-                ip = ip.offset((bitCount >> 3 as std::ffi::c_int) as isize);
+                ip = ip.offset((bitCount >> 3) as isize);
                 bitCount &= 7 as std::ffi::c_int;
             } else {
                 bitCount
@@ -295,10 +295,10 @@ unsafe extern "C" fn FSE_readNCount_body(
             break;
         }
         if LIKELY!(ip <= iend - 7) != 0
-            || ip.offset((bitCount >> 3 as std::ffi::c_int) as isize)
+            || ip.offset((bitCount >> 3) as isize)
                 <= iend.offset(-(4 as std::ffi::c_int as isize))
         {
-            ip = ip.offset((bitCount >> 3 as std::ffi::c_int) as isize);
+            ip = ip.offset((bitCount >> 3) as isize);
             bitCount &= 7 as std::ffi::c_int;
         } else {
             bitCount
@@ -320,7 +320,7 @@ unsafe extern "C" fn FSE_readNCount_body(
         return ERROR!(corruption_detected);
     }
     *maxSVPtr = charnum.wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint);
-    ip = ip.offset((bitCount + 7 as std::ffi::c_int >> 3 as std::ffi::c_int) as isize);
+    ip = ip.offset((bitCount + 7 as std::ffi::c_int >> 3) as isize);
     return ip.offset_from(istart) as std::ffi::c_long as usize;
 }
 unsafe extern "C" fn FSE_readNCount_body_default(
@@ -459,7 +459,7 @@ unsafe extern "C" fn HUF_readStats_body(
                 .offset(
                     n as isize,
                 ) = (*ip.offset((n / 2 as std::ffi::c_int as u32) as isize)
-                as std::ffi::c_int >> 4 as std::ffi::c_int) as u8;
+                as std::ffi::c_int >> 4) as u8;
             *huffWeight
                 .offset(
                     n.wrapping_add(1 as std::ffi::c_int as u32) as isize,
@@ -507,7 +507,7 @@ unsafe extern "C" fn HUF_readStats_body(
             .wrapping_add(
                 ((1 as std::ffi::c_int)
                     << *huffWeight.offset(n_0 as isize) as std::ffi::c_int
-                    >> 1 as std::ffi::c_int) as u32,
+                    >> 1) as u32,
             );
         n_0 = n_0.wrapping_add(1);
         n_0;

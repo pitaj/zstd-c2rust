@@ -442,7 +442,7 @@ unsafe extern "C" fn MEM_readLE16(mut memPtr: *const std::ffi::c_void) -> u16 {
         let mut p = memPtr as *const u8;
         return (*p.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int
             + ((*p.offset(1 as std::ffi::c_int as isize) as std::ffi::c_int)
-                << 8 as std::ffi::c_int)) as u16;
+                << 8)) as u16;
     };
 }
 #[inline]
@@ -450,7 +450,7 @@ unsafe extern "C" fn MEM_readLE24(mut memPtr: *const std::ffi::c_void) -> u32 {
     return (MEM_readLE16(memPtr) as u32)
         .wrapping_add(
             (*(memPtr as *const u8).offset(2 as std::ffi::c_int as isize) as u32)
-                << 16 as std::ffi::c_int,
+                << 16,
         );
 }
 #[inline]
@@ -613,7 +613,7 @@ unsafe extern "C" fn BIT_initDStream(
                     .wrapping_add(
                         (*(srcBuffer as *const u8)
                             .offset(3 as std::ffi::c_int as isize) as BitContainerType)
-                            << 24 as std::ffi::c_int,
+                            << 24,
                     );
                 current_block_32 = 3706235558033962171;
             }
@@ -626,7 +626,7 @@ unsafe extern "C" fn BIT_initDStream(
                     .wrapping_add(
                         (*(srcBuffer as *const u8)
                             .offset(2 as std::ffi::c_int as isize) as BitContainerType)
-                            << 16 as std::ffi::c_int,
+                            << 16,
                     );
                 current_block_32 = 3205284525055210370;
             }
@@ -639,7 +639,7 @@ unsafe extern "C" fn BIT_initDStream(
                     .wrapping_add(
                         (*(srcBuffer as *const u8)
                             .offset(1 as std::ffi::c_int as isize) as BitContainerType)
-                            << 8 as std::ffi::c_int,
+                            << 8,
                     );
             }
             _ => {}
@@ -732,7 +732,7 @@ unsafe extern "C" fn BIT_reloadDStream_internal(
 ) -> BIT_DStream_status {
     (*bitD)
         .ptr = ((*bitD).ptr)
-        .offset(-(((*bitD).bitsConsumed >> 3 as std::ffi::c_int) as isize));
+        .offset(-(((*bitD).bitsConsumed >> 3) as isize));
     (*bitD).bitsConsumed &= 7 as std::ffi::c_int as std::ffi::c_uint;
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return BIT_DStream_unfinished;
@@ -763,7 +763,7 @@ unsafe extern "C" fn BIT_reloadDStream(
         }
         return BIT_DStream_completed;
     }
-    let mut nbBytes = (*bitD).bitsConsumed >> 3 as std::ffi::c_int;
+    let mut nbBytes = (*bitD).bitsConsumed >> 3;
     let mut result = BIT_DStream_unfinished;
     if ((*bitD).ptr).offset(-(nbBytes as isize)) < (*bitD).start {
         nbBytes = ((*bitD).ptr).offset_from((*bitD).start) as std::ffi::c_long as u32;
@@ -1155,10 +1155,10 @@ pub unsafe extern "C" fn ZSTD_getcBlockSize(
         return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
     }
     let cBlockHeader = MEM_readLE24(src);
-    let cSize = cBlockHeader >> 3 as std::ffi::c_int;
+    let cSize = cBlockHeader >> 3;
     (*bpPtr).lastBlock = cBlockHeader & 1 as std::ffi::c_int as u32;
     (*bpPtr)
-        .blockType = (cBlockHeader >> 1 as std::ffi::c_int & 3 as std::ffi::c_int as u32)
+        .blockType = (cBlockHeader >> 1 & 3 as std::ffi::c_int as u32)
         as blockType_e;
     (*bpPtr).origSize = cSize;
     if (*bpPtr).blockType as std::ffi::c_uint
@@ -1199,22 +1199,22 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
         (*dctx).litBufferLocation = ZSTD_in_dst;
     } else if litSize
         <= (if 64 as std::ffi::c_int
-            > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+            > (if ((1 as std::ffi::c_int) << 16)
+                < (128 as std::ffi::c_int) << 10
             {
-                (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                (1 as std::ffi::c_int) << 16
             } else {
-                (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                (128 as std::ffi::c_int) << 10
             })
         {
             64 as std::ffi::c_int
         } else {
-            (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+            (if ((1 as std::ffi::c_int) << 16)
+                < (128 as std::ffi::c_int) << 10
             {
-                (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                (1 as std::ffi::c_int) << 16
             } else {
-                (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                (128 as std::ffi::c_int) << 10
             })
         }) as usize
     {
@@ -1229,22 +1229,22 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
                 .offset(-(litSize as isize))
                 .offset(
                     (if 64 as std::ffi::c_int
-                        > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                            < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        > (if ((1 as std::ffi::c_int) << 16)
+                            < (128 as std::ffi::c_int) << 10
                         {
-                            (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                            (1 as std::ffi::c_int) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (128 as std::ffi::c_int) << 10
                         })
                     {
                         64 as std::ffi::c_int
                     } else {
-                        (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                            < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (if ((1 as std::ffi::c_int) << 16)
+                            < (128 as std::ffi::c_int) << 10
                         {
-                            (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                            (1 as std::ffi::c_int) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (128 as std::ffi::c_int) << 10
                         })
                     }) as isize,
                 )
@@ -1254,22 +1254,22 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
                 .offset(litSize as isize)
                 .offset(
                     -((if 64 as std::ffi::c_int
-                        > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                            < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        > (if ((1 as std::ffi::c_int) << 16)
+                            < (128 as std::ffi::c_int) << 10
                         {
-                            (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                            (1 as std::ffi::c_int) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (128 as std::ffi::c_int) << 10
                         })
                     {
                         64 as std::ffi::c_int
                     } else {
-                        (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                            < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (if ((1 as std::ffi::c_int) << 16)
+                            < (128 as std::ffi::c_int) << 10
                         {
-                            (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                            (1 as std::ffi::c_int) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (128 as std::ffi::c_int) << 10
                         })
                     }) as isize),
                 );
@@ -1309,14 +1309,14 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             let mut litSize_0: usize = 0;
             let mut lhSize_0: usize = 0;
             let lhlCode_0 = (*istart.offset(0 as std::ffi::c_int as isize)
-                as std::ffi::c_int >> 2 as std::ffi::c_int & 3 as std::ffi::c_int)
+                as std::ffi::c_int >> 2 & 3 as std::ffi::c_int)
                 as u32;
             let mut expectedWriteSize_0 = MIN!(blockSizeMax, dstCapacity);
             match lhlCode_0 {
                 1 => {
                     lhSize_0 = 2 as std::ffi::c_int as usize;
                     litSize_0 = (MEM_readLE16(istart as *const std::ffi::c_void)
-                        as std::ffi::c_int >> 4 as std::ffi::c_int) as usize;
+                        as std::ffi::c_int >> 4) as usize;
                 }
                 3 => {
                     lhSize_0 = 3 as std::ffi::c_int as usize;
@@ -1325,12 +1325,12 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                             as usize;
                     }
                     litSize_0 = (MEM_readLE24(istart as *const std::ffi::c_void)
-                        >> 4 as std::ffi::c_int) as usize;
+                        >> 4) as usize;
                 }
                 0 | 2 | _ => {
                     lhSize_0 = 1 as std::ffi::c_int as usize;
                     litSize_0 = (*istart.offset(0 as std::ffi::c_int as isize)
-                        as std::ffi::c_int >> 3 as std::ffi::c_int) as usize;
+                        as std::ffi::c_int >> 3) as usize;
                 }
             }
             if litSize_0 > 0 as std::ffi::c_int as usize && dst.is_null() {
@@ -1410,7 +1410,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
         }
         1 => {
             let lhlCode_1 = (*istart.offset(0 as std::ffi::c_int as isize)
-                as std::ffi::c_int >> 2 as std::ffi::c_int & 3 as std::ffi::c_int)
+                as std::ffi::c_int >> 2 & 3 as std::ffi::c_int)
                 as u32;
             let mut litSize_1: usize = 0;
             let mut lhSize_1: usize = 0;
@@ -1423,7 +1423,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                             as usize;
                     }
                     litSize_1 = (MEM_readLE16(istart as *const std::ffi::c_void)
-                        as std::ffi::c_int >> 4 as std::ffi::c_int) as usize;
+                        as std::ffi::c_int >> 4) as usize;
                 }
                 3 => {
                     lhSize_1 = 3 as std::ffi::c_int as usize;
@@ -1432,12 +1432,12 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                             as usize;
                     }
                     litSize_1 = (MEM_readLE24(istart as *const std::ffi::c_void)
-                        >> 4 as std::ffi::c_int) as usize;
+                        >> 4) as usize;
                 }
                 0 | 2 | _ => {
                     lhSize_1 = 1 as std::ffi::c_int as usize;
                     litSize_1 = (*istart.offset(0 as std::ffi::c_int as isize)
-                        as std::ffi::c_int >> 3 as std::ffi::c_int) as usize;
+                        as std::ffi::c_int >> 3) as usize;
                 }
             }
             if litSize_1 > 0 as std::ffi::c_int as usize && dst.is_null() {
@@ -1508,7 +1508,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     let mut litCSize: usize = 0;
     let mut singleStream: u32 = 0;
     let lhlCode = (*istart.offset(0 as std::ffi::c_int as isize) as std::ffi::c_int
-        >> 2 as std::ffi::c_int & 3 as std::ffi::c_int) as u32;
+        >> 2 & 3 as std::ffi::c_int) as u32;
     let lhc = MEM_readLE32(istart as *const std::ffi::c_void);
     let mut hufSuccess: usize = 0;
     let mut expectedWriteSize = MIN!(blockSizeMax, dstCapacity);
@@ -1526,26 +1526,26 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     match lhlCode {
         2 => {
             lhSize = 4 as std::ffi::c_int as usize;
-            litSize = (lhc >> 4 as std::ffi::c_int & 0x3fff as std::ffi::c_int as u32)
+            litSize = (lhc >> 4 & 0x3fff as std::ffi::c_int as u32)
                 as usize;
-            litCSize = (lhc >> 18 as std::ffi::c_int) as usize;
+            litCSize = (lhc >> 18) as usize;
         }
         3 => {
             lhSize = 5 as std::ffi::c_int as usize;
-            litSize = (lhc >> 4 as std::ffi::c_int & 0x3ffff as std::ffi::c_int as u32)
+            litSize = (lhc >> 4 & 0x3ffff as std::ffi::c_int as u32)
                 as usize;
-            litCSize = ((lhc >> 22 as std::ffi::c_int) as usize)
+            litCSize = ((lhc >> 22) as usize)
                 .wrapping_add(
                     (*istart.offset(4 as std::ffi::c_int as isize) as usize)
-                        << 10 as std::ffi::c_int,
+                        << 10,
                 );
         }
         0 | 1 | _ => {
             singleStream = (lhlCode == 0) as std::ffi::c_int as u32;
             lhSize = 3 as std::ffi::c_int as usize;
-            litSize = (lhc >> 4 as std::ffi::c_int & 0x3ff as std::ffi::c_int as u32)
+            litSize = (lhc >> 4 & 0x3ff as std::ffi::c_int as u32)
                 as usize;
-            litCSize = (lhc >> 14 as std::ffi::c_int & 0x3ff as std::ffi::c_int as u32)
+            litCSize = (lhc >> 14 & 0x3ff as std::ffi::c_int as u32)
                 as usize;
         }
     }
@@ -1664,22 +1664,22 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             .litBuffer = ((*dctx).litBuffer)
             .offset(
                 ((if 64 as std::ffi::c_int
-                    > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                        < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                    > (if ((1 as std::ffi::c_int) << 16)
+                        < (128 as std::ffi::c_int) << 10
                     {
-                        (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                        (1 as std::ffi::c_int) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (128 as std::ffi::c_int) << 10
                     })
                 {
                     64 as std::ffi::c_int
                 } else {
-                    (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                        < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                    (if ((1 as std::ffi::c_int) << 16)
+                        < (128 as std::ffi::c_int) << 10
                     {
-                        (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                        (1 as std::ffi::c_int) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (128 as std::ffi::c_int) << 10
                     })
                 }) - WILDCOPY_OVERLENGTH) as isize,
             );
@@ -3551,7 +3551,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
             }
             let fresh6 = ip;
             ip = ip.offset(1);
-            nbSeq = ((nbSeq - 0x80 as std::ffi::c_int) << 8 as std::ffi::c_int)
+            nbSeq = ((nbSeq - 0x80 as std::ffi::c_int) << 8)
                 + *fresh6 as std::ffi::c_int;
         }
     }
@@ -3568,11 +3568,11 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
     if *ip as std::ffi::c_int & 3 as std::ffi::c_int != 0 {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
-    let LLtype = (*ip as std::ffi::c_int >> 6 as std::ffi::c_int)
+    let LLtype = (*ip as std::ffi::c_int >> 6)
         as SymbolEncodingType_e;
-    let OFtype = (*ip as std::ffi::c_int >> 4 as std::ffi::c_int & 3 as std::ffi::c_int)
+    let OFtype = (*ip as std::ffi::c_int >> 4 & 3 as std::ffi::c_int)
         as SymbolEncodingType_e;
-    let MLtype = (*ip as std::ffi::c_int >> 2 as std::ffi::c_int & 3 as std::ffi::c_int)
+    let MLtype = (*ip as std::ffi::c_int >> 2 & 3 as std::ffi::c_int)
         as SymbolEncodingType_e;
     ip = ip.offset(1);
     ip;
@@ -4417,22 +4417,22 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
                 .as_mut_ptr()
                 .offset(
                     (if 64 as std::ffi::c_int
-                        > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                            < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        > (if ((1 as std::ffi::c_int) << 16)
+                            < (128 as std::ffi::c_int) << 10
                         {
-                            (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                            (1 as std::ffi::c_int) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (128 as std::ffi::c_int) << 10
                         })
                     {
                         64 as std::ffi::c_int
                     } else {
-                        (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                            < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (if ((1 as std::ffi::c_int) << 16)
+                            < (128 as std::ffi::c_int) << 10
                         {
-                            (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                            (1 as std::ffi::c_int) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (128 as std::ffi::c_int) << 10
                         })
                     }) as isize,
                 );
@@ -4518,22 +4518,22 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             .as_mut_ptr()
             .offset(
                 (if 64 as std::ffi::c_int
-                    > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                        < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                    > (if ((1 as std::ffi::c_int) << 16)
+                        < (128 as std::ffi::c_int) << 10
                     {
-                        (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                        (1 as std::ffi::c_int) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (128 as std::ffi::c_int) << 10
                     })
                 {
                     64 as std::ffi::c_int
                 } else {
-                    (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                        < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                    (if ((1 as std::ffi::c_int) << 16)
+                        < (128 as std::ffi::c_int) << 10
                     {
-                        (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                        (1 as std::ffi::c_int) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (128 as std::ffi::c_int) << 10
                     })
                 }) as isize,
             );
@@ -4857,22 +4857,22 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                     .as_mut_ptr()
                     .offset(
                         (if 64 as std::ffi::c_int
-                            > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                                < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            > (if ((1 as std::ffi::c_int) << 16)
+                                < (128 as std::ffi::c_int) << 10
                             {
-                                (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                                (1 as std::ffi::c_int) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                                (128 as std::ffi::c_int) << 10
                             })
                         {
                             64 as std::ffi::c_int
                         } else {
-                            (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                                < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (if ((1 as std::ffi::c_int) << 16)
+                                < (128 as std::ffi::c_int) << 10
                             {
-                                (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                                (1 as std::ffi::c_int) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                                (128 as std::ffi::c_int) << 10
                             })
                         }) as isize,
                     );
@@ -4977,22 +4977,22 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                     .as_mut_ptr()
                     .offset(
                         (if 64 as std::ffi::c_int
-                            > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                                < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            > (if ((1 as std::ffi::c_int) << 16)
+                                < (128 as std::ffi::c_int) << 10
                             {
-                                (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                                (1 as std::ffi::c_int) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                                (128 as std::ffi::c_int) << 10
                             })
                         {
                             64 as std::ffi::c_int
                         } else {
-                            (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                                < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                            (if ((1 as std::ffi::c_int) << 16)
+                                < (128 as std::ffi::c_int) << 10
                             {
-                                (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                                (1 as std::ffi::c_int) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                                (128 as std::ffi::c_int) << 10
                             })
                         }) as isize,
                     );
@@ -5076,22 +5076,22 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             .as_mut_ptr()
             .offset(
                 (if 64 as std::ffi::c_int
-                    > (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                        < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                    > (if ((1 as std::ffi::c_int) << 16)
+                        < (128 as std::ffi::c_int) << 10
                     {
-                        (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                        (1 as std::ffi::c_int) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (128 as std::ffi::c_int) << 10
                     })
                 {
                     64 as std::ffi::c_int
                 } else {
-                    (if ((1 as std::ffi::c_int) << 16 as std::ffi::c_int)
-                        < (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                    (if ((1 as std::ffi::c_int) << 16)
+                        < (128 as std::ffi::c_int) << 10
                     {
-                        (1 as std::ffi::c_int) << 16 as std::ffi::c_int
+                        (1 as std::ffi::c_int) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10 as std::ffi::c_int
+                        (128 as std::ffi::c_int) << 10
                     })
                 }) as isize,
             );
@@ -5402,14 +5402,14 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         && ::core::mem::size_of::<usize>()
             == ::core::mem::size_of::<*mut std::ffi::c_void>()
         && (-(1 as std::ffi::c_int) as usize).wrapping_sub(dst as usize)
-            < ((1 as std::ffi::c_int) << 20 as std::ffi::c_int) as usize
+            < ((1 as std::ffi::c_int) << 20) as usize
     {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if isLongOffset as std::ffi::c_uint != 0
         || usePrefetchDecoder == 0
             && totalHistorySize
-                > ((1 as std::ffi::c_uint) << 24 as std::ffi::c_int) as usize
+                > ((1 as std::ffi::c_uint) << 24) as usize
             && nbSeq > 8 as std::ffi::c_int
     {
         let info = ZSTD_getOffsetInfo((*dctx).OFTptr, nbSeq);

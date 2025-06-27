@@ -228,7 +228,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u
         *p
             .offset(
                 1 as std::ffi::c_int as isize,
-            ) = (val as std::ffi::c_int >> 8 as std::ffi::c_int) as u8;
+            ) = (val as std::ffi::c_int >> 8) as u8;
     };
 }
 #[inline]
@@ -551,7 +551,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
                 (n / 2 as std::ffi::c_int as u32)
                     .wrapping_add(1 as std::ffi::c_int as u32) as isize,
             ) = ((((*wksp).huffWeight[n as usize] as std::ffi::c_int)
-            << 4 as std::ffi::c_int)
+            << 4)
             + (*wksp).huffWeight[n.wrapping_add(1 as std::ffi::c_int as u32) as usize]
                 as std::ffi::c_int) as u8;
         n = n.wrapping_add(2 as std::ffi::c_int as u32);
@@ -675,7 +675,7 @@ pub unsafe extern "C" fn HUF_readCTable(
         valPerRank[n_2 as usize] = min;
         min = (min as std::ffi::c_int + nbPerRank[n_2 as usize] as std::ffi::c_int)
             as u16;
-        min = (min as std::ffi::c_int >> 1 as std::ffi::c_int) as u16;
+        min = (min as std::ffi::c_int >> 1) as u16;
         n_2 = n_2.wrapping_sub(1);
         n_2;
     }
@@ -1030,12 +1030,12 @@ unsafe extern "C" fn HUF_buildTree(
     n = nodeNb;
     while n <= nodeRoot {
         (*huffNode.offset(n as isize))
-            .count = (1 as std::ffi::c_uint) << 30 as std::ffi::c_int;
+            .count = (1 as std::ffi::c_uint) << 30;
         n += 1;
         n;
     }
     (*huffNode0.offset(0 as std::ffi::c_int as isize))
-        .count = (1 as std::ffi::c_uint) << 31 as std::ffi::c_int;
+        .count = (1 as std::ffi::c_uint) << 31;
     while nodeNb <= nodeRoot {
         let n1 = if (*huffNode.offset(lowS as isize)).count
             < (*huffNode.offset(lowN as isize)).count
@@ -1142,7 +1142,7 @@ unsafe extern "C" fn HUF_buildCTableFromTree(
     while n > 0 as std::ffi::c_int {
         valPerRank[n as usize] = min;
         min = (min as std::ffi::c_int + nbPerRank[n as usize] as std::ffi::c_int) as u16;
-        min = (min as std::ffi::c_int >> 1 as std::ffi::c_int) as u16;
+        min = (min as std::ffi::c_int >> 1) as u16;
         n -= 1;
         n;
     }
@@ -1230,7 +1230,7 @@ pub unsafe extern "C" fn HUF_estimateCompressedSize(
         s += 1;
         s;
     }
-    return nbBits >> 3 as std::ffi::c_int;
+    return nbBits >> 3;
 }
 #[no_mangle]
 pub unsafe extern "C" fn HUF_validateCTable(
@@ -1323,7 +1323,7 @@ unsafe extern "C" fn HUF_flushBits(
 ) {
     let nbBits = (*bitC).bitPos[0 as std::ffi::c_int as usize]
         & 0xff as std::ffi::c_int as usize;
-    let nbBytes = nbBits >> 3 as std::ffi::c_int;
+    let nbBytes = nbBits >> 3;
     let bitContainer = (*bitC).bitContainer[0 as std::ffi::c_int as usize]
         >> HUF_BITS_IN_CONTAINER.wrapping_sub(nbBits);
     (*bitC).bitPos[0 as std::ffi::c_int as usize] &= 7 as std::ffi::c_int as usize;
@@ -1464,7 +1464,7 @@ unsafe extern "C" fn HUF_tightCompressBound(
     mut srcSize: usize,
     mut tableLog: usize,
 ) -> usize {
-    return (srcSize * tableLog >> 3 as std::ffi::c_int)
+    return (srcSize * tableLog >> 3)
         .wrapping_add(8 as std::ffi::c_int as usize);
 }
 #[inline(always)]
@@ -2068,7 +2068,7 @@ unsafe extern "C" fn HUF_compress_internal(
         largestTotal = largestTotal.wrapping_add(largestEnd);
         if largestTotal
             <= ((2 as std::ffi::c_int * SUSPECT_INCOMPRESSIBLE_SAMPLE_SIZE
-                >> 7 as std::ffi::c_int) + 4 as std::ffi::c_int) as usize
+                >> 7) + 4 as std::ffi::c_int) as usize
         {
             return 0 as std::ffi::c_int as usize;
         }
@@ -2093,7 +2093,7 @@ unsafe extern "C" fn HUF_compress_internal(
         return 1 as std::ffi::c_int as usize;
     }
     if largest
-        <= (srcSize >> 7 as std::ffi::c_int).wrapping_add(4 as std::ffi::c_int as usize)
+        <= (srcSize >> 7).wrapping_add(4 as std::ffi::c_int as usize)
     {
         return 0 as std::ffi::c_int as usize;
     }

@@ -334,7 +334,7 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
 }
 static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 as std::ffi::c_int - 48 as std::ffi::c_int) * prime6bytes ^ s)
+    return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
         >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash6Ptr(
@@ -676,7 +676,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
                 -(1 as std::ffi::c_int) as std::ffi::c_uint
             } else {
                 (1 as std::ffi::c_int as std::ffi::c_uint)
-                    .wrapping_mul((1 as std::ffi::c_uint) << 30 as std::ffi::c_int)
+                    .wrapping_mul((1 as std::ffi::c_uint) << 30)
             }) as usize
     {
         if displayLevel >= 1 as std::ffi::c_int {
@@ -684,15 +684,15 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
                 stderr,
                 b"Total samples size is too large (%u MB), maximum size is %u MB\n\0"
                     as *const u8 as *const std::ffi::c_char,
-                (totalSamplesSize >> 20 as std::ffi::c_int) as std::ffi::c_uint,
+                (totalSamplesSize >> 20) as std::ffi::c_uint,
                 (if ::core::mem::size_of::<usize>()
                     == 8 as std::ffi::c_int as std::ffi::c_ulong
                 {
                     -(1 as std::ffi::c_int) as std::ffi::c_uint
                 } else {
                     (1 as std::ffi::c_int as std::ffi::c_uint)
-                        .wrapping_mul((1 as std::ffi::c_uint) << 30 as std::ffi::c_int)
-                }) >> 20 as std::ffi::c_int,
+                        .wrapping_mul((1 as std::ffi::c_uint) << 30)
+                }) >> 20,
             );
             fflush(stderr);
         }

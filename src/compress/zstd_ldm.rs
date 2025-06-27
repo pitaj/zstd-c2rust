@@ -566,12 +566,12 @@ unsafe extern "C" fn ZSTD_window_needOverflowCorrection(
         > (if MEM_64bits() != 0 {
             (3500 as std::ffi::c_uint)
                 .wrapping_mul(
-                    ((1 as std::ffi::c_int) << 20 as std::ffi::c_int) as std::ffi::c_uint,
+                    ((1 as std::ffi::c_int) << 20) as std::ffi::c_uint,
                 )
         } else {
             (2000 as std::ffi::c_uint)
                 .wrapping_mul(
-                    ((1 as std::ffi::c_int) << 20 as std::ffi::c_int) as std::ffi::c_uint,
+                    ((1 as std::ffi::c_int) << 20) as std::ffi::c_uint,
                 )
         })) as std::ffi::c_int as u32;
 }
@@ -736,14 +736,14 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
     if MEM_isLittleEndian() != 0 {
         if MEM_64bits() != 0 {
-            return ZSTD_countTrailingZeros64(val) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros64(val) >> 3
         } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3 as std::ffi::c_int
+            return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
     } else if MEM_64bits() != 0 {
-        return ZSTD_countLeadingZeros64(val) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros64(val) >> 3
     } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3 as std::ffi::c_int
+        return ZSTD_countLeadingZeros32(val as u32) >> 3
     };
 }
 static mut ZSTD_ldm_gearTab: [u64; 256] = [
@@ -1401,7 +1401,7 @@ pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
                     checksum: 0,
                 };
                 entry.offset = split.offset_from(base) as std::ffi::c_long as u32;
-                entry.checksum = (xxhash >> 32 as std::ffi::c_int) as u32;
+                entry.checksum = (xxhash >> 32) as u32;
                 ZSTD_ldm_insertEntry(
                     ldmState,
                     hash as usize,
@@ -1502,7 +1502,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
             *fresh32 = split;
             (*candidates.offset(n as isize)).hash = hash;
             (*candidates.offset(n as isize))
-                .checksum = (xxhash >> 32 as std::ffi::c_int) as u32;
+                .checksum = (xxhash >> 32) as u32;
             let ref mut fresh33 = (*candidates.offset(n as isize)).bucket;
             *fresh33 = ZSTD_ldm_getBucket(
                 ldmState,
@@ -1692,7 +1692,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
     let maxDist = (1 as std::ffi::c_uint) << (*params).windowLog;
     let istart = src as *const u8;
     let iend = istart.offset(srcSize as isize);
-    let kMaxChunkSize = ((1 as std::ffi::c_int) << 20 as std::ffi::c_int) as usize;
+    let kMaxChunkSize = ((1 as std::ffi::c_int) << 20) as usize;
     let nbChunks = (srcSize / kMaxChunkSize)
         .wrapping_add(
             (srcSize % kMaxChunkSize != 0 as std::ffi::c_int as usize)

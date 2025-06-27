@@ -276,7 +276,7 @@ unsafe extern "C" fn BIT_initDStream(
                     .wrapping_add(
                         (*(srcBuffer as *const u8)
                             .offset(3 as std::ffi::c_int as isize) as BitContainerType)
-                            << 24 as std::ffi::c_int,
+                            << 24,
                     );
                 current_block_32 = 6819980346489144569;
             }
@@ -289,7 +289,7 @@ unsafe extern "C" fn BIT_initDStream(
                     .wrapping_add(
                         (*(srcBuffer as *const u8)
                             .offset(2 as std::ffi::c_int as isize) as BitContainerType)
-                            << 16 as std::ffi::c_int,
+                            << 16,
                     );
                 current_block_32 = 8159937075156795181;
             }
@@ -302,7 +302,7 @@ unsafe extern "C" fn BIT_initDStream(
                     .wrapping_add(
                         (*(srcBuffer as *const u8)
                             .offset(1 as std::ffi::c_int as isize) as BitContainerType)
-                            << 8 as std::ffi::c_int,
+                            << 8,
                     );
             }
             _ => {}
@@ -395,7 +395,7 @@ unsafe extern "C" fn BIT_reloadDStream_internal(
 ) -> BIT_DStream_status {
     (*bitD)
         .ptr = ((*bitD).ptr)
-        .offset(-(((*bitD).bitsConsumed >> 3 as std::ffi::c_int) as isize));
+        .offset(-(((*bitD).bitsConsumed >> 3) as isize));
     (*bitD).bitsConsumed &= 7 as std::ffi::c_int as std::ffi::c_uint;
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return BIT_DStream_unfinished;
@@ -426,7 +426,7 @@ unsafe extern "C" fn BIT_reloadDStream(
         }
         return BIT_DStream_completed;
     }
-    let mut nbBytes = (*bitD).bitsConsumed >> 3 as std::ffi::c_int;
+    let mut nbBytes = (*bitD).bitsConsumed >> 3;
     let mut result = BIT_DStream_unfinished;
     if ((*bitD).ptr).offset(-(nbBytes as isize)) < (*bitD).start {
         nbBytes = ((*bitD).ptr).offset_from((*bitD).start) as std::ffi::c_long as u32;

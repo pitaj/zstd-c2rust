@@ -92,10 +92,10 @@ pub const XXH_rotl64: unsafe extern "C" fn(
     std::ffi::c_ulong,
 ) -> std::ffi::c_ulong = __builtin_rotateleft64;
 unsafe extern "C" fn XXH_swap32(mut x: xxh_u32) -> xxh_u32 {
-    return x << 24 as std::ffi::c_int & 0xff000000 as std::ffi::c_uint
-        | x << 8 as std::ffi::c_int & 0xff0000 as std::ffi::c_int as xxh_u32
-        | x >> 8 as std::ffi::c_int & 0xff00 as std::ffi::c_int as xxh_u32
-        | x >> 24 as std::ffi::c_int & 0xff as std::ffi::c_int as xxh_u32;
+    return x << 24 & 0xff000000 as std::ffi::c_uint
+        | x << 8 & 0xff0000 as std::ffi::c_int as xxh_u32
+        | x >> 8 & 0xff00 as std::ffi::c_int as xxh_u32
+        | x >> 24 & 0xff as std::ffi::c_int as xxh_u32;
 }
 unsafe extern "C" fn XXH_readLE32(mut ptr: *const std::ffi::c_void) -> xxh_u32 {
     return if XXH_CPU_LITTLE_ENDIAN != 0 {
@@ -146,11 +146,11 @@ unsafe extern "C" fn XXH32_round(mut acc: xxh_u32, mut input: xxh_u32) -> xxh_u3
     return acc;
 }
 unsafe extern "C" fn XXH32_avalanche(mut hash: xxh_u32) -> xxh_u32 {
-    hash ^= hash >> 15 as std::ffi::c_int;
+    hash ^= hash >> 15;
     hash = (hash as std::ffi::c_uint).wrapping_mul(XXH_PRIME32_2) as xxh_u32 as xxh_u32;
-    hash ^= hash >> 13 as std::ffi::c_int;
+    hash ^= hash >> 13;
     hash = (hash as std::ffi::c_uint).wrapping_mul(XXH_PRIME32_3) as xxh_u32 as xxh_u32;
-    hash ^= hash >> 16 as std::ffi::c_int;
+    hash ^= hash >> 16;
     return hash;
 }
 #[no_mangle]
@@ -246,21 +246,21 @@ unsafe extern "C" fn XXH_read64(mut ptr: *const std::ffi::c_void) -> xxh_u64 {
     return *(ptr as *const xxh_unalign64);
 }
 unsafe extern "C" fn XXH_swap64(mut x: xxh_u64) -> xxh_u64 {
-    return ((x << 56 as std::ffi::c_int) as std::ffi::c_ulonglong
+    return ((x << 56) as std::ffi::c_ulonglong
         & 0xff00000000000000 as std::ffi::c_ulonglong
-        | (x << 40 as std::ffi::c_int) as std::ffi::c_ulonglong
+        | (x << 40) as std::ffi::c_ulonglong
             & 0xff000000000000 as std::ffi::c_ulonglong
-        | (x << 24 as std::ffi::c_int) as std::ffi::c_ulonglong
+        | (x << 24) as std::ffi::c_ulonglong
             & 0xff0000000000 as std::ffi::c_ulonglong
-        | (x << 8 as std::ffi::c_int) as std::ffi::c_ulonglong
+        | (x << 8) as std::ffi::c_ulonglong
             & 0xff00000000 as std::ffi::c_ulonglong
-        | (x >> 8 as std::ffi::c_int) as std::ffi::c_ulonglong
+        | (x >> 8) as std::ffi::c_ulonglong
             & 0xff000000 as std::ffi::c_ulonglong
-        | (x >> 24 as std::ffi::c_int) as std::ffi::c_ulonglong
+        | (x >> 24) as std::ffi::c_ulonglong
             & 0xff0000 as std::ffi::c_ulonglong
-        | (x >> 40 as std::ffi::c_int) as std::ffi::c_ulonglong
+        | (x >> 40) as std::ffi::c_ulonglong
             & 0xff00 as std::ffi::c_ulonglong
-        | (x >> 56 as std::ffi::c_int) as std::ffi::c_ulonglong
+        | (x >> 56) as std::ffi::c_ulonglong
             & 0xff as std::ffi::c_ulonglong) as xxh_u64;
 }
 unsafe extern "C" fn XXH_readLE64(mut ptr: *const std::ffi::c_void) -> xxh_u64 {
@@ -323,13 +323,13 @@ unsafe extern "C" fn XXH64_mergeRound(mut acc: xxh_u64, mut val: xxh_u64) -> xxh
     return acc;
 }
 unsafe extern "C" fn XXH64_avalanche(mut hash: xxh_u64) -> xxh_u64 {
-    hash ^= hash >> 33 as std::ffi::c_int;
+    hash ^= hash >> 33;
     hash = (hash as std::ffi::c_ulonglong).wrapping_mul(XXH_PRIME64_2) as xxh_u64
         as xxh_u64;
-    hash ^= hash >> 29 as std::ffi::c_int;
+    hash ^= hash >> 29;
     hash = (hash as std::ffi::c_ulonglong).wrapping_mul(XXH_PRIME64_3) as xxh_u64
         as xxh_u64;
-    hash ^= hash >> 32 as std::ffi::c_int;
+    hash ^= hash >> 32;
     return hash;
 }
 #[no_mangle]
