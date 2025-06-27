@@ -751,12 +751,9 @@ unsafe extern "C" fn ss_heapsort(
             < *Td.offset(*PA.offset(*SA.offset(m as isize) as isize) as isize)
                 as std::ffi::c_int
         {
-            let ref mut fresh1 = SWAP!(SA[m], SA[m / 2]);
-            *fresh1 = SWAP!(SA[m], SA[m / 2]);
-            let ref mut fresh2 = SWAP!(SA[m], SA[m / 2]);
-            *fresh2 = SWAP!(SA[m], SA[m / 2]);
-            let ref mut fresh3 = SWAP!(SA[m], SA[m / 2]);
-            *fresh3 = SWAP!(SA[m], SA[m / 2]);
+            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
+            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
+            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
         }
     }
     i = m / 2 as std::ffi::c_int - 1;
@@ -766,12 +763,9 @@ unsafe extern "C" fn ss_heapsort(
         i;
     }
     if size % 2 as std::ffi::c_int == 0 {
-        let ref mut fresh4 = SWAP!(SA[0], SA[m]);
-        *fresh4 = SWAP!(SA[0], SA[m]);
-        let ref mut fresh5 = SWAP!(SA[0], SA[m]);
-        *fresh5 = SWAP!(SA[0], SA[m]);
-        let ref mut fresh6 = SWAP!(SA[0], SA[m]);
-        *fresh6 = SWAP!(SA[0], SA[m]);
+        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
+        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
+        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         ss_fixdown(Td, PA, SA, 0, m);
     }
     i = m - 1;
@@ -796,12 +790,9 @@ unsafe extern "C" fn ss_median3(
     if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
     {
-        let ref mut fresh7 = SWAP!(v1, v2);
-        *fresh7 = SWAP!(v1, v2);
-        let ref mut fresh8 = SWAP!(v1, v2);
-        *fresh8 = SWAP!(v1, v2);
-        let ref mut fresh9 = SWAP!(v1, v2);
-        *fresh9 = SWAP!(v1, v2);
+        SWAP!(v1, v2);
+        SWAP!(v1, v2);
+        SWAP!(v1, v2);
     }
     if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
@@ -830,64 +821,43 @@ unsafe extern "C" fn ss_median5(
     if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
     {
-        let ref mut fresh10 = SWAP!(v2, v3);
-        *fresh10 = SWAP!(v2, v3);
-        let ref mut fresh11 = SWAP!(v2, v3);
-        *fresh11 = SWAP!(v2, v3);
-        let ref mut fresh12 = SWAP!(v2, v3);
-        *fresh12 = SWAP!(v2, v3);
+        SWAP!(v2, v3);
+        SWAP!(v2, v3);
+        SWAP!(v2, v3);
     }
     if *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v5 as isize) as isize) as std::ffi::c_int
     {
-        let ref mut fresh13 = SWAP!(v4, v5);
-        *fresh13 = SWAP!(v4, v5);
-        let ref mut fresh14 = SWAP!(v4, v5);
-        *fresh14 = SWAP!(v4, v5);
-        let ref mut fresh15 = SWAP!(v4, v5);
-        *fresh15 = SWAP!(v4, v5);
+        SWAP!(v4, v5);
+        SWAP!(v4, v5);
+        SWAP!(v4, v5);
     }
     if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
     {
-        let ref mut fresh16 = SWAP!(v2, v4);
-        *fresh16 = SWAP!(v2, v4);
-        let ref mut fresh17 = SWAP!(v2, v4);
-        *fresh17 = SWAP!(v2, v4);
-        let ref mut fresh18 = SWAP!(v2, v4);
-        *fresh18 = SWAP!(v2, v4);
-        let ref mut fresh19 = SWAP!(v3, v5);
-        *fresh19 = SWAP!(v3, v5);
-        let ref mut fresh20 = SWAP!(v3, v5);
-        *fresh20 = SWAP!(v3, v5);
-        let ref mut fresh21 = SWAP!(v3, v5);
-        *fresh21 = SWAP!(v3, v5);
+        SWAP!(v2, v4);
+        SWAP!(v2, v4);
+        SWAP!(v2, v4);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
     }
     if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
     {
-        let ref mut fresh22 = SWAP!(v1, v3);
-        *fresh22 = SWAP!(v1, v3);
-        let ref mut fresh23 = SWAP!(v1, v3);
-        *fresh23 = SWAP!(v1, v3);
-        let ref mut fresh24 = SWAP!(v1, v3);
-        *fresh24 = SWAP!(v1, v3);
+        SWAP!(v1, v3);
+        SWAP!(v1, v3);
+        SWAP!(v1, v3);
     }
     if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
     {
-        let ref mut fresh25 = SWAP!(v1, v4);
-        *fresh25 = SWAP!(v1, v4);
-        let ref mut fresh26 = SWAP!(v1, v4);
-        *fresh26 = SWAP!(v1, v4);
-        let ref mut fresh27 = SWAP!(v1, v4);
-        *fresh27 = SWAP!(v1, v4);
-        let ref mut fresh28 = SWAP!(v3, v5);
-        *fresh28 = SWAP!(v3, v5);
-        let ref mut fresh29 = SWAP!(v3, v5);
-        *fresh29 = SWAP!(v3, v5);
-        let ref mut fresh30 = SWAP!(v3, v5);
-        *fresh30 = SWAP!(v3, v5);
+        SWAP!(v1, v4);
+        SWAP!(v1, v4);
+        SWAP!(v1, v4);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
     }
     if *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
@@ -1216,12 +1186,9 @@ unsafe extern "C" fn ss_mintrosort(
             } else {
                 a = ss_pivot(Td, PA, first, last);
                 v = *Td.offset(*PA.offset(*a as isize) as isize) as std::ffi::c_int;
-                let ref mut fresh33 = SWAP!(* first, * a);
-                *fresh33 = SWAP!(* first, * a);
-                let ref mut fresh34 = SWAP!(* first, * a);
-                *fresh34 = SWAP!(* first, * a);
-                let ref mut fresh35 = SWAP!(* first, * a);
-                *fresh35 = SWAP!(* first, * a);
+                SWAP!(* first, * a);
+                SWAP!(* first, * a);
+                SWAP!(* first, * a);
                 b = first;
                 loop {
                     b = b.offset(1);
@@ -1249,12 +1216,9 @@ unsafe extern "C" fn ss_mintrosort(
                             break;
                         }
                         if x == v {
-                            let ref mut fresh36 = SWAP!(* b, * a);
-                            *fresh36 = SWAP!(* b, * a);
-                            let ref mut fresh37 = SWAP!(* b, * a);
-                            *fresh37 = SWAP!(* b, * a);
-                            let ref mut fresh38 = SWAP!(* b, * a);
-                            *fresh38 = SWAP!(* b, * a);
+                            SWAP!(* b, * a);
+                            SWAP!(* b, * a);
+                            SWAP!(* b, * a);
                             a = a.offset(1);
                             a;
                         }
@@ -1287,24 +1251,18 @@ unsafe extern "C" fn ss_mintrosort(
                             break;
                         }
                         if x == v {
-                            let ref mut fresh39 = SWAP!(* c, * d);
-                            *fresh39 = SWAP!(* c, * d);
-                            let ref mut fresh40 = SWAP!(* c, * d);
-                            *fresh40 = SWAP!(* c, * d);
-                            let ref mut fresh41 = SWAP!(* c, * d);
-                            *fresh41 = SWAP!(* c, * d);
+                            SWAP!(* c, * d);
+                            SWAP!(* c, * d);
+                            SWAP!(* c, * d);
                             d = d.offset(-1);
                             d;
                         }
                     }
                 }
                 while b < c {
-                    let ref mut fresh42 = SWAP!(* b, * c);
-                    *fresh42 = SWAP!(* b, * c);
-                    let ref mut fresh43 = SWAP!(* b, * c);
-                    *fresh43 = SWAP!(* b, * c);
-                    let ref mut fresh44 = SWAP!(* b, * c);
-                    *fresh44 = SWAP!(* b, * c);
+                    SWAP!(* b, * c);
+                    SWAP!(* b, * c);
+                    SWAP!(* b, * c);
                     loop {
                         b = b.offset(1);
                         if !(b < c
@@ -1317,12 +1275,9 @@ unsafe extern "C" fn ss_mintrosort(
                             break;
                         }
                         if x == v {
-                            let ref mut fresh45 = SWAP!(* b, * a);
-                            *fresh45 = SWAP!(* b, * a);
-                            let ref mut fresh46 = SWAP!(* b, * a);
-                            *fresh46 = SWAP!(* b, * a);
-                            let ref mut fresh47 = SWAP!(* b, * a);
-                            *fresh47 = SWAP!(* b, * a);
+                            SWAP!(* b, * a);
+                            SWAP!(* b, * a);
+                            SWAP!(* b, * a);
                             a = a.offset(1);
                             a;
                         }
@@ -1339,12 +1294,9 @@ unsafe extern "C" fn ss_mintrosort(
                             break;
                         }
                         if x == v {
-                            let ref mut fresh48 = SWAP!(* c, * d);
-                            *fresh48 = SWAP!(* c, * d);
-                            let ref mut fresh49 = SWAP!(* c, * d);
-                            *fresh49 = SWAP!(* c, * d);
-                            let ref mut fresh50 = SWAP!(* c, * d);
-                            *fresh50 = SWAP!(* c, * d);
+                            SWAP!(* c, * d);
+                            SWAP!(* c, * d);
+                            SWAP!(* c, * d);
                             d = d.offset(-1);
                             d;
                         }
@@ -1360,12 +1312,9 @@ unsafe extern "C" fn ss_mintrosort(
                     e = first;
                     f = b.offset(-(s as isize));
                     while (0 as std::ffi::c_int) < s {
-                        let ref mut fresh51 = SWAP!(* e, * f);
-                        *fresh51 = SWAP!(* e, * f);
-                        let ref mut fresh52 = SWAP!(* e, * f);
-                        *fresh52 = SWAP!(* e, * f);
-                        let ref mut fresh53 = SWAP!(* e, * f);
-                        *fresh53 = SWAP!(* e, * f);
+                        SWAP!(* e, * f);
+                        SWAP!(* e, * f);
+                        SWAP!(* e, * f);
                         s -= 1;
                         s;
                         e = e.offset(1);
@@ -1382,12 +1331,9 @@ unsafe extern "C" fn ss_mintrosort(
                     e = b;
                     f = last.offset(-(s as isize));
                     while (0 as std::ffi::c_int) < s {
-                        let ref mut fresh54 = SWAP!(* e, * f);
-                        *fresh54 = SWAP!(* e, * f);
-                        let ref mut fresh55 = SWAP!(* e, * f);
-                        *fresh55 = SWAP!(* e, * f);
-                        let ref mut fresh56 = SWAP!(* e, * f);
-                        *fresh56 = SWAP!(* e, * f);
+                        SWAP!(* e, * f);
+                        SWAP!(* e, * f);
+                        SWAP!(* e, * f);
                         s -= 1;
                         s;
                         e = e.offset(1);
@@ -2952,12 +2898,9 @@ unsafe extern "C" fn tr_heapsort(
         if *ISAd.offset(*SA.offset((m / 2 as std::ffi::c_int) as isize) as isize)
             < *ISAd.offset(*SA.offset(m as isize) as isize)
         {
-            let ref mut fresh106 = SWAP!(SA[m], SA[m / 2]);
-            *fresh106 = SWAP!(SA[m], SA[m / 2]);
-            let ref mut fresh107 = SWAP!(SA[m], SA[m / 2]);
-            *fresh107 = SWAP!(SA[m], SA[m / 2]);
-            let ref mut fresh108 = SWAP!(SA[m], SA[m / 2]);
-            *fresh108 = SWAP!(SA[m], SA[m / 2]);
+            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
+            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
+            SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
         }
     }
     i = m / 2 as std::ffi::c_int - 1;
@@ -2967,12 +2910,9 @@ unsafe extern "C" fn tr_heapsort(
         i;
     }
     if size % 2 as std::ffi::c_int == 0 {
-        let ref mut fresh109 = SWAP!(SA[0], SA[m]);
-        *fresh109 = SWAP!(SA[0], SA[m]);
-        let ref mut fresh110 = SWAP!(SA[0], SA[m]);
-        *fresh110 = SWAP!(SA[0], SA[m]);
-        let ref mut fresh111 = SWAP!(SA[0], SA[m]);
-        *fresh111 = SWAP!(SA[0], SA[m]);
+        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
+        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
+        SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         tr_fixdown(ISAd, SA, 0, m);
     }
     i = m - 1;
@@ -2994,12 +2934,9 @@ unsafe extern "C" fn tr_median3(
 ) -> *mut std::ffi::c_int {
     let mut t = 0 as *mut std::ffi::c_int;
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v2 as isize) {
-        let ref mut fresh112 = SWAP!(v1, v2);
-        *fresh112 = SWAP!(v1, v2);
-        let ref mut fresh113 = SWAP!(v1, v2);
-        *fresh113 = SWAP!(v1, v2);
-        let ref mut fresh114 = SWAP!(v1, v2);
-        *fresh114 = SWAP!(v1, v2);
+        SWAP!(v1, v2);
+        SWAP!(v1, v2);
+        SWAP!(v1, v2);
     }
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v3 as isize) {
         if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v3 as isize) {
@@ -3021,56 +2958,35 @@ unsafe extern "C" fn tr_median5(
 ) -> *mut std::ffi::c_int {
     let mut t = 0 as *mut std::ffi::c_int;
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v3 as isize) {
-        let ref mut fresh115 = SWAP!(v2, v3);
-        *fresh115 = SWAP!(v2, v3);
-        let ref mut fresh116 = SWAP!(v2, v3);
-        *fresh116 = SWAP!(v2, v3);
-        let ref mut fresh117 = SWAP!(v2, v3);
-        *fresh117 = SWAP!(v2, v3);
+        SWAP!(v2, v3);
+        SWAP!(v2, v3);
+        SWAP!(v2, v3);
     }
     if *ISAd.offset(*v4 as isize) > *ISAd.offset(*v5 as isize) {
-        let ref mut fresh118 = SWAP!(v4, v5);
-        *fresh118 = SWAP!(v4, v5);
-        let ref mut fresh119 = SWAP!(v4, v5);
-        *fresh119 = SWAP!(v4, v5);
-        let ref mut fresh120 = SWAP!(v4, v5);
-        *fresh120 = SWAP!(v4, v5);
+        SWAP!(v4, v5);
+        SWAP!(v4, v5);
+        SWAP!(v4, v5);
     }
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v4 as isize) {
-        let ref mut fresh121 = SWAP!(v2, v4);
-        *fresh121 = SWAP!(v2, v4);
-        let ref mut fresh122 = SWAP!(v2, v4);
-        *fresh122 = SWAP!(v2, v4);
-        let ref mut fresh123 = SWAP!(v2, v4);
-        *fresh123 = SWAP!(v2, v4);
-        let ref mut fresh124 = SWAP!(v3, v5);
-        *fresh124 = SWAP!(v3, v5);
-        let ref mut fresh125 = SWAP!(v3, v5);
-        *fresh125 = SWAP!(v3, v5);
-        let ref mut fresh126 = SWAP!(v3, v5);
-        *fresh126 = SWAP!(v3, v5);
+        SWAP!(v2, v4);
+        SWAP!(v2, v4);
+        SWAP!(v2, v4);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
     }
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v3 as isize) {
-        let ref mut fresh127 = SWAP!(v1, v3);
-        *fresh127 = SWAP!(v1, v3);
-        let ref mut fresh128 = SWAP!(v1, v3);
-        *fresh128 = SWAP!(v1, v3);
-        let ref mut fresh129 = SWAP!(v1, v3);
-        *fresh129 = SWAP!(v1, v3);
+        SWAP!(v1, v3);
+        SWAP!(v1, v3);
+        SWAP!(v1, v3);
     }
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v4 as isize) {
-        let ref mut fresh130 = SWAP!(v1, v4);
-        *fresh130 = SWAP!(v1, v4);
-        let ref mut fresh131 = SWAP!(v1, v4);
-        *fresh131 = SWAP!(v1, v4);
-        let ref mut fresh132 = SWAP!(v1, v4);
-        *fresh132 = SWAP!(v1, v4);
-        let ref mut fresh133 = SWAP!(v3, v5);
-        *fresh133 = SWAP!(v3, v5);
-        let ref mut fresh134 = SWAP!(v3, v5);
-        *fresh134 = SWAP!(v3, v5);
-        let ref mut fresh135 = SWAP!(v3, v5);
-        *fresh135 = SWAP!(v3, v5);
+        SWAP!(v1, v4);
+        SWAP!(v1, v4);
+        SWAP!(v1, v4);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
+        SWAP!(v3, v5);
     }
     if *ISAd.offset(*v3 as isize) > *ISAd.offset(*v4 as isize) {
         return v4;
@@ -3201,12 +3117,9 @@ unsafe extern "C" fn tr_partition(
                 break;
             }
             if x == v {
-                let ref mut fresh136 = SWAP!(* b, * a);
-                *fresh136 = SWAP!(* b, * a);
-                let ref mut fresh137 = SWAP!(* b, * a);
-                *fresh137 = SWAP!(* b, * a);
-                let ref mut fresh138 = SWAP!(* b, * a);
-                *fresh138 = SWAP!(* b, * a);
+                SWAP!(* b, * a);
+                SWAP!(* b, * a);
+                SWAP!(* b, * a);
                 a = a.offset(1);
                 a;
             }
@@ -3237,24 +3150,18 @@ unsafe extern "C" fn tr_partition(
                 break;
             }
             if x == v {
-                let ref mut fresh139 = SWAP!(* c, * d);
-                *fresh139 = SWAP!(* c, * d);
-                let ref mut fresh140 = SWAP!(* c, * d);
-                *fresh140 = SWAP!(* c, * d);
-                let ref mut fresh141 = SWAP!(* c, * d);
-                *fresh141 = SWAP!(* c, * d);
+                SWAP!(* c, * d);
+                SWAP!(* c, * d);
+                SWAP!(* c, * d);
                 d = d.offset(-1);
                 d;
             }
         }
     }
     while b < c {
-        let ref mut fresh142 = SWAP!(* b, * c);
-        *fresh142 = SWAP!(* b, * c);
-        let ref mut fresh143 = SWAP!(* b, * c);
-        *fresh143 = SWAP!(* b, * c);
-        let ref mut fresh144 = SWAP!(* b, * c);
-        *fresh144 = SWAP!(* b, * c);
+        SWAP!(* b, * c);
+        SWAP!(* b, * c);
+        SWAP!(* b, * c);
         loop {
             b = b.offset(1);
             if !(b < c
@@ -3266,12 +3173,9 @@ unsafe extern "C" fn tr_partition(
                 break;
             }
             if x == v {
-                let ref mut fresh145 = SWAP!(* b, * a);
-                *fresh145 = SWAP!(* b, * a);
-                let ref mut fresh146 = SWAP!(* b, * a);
-                *fresh146 = SWAP!(* b, * a);
-                let ref mut fresh147 = SWAP!(* b, * a);
-                *fresh147 = SWAP!(* b, * a);
+                SWAP!(* b, * a);
+                SWAP!(* b, * a);
+                SWAP!(* b, * a);
                 a = a.offset(1);
                 a;
             }
@@ -3287,12 +3191,9 @@ unsafe extern "C" fn tr_partition(
                 break;
             }
             if x == v {
-                let ref mut fresh148 = SWAP!(* c, * d);
-                *fresh148 = SWAP!(* c, * d);
-                let ref mut fresh149 = SWAP!(* c, * d);
-                *fresh149 = SWAP!(* c, * d);
-                let ref mut fresh150 = SWAP!(* c, * d);
-                *fresh150 = SWAP!(* c, * d);
+                SWAP!(* c, * d);
+                SWAP!(* c, * d);
+                SWAP!(* c, * d);
                 d = d.offset(-1);
                 d;
             }
@@ -3308,12 +3209,9 @@ unsafe extern "C" fn tr_partition(
         e = first;
         f = b.offset(-(s as isize));
         while (0 as std::ffi::c_int) < s {
-            let ref mut fresh151 = SWAP!(* e, * f);
-            *fresh151 = SWAP!(* e, * f);
-            let ref mut fresh152 = SWAP!(* e, * f);
-            *fresh152 = SWAP!(* e, * f);
-            let ref mut fresh153 = SWAP!(* e, * f);
-            *fresh153 = SWAP!(* e, * f);
+            SWAP!(* e, * f);
+            SWAP!(* e, * f);
+            SWAP!(* e, * f);
             s -= 1;
             s;
             e = e.offset(1);
@@ -3330,12 +3228,9 @@ unsafe extern "C" fn tr_partition(
         e = b;
         f = last.offset(-(s as isize));
         while (0 as std::ffi::c_int) < s {
-            let ref mut fresh154 = SWAP!(* e, * f);
-            *fresh154 = SWAP!(* e, * f);
-            let ref mut fresh155 = SWAP!(* e, * f);
-            *fresh155 = SWAP!(* e, * f);
-            let ref mut fresh156 = SWAP!(* e, * f);
-            *fresh156 = SWAP!(* e, * f);
+            SWAP!(* e, * f);
+            SWAP!(* e, * f);
+            SWAP!(* e, * f);
             s -= 1;
             s;
             e = e.offset(1);
@@ -4085,12 +3980,9 @@ unsafe extern "C" fn tr_introsort(
                 limit = -(3 as std::ffi::c_int);
             } else {
                 a = tr_pivot(ISAd, first, last);
-                let ref mut fresh158 = SWAP!(* first, * a);
-                *fresh158 = SWAP!(* first, * a);
-                let ref mut fresh159 = SWAP!(* first, * a);
-                *fresh159 = SWAP!(* first, * a);
-                let ref mut fresh160 = SWAP!(* first, * a);
-                *fresh160 = SWAP!(* first, * a);
+                SWAP!(* first, * a);
+                SWAP!(* first, * a);
+                SWAP!(* first, * a);
                 v = *ISAd.offset(*first as isize);
                 tr_partition(
                     ISAd,
