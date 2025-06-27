@@ -40,6 +40,11 @@ pub const ZSTD_error_prefix_unknown: ZSTD_ErrorCode = 10;
 pub const ZSTD_error_GENERIC: ZSTD_ErrorCode = 1;
 pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
 pub type ERR_enum = ZSTD_ErrorCode;
+
+pub const fn ERROR(code: ZSTD_ErrorCode) -> usize {
+    return -(code as std::ffi::c_int) as usize;
+}
+
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
     return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
