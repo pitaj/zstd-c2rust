@@ -3380,15 +3380,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
                         (SEQSYMBOL_TABLE_SIZE!(maxLog) + SEQSYMBOL_TABLE_SIZE!(maxLog))
                             as std::ffi::c_ulong,
                     );
-                let _ptr = PREFETCH_AREA!(pStart, pSize);
-                let _size = PREFETCH_AREA!(pStart, pSize);
-                let mut _pos: usize = 0;
-                let ref mut fresh3 = PREFETCH_AREA!(pStart, pSize);
-                *fresh3 = PREFETCH_AREA!(pStart, pSize);
-                while PREFETCH_AREA!(pStart, pSize) != 0 {
-                    let ref mut fresh4 = PREFETCH_AREA!(pStart, pSize);
-                    *fresh4 = (*fresh4).wrapping_add(CACHELINE_SIZE as usize);
-                }
+                PREFETCH_AREA!(pStart, pSize);
             }
             return 0;
         }

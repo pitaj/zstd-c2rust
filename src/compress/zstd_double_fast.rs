@@ -1207,24 +1207,8 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_dictMatchState_generic(
         let chainTableBytes = (1_usize
             << (*dictCParams).chainLog)
             .wrapping_mul(::core::mem::size_of::<u32>());
-        let _ptr = PREFETCH_AREA!(dictHashLong, hashTableBytes);
-        let _size = PREFETCH_AREA!(dictHashLong, hashTableBytes);
-        let mut _pos: usize = 0;
-        let ref mut fresh3 = PREFETCH_AREA!(dictHashLong, hashTableBytes);
-        *fresh3 = PREFETCH_AREA!(dictHashLong, hashTableBytes);
-        while PREFETCH_AREA!(dictHashLong, hashTableBytes) != 0 {
-            let ref mut fresh4 = PREFETCH_AREA!(dictHashLong, hashTableBytes);
-            *fresh4 = (*fresh4).wrapping_add(CACHELINE_SIZE as usize);
-        }
-        let _ptr_0 = PREFETCH_AREA!(dictHashSmall, chainTableBytes);
-        let _size_0 = PREFETCH_AREA!(dictHashSmall, chainTableBytes);
-        let mut _pos_0: usize = 0;
-        let ref mut fresh5 = PREFETCH_AREA!(dictHashSmall, chainTableBytes);
-        *fresh5 = PREFETCH_AREA!(dictHashSmall, chainTableBytes);
-        while PREFETCH_AREA!(dictHashSmall, chainTableBytes) != 0 {
-            let ref mut fresh6 = PREFETCH_AREA!(dictHashSmall, chainTableBytes);
-            *fresh6 = (*fresh6).wrapping_add(CACHELINE_SIZE as usize);
-        }
+        PREFETCH_AREA!(dictHashLong, hashTableBytes);
+        PREFETCH_AREA!(dictHashSmall, chainTableBytes);
     }
     ip = ip
         .offset(

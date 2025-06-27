@@ -1357,15 +1357,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_dictMatchState_generic(
     if (*ms).prefetchCDictTables != 0 {
         let hashTableBytes = (1_usize << (*dictCParams).hashLog)
             .wrapping_mul(::core::mem::size_of::<u32>());
-        let _ptr = PREFETCH_AREA!(dictHashTable, hashTableBytes);
-        let _size = PREFETCH_AREA!(dictHashTable, hashTableBytes);
-        let mut _pos: usize = 0;
-        let ref mut fresh2 = PREFETCH_AREA!(dictHashTable, hashTableBytes);
-        *fresh2 = PREFETCH_AREA!(dictHashTable, hashTableBytes);
-        while PREFETCH_AREA!(dictHashTable, hashTableBytes) != 0 {
-            let ref mut fresh3 = PREFETCH_AREA!(dictHashTable, hashTableBytes);
-            *fresh3 = (*fresh3).wrapping_add(CACHELINE_SIZE as usize);
-        }
+        PREFETCH_AREA!(dictHashTable, hashTableBytes);
     }
     ip0 = ip0
         .offset(
