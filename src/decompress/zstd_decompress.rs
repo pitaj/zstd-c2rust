@@ -1487,17 +1487,9 @@ unsafe extern "C" fn ZSTD_DDictHashSet_expand(
     i = 0;
     while i < oldTableSize {
         if !(*oldTable.offset(i as isize)).is_null() {
-            let err_code = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 ZSTD_DDictHashSet_emplaceDDict(hashSet, oldTable[i]), ""
             );
-            if FORWARD_IF_ERROR!(
-                ZSTD_DDictHashSet_emplaceDDict(hashSet, oldTable[i]), ""
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_DDictHashSet_emplaceDDict(hashSet, oldTable[i]), ""
-                );
-            }
         }
         i = i.wrapping_add(1);
         i;
@@ -1573,19 +1565,13 @@ unsafe extern "C" fn ZSTD_DDictHashSet_addDDict(
         * DDICT_HASHSET_MAX_LOAD_FACTOR_SIZE_MULT as usize
         != 0
     {
-        let err_code = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             ZSTD_DDictHashSet_expand(hashSet, customMem), ""
         );
-        if FORWARD_IF_ERROR!(ZSTD_DDictHashSet_expand(hashSet, customMem), "") != 0 {
-            return FORWARD_IF_ERROR!(ZSTD_DDictHashSet_expand(hashSet, customMem), "");
-        }
     }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_DDictHashSet_emplaceDDict(hashSet, ddict), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_DDictHashSet_emplaceDDict(hashSet, ddict), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DDictHashSet_emplaceDDict(hashSet, ddict), "");
-    }
     return 0;
 }
 #[no_mangle]
@@ -2332,10 +2318,7 @@ pub unsafe extern "C" fn ZSTD_decompressionMargin(
             _reserved1: 0,
             _reserved2: 0,
         };
-        let err_code = FORWARD_IF_ERROR!(ZSTD_getFrameHeader(& zfh, src, srcSize), "");
-        if FORWARD_IF_ERROR!(ZSTD_getFrameHeader(& zfh, src, srcSize), "") != 0 {
-            return FORWARD_IF_ERROR!(ZSTD_getFrameHeader(& zfh, src, srcSize), "");
-        }
+        FORWARD_IF_ERROR!(ZSTD_getFrameHeader(addr_of!(zfh), src, srcSize), "");
         if ERR_isError(compressedSize) != 0
             || decompressedBound == ZSTD_CONTENTSIZE_ERROR
         {
@@ -2497,12 +2480,9 @@ unsafe extern "C" fn ZSTD_decompressFrame(
     if remainingSrcSize < frameHeaderSize.wrapping_add(ZSTD_blockHeaderSize) {
         return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
     }
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_decodeFrameHeader(dctx, ip, frameHeaderSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_decodeFrameHeader(dctx, ip, frameHeaderSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_decodeFrameHeader(dctx, ip, frameHeaderSize), "");
-    }
     ip = ip.offset(frameHeaderSize as isize);
     remainingSrcSize = remainingSrcSize.wrapping_sub(frameHeaderSize);
     if (*dctx).maxBlockSizeParam != 0 {
@@ -2567,10 +2547,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
                 return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
             }
         }
-        let err_code_0 = FORWARD_IF_ERROR!(decodedSize, "Block decompression failure");
-        if FORWARD_IF_ERROR!(decodedSize, "Block decompression failure") != 0 {
-            return FORWARD_IF_ERROR!(decodedSize, "Block decompression failure");
-        }
+        FORWARD_IF_ERROR!(decodedSize, "Block decompression failure");
         if (*dctx).validateChecksum != 0 {
             ZSTD_XXH64_update(
                 &mut (*dctx).xxhState,
@@ -2688,14 +2665,9 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
                     == ZSTD_MAGIC_SKIPPABLE_START as std::ffi::c_uint
                 {
                     let skippableSize = readSkippableFrameSize(src, srcSize);
-                    let err_code = FORWARD_IF_ERROR!(
+                    FORWARD_IF_ERROR!(
                         skippableSize, "invalid skippable frame"
                     );
-                    if FORWARD_IF_ERROR!(skippableSize, "invalid skippable frame") != 0 {
-                        return FORWARD_IF_ERROR!(
-                            skippableSize, "invalid skippable frame"
-                        );
-                    }
                     src = (src as *const u8).offset(skippableSize as isize)
                         as *const std::ffi::c_void;
                     srcSize = srcSize.wrapping_sub(skippableSize);
@@ -2703,28 +2675,13 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
                 }
             }
             if !ddict.is_null() {
-                let err_code_0 = FORWARD_IF_ERROR!(
+                FORWARD_IF_ERROR!(
                     ZSTD_decompressBegin_usingDDict(dctx, ddict), ""
                 );
-                if FORWARD_IF_ERROR!(ZSTD_decompressBegin_usingDDict(dctx, ddict), "")
-                    != 0
-                {
-                    return FORWARD_IF_ERROR!(
-                        ZSTD_decompressBegin_usingDDict(dctx, ddict), ""
-                    );
-                }
             } else {
-                let err_code_1 = FORWARD_IF_ERROR!(
+                FORWARD_IF_ERROR!(
                     ZSTD_decompressBegin_usingDict(dctx, dict, dictSize), ""
                 );
-                if FORWARD_IF_ERROR!(
-                    ZSTD_decompressBegin_usingDict(dctx, dict, dictSize), ""
-                ) != 0
-                {
-                    return FORWARD_IF_ERROR!(
-                        ZSTD_decompressBegin_usingDict(dctx, dict, dictSize), ""
-                    );
-                }
             }
             ZSTD_checkContinuity(dctx, dst, dstCapacity);
             let res = ZSTD_decompressFrame(
@@ -2910,20 +2867,10 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
         }
         1 => {
             libc::memcpy((*dctx).headerBuffer + ((*dctx).headerSize - srcSize), src, (srcSize) as usize);
-            let err_code = FORWARD_IF_ERROR!(
-                ZSTD_decodeFrameHeader(dctx, dctx -> headerBuffer, dctx -> headerSize),
+            FORWARD_IF_ERROR!(
+                ZSTD_decodeFrameHeader(dctx, (*dctx).headerBuffer, (*dctx).headerSize),
                 ""
             );
-            if FORWARD_IF_ERROR!(
-                ZSTD_decodeFrameHeader(dctx, dctx -> headerBuffer, dctx -> headerSize),
-                ""
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_decodeFrameHeader(dctx, dctx -> headerBuffer, dctx ->
-                    headerSize), ""
-                );
-            }
             (*dctx).expected = ZSTD_blockHeaderSize;
             (*dctx).stage = ZSTDds_decodeBlockHeader;
             return 0;
@@ -2983,12 +2930,9 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
                 }
                 0 => {
                     rSize = ZSTD_copyRawBlock(dst, dstCapacity, src, srcSize);
-                    let err_code_0 = FORWARD_IF_ERROR!(
+                    FORWARD_IF_ERROR!(
                         rSize, "ZSTD_copyRawBlock failed"
                     );
-                    if FORWARD_IF_ERROR!(rSize, "ZSTD_copyRawBlock failed") != 0 {
-                        return FORWARD_IF_ERROR!(rSize, "ZSTD_copyRawBlock failed");
-                    }
                     (*dctx).expected = ((*dctx).expected).wrapping_sub(rSize);
                 }
                 1 => {
@@ -3004,10 +2948,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
                     return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
                 }
             }
-            let err_code_1 = FORWARD_IF_ERROR!(rSize, "");
-            if FORWARD_IF_ERROR!(rSize, "") != 0 {
-                return FORWARD_IF_ERROR!(rSize, "");
-            }
+            FORWARD_IF_ERROR!(rSize, "");
             if rSize > (*dctx).fParams.blockSizeMax as usize {
                 return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
             }
@@ -3330,10 +3271,7 @@ pub unsafe extern "C" fn ZSTD_decompressBegin_usingDict(
     mut dict: *const std::ffi::c_void,
     mut dictSize: usize,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "");
-    if FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "");
     if !dict.is_null() && dictSize != 0 {
         if ERR_isError(ZSTD_decompress_insertDictionary(dctx, dict, dictSize)) != 0 {
             return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
@@ -3352,10 +3290,7 @@ pub unsafe extern "C" fn ZSTD_decompressBegin_usingDDict(
         let dictEnd = dictStart.offset(dictSize as isize) as *const std::ffi::c_void;
         (*dctx).ddictIsCold = ((*dctx).dictEnd != dictEnd) as std::ffi::c_int;
     }
-    let err_code = FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "");
-    if FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_decompressBegin(dctx), "");
     if !ddict.is_null() {
         ZSTD_copyDDictParameters(dctx, ddict);
     }
@@ -3517,20 +3452,10 @@ pub unsafe extern "C" fn ZSTD_DCtx_refPrefix_advanced(
     mut prefixSize: usize,
     mut dictContentType: ZSTD_dictContentType_e,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_DCtx_loadDictionary_advanced(dctx, prefix, prefixSize, ZSTD_dlm_byRef,
         dictContentType), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_DCtx_loadDictionary_advanced(dctx, prefix, prefixSize, ZSTD_dlm_byRef,
-        dictContentType), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_DCtx_loadDictionary_advanced(dctx, prefix, prefixSize, ZSTD_dlm_byRef,
-            dictContentType), ""
-        );
-    }
     (*dctx).dictUses = ZSTD_use_once;
     return 0;
 }
@@ -3548,28 +3473,16 @@ pub unsafe extern "C" fn ZSTD_initDStream_usingDict(
     mut dict: *const std::ffi::c_void,
     mut dictSize: usize,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(
         ZSTD_DCtx_loadDictionary(zds, dict, dictSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_DCtx_loadDictionary(zds, dict, dictSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DCtx_loadDictionary(zds, dict, dictSize), "");
-    }
     return ZSTD_startingInputLength((*zds).format);
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_initDStream(mut zds: *mut ZSTD_DStream) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(zds, NULL), "");
-    if FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(zds, NULL), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(zds, NULL), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(zds, NULL), "");
     return ZSTD_startingInputLength((*zds).format);
 }
 #[no_mangle]
@@ -3577,22 +3490,13 @@ pub unsafe extern "C" fn ZSTD_initDStream_usingDDict(
     mut dctx: *mut ZSTD_DStream,
     mut ddict: *const ZSTD_DDict,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(dctx, ddict), "");
-    if FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(dctx, ddict), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(dctx, ddict), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(dctx, ddict), "");
     return ZSTD_startingInputLength((*dctx).format);
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_resetDStream(mut dctx: *mut ZSTD_DStream) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only), "");
     return ZSTD_startingInputLength((*dctx).format);
 }
 #[no_mangle]
@@ -3618,20 +3522,10 @@ pub unsafe extern "C" fn ZSTD_DCtx_refDDict(
                     return -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
                 }
             }
-            let err_code = FORWARD_IF_ERROR!(
-                ZSTD_DDictHashSet_addDDict(dctx -> ddictSet, ddict, dctx -> customMem),
+            FORWARD_IF_ERROR!(
+                ZSTD_DDictHashSet_addDDict((*dctx).ddictSet, ddict, (*dctx).customMem),
                 ""
             );
-            if FORWARD_IF_ERROR!(
-                ZSTD_DDictHashSet_addDDict(dctx -> ddictSet, ddict, dctx -> customMem),
-                ""
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_DDictHashSet_addDDict(dctx -> ddictSet, ddict, dctx ->
-                    customMem), ""
-                );
-            }
         }
     }
     return 0;
@@ -4040,10 +3934,7 @@ unsafe extern "C" fn ZSTD_decompressContinueStream(
             src,
             srcSize,
         );
-        let err_code = FORWARD_IF_ERROR!(decodedSize, "");
-        if FORWARD_IF_ERROR!(decodedSize, "") != 0 {
-            return FORWARD_IF_ERROR!(decodedSize, "");
-        }
+        FORWARD_IF_ERROR!(decodedSize, "");
         if decodedSize == 0 && isSkipFrame == 0 {
             (*zds).streamStage = zdss_read;
         } else {
@@ -4063,10 +3954,7 @@ unsafe extern "C" fn ZSTD_decompressContinueStream(
             src,
             srcSize,
         );
-        let err_code_0 = FORWARD_IF_ERROR!(decodedSize, "");
-        if FORWARD_IF_ERROR!(decodedSize, "") != 0 {
-            return FORWARD_IF_ERROR!(decodedSize, "");
-        }
+        FORWARD_IF_ERROR!(decodedSize, "");
         *op = (*op).offset(decodedSize_0 as isize);
         (*zds).streamStage = zdss_read;
     }
@@ -4109,10 +3997,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
     if (*output).pos > (*output).size {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
-    let err_code = FORWARD_IF_ERROR!(ZSTD_checkOutBuffer(zds, output), "");
-    if FORWARD_IF_ERROR!(ZSTD_checkOutBuffer(zds, output), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_checkOutBuffer(zds, output), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_checkOutBuffer(zds, output), "");
     while someMoreWork != 0 {
         let mut current_block_402: u64;
         match (*zds).streamStage as std::ffi::c_uint {
@@ -4215,20 +4100,9 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             return -(ZSTD_error_memory_allocation as std::ffi::c_int)
                                 as usize;
                         }
-                        let err_code_0 = FORWARD_IF_ERROR!(
-                            ZSTD_initLegacyStream(& zds -> legacyContext, zds ->
-                            previousLegacyVersion, legacyVersion, dict, dictSize), ""
+                        FORWARD_IF_ERROR!(
+                            ZSTD_initLegacyStream(addr_of!((*zds).legacyContext), (*zds).previousLegacyVersion, legacyVersion, dict, dictSize), ""
                         );
-                        if FORWARD_IF_ERROR!(
-                            ZSTD_initLegacyStream(& zds -> legacyContext, zds ->
-                            previousLegacyVersion, legacyVersion, dict, dictSize), ""
-                        ) != 0
-                        {
-                            return FORWARD_IF_ERROR!(
-                                ZSTD_initLegacyStream(& zds -> legacyContext, zds ->
-                                previousLegacyVersion, legacyVersion, dict, dictSize), ""
-                            );
-                        }
                         (*zds).previousLegacyVersion = legacyVersion;
                         (*zds).legacyVersion = (*zds).previousLegacyVersion;
                         let hint_0 = ZSTD_decompressLegacyStream(
@@ -4254,23 +4128,10 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             (*zds).lhSize = ((*zds).lhSize).wrapping_add(remainingInput);
                         }
                         (*input).pos = (*input).size;
-                        let err_code_1 = FORWARD_IF_ERROR!(
-                            ZSTD_getFrameHeader_advanced(& zds -> fParams, zds ->
-                            headerBuffer, zds -> lhSize, zds -> format),
+                        FORWARD_IF_ERROR!(
+                            ZSTD_getFrameHeader_advanced(addr_of!((*zds).fParams), (*zds).headerBuffer, (*zds).lhSize, (*zds).format),
                             "First few bytes detected incorrect"
                         );
-                        if FORWARD_IF_ERROR!(
-                            ZSTD_getFrameHeader_advanced(& zds -> fParams, zds ->
-                            headerBuffer, zds -> lhSize, zds -> format),
-                            "First few bytes detected incorrect"
-                        ) != 0
-                        {
-                            return FORWARD_IF_ERROR!(
-                                ZSTD_getFrameHeader_advanced(& zds -> fParams, zds ->
-                                headerBuffer, zds -> lhSize, zds -> format),
-                                "First few bytes detected incorrect"
-                            );
-                        }
                         return std::cmp::max(
                             (usize) ZSTD_FRAMEHEADERSIZE_MIN((*zds).format), hSize
                         )
@@ -4339,17 +4200,9 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int)
                                     as usize;
                             }
-                            let err_code_2 = FORWARD_IF_ERROR!(
+                            FORWARD_IF_ERROR!(
                                 ZSTD_decompressBegin_usingDDict(zds, ZSTD_getDDict(zds)), ""
                             );
-                            if FORWARD_IF_ERROR!(
-                                ZSTD_decompressBegin_usingDDict(zds, ZSTD_getDDict(zds)), ""
-                            ) != 0
-                            {
-                                return FORWARD_IF_ERROR!(
-                                    ZSTD_decompressBegin_usingDDict(zds, ZSTD_getDDict(zds)), ""
-                                );
-                            }
                             if (*zds).format as std::ffi::c_uint
                                 == ZSTD_f_zstd1 as std::ffi::c_int as std::ffi::c_uint
                                 && MEM_readLE32(
@@ -4367,20 +4220,9 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 ) as usize;
                                 (*zds).stage = ZSTDds_skipFrame;
                             } else {
-                                let err_code_3 = FORWARD_IF_ERROR!(
-                                    ZSTD_decodeFrameHeader(zds, zds -> headerBuffer, zds ->
-                                    lhSize), ""
+                                FORWARD_IF_ERROR!(
+                                    ZSTD_decodeFrameHeader(zds, (*zds).headerBuffer, (*zds).lhSize), ""
                                 );
-                                if FORWARD_IF_ERROR!(
-                                    ZSTD_decodeFrameHeader(zds, zds -> headerBuffer, zds ->
-                                    lhSize), ""
-                                ) != 0
-                                {
-                                    return FORWARD_IF_ERROR!(
-                                        ZSTD_decodeFrameHeader(zds, zds -> headerBuffer, zds ->
-                                        lhSize), ""
-                                    );
-                                }
                                 (*zds).expected = ZSTD_blockHeaderSize;
                                 (*zds).stage = ZSTDds_decodeBlockHeader;
                             }
@@ -4480,20 +4322,10 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                 } else if iend.offset_from(ip) as std::ffi::c_long as usize
                     >= neededInSize
                 {
-                    let err_code_4 = FORWARD_IF_ERROR!(
-                        ZSTD_decompressContinueStream(zds, & op, oend, ip, neededInSize),
+                    FORWARD_IF_ERROR!(
+                        ZSTD_decompressContinueStream(zds, addr_of!(op), oend, ip, neededInSize),
                         ""
                     );
-                    if FORWARD_IF_ERROR!(
-                        ZSTD_decompressContinueStream(zds, & op, oend, ip, neededInSize),
-                        ""
-                    ) != 0
-                    {
-                        return FORWARD_IF_ERROR!(
-                            ZSTD_decompressContinueStream(zds, & op, oend, ip,
-                            neededInSize), ""
-                        );
-                    }
                     ip = ip.offset(neededInSize as isize);
                     current_block_402 = 7792909578691485565;
                 } else if ip == iend {
@@ -4541,20 +4373,10 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                     someMoreWork = 0;
                 } else {
                     (*zds).inPos = 0;
-                    let err_code_5 = FORWARD_IF_ERROR!(
-                        ZSTD_decompressContinueStream(zds, & op, oend, zds -> inBuff,
+                    FORWARD_IF_ERROR!(
+                        ZSTD_decompressContinueStream(zds, addr_of!(op), oend, (*zds).inBuff,
                         neededInSize), ""
                     );
-                    if FORWARD_IF_ERROR!(
-                        ZSTD_decompressContinueStream(zds, & op, oend, zds -> inBuff,
-                        neededInSize), ""
-                    ) != 0
-                    {
-                        return FORWARD_IF_ERROR!(
-                            ZSTD_decompressContinueStream(zds, & op, oend, zds -> inBuff,
-                            neededInSize), ""
-                        );
-                    }
                 }
             }
             _ => {}

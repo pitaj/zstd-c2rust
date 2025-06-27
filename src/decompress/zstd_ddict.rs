@@ -419,12 +419,9 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
     (*ddict)
         .entropy
         .hufTable[0] = (12 as std::ffi::c_int * 0x1000001 as std::ffi::c_int) as HUF_DTable;
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_loadEntropy_intoDDict(ddict, dictContentType), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_loadEntropy_intoDDict(ddict, dictContentType), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_loadEntropy_intoDDict(ddict, dictContentType), "");
-    }
     return 0;
 }
 #[no_mangle]

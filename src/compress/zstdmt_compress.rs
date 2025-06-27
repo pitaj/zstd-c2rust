@@ -2355,10 +2355,7 @@ unsafe extern "C" fn ZSTDMT_resize(
     if POOL_resize((*mtctx).factory, nbWorkers as usize) != 0 {
         return ERROR(ZSTD_error_memory_allocation);
     }
-    let err_code = FORWARD_IF_ERROR!(ZSTDMT_expandJobsTable(mtctx, nbWorkers), "");
-    if FORWARD_IF_ERROR!(ZSTDMT_expandJobsTable(mtctx, nbWorkers), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTDMT_expandJobsTable(mtctx, nbWorkers), "");
-    }
+    FORWARD_IF_ERROR!(ZSTDMT_expandJobsTable(mtctx, nbWorkers), "");
     (*mtctx)
         .bufPool = ZSTDMT_expandBufferPool(
         (*mtctx).bufPool,
@@ -2562,15 +2559,9 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
     mut pledgedSrcSize: std::ffi::c_ulonglong,
 ) -> usize {
     if params.nbWorkers != (*mtctx).params.nbWorkers {
-        let err_code = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             ZSTDMT_resize(mtctx, (unsigned) params.nbWorkers), ""
         );
-        if FORWARD_IF_ERROR!(ZSTDMT_resize(mtctx, (unsigned) params.nbWorkers), "") != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTDMT_resize(mtctx, (unsigned) params.nbWorkers), ""
-            );
-        }
     }
     if params.jobSize != 0
         && params.jobSize < ZSTDMT_JOBSIZE_MIN as usize
@@ -3213,15 +3204,9 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
             && (*mtctx).frameEnded == 0
     {
         let jobSize = (*mtctx).inBuff.filled;
-        let err_code = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             ZSTDMT_createCompressionJob(mtctx, jobSize, endOp), ""
         );
-        if FORWARD_IF_ERROR!(ZSTDMT_createCompressionJob(mtctx, jobSize, endOp), "") != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTDMT_createCompressionJob(mtctx, jobSize, endOp), ""
-            );
-        }
     }
     let remainingToFlush = ZSTDMT_flushProduced(
         mtctx,

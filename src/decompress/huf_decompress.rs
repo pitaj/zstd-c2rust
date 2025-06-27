@@ -1621,10 +1621,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
         cSrcSize,
         DTable,
     );
-    let err_code = FORWARD_IF_ERROR!(ret, "Failed to init fast loop args");
-    if FORWARD_IF_ERROR!(ret, "Failed to init fast loop args") != 0 {
-        return FORWARD_IF_ERROR!(ret, "Failed to init fast loop args");
-    }
+    FORWARD_IF_ERROR!(ret, "Failed to init fast loop args");
     if ret == 0 {
         return 0;
     }
@@ -1647,17 +1644,9 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
         } else {
             segmentEnd = oend;
         }
-        let err_code_0 = FORWARD_IF_ERROR!(
-            HUF_initRemainingDStream(& bit, & args, i, segmentEnd), "corruption"
+        FORWARD_IF_ERROR!(
+            HUF_initRemainingDStream(addr_of!(bit), addr_of!(args), i, segmentEnd), "corruption"
         );
-        if FORWARD_IF_ERROR!(
-            HUF_initRemainingDStream(& bit, & args, i, segmentEnd), "corruption"
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                HUF_initRemainingDStream(& bit, & args, i, segmentEnd), "corruption"
-            );
-        }
         args
             .op[i
             as usize] = (args.op[i as usize])
@@ -3223,10 +3212,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
         cSrcSize,
         DTable,
     );
-    let err_code = FORWARD_IF_ERROR!(ret, "Failed to init asm args");
-    if FORWARD_IF_ERROR!(ret, "Failed to init asm args") != 0 {
-        return FORWARD_IF_ERROR!(ret, "Failed to init asm args");
-    }
+    FORWARD_IF_ERROR!(ret, "Failed to init asm args");
     if ret == 0 {
         return 0;
     }
@@ -3249,17 +3235,9 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
         } else {
             segmentEnd = oend;
         }
-        let err_code_0 = FORWARD_IF_ERROR!(
-            HUF_initRemainingDStream(& bit, & args, i, segmentEnd), "corruption"
+        FORWARD_IF_ERROR!(
+            HUF_initRemainingDStream(addr_of!(bit), addr_of!(args), i, segmentEnd), "corruption"
         );
-        if FORWARD_IF_ERROR!(
-            HUF_initRemainingDStream(& bit, & args, i, segmentEnd), "corruption"
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                HUF_initRemainingDStream(& bit, & args, i, segmentEnd), "corruption"
-            );
-        }
         args
             .op[i
             as usize] = (args.op[i as usize])

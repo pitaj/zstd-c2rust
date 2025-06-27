@@ -3899,10 +3899,7 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_init_advanced(
     if cctxParams.is_null() {
         return -(ZSTD_error_GENERIC as std::ffi::c_int) as usize;
     }
-    let err_code = FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    if FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
     ZSTD_CCtxParams_init_internal(cctxParams, &mut params, ZSTD_NO_CLEVEL);
     return 0;
 }
@@ -4271,12 +4268,9 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
             return (*CCtxParams).format as usize;
         }
         100 => {
-            let err_code = FORWARD_IF_ERROR!(
-                ZSTD_cParam_clampBounds(param, & value), ""
+            FORWARD_IF_ERROR!(
+                ZSTD_cParam_clampBounds(param, addr_of!(value)), ""
             );
-            if FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(param, & value), "") != 0 {
-                return FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(param, & value), "");
-            }
             if value == 0 {
                 (*CCtxParams).compressionLevel = ZSTD_CLEVEL_DEFAULT;
             } else {
@@ -4401,12 +4395,9 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
             return (*CCtxParams).literalCompressionMode as usize;
         }
         400 => {
-            let err_code_0 = FORWARD_IF_ERROR!(
-                ZSTD_cParam_clampBounds(param, & value), ""
+            FORWARD_IF_ERROR!(
+                ZSTD_cParam_clampBounds(param, addr_of!(value)), ""
             );
-            if FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(param, & value), "") != 0 {
-                return FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(param, & value), "");
-            }
             (*CCtxParams).nbWorkers = value;
             return (*CCtxParams).nbWorkers as usize;
         }
@@ -4414,40 +4405,23 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
             if value != 0 && value < ZSTDMT_JOBSIZE_MIN {
                 value = ZSTDMT_JOBSIZE_MIN;
             }
-            let err_code_1 = FORWARD_IF_ERROR!(
-                ZSTD_cParam_clampBounds(param, & value), ""
+            FORWARD_IF_ERROR!(
+                ZSTD_cParam_clampBounds(param, addr_of!(value)), ""
             );
-            if FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(param, & value), "") != 0 {
-                return FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(param, & value), "");
-            }
             (*CCtxParams).jobSize = value as usize;
             return (*CCtxParams).jobSize;
         }
         402 => {
-            let err_code_2 = FORWARD_IF_ERROR!(
-                ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, & value), ""
+            FORWARD_IF_ERROR!(
+                ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, addr_of!(value)), ""
             );
-            if FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, & value), "")
-                != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, & value), ""
-                );
-            }
             (*CCtxParams).overlapLog = value;
             return (*CCtxParams).overlapLog as usize;
         }
         500 => {
-            let err_code_3 = FORWARD_IF_ERROR!(
-                ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, & value), ""
+            FORWARD_IF_ERROR!(
+                ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, addr_of!(value)), ""
             );
-            if FORWARD_IF_ERROR!(ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, & value), "")
-                != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_cParam_clampBounds(ZSTD_c_overlapLog, & value), ""
-                );
-            }
             (*CCtxParams).rsyncable = value;
             return (*CCtxParams).rsyncable as usize;
         }
@@ -4772,88 +4746,28 @@ pub unsafe extern "C" fn ZSTD_CCtx_setCParams(
     mut cctx: *mut ZSTD_CCtx,
     mut cparams: ZSTD_compressionParameters,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_checkCParams(cparams), "");
-    if FORWARD_IF_ERROR!(ZSTD_checkCParams(cparams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_checkCParams(cparams), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_windowLog, (int) cparams.windowLog), ""
+    FORWARD_IF_ERROR!(ZSTD_checkCParams(cparams), "");
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_windowLog, (cparams.windowLog as std::ffi::c_int)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_windowLog, (int) cparams.windowLog), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_windowLog, (int) cparams.windowLog), ""
-        );
-    }
-    let err_code_1 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_chainLog, (int) cparams.chainLog), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_chainLog, (cparams.chainLog as std::ffi::c_int)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_chainLog, (int) cparams.chainLog), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_chainLog, (int) cparams.chainLog), ""
-        );
-    }
-    let err_code_2 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_hashLog, (int) cparams.hashLog), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_hashLog, (cparams.hashLog as std::ffi::c_int)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_hashLog, (int) cparams.hashLog), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_hashLog, (int) cparams.hashLog), ""
-        );
-    }
-    let err_code_3 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_searchLog, (int) cparams.searchLog), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_searchLog, (cparams.searchLog as std::ffi::c_int)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_searchLog, (int) cparams.searchLog), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_searchLog, (int) cparams.searchLog), ""
-        );
-    }
-    let err_code_4 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_minMatch, (int) cparams.minMatch), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_minMatch, (cparams.minMatch as std::ffi::c_int)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_minMatch, (int) cparams.minMatch), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_minMatch, (int) cparams.minMatch), ""
-        );
-    }
-    let err_code_5 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_targetLength, (int) cparams.targetLength), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_targetLength, (cparams.targetLength as std::ffi::c_int)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_targetLength, (int) cparams.targetLength), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_targetLength, (int) cparams
-            .targetLength), ""
-        );
-    }
-    let err_code_6 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_strategy, (int) cparams.strategy), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_setParameter(cctx, ZSTD_c_strategy, (cparams.strategy as std::ffi::c_int)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_strategy, (int) cparams.strategy), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_strategy, (int) cparams.strategy), ""
-        );
-    }
     return 0;
 }
 #[no_mangle]
@@ -4861,44 +4775,16 @@ pub unsafe extern "C" fn ZSTD_CCtx_setFParams(
     mut cctx: *mut ZSTD_CCtx,
     mut fparams: ZSTD_frameParameters,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_contentSizeFlag, fparams.contentSizeFlag !=
         0), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_contentSizeFlag, fparams.contentSizeFlag !=
-        0), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_contentSizeFlag, fparams.contentSizeFlag
-            != 0), ""
-        );
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_checksumFlag, fparams.checksumFlag != 0), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_checksumFlag, fparams.checksumFlag != 0), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_checksumFlag, fparams.checksumFlag != 0),
-            ""
-        );
-    }
-    let err_code_1 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setParameter(cctx, ZSTD_c_dictIDFlag, fparams.noDictIDFlag == 0), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(cctx, ZSTD_c_dictIDFlag, fparams.noDictIDFlag == 0), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(cctx, ZSTD_c_dictIDFlag, fparams.noDictIDFlag == 0),
-            ""
-        );
-    }
     return 0;
 }
 #[no_mangle]
@@ -4906,18 +4792,9 @@ pub unsafe extern "C" fn ZSTD_CCtx_setParams(
     mut cctx: *mut ZSTD_CCtx,
     mut params: ZSTD_parameters,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    if FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(ZSTD_CCtx_setFParams(cctx, params.fParams), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_setFParams(cctx, params.fParams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_setFParams(cctx, params.fParams), "");
-    }
-    let err_code_1 = FORWARD_IF_ERROR!(ZSTD_CCtx_setCParams(cctx, params.cParams), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_setCParams(cctx, params.cParams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_setCParams(cctx, params.cParams), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
+    FORWARD_IF_ERROR!(ZSTD_CCtx_setFParams(cctx, params.fParams), "");
+    FORWARD_IF_ERROR!(ZSTD_CCtx_setCParams(cctx, params.cParams), "");
     return 0;
 }
 #[no_mangle]
@@ -6165,10 +6042,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
         ZSTD_hasExtSeqProd(params),
         (*params).maxBlockSize,
     );
-    let err_code = FORWARD_IF_ERROR!(neededSpace, "cctx size estimate failed!");
-    if FORWARD_IF_ERROR!(neededSpace, "cctx size estimate failed!") != 0 {
-        return FORWARD_IF_ERROR!(neededSpace, "cctx size estimate failed!");
-    }
+    FORWARD_IF_ERROR!(neededSpace, "cctx size estimate failed!");
     if (*zc).staticSize == 0 {
         ZSTD_cwksp_bump_oversized_duration(ws, 0);
     }
@@ -6182,16 +6056,9 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
         }
         needsIndexReset = ZSTDirp_reset;
         ZSTD_cwksp_free(ws, (*zc).customMem);
-        let err_code_0 = FORWARD_IF_ERROR!(
-            ZSTD_cwksp_create(ws, neededSpace, zc -> customMem), ""
+        FORWARD_IF_ERROR!(
+            ZSTD_cwksp_create(ws, neededSpace, (*zc).customMem), ""
         );
-        if FORWARD_IF_ERROR!(ZSTD_cwksp_create(ws, neededSpace, zc -> customMem), "")
-            != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTD_cwksp_create(ws, neededSpace, zc -> customMem), ""
-            );
-        }
         (*zc)
             .blockState
             .prevCBlock = ZSTD_cwksp_reserve_object(
@@ -6296,20 +6163,10 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
     (*zc).dictID = 0;
     (*zc).dictContentSize = 0;
     ZSTD_reset_compressedBlockState((*zc).blockState.prevCBlock);
-    let err_code_1 = FORWARD_IF_ERROR!(
-        ZSTD_reset_matchState(& zc -> blockState.matchState, ws, & params -> cParams,
-        params -> useRowMatchFinder, crp, needsIndexReset, ZSTD_resetTarget_CCtx), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_reset_matchState(addr_of!((*zc).blockState.matchState), ws, addr_of!((*params).cParams),
+ (*       params).useRowMatchFinder, crp, needsIndexReset, ZSTD_resetTarget_CCtx), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_reset_matchState(& zc -> blockState.matchState, ws, & params -> cParams,
-        params -> useRowMatchFinder, crp, needsIndexReset, ZSTD_resetTarget_CCtx), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_reset_matchState(& zc -> blockState.matchState, ws, & params -> cParams,
-            params -> useRowMatchFinder, crp, needsIndexReset, ZSTD_resetTarget_CCtx), ""
-        );
-    }
     (*zc)
         .seqStore
         .sequencesStart = ZSTD_cwksp_reserve_aligned64(
@@ -6471,20 +6328,10 @@ unsafe extern "C" fn ZSTD_resetCCtx_byAttachingCDict(
     );
     params.cParams.windowLog = windowLog;
     params.useRowMatchFinder = (*cdict).useRowMatchFinder;
-    let err_code = FORWARD_IF_ERROR!(
-        ZSTD_resetCCtx_internal(cctx, & params, pledgedSrcSize, 0, ZSTDcrp_makeClean,
+    FORWARD_IF_ERROR!(
+        ZSTD_resetCCtx_internal(cctx, addr_of!(params), pledgedSrcSize, 0, ZSTDcrp_makeClean,
         zbuff), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_resetCCtx_internal(cctx, & params, pledgedSrcSize, 0, ZSTDcrp_makeClean,
-        zbuff), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_resetCCtx_internal(cctx, & params, pledgedSrcSize, 0, ZSTDcrp_makeClean,
-            zbuff), ""
-        );
-    }
     let cdictEnd = ((*cdict).matchState.window.nextSrc)
         .offset_from((*cdict).matchState.window.base) as std::ffi::c_long as u32;
     let cdictLen = cdictEnd.wrapping_sub((*cdict).matchState.window.dictLimit);
@@ -6554,20 +6401,10 @@ unsafe extern "C" fn ZSTD_resetCCtx_byCopyingCDict(
     params.cParams = *cdict_cParams;
     params.cParams.windowLog = windowLog;
     params.useRowMatchFinder = (*cdict).useRowMatchFinder;
-    let err_code = FORWARD_IF_ERROR!(
-        ZSTD_resetCCtx_internal(cctx, & params, pledgedSrcSize, 0, ZSTDcrp_leaveDirty,
+    FORWARD_IF_ERROR!(
+        ZSTD_resetCCtx_internal(cctx, addr_of!(params), pledgedSrcSize, 0, ZSTDcrp_leaveDirty,
         zbuff), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_resetCCtx_internal(cctx, & params, pledgedSrcSize, 0, ZSTDcrp_leaveDirty,
-        zbuff), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_resetCCtx_internal(cctx, & params, pledgedSrcSize, 0,
-            ZSTDcrp_leaveDirty, zbuff), ""
-        );
-    }
     ZSTD_cwksp_mark_tables_dirty(&mut (*cctx).workspace);
     let chainSize = if ZSTD_allocateChainTable(
         (*cdict_cParams).strategy,
@@ -7159,10 +6996,7 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
         suspectUncompressible,
         bmi2,
     );
-    let err_code = FORWARD_IF_ERROR!(cSize, "ZSTD_compressLiterals failed");
-    if FORWARD_IF_ERROR!(cSize, "ZSTD_compressLiterals failed") != 0 {
-        return FORWARD_IF_ERROR!(cSize, "ZSTD_compressLiterals failed");
-    }
+    FORWARD_IF_ERROR!(cSize, "ZSTD_compressLiterals failed");
     op = op.offset(cSize as isize);
     if (oend.offset_from(op) as std::ffi::c_long)
         < (3 as std::ffi::c_int + 1 as std::ffi::c_int) as std::ffi::c_long
@@ -7213,12 +7047,9 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
         entropyWorkspace,
         entropyWkspSize,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         stats.size, "ZSTD_buildSequencesStatistics failed!"
     );
-    if FORWARD_IF_ERROR!(stats.size, "ZSTD_buildSequencesStatistics failed!") != 0 {
-        return FORWARD_IF_ERROR!(stats.size, "ZSTD_buildSequencesStatistics failed!");
-    }
     *seqHead = (stats.LLtype << 6)
         .wrapping_add(stats.Offtype << 4)
         .wrapping_add(stats.MLtype << 2) as u8;
@@ -7239,10 +7070,7 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_internal(
         longOffsets,
         bmi2,
     );
-    let err_code_1 = FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed");
-    if FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed") != 0 {
-        return FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed");
-    }
+    FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed");
     op = op.offset(bitstreamSize as isize);
     if lastCountSize != 0
         && lastCountSize.wrapping_add(bitstreamSize) < 4
@@ -7286,12 +7114,9 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_wExtLitBuffer(
     {
         return 0;
     }
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         cSize, "ZSTD_entropyCompressSeqStore_internal failed"
     );
-    if FORWARD_IF_ERROR!(cSize, "ZSTD_entropyCompressSeqStore_internal failed") != 0 {
-        return FORWARD_IF_ERROR!(cSize, "ZSTD_entropyCompressSeqStore_internal failed");
-    }
     let maxCSize = blockSize
         .wrapping_sub(ZSTD_minGain(blockSize, (*cctxParams).cParams.strategy));
     if cSize >= maxCSize {
@@ -7658,20 +7483,9 @@ unsafe extern "C" fn ZSTD_buildSeqStore(
         }
         ldmSeqStore.seq = (*zc).ldmSequences;
         ldmSeqStore.capacity = (*zc).maxNbLdmSequences;
-        let err_code = FORWARD_IF_ERROR!(
-            ZSTD_ldm_generateSequences(& zc -> ldmState, & ldmSeqStore, & zc ->
-            appliedParams.ldmParams, src, srcSize), ""
+        FORWARD_IF_ERROR!(
+            ZSTD_ldm_generateSequences(addr_of!((*zc).ldmState), addr_of!(ldmSeqStore), addr_of!((*zc).appliedParams.ldmParams), src, srcSize), ""
         );
-        if FORWARD_IF_ERROR!(
-            ZSTD_ldm_generateSequences(& zc -> ldmState, & ldmSeqStore, & zc ->
-            appliedParams.ldmParams, src, srcSize), ""
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTD_ldm_generateSequences(& zc -> ldmState, & ldmSeqStore, & zc ->
-                appliedParams.ldmParams, src, srcSize), ""
-            );
-        }
         lastLLSize = ZSTD_ldm_blockCompress(
             &mut ldmSeqStore,
             ms,
@@ -7721,26 +7535,12 @@ unsafe extern "C" fn ZSTD_buildSeqStore(
                 return -(ZSTD_error_externalSequences_invalid as std::ffi::c_int)
                     as usize;
             }
-            let err_code_0 = FORWARD_IF_ERROR!(
-                ZSTD_transferSequences_wBlockDelim(zc, & seqPos, zc -> extSeqBuf,
-                nbPostProcessedSeqs, src, srcSize, zc -> appliedParams
+            FORWARD_IF_ERROR!(
+                ZSTD_transferSequences_wBlockDelim(zc, addr_of!(seqPos), (*zc).extSeqBuf,
+                nbPostProcessedSeqs, src, srcSize, (*zc).appliedParams
                 .searchForExternalRepcodes),
                 "Failed to copy external sequences to seqStore!"
             );
-            if FORWARD_IF_ERROR!(
-                ZSTD_transferSequences_wBlockDelim(zc, & seqPos, zc -> extSeqBuf,
-                nbPostProcessedSeqs, src, srcSize, zc -> appliedParams
-                .searchForExternalRepcodes),
-                "Failed to copy external sequences to seqStore!"
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_transferSequences_wBlockDelim(zc, & seqPos, zc -> extSeqBuf,
-                    nbPostProcessedSeqs, src, srcSize, zc -> appliedParams
-                    .searchForExternalRepcodes),
-                    "Failed to copy external sequences to seqStore!"
-                );
-            }
             (*ms).ldmSeqStore = NULL as *const RawSeqStore_t;
             return ZSTDbss_compress as std::ffi::c_int as usize;
         }
@@ -7904,31 +7704,16 @@ pub unsafe extern "C" fn ZSTD_generateSequences(
         maxSequences: 0,
     };
     let mut targetCBlockSize: std::ffi::c_int = 0;
-    let err_code = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_getParameter(zc, ZSTD_c_targetCBlockSize, & targetCBlockSize), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_getParameter(zc, ZSTD_c_targetCBlockSize, addr_of!(targetCBlockSize)), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_getParameter(zc, ZSTD_c_targetCBlockSize, & targetCBlockSize), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_getParameter(zc, ZSTD_c_targetCBlockSize, & targetCBlockSize), ""
-        );
-    }
     if targetCBlockSize != 0 {
         return -(ZSTD_error_parameter_unsupported as std::ffi::c_int) as usize;
     }
     let mut nbWorkers: std::ffi::c_int = 0;
-    let err_code_0 = FORWARD_IF_ERROR!(
-        ZSTD_CCtx_getParameter(zc, ZSTD_c_nbWorkers, & nbWorkers), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_CCtx_getParameter(zc, ZSTD_c_nbWorkers, addr_of!(nbWorkers)), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_getParameter(zc, ZSTD_c_nbWorkers, & nbWorkers), "")
-        != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_getParameter(zc, ZSTD_c_nbWorkers, & nbWorkers), ""
-        );
-    }
     if nbWorkers != 0 {
         return -(ZSTD_error_parameter_unsupported as std::ffi::c_int) as usize;
     }
@@ -7943,10 +7728,7 @@ pub unsafe extern "C" fn ZSTD_generateSequences(
     (*zc).seqCollector = seqCollector;
     let ret = ZSTD_compress2(zc, dst, dstCapacity, src, srcSize);
     ZSTD_customFree(dst, ZSTD_defaultCMem);
-    let err_code_1 = FORWARD_IF_ERROR!(ret, "ZSTD_compress2 failed");
-    if FORWARD_IF_ERROR!(ret, "ZSTD_compress2 failed") != 0 {
-        return FORWARD_IF_ERROR!(ret, "ZSTD_compress2 failed");
-    }
+    FORWARD_IF_ERROR!(ret, "ZSTD_compress2 failed");
     return (*zc).seqCollector.seqIndex;
 }
 #[no_mangle]
@@ -8108,10 +7890,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
         workspace,
         wkspSize,
     );
-    let err_code = FORWARD_IF_ERROR!(largest, "HIST_count_wksp failed");
-    if FORWARD_IF_ERROR!(largest, "HIST_count_wksp failed") != 0 {
-        return FORWARD_IF_ERROR!(largest, "HIST_count_wksp failed");
-    }
+    FORWARD_IF_ERROR!(largest, "HIST_count_wksp failed");
     if largest == srcSize {
         (*hufMetadata).hType = set_rle;
         return 0;
@@ -8152,10 +7931,7 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_literals(
         nodeWksp as *mut std::ffi::c_void,
         nodeWkspSize,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(maxBits, "HUF_buildCTable_wksp");
-    if FORWARD_IF_ERROR!(maxBits, "HUF_buildCTable_wksp") != 0 {
-        return FORWARD_IF_ERROR!(maxBits, "HUF_buildCTable_wksp");
-    }
+    FORWARD_IF_ERROR!(maxBits, "HUF_buildCTable_wksp");
     huffLog = maxBits as u32;
     let newCSize = HUF_estimateCompressedSize(
         ((*nextHuf).CTable).as_mut_ptr(),
@@ -8287,12 +8063,9 @@ unsafe extern "C" fn ZSTD_buildBlockEntropyStats_sequences(
     } else {
         ZSTD_buildDummySequencesStatistics(nextEntropy)
     };
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         stats.size, "ZSTD_buildSequencesStatistics failed!"
     );
-    if FORWARD_IF_ERROR!(stats.size, "ZSTD_buildSequencesStatistics failed!") != 0 {
-        return FORWARD_IF_ERROR!(stats.size, "ZSTD_buildSequencesStatistics failed!");
-    }
     (*fseMetadata).llType = stats.LLtype as SymbolEncodingType_e;
     (*fseMetadata).ofType = stats.Offtype as SymbolEncodingType_e;
     (*fseMetadata).mlType = stats.MLtype as SymbolEncodingType_e;
@@ -8331,20 +8104,10 @@ pub unsafe extern "C" fn ZSTD_buildBlockEntropyStats(
         wkspSize,
         hufFlags,
     );
-    let err_code = FORWARD_IF_ERROR!(
-        entropyMetadata -> hufMetadata.hufDesSize,
+    FORWARD_IF_ERROR!(
+ (*       entropyMetadata).hufMetadata.hufDesSize,
         "ZSTD_buildBlockEntropyStats_literals failed"
     );
-    if FORWARD_IF_ERROR!(
-        entropyMetadata -> hufMetadata.hufDesSize,
-        "ZSTD_buildBlockEntropyStats_literals failed"
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            entropyMetadata -> hufMetadata.hufDesSize,
-            "ZSTD_buildBlockEntropyStats_literals failed"
-        );
-    }
     (*entropyMetadata)
         .fseMetadata
         .fseTablesSize = ZSTD_buildBlockEntropyStats_sequences(
@@ -8356,20 +8119,10 @@ pub unsafe extern "C" fn ZSTD_buildBlockEntropyStats(
         workspace,
         wkspSize,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(
-        entropyMetadata -> fseMetadata.fseTablesSize,
+    FORWARD_IF_ERROR!(
+ (*       entropyMetadata).fseMetadata.fseTablesSize,
         "ZSTD_buildBlockEntropyStats_sequences failed"
     );
-    if FORWARD_IF_ERROR!(
-        entropyMetadata -> fseMetadata.fseTablesSize,
-        "ZSTD_buildBlockEntropyStats_sequences failed"
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            entropyMetadata -> fseMetadata.fseTablesSize,
-            "ZSTD_buildBlockEntropyStats_sequences failed"
-        );
-    }
     return 0;
 }
 unsafe extern "C" fn ZSTD_estimateBlockSize_literal(
@@ -8605,23 +8358,10 @@ unsafe extern "C" fn ZSTD_buildEntropyStatisticsAndEstimateSubBlockSize(
     let entropyMetadata: *mut ZSTD_entropyCTablesMetadata_t = &mut (*zc)
         .blockSplitCtx
         .entropyMetadata;
-    let err_code = FORWARD_IF_ERROR!(
-        ZSTD_buildBlockEntropyStats(seqStore, & zc -> blockState.prevCBlock -> entropy, &
-        zc -> blockState.nextCBlock -> entropy, & zc -> appliedParams, entropyMetadata,
-        zc -> tmpWorkspace, zc -> tmpWkspSize), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_buildBlockEntropyStats(seqStore, addr_of!((*(*zc).blockState.prevCBlock).entropy), addr_of!((*(*       zc).blockState.nextCBlock).entropy), addr_of!((*zc).appliedParams), entropyMetadata,
+ (*       zc).tmpWorkspace, (*zc).tmpWkspSize), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_buildBlockEntropyStats(seqStore, & zc -> blockState.prevCBlock -> entropy, &
-        zc -> blockState.nextCBlock -> entropy, & zc -> appliedParams, entropyMetadata,
-        zc -> tmpWorkspace, zc -> tmpWkspSize), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_buildBlockEntropyStats(seqStore, & zc -> blockState.prevCBlock ->
-            entropy, & zc -> blockState.nextCBlock -> entropy, & zc -> appliedParams,
-            entropyMetadata, zc -> tmpWorkspace, zc -> tmpWkspSize), ""
-        );
-    }
     return ZSTD_estimateBlockSize(
         (*seqStore).litStart,
         ((*seqStore).lit).offset_from((*seqStore).litStart) as std::ffi::c_long
@@ -8826,30 +8566,17 @@ unsafe extern "C" fn ZSTD_compressSeqStore_singleBlock(
         (*zc).tmpWkspSize,
         (*zc).bmi2,
     );
-    let err_code = FORWARD_IF_ERROR!(cSeqsSize, "ZSTD_entropyCompressSeqStore failed!");
-    if FORWARD_IF_ERROR!(cSeqsSize, "ZSTD_entropyCompressSeqStore failed!") != 0 {
-        return FORWARD_IF_ERROR!(cSeqsSize, "ZSTD_entropyCompressSeqStore failed!");
-    }
+    FORWARD_IF_ERROR!(cSeqsSize, "ZSTD_entropyCompressSeqStore failed!");
     if (*zc).isFirstBlock == 0 && cSeqsSize < rleMaxLength as usize
         && ZSTD_isRLE(src as *const u8, srcSize) != 0
     {
         cSeqsSize = 1;
     }
     if (*zc).seqCollector.collectSequences != 0 {
-        let err_code_0 = FORWARD_IF_ERROR!(
-            ZSTD_copyBlockSequences(& zc -> seqCollector, seqStore, dRepOriginal.rep),
+        FORWARD_IF_ERROR!(
+            ZSTD_copyBlockSequences(addr_of!((*zc).seqCollector), seqStore, dRepOriginal.rep),
             "copyBlockSequences failed"
         );
-        if FORWARD_IF_ERROR!(
-            ZSTD_copyBlockSequences(& zc -> seqCollector, seqStore, dRepOriginal.rep),
-            "copyBlockSequences failed"
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTD_copyBlockSequences(& zc -> seqCollector, seqStore, dRepOriginal
-                .rep), "copyBlockSequences failed"
-            );
-        }
         ZSTD_blockState_confirmRepcodesAndEntropyTables(&mut (*zc).blockState);
         return 0;
     }
@@ -8861,10 +8588,7 @@ unsafe extern "C" fn ZSTD_compressSeqStore_singleBlock(
             srcSize,
             lastBlock,
         );
-        let err_code_1 = FORWARD_IF_ERROR!(cSize, "Nocompress block failed");
-        if FORWARD_IF_ERROR!(cSize, "Nocompress block failed") != 0 {
-            return FORWARD_IF_ERROR!(cSize, "Nocompress block failed");
-        }
+        FORWARD_IF_ERROR!(cSize, "Nocompress block failed");
         *dRep = dRepOriginal;
     } else if cSeqsSize == 1 {
         cSize = ZSTD_rleCompressBlock(
@@ -8874,10 +8598,7 @@ unsafe extern "C" fn ZSTD_compressSeqStore_singleBlock(
             srcSize,
             lastBlock,
         );
-        let err_code_2 = FORWARD_IF_ERROR!(cSize, "RLE compress block failed");
-        if FORWARD_IF_ERROR!(cSize, "RLE compress block failed") != 0 {
-            return FORWARD_IF_ERROR!(cSize, "RLE compress block failed");
-        }
+        FORWARD_IF_ERROR!(cSize, "RLE compress block failed");
         *dRep = dRepOriginal;
     } else {
         ZSTD_blockState_confirmRepcodesAndEntropyTables(&mut (*zc).blockState);
@@ -9016,20 +8737,10 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
             lastBlock,
             0,
         );
-        let err_code = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             cSizeSingleBlock,
             "Compressing single block from splitBlock_internal() failed!"
         );
-        if FORWARD_IF_ERROR!(
-            cSizeSingleBlock,
-            "Compressing single block from splitBlock_internal() failed!"
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                cSizeSingleBlock,
-                "Compressing single block from splitBlock_internal() failed!"
-            );
-        }
         return cSizeSingleBlock;
     }
     ZSTD_deriveSeqStoreChunk(
@@ -9071,10 +8782,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock_internal(
             lastBlockEntireSrc,
             1,
         );
-        let err_code_0 = FORWARD_IF_ERROR!(cSizeChunk, "Compressing chunk failed!");
-        if FORWARD_IF_ERROR!(cSizeChunk, "Compressing chunk failed!") != 0 {
-            return FORWARD_IF_ERROR!(cSizeChunk, "Compressing chunk failed!");
-        }
+        FORWARD_IF_ERROR!(cSizeChunk, "Compressing chunk failed!");
         ip = ip.offset(srcBytes as isize);
         op = op.offset(cSizeChunk as isize);
         dstCapacity = dstCapacity.wrapping_sub(cSizeChunk);
@@ -9101,10 +8809,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock(
     let mut nbSeq: u32 = 0;
     let mut cSize: usize = 0;
     let bss = ZSTD_buildSeqStore(zc, src, srcSize);
-    let err_code = FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
-    if FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed") != 0 {
-        return FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
-    }
+    FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
     if bss == ZSTDbss_noCompress as std::ffi::c_int as usize {
         if (*(*zc).blockState.prevCBlock).entropy.fse.offcode_repeatMode
             as std::ffi::c_uint
@@ -9119,10 +8824,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock(
             return -(ZSTD_error_sequenceProducer_failed as std::ffi::c_int) as usize;
         }
         cSize = ZSTD_noCompressBlock(dst, dstCapacity, src, srcSize, lastBlock);
-        let err_code_0 = FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
-        if FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed") != 0 {
-            return FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
-        }
+        FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
         return cSize;
     }
     nbSeq = ((*zc).seqStore.sequences).offset_from((*zc).seqStore.sequencesStart)
@@ -9136,10 +8838,7 @@ unsafe extern "C" fn ZSTD_compressBlock_splitBlock(
         lastBlock,
         nbSeq,
     );
-    let err_code_1 = FORWARD_IF_ERROR!(cSize, "Splitting blocks failed!");
-    if FORWARD_IF_ERROR!(cSize, "Splitting blocks failed!") != 0 {
-        return FORWARD_IF_ERROR!(cSize, "Splitting blocks failed!");
-    }
+    FORWARD_IF_ERROR!(cSize, "Splitting blocks failed!");
     return cSize;
 }
 unsafe extern "C" fn ZSTD_compressBlock_internal(
@@ -9155,10 +8854,7 @@ unsafe extern "C" fn ZSTD_compressBlock_internal(
     let mut ip = src as *const u8;
     let mut op = dst as *mut u8;
     let bss = ZSTD_buildSeqStore(zc, src, srcSize);
-    let err_code = FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
-    if FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed") != 0 {
-        return FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
-    }
+    FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
     if bss == ZSTDbss_noCompress as std::ffi::c_int as usize {
         if (*zc).seqCollector.collectSequences != 0 {
             return -(ZSTD_error_sequenceProducer_failed as std::ffi::c_int) as usize;
@@ -9166,20 +8862,9 @@ unsafe extern "C" fn ZSTD_compressBlock_internal(
         cSize = 0;
     } else {
         if (*zc).seqCollector.collectSequences != 0 {
-            let err_code_0 = FORWARD_IF_ERROR!(
-                ZSTD_copyBlockSequences(& zc -> seqCollector, ZSTD_getSeqStore(zc), zc ->
-                blockState.prevCBlock -> rep), "copyBlockSequences failed"
+            FORWARD_IF_ERROR!(
+                ZSTD_copyBlockSequences(addr_of!((*zc).seqCollector), ZSTD_getSeqStore(zc), (*(*zc).blockState.prevCBlock).rep), "copyBlockSequences failed"
             );
-            if FORWARD_IF_ERROR!(
-                ZSTD_copyBlockSequences(& zc -> seqCollector, ZSTD_getSeqStore(zc), zc ->
-                blockState.prevCBlock -> rep), "copyBlockSequences failed"
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_copyBlockSequences(& zc -> seqCollector, ZSTD_getSeqStore(zc),
-                    zc -> blockState.prevCBlock -> rep), "copyBlockSequences failed"
-                );
-            }
             ZSTD_blockState_confirmRepcodesAndEntropyTables(&mut (*zc).blockState);
             return 0;
         }
@@ -9249,10 +8934,7 @@ unsafe extern "C" fn ZSTD_compressBlock_targetCBlockSize_body(
                 .wrapping_sub(
                     ZSTD_minGain(srcSize, (*zc).appliedParams.cParams.strategy),
                 );
-            let err_code = FORWARD_IF_ERROR!(cSize, "ZSTD_compressSuperBlock failed");
-            if FORWARD_IF_ERROR!(cSize, "ZSTD_compressSuperBlock failed") != 0 {
-                return FORWARD_IF_ERROR!(cSize, "ZSTD_compressSuperBlock failed");
-            }
+            FORWARD_IF_ERROR!(cSize, "ZSTD_compressSuperBlock failed");
             if cSize != 0
                 && cSize < maxCSize.wrapping_add(ZSTD_blockHeaderSize)
             {
@@ -9273,10 +8955,7 @@ unsafe extern "C" fn ZSTD_compressBlock_targetCBlockSize(
 ) -> usize {
     let mut cSize: usize = 0;
     let bss = ZSTD_buildSeqStore(zc, src, srcSize);
-    let err_code = FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
-    if FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed") != 0 {
-        return FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
-    }
+    FORWARD_IF_ERROR!(bss, "ZSTD_buildSeqStore failed");
     cSize = ZSTD_compressBlock_targetCBlockSize_body(
         zc,
         dst,
@@ -9286,14 +8965,9 @@ unsafe extern "C" fn ZSTD_compressBlock_targetCBlockSize(
         bss,
         lastBlock,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         cSize, "ZSTD_compressBlock_targetCBlockSize_body failed"
     );
-    if FORWARD_IF_ERROR!(cSize, "ZSTD_compressBlock_targetCBlockSize_body failed") != 0 {
-        return FORWARD_IF_ERROR!(
-            cSize, "ZSTD_compressBlock_targetCBlockSize_body failed"
-        );
-    }
     if (*(*zc).blockState.prevCBlock).entropy.fse.offcode_repeatMode as std::ffi::c_uint
         == FSE_repeat_valid as std::ffi::c_int as std::ffi::c_uint
     {
@@ -9461,16 +9135,9 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
                 blockSize,
                 lastBlock,
             );
-            let err_code = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 cSize, "ZSTD_compressBlock_targetCBlockSize failed"
             );
-            if FORWARD_IF_ERROR!(cSize, "ZSTD_compressBlock_targetCBlockSize failed")
-                != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    cSize, "ZSTD_compressBlock_targetCBlockSize failed"
-                );
-            }
         } else if ZSTD_blockSplitterEnabled(&mut (*cctx).appliedParams) != 0 {
             cSize = ZSTD_compressBlock_splitBlock(
                 cctx,
@@ -9480,12 +9147,9 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
                 blockSize,
                 lastBlock,
             );
-            let err_code_0 = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 cSize, "ZSTD_compressBlock_splitBlock failed"
             );
-            if FORWARD_IF_ERROR!(cSize, "ZSTD_compressBlock_splitBlock failed") != 0 {
-                return FORWARD_IF_ERROR!(cSize, "ZSTD_compressBlock_splitBlock failed");
-            }
         } else {
             cSize = ZSTD_compressBlock_internal(
                 cctx,
@@ -9495,12 +9159,9 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
                 blockSize,
                 1,
             );
-            let err_code_1 = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 cSize, "ZSTD_compressBlock_internal failed"
             );
-            if FORWARD_IF_ERROR!(cSize, "ZSTD_compressBlock_internal failed") != 0 {
-                return FORWARD_IF_ERROR!(cSize, "ZSTD_compressBlock_internal failed");
-            }
             if cSize == 0 {
                 cSize = ZSTD_noCompressBlock(
                     op as *mut std::ffi::c_void,
@@ -9509,10 +9170,7 @@ unsafe extern "C" fn ZSTD_compress_frameChunk(
                     blockSize,
                     lastBlock,
                 );
-                let err_code_2 = FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
-                if FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed") != 0 {
-                    return FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
-                }
+                FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
             } else {
                 let cBlockHeader = if cSize == 1 {
                     lastBlock
@@ -9733,10 +9391,7 @@ unsafe extern "C" fn ZSTD_compressContinue_internal(
                 .wrapping_sub(1) as u64,
             (*cctx).dictID,
         );
-        let err_code = FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed");
-        if FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed") != 0 {
-            return FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed");
-        }
+        FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed");
         dstCapacity = dstCapacity.wrapping_sub(fhSize);
         dst = (dst as *mut std::ffi::c_char).offset(fhSize as isize)
             as *mut std::ffi::c_void;
@@ -9781,20 +9436,10 @@ unsafe extern "C" fn ZSTD_compressContinue_internal(
             0,
         )
     };
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         cSize, "%s", frame ? "ZSTD_compress_frameChunk failed" :
         "ZSTD_compressBlock_internal failed"
     );
-    if FORWARD_IF_ERROR!(
-        cSize, "%s", frame ? "ZSTD_compress_frameChunk failed" :
-        "ZSTD_compressBlock_internal failed"
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            cSize, "%s", frame ? "ZSTD_compress_frameChunk failed" :
-            "ZSTD_compressBlock_internal failed"
-        );
-    }
     (*cctx)
         .consumedSrcSize = ((*cctx).consumedSrcSize)
         .wrapping_add(srcSize as std::ffi::c_ulonglong);
@@ -10249,26 +9894,13 @@ unsafe extern "C" fn ZSTD_loadZstdDictionary(
         )
     }) as usize;
     eSize = ZSTD_loadCEntropy(bs, workspace, dict, dictSize);
-    let err_code = FORWARD_IF_ERROR!(eSize, "ZSTD_loadCEntropy failed");
-    if FORWARD_IF_ERROR!(eSize, "ZSTD_loadCEntropy failed") != 0 {
-        return FORWARD_IF_ERROR!(eSize, "ZSTD_loadCEntropy failed");
-    }
+    FORWARD_IF_ERROR!(eSize, "ZSTD_loadCEntropy failed");
     dictPtr = dictPtr.offset(eSize as isize);
     let dictContentSize = dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize;
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_loadDictionaryContent(ms, NULL, ws, params, dictPtr, dictContentSize, dtlm,
         tfp), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_loadDictionaryContent(ms, NULL, ws, params, dictPtr, dictContentSize, dtlm,
-        tfp), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_loadDictionaryContent(ms, NULL, ws, params, dictPtr, dictContentSize,
-            dtlm, tfp), ""
-        );
-    }
     return dictID;
 }
 unsafe extern "C" fn ZSTD_compress_insertDictionary(
@@ -10374,20 +10006,10 @@ unsafe extern "C" fn ZSTD_compressBegin_internal(
     {
         return ZSTD_resetCCtx_usingCDict(cctx, cdict, params, pledgedSrcSize, zbuff);
     }
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_resetCCtx_internal(cctx, params, pledgedSrcSize, dictContentSize,
         ZSTDcrp_makeClean, zbuff), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_resetCCtx_internal(cctx, params, pledgedSrcSize, dictContentSize,
-        ZSTDcrp_makeClean, zbuff), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_resetCCtx_internal(cctx, params, pledgedSrcSize, dictContentSize,
-            ZSTDcrp_makeClean, zbuff), ""
-        );
-    }
     let dictID = if !cdict.is_null() {
         ZSTD_compress_insertDictionary(
             (*cctx).blockState.prevCBlock,
@@ -10417,10 +10039,7 @@ unsafe extern "C" fn ZSTD_compressBegin_internal(
             (*cctx).tmpWorkspace,
         )
     };
-    let err_code_0 = FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed");
-    if FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed") != 0 {
-        return FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed");
-    }
+    FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed");
     (*cctx).dictID = dictID as u32;
     (*cctx).dictContentSize = dictContentSize;
     return 0;
@@ -10436,10 +10055,7 @@ pub unsafe extern "C" fn ZSTD_compressBegin_advanced_internal(
     mut params: *const ZSTD_CCtx_params,
     mut pledgedSrcSize: std::ffi::c_ulonglong,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_checkCParams(params -> cParams), "");
-    if FORWARD_IF_ERROR!(ZSTD_checkCParams(params -> cParams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_checkCParams(params -> cParams), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_checkCParams((*params).cParams), "");
     return ZSTD_compressBegin_internal(
         cctx,
         dict,
@@ -10663,10 +10279,7 @@ unsafe extern "C" fn ZSTD_writeEpilogue(
             0,
             0,
         );
-        let err_code = FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed");
-        if FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed") != 0 {
-            return FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed");
-        }
+        FORWARD_IF_ERROR!(fhSize, "ZSTD_writeFrameHeader failed");
         dstCapacity = dstCapacity.wrapping_sub(fhSize);
         op = op.offset(fhSize as isize);
         (*cctx).stage = ZSTDcs_ongoing;
@@ -10760,19 +10373,13 @@ pub unsafe extern "C" fn ZSTD_compressEnd_public(
         1,
         1,
     );
-    let err_code = FORWARD_IF_ERROR!(cSize, "ZSTD_compressContinue_internal failed");
-    if FORWARD_IF_ERROR!(cSize, "ZSTD_compressContinue_internal failed") != 0 {
-        return FORWARD_IF_ERROR!(cSize, "ZSTD_compressContinue_internal failed");
-    }
+    FORWARD_IF_ERROR!(cSize, "ZSTD_compressContinue_internal failed");
     endResult = ZSTD_writeEpilogue(
         cctx,
         (dst as *mut std::ffi::c_char).offset(cSize as isize) as *mut std::ffi::c_void,
         dstCapacity.wrapping_sub(cSize),
     );
-    let err_code_0 = FORWARD_IF_ERROR!(endResult, "ZSTD_writeEpilogue failed");
-    if FORWARD_IF_ERROR!(endResult, "ZSTD_writeEpilogue failed") != 0 {
-        return FORWARD_IF_ERROR!(endResult, "ZSTD_writeEpilogue failed");
-    }
+    FORWARD_IF_ERROR!(endResult, "ZSTD_writeEpilogue failed");
     if (*cctx).pledgedSrcSizePlusOne != 0 {
         if (*cctx).pledgedSrcSizePlusOne
             != ((*cctx).consumedSrcSize)
@@ -10805,10 +10412,7 @@ pub unsafe extern "C" fn ZSTD_compress_advanced(
     mut dictSize: usize,
     mut params: ZSTD_parameters,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    if FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
     ZSTD_CCtxParams_init_internal(
         &mut (*cctx).simpleApiParams,
         &mut params,
@@ -10836,20 +10440,10 @@ pub unsafe extern "C" fn ZSTD_compress_advanced_internal(
     mut dictSize: usize,
     mut params: *const ZSTD_CCtx_params,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_compressBegin_internal(cctx, dict, dictSize, ZSTD_dct_auto, ZSTD_dtlm_fast,
         NULL, params, srcSize, ZSTDb_not_buffered), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_compressBegin_internal(cctx, dict, dictSize, ZSTD_dct_auto, ZSTD_dtlm_fast,
-        NULL, params, srcSize, ZSTDb_not_buffered), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_compressBegin_internal(cctx, dict, dictSize, ZSTD_dct_auto,
-            ZSTD_dtlm_fast, NULL, params, srcSize, ZSTDb_not_buffered), ""
-        );
-    }
     return ZSTD_compressEnd_public(cctx, dst, dstCapacity, src, srcSize);
 }
 #[no_mangle]
@@ -11460,23 +11054,11 @@ unsafe extern "C" fn ZSTD_initCDict_internal(
         HUF_WORKSPACE_SIZE as usize,
     ) as *mut u32;
     ZSTD_reset_compressedBlockState(&mut (*cdict).cBlockState);
-    let err_code = FORWARD_IF_ERROR!(
-        ZSTD_reset_matchState(& cdict -> matchState, & cdict -> workspace, & params
-        .cParams, params.useRowMatchFinder, ZSTDcrp_makeClean, ZSTDirp_reset,
+    FORWARD_IF_ERROR!(
+        ZSTD_reset_matchState(addr_of!((*cdict).matchState), addr_of!((*cdict).workspace), addr_of!(params
+        .cParams), params.useRowMatchFinder, ZSTDcrp_makeClean, ZSTDirp_reset,
         ZSTD_resetTarget_CDict), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_reset_matchState(& cdict -> matchState, & cdict -> workspace, & params
-        .cParams, params.useRowMatchFinder, ZSTDcrp_makeClean, ZSTDirp_reset,
-        ZSTD_resetTarget_CDict), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_reset_matchState(& cdict -> matchState, & cdict -> workspace, & params
-            .cParams, params.useRowMatchFinder, ZSTDcrp_makeClean, ZSTDirp_reset,
-            ZSTD_resetTarget_CDict), ""
-        );
-    }
     params.compressionLevel = ZSTD_CLEVEL_DEFAULT;
     params.fParams.contentSizeFlag = 1;
     let dictID = ZSTD_compress_insertDictionary(
@@ -11492,10 +11074,7 @@ unsafe extern "C" fn ZSTD_initCDict_internal(
         ZSTD_tfp_forCDict,
         (*cdict).entropyWorkspace as *mut std::ffi::c_void,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed");
-    if FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed") != 0 {
-        return FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed");
-    }
+    FORWARD_IF_ERROR!(dictID, "ZSTD_compress_insertDictionary failed");
     (*cdict).dictID = dictID as u32;
     return 0;
 }
@@ -12131,17 +11710,9 @@ unsafe extern "C" fn ZSTD_compress_usingCDict_internal(
     mut cdict: *const ZSTD_CDict,
     mut fParams: ZSTD_frameParameters,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_compressBegin_usingCDict_internal(cctx, cdict, fParams, srcSize), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_compressBegin_usingCDict_internal(cctx, cdict, fParams, srcSize), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_compressBegin_usingCDict_internal(cctx, cdict, fParams, srcSize), ""
-        );
-    }
     return ZSTD_compressEnd_public(cctx, dst, dstCapacity, src, srcSize);
 }
 #[no_mangle]
@@ -12243,16 +11814,10 @@ pub unsafe extern "C" fn ZSTD_resetCStream(
     } else {
         pss
     }) as u64;
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "");
-    }
     return 0;
 }
 #[no_mangle]
@@ -12264,29 +11829,17 @@ pub unsafe extern "C" fn ZSTD_initCStream_internal(
     mut params: *const ZSTD_CCtx_params,
     mut pledgedSrcSize: std::ffi::c_ulonglong,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "");
-    }
     (*zcs).requestedParams = *params;
     if !dict.is_null() {
-        let err_code_1 = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), ""
         );
-        if FORWARD_IF_ERROR!(ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), "") != 0 {
-            return FORWARD_IF_ERROR!(ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), "");
-        }
     } else {
-        let err_code_2 = FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
-        if FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "") != 0 {
-            return FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
-        }
+        FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
     }
     return 0;
 }
@@ -12297,21 +11850,12 @@ pub unsafe extern "C" fn ZSTD_initCStream_usingCDict_advanced(
     mut fParams: ZSTD_frameParameters,
     mut pledgedSrcSize: std::ffi::c_ulonglong,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "");
-    }
     (*zcs).requestedParams.fParams = fParams;
-    let err_code_1 = FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
     return 0;
 }
 #[no_mangle]
@@ -12319,14 +11863,8 @@ pub unsafe extern "C" fn ZSTD_initCStream_usingCDict(
     mut zcs: *mut ZSTD_CStream,
     mut cdict: *const ZSTD_CDict,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, cdict), "");
     return 0;
 }
 #[no_mangle]
@@ -12344,27 +11882,15 @@ pub unsafe extern "C" fn ZSTD_initCStream_advanced(
     } else {
         pss
     }) as u64;
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "");
-    }
-    let err_code_1 = FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    if FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_checkCParams(params.cParams), "");
     ZSTD_CCtxParams_setZstdParams(&mut (*zcs).requestedParams, &mut params);
-    let err_code_2 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), "");
-    }
     return 0;
 }
 #[no_mangle]
@@ -12374,27 +11900,13 @@ pub unsafe extern "C" fn ZSTD_initCStream_usingDict(
     mut dictSize: usize,
     mut compressionLevel: std::ffi::c_int,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
-        );
-    }
-    let err_code_1 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_loadDictionary(zcs, dict, dictSize), "");
-    }
     return 0;
 }
 #[no_mangle]
@@ -12408,31 +11920,14 @@ pub unsafe extern "C" fn ZSTD_initCStream_srcSize(
     } else {
         pss
     }) as u64;
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "");
-    }
-    let err_code_1 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "");
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
-        );
-    }
-    let err_code_2 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_setPledgedSrcSize(zcs, pledgedSrcSize), "");
-    }
     return 0;
 }
 #[no_mangle]
@@ -12440,25 +11935,11 @@ pub unsafe extern "C" fn ZSTD_initCStream(
     mut zcs: *mut ZSTD_CStream,
     mut compressionLevel: std::ffi::c_int,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
-    }
-    let err_code_0 = FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "");
-    if FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "");
-    }
-    let err_code_1 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only), "");
+    FORWARD_IF_ERROR!(ZSTD_CCtx_refCDict(zcs, NULL), "");
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel), ""
-        );
-    }
     return 0;
 }
 unsafe extern "C" fn ZSTD_nextInputSizeHint(mut cctx: *const ZSTD_CCtx) -> usize {
@@ -12539,10 +12020,7 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
                         ip as *const std::ffi::c_void,
                         iend.offset_from(ip) as std::ffi::c_long as usize,
                     );
-                    let err_code = FORWARD_IF_ERROR!(cSize, "ZSTD_compressEnd failed");
-                    if FORWARD_IF_ERROR!(cSize, "ZSTD_compressEnd failed") != 0 {
-                        return FORWARD_IF_ERROR!(cSize, "ZSTD_compressEnd failed");
-                    }
+                    FORWARD_IF_ERROR!(cSize, "ZSTD_compressEnd failed");
                     ip = iend;
                     op = op.offset(cSize as isize);
                     (*zcs).frameEnded = 1;
@@ -12649,20 +12127,10 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
                                         iSize,
                                     )
                                 };
-                                let err_code_0 = FORWARD_IF_ERROR!(
+                                FORWARD_IF_ERROR!(
                                     cSize, "%s", lastBlock ? "ZSTD_compressEnd failed" :
                                     "ZSTD_compressContinue failed"
                                 );
-                                if FORWARD_IF_ERROR!(
-                                    cSize, "%s", lastBlock ? "ZSTD_compressEnd failed" :
-                                    "ZSTD_compressContinue failed"
-                                ) != 0
-                                {
-                                    return FORWARD_IF_ERROR!(
-                                        cSize, "%s", lastBlock ? "ZSTD_compressEnd failed" :
-                                        "ZSTD_compressContinue failed"
-                                    );
-                                }
                                 (*zcs).frameEnded = lastBlock;
                                 (*zcs)
                                     .inBuffTarget = ((*zcs).inBuffPos)
@@ -12698,20 +12166,10 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
                                 if !ip.is_null() {
                                     ip = ip.offset(iSize as isize);
                                 }
-                                let err_code_1 = FORWARD_IF_ERROR!(
+                                FORWARD_IF_ERROR!(
                                     cSize, "%s", lastBlock ? "ZSTD_compressEnd failed" :
                                     "ZSTD_compressContinue failed"
                                 );
-                                if FORWARD_IF_ERROR!(
-                                    cSize, "%s", lastBlock ? "ZSTD_compressEnd failed" :
-                                    "ZSTD_compressContinue failed"
-                                ) != 0
-                                {
-                                    return FORWARD_IF_ERROR!(
-                                        cSize, "%s", lastBlock ? "ZSTD_compressEnd failed" :
-                                        "ZSTD_compressContinue failed"
-                                    );
-                                }
                                 (*zcs).frameEnded = lastBlock_0;
                                 lastBlock_0 != 0;
                             }
@@ -12793,16 +12251,9 @@ pub unsafe extern "C" fn ZSTD_compressStream(
     mut output: *mut ZSTD_outBuffer,
     mut input: *mut ZSTD_inBuffer,
 ) -> usize {
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_compressStream2(zcs, output, input, ZSTD_e_continue), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_compressStream2(zcs, output, input, ZSTD_e_continue), "")
-        != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_compressStream2(zcs, output, input, ZSTD_e_continue), ""
-        );
-    }
     return ZSTD_nextInputSizeHint_MTorST(zcs);
 }
 unsafe extern "C" fn ZSTD_setBufferExpectations(
@@ -12854,10 +12305,7 @@ unsafe extern "C" fn ZSTD_CCtx_init_compressStream2(
 ) -> usize {
     let mut params = (*cctx).requestedParams;
     let prefixDict = (*cctx).prefixDict;
-    let err_code = FORWARD_IF_ERROR!(ZSTD_initLocalDict(cctx), "");
-    if FORWARD_IF_ERROR!(ZSTD_initLocalDict(cctx), "") != 0 {
-        return FORWARD_IF_ERROR!(ZSTD_initLocalDict(cctx), "");
-    }
+    FORWARD_IF_ERROR!(ZSTD_initLocalDict(cctx), "");
     libc::memset(
         &mut (*cctx).prefixDict as *mut ZSTD_prefixDict as *mut std::ffi::c_void,
         0,
@@ -12951,23 +12399,10 @@ unsafe extern "C" fn ZSTD_CCtx_init_compressStream2(
                 return -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
             }
         }
-        let err_code_0 = FORWARD_IF_ERROR!(
-            ZSTDMT_initCStream_internal(cctx -> mtctx, prefixDict.dict, prefixDict
-            .dictSize, prefixDict.dictContentType, cctx -> cdict, params, cctx ->
-            pledgedSrcSizePlusOne - 1), ""
+        FORWARD_IF_ERROR!(
+            ZSTDMT_initCStream_internal((*cctx).mtctx, prefixDict.dict, prefixDict
+            .dictSize, prefixDict.dictContentType, (*cctx).cdict, params, (*cctx).pledgedSrcSizePlusOne - 1), ""
         );
-        if FORWARD_IF_ERROR!(
-            ZSTDMT_initCStream_internal(cctx -> mtctx, prefixDict.dict, prefixDict
-            .dictSize, prefixDict.dictContentType, cctx -> cdict, params, cctx ->
-            pledgedSrcSizePlusOne - 1), ""
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTDMT_initCStream_internal(cctx -> mtctx, prefixDict.dict, prefixDict
-                .dictSize, prefixDict.dictContentType, cctx -> cdict, params, cctx ->
-                pledgedSrcSizePlusOne - 1), ""
-            );
-        }
         (*cctx)
             .dictID = if !((*cctx).cdict).is_null() {
             (*(*cctx).cdict).dictID
@@ -12987,23 +12422,11 @@ unsafe extern "C" fn ZSTD_CCtx_init_compressStream2(
     } else {
         let pledgedSrcSize = ((*cctx).pledgedSrcSizePlusOne)
             .wrapping_sub(1) as u64;
-        let err_code_1 = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             ZSTD_compressBegin_internal(cctx, prefixDict.dict, prefixDict.dictSize,
-            prefixDict.dictContentType, ZSTD_dtlm_fast, cctx -> cdict, & params,
+            prefixDict.dictContentType, ZSTD_dtlm_fast, (*cctx).cdict, addr_of!(params),
             pledgedSrcSize, ZSTDb_buffered), ""
         );
-        if FORWARD_IF_ERROR!(
-            ZSTD_compressBegin_internal(cctx, prefixDict.dict, prefixDict.dictSize,
-            prefixDict.dictContentType, ZSTD_dtlm_fast, cctx -> cdict, & params,
-            pledgedSrcSize, ZSTDb_buffered), ""
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTD_compressBegin_internal(cctx, prefixDict.dict, prefixDict.dictSize,
-                prefixDict.dictContentType, ZSTD_dtlm_fast, cctx -> cdict, & params,
-                pledgedSrcSize, ZSTDb_buffered), ""
-            );
-        }
         (*cctx).inToCompress = 0;
         (*cctx).inBuffPos = 0;
         if (*cctx).appliedParams.inBufferMode as std::ffi::c_uint
@@ -13068,33 +12491,15 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
                 .wrapping_add(inputSize);
             return ZSTD_FRAMEHEADERSIZE_MIN!(cctx -> requestedParams.format);
         }
-        let err_code = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             ZSTD_CCtx_init_compressStream2(cctx, endOp, totalInputSize),
             "compressStream2 initialization failed"
         );
-        if FORWARD_IF_ERROR!(
-            ZSTD_CCtx_init_compressStream2(cctx, endOp, totalInputSize),
-            "compressStream2 initialization failed"
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                ZSTD_CCtx_init_compressStream2(cctx, endOp, totalInputSize),
-                "compressStream2 initialization failed"
-            );
-        }
         ZSTD_setBufferExpectations(cctx, output, input);
     }
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_checkBufferStability(cctx, output, input, endOp), "invalid buffers"
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_checkBufferStability(cctx, output, input, endOp), "invalid buffers"
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_checkBufferStability(cctx, output, input, endOp), "invalid buffers"
-        );
-    }
     if (*cctx).appliedParams.nbWorkers > 0 {
         let mut flushMin: usize = 0;
         if (*cctx).cParamsChanged != 0 {
@@ -13137,14 +12542,9 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
                 }
                 ZSTD_CCtx_reset(cctx, ZSTD_reset_session_only);
             }
-            let err_code_1 = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 flushMin, "ZSTDMT_compressStream_generic failed"
             );
-            if FORWARD_IF_ERROR!(flushMin, "ZSTDMT_compressStream_generic failed") != 0 {
-                return FORWARD_IF_ERROR!(
-                    flushMin, "ZSTDMT_compressStream_generic failed"
-                );
-            }
             if endOp as std::ffi::c_uint
                 == ZSTD_e_continue as std::ffi::c_int as std::ffi::c_uint
             {
@@ -13162,16 +12562,9 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
         ZSTD_setBufferExpectations(cctx, output, input);
         return flushMin;
     }
-    let err_code_2 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_compressStream_generic(cctx, output, input, endOp), ""
     );
-    if FORWARD_IF_ERROR!(ZSTD_compressStream_generic(cctx, output, input, endOp), "")
-        != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_compressStream_generic(cctx, output, input, endOp), ""
-        );
-    }
     ZSTD_setBufferExpectations(cctx, output, input);
     return ((*cctx).outBuffContentSize).wrapping_sub((*cctx).outBuffFlushedSize);
 }
@@ -13234,10 +12627,7 @@ pub unsafe extern "C" fn ZSTD_compress2(
     );
     (*cctx).requestedParams.inBufferMode = originalInBufferMode;
     (*cctx).requestedParams.outBufferMode = originalOutBufferMode;
-    let err_code = FORWARD_IF_ERROR!(result, "ZSTD_compressStream2_simpleArgs failed");
-    if FORWARD_IF_ERROR!(result, "ZSTD_compressStream2_simpleArgs failed") != 0 {
-        return FORWARD_IF_ERROR!(result, "ZSTD_compressStream2_simpleArgs failed");
-    }
+    FORWARD_IF_ERROR!(result, "ZSTD_compressStream2_simpleArgs failed");
     if result != 0 {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
@@ -13348,26 +12738,12 @@ unsafe extern "C" fn ZSTD_transferSequences_wBlockDelim(
             (*seqPos)
                 .posInSrc = ((*seqPos).posInSrc)
                 .wrapping_add(litLength.wrapping_add(matchLength) as usize);
-            let err_code = FORWARD_IF_ERROR!(
-                ZSTD_validateSequence(offBase, matchLength, cctx -> appliedParams.cParams
-                .minMatch, seqPos -> posInSrc, cctx -> appliedParams.cParams.windowLog,
-                dictSize, ZSTD_hasExtSeqProd(& cctx -> appliedParams)),
+            FORWARD_IF_ERROR!(
+                ZSTD_validateSequence(offBase, matchLength, (*cctx).appliedParams.cParams
+                .minMatch, (*seqPos).posInSrc, (*cctx).appliedParams.cParams.windowLog,
+                dictSize, ZSTD_hasExtSeqProd(addr_of!((*cctx).appliedParams))),
                 "Sequence validation failed"
             );
-            if FORWARD_IF_ERROR!(
-                ZSTD_validateSequence(offBase, matchLength, cctx -> appliedParams.cParams
-                .minMatch, seqPos -> posInSrc, cctx -> appliedParams.cParams.windowLog,
-                dictSize, ZSTD_hasExtSeqProd(& cctx -> appliedParams)),
-                "Sequence validation failed"
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_validateSequence(offBase, matchLength, cctx -> appliedParams
-                    .cParams.minMatch, seqPos -> posInSrc, cctx -> appliedParams.cParams
-                    .windowLog, dictSize, ZSTD_hasExtSeqProd(& cctx -> appliedParams)),
-                    "Sequence validation failed"
-                );
-            }
         }
         if idx.wrapping_sub((*seqPos).idx) as usize >= (*cctx).seqStore.maxNbSeq {
             return -(ZSTD_error_externalSequences_invalid as std::ffi::c_int) as usize;
@@ -13559,26 +12935,12 @@ unsafe extern "C" fn ZSTD_transferSequences_noDelim(
             (*seqPos)
                 .posInSrc = ((*seqPos).posInSrc)
                 .wrapping_add(litLength.wrapping_add(matchLength) as usize);
-            let err_code = FORWARD_IF_ERROR!(
-                ZSTD_validateSequence(offBase, matchLength, cctx -> appliedParams.cParams
-                .minMatch, seqPos -> posInSrc, cctx -> appliedParams.cParams.windowLog,
-                dictSize, ZSTD_hasExtSeqProd(& cctx -> appliedParams)),
+            FORWARD_IF_ERROR!(
+                ZSTD_validateSequence(offBase, matchLength, (*cctx).appliedParams.cParams
+                .minMatch, (*seqPos).posInSrc, (*cctx).appliedParams.cParams.windowLog,
+                dictSize, ZSTD_hasExtSeqProd(addr_of!((*cctx).appliedParams))),
                 "Sequence validation failed"
             );
-            if FORWARD_IF_ERROR!(
-                ZSTD_validateSequence(offBase, matchLength, cctx -> appliedParams.cParams
-                .minMatch, seqPos -> posInSrc, cctx -> appliedParams.cParams.windowLog,
-                dictSize, ZSTD_hasExtSeqProd(& cctx -> appliedParams)),
-                "Sequence validation failed"
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    ZSTD_validateSequence(offBase, matchLength, cctx -> appliedParams
-                    .cParams.minMatch, seqPos -> posInSrc, cctx -> appliedParams.cParams
-                    .windowLog, dictSize, ZSTD_hasExtSeqProd(& cctx -> appliedParams)),
-                    "Sequence validation failed"
-                );
-            }
         }
         if idx.wrapping_sub((*seqPos).idx) as usize >= (*cctx).seqStore.maxNbSeq {
             return -(ZSTD_error_externalSequences_invalid as std::ffi::c_int) as usize;
@@ -13692,18 +13054,9 @@ unsafe extern "C" fn determine_blockSize(
         return std::cmp::min(remaining, blockSize);
     }
     let explicitBlockSize = blockSize_explicitDelimiter(inSeqs, inSeqsSize, seqPos);
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         explicitBlockSize, "Error while determining block size with explicit delimiters"
     );
-    if FORWARD_IF_ERROR!(
-        explicitBlockSize, "Error while determining block size with explicit delimiters"
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            explicitBlockSize,
-            "Error while determining block size with explicit delimiters"
-        );
-    }
     if explicitBlockSize > blockSize {
         return -(ZSTD_error_externalSequences_invalid as std::ffi::c_int) as usize;
     }
@@ -13759,16 +13112,9 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
             seqPos,
         );
         let lastBlock = (blockSize == remaining) as std::ffi::c_int as u32;
-        let err_code = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             blockSize, "Error while trying to determine block size"
         );
-        if FORWARD_IF_ERROR!(blockSize, "Error while trying to determine block size")
-            != 0
-        {
-            return FORWARD_IF_ERROR!(
-                blockSize, "Error while trying to determine block size"
-            );
-        }
         ZSTD_resetSeqStore(&mut (*cctx).seqStore);
         blockSize = sequenceCopier
             .expect(
@@ -13782,10 +13128,7 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
             blockSize,
             (*cctx).appliedParams.searchForExternalRepcodes,
         );
-        let err_code_0 = FORWARD_IF_ERROR!(blockSize, "Bad sequence copy");
-        if FORWARD_IF_ERROR!(blockSize, "Bad sequence copy") != 0 {
-            return FORWARD_IF_ERROR!(blockSize, "Bad sequence copy");
-        }
+        FORWARD_IF_ERROR!(blockSize, "Bad sequence copy");
         if blockSize
             < (MIN_CBLOCK_SIZE as usize)
                 .wrapping_add(ZSTD_blockHeaderSize)
@@ -13799,10 +13142,7 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
                 blockSize,
                 lastBlock,
             );
-            let err_code_1 = FORWARD_IF_ERROR!(cBlockSize, "Nocompress block failed");
-            if FORWARD_IF_ERROR!(cBlockSize, "Nocompress block failed") != 0 {
-                return FORWARD_IF_ERROR!(cBlockSize, "Nocompress block failed");
-            }
+            FORWARD_IF_ERROR!(cBlockSize, "Nocompress block failed");
             cSize = cSize.wrapping_add(cBlockSize);
             ip = ip.offset(blockSize as isize);
             op = op.offset(cBlockSize as isize);
@@ -13824,17 +13164,9 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
                 (*cctx).tmpWkspSize,
                 (*cctx).bmi2,
             );
-            let err_code_2 = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 compressedSeqsSize, "Compressing sequences of block failed"
             );
-            if FORWARD_IF_ERROR!(
-                compressedSeqsSize, "Compressing sequences of block failed"
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    compressedSeqsSize, "Compressing sequences of block failed"
-                );
-            }
             if (*cctx).isFirstBlock == 0 && ZSTD_maybeRLE(&mut (*cctx).seqStore) != 0
                 && ZSTD_isRLE(ip, blockSize) != 0
             {
@@ -13848,12 +13180,9 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
                     blockSize,
                     lastBlock,
                 );
-                let err_code_3 = FORWARD_IF_ERROR!(
+                FORWARD_IF_ERROR!(
                     cBlockSize, "ZSTD_noCompressBlock failed"
                 );
-                if FORWARD_IF_ERROR!(cBlockSize, "ZSTD_noCompressBlock failed") != 0 {
-                    return FORWARD_IF_ERROR!(cBlockSize, "ZSTD_noCompressBlock failed");
-                }
             } else if compressedSeqsSize == 1 {
                 cBlockSize = ZSTD_rleCompressBlock(
                     op as *mut std::ffi::c_void,
@@ -13862,12 +13191,9 @@ unsafe extern "C" fn ZSTD_compressSequences_internal(
                     blockSize,
                     lastBlock,
                 );
-                let err_code_4 = FORWARD_IF_ERROR!(
+                FORWARD_IF_ERROR!(
                     cBlockSize, "ZSTD_rleCompressBlock failed"
                 );
-                if FORWARD_IF_ERROR!(cBlockSize, "ZSTD_rleCompressBlock failed") != 0 {
-                    return FORWARD_IF_ERROR!(cBlockSize, "ZSTD_rleCompressBlock failed");
-                }
             } else {
                 let mut cBlockHeader: u32 = 0;
                 ZSTD_blockState_confirmRepcodesAndEntropyTables(&mut (*cctx).blockState);
@@ -13913,20 +13239,10 @@ pub unsafe extern "C" fn ZSTD_compressSequences(
 ) -> usize {
     let mut op = dst as *mut u8;
     let mut cSize: usize = 0;
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_init_compressStream2(cctx, ZSTD_e_end, srcSize),
         "CCtx initialization failed"
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_init_compressStream2(cctx, ZSTD_e_end, srcSize),
-        "CCtx initialization failed"
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_init_compressStream2(cctx, ZSTD_e_end, srcSize),
-            "CCtx initialization failed"
-        );
-    }
     let frameHeaderSize = ZSTD_writeFrameHeader(
         op as *mut std::ffi::c_void,
         dstCapacity,
@@ -13949,10 +13265,7 @@ pub unsafe extern "C" fn ZSTD_compressSequences(
         src,
         srcSize,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!");
-    if FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!") != 0 {
-        return FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!");
-    }
+    FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!");
     cSize = cSize.wrapping_add(cBlocksSize);
     dstCapacity = dstCapacity.wrapping_sub(cBlocksSize);
     if (*cctx).appliedParams.fParams.checksumFlag != 0 {
@@ -14201,20 +13514,10 @@ unsafe extern "C" fn ZSTD_compressSequencesAndLiterals_internal(
         let mut conversionStatus: usize = 0;
         let block = ZSTD_get1BlockSummary(inSeqs, nbSequences);
         let lastBlock = (block.nbSequences == nbSequences) as std::ffi::c_int as u32;
-        let err_code = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             block.nbSequences,
             "Error while trying to determine nb of sequences for a block"
         );
-        if FORWARD_IF_ERROR!(
-            block.nbSequences,
-            "Error while trying to determine nb of sequences for a block"
-        ) != 0
-        {
-            return FORWARD_IF_ERROR!(
-                block.nbSequences,
-                "Error while trying to determine nb of sequences for a block"
-            );
-        }
         if block.litSize > litSize {
             return -(ZSTD_error_externalSequences_invalid as std::ffi::c_int) as usize;
         }
@@ -14225,10 +13528,7 @@ unsafe extern "C" fn ZSTD_compressSequencesAndLiterals_internal(
             block.nbSequences,
             repcodeResolution,
         );
-        let err_code_0 = FORWARD_IF_ERROR!(conversionStatus, "Bad sequence conversion");
-        if FORWARD_IF_ERROR!(conversionStatus, "Bad sequence conversion") != 0 {
-            return FORWARD_IF_ERROR!(conversionStatus, "Bad sequence conversion");
-        }
+        FORWARD_IF_ERROR!(conversionStatus, "Bad sequence conversion");
         inSeqs = inSeqs.offset(block.nbSequences as isize);
         nbSequences = nbSequences.wrapping_sub(block.nbSequences);
         remaining = remaining.wrapping_sub(block.blockSize);
@@ -14248,16 +13548,9 @@ unsafe extern "C" fn ZSTD_compressSequencesAndLiterals_internal(
             (*cctx).tmpWkspSize,
             (*cctx).bmi2,
         );
-        let err_code_1 = FORWARD_IF_ERROR!(
+        FORWARD_IF_ERROR!(
             compressedSeqsSize, "Compressing sequences of block failed"
         );
-        if FORWARD_IF_ERROR!(compressedSeqsSize, "Compressing sequences of block failed")
-            != 0
-        {
-            return FORWARD_IF_ERROR!(
-                compressedSeqsSize, "Compressing sequences of block failed"
-            );
-        }
         if compressedSeqsSize > (*cctx).blockSizeMax {
             compressedSeqsSize = 0;
         }
@@ -14320,20 +13613,10 @@ pub unsafe extern "C" fn ZSTD_compressSequencesAndLiterals(
     if litCapacity < litSize {
         return -(ZSTD_error_workSpace_tooSmall as std::ffi::c_int) as usize;
     }
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         ZSTD_CCtx_init_compressStream2(cctx, ZSTD_e_end, decompressedSize),
         "CCtx initialization failed"
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_CCtx_init_compressStream2(cctx, ZSTD_e_end, decompressedSize),
-        "CCtx initialization failed"
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_CCtx_init_compressStream2(cctx, ZSTD_e_end, decompressedSize),
-            "CCtx initialization failed"
-        );
-    }
     if (*cctx).appliedParams.blockDelimiters as std::ffi::c_uint
         == ZSTD_sf_noBlockDelimiters as std::ffi::c_int as std::ffi::c_uint
     {
@@ -14365,10 +13648,7 @@ pub unsafe extern "C" fn ZSTD_compressSequencesAndLiterals(
         litSize,
         decompressedSize,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!");
-    if FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!") != 0 {
-        return FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!");
-    }
+    FORWARD_IF_ERROR!(cBlocksSize, "Compressing blocks failed!");
     cSize = cSize.wrapping_add(cBlocksSize);
     dstCapacity = dstCapacity.wrapping_sub(cBlocksSize);
     return cSize;
@@ -14404,16 +13684,9 @@ pub unsafe extern "C" fn ZSTD_endStream(
 ) -> usize {
     let mut input = inBuffer_forEndFlush(zcs);
     let remainingToFlush = ZSTD_compressStream2(zcs, output, &mut input, ZSTD_e_end);
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         remainingToFlush, "ZSTD_compressStream2(,,ZSTD_e_end) failed"
     );
-    if FORWARD_IF_ERROR!(remainingToFlush, "ZSTD_compressStream2(,,ZSTD_e_end) failed")
-        != 0
-    {
-        return FORWARD_IF_ERROR!(
-            remainingToFlush, "ZSTD_compressStream2(,,ZSTD_e_end) failed"
-        );
-    }
     if (*zcs).appliedParams.nbWorkers > 0 {
         return remainingToFlush;
     }

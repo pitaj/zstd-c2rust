@@ -1297,10 +1297,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
         longOffsets,
         bmi2,
     );
-    let err_code = FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed");
-    if FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed") != 0 {
-        return FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed");
-    }
+    FORWARD_IF_ERROR!(bitstreamSize, "ZSTD_encodeSequences failed");
     op = op.offset(bitstreamSize as isize);
     if writeEntropy != 0 && (*fseMetadata).lastCountSize != 0
         && ((*fseMetadata).lastCountSize).wrapping_add(bitstreamSize)
@@ -1350,10 +1347,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
         writeLitEntropy,
         litEntropyWritten,
     );
-    let err_code = FORWARD_IF_ERROR!(cLitSize, "ZSTD_compressSubBlock_literal failed");
-    if FORWARD_IF_ERROR!(cLitSize, "ZSTD_compressSubBlock_literal failed") != 0 {
-        return FORWARD_IF_ERROR!(cLitSize, "ZSTD_compressSubBlock_literal failed");
-    }
+    FORWARD_IF_ERROR!(cLitSize, "ZSTD_compressSubBlock_literal failed");
     if cLitSize == 0 {
         return 0;
     }
@@ -1373,12 +1367,9 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
         writeSeqEntropy,
         seqEntropyWritten,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         cSeqSize, "ZSTD_compressSubBlock_sequences failed"
     );
-    if FORWARD_IF_ERROR!(cSeqSize, "ZSTD_compressSubBlock_sequences failed") != 0 {
-        return FORWARD_IF_ERROR!(cSeqSize, "ZSTD_compressSubBlock_sequences failed");
-    }
     if cSeqSize == 0 {
         return 0;
     }
@@ -1815,10 +1806,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
                 &mut seqEntropyWritten,
                 0,
             );
-            let err_code = FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed");
-            if FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed") != 0 {
-                return FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed");
-            }
+            FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed");
             if cSize > 0 && cSize < decompressedSize {
                 ip = ip.offset(decompressedSize as isize);
                 lp = lp.offset(litSize as isize);
@@ -1870,10 +1858,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
         &mut seqEntropyWritten_0,
         lastBlock,
     );
-    let err_code_0 = FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed");
-    if FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed") != 0 {
-        return FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed");
-    }
+    FORWARD_IF_ERROR!(cSize, "ZSTD_compressSubBlock failed");
     if cSize_0 > 0 && cSize_0 < decompressedSize_0 {
         ip = ip.offset(decompressedSize_0 as isize);
         lp = lp.offset(litSize_0 as isize);
@@ -1913,10 +1898,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             rSize,
             lastBlock,
         );
-        let err_code_1 = FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
-        if FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed") != 0 {
-            return FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
-        }
+        FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
         op = op.offset(cSize_1 as isize);
         if sp < send {
             let mut seq = 0 as *const SeqDef;
@@ -1970,23 +1952,9 @@ pub unsafe extern "C" fn ZSTD_compressSuperBlock(
             lastCountSize: 0,
         },
     };
-    let err_code = FORWARD_IF_ERROR!(
-        ZSTD_buildBlockEntropyStats(& zc -> seqStore, & zc -> blockState.prevCBlock ->
-        entropy, & zc -> blockState.nextCBlock -> entropy, & zc -> appliedParams, &
-        entropyMetadata, zc -> tmpWorkspace, zc -> tmpWkspSize), ""
+    FORWARD_IF_ERROR!(
+        ZSTD_buildBlockEntropyStats(addr_of!((*zc).seqStore), addr_of!((*(*zc).blockState.prevCBlock).entropy), addr_of!((*(*zc).blockState.nextCBlock).entropy), addr_of!((*zc).appliedParams), addr_of!(entropyMetadata), (*zc).tmpWorkspace, (*zc).tmpWkspSize), ""
     );
-    if FORWARD_IF_ERROR!(
-        ZSTD_buildBlockEntropyStats(& zc -> seqStore, & zc -> blockState.prevCBlock ->
-        entropy, & zc -> blockState.nextCBlock -> entropy, & zc -> appliedParams, &
-        entropyMetadata, zc -> tmpWorkspace, zc -> tmpWkspSize), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            ZSTD_buildBlockEntropyStats(& zc -> seqStore, & zc -> blockState.prevCBlock
-            -> entropy, & zc -> blockState.nextCBlock -> entropy, & zc -> appliedParams,
-            & entropyMetadata, zc -> tmpWorkspace, zc -> tmpWkspSize), ""
-        );
-    }
     return ZSTD_compressSubBlock_multi(
         &mut (*zc).seqStore,
         (*zc).blockState.prevCBlock,

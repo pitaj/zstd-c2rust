@@ -5354,10 +5354,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_deprecated(
         srcSize,
         not_streaming,
     );
-    let err_code = FORWARD_IF_ERROR!(dSize, "");
-    if FORWARD_IF_ERROR!(dSize, "") != 0 {
-        return FORWARD_IF_ERROR!(dSize, "");
-    }
+    FORWARD_IF_ERROR!(dSize, "");
     (*dctx)
         .previousDstEnd = (dst as *mut std::ffi::c_char).offset(dSize as isize)
         as *const std::ffi::c_void;

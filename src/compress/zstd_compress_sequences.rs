@@ -780,20 +780,10 @@ unsafe extern "C" fn ZSTD_NCountCost(
     let mut wksp: [u8; 512] = [0; 512];
     let mut norm: [i16; 53] = [0; 53];
     let tableLog = FSE_optimalTableLog(FSELog, nbSeq, max);
-    let err_code = FORWARD_IF_ERROR!(
+    FORWARD_IF_ERROR!(
         FSE_normalizeCount(norm, tableLog, count, nbSeq, max,
         ZSTD_useLowProbCount(nbSeq)), ""
     );
-    if FORWARD_IF_ERROR!(
-        FSE_normalizeCount(norm, tableLog, count, nbSeq, max,
-        ZSTD_useLowProbCount(nbSeq)), ""
-    ) != 0
-    {
-        return FORWARD_IF_ERROR!(
-            FSE_normalizeCount(norm, tableLog, count, nbSeq, max,
-            ZSTD_useLowProbCount(nbSeq)), ""
-        );
-    }
     return FSE_writeNCount(
         wksp.as_mut_ptr() as *mut std::ffi::c_void,
         ::core::mem::size_of::<[u8; 512]>(),
@@ -993,14 +983,9 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
     let oend: *const u8 = op.offset(dstCapacity as isize);
     match type_0 as std::ffi::c_uint {
         1 => {
-            let err_code = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 FSE_buildCTable_rle(nextCTable, (u8) max), ""
             );
-            if FORWARD_IF_ERROR!(FSE_buildCTable_rle(nextCTable, (u8) max), "") != 0 {
-                return FORWARD_IF_ERROR!(
-                    FSE_buildCTable_rle(nextCTable, (u8) max), ""
-                );
-            }
             if dstCapacity == 0 {
                 return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
             }
@@ -1012,20 +997,10 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
             return 0;
         }
         0 => {
-            let err_code_0 = FORWARD_IF_ERROR!(
+            FORWARD_IF_ERROR!(
                 FSE_buildCTable_wksp(nextCTable, defaultNorm, defaultMax, defaultNormLog,
                 entropyWorkspace, entropyWorkspaceSize), ""
             );
-            if FORWARD_IF_ERROR!(
-                FSE_buildCTable_wksp(nextCTable, defaultNorm, defaultMax, defaultNormLog,
-                entropyWorkspace, entropyWorkspaceSize), ""
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    FSE_buildCTable_wksp(nextCTable, defaultNorm, defaultMax,
-                    defaultNormLog, entropyWorkspace, entropyWorkspaceSize), ""
-                );
-            }
             return 0;
         }
         2 => {
@@ -1052,20 +1027,10 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
                 nbSeq_1 = nbSeq_1.wrapping_sub(1);
                 nbSeq_1;
             }
-            let err_code_1 = FORWARD_IF_ERROR!(
-                FSE_normalizeCount(wksp -> norm, tableLog, count, nbSeq_1, max,
+            FORWARD_IF_ERROR!(
+                FSE_normalizeCount((*wksp).norm, tableLog, count, nbSeq_1, max,
                 ZSTD_useLowProbCount(nbSeq_1)), "FSE_normalizeCount failed"
             );
-            if FORWARD_IF_ERROR!(
-                FSE_normalizeCount(wksp -> norm, tableLog, count, nbSeq_1, max,
-                ZSTD_useLowProbCount(nbSeq_1)), "FSE_normalizeCount failed"
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    FSE_normalizeCount(wksp -> norm, tableLog, count, nbSeq_1, max,
-                    ZSTD_useLowProbCount(nbSeq_1)), "FSE_normalizeCount failed"
-                );
-            }
             let NCountSize = FSE_writeNCount(
                 op as *mut std::ffi::c_void,
                 oend.offset_from(op) as std::ffi::c_long as usize,
@@ -1073,24 +1038,10 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
                 max,
                 tableLog,
             );
-            let err_code_2 = FORWARD_IF_ERROR!(NCountSize, "FSE_writeNCount failed");
-            if FORWARD_IF_ERROR!(NCountSize, "FSE_writeNCount failed") != 0 {
-                return FORWARD_IF_ERROR!(NCountSize, "FSE_writeNCount failed");
-            }
-            let err_code_3 = FORWARD_IF_ERROR!(
-                FSE_buildCTable_wksp(nextCTable, wksp -> norm, max, tableLog, wksp ->
-                wksp, sizeof(wksp -> wksp)), "FSE_buildCTable_wksp failed"
+            FORWARD_IF_ERROR!(NCountSize, "FSE_writeNCount failed");
+            FORWARD_IF_ERROR!(
+                FSE_buildCTable_wksp(nextCTable, (*wksp).norm, max, tableLog, (*wksp).wksp, sizeof((*wksp).wksp)), "FSE_buildCTable_wksp failed"
             );
-            if FORWARD_IF_ERROR!(
-                FSE_buildCTable_wksp(nextCTable, wksp -> norm, max, tableLog, wksp ->
-                wksp, sizeof(wksp -> wksp)), "FSE_buildCTable_wksp failed"
-            ) != 0
-            {
-                return FORWARD_IF_ERROR!(
-                    FSE_buildCTable_wksp(nextCTable, wksp -> norm, max, tableLog, wksp ->
-                    wksp, sizeof(wksp -> wksp)), "FSE_buildCTable_wksp failed"
-                );
-            }
             return NCountSize;
         }
         _ => return -(ZSTD_error_GENERIC as std::ffi::c_int) as usize,
