@@ -1095,9 +1095,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         && diff < WILDCOPY_VECLEN as ptrdiff_t
     {
         loop {
-            COPY8!(op, ip)(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-            op = op.offset(COPY8!(op, ip) as isize);
-            ip = ip.offset(COPY8!(op, ip) as isize);
+            COPY8!(op, ip);
             if !(op < oend) {
                 break;
             }
@@ -1110,12 +1108,8 @@ unsafe extern "C" fn ZSTD_wildcopy(
         op = op.offset(16);
         ip = ip.offset(16);
         loop {
-            COPY16!(op, ip)(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-            op = op.offset(COPY16!(op, ip) as isize);
-            ip = ip.offset(COPY16!(op, ip) as isize);
-            COPY16!(op, ip)(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-            op = op.offset(COPY16!(op, ip) as isize);
-            ip = ip.offset(COPY16!(op, ip) as isize);
+            COPY16!(op, ip);
+            COPY16!(op, ip);
             if !(op < oend) {
                 break;
             }
