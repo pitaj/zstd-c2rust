@@ -487,6 +487,12 @@ case $1 in
 
     ;;
 
+  fse-flushbits)
+    # if FSE_FLUSHBITS!(& bitC) != 0 {} else {};
+    perl -i -p0e 's/if (FSE_FLUSHBITS!\()& ?([^)]+)\)[^}]*}[^}]*}/$1addr_of!($2))/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -534,6 +540,7 @@ case $1 in
     ./convert.sh weight
     ./convert.sh bt-get-all-matches
     ./convert.sh fse-getsymbol
+    ./convert.sh fse-flushbits
 
     ;;
 
