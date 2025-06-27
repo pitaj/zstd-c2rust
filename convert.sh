@@ -440,6 +440,25 @@ case $1 in
 
     ;;
 
+  huf-decode-symbol)
+    # let ref mut fresh6 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
+    # *fresh6 = HUF_DECODE_SYMBOLX1_0!(p, bitDPtr);
+    perl -i -p0e 's/let [^=]*= (HUF_DECODE_SYMBOLX1_0!\([^)]*\);)[^;]*\1/$1/gm'  src/*/*.rs
+    # if HUF_DECODE_SYMBOLX2_1!(op2, & bitD2) != 0 {
+    #     op2 = op2.offset(HUF_DECODE_SYMBOLX2_1!(op2, & bitD2) as isize);
+    # }
+    # if HUF_DECODE_SYMBOLX1_2!(op1, & bitD1) != 0 {
+    #     let fresh9 = op1;
+    #     op1 = op1.offset(1);
+    #     *fresh9 = HUF_decodeSymbolX1(&mut bitD1, dt, dtLog);
+    # }
+    perl -i -p0e 's/if (HUF_DECODE_SYMBOLX[12]_\d!\([^)]*\))[^}]*}/$1;/gm'  src/*/*.rs
+
+    # fix addr-of &
+    perl -i -p0e 's/\b(HUF_DECODE_SYMBOL\w+!\([^;]*?)&[\s\n]+((?:\((?:\([^\)]*\)|[^\)])*\)|[^,\(\)])+)/$1addr_of!($2)/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -482,6 +501,7 @@ case $1 in
     ./convert.sh prefetch-area
     ./convert.sh zstd-gen-fn
     ./convert.sh bounded
+    ./convert.sh huf-decode-symbol
 
     ;;
 
