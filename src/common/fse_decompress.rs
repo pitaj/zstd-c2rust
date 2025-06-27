@@ -694,7 +694,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
         as std::ffi::c_int & (op < olimit) as std::ffi::c_int != 0
     {
-        *op.offset(0) = FSE_GETSYMBOL!(& state1);
+        *op.offset(0) = FSE_GETSYMBOL!(addr_of!(state1));
         if (FSE_MAX_TABLELOG * 2 as std::ffi::c_int + 7 as std::ffi::c_int)
             as std::ffi::c_ulong
             > (::core::mem::size_of::<BitContainerType>())
@@ -702,7 +702,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         {
             BIT_reloadDStream(&mut bitD);
         }
-        *op.offset(1) = FSE_GETSYMBOL!(& state2);
+        *op.offset(1) = FSE_GETSYMBOL!(addr_of!(state2));
         if (FSE_MAX_TABLELOG * 4 as std::ffi::c_int + 7 as std::ffi::c_int)
             as std::ffi::c_ulong
             > (::core::mem::size_of::<BitContainerType>())
@@ -715,7 +715,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
                 break;
             }
         }
-        *op.offset(2) = FSE_GETSYMBOL!(& state1);
+        *op.offset(2) = FSE_GETSYMBOL!(addr_of!(state1));
         if (FSE_MAX_TABLELOG * 2 as std::ffi::c_int + 7 as std::ffi::c_int)
             as std::ffi::c_ulong
             > (::core::mem::size_of::<BitContainerType>())
@@ -723,7 +723,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         {
             BIT_reloadDStream(&mut bitD);
         }
-        *op.offset(3) = FSE_GETSYMBOL!(& state2);
+        *op.offset(3) = FSE_GETSYMBOL!(addr_of!(state2));
         op = op.offset(4);
     }
     loop {
@@ -732,13 +732,13 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         }
         let fresh3 = op;
         op = op.offset(1);
-        *fresh3 = FSE_GETSYMBOL!(& state1);
+        *fresh3 = FSE_GETSYMBOL!(addr_of!(state1));
         if BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
             == BIT_DStream_overflow as std::ffi::c_int as std::ffi::c_uint
         {
             let fresh4 = op;
             op = op.offset(1);
-            *fresh4 = FSE_GETSYMBOL!(& state2);
+            *fresh4 = FSE_GETSYMBOL!(addr_of!(state2));
             break;
         } else {
             if op > omax.offset(-2_isize) {
@@ -746,7 +746,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
             }
             let fresh5 = op;
             op = op.offset(1);
-            *fresh5 = FSE_GETSYMBOL!(& state2);
+            *fresh5 = FSE_GETSYMBOL!(addr_of!(state2));
             if !(BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
                 == BIT_DStream_overflow as std::ffi::c_int as std::ffi::c_uint)
             {
@@ -754,7 +754,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
             }
             let fresh6 = op;
             op = op.offset(1);
-            *fresh6 = FSE_GETSYMBOL!(& state1);
+            *fresh6 = FSE_GETSYMBOL!(addr_of!(state1));
             break;
         }
     }
