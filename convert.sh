@@ -465,6 +465,16 @@ case $1 in
 
     ;;
 
+  weight)
+    # fix -> in WEIGHT
+    perl -i -p0e 's/\b(WEIGHT!\(\n?.*?)\b(\w+) -> /$1(*$2)./gm'  src/*/*.rs
+
+    # fix x[y] in WEIGHT
+    perl -i -p0e 's/\b(WEIGHT!\((?:[^,]+,)*(?:[^\[]*\[)?)((?:\([^\]();]*\)|[^\]();])+)\[([^\]\[;]+)\]/$1*$2.offset($3 as isize)/gm'  src/*/*.rs
+    perl -i -p0e 's/\b(WEIGHT!\((?:[^,]+,)*(?:[^\[]*\[)?)((?:\([^\]();]*\)|[^\]();])+)\[([^\]\[;]+)\]/$1*$2.offset($3 as isize)/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -509,6 +519,7 @@ case $1 in
     ./convert.sh bounded
     ./convert.sh huf-decode-symbol
     ./convert.sh zstd-gen-record-fingerprint
+    ./convert.sh weight
 
     ;;
 
