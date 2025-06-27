@@ -339,15 +339,15 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
         (*dctx)
             .entropy
             .rep[0 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[0 as std::ffi::c_int as usize];
+            as usize] = (*ddict).entropy.rep[0 as usize];
         (*dctx)
             .entropy
             .rep[1 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[1 as std::ffi::c_int as usize];
+            as usize] = (*ddict).entropy.rep[1 as usize];
         (*dctx)
             .entropy
             .rep[2 as std::ffi::c_int
-            as usize] = (*ddict).entropy.rep[2 as std::ffi::c_int as usize];
+            as usize] = (*ddict).entropy.rep[2 as usize];
     } else {
         (*dctx).litEntropy = 0;
         (*dctx).fseEntropy = 0;
@@ -539,13 +539,13 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
             (if dictLoadMethod as std::ffi::c_uint
                 == ZSTD_dlm_byRef as std::ffi::c_int as std::ffi::c_uint
             {
-                0 as std::ffi::c_int as usize
+                0 as usize
             } else {
                 dictSize
             }),
         );
     let ddict = sBuffer as *mut ZSTD_DDict;
-    if sBuffer as usize & 7 as std::ffi::c_int as usize != 0 {
+    if sBuffer as usize & 7 as usize != 0 {
         return NULL as *const ZSTD_DDict;
     }
     if sBufferSize < neededSpace {
@@ -589,7 +589,7 @@ pub unsafe extern "C" fn ZSTD_estimateDDictSize(
             (if dictLoadMethod as std::ffi::c_uint
                 == ZSTD_dlm_byRef as std::ffi::c_int as std::ffi::c_uint
             {
-                0 as std::ffi::c_int as usize
+                0 as usize
             } else {
                 dictSize
             }),
@@ -605,7 +605,7 @@ pub unsafe extern "C" fn ZSTD_sizeof_DDict(mut ddict: *const ZSTD_DDict) -> usiz
             (if !((*ddict).dictBuffer).is_null() {
                 (*ddict).dictSize
             } else {
-                0 as std::ffi::c_int as usize
+                0 as usize
             }),
         );
 }

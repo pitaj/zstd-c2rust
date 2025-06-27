@@ -341,7 +341,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash6(MEM_readLE64(p), h, 0 as u64);
 }
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -351,7 +351,7 @@ unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash8(MEM_readLE64(p), h, 0 as u64);
 }
 pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
@@ -915,7 +915,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
             );
             if displayLevel >= 2 {
                 let refreshRate = CLOCKS_PER_SEC as __clock_t
-                    * 15 as std::ffi::c_int as __clock_t
+                    * 15 as __clock_t
                     / 100;
                 if clock() - lastUpdateTime > refreshRate
                     || displayLevel >= 4
@@ -925,7 +925,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
                         stderr,
                         b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
                         (dictBufferCapacity.wrapping_sub(tail)
-                            * 100 as std::ffi::c_int as usize / dictBufferCapacity)
+                            * 100 as usize / dictBufferCapacity)
                             as std::ffi::c_uint,
                     );
                     fflush(stderr);
@@ -989,7 +989,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
             segmentFreqs,
         );
         let nbFinalizeSamples = ((*ctx).nbTrainSamples
-            * (*ctx).accelParams.finalize as usize / 100 as std::ffi::c_int as usize)
+            * (*ctx).accelParams.finalize as usize / 100 as usize)
             as std::ffi::c_uint;
         selection = COVER_selectDict(
             dict.offset(tail as isize),
@@ -1205,7 +1205,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         segmentFreqs,
     );
     let nbFinalizeSamples = (ctx.nbTrainSamples * ctx.accelParams.finalize as usize
-        / 100 as std::ffi::c_int as usize) as std::ffi::c_uint;
+        / 100 as usize) as std::ffi::c_uint;
     let dictionarySize = ZDICT_finalizeDictionary(
         dict as *mut std::ffi::c_void,
         dictBufferCapacity,
@@ -1268,27 +1268,27 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         (*parameters).splitPoint
     };
     let kMinD = if (*parameters).d == 0 {
-        6 as std::ffi::c_int as std::ffi::c_uint
+        6 as std::ffi::c_uint
     } else {
         (*parameters).d
     };
     let kMaxD = if (*parameters).d == 0 {
-        8 as std::ffi::c_int as std::ffi::c_uint
+        8 as std::ffi::c_uint
     } else {
         (*parameters).d
     };
     let kMinK = if (*parameters).k == 0 {
-        50 as std::ffi::c_int as std::ffi::c_uint
+        50 as std::ffi::c_uint
     } else {
         (*parameters).k
     };
     let kMaxK = if (*parameters).k == 0 {
-        2000 as std::ffi::c_int as std::ffi::c_uint
+        2000 as std::ffi::c_uint
     } else {
         (*parameters).k
     };
     let kSteps = if (*parameters).steps == 0 {
-        40 as std::ffi::c_int as std::ffi::c_uint
+        40 as std::ffi::c_uint
     } else {
         (*parameters).steps
     };
@@ -1432,7 +1432,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         return ERROR!(dstSize_tooSmall);
     }
     if nbThreads > 1 {
-        pool = POOL_create(nbThreads as usize, 1 as std::ffi::c_int as usize);
+        pool = POOL_create(nbThreads as usize, 1 as usize);
         if pool.is_null() {
             return ERROR!(memory_allocation);
         }
@@ -1586,7 +1586,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 }
                 if displayLevel >= 2 {
                     let refreshRate = CLOCKS_PER_SEC as __clock_t
-                        * 15 as std::ffi::c_int as __clock_t
+                        * 15 as __clock_t
                         / 100;
                     if clock() - lastUpdateTime > refreshRate
                         || displayLevel >= 4

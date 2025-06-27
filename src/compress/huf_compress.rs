@@ -478,7 +478,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
     if maxSymbolValue > HUF_SYMBOLVALUE_MAX as std::ffi::c_uint {
         return ERROR!(maxSymbolValue_tooLarge);
     }
-    (*wksp).bitsToWeight[0 as std::ffi::c_int as usize] = 0;
+    (*wksp).bitsToWeight[0 as usize] = 0;
     n = 1;
     while n < huffLog.wrapping_add(1) {
         (*wksp)
@@ -548,7 +548,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
     while n < maxSymbolValue {
         *op
             .offset(
-                (n / 2 as std::ffi::c_int as u32)
+                (n / 2 as u32)
                     .wrapping_add(1) as isize,
             ) = ((((*wksp).huffWeight[n as usize] as std::ffi::c_int)
             << 4)
@@ -586,7 +586,7 @@ pub unsafe extern "C" fn HUF_readCTable(
     if ERR_isError(readSize) != 0 {
         return readSize;
     }
-    *hasZeroWeights = (rankVal[0 as std::ffi::c_int as usize]
+    *hasZeroWeights = (rankVal[0 as usize]
         > 0) as std::ffi::c_int as std::ffi::c_uint;
     if tableLog > HUF_TABLELOG_MAX as u32 {
         return ERROR!(tableLog_tooLarge);
@@ -766,7 +766,7 @@ unsafe extern "C" fn HUF_setMaxHeight(
                     break;
                 }
                 let highTotal = (*huffNode.offset(highPos as isize)).count;
-                let lowTotal = 2 as std::ffi::c_int as u32
+                let lowTotal = 2 as u32
                     * (*huffNode.offset(lowPos as isize)).count;
                 if highTotal <= lowTotal {
                     break;
@@ -809,7 +809,7 @@ unsafe extern "C" fn HUF_setMaxHeight(
         }
     }
     while totalCost < 0 {
-        if rankLast[1 as std::ffi::c_int as usize] == noSymbol {
+        if rankLast[1 as usize] == noSymbol {
             while (*huffNode.offset(n as isize)).nbBits as u32 == targetNbBits {
                 n -= 1;
                 n;
@@ -818,21 +818,21 @@ unsafe extern "C" fn HUF_setMaxHeight(
                 .nbBits;
             *fresh2 = (*fresh2).wrapping_sub(1);
             *fresh2;
-            rankLast[1 as std::ffi::c_int as usize] = (n + 1 as std::ffi::c_int) as u32;
+            rankLast[1 as usize] = (n + 1 as std::ffi::c_int) as u32;
             totalCost += 1;
             totalCost;
         } else {
             let ref mut fresh3 = (*huffNode
                 .offset(
-                    (rankLast[1 as std::ffi::c_int as usize])
+                    (rankLast[1 as usize])
                         .wrapping_add(1) as isize,
                 ))
                 .nbBits;
             *fresh3 = (*fresh3).wrapping_sub(1);
             *fresh3;
             rankLast[1 as std::ffi::c_int
-                as usize] = (rankLast[1 as std::ffi::c_int as usize]).wrapping_add(1);
-            rankLast[1 as std::ffi::c_int as usize];
+                as usize] = (rankLast[1 as usize]).wrapping_add(1);
+            rankLast[1 as usize];
             totalCost += 1;
             totalCost;
         }
@@ -1301,32 +1301,32 @@ unsafe extern "C" fn HUF_addBits(
 }
 #[inline(always)]
 unsafe extern "C" fn HUF_zeroIndex1(mut bitC: *mut HUF_CStream_t) {
-    (*bitC).bitContainer[1 as std::ffi::c_int as usize] = 0;
-    (*bitC).bitPos[1 as std::ffi::c_int as usize] = 0;
+    (*bitC).bitContainer[1 as usize] = 0;
+    (*bitC).bitPos[1 as usize] = 0;
 }
 #[inline(always)]
 unsafe extern "C" fn HUF_mergeIndex1(mut bitC: *mut HUF_CStream_t) {
-    (*bitC).bitContainer[0 as std::ffi::c_int as usize]
-        >>= (*bitC).bitPos[1 as std::ffi::c_int as usize]
+    (*bitC).bitContainer[0 as usize]
+        >>= (*bitC).bitPos[1 as usize]
             & 0xff as std::ffi::c_int as usize;
-    (*bitC).bitContainer[0 as std::ffi::c_int as usize]
-        |= (*bitC).bitContainer[1 as std::ffi::c_int as usize];
+    (*bitC).bitContainer[0 as usize]
+        |= (*bitC).bitContainer[1 as usize];
     (*bitC)
         .bitPos[0 as std::ffi::c_int
-        as usize] = ((*bitC).bitPos[0 as std::ffi::c_int as usize])
-        .wrapping_add((*bitC).bitPos[1 as std::ffi::c_int as usize]);
+        as usize] = ((*bitC).bitPos[0 as usize])
+        .wrapping_add((*bitC).bitPos[1 as usize]);
 }
 #[inline(always)]
 unsafe extern "C" fn HUF_flushBits(
     mut bitC: *mut HUF_CStream_t,
     mut kFast: std::ffi::c_int,
 ) {
-    let nbBits = (*bitC).bitPos[0 as std::ffi::c_int as usize]
+    let nbBits = (*bitC).bitPos[0 as usize]
         & 0xff as std::ffi::c_int as usize;
     let nbBytes = nbBits >> 3;
-    let bitContainer = (*bitC).bitContainer[0 as std::ffi::c_int as usize]
+    let bitContainer = (*bitC).bitContainer[0 as usize]
         >> HUF_BITS_IN_CONTAINER.wrapping_sub(nbBits);
-    (*bitC).bitPos[0 as std::ffi::c_int as usize] &= 7;
+    (*bitC).bitPos[0 as usize] &= 7;
     MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, bitContainer);
     (*bitC).ptr = ((*bitC).ptr).offset(nbBytes as isize);
     if kFast == 0 && (*bitC).ptr > (*bitC).endPtr {
@@ -1335,14 +1335,14 @@ unsafe extern "C" fn HUF_flushBits(
 }
 unsafe extern "C" fn HUF_endMark() -> HUF_CElt {
     let mut endMark: HUF_CElt = 0;
-    HUF_setNbBits(&mut endMark, 1 as std::ffi::c_int as usize);
-    HUF_setValue(&mut endMark, 1 as std::ffi::c_int as usize);
+    HUF_setNbBits(&mut endMark, 1 as usize);
+    HUF_setValue(&mut endMark, 1 as usize);
     return endMark;
 }
 unsafe extern "C" fn HUF_closeCStream(mut bitC: *mut HUF_CStream_t) -> usize {
     HUF_addBits(bitC, HUF_endMark(), 0, 0 as std::ffi::c_int);
     HUF_flushBits(bitC, 0 as std::ffi::c_int);
-    let nbBits = (*bitC).bitPos[0 as std::ffi::c_int as usize]
+    let nbBits = (*bitC).bitPos[0 as usize]
         & 0xff as std::ffi::c_int as usize;
     if (*bitC).ptr >= (*bitC).endPtr {
         return 0;

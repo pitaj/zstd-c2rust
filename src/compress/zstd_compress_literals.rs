@@ -175,7 +175,7 @@ unsafe extern "C" fn ZSTD_minGain(
     {
         (strat as u32).wrapping_sub(1)
     } else {
-        6 as std::ffi::c_int as u32
+        6 as u32
     };
     return (srcSize >> minlog).wrapping_add(2);
 }
@@ -303,7 +303,7 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     let mintc = if huf_repeat as std::ffi::c_uint
         == HUF_repeat_valid as std::ffi::c_int as std::ffi::c_uint
     {
-        6 as std::ffi::c_int as usize
+        6 as usize
     } else {
         8_usize << shift
     };

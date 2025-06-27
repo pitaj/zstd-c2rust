@@ -442,7 +442,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
     mut ptr: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash4(MEM_readLE32(ptr), h, 0 as std::ffi::c_int as u32) as usize;
+    return ZSTD_hash4(MEM_readLE32(ptr), h, 0 as u32) as usize;
 }
 static mut prime5bytes: u64 = 889523592379;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -453,7 +453,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash5(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash5(MEM_readLE64(p), h, 0 as u64);
 }
 static mut prime6bytes: u64 = 227718039650203;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -464,7 +464,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash6(MEM_readLE64(p), h, 0 as u64);
 }
 static mut prime7bytes: u64 = 58295818150454627;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -475,7 +475,7 @@ unsafe extern "C" fn ZSTD_hash7Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash7(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash7(MEM_readLE64(p), h, 0 as u64);
 }
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -485,7 +485,7 @@ unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash8(MEM_readLE64(p), h, 0 as u64);
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_hashPtr(
@@ -615,7 +615,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as std::ffi::c_int as usize >= length {
+        if 16 as usize >= length {
             return;
         }
         op = op.offset(16);
@@ -1862,7 +1862,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
                     MEM_read32(idxBase.offset(idx as isize) as *const std::ffi::c_void)
                 } else {
                     MEM_read32(ip0 as *const std::ffi::c_void)
-                        ^ 1 as std::ffi::c_int as u32
+                        ^ 1 as u32
                 };
                 if MEM_read32(ip0 as *const std::ffi::c_void) == mval {
                     current_block = 15498112657170199191;
@@ -1883,7 +1883,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
                         )
                     } else {
                         MEM_read32(ip0 as *const std::ffi::c_void)
-                            ^ 1 as std::ffi::c_int as u32
+                            ^ 1 as u32
                     };
                     if MEM_read32(ip0 as *const std::ffi::c_void) == mval_0 {
                         current_block = 15498112657170199191;

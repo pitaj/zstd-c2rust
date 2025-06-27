@@ -191,29 +191,29 @@ pub unsafe extern "C" fn ZSTD_XXH32_digest(
     let mut h32: xxh_u32 = 0;
     if (*state).large_len != 0 {
         h32 = (::core::intrinsics::rotate_left(
-            (*state).v[0 as std::ffi::c_int as usize],
+            (*state).v[0 as usize],
             1,
         ))
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
-                    (*state).v[1 as std::ffi::c_int as usize],
+                    (*state).v[1 as usize],
                     7,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
-                    (*state).v[2 as std::ffi::c_int as usize],
+                    (*state).v[2 as usize],
                     12,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
-                    (*state).v[3 as std::ffi::c_int as usize],
+                    (*state).v[3 as usize],
                     18,
                 ),
             );
     } else {
-        h32 = ((*state).v[2 as std::ffi::c_int as usize]).wrapping_add(XXH_PRIME32_5);
+        h32 = ((*state).v[2 as usize]).wrapping_add(XXH_PRIME32_5);
     }
     h32 = (h32 as XXH32_hash_t).wrapping_add((*state).total_len_32) as xxh_u32
         as xxh_u32;
@@ -370,33 +370,33 @@ pub unsafe extern "C" fn ZSTD_XXH64_digest(
     let mut h64: xxh_u64 = 0;
     if (*state).total_len >= 32 {
         h64 = (::core::intrinsics::rotate_left(
-            (*state).v[0 as std::ffi::c_int as usize],
+            (*state).v[0 as usize],
             1,
         ))
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
-                    (*state).v[1 as std::ffi::c_int as usize],
+                    (*state).v[1 as usize],
                     7,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
-                    (*state).v[2 as std::ffi::c_int as usize],
+                    (*state).v[2 as usize],
                     12,
                 ),
             )
             .wrapping_add(
                 ::core::intrinsics::rotate_left(
-                    (*state).v[3 as std::ffi::c_int as usize],
+                    (*state).v[3 as usize],
                     18,
                 ),
             );
-        h64 = XXH64_mergeRound(h64, (*state).v[0 as std::ffi::c_int as usize]);
-        h64 = XXH64_mergeRound(h64, (*state).v[1 as std::ffi::c_int as usize]);
-        h64 = XXH64_mergeRound(h64, (*state).v[2 as std::ffi::c_int as usize]);
-        h64 = XXH64_mergeRound(h64, (*state).v[3 as std::ffi::c_int as usize]);
+        h64 = XXH64_mergeRound(h64, (*state).v[0 as usize]);
+        h64 = XXH64_mergeRound(h64, (*state).v[1 as usize]);
+        h64 = XXH64_mergeRound(h64, (*state).v[2 as usize]);
+        h64 = XXH64_mergeRound(h64, (*state).v[3 as usize]);
     } else {
-        h64 = ((*state).v[2 as std::ffi::c_int as usize] as std::ffi::c_ulonglong)
+        h64 = ((*state).v[2 as usize] as std::ffi::c_ulonglong)
             .wrapping_add(XXH_PRIME64_5) as xxh_u64;
     }
     h64 = h64.wrapping_add((*state).total_len);

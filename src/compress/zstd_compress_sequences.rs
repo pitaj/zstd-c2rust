@@ -883,7 +883,7 @@ pub unsafe extern "C" fn ZSTD_crossEntropyCost(
         {
             *norm.offset(s as isize) as std::ffi::c_uint
         } else {
-            1 as std::ffi::c_int as std::ffi::c_uint
+            1 as std::ffi::c_uint
         };
         let norm256 = normAcc << shift;
         cost = cost

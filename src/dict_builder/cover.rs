@@ -1132,16 +1132,16 @@ unsafe extern "C" fn COVER_buildDictionary(
         parameters.k,
         4,
     );
-    let maxZeroScoreRun = (if 10 as std::ffi::c_int as u32
+    let maxZeroScoreRun = (if 10 as u32
         > (if 100_u32 < epochs.num >> 3 {
-            100 as std::ffi::c_int as u32
+            100 as u32
         } else {
             epochs.num >> 3
         })
     {
-        10 as std::ffi::c_int as u32
+        10 as u32
     } else if 100_u32 < epochs.num >> 3 {
-        100 as std::ffi::c_int as u32
+        100 as u32
     } else {
         epochs.num >> 3
     }) as usize;
@@ -1196,7 +1196,7 @@ unsafe extern "C" fn COVER_buildDictionary(
             );
             if displayLevel >= 2 {
                 let refreshRate = CLOCKS_PER_SEC as __clock_t
-                    * 15 as std::ffi::c_int as __clock_t
+                    * 15 as __clock_t
                     / 100;
                 if clock() - lastUpdateTime > refreshRate
                     || displayLevel >= 4
@@ -1206,7 +1206,7 @@ unsafe extern "C" fn COVER_buildDictionary(
                         stderr,
                         b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
                         (dictBufferCapacity.wrapping_sub(tail)
-                            * 100 as std::ffi::c_int as usize / dictBufferCapacity)
+                            * 100 as usize / dictBufferCapacity)
                             as std::ffi::c_uint,
                     );
                     fflush(stderr);
@@ -1393,7 +1393,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
     i = if parameters.splitPoint < 1.0f64 {
         nbTrainSamples
     } else {
-        0 as std::ffi::c_int as usize
+        0 as usize
     };
     while i < nbSamples {
         maxSampleSize = MAX!(samplesSizes[i], maxSampleSize);
@@ -1413,7 +1413,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
         i = if parameters.splitPoint < 1.0f64 {
             nbTrainSamples
         } else {
-            0 as std::ffi::c_int as usize
+            0 as usize
         };
         while i < nbSamples {
             let size = ZSTD_compress_usingCDict(
@@ -1818,27 +1818,27 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         (*parameters).splitPoint
     };
     let kMinD = if (*parameters).d == 0 {
-        6 as std::ffi::c_int as std::ffi::c_uint
+        6 as std::ffi::c_uint
     } else {
         (*parameters).d
     };
     let kMaxD = if (*parameters).d == 0 {
-        8 as std::ffi::c_int as std::ffi::c_uint
+        8 as std::ffi::c_uint
     } else {
         (*parameters).d
     };
     let kMinK = if (*parameters).k == 0 {
-        50 as std::ffi::c_int as std::ffi::c_uint
+        50 as std::ffi::c_uint
     } else {
         (*parameters).k
     };
     let kMaxK = if (*parameters).k == 0 {
-        2000 as std::ffi::c_int as std::ffi::c_uint
+        2000 as std::ffi::c_uint
     } else {
         (*parameters).k
     };
     let kSteps = if (*parameters).steps == 0 {
-        40 as std::ffi::c_int as std::ffi::c_uint
+        40 as std::ffi::c_uint
     } else {
         (*parameters).steps
     };
@@ -1963,7 +1963,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         return ERROR!(dstSize_tooSmall);
     }
     if nbThreads > 1 {
-        pool = POOL_create(nbThreads as usize, 1 as std::ffi::c_int as usize);
+        pool = POOL_create(nbThreads as usize, 1 as usize);
         if pool.is_null() {
             return ERROR!(memory_allocation);
         }
@@ -2098,7 +2098,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                 }
                 if displayLevel >= 2 {
                     let refreshRate = CLOCKS_PER_SEC as __clock_t
-                        * 15 as std::ffi::c_int as __clock_t
+                        * 15 as __clock_t
                         / 100;
                     if clock() - lastUpdateTime > refreshRate
                         || displayLevel >= 4

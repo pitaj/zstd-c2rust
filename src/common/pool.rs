@@ -255,7 +255,7 @@ unsafe extern "C" fn POOL_thread(
 pub unsafe extern "C" fn ZSTD_createThreadPool(
     mut numThreads: usize,
 ) -> *mut ZSTD_threadPool {
-    return POOL_create(numThreads, 0 as std::ffi::c_int as usize);
+    return POOL_create(numThreads, 0 as usize);
 }
 #[no_mangle]
 pub unsafe extern "C" fn POOL_create(

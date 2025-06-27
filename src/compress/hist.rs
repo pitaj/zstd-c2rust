@@ -276,7 +276,7 @@ pub unsafe extern "C" fn HIST_countFast_wksp(
     if sourceSize < 1500 {
         return HIST_count_simple(count, maxSymbolValuePtr, source, sourceSize) as usize;
     }
-    if workSpace as usize & 3 as std::ffi::c_int as usize != 0 {
+    if workSpace as usize & 3 as usize != 0 {
         return ERROR!(GENERIC);
     }
     if workSpaceSize < HIST_WKSP_SIZE {
@@ -300,7 +300,7 @@ pub unsafe extern "C" fn HIST_count_wksp(
     mut workSpace: *mut std::ffi::c_void,
     mut workSpaceSize: usize,
 ) -> usize {
-    if workSpace as usize & 3 as std::ffi::c_int as usize != 0 {
+    if workSpace as usize & 3 as usize != 0 {
         return ERROR!(GENERIC);
     }
     if workSpaceSize < HIST_WKSP_SIZE {

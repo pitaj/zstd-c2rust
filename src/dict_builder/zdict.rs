@@ -1492,7 +1492,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
     if maxLength < MINMATCHLENGTH as usize {
         return solution;
     }
-    savings[5 as std::ffi::c_int as usize] = 0;
+    savings[5 as usize] = 0;
     let mut u_1: std::ffi::c_uint = 0;
     u_1 = MINMATCHLENGTH as std::ffi::c_uint;
     while u_1 as usize <= maxLength {
@@ -1604,7 +1604,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                 *fresh1 = (*fresh1).wrapping_add(elt.savings * addedLength / elt.length);
                 let ref mut fresh2 = (*table.offset(u as isize)).savings;
                 *fresh2 = (*fresh2)
-                    .wrapping_add(elt.length / 8 as std::ffi::c_int as u32);
+                    .wrapping_add(elt.length / 8 as u32);
                 elt = *table.offset(u as isize);
                 while u > 1
                     && (*table
@@ -1639,7 +1639,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                         as std::ffi::c_int;
                 let ref mut fresh3 = (*table.offset(u as isize)).savings;
                 *fresh3 = (*fresh3)
-                    .wrapping_add(elt.length / 8 as std::ffi::c_int as u32);
+                    .wrapping_add(elt.length / 8 as u32);
                 if addedLength_0 > 0 {
                     let ref mut fresh4 = (*table.offset(u as isize)).length;
                     *fresh4 = (*fresh4 as std::ffi::c_uint)
@@ -1806,7 +1806,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
     ) as *mut u32;
     let mut result: usize = 0;
     let mut displayClock: clock_t = 0;
-    let refreshRate = CLOCKS_PER_SEC as __clock_t * 3 as std::ffi::c_int as __clock_t
+    let refreshRate = CLOCKS_PER_SEC as __clock_t * 3 as __clock_t
         / 10;
     if DISPLAYLEVEL!(2, "\r%70s\r", "") >= 2 {
         fprintf(
@@ -2289,11 +2289,11 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
             0,
             ::core::mem::size_of::<[u32; 1024]>(),
         );
-        repOffset[8 as std::ffi::c_int as usize] = 1;
+        repOffset[8 as usize] = 1;
         repOffset[4 as std::ffi::c_int
-            as usize] = repOffset[8 as std::ffi::c_int as usize];
+            as usize] = repOffset[8 as usize];
         repOffset[1 as std::ffi::c_int
-            as usize] = repOffset[4 as std::ffi::c_int as usize];
+            as usize] = repOffset[4 as usize];
         memset(
             bestRepOffset.as_mut_ptr() as *mut std::ffi::c_void,
             0,
@@ -2639,17 +2639,17 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                                 MEM_writeLE32(
                                                     dstPtr.offset(0)
                                                         as *mut std::ffi::c_void,
-                                                    repStartValue[0 as std::ffi::c_int as usize],
+                                                    repStartValue[0 as usize],
                                                 );
                                                 MEM_writeLE32(
                                                     dstPtr.offset(4)
                                                         as *mut std::ffi::c_void,
-                                                    repStartValue[1 as std::ffi::c_int as usize],
+                                                    repStartValue[1 as usize],
                                                 );
                                                 MEM_writeLE32(
                                                     dstPtr.offset(8)
                                                         as *mut std::ffi::c_void,
-                                                    repStartValue[2 as std::ffi::c_int as usize],
+                                                    repStartValue[2 as usize],
                                                 );
                                                 eSize = eSize.wrapping_add(12);
                                             }
@@ -2859,19 +2859,19 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     mut nbSamples: std::ffi::c_uint,
     mut params: ZDICT_legacy_params_t,
 ) -> usize {
-    let dictListSize = if (if 10000 as std::ffi::c_int as std::ffi::c_uint > nbSamples {
-        10000 as std::ffi::c_int as std::ffi::c_uint
+    let dictListSize = if (if 10000 as std::ffi::c_uint > nbSamples {
+        10000 as std::ffi::c_uint
     } else {
         nbSamples
-    }) > (maxDictSize / 16 as std::ffi::c_int as usize) as u32
+    }) > (maxDictSize / 16 as usize) as u32
     {
-        if 10000 as std::ffi::c_int as std::ffi::c_uint > nbSamples {
-            10000 as std::ffi::c_int as std::ffi::c_uint
+        if 10000 as std::ffi::c_uint > nbSamples {
+            10000 as std::ffi::c_uint
         } else {
             nbSamples
         }
     } else {
-        (maxDictSize / 16 as std::ffi::c_int as usize) as u32
+        (maxDictSize / 16 as usize) as u32
     };
     let dictList = malloc(
         (dictListSize as std::ffi::c_ulong)
@@ -2989,7 +2989,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         free(dictList as *mut std::ffi::c_void);
         return ERROR!(dictionaryCreation_failed);
     }
-    if (dictContentSize_0 as usize) < targetDictSize / 4 as std::ffi::c_int as usize {
+    if (dictContentSize_0 as usize) < targetDictSize / 4 as usize {
         if DISPLAYLEVEL!(
             2,
             "!  warning : selected content significantly smaller than requested (%u < %u) \n",
@@ -3045,7 +3045,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             }
         }
     }
-    if dictContentSize_0 as usize > targetDictSize * 3 as std::ffi::c_int as usize
+    if dictContentSize_0 as usize > targetDictSize * 3 as usize
         && nbSamples > (2 as std::ffi::c_int * MINRATIO) as std::ffi::c_uint
         && selectivity > 1
     {

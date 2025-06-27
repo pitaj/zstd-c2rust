@@ -195,7 +195,7 @@ unsafe extern "C" fn BIT_initDStream(
             (8 as std::ffi::c_uint)
                 .wrapping_sub(ZSTD_highbit32(lastByte as u32))
         } else {
-            0 as std::ffi::c_int as std::ffi::c_uint
+            0 as std::ffi::c_uint
         };
         if lastByte as std::ffi::c_int == 0 {
             return ERROR!(GENERIC);
@@ -314,7 +314,7 @@ unsafe extern "C" fn BIT_initDStream(
             (8 as std::ffi::c_uint)
                 .wrapping_sub(ZSTD_highbit32(lastByte_0 as u32))
         } else {
-            0 as std::ffi::c_int as std::ffi::c_uint
+            0 as std::ffi::c_uint
         };
         if lastByte_0 as std::ffi::c_int == 0 {
             return ERROR!(corruption_detected);
@@ -435,7 +435,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     (*bitD).ptr = ((*bitD).ptr).offset(-(nbBytes as isize));
     (*bitD)
         .bitsConsumed = ((*bitD).bitsConsumed)
-        .wrapping_sub(nbBytes * 8 as std::ffi::c_int as u32);
+        .wrapping_sub(nbBytes * 8 as u32);
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return result;
 }

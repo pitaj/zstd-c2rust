@@ -1377,7 +1377,7 @@ unsafe extern "C" fn ss_mintrosort(
                     }
                     s = d.offset_from(c) as std::ffi::c_long as std::ffi::c_int;
                     t = (last.offset_from(d) as std::ffi::c_long
-                        - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as std::ffi::c_int;
                     if s > t {
                         s = t;
                     }
@@ -2826,7 +2826,7 @@ unsafe extern "C" fn sssort(
         PAi[0 as std::ffi::c_int
             as usize] = *PA
             .offset(*first.offset(-1_isize) as isize);
-        PAi[1 as std::ffi::c_int as usize] = n - 2;
+        PAi[1 as usize] = n - 2;
         a = first;
         i = *first.offset(-1_isize);
         while a < last
@@ -3326,7 +3326,7 @@ unsafe extern "C" fn tr_partition(
         }
         s = d.offset_from(c) as std::ffi::c_long as std::ffi::c_int;
         t = (last.offset_from(d) as std::ffi::c_long
-            - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int;
+            - 1 as std::ffi::c_long) as std::ffi::c_int;
         if s > t {
             s = t;
         }
@@ -3367,7 +3367,7 @@ unsafe extern "C" fn tr_copy(
     let mut s: std::ffi::c_int = 0;
     let mut v: std::ffi::c_int = 0;
     v = (b.offset_from(SA) as std::ffi::c_long
-        - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int;
+        - 1 as std::ffi::c_long) as std::ffi::c_int;
     c = first;
     d = a.offset(-1_isize);
     while c <= d {
@@ -3418,7 +3418,7 @@ unsafe extern "C" fn tr_partialcopy(
     let mut lastrank: std::ffi::c_int = 0;
     let mut newrank = -(1 as std::ffi::c_int);
     v = (b.offset_from(SA) as std::ffi::c_long
-        - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int;
+        - 1 as std::ffi::c_long) as std::ffi::c_int;
     lastrank = -(1 as std::ffi::c_int);
     c = first;
     d = a.offset(-1_isize);
@@ -3510,12 +3510,12 @@ unsafe extern "C" fn tr_introsort(
                     &mut a,
                     &mut b,
                     (last.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int,
+                        - 1 as std::ffi::c_long) as std::ffi::c_int,
                 );
                 if a < last {
                     c = first;
                     v = (a.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as std::ffi::c_int;
                     while c < a {
                         *ISA.offset(*c as isize) = v;
                         c = c.offset(1);
@@ -3525,7 +3525,7 @@ unsafe extern "C" fn tr_introsort(
                 if b < last {
                     c = a;
                     v = (b.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as std::ffi::c_int;
                     while c < b {
                         *ISA.offset(*c as isize) = v;
                         c = c.offset(1);
@@ -3868,7 +3868,7 @@ unsafe extern "C" fn tr_introsort(
                     next = if *ISA.offset(*a as isize) != *ISAd.offset(*a as isize) {
                         tr_ilg(
                             (a.offset_from(first) as std::ffi::c_long
-                                + 1 as std::ffi::c_int as std::ffi::c_long)
+                                + 1 as std::ffi::c_long)
                                 as std::ffi::c_int,
                         )
                     } else {
@@ -3878,7 +3878,7 @@ unsafe extern "C" fn tr_introsort(
                     if a < last {
                         b = first;
                         v = (a.offset_from(SA) as std::ffi::c_long
-                            - 1 as std::ffi::c_int as std::ffi::c_long)
+                            - 1 as std::ffi::c_long)
                             as std::ffi::c_int;
                         while b < a {
                             *ISA.offset(*b as isize) = v;
@@ -4114,7 +4114,7 @@ unsafe extern "C" fn tr_introsort(
                     };
                     c = first;
                     v = (a.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_int as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as std::ffi::c_int;
                     while c < a {
                         *ISA.offset(*c as isize) = v;
                         c = c.offset(1);
@@ -4123,7 +4123,7 @@ unsafe extern "C" fn tr_introsort(
                     if b < last {
                         c = a;
                         v = (b.offset_from(SA) as std::ffi::c_long
-                            - 1 as std::ffi::c_int as std::ffi::c_long)
+                            - 1 as std::ffi::c_long)
                             as std::ffi::c_int;
                         while c < b {
                             *ISA.offset(*c as isize) = v;

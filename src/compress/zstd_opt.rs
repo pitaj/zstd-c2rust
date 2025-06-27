@@ -755,7 +755,7 @@ unsafe extern "C" fn ZSTD_hash3Ptr(
     mut ptr: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash3(MEM_readLE32(ptr), h, 0 as std::ffi::c_int as u32) as usize;
+    return ZSTD_hash3(MEM_readLE32(ptr), h, 0 as u32) as usize;
 }
 static mut prime4bytes: u32 = 2654435761;
 unsafe extern "C" fn ZSTD_hash4(mut u: u32, mut h: u32, mut s: u32) -> u32 {
@@ -765,7 +765,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
     mut ptr: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash4(MEM_readLE32(ptr), h, 0 as std::ffi::c_int as u32) as usize;
+    return ZSTD_hash4(MEM_readLE32(ptr), h, 0 as u32) as usize;
 }
 static mut prime5bytes: u64 = 889523592379;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -776,7 +776,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash5(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash5(MEM_readLE64(p), h, 0 as u64);
 }
 static mut prime6bytes: u64 = 227718039650203;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -787,7 +787,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash6(MEM_readLE64(p), h, 0 as u64);
 }
 static mut prime7bytes: u64 = 58295818150454627;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -798,7 +798,7 @@ unsafe extern "C" fn ZSTD_hash7Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash7(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash7(MEM_readLE64(p), h, 0 as u64);
 }
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -808,7 +808,7 @@ unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0 as std::ffi::c_int as u64);
+    return ZSTD_hash8(MEM_readLE64(p), h, 0 as u64);
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_hashPtr(
@@ -998,7 +998,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as std::ffi::c_int as usize >= length {
+        if 16 as usize >= length {
             return;
         }
         op = op.offset(16);
@@ -1490,7 +1490,7 @@ unsafe extern "C" fn ZSTD_rawLiteralsCost(
     if (*optPtr).priceType as std::ffi::c_uint
         == zop_predef as std::ffi::c_int as std::ffi::c_uint
     {
-        return litLength * 6 as std::ffi::c_int as u32 * BITCOST_MULTIPLIER as u32;
+        return litLength * 6 as u32 * BITCOST_MULTIPLIER as u32;
     }
     let mut price = (*optPtr).litSumBasePrice * litLength;
     let litPriceMax = ((*optPtr).litSumBasePrice)
@@ -1561,7 +1561,7 @@ unsafe extern "C" fn ZSTD_getMatchPrice(
         price = price
             .wrapping_add(
                 offCode.wrapping_sub(19)
-                    * 2 as std::ffi::c_int as u32 * BITCOST_MULTIPLIER as u32,
+                    * 2 as u32 * BITCOST_MULTIPLIER as u32,
             );
     }
     let mlCode = ZSTD_MLcode(mlBase);
@@ -1687,12 +1687,12 @@ unsafe extern "C" fn ZSTD_insertBt1(
     let mut match_0 = 0 as *const u8;
     let curr = ip.offset_from(base) as std::ffi::c_long as u32;
     let btLow = if btMask >= curr {
-        0 as std::ffi::c_int as u32
+        0 as u32
     } else {
         curr.wrapping_sub(btMask)
     };
     let mut smallerPtr = bt
-        .offset((2 as std::ffi::c_int as u32 * (curr & btMask)) as isize);
+        .offset((2 as u32 * (curr & btMask)) as isize);
     let mut largerPtr = smallerPtr.offset(1);
     let mut dummy32: u32 = 0;
     let windowLow = ZSTD_getLowestMatchIndex(ms, target, (*cParams).windowLog);
@@ -1704,7 +1704,7 @@ unsafe extern "C" fn ZSTD_insertBt1(
     *hashTable.offset(h as isize) = curr;
     while nbCompares != 0 && matchIndex >= windowLow {
         let nextPtr = bt
-            .offset((2 as std::ffi::c_int as u32 * (matchIndex & btMask)) as isize);
+            .offset((2 as u32 * (matchIndex & btMask)) as isize);
         let mut matchLength = MIN!(commonLengthSmaller, commonLengthLarger);
         if extDict == 0
             || (matchIndex as usize).wrapping_add(matchLength) >= dictLimit as usize
@@ -1777,7 +1777,7 @@ unsafe extern "C" fn ZSTD_insertBt1(
         positions = if 192_u32
             < bestLength.wrapping_sub(384) as u32
         {
-            192 as std::ffi::c_int as u32
+            192 as u32
         } else {
             bestLength.wrapping_sub(384) as u32
         };
@@ -1862,16 +1862,16 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
     let dictEnd = dictBase.offset(dictLimit as isize);
     let prefixStart = base.offset(dictLimit as isize);
     let btLow = if btMask >= curr {
-        0 as std::ffi::c_int as u32
+        0 as u32
     } else {
         curr.wrapping_sub(btMask)
     };
     let windowLow = ZSTD_getLowestMatchIndex(ms, curr, (*cParams).windowLog);
-    let matchLow = if windowLow != 0 { windowLow } else { 1 as std::ffi::c_int as u32 };
+    let matchLow = if windowLow != 0 { windowLow } else { 1 as u32 };
     let mut smallerPtr = bt
-        .offset((2 as std::ffi::c_int as u32 * (curr & btMask)) as isize);
+        .offset((2 as u32 * (curr & btMask)) as isize);
     let mut largerPtr = bt
-        .offset((2 as std::ffi::c_int as u32 * (curr & btMask)) as isize)
+        .offset((2 as u32 * (curr & btMask)) as isize)
         .offset(1);
     let mut matchEndIdx = curr
         .wrapping_add(8)
@@ -1912,21 +1912,21 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
     {
         dmsEnd.offset_from(dmsBase) as std::ffi::c_long as u32
     } else {
-        0 as std::ffi::c_int as u32
+        0 as u32
     };
     let dmsLowLimit = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
     {
         (*dms).window.lowLimit
     } else {
-        0 as std::ffi::c_int as u32
+        0 as u32
     };
     let dmsIndexDelta = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
     {
         windowLow.wrapping_sub(dmsHighLimit)
     } else {
-        0 as std::ffi::c_int as u32
+        0 as u32
     };
     let dmsHashLog = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
@@ -1948,7 +1948,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
         ((1 as std::ffi::c_uint) << dmsBtLog)
             .wrapping_sub(1)
     } else {
-        0 as std::ffi::c_int as std::ffi::c_uint
+        0 as std::ffi::c_uint
     };
     let dmsBtLow = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
@@ -2087,7 +2087,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
     *hashTable.offset(h as isize) = curr;
     while nbCompares != 0 && matchIndex >= matchLow {
         let nextPtr = bt
-            .offset((2 as std::ffi::c_int as u32 * (matchIndex & btMask)) as isize);
+            .offset((2 as u32 * (matchIndex & btMask)) as isize);
         let mut match_2 = 0 as *const u8;
         let mut matchLength = MIN!(commonLengthSmaller, commonLengthLarger);
         if dictMode as std::ffi::c_uint
@@ -2181,7 +2181,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
         while nbCompares != 0 && dictMatchIndex > dmsLowLimit {
             let nextPtr_0 = dmsBt
                 .offset(
-                    (2 as std::ffi::c_int as u32 * (dictMatchIndex & dmsBtMask)) as isize,
+                    (2 as u32 * (dictMatchIndex & dmsBtMask)) as isize,
                 );
             let mut matchLength_0 = MIN!(commonLengthSmaller, commonLengthLarger);
             let mut match_3 = dmsBase.offset(dictMatchIndex as isize);
@@ -2608,7 +2608,7 @@ unsafe extern "C" fn ZSTD_opt_getNextMatchAndUpdateSeqStore(
     {
         (currSeq.litLength).wrapping_sub((*optLdm).seqStore.posInSequence as u32)
     } else {
-        0 as std::ffi::c_int as u32
+        0 as u32
     };
     matchBytesRemaining = if literalsBytesRemaining == 0 {
         (currSeq.matchLength)

@@ -532,7 +532,7 @@ unsafe extern "C" fn BIT_initDStream(
             (8 as std::ffi::c_uint)
                 .wrapping_sub(ZSTD_highbit32(lastByte as u32))
         } else {
-            0 as std::ffi::c_int as std::ffi::c_uint
+            0 as std::ffi::c_uint
         };
         if lastByte as std::ffi::c_int == 0 {
             return ERROR!(GENERIC);
@@ -651,7 +651,7 @@ unsafe extern "C" fn BIT_initDStream(
             (8 as std::ffi::c_uint)
                 .wrapping_sub(ZSTD_highbit32(lastByte_0 as u32))
         } else {
-            0 as std::ffi::c_int as std::ffi::c_uint
+            0 as std::ffi::c_uint
         };
         if lastByte_0 as std::ffi::c_int == 0 {
             return ERROR!(corruption_detected);
@@ -772,7 +772,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     (*bitD).ptr = ((*bitD).ptr).offset(-(nbBytes as isize));
     (*bitD)
         .bitsConsumed = ((*bitD).bitsConsumed)
-        .wrapping_sub(nbBytes * 8 as std::ffi::c_int as u32);
+        .wrapping_sub(nbBytes * 8 as u32);
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return result;
 }
@@ -1108,7 +1108,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as std::ffi::c_int as usize >= length {
+        if 16 as usize >= length {
             return;
         }
         op = op.offset(16);
@@ -1158,7 +1158,7 @@ pub unsafe extern "C" fn ZSTD_getcBlockSize(
     let cSize = cBlockHeader >> 3;
     (*bpPtr).lastBlock = cBlockHeader & 1;
     (*bpPtr)
-        .blockType = (cBlockHeader >> 1 & 3 as std::ffi::c_int as u32)
+        .blockType = (cBlockHeader >> 1 & 3 as u32)
         as blockType_e;
     (*bpPtr).origSize = cSize;
     if (*bpPtr).blockType as std::ffi::c_uint
@@ -4194,11 +4194,11 @@ unsafe extern "C" fn ZSTD_decodeSequence(
         }
         (*seqState)
             .prevOffset[2 as std::ffi::c_int
-            as usize] = (*seqState).prevOffset[1 as std::ffi::c_int as usize];
+            as usize] = (*seqState).prevOffset[1 as usize];
         (*seqState)
             .prevOffset[1 as std::ffi::c_int
-            as usize] = (*seqState).prevOffset[0 as std::ffi::c_int as usize];
-        (*seqState).prevOffset[0 as std::ffi::c_int as usize] = offset;
+            as usize] = (*seqState).prevOffset[0 as usize];
+        (*seqState).prevOffset[0 as usize] = offset;
     } else {
         let ll0 = ((*llDInfo).baseValue == 0)
             as std::ffi::c_int as u32;
@@ -4210,7 +4210,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                 .prevOffset[1 as std::ffi::c_int
                 as usize] = (*seqState)
                 .prevOffset[(ll0 == 0) as std::ffi::c_int as usize];
-            (*seqState).prevOffset[0 as std::ffi::c_int as usize] = offset;
+            (*seqState).prevOffset[0 as usize] = offset;
         } else {
             offset = (ofBase.wrapping_add(ll0) as usize)
                 .wrapping_add(
@@ -4220,7 +4220,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                     ),
                 );
             let mut temp = if offset == 3 {
-                ((*seqState).prevOffset[0 as std::ffi::c_int as usize])
+                ((*seqState).prevOffset[0 as usize])
                     .wrapping_sub(1)
             } else {
                 (*seqState).prevOffset[offset as usize]
@@ -4229,13 +4229,13 @@ unsafe extern "C" fn ZSTD_decodeSequence(
             if offset != 1 {
                 (*seqState)
                     .prevOffset[2 as std::ffi::c_int
-                    as usize] = (*seqState).prevOffset[1 as std::ffi::c_int as usize];
+                    as usize] = (*seqState).prevOffset[1 as usize];
             }
             (*seqState)
                 .prevOffset[1 as std::ffi::c_int
-                as usize] = (*seqState).prevOffset[0 as std::ffi::c_int as usize];
+                as usize] = (*seqState).prevOffset[0 as usize];
             offset = temp;
-            (*seqState).prevOffset[0 as std::ffi::c_int as usize] = offset;
+            (*seqState).prevOffset[0 as usize] = offset;
         }
     }
     seq.offset = offset;
