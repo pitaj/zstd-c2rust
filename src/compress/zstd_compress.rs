@@ -5029,49 +5029,23 @@ pub unsafe extern "C" fn ZSTD_checkCParams(
 unsafe extern "C" fn ZSTD_clampCParams(
     mut cParams: ZSTD_compressionParameters,
 ) -> ZSTD_compressionParameters {
-    let bounds = CLAMP!(ZSTD_c_windowLog, cParams.windowLog);
-    if CLAMP!(ZSTD_c_windowLog, cParams.windowLog) != 0 {
-        cParams.windowLog = CLAMP!(ZSTD_c_windowLog, cParams.windowLog);
-    } else if CLAMP!(ZSTD_c_windowLog, cParams.windowLog) != 0 {
-        cParams.windowLog = CLAMP!(ZSTD_c_windowLog, cParams.windowLog);
+    macro_rules! CLAMP {
+        ($cParam:expr, $val:expr, $typ:ty) => {{
+            let bounds: ZSTD_bounds = ZSTD_cParam_getBounds($cParam);
+            $val = std::cmp::clamp($val, bounds.lowerBound as $typ, bounds.upperBound as $typ);
+        }};
+        ($cParam:expr, $val:expr) => { CLAMP!($cParam, $val, std::ffi::c_uint) }
     }
-    let bounds_0 = CLAMP!(ZSTD_c_chainLog, cParams.chainLog);
-    if CLAMP!(ZSTD_c_chainLog, cParams.chainLog) != 0 {
-        cParams.chainLog = CLAMP!(ZSTD_c_chainLog, cParams.chainLog);
-    } else if CLAMP!(ZSTD_c_chainLog, cParams.chainLog) != 0 {
-        cParams.chainLog = CLAMP!(ZSTD_c_chainLog, cParams.chainLog);
-    }
-    let bounds_1 = CLAMP!(ZSTD_c_hashLog, cParams.hashLog);
-    if CLAMP!(ZSTD_c_hashLog, cParams.hashLog) != 0 {
-        cParams.hashLog = CLAMP!(ZSTD_c_hashLog, cParams.hashLog);
-    } else if CLAMP!(ZSTD_c_hashLog, cParams.hashLog) != 0 {
-        cParams.hashLog = CLAMP!(ZSTD_c_hashLog, cParams.hashLog);
-    }
-    let bounds_2 = CLAMP!(ZSTD_c_searchLog, cParams.searchLog);
-    if CLAMP!(ZSTD_c_searchLog, cParams.searchLog) != 0 {
-        cParams.searchLog = CLAMP!(ZSTD_c_searchLog, cParams.searchLog);
-    } else if CLAMP!(ZSTD_c_searchLog, cParams.searchLog) != 0 {
-        cParams.searchLog = CLAMP!(ZSTD_c_searchLog, cParams.searchLog);
-    }
-    let bounds_3 = CLAMP!(ZSTD_c_minMatch, cParams.minMatch);
-    if CLAMP!(ZSTD_c_minMatch, cParams.minMatch) != 0 {
-        cParams.minMatch = CLAMP!(ZSTD_c_minMatch, cParams.minMatch);
-    } else if CLAMP!(ZSTD_c_minMatch, cParams.minMatch) != 0 {
-        cParams.minMatch = CLAMP!(ZSTD_c_minMatch, cParams.minMatch);
-    }
-    let bounds_4 = CLAMP!(ZSTD_c_targetLength, cParams.targetLength);
-    if CLAMP!(ZSTD_c_targetLength, cParams.targetLength) != 0 {
-        cParams.targetLength = CLAMP!(ZSTD_c_targetLength, cParams.targetLength);
-    } else if CLAMP!(ZSTD_c_targetLength, cParams.targetLength) != 0 {
-        cParams.targetLength = CLAMP!(ZSTD_c_targetLength, cParams.targetLength);
-    }
-    let bounds_5 = CLAMP_TYPE!(ZSTD_c_strategy, cParams.strategy, ZSTD_strategy);
-    if CLAMP_TYPE!(ZSTD_c_strategy, cParams.strategy, ZSTD_strategy) != 0 {
-        cParams.strategy = CLAMP_TYPE!(ZSTD_c_strategy, cParams.strategy, ZSTD_strategy);
-    } else if CLAMP_TYPE!(ZSTD_c_strategy, cParams.strategy, ZSTD_strategy) != 0 {
-        cParams.strategy = CLAMP_TYPE!(ZSTD_c_strategy, cParams.strategy, ZSTD_strategy);
-    }
-    return cParams;
+
+    CLAMP!(ZSTD_c_windowLog, cParams.windowLog);
+    CLAMP!(ZSTD_c_chainLog, cParams.chainLog);
+    CLAMP!(ZSTD_c_hashLog, cParams.hashLog);
+    CLAMP!(ZSTD_c_searchLog, cParams.searchLog);
+    CLAMP!(ZSTD_c_minMatch, cParams.minMatch);
+    CLAMP!(ZSTD_c_targetLength, cParams.targetLength);
+    CLAMP!(ZSTD_c_strategy, cParams.strategy, ZSTD_strategy);
+
+    cParams
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_cycleLog(
