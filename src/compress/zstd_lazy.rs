@@ -1,4 +1,5 @@
 use crate::__m128i_u;
+use crate::__m128i_u;
 use ::libc;
 #[cfg(target_arch = "x86")]
 pub use core::arch::x86::{
