@@ -1068,11 +1068,7 @@ unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
 ) {
-    libc::memcpy(
-        ZSTD_memcpy!(dst, src, 8),
-        ZSTD_memcpy!(dst, src, 8),
-        ZSTD_memcpy!(dst, src, 8) as usize,
-    );
+    libc::memcpy(dst, src, (8) as usize);
 }
 unsafe extern "C" fn ZSTD_copy16(
     mut dst: *mut std::ffi::c_void,
@@ -1131,11 +1127,7 @@ unsafe extern "C" fn ZSTD_copy4(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
 ) {
-    libc::memcpy(
-        ZSTD_memcpy!(dst, src, 4),
-        ZSTD_memcpy!(dst, src, 4),
-        ZSTD_memcpy!(dst, src, 4) as usize,
-    );
+    libc::memcpy(dst, src, (4) as usize);
 }
 unsafe extern "C" fn ZSTD_blockSizeMax(mut dctx: *const ZSTD_DCtx) -> usize {
     let blockSizeMax = (if (*dctx).isFrameDecompression != 0 {
@@ -1362,41 +1354,12 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 if (*dctx).litBufferLocation as std::ffi::c_uint
                     == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
                 {
-                    libc::memcpy(
-                        ZSTD_memcpy!(
-                            dctx -> litBuffer, istart + lhSize, litSize -
-                            ZSTD_LITBUFFEREXTRASIZE
-                        ),
-                        ZSTD_memcpy!(
-                            dctx -> litBuffer, istart + lhSize, litSize -
-                            ZSTD_LITBUFFEREXTRASIZE
-                        ),
-                        ZSTD_memcpy!(
-                            dctx -> litBuffer, istart + lhSize, litSize -
-                            ZSTD_LITBUFFEREXTRASIZE
-                        ) as usize,
-                    );
-                    libc::memcpy(
-                        ZSTD_memcpy!(
-                            dctx -> litExtraBuffer, istart + lhSize + litSize -
-                            ZSTD_LITBUFFEREXTRASIZE, ZSTD_LITBUFFEREXTRASIZE
-                        ),
-                        ZSTD_memcpy!(
-                            dctx -> litExtraBuffer, istart + lhSize + litSize -
-                            ZSTD_LITBUFFEREXTRASIZE, ZSTD_LITBUFFEREXTRASIZE
-                        ),
-                        ZSTD_memcpy!(
-                            dctx -> litExtraBuffer, istart + lhSize + litSize -
-                            ZSTD_LITBUFFEREXTRASIZE, ZSTD_LITBUFFEREXTRASIZE
-                        ) as usize,
-                    );
+                    libc::memcpy((*dctx).litBuffer, istart + lhSize, (litSize -
+                            ZSTD_LITBUFFEREXTRASIZE) as usize);
+                    libc::memcpy((*dctx).litExtraBuffer, istart + lhSize + litSize -
+                            ZSTD_LITBUFFEREXTRASIZE, (ZSTD_LITBUFFEREXTRASIZE) as usize);
                 } else {
-                    libc::memcpy(
-                        ZSTD_memcpy!(dctx -> litBuffer, istart + lhSize, litSize),
-                        ZSTD_memcpy!(dctx -> litBuffer, istart + lhSize, litSize),
-                        ZSTD_memcpy!(dctx -> litBuffer, istart + lhSize, litSize)
-                            as usize,
-                    );
+                    libc::memcpy((*dctx).litBuffer, istart + lhSize, (litSize) as usize);
                 }
                 (*dctx).litPtr = (*dctx).litBuffer;
                 (*dctx).litSize = litSize_0;
@@ -1461,38 +1424,11 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             if (*dctx).litBufferLocation as std::ffi::c_uint
                 == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
             {
-                libc::memset(
-                    ZSTD_memset!(
-                        dctx -> litBuffer, istart[lhSize], litSize -
-                        ZSTD_LITBUFFEREXTRASIZE
-                    ),
-                    ZSTD_memset!(
-                        dctx -> litBuffer, istart[lhSize], litSize -
-                        ZSTD_LITBUFFEREXTRASIZE
-                    ),
-                    ZSTD_memset!(
-                        dctx -> litBuffer, istart[lhSize], litSize -
-                        ZSTD_LITBUFFEREXTRASIZE
-                    ) as usize,
-                );
-                libc::memset(
-                    ZSTD_memset!(
-                        dctx -> litExtraBuffer, istart[lhSize], ZSTD_LITBUFFEREXTRASIZE
-                    ),
-                    ZSTD_memset!(
-                        dctx -> litExtraBuffer, istart[lhSize], ZSTD_LITBUFFEREXTRASIZE
-                    ),
-                    ZSTD_memset!(
-                        dctx -> litExtraBuffer, istart[lhSize], ZSTD_LITBUFFEREXTRASIZE
-                    ) as usize,
-                );
+                libc::memset((*dctx).litBuffer, (*istart.offset(lhSize as isize)), (litSize -
+                        ZSTD_LITBUFFEREXTRASIZE) as usize);
+                libc::memset((*dctx).litExtraBuffer, (*istart.offset(lhSize as isize)), (ZSTD_LITBUFFEREXTRASIZE) as usize);
             } else {
-                libc::memset(
-                    ZSTD_memset!(dctx -> litBuffer, istart[lhSize], litSize),
-                    ZSTD_memset!(dctx -> litBuffer, istart[lhSize], litSize),
-                    ZSTD_memset!(dctx -> litBuffer, istart[lhSize], litSize)
-                        as usize,
-                );
+                libc::memset((*dctx).litBuffer, (*istart.offset(lhSize as isize)), (litSize) as usize);
             }
             (*dctx).litPtr = (*dctx).litBuffer;
             (*dctx).litSize = litSize_1;
@@ -1632,34 +1568,9 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     if (*dctx).litBufferLocation as std::ffi::c_uint
         == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
     {
-        libc::memcpy(
-            ZSTD_memcpy!(
-                dctx -> litExtraBuffer, dctx -> litBufferEnd - ZSTD_LITBUFFEREXTRASIZE,
-                ZSTD_LITBUFFEREXTRASIZE
-            ),
-            ZSTD_memcpy!(
-                dctx -> litExtraBuffer, dctx -> litBufferEnd - ZSTD_LITBUFFEREXTRASIZE,
-                ZSTD_LITBUFFEREXTRASIZE
-            ),
-            ZSTD_memcpy!(
-                dctx -> litExtraBuffer, dctx -> litBufferEnd - ZSTD_LITBUFFEREXTRASIZE,
-                ZSTD_LITBUFFEREXTRASIZE
-            ) as usize,
-        );
-        libc::memmove(
-            ZSTD_memmove!(
-                dctx -> litBuffer + ZSTD_LITBUFFEREXTRASIZE - WILDCOPY_OVERLENGTH, dctx
-                -> litBuffer, litSize - ZSTD_LITBUFFEREXTRASIZE
-            ),
-            ZSTD_memmove!(
-                dctx -> litBuffer + ZSTD_LITBUFFEREXTRASIZE - WILDCOPY_OVERLENGTH, dctx
-                -> litBuffer, litSize - ZSTD_LITBUFFEREXTRASIZE
-            ),
-            ZSTD_memmove!(
-                dctx -> litBuffer + ZSTD_LITBUFFEREXTRASIZE - WILDCOPY_OVERLENGTH, dctx
-                -> litBuffer, litSize - ZSTD_LITBUFFEREXTRASIZE
-            ) as usize,
-        );
+        libc::memcpy((*dctx).litExtraBuffer, (*dctx).litBufferEnd - ZSTD_LITBUFFEREXTRASIZE, (ZSTD_LITBUFFEREXTRASIZE) as usize);
+        libc::memmove((*dctx).litBuffer + ZSTD_LITBUFFEREXTRASIZE - WILDCOPY_OVERLENGTH, dctx
+                -> litBuffer, (litSize - ZSTD_LITBUFFEREXTRASIZE) as usize);
         (*dctx)
             .litBuffer = ((*dctx).litBuffer)
             .offset(
@@ -3834,19 +3745,11 @@ unsafe extern "C" fn ZSTD_execSequenceEnd(
         match_0 = dictEnd
             .offset(-(prefixStart.offset_from(match_0) as std::ffi::c_long as isize));
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength) as usize,
-            );
+            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1) as usize,
-        );
+        libc::memmove(oLitEnd, match, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
@@ -3899,19 +3802,11 @@ unsafe extern "C" fn ZSTD_execSequenceEndSplitLitBuffer(
         match_0 = dictEnd
             .offset(-(prefixStart.offset_from(match_0) as std::ffi::c_long as isize));
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength) as usize,
-            );
+            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1) as usize,
-        );
+        libc::memmove(oLitEnd, match, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
@@ -3980,19 +3875,11 @@ unsafe extern "C" fn ZSTD_execSequence(
         match_0 = dictEnd
             .offset(match_0.offset_from(prefixStart) as std::ffi::c_long as isize);
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength) as usize,
-            );
+            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1) as usize,
-        );
+        libc::memmove(oLitEnd, match, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
@@ -4073,19 +3960,11 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
         match_0 = dictEnd
             .offset(match_0.offset_from(prefixStart) as std::ffi::c_long as isize);
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength),
-                ZSTD_memmove!(oLitEnd, match, sequence.matchLength) as usize,
-            );
+            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1),
-            ZSTD_memmove!(oLitEnd, match, length1) as usize,
-        );
+        libc::memmove(oLitEnd, match, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
@@ -4501,11 +4380,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
         }
         if !op.is_null() {
-            libc::memmove(
-                ZSTD_memmove!(op, litPtr, lastLLSize),
-                ZSTD_memmove!(op, litPtr, lastLLSize),
-                ZSTD_memmove!(op, litPtr, lastLLSize) as usize,
-            );
+            libc::memmove(op, litPtr, (lastLLSize) as usize);
             op = op.offset(lastLLSize as isize);
         }
         litPtr = ((*dctx).litExtraBuffer).as_mut_ptr();
@@ -4539,11 +4414,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if !op.is_null() {
-        libc::memcpy(
-            ZSTD_memcpy!(op, litPtr, lastLLSize),
-            ZSTD_memcpy!(op, litPtr, lastLLSize),
-            ZSTD_memcpy!(op, litPtr, lastLLSize) as usize,
-        );
+        libc::memcpy(op, litPtr, (lastLLSize) as usize);
         op = op.offset(lastLLSize_0 as isize);
     }
     return op.offset_from(ostart) as std::ffi::c_long as usize;
@@ -4658,11 +4529,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if !op.is_null() {
-        libc::memcpy(
-            ZSTD_memcpy!(op, litPtr, lastLLSize),
-            ZSTD_memcpy!(op, litPtr, lastLLSize),
-            ZSTD_memcpy!(op, litPtr, lastLLSize) as usize,
-        );
+        libc::memcpy(op, litPtr, (lastLLSize) as usize);
         op = op.offset(lastLLSize as isize);
     }
     return op.offset_from(ostart) as std::ffi::c_long as usize;
@@ -5059,11 +4926,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
         }
         if !op.is_null() {
-            libc::memmove(
-                ZSTD_memmove!(op, litPtr, lastLLSize),
-                ZSTD_memmove!(op, litPtr, lastLLSize),
-                ZSTD_memmove!(op, litPtr, lastLLSize) as usize,
-            );
+            libc::memmove(op, litPtr, (lastLLSize) as usize);
             op = op.offset(lastLLSize as isize);
         }
         litPtr = ((*dctx).litExtraBuffer).as_mut_ptr();
@@ -5096,11 +4959,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if !op.is_null() {
-        libc::memmove(
-            ZSTD_memmove!(op, litPtr, lastLLSize),
-            ZSTD_memmove!(op, litPtr, lastLLSize),
-            ZSTD_memmove!(op, litPtr, lastLLSize) as usize,
-        );
+        libc::memmove(op, litPtr, (lastLLSize) as usize);
         op = op.offset(lastLLSize_0 as isize);
     }
     return op.offset_from(ostart) as std::ffi::c_long as usize;

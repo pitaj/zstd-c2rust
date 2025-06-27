@@ -2347,11 +2347,7 @@ unsafe extern "C" fn HUF_decodeSymbolX2(
     dtLog: u32,
 ) -> u32 {
     let val = BIT_lookBitsFast(DStream, dtLog);
-    libc::memcpy(
-        ZSTD_memcpy!(op, & dt[val].sequence, 2),
-        ZSTD_memcpy!(op, & dt[val].sequence, 2),
-        ZSTD_memcpy!(op, & dt[val].sequence, 2) as usize,
-    );
+    libc::memcpy(op, & (*dt.offset(val as isize)).sequence, (2) as usize);
     BIT_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
     return (*dt.offset(val as isize)).length as u32;
 }
@@ -2363,11 +2359,7 @@ unsafe extern "C" fn HUF_decodeLastSymbolX2(
     dtLog: u32,
 ) -> u32 {
     let val = BIT_lookBitsFast(DStream, dtLog);
-    libc::memcpy(
-        ZSTD_memcpy!(op, & dt[val].sequence, 1),
-        ZSTD_memcpy!(op, & dt[val].sequence, 1),
-        ZSTD_memcpy!(op, & dt[val].sequence, 1) as usize,
-    );
+    libc::memcpy(op, & (*dt.offset(val as isize)).sequence, (1) as usize);
     if (*dt.offset(val as isize)).length as std::ffi::c_int == 1 {
         BIT_skipBits(DStream, (*dt.offset(val as isize)).nbBits as u32);
     } else if ((*DStream).bitsConsumed as std::ffi::c_ulong)
@@ -3762,19 +3754,11 @@ pub unsafe extern "C" fn HUF_decompress1X_DCtx_wksp(
         return ERROR(ZSTD_error_corruption_detected);
     }
     if cSrcSize == dstSize {
-        libc::memcpy(
-            ZSTD_memcpy!(dst, cSrc, dstSize),
-            ZSTD_memcpy!(dst, cSrc, dstSize),
-            ZSTD_memcpy!(dst, cSrc, dstSize) as usize,
-        );
+        libc::memcpy(dst, cSrc, (dstSize) as usize);
         return dstSize;
     }
     if cSrcSize == 1 {
-        libc::memset(
-            ZSTD_memset!(dst, * (const u8 *) cSrc, dstSize),
-            ZSTD_memset!(dst, * (const u8 *) cSrc, dstSize),
-            ZSTD_memset!(dst, * (const u8 *) cSrc, dstSize) as usize,
-        );
+        libc::memset(dst, * (const u8 *) cSrc, (dstSize) as usize);
         return dstSize;
     }
     let algoNb = HUF_selectDecoder(dstSize, cSrcSize);

@@ -172,14 +172,10 @@ unsafe extern "C" fn ZSTD_customCalloc(
     if (customMem.customAlloc).is_some() {
         let ptr = (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
-        libc::memset(
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size) as usize,
-        );
+        libc::memset(ptr, 0, (size) as usize);
         return ptr;
     }
-    return ZSTD_calloc!(1, size);
+    return libc::calloc(1, size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(

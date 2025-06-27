@@ -697,11 +697,7 @@ unsafe extern "C" fn ZSTD_noCompressBlock(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     MEM_writeLE24(dst, cBlockHeader24);
-    libc::memcpy(
-        ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize),
-        ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize),
-        ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize) as usize,
-    );
+    libc::memcpy((u8 *) dst + ZSTD_blockHeaderSize, src, (srcSize) as usize);
     return ZSTD_blockHeaderSize.wrapping_add(srcSize);
 }
 #[inline]
@@ -1097,12 +1093,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
         && (*hufMetadata).hType as std::ffi::c_uint
             == set_compressed as std::ffi::c_int as std::ffi::c_uint
     {
-        libc::memcpy(
-            ZSTD_memcpy!(op, hufMetadata -> hufDesBuffer, hufMetadata -> hufDesSize),
-            ZSTD_memcpy!(op, hufMetadata -> hufDesBuffer, hufMetadata -> hufDesSize),
-            ZSTD_memcpy!(op, hufMetadata -> hufDesBuffer, hufMetadata -> hufDesSize)
-                as usize,
-        );
+        libc::memcpy(op, (*hufMetadata).hufDesBuffer, ((*hufMetadata).hufDesSize) as usize);
         op = op.offset((*hufMetadata).hufDesSize as isize);
         cLitSize = cLitSize.wrapping_add((*hufMetadata).hufDesSize);
     }
@@ -1284,17 +1275,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
         *seqHead = (LLtype << 6)
             .wrapping_add(Offtype << 4)
             .wrapping_add(MLtype << 2) as u8;
-        libc::memcpy(
-            ZSTD_memcpy!(
-                op, fseMetadata -> fseTablesBuffer, fseMetadata -> fseTablesSize
-            ),
-            ZSTD_memcpy!(
-                op, fseMetadata -> fseTablesBuffer, fseMetadata -> fseTablesSize
-            ),
-            ZSTD_memcpy!(
-                op, fseMetadata -> fseTablesBuffer, fseMetadata -> fseTablesSize
-            ) as usize,
-        );
+        libc::memcpy(op, (*fseMetadata).fseTablesBuffer, ((*fseMetadata).fseTablesSize) as usize);
         op = op.offset((*fseMetadata).fseTablesSize as isize);
     } else {
         let repeat = set_repeat as std::ffi::c_int as u32;

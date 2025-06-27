@@ -136,11 +136,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     let Counting3 = Counting2.offset(256);
     let Counting4 = Counting3.offset(256);
     if sourceSize == 0 {
-        libc::memset(
-            ZSTD_memset!(count, 0, countSize),
-            ZSTD_memset!(count, 0, countSize),
-            ZSTD_memset!(count, 0, countSize) as usize,
-        );
+        libc::memset(count, 0, (countSize) as usize);
         *maxSymbolValuePtr = 0;
         return 0;
     }
@@ -257,11 +253,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         return ERROR(ZSTD_error_maxSymbolValue_tooSmall);
     }
     *maxSymbolValuePtr = maxSymbolValue;
-    libc::memmove(
-        ZSTD_memmove!(count, Counting1, countSize),
-        ZSTD_memmove!(count, Counting1, countSize),
-        ZSTD_memmove!(count, Counting1, countSize) as usize,
-    );
+    libc::memmove(count, Counting1, (countSize) as usize);
     return max as usize;
 }
 #[no_mangle]

@@ -1119,7 +1119,7 @@ unsafe extern "C" fn ZSTD_customMalloc(
         return (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
     }
-    return ZSTD_malloc!(size);
+    return libc::malloc(size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customCalloc(
@@ -1129,14 +1129,10 @@ unsafe extern "C" fn ZSTD_customCalloc(
     if (customMem.customAlloc).is_some() {
         let ptr = (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
-        libc::memset(
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size) as usize,
-        );
+        libc::memset(ptr, 0, (size) as usize);
         return ptr;
     }
-    return ZSTD_calloc!(1, size);
+    return libc::calloc(1, size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(
@@ -1609,17 +1605,8 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
         {
             return 1;
         }
-        libc::memset(
-            ZSTD_memset!(serialState -> ldmState.hashTable, 0, hashSize),
-            ZSTD_memset!(serialState -> ldmState.hashTable, 0, hashSize),
-            ZSTD_memset!(serialState -> ldmState.hashTable, 0, hashSize) as usize,
-        );
-        libc::memset(
-            ZSTD_memset!(serialState -> ldmState.bucketOffsets, 0, numBuckets),
-            ZSTD_memset!(serialState -> ldmState.bucketOffsets, 0, numBuckets),
-            ZSTD_memset!(serialState -> ldmState.bucketOffsets, 0, numBuckets)
-                as usize,
-        );
+        libc::memset((*serialState).ldmState.hashTable, 0, (hashSize) as usize);
+        libc::memset((*serialState).ldmState.bucketOffsets, 0, (numBuckets) as usize);
         (*serialState).ldmState.loadedDictEnd = 0;
         if dictSize > 0 {
             if dictContentType as std::ffi::c_uint
@@ -2905,23 +2892,8 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
             cSize - (*mtctx).(*jobs.offset(wJobID as isize)).dstFlushed, (*output).size - (*output).pos
         );
         if toFlush > 0 {
-            libc::memcpy(
-                ZSTD_memcpy!(
-                    (char *) output -> dst + output -> pos, (const char *) mtctx ->
-                    jobs[wJobID].dstBuff.start + mtctx -> jobs[wJobID].dstFlushed,
-                    toFlush
-                ),
-                ZSTD_memcpy!(
-                    (char *) output -> dst + output -> pos, (const char *) mtctx ->
-                    jobs[wJobID].dstBuff.start + mtctx -> jobs[wJobID].dstFlushed,
-                    toFlush
-                ),
-                ZSTD_memcpy!(
-                    (char *) output -> dst + output -> pos, (const char *) mtctx ->
-                    jobs[wJobID].dstBuff.start + mtctx -> jobs[wJobID].dstFlushed,
-                    toFlush
-                ) as usize,
-            );
+            libc::memcpy((char *) (*output).dst + (*output).pos, (const char *) mtctx ->
+                    jobs[wJobID].dstBuff.start + mtctx -> jobs[wJobID].dstFlushed, (toFlush) as usize);
         }
         (*output).pos = ((*output).pos).wrapping_add(toFlush);
         let ref mut fresh18 = (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed;
@@ -3080,12 +3052,7 @@ unsafe extern "C" fn ZSTDMT_tryGetInputRange(
             return 0;
         }
         ZSTDMT_waitForLdmComplete(mtctx, buffer);
-        libc::memmove(
-            ZSTD_memmove!(start, mtctx -> inBuff.prefix.start, prefixSize),
-            ZSTD_memmove!(start, mtctx -> inBuff.prefix.start, prefixSize),
-            ZSTD_memmove!(start, mtctx -> inBuff.prefix.start, prefixSize)
-                as usize,
-        );
+        libc::memmove(start, (*mtctx).inBuff.prefix.start, (prefixSize) as usize);
         (*mtctx).inBuff.prefix.start = start as *const std::ffi::c_void;
         (*mtctx).roundBuff.pos = prefixSize;
     }
@@ -3224,20 +3191,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
             {
                 endOp = ZSTD_e_flush;
             }
-            libc::memcpy(
-                ZSTD_memcpy!(
-                    (char *) mtctx -> inBuff.buffer.start + mtctx -> inBuff.filled,
-                    (const char *) input -> src + input -> pos, syncPoint.toLoad
-                ),
-                ZSTD_memcpy!(
-                    (char *) mtctx -> inBuff.buffer.start + mtctx -> inBuff.filled,
-                    (const char *) input -> src + input -> pos, syncPoint.toLoad
-                ),
-                ZSTD_memcpy!(
-                    (char *) mtctx -> inBuff.buffer.start + mtctx -> inBuff.filled,
-                    (const char *) input -> src + input -> pos, syncPoint.toLoad
-                ) as usize,
-            );
+            libc::memcpy((char *) (*mtctx).inBuff.buffer.start + (*mtctx).inBuff.filled, (const char *) (*input).src + input -> pos, (syncPoint.toLoad) as usize);
             (*input).pos = ((*input).pos).wrapping_add(syncPoint.toLoad);
             (*mtctx)
                 .inBuff

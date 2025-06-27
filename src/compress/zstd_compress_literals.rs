@@ -226,11 +226,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
         }
         _ => {}
     }
-    libc::memcpy(
-        ZSTD_memcpy!(ostart + flSize, src, srcSize),
-        ZSTD_memcpy!(ostart + flSize, src, srcSize),
-        ZSTD_memcpy!(ostart + flSize, src, srcSize) as usize,
-    );
+    libc::memcpy(ostart + flSize, src, (srcSize) as usize);
     return srcSize.wrapping_add(flSize as usize);
 }
 unsafe extern "C" fn allBytesIdentical(

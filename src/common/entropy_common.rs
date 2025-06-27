@@ -162,11 +162,7 @@ unsafe extern "C" fn FSE_readNCount_body(
             0,
             0,
         ];
-        libc::memcpy(
-            ZSTD_memcpy!(buffer, headerBuffer, hbSize),
-            ZSTD_memcpy!(buffer, headerBuffer, hbSize),
-            ZSTD_memcpy!(buffer, headerBuffer, hbSize) as usize,
-        );
+        libc::memcpy(buffer, headerBuffer, (hbSize) as usize);
         let countSize = FSE_readNCount(
             normalizedCounter,
             maxSVPtr,

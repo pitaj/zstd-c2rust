@@ -1008,11 +1008,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
             return 1;
         }
         3 => {
-            libc::memcpy(
-                ZSTD_memcpy!(nextCTable, prevCTable, prevCTableSize),
-                ZSTD_memcpy!(nextCTable, prevCTable, prevCTableSize),
-                ZSTD_memcpy!(nextCTable, prevCTable, prevCTableSize) as usize,
-            );
+            libc::memcpy(nextCTable, prevCTable, (prevCTableSize) as usize);
             return 0;
         }
         0 => {

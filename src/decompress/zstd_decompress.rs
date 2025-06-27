@@ -946,11 +946,7 @@ unsafe extern "C" fn ZSTD_limitCopy(
 ) -> usize {
     let length = std::cmp::min(dstCapacity, srcSize);
     if length > 0 {
-        libc::memcpy(
-            ZSTD_memcpy!(dst, src, length),
-            ZSTD_memcpy!(dst, src, length),
-            ZSTD_memcpy!(dst, src, length) as usize,
-        );
+        libc::memcpy(dst, src, (length) as usize);
     }
     return length;
 }
@@ -971,7 +967,7 @@ unsafe extern "C" fn ZSTD_customMalloc(
         return (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
     }
-    return ZSTD_malloc!(size);
+    return libc::malloc(size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customCalloc(
@@ -981,14 +977,10 @@ unsafe extern "C" fn ZSTD_customCalloc(
     if (customMem.customAlloc).is_some() {
         let ptr = (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
-        libc::memset(
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size) as usize,
-        );
+        libc::memset(ptr, 0, (size) as usize);
         return ptr;
     }
-    return ZSTD_calloc!(1, size);
+    return libc::calloc(1, size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(
@@ -1728,11 +1720,7 @@ pub unsafe extern "C" fn ZSTD_copyDCtx(
     let toCopy = (&mut (*dstDCtx).inBuff as *mut *mut std::ffi::c_char
         as *mut std::ffi::c_char)
         .offset_from(dstDCtx as *mut std::ffi::c_char) as std::ffi::c_long as usize;
-    libc::memcpy(
-        ZSTD_memcpy!(dstDCtx, srcDCtx, toCopy),
-        ZSTD_memcpy!(dstDCtx, srcDCtx, toCopy),
-        ZSTD_memcpy!(dstDCtx, srcDCtx, toCopy) as usize,
-    );
+    libc::memcpy(dstDCtx, srcDCtx, (toCopy) as usize);
 }
 unsafe extern "C" fn ZSTD_DCtx_selectFrameDDict(mut dctx: *mut ZSTD_DCtx) {
     if !((*dctx).ddict).is_null() {
@@ -1836,11 +1824,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
             let toCopy = std::cmp::min(4, srcSize);
             let mut hbuf: [std::ffi::c_uchar; 4] = [0; 4];
             MEM_writeLE32(hbuf.as_mut_ptr() as *mut std::ffi::c_void, ZSTD_MAGICNUMBER);
-            libc::memcpy(
-                ZSTD_memcpy!(hbuf, src, toCopy),
-                ZSTD_memcpy!(hbuf, src, toCopy),
-                ZSTD_memcpy!(hbuf, src, toCopy) as usize,
-            );
+            libc::memcpy(hbuf, src, (toCopy) as usize);
             if MEM_readLE32(hbuf.as_mut_ptr() as *const std::ffi::c_void)
                 != ZSTD_MAGICNUMBER
             {
@@ -1848,11 +1832,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
                     hbuf.as_mut_ptr() as *mut std::ffi::c_void,
                     ZSTD_MAGIC_SKIPPABLE_START as u32,
                 );
-                libc::memcpy(
-                    ZSTD_memcpy!(hbuf, src, toCopy),
-                    ZSTD_memcpy!(hbuf, src, toCopy),
-                    ZSTD_memcpy!(hbuf, src, toCopy) as usize,
-                );
+                libc::memcpy(hbuf, src, (toCopy) as usize);
                 if MEM_readLE32(hbuf.as_mut_ptr() as *const std::ffi::c_void)
                     & ZSTD_MAGIC_SKIPPABLE_MASK
                     != ZSTD_MAGIC_SKIPPABLE_START as std::ffi::c_uint
@@ -2084,17 +2064,7 @@ pub unsafe extern "C" fn ZSTD_readSkippableFrame(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if skippableContentSize > 0 && !dst.is_null() {
-        libc::memcpy(
-            ZSTD_memcpy!(
-                dst, (const u8 *) src + ZSTD_SKIPPABLEHEADERSIZE, skippableContentSize
-            ),
-            ZSTD_memcpy!(
-                dst, (const u8 *) src + ZSTD_SKIPPABLEHEADERSIZE, skippableContentSize
-            ),
-            ZSTD_memcpy!(
-                dst, (const u8 *) src + ZSTD_SKIPPABLEHEADERSIZE, skippableContentSize
-            ) as usize,
-        );
+        libc::memcpy(dst, (const u8 *) src + ZSTD_SKIPPABLEHEADERSIZE, (skippableContentSize) as usize);
     }
     if !magicVariant.is_null() {
         *magicVariant = magicNumber.wrapping_sub(ZSTD_MAGIC_SKIPPABLE_START as u32);
@@ -2423,11 +2393,7 @@ unsafe extern "C" fn ZSTD_copyRawBlock(
         }
         return -(ZSTD_error_dstBuffer_null as std::ffi::c_int) as usize;
     }
-    libc::memmove(
-        ZSTD_memmove!(dst, src, srcSize),
-        ZSTD_memmove!(dst, src, srcSize),
-        ZSTD_memmove!(dst, src, srcSize) as usize,
-    );
+    libc::memmove(dst, src, (srcSize) as usize);
     return srcSize;
 }
 unsafe extern "C" fn ZSTD_setRleBlock(
@@ -2445,11 +2411,7 @@ unsafe extern "C" fn ZSTD_setRleBlock(
         }
         return -(ZSTD_error_dstBuffer_null as std::ffi::c_int) as usize;
     }
-    libc::memset(
-        ZSTD_memset!(dst, b, regenSize),
-        ZSTD_memset!(dst, b, regenSize),
-        ZSTD_memset!(dst, b, regenSize) as usize,
-    );
+    libc::memset(dst, b, (regenSize) as usize);
     return regenSize;
 }
 unsafe extern "C" fn ZSTD_DCtx_trace_end(
@@ -2924,11 +2886,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
                 if MEM_readLE32(src) & ZSTD_MAGIC_SKIPPABLE_MASK
                     == ZSTD_MAGIC_SKIPPABLE_START as std::ffi::c_uint
                 {
-                    libc::memcpy(
-                        ZSTD_memcpy!(dctx -> headerBuffer, src, srcSize),
-                        ZSTD_memcpy!(dctx -> headerBuffer, src, srcSize),
-                        ZSTD_memcpy!(dctx -> headerBuffer, src, srcSize) as usize,
-                    );
+                    libc::memcpy((*dctx).headerBuffer, src, (srcSize) as usize);
                     (*dctx)
                         .expected = (ZSTD_SKIPPABLEHEADERSIZE as usize)
                         .wrapping_sub(srcSize);
@@ -2945,27 +2903,13 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
             if ERR_isError((*dctx).headerSize) != 0 {
                 return (*dctx).headerSize;
             }
-            libc::memcpy(
-                ZSTD_memcpy!(dctx -> headerBuffer, src, srcSize),
-                ZSTD_memcpy!(dctx -> headerBuffer, src, srcSize),
-                ZSTD_memcpy!(dctx -> headerBuffer, src, srcSize) as usize,
-            );
+            libc::memcpy((*dctx).headerBuffer, src, (srcSize) as usize);
             (*dctx).expected = ((*dctx).headerSize).wrapping_sub(srcSize);
             (*dctx).stage = ZSTDds_decodeFrameHeader;
             return 0;
         }
         1 => {
-            libc::memcpy(
-                ZSTD_memcpy!(
-                    dctx -> headerBuffer + (dctx -> headerSize - srcSize), src, srcSize
-                ),
-                ZSTD_memcpy!(
-                    dctx -> headerBuffer + (dctx -> headerSize - srcSize), src, srcSize
-                ),
-                ZSTD_memcpy!(
-                    dctx -> headerBuffer + (dctx -> headerSize - srcSize), src, srcSize
-                ) as usize,
-            );
+            libc::memcpy((*dctx).headerBuffer + ((*dctx).headerSize - srcSize), src, (srcSize) as usize);
             let err_code = FORWARD_IF_ERROR!(
                 ZSTD_decodeFrameHeader(dctx, dctx -> headerBuffer, dctx -> headerSize),
                 ""
@@ -3129,20 +3073,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
             return 0;
         }
         6 => {
-            libc::memcpy(
-                ZSTD_memcpy!(
-                    dctx -> headerBuffer + (ZSTD_SKIPPABLEHEADERSIZE - srcSize), src,
-                    srcSize
-                ),
-                ZSTD_memcpy!(
-                    dctx -> headerBuffer + (ZSTD_SKIPPABLEHEADERSIZE - srcSize), src,
-                    srcSize
-                ),
-                ZSTD_memcpy!(
-                    dctx -> headerBuffer + (ZSTD_SKIPPABLEHEADERSIZE - srcSize), src,
-                    srcSize
-                ) as usize,
-            );
+            libc::memcpy((*dctx).headerBuffer + (ZSTD_SKIPPABLEHEADERSIZE - srcSize), src, (srcSize) as usize);
             (*dctx)
                 .expected = MEM_readLE32(
                 ((*dctx).headerBuffer).as_mut_ptr().offset(ZSTD_FRAMEIDSIZE as isize)
@@ -4319,17 +4250,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                         as usize;
                     if toLoad > remainingInput {
                         if remainingInput > 0 {
-                            libc::memcpy(
-                                ZSTD_memcpy!(
-                                    zds -> headerBuffer + zds -> lhSize, ip, remainingInput
-                                ),
-                                ZSTD_memcpy!(
-                                    zds -> headerBuffer + zds -> lhSize, ip, remainingInput
-                                ),
-                                ZSTD_memcpy!(
-                                    zds -> headerBuffer + zds -> lhSize, ip, remainingInput
-                                ) as usize,
-                            );
+                            libc::memcpy((*zds).headerBuffer + (*zds).lhSize, ip, (remainingInput) as usize);
                             (*zds).lhSize = ((*zds).lhSize).wrapping_add(remainingInput);
                         }
                         (*input).pos = (*input).size;
@@ -4356,12 +4277,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             .wrapping_sub((*zds).lhSize)
                             .wrapping_add(ZSTD_blockHeaderSize);
                     }
-                    libc::memcpy(
-                        ZSTD_memcpy!(zds -> headerBuffer + zds -> lhSize, ip, toLoad),
-                        ZSTD_memcpy!(zds -> headerBuffer + zds -> lhSize, ip, toLoad),
-                        ZSTD_memcpy!(zds -> headerBuffer + zds -> lhSize, ip, toLoad)
-                            as usize,
-                    );
+                    libc::memcpy((*zds).headerBuffer + (*zds).lhSize, ip, (toLoad) as usize);
                     (*zds).lhSize = hSize;
                     ip = ip.offset(toLoad as isize);
                     current_block_402 = 7792909578691485565;

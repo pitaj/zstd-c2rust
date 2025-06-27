@@ -280,7 +280,7 @@ unsafe extern "C" fn ZSTD_customMalloc(
         return (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
     }
-    return ZSTD_malloc!(size);
+    return libc::malloc(size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(
@@ -413,11 +413,7 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
         if internalBuffer.is_null() {
             return ERROR(ZSTD_error_memory_allocation);
         }
-        libc::memcpy(
-            ZSTD_memcpy!(internalBuffer, dict, dictSize),
-            ZSTD_memcpy!(internalBuffer, dict, dictSize),
-            ZSTD_memcpy!(internalBuffer, dict, dictSize) as usize,
-        );
+        libc::memcpy(internalBuffer, dict, (dictSize) as usize);
     }
     (*ddict).dictSize = dictSize;
     (*ddict)
@@ -548,11 +544,7 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
     if dictLoadMethod as std::ffi::c_uint
         == ZSTD_dlm_byCopy as std::ffi::c_int as std::ffi::c_uint
     {
-        libc::memcpy(
-            ZSTD_memcpy!(ddict + 1, dict, dictSize),
-            ZSTD_memcpy!(ddict + 1, dict, dictSize),
-            ZSTD_memcpy!(ddict + 1, dict, dictSize) as usize,
-        );
+        libc::memcpy(ddict + 1, dict, (dictSize) as usize);
         dict = ddict.offset(1) as *const std::ffi::c_void;
     }
     if ERR_isError(

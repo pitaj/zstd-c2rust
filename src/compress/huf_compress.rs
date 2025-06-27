@@ -309,7 +309,7 @@ unsafe extern "C" fn HUF_compressWeights(
     let mut wksp = HUF_alignUpWorkspace(
         workspace,
         &mut workspaceSize,
-        ZSTD_ALIGNOF!(u32),
+        std::mem::align_of::<u32>(),
     ) as *mut HUF_CompressWeightsWksp;
     if workspaceSize
         < ::core::mem::size_of::<HUF_CompressWeightsWksp>()
@@ -469,7 +469,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
     let mut wksp = HUF_alignUpWorkspace(
         workspace,
         &mut workspaceSize,
-        ZSTD_ALIGNOF!(u32),
+        std::mem::align_of::<u32>(),
     ) as *mut HUF_WriteCTableWksp;
     if workspaceSize < ::core::mem::size_of::<HUF_WriteCTableWksp>()
     {
@@ -938,12 +938,7 @@ unsafe extern "C" fn HUF_sort(
 ) {
     let mut n: u32 = 0;
     let maxSymbolValue1 = maxSymbolValue.wrapping_add(1);
-    libc::memset(
-        ZSTD_memset!(rankPosition, 0, sizeof(* rankPosition) * RANK_POSITION_TABLE_SIZE),
-        ZSTD_memset!(rankPosition, 0, sizeof(* rankPosition) * RANK_POSITION_TABLE_SIZE),
-        ZSTD_memset!(rankPosition, 0, sizeof(* rankPosition) * RANK_POSITION_TABLE_SIZE)
-            as usize,
-    );
+    libc::memset(rankPosition, 0, (sizeof(* rankPosition) * RANK_POSITION_TABLE_SIZE) as usize);
     n = 0;
     while n < maxSymbolValue1 {
         let mut lowerRank = HUF_getIndex(*count.offset(n as isize));
@@ -1175,7 +1170,7 @@ pub unsafe extern "C" fn HUF_buildCTable_wksp(
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) -> usize {
-    let wksp_tables = HUF_alignUpWorkspace(workSpace, &mut wkspSize, ZSTD_ALIGNOF!(u32))
+    let wksp_tables = HUF_alignUpWorkspace(workSpace, &mut wkspSize, std::mem::align_of::<u32>())
         as *mut HUF_buildCTable_wksp_tables;
     let huffNode0 = ((*wksp_tables).huffNodeTbl).as_mut_ptr();
     let huffNode = huffNode0.offset(1);
@@ -1981,7 +1976,7 @@ unsafe extern "C" fn HUF_compress_internal(
     mut repeat: *mut HUF_repeat,
     mut flags: std::ffi::c_int,
 ) -> usize {
-    let table = HUF_alignUpWorkspace(workSpace, &mut wkspSize, ZSTD_ALIGNOF!(usize))
+    let table = HUF_alignUpWorkspace(workSpace, &mut wkspSize, std::mem::align_of::<usize>())
         as *mut HUF_compress_tables_t;
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);

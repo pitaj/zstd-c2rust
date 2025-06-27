@@ -1658,11 +1658,7 @@ unsafe extern "C" fn ZSTD_noCompressBlock(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     MEM_writeLE24(dst, cBlockHeader24);
-    libc::memcpy(
-        ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize),
-        ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize),
-        ZSTD_memcpy!((u8 *) dst + ZSTD_blockHeaderSize, src, srcSize) as usize,
-    );
+    libc::memcpy((u8 *) dst + ZSTD_blockHeaderSize, src, (srcSize) as usize);
     return ZSTD_blockHeaderSize.wrapping_add(srcSize);
 }
 #[inline]
@@ -2470,11 +2466,7 @@ unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
 ) {
-    libc::memcpy(
-        ZSTD_memcpy!(dst, src, 8),
-        ZSTD_memcpy!(dst, src, 8),
-        ZSTD_memcpy!(dst, src, 8) as usize,
-    );
+    libc::memcpy(dst, src, (8) as usize);
 }
 unsafe extern "C" fn ZSTD_copy16(
     mut dst: *mut std::ffi::c_void,
@@ -2537,11 +2529,7 @@ unsafe extern "C" fn ZSTD_limitCopy(
 ) -> usize {
     let length = std::cmp::min(dstCapacity, srcSize);
     if length > 0 {
-        libc::memcpy(
-            ZSTD_memcpy!(dst, src, length),
-            ZSTD_memcpy!(dst, src, length),
-            ZSTD_memcpy!(dst, src, length) as usize,
-        );
+        libc::memcpy(dst, src, (length) as usize);
     }
     return length;
 }
@@ -2944,7 +2932,7 @@ unsafe extern "C" fn ZSTD_customMalloc(
         return (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
     }
-    return ZSTD_malloc!(size);
+    return libc::malloc(size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customCalloc(
@@ -2954,14 +2942,10 @@ unsafe extern "C" fn ZSTD_customCalloc(
     if (customMem.customAlloc).is_some() {
         let ptr = (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
-        libc::memset(
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size),
-            ZSTD_memset!(ptr, 0, size) as usize,
-        );
+        libc::memset(ptr, 0, (size) as usize);
         return ptr;
     }
-    return ZSTD_calloc!(1, size);
+    return libc::calloc(1, size);
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(
@@ -5010,11 +4994,7 @@ pub unsafe extern "C" fn ZSTD_CCtx_loadDictionary_advanced(
         if dictBuffer.is_null() {
             return -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
         }
-        libc::memcpy(
-            ZSTD_memcpy!(dictBuffer, dict, dictSize),
-            ZSTD_memcpy!(dictBuffer, dict, dictSize),
-            ZSTD_memcpy!(dictBuffer, dict, dictSize) as usize,
-        );
+        libc::memcpy(dictBuffer, dict, (dictSize) as usize);
         (*cctx).localDict.dictBuffer = dictBuffer;
         (*cctx).localDict.dict = dictBuffer;
     }
@@ -6000,11 +5980,7 @@ unsafe extern "C" fn ZSTD_reset_matchState(
             ZSTD_advanceHashSalt(ms);
         } else {
             (*ms).tagTable = ZSTD_cwksp_reserve_aligned64(ws, tagTableSize) as *mut u8;
-            libc::memset(
-                ZSTD_memset!(ms -> tagTable, 0, tagTableSize),
-                ZSTD_memset!(ms -> tagTable, 0, tagTableSize),
-                ZSTD_memset!(ms -> tagTable, 0, tagTableSize) as usize,
-            );
+            libc::memset((*ms).tagTable, 0, (tagTableSize) as usize);
             (*ms).hashSalt = 0;
         }
         let rowLog = BOUNDED!(4, cParams -> searchLog, 6);
@@ -6405,11 +6381,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
             << ((*params).ldmParams.hashLog)
                 .wrapping_sub((*params).ldmParams.bucketSizeLog);
         (*zc).ldmState.bucketOffsets = ZSTD_cwksp_reserve_buffer(ws, numBuckets);
-        libc::memset(
-            ZSTD_memset!(zc -> ldmState.bucketOffsets, 0, numBuckets),
-            ZSTD_memset!(zc -> ldmState.bucketOffsets, 0, numBuckets),
-            ZSTD_memset!(zc -> ldmState.bucketOffsets, 0, numBuckets) as usize,
-        );
+        libc::memset((*zc).ldmState.bucketOffsets, 0, (numBuckets) as usize);
     }
     ZSTD_referenceExternalSequences(
         zc,
@@ -6637,20 +6609,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_byCopyingCDict(
         != 0
     {
         let tagTableSize = hSize;
-        libc::memcpy(
-            ZSTD_memcpy!(
-                cctx -> blockState.matchState.tagTable, cdict -> matchState.tagTable,
-                tagTableSize
-            ),
-            ZSTD_memcpy!(
-                cctx -> blockState.matchState.tagTable, cdict -> matchState.tagTable,
-                tagTableSize
-            ),
-            ZSTD_memcpy!(
-                cctx -> blockState.matchState.tagTable, cdict -> matchState.tagTable,
-                tagTableSize
-            ) as usize,
-        );
+        libc::memcpy((*cctx).blockState.matchState.tagTable, (*cdict).matchState.tagTable, (tagTableSize) as usize);
         (*cctx).blockState.matchState.hashSalt = (*cdict).matchState.hashSalt;
     }
     let h3log = (*cctx).blockState.matchState.hashLog3;
@@ -7547,11 +7506,7 @@ unsafe extern "C" fn ZSTD_storeLastLiterals(
     mut anchor: *const u8,
     mut lastLLSize: usize,
 ) {
-    libc::memcpy(
-        ZSTD_memcpy!(seqStorePtr -> lit, anchor, lastLLSize),
-        ZSTD_memcpy!(seqStorePtr -> lit, anchor, lastLLSize),
-        ZSTD_memcpy!(seqStorePtr -> lit, anchor, lastLLSize) as usize,
-    );
+    libc::memcpy((*seqStorePtr).lit, anchor, (lastLLSize) as usize);
     (*seqStorePtr).lit = ((*seqStorePtr).lit).offset(lastLLSize as isize);
 }
 #[no_mangle]
@@ -9728,11 +9683,7 @@ pub unsafe extern "C" fn ZSTD_writeSkippableFrame(
         op.offset(4) as *mut std::ffi::c_void,
         srcSize as u32,
     );
-    libc::memcpy(
-        ZSTD_memcpy!(op + 8, src, srcSize),
-        ZSTD_memcpy!(op + 8, src, srcSize),
-        ZSTD_memcpy!(op + 8, src, srcSize) as usize,
-    );
+    libc::memcpy(op + 8, src, (srcSize) as usize);
     return srcSize.wrapping_add(ZSTD_SKIPPABLEHEADERSIZE as usize);
 }
 #[no_mangle]
@@ -10051,11 +10002,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
             {
                 let tagTableSize = 1_usize
                     << (*params).cParams.hashLog;
-                libc::memset(
-                    ZSTD_memset!(ms -> tagTable, 0, tagTableSize),
-                    ZSTD_memset!(ms -> tagTable, 0, tagTableSize),
-                    ZSTD_memset!(ms -> tagTable, 0, tagTableSize) as usize,
-                );
+                libc::memset((*ms).tagTable, 0, (tagTableSize) as usize);
                 ZSTD_row_update(ms, iend.offset(-(HASH_READ_SIZE as isize)));
             } else {
                 ZSTD_insertAndFindFirstIndex(
@@ -11509,11 +11456,7 @@ unsafe extern "C" fn ZSTD_initCDict_internal(
             return -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
         }
         (*cdict).dictContent = internalBuffer;
-        libc::memcpy(
-            ZSTD_memcpy!(internalBuffer, dictBuffer, dictSize),
-            ZSTD_memcpy!(internalBuffer, dictBuffer, dictSize),
-            ZSTD_memcpy!(internalBuffer, dictBuffer, dictSize) as usize,
-        );
+        libc::memcpy(internalBuffer, dictBuffer, (dictSize) as usize);
     }
     (*cdict).dictContentSize = dictSize;
     (*cdict).dictContentType = dictContentType;
