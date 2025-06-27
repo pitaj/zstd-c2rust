@@ -491,7 +491,7 @@ unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint 
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_int as std::ffi::c_uint)
+    return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 pub const STREAM_ACCUMULATOR_MIN_32: std::ffi::c_int = 25 as std::ffi::c_int;
@@ -529,7 +529,7 @@ unsafe extern "C" fn BIT_initDStream(
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
             .bitsConsumed = if lastByte as std::ffi::c_int != 0 {
-            (8 as std::ffi::c_int as std::ffi::c_uint)
+            (8 as std::ffi::c_uint)
                 .wrapping_sub(ZSTD_highbit32(lastByte as u32))
         } else {
             0 as std::ffi::c_int as std::ffi::c_uint
@@ -648,7 +648,7 @@ unsafe extern "C" fn BIT_initDStream(
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
             .bitsConsumed = if lastByte_0 as std::ffi::c_int != 0 {
-            (8 as std::ffi::c_int as std::ffi::c_uint)
+            (8 as std::ffi::c_uint)
                 .wrapping_sub(ZSTD_highbit32(lastByte_0 as u32))
         } else {
             0 as std::ffi::c_int as std::ffi::c_uint

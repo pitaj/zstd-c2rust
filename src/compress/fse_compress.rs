@@ -128,7 +128,7 @@ unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint 
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_int as std::ffi::c_uint)
+    return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 static mut BIT_mask: [std::ffi::c_uint; 32] = [
@@ -256,7 +256,7 @@ unsafe extern "C" fn FSE_initCState(
     let mut ptr = ct as *const std::ffi::c_void;
     let mut u16ptr = ptr as *const u16;
     let tableLog = MEM_read16(ptr) as u32;
-    (*statePtr).value = (1 as std::ffi::c_int as ptrdiff_t) << tableLog;
+    (*statePtr).value = (1 as ptrdiff_t) << tableLog;
     (*statePtr)
         .stateTable = u16ptr.offset(2)
         as *const std::ffi::c_void;
@@ -934,7 +934,7 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     } else {
         1 as std::ffi::c_int
     }) as std::ffi::c_short;
-    let scale = (62 as std::ffi::c_int as std::ffi::c_uint).wrapping_sub(tableLog)
+    let scale = (62 as std::ffi::c_uint).wrapping_sub(tableLog)
         as u64;
     let step = ZSTD_div64!((u64) 1 << 62, (u32) total);
     let vStep = ((1 as std::ffi::c_ulonglong)

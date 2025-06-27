@@ -3020,7 +3020,7 @@ unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_int as std::ffi::c_uint)
+    return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 #[inline]
@@ -3458,7 +3458,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCCtx(
             8208 as std::ffi::c_int as std::ffi::c_ulong
         })
             .wrapping_add(
-                (2 as std::ffi::c_int as std::ffi::c_ulong)
+                (2 as std::ffi::c_ulong)
                     .wrapping_mul(
                         ::core::mem::size_of::<ZSTD_compressedBlockState_t>()
                             as std::ffi::c_ulong,

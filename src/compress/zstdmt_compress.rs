@@ -1169,7 +1169,7 @@ unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint 
 }
 #[inline]
 unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_int as std::ffi::c_uint)
+    return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
 pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
@@ -2226,7 +2226,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
     (*mtctx).allJobsCompleted = 1 as std::ffi::c_int as std::ffi::c_uint;
     if !pool.is_null() {
         (*mtctx).factory = pool;
-        (*mtctx).set_providedFactory(1 as std::ffi::c_int as std::ffi::c_uint);
+        (*mtctx).set_providedFactory(1 as std::ffi::c_uint);
     } else {
         (*mtctx)
             .factory = POOL_create_advanced(
@@ -2234,7 +2234,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
             0 as std::ffi::c_int as usize,
             cMem,
         );
-        (*mtctx).set_providedFactory(0 as std::ffi::c_int as std::ffi::c_uint);
+        (*mtctx).set_providedFactory(0 as std::ffi::c_uint);
     }
     (*mtctx).jobs = ZSTDMT_createJobsTable(&mut nbJobs, cMem);
     (*mtctx).jobIDMask = nbJobs.wrapping_sub(1);

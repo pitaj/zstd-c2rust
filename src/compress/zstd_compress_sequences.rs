@@ -301,7 +301,7 @@ unsafe extern "C" fn FSE_initCState(
     let mut ptr = ct as *const std::ffi::c_void;
     let mut u16ptr = ptr as *const u16;
     let tableLog = MEM_read16(ptr) as u32;
-    (*statePtr).value = (1 as std::ffi::c_int as ptrdiff_t) << tableLog;
+    (*statePtr).value = (1 as ptrdiff_t) << tableLog;
     (*statePtr)
         .stateTable = u16ptr.offset(2)
         as *const std::ffi::c_void;
@@ -811,7 +811,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
     let mut s: std::ffi::c_uint = 0;
     s = 0 as std::ffi::c_int as std::ffi::c_uint;
     while s <= max {
-        let mut norm = ((256 as std::ffi::c_int as std::ffi::c_uint)
+        let mut norm = ((256 as std::ffi::c_uint)
             .wrapping_mul(*count.offset(s as isize)) as usize / total)
             as std::ffi::c_uint;
         if *count.offset(s as isize) != 0 as std::ffi::c_int as std::ffi::c_uint
@@ -873,7 +873,7 @@ pub unsafe extern "C" fn ZSTD_crossEntropyCost(
     mut count: *const std::ffi::c_uint,
     max: std::ffi::c_uint,
 ) -> usize {
-    let shift = (8 as std::ffi::c_int as std::ffi::c_uint).wrapping_sub(accuracyLog);
+    let shift = (8 as std::ffi::c_uint).wrapping_sub(accuracyLog);
     let mut cost: usize = 0;
     let mut s: std::ffi::c_uint = 0;
     s = 0 as std::ffi::c_int as std::ffi::c_uint;
@@ -923,7 +923,7 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
     {
         if isDefaultAllowed as u64 != 0 {
             let staticFse_nbSeq_max = 1000 as std::ffi::c_int as usize;
-            let mult = (10 as std::ffi::c_int as std::ffi::c_uint)
+            let mult = (10 as std::ffi::c_uint)
                 .wrapping_sub(strategy as std::ffi::c_uint) as usize;
             let baseLog = 3 as std::ffi::c_int as usize;
             let dynamicFse_nbSeq_min = (1_usize
