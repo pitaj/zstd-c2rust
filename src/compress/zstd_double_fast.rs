@@ -439,7 +439,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
     mut ptr: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash4(MEM_readLE32(ptr), h, 0 as u32) as usize;
+    return ZSTD_hash4(MEM_readLE32(ptr), h, 0) as usize;
 }
 static mut prime5bytes: u64 = 889523592379;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -450,7 +450,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash5(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash5(MEM_readLE64(p), h, 0);
 }
 static mut prime6bytes: u64 = 227718039650203;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -461,7 +461,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash6(MEM_readLE64(p), h, 0);
 }
 static mut prime7bytes: u64 = 58295818150454627;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -472,7 +472,7 @@ unsafe extern "C" fn ZSTD_hash7Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash7(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash7(MEM_readLE64(p), h, 0);
 }
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -482,7 +482,7 @@ unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash8(MEM_readLE64(p), h, 0);
 }
 #[inline(always)]
 unsafe extern "C" fn ZSTD_hashPtr(

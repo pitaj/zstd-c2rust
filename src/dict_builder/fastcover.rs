@@ -341,7 +341,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash6(MEM_readLE64(p), h, 0);
 }
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
@@ -351,7 +351,7 @@ unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
     mut h: u32,
 ) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0 as u64);
+    return ZSTD_hash8(MEM_readLE64(p), h, 0);
 }
 pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
@@ -1432,7 +1432,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         return ERROR!(dstSize_tooSmall);
     }
     if nbThreads > 1 {
-        pool = POOL_create(nbThreads as usize, 1 as usize);
+        pool = POOL_create(nbThreads as usize, 1);
         if pool.is_null() {
             return ERROR!(memory_allocation);
         }

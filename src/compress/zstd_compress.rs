@@ -5909,8 +5909,8 @@ unsafe extern "C" fn ZSTD_invalidateMatchState(mut ms: *mut ZSTD_MatchState_t) {
 }
 unsafe extern "C" fn ZSTD_bitmix(mut val: u64, mut len: u64) -> u64 {
     val
-        ^= ZSTD_rotateRight_U64(val, 49 as u32)
-            ^ ZSTD_rotateRight_U64(val, 24 as u32);
+        ^= ZSTD_rotateRight_U64(val, 49)
+            ^ ZSTD_rotateRight_U64(val, 24);
     val = (val as std::ffi::c_ulonglong)
         .wrapping_mul(0x9fb21c651e98df25 as std::ffi::c_ulonglong) as u64 as u64;
     val ^= (val >> 35).wrapping_add(len);
@@ -5920,8 +5920,8 @@ unsafe extern "C" fn ZSTD_bitmix(mut val: u64, mut len: u64) -> u64 {
 }
 unsafe extern "C" fn ZSTD_advanceHashSalt(mut ms: *mut ZSTD_MatchState_t) {
     (*ms)
-        .hashSalt = ZSTD_bitmix((*ms).hashSalt, 8 as u64)
-        ^ ZSTD_bitmix((*ms).hashSaltEntropy as u64, 4 as u64);
+        .hashSalt = ZSTD_bitmix((*ms).hashSalt, 8)
+        ^ ZSTD_bitmix((*ms).hashSaltEntropy as u64, 4);
 }
 unsafe extern "C" fn ZSTD_reset_matchState(
     mut ms: *mut ZSTD_MatchState_t,
@@ -6203,7 +6203,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
         return FORWARD_IF_ERROR!(neededSpace, "cctx size estimate failed!");
     }
     if (*zc).staticSize == 0 {
-        ZSTD_cwksp_bump_oversized_duration(ws, 0 as usize);
+        ZSTD_cwksp_bump_oversized_duration(ws, 0);
     }
     let workspaceTooSmall = (ZSTD_cwksp_sizeof(ws) < neededSpace) as std::ffi::c_int;
     let workspaceWasteful = ZSTD_cwksp_check_wasteful(ws, neededSpace);
@@ -6324,7 +6324,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
         (*zc).appliedParams.fParams.contentSizeFlag = 0;
     }
     (*zc).blockSizeMax = blockSize;
-    ZSTD_XXH64_reset(&mut (*zc).xxhState, 0 as XXH64_hash_t);
+    ZSTD_XXH64_reset(&mut (*zc).xxhState, 0);
     (*zc).stage = ZSTDcs_init;
     (*zc).dictID = 0;
     (*zc).dictContentSize = 0;
@@ -6858,14 +6858,14 @@ unsafe extern "C" fn ZSTD_reduceTable_internal(
     }
 }
 unsafe extern "C" fn ZSTD_reduceTable(table: *mut u32, size: u32, reducerValue: u32) {
-    ZSTD_reduceTable_internal(table, size, reducerValue, 0 as std::ffi::c_int);
+    ZSTD_reduceTable_internal(table, size, reducerValue, 0);
 }
 unsafe extern "C" fn ZSTD_reduceTable_btlazy2(
     table: *mut u32,
     size: u32,
     reducerValue: u32,
 ) {
-    ZSTD_reduceTable_internal(table, size, reducerValue, 1 as std::ffi::c_int);
+    ZSTD_reduceTable_internal(table, size, reducerValue, 1);
 }
 unsafe extern "C" fn ZSTD_reduceIndex(
     mut ms: *mut ZSTD_MatchState_t,
@@ -10000,9 +10000,9 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
     {
         loadLdmDict != 0;
     }
-    ZSTD_window_update(&mut (*ms).window, src, srcSize, 0 as std::ffi::c_int);
+    ZSTD_window_update(&mut (*ms).window, src, srcSize, 0);
     if loadLdmDict != 0 {
-        ZSTD_window_update(&mut (*ls).window, src, srcSize, 0 as std::ffi::c_int);
+        ZSTD_window_update(&mut (*ls).window, src, srcSize, 0);
         (*ls)
             .loadedDictEnd = if (*params).forceWindow != 0 {
             0 as u32
@@ -11707,7 +11707,7 @@ pub unsafe extern "C" fn ZSTD_createCDict_advanced(
         0,
         ::core::mem::size_of::<ZSTD_CCtx_params>() as usize,
     );
-    ZSTD_CCtxParams_init(&mut cctxParams, 0 as std::ffi::c_int);
+    ZSTD_CCtxParams_init(&mut cctxParams, 0);
     cctxParams.cParams = cParams;
     cctxParams.customMem = customMem;
     return ZSTD_createCDict_advanced2(
@@ -11995,7 +11995,7 @@ pub unsafe extern "C" fn ZSTD_initStaticCDict(
     if workspaceSize < neededSize {
         return NULL as *const ZSTD_CDict;
     }
-    ZSTD_CCtxParams_init(&mut params, 0 as std::ffi::c_int);
+    ZSTD_CCtxParams_init(&mut params, 0);
     params.cParams = cParams;
     params.useRowMatchFinder = useRowMatchFinder;
     (*cdict).useRowMatchFinder = useRowMatchFinder;
@@ -13202,7 +13202,7 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
                     && flushMin == 0
             {
                 if flushMin == 0 {
-                    ZSTD_CCtx_trace(cctx, 0 as usize);
+                    ZSTD_CCtx_trace(cctx, 0);
                 }
                 ZSTD_CCtx_reset(cctx, ZSTD_reset_session_only);
             }

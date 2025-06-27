@@ -5226,7 +5226,7 @@ unsafe extern "C" fn sort_typeBstar(
             i -= 1;
             i;
         }
-        trsort(ISAb, SA, m, 1 as std::ffi::c_int);
+        trsort(ISAb, SA, m, 1);
         i = n - 1;
         j = m;
         c0 = *T.offset((n - 1 as std::ffi::c_int) as isize) as std::ffi::c_int;

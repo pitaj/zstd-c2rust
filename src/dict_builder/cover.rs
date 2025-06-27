@@ -1963,7 +1963,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         return ERROR!(dstSize_tooSmall);
     }
     if nbThreads > 1 {
-        pool = POOL_create(nbThreads as usize, 1 as usize);
+        pool = POOL_create(nbThreads as usize, 1);
         if pool.is_null() {
             return ERROR!(memory_allocation);
         }
