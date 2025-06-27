@@ -197,9 +197,9 @@ unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,
     mut args: ...
 ) {}
-pub const MLFSELog: std::ffi::c_int = 9 as std::ffi::c_int;
-pub const LLFSELog: std::ffi::c_int = 9 as std::ffi::c_int;
-pub const OffFSELog: std::ffi::c_int = 8 as std::ffi::c_int;
+pub const MLFSELog: std::ffi::c_int = 9;
+pub const LLFSELog: std::ffi::c_int = 9;
+pub const OffFSELog: std::ffi::c_int = 8;
 static mut LL_bits: [u8; 36] = [
     0 as std::ffi::c_int as u8,
     0 as std::ffi::c_int as u8,
@@ -431,8 +431,8 @@ unsafe extern "C" fn BIT_initCStream(
     mut startPtr: *mut std::ffi::c_void,
     mut dstCapacity: usize,
 ) -> usize {
-    (*bitC).bitContainer = 0 as std::ffi::c_int as BitContainerType;
-    (*bitC).bitPos = 0 as std::ffi::c_int as std::ffi::c_uint;
+    (*bitC).bitContainer = 0;
+    (*bitC).bitPos = 0;
     (*bitC).startPtr = startPtr as *mut std::ffi::c_char;
     (*bitC).ptr = (*bitC).startPtr;
     (*bitC)
@@ -479,7 +479,7 @@ unsafe extern "C" fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
     if (*bitC).ptr > (*bitC).endPtr {
         (*bitC).ptr = (*bitC).endPtr;
     }
-    (*bitC).bitPos &= 7 as std::ffi::c_int as std::ffi::c_uint;
+    (*bitC).bitPos &= 7;
     (*bitC).bitContainer >>= nbBytes * 8 as std::ffi::c_int as usize;
 }
 #[inline]
@@ -809,7 +809,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
 ) -> usize {
     let mut cost: std::ffi::c_uint = 0;
     let mut s: std::ffi::c_uint = 0;
-    s = 0 as std::ffi::c_int as std::ffi::c_uint;
+    s = 0;
     while s <= max {
         let mut norm = ((256 as std::ffi::c_uint)
             .wrapping_mul(*count.offset(s as isize)) as usize / total)
@@ -817,7 +817,7 @@ unsafe extern "C" fn ZSTD_entropyCost(
         if *count.offset(s as isize) != 0 as std::ffi::c_int as std::ffi::c_uint
             && norm == 0 as std::ffi::c_int as std::ffi::c_uint
         {
-            norm = 1 as std::ffi::c_int as std::ffi::c_uint;
+            norm = 1;
         }
         cost = cost
             .wrapping_add(
@@ -835,7 +835,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
     mut count: *const std::ffi::c_uint,
     max: std::ffi::c_uint,
 ) -> usize {
-    let kAccuracyLog = 8 as std::ffi::c_int as std::ffi::c_uint;
+    let kAccuracyLog = 8;
     let mut cost: usize = 0;
     let mut s: std::ffi::c_uint = 0;
     let mut cstate = FSE_CState_t {
@@ -848,7 +848,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
     if ZSTD_getFSEMaxSymbolValue(ctable) < max {
         return ERROR!(GENERIC);
     }
-    s = 0 as std::ffi::c_int as std::ffi::c_uint;
+    s = 0;
     while s <= max {
         let tableLog = cstate.stateLog;
         let badCost = tableLog.wrapping_add(1)
@@ -876,7 +876,7 @@ pub unsafe extern "C" fn ZSTD_crossEntropyCost(
     let shift = (8 as std::ffi::c_uint).wrapping_sub(accuracyLog);
     let mut cost: usize = 0;
     let mut s: std::ffi::c_uint = 0;
-    s = 0 as std::ffi::c_int as std::ffi::c_uint;
+    s = 0;
     while s <= max {
         let normAcc = if *norm.offset(s as isize) as std::ffi::c_int
             != -(1 as std::ffi::c_int)
@@ -922,10 +922,10 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
     if (strategy as std::ffi::c_uint) < ZSTD_lazy as std::ffi::c_int as std::ffi::c_uint
     {
         if isDefaultAllowed as u64 != 0 {
-            let staticFse_nbSeq_max = 1000 as std::ffi::c_int as usize;
+            let staticFse_nbSeq_max = 1000;
             let mult = (10 as std::ffi::c_uint)
                 .wrapping_sub(strategy as std::ffi::c_uint) as usize;
-            let baseLog = 3 as std::ffi::c_int as usize;
+            let baseLog = 3;
             let dynamicFse_nbSeq_min = (1_usize
                 << defaultNormLog) * mult >> baseLog;
             if *repeatMode as std::ffi::c_uint

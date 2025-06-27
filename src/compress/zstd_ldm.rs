@@ -342,9 +342,9 @@ unsafe extern "C" fn MEM_readST(mut ptr: *const std::ffi::c_void) -> usize {
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
     return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
-pub const HASH_READ_SIZE: std::ffi::c_int = 8 as std::ffi::c_int;
-pub const ZSTD_WINDOW_START_INDEX: std::ffi::c_int = 2 as std::ffi::c_int;
-pub const LDM_BATCH_SIZE: std::ffi::c_int = 64 as std::ffi::c_int;
+pub const HASH_READ_SIZE: std::ffi::c_int = 8;
+pub const ZSTD_WINDOW_START_INDEX: std::ffi::c_int = 2;
+pub const LDM_BATCH_SIZE: std::ffi::c_int = 64;
 unsafe extern "C" fn ZSTD_safecopyLiterals(
     mut op: *mut u8,
     mut ip: *const u8,
@@ -637,7 +637,7 @@ unsafe extern "C" fn ZSTD_window_enforceMaxDist(
             (*window).dictLimit = (*window).lowLimit;
         }
         if !loadedDictEndPtr.is_null() {
-            *loadedDictEndPtr = 0 as std::ffi::c_int as u32;
+            *loadedDictEndPtr = 0;
         }
         if !dictMatchStatePtr.is_null() {
             *dictMatchStatePtr = NULL as *const ZSTD_MatchState_t;
@@ -645,8 +645,8 @@ unsafe extern "C" fn ZSTD_window_enforceMaxDist(
     }
 }
 pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
-pub const ZSTD_REP_NUM: std::ffi::c_int = 3 as std::ffi::c_int;
-pub const MINMATCH: std::ffi::c_int = 3 as std::ffi::c_int;
+pub const ZSTD_REP_NUM: std::ffi::c_int = 3;
+pub const MINMATCH: std::ffi::c_int = 3;
 unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
@@ -663,8 +663,8 @@ unsafe extern "C" fn ZSTD_copy16(
 ) {
     _mm_storeu_si128(dst as *mut __m128i, _mm_loadu_si128(src as *const __m128i));
 }
-pub const WILDCOPY_OVERLENGTH: std::ffi::c_int = 32 as std::ffi::c_int;
-pub const WILDCOPY_VECLEN: std::ffi::c_int = 16 as std::ffi::c_int;
+pub const WILDCOPY_OVERLENGTH: std::ffi::c_int = 32;
+pub const WILDCOPY_VECLEN: std::ffi::c_int = 16;
 #[inline(always)]
 unsafe extern "C" fn ZSTD_wildcopy(
     mut dst: *mut std::ffi::c_void,
@@ -1004,8 +1004,8 @@ static mut ZSTD_ldm_gearTab: [u64; 256] = [
     0xcf751f27ecdab2b as std::ffi::c_long as u64,
     0x2b4da14f2613d8f4 as std::ffi::c_long as u64,
 ];
-pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
-pub const LDM_MIN_MATCH_LENGTH: std::ffi::c_int = 64 as std::ffi::c_int;
+pub const NULL: std::ffi::c_int = 0;
+pub const LDM_MIN_MATCH_LENGTH: std::ffi::c_int = 64;
 unsafe extern "C" fn ZSTD_ldm_gear_init(
     mut state: *mut ldmRollingHashState_t,
     mut params: *const ldmParams_t,
@@ -1071,7 +1071,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
     let mut mask: u64 = 0;
     hash = (*state).rolling;
     mask = (*state).stopMask;
-    n = 0 as std::ffi::c_int as usize;
+    n = 0;
     loop {
         if !(n.wrapping_add(3) < size) {
             current_block = 5689316957504528238;
@@ -1372,7 +1372,7 @@ pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
     while ip < iend {
         let mut hashed: usize = 0;
         let mut n: std::ffi::c_uint = 0;
-        numSplits = 0 as std::ffi::c_int as std::ffi::c_uint;
+        numSplits = 0;
         hashed = ZSTD_ldm_gear_feed(
             &mut hashState,
             ip,
@@ -1380,7 +1380,7 @@ pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
             splits,
             &mut numSplits,
         );
-        n = 0 as std::ffi::c_int as std::ffi::c_uint;
+        n = 0;
         while n < numSplits {
             if ip.offset(*splits.offset(n as isize) as isize)
                 >= istart.offset(minMatchLength as isize)
@@ -1477,7 +1477,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
     while ip < ilimit {
         let mut hashed: usize = 0;
         let mut n: std::ffi::c_uint = 0;
-        numSplits = 0 as std::ffi::c_int as std::ffi::c_uint;
+        numSplits = 0;
         hashed = ZSTD_ldm_gear_feed(
             &mut hashState,
             ip,
@@ -1485,7 +1485,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
             splits,
             &mut numSplits,
         );
-        n = 0 as std::ffi::c_int as std::ffi::c_uint;
+        n = 0;
         while n < numSplits {
             let split = ip
                 .offset(*splits.offset(n as isize) as isize)
@@ -1512,7 +1512,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
             n = n.wrapping_add(1);
             n;
         }
-        n = 0 as std::ffi::c_int as std::ffi::c_uint;
+        n = 0;
         while n < numSplits {
             let mut forwardMatchLength: usize = 0;
             let mut backwardMatchLength: usize = 0;
@@ -1669,10 +1669,10 @@ unsafe extern "C" fn ZSTD_ldm_reduceTable(
     reducerValue: u32,
 ) {
     let mut u: u32 = 0;
-    u = 0 as std::ffi::c_int as u32;
+    u = 0;
     while u < size {
         if (*table.offset(u as isize)).offset < reducerValue {
-            (*table.offset(u as isize)).offset = 0 as std::ffi::c_int as u32;
+            (*table.offset(u as isize)).offset = 0;
         } else {
             let ref mut fresh34 = (*table.offset(u as isize)).offset;
             *fresh34 = (*fresh34).wrapping_sub(reducerValue);
@@ -1700,7 +1700,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
         );
     let mut chunk: usize = 0;
     let mut leftoverSize: usize = 0;
-    chunk = 0 as std::ffi::c_int as usize;
+    chunk = 0;
     while chunk < nbChunks && (*sequences).size < (*sequences).capacity {
         let chunkStart = istart.offset((chunk * kMaxChunkSize) as isize);
         let remaining = iend.offset_from(chunkStart) as std::ffi::c_long as usize;
@@ -1729,7 +1729,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
                 chunkStart as *const std::ffi::c_void,
             );
             ZSTD_ldm_reduceTable((*ldmState).hashTable, ldmHSize, correction);
-            (*ldmState).loadedDictEnd = 0 as std::ffi::c_int as u32;
+            (*ldmState).loadedDictEnd = 0;
         }
         ZSTD_window_enforceMaxDist(
             &mut (*ldmState).window,
@@ -1776,7 +1776,7 @@ pub unsafe extern "C" fn ZSTD_ldm_skipSequences(
             return;
         }
         srcSize = srcSize.wrapping_sub((*seq).litLength as usize);
-        (*seq).litLength = 0 as std::ffi::c_int as u32;
+        (*seq).litLength = 0;
         if srcSize < (*seq).matchLength as usize {
             (*seq).matchLength = ((*seq).matchLength).wrapping_sub(srcSize as u32);
             if (*seq).matchLength < minMatch {
@@ -1796,7 +1796,7 @@ pub unsafe extern "C" fn ZSTD_ldm_skipSequences(
             return;
         }
         srcSize = srcSize.wrapping_sub((*seq).matchLength as usize);
-        (*seq).matchLength = 0 as std::ffi::c_int as u32;
+        (*seq).matchLength = 0;
         (*rawSeqStore).pos = ((*rawSeqStore).pos).wrapping_add(1);
         (*rawSeqStore).pos;
     }
@@ -1813,11 +1813,11 @@ unsafe extern "C" fn maybeSplitSequence(
         return sequence;
     }
     if remaining <= sequence.litLength {
-        sequence.offset = 0 as std::ffi::c_int as u32;
+        sequence.offset = 0;
     } else if remaining < (sequence.litLength).wrapping_add(sequence.matchLength) {
         sequence.matchLength = remaining.wrapping_sub(sequence.litLength);
         if sequence.matchLength < minMatch {
-            sequence.offset = 0 as std::ffi::c_int as u32;
+            sequence.offset = 0;
         }
     }
     ZSTD_ldm_skipSequences(rawSeqStore, remaining as usize, minMatch);
@@ -1844,7 +1844,7 @@ pub unsafe extern "C" fn ZSTD_ldm_skipRawSeqStoreBytes(
     if currPos == 0 as std::ffi::c_int as u32
         || (*rawSeqStore).pos == (*rawSeqStore).size
     {
-        (*rawSeqStore).posInSequence = 0 as std::ffi::c_int as usize;
+        (*rawSeqStore).posInSequence = 0;
     }
 }
 #[no_mangle]

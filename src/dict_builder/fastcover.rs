@@ -332,7 +332,7 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
         return MEM_swap64(MEM_read64(memPtr))
     };
 }
-static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
+static mut prime6bytes: u64 = 227718039650203;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
         >> 64_u32.wrapping_sub(h);
@@ -357,14 +357,14 @@ pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_is
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
     return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
-pub const ZDICT_DICTSIZE_MIN: std::ffi::c_int = 256 as std::ffi::c_int;
-pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000 as std::ffi::c_int;
-pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
-pub const FASTCOVER_MAX_F: std::ffi::c_int = 31 as std::ffi::c_int;
-pub const FASTCOVER_MAX_ACCEL: std::ffi::c_int = 10 as std::ffi::c_int;
+pub const ZDICT_DICTSIZE_MIN: std::ffi::c_int = 256;
+pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000;
+pub const NULL: std::ffi::c_int = 0;
+pub const FASTCOVER_MAX_F: std::ffi::c_int = 31;
+pub const FASTCOVER_MAX_ACCEL: std::ffi::c_int = 10;
 pub const FASTCOVER_DEFAULT_SPLITPOINT: std::ffi::c_double = 0.75f64;
-pub const DEFAULT_F: std::ffi::c_int = 20 as std::ffi::c_int;
-pub const DEFAULT_ACCEL: std::ffi::c_int = 1 as std::ffi::c_int;
+pub const DEFAULT_F: std::ffi::c_int = 20;
+pub const DEFAULT_ACCEL: std::ffi::c_int = 1;
 unsafe extern "C" fn FASTCOVER_hashPtrToIndex(
     mut p: *const std::ffi::c_void,
     mut f: u32,
@@ -481,7 +481,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
     };
     activeSegment.begin = begin;
     activeSegment.end = begin;
-    activeSegment.score = 0 as std::ffi::c_int as u32;
+    activeSegment.score = 0;
     while activeSegment.end < end {
         let idx = FASTCOVER_hashPtrToIndex(
             ((*ctx).samples).offset(activeSegment.end as isize)
@@ -543,7 +543,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
             f,
             d,
         );
-        *freqs.offset(i as isize) = 0 as std::ffi::c_int as u32;
+        *freqs.offset(i as isize) = 0;
         pos = pos.wrapping_add(1);
         pos;
     }
@@ -606,7 +606,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
     let skip = (*ctx).accelParams.skip;
     let readLength = MAX!(d, 8);
     let mut i: usize = 0;
-    i = 0 as std::ffi::c_int as usize;
+    i = 0;
     while i < (*ctx).nbTrainSamples {
         let mut start = *((*ctx).offsets).offset(i as isize);
         let currSampleEnd = *((*ctx).offsets)
@@ -803,8 +803,8 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     }
     let mut i: u32 = 0;
     *((*ctx).offsets)
-        .offset(0) = 0 as std::ffi::c_int as usize;
-    i = 1 as std::ffi::c_int as u32;
+        .offset(0) = 0;
+    i = 1;
     while i <= nbSamples {
         *((*ctx).offsets)
             .offset(
@@ -863,7 +863,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
         parameters.k,
         1 as std::ffi::c_int as u32,
     );
-    let maxZeroScoreRun = 10 as std::ffi::c_int as usize;
+    let maxZeroScoreRun = 10;
     let displayLevel = (*ctx).displayLevel;
     let mut zeroScoreRun: usize = 0;
     let mut lastUpdateTime: clock_t = 0;
@@ -882,7 +882,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
         );
         fflush(stderr);
     }
-    epoch = 0 as std::ffi::c_int as usize;
+    epoch = 0;
     while tail > 0 as std::ffi::c_int as usize {
         let epochBegin = (epoch * epochs.size as usize) as u32;
         let epochEnd = epochBegin.wrapping_add(epochs.size);
@@ -901,7 +901,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
                 break;
             }
         } else {
-            zeroScoreRun = 0 as std::ffi::c_int as usize;
+            zeroScoreRun = 0;
             segmentSize = MIN!(segment.end - segment.begin + parameters.d - 1, tail);
             if segmentSize < parameters.d as usize {
                 break;
@@ -1313,7 +1313,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     } else {
         (*parameters).accel
     };
-    let shrinkDict = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let shrinkDict = 0;
     let displayLevel = (*parameters).zParams.notificationLevel as std::ffi::c_int;
     let mut iteration: std::ffi::c_uint = 1;
     let mut d: std::ffi::c_uint = 0;
@@ -1511,7 +1511,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         }
         if warned == 0 {
             COVER_warnOnSmallCorpus(dictBufferCapacity, ctx.nbDmers, displayLevel);
-            warned = 1 as std::ffi::c_int;
+            warned = 1;
         }
         k = kMinK;
         while k <= kMaxK {

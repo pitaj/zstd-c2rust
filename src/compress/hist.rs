@@ -47,7 +47,7 @@ unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
     return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
-pub const HIST_WKSP_SIZE_U32: std::ffi::c_int = 1024 as std::ffi::c_int;
+pub const HIST_WKSP_SIZE_U32: std::ffi::c_int = 1024;
 pub const HIST_WKSP_SIZE: std::ffi::c_ulong = (HIST_WKSP_SIZE_U32 as std::ffi::c_ulong)
     .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>());
 #[no_mangle]
@@ -91,7 +91,7 @@ pub unsafe extern "C" fn HIST_count_simple(
             ) as usize,
     );
     if srcSize == 0 as std::ffi::c_int as usize {
-        *maxSymbolValuePtr = 0 as std::ffi::c_int as std::ffi::c_uint;
+        *maxSymbolValuePtr = 0;
         return 0 as std::ffi::c_int as std::ffi::c_uint;
     }
     while ip < end {
@@ -107,7 +107,7 @@ pub unsafe extern "C" fn HIST_count_simple(
     }
     *maxSymbolValuePtr = maxSymbolValue;
     let mut s: u32 = 0;
-    s = 0 as std::ffi::c_int as u32;
+    s = 0;
     while s <= maxSymbolValue {
         if *count.offset(s as isize) > largestCount {
             largestCount = *count.offset(s as isize);
@@ -141,7 +141,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
             ZSTD_memset!(count, 0, countSize),
             ZSTD_memset!(count, 0, countSize) as usize,
         );
-        *maxSymbolValuePtr = 0 as std::ffi::c_int as std::ffi::c_uint;
+        *maxSymbolValuePtr = 0;
         return 0 as std::ffi::c_int as usize;
     }
     libc::memset(
@@ -233,7 +233,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh21;
     }
     let mut s: u32 = 0;
-    s = 0 as std::ffi::c_int as u32;
+    s = 0;
     while s < 256 as std::ffi::c_int as u32 {
         let ref mut fresh22 = *Counting1.offset(s as isize);
         *fresh22 = (*fresh22)
@@ -316,7 +316,7 @@ pub unsafe extern "C" fn HIST_count_wksp(
             workSpace as *mut u32,
         );
     }
-    *maxSymbolValuePtr = 255 as std::ffi::c_int as std::ffi::c_uint;
+    *maxSymbolValuePtr = 255;
     return HIST_countFast_wksp(
         count,
         maxSymbolValuePtr,

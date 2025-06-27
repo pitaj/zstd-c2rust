@@ -455,7 +455,7 @@ unsafe extern "C" fn BIT_reloadDStream_internal(
     (*bitD)
         .ptr = ((*bitD).ptr)
         .offset(-(((*bitD).bitsConsumed >> 3) as isize));
-    (*bitD).bitsConsumed &= 7 as std::ffi::c_int as std::ffi::c_uint;
+    (*bitD).bitsConsumed &= 7;
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return BIT_DStream_unfinished;
 }
@@ -517,10 +517,10 @@ unsafe extern "C" fn BIT_endOfDStream(
                 .wrapping_mul(8))
         as std::ffi::c_int as std::ffi::c_uint;
 }
-pub const HUF_TABLELOG_MAX: std::ffi::c_int = 12 as std::ffi::c_int;
-pub const HUF_SYMBOLVALUE_MAX: std::ffi::c_int = 255 as std::ffi::c_int;
-pub const HUF_DECODER_FAST_TABLELOG: std::ffi::c_int = 11 as std::ffi::c_int;
-pub const HUF_ENABLE_FAST_DECODE: std::ffi::c_int = 1 as std::ffi::c_int;
+pub const HUF_TABLELOG_MAX: std::ffi::c_int = 12;
+pub const HUF_SYMBOLVALUE_MAX: std::ffi::c_int = 255;
+pub const HUF_DECODER_FAST_TABLELOG: std::ffi::c_int = 11;
+pub const HUF_ENABLE_FAST_DECODE: std::ffi::c_int = 1;
 pub const HUF_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 unsafe extern "C" fn HUF_getDTableDesc(mut table: *const HUF_DTable) -> DTableDesc {
     let mut dtd = DTableDesc {
@@ -722,7 +722,7 @@ unsafe extern "C" fn HUF_rescaleStats(
     if tableLog < targetTableLog {
         let scale = targetTableLog.wrapping_sub(tableLog);
         let mut s: u32 = 0;
-        s = 0 as std::ffi::c_int as u32;
+        s = 0;
         while s < nbSymbols {
             let ref mut fresh0 = *huffWeight.offset(s as isize);
             *fresh0 = (*fresh0 as std::ffi::c_int
@@ -745,7 +745,7 @@ unsafe extern "C" fn HUF_rescaleStats(
         }
         s = scale;
         while s > 0 as std::ffi::c_int as u32 {
-            *rankVal.offset(s as isize) = 0 as std::ffi::c_int as u32;
+            *rankVal.offset(s as isize) = 0;
             s = s.wrapping_sub(1);
             s;
         }
@@ -800,7 +800,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     if tableLog > (dtd.maxTableLog as std::ffi::c_int + 1 as std::ffi::c_int) as u32 {
         return ERROR!(tableLog_tooLarge);
     }
-    dtd.tableType = 0 as std::ffi::c_int as u8;
+    dtd.tableType = 0;
     dtd.tableLog = tableLog as u8;
     libc::memcpy(
         DTable as *mut std::ffi::c_void,
@@ -809,9 +809,9 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     );
     let mut n: std::ffi::c_int = 0;
     let mut nextRankStart: u32 = 0;
-    let unroll = 4 as std::ffi::c_int;
+    let unroll = 4;
     let nLimit = nbSymbols as std::ffi::c_int - unroll + 1 as std::ffi::c_int;
-    n = 0 as std::ffi::c_int;
+    n = 0;
     while n < tableLog as std::ffi::c_int + 1 as std::ffi::c_int {
         let curr = nextRankStart;
         nextRankStart = nextRankStart.wrapping_add((*wksp).rankVal[n as usize]);
@@ -819,10 +819,10 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
         n += 1;
         n;
     }
-    n = 0 as std::ffi::c_int;
+    n = 0;
     while n < nLimit {
         let mut u: std::ffi::c_int = 0;
-        u = 0 as std::ffi::c_int;
+        u = 0;
         while u < unroll {
             let w = (*wksp).huffWeight[(n + u) as usize] as usize;
             let fresh1 = (*wksp).rankStart[w as usize];
@@ -846,7 +846,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     let mut w_1: u32 = 0;
     let mut symbol = (*wksp).rankVal[0 as std::ffi::c_int as usize] as std::ffi::c_int;
     let mut rankStart: std::ffi::c_int = 0;
-    w_1 = 1 as std::ffi::c_int as u32;
+    w_1 = 1;
     while w_1 < tableLog.wrapping_add(1) {
         let symbolCount = (*wksp).rankVal[w_1 as usize] as std::ffi::c_int;
         let length = (1 as std::ffi::c_int) << w_1 >> 1;
@@ -857,45 +857,45 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
         let mut u_0: std::ffi::c_int = 0;
         match length {
             1 => {
-                s = 0 as std::ffi::c_int;
+                s = 0;
                 while s < symbolCount {
                     let mut D = HUF_DEltX1 { nbBits: 0, byte: 0 };
                     D.byte = (*wksp).symbols[(symbol + s) as usize];
                     D.nbBits = nbBits;
                     *dt.offset(uStart as isize) = D;
-                    uStart += 1 as std::ffi::c_int;
+                    uStart += 1;
                     s += 1;
                     s;
                 }
             }
             2 => {
-                s = 0 as std::ffi::c_int;
+                s = 0;
                 while s < symbolCount {
                     let mut D_0 = HUF_DEltX1 { nbBits: 0, byte: 0 };
                     D_0.byte = (*wksp).symbols[(symbol + s) as usize];
                     D_0.nbBits = nbBits;
                     *dt.offset((uStart + 0 as std::ffi::c_int) as isize) = D_0;
                     *dt.offset((uStart + 1 as std::ffi::c_int) as isize) = D_0;
-                    uStart += 2 as std::ffi::c_int;
+                    uStart += 2;
                     s += 1;
                     s;
                 }
             }
             4 => {
-                s = 0 as std::ffi::c_int;
+                s = 0;
                 while s < symbolCount {
                     let D4 = HUF_DEltX1_set4(
                         (*wksp).symbols[(symbol + s) as usize],
                         nbBits,
                     );
                     MEM_write64(dt.offset(uStart as isize) as *mut std::ffi::c_void, D4);
-                    uStart += 4 as std::ffi::c_int;
+                    uStart += 4;
                     s += 1;
                     s;
                 }
             }
             8 => {
-                s = 0 as std::ffi::c_int;
+                s = 0;
                 while s < symbolCount {
                     let D4_0 = HUF_DEltX1_set4(
                         (*wksp).symbols[(symbol + s) as usize],
@@ -910,19 +910,19 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
                             as *mut std::ffi::c_void,
                         D4_0,
                     );
-                    uStart += 8 as std::ffi::c_int;
+                    uStart += 8;
                     s += 1;
                     s;
                 }
             }
             _ => {
-                s = 0 as std::ffi::c_int;
+                s = 0;
                 while s < symbolCount {
                     let D4_1 = HUF_DEltX1_set4(
                         (*wksp).symbols[(symbol + s) as usize],
                         nbBits,
                     );
-                    u_0 = 0 as std::ffi::c_int;
+                    u_0 = 0;
                     while u_0 < length {
                         MEM_write64(
                             dt
@@ -956,7 +956,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
                                 as *mut std::ffi::c_void,
                             D4_1,
                         );
-                        u_0 += 16 as std::ffi::c_int;
+                        u_0 += 16;
                     }
                     uStart += length;
                     s += 1;
@@ -1350,7 +1350,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
     's_33: loop {
         let mut olimit = 0 as *mut u8;
         let mut stream: std::ffi::c_int = 0;
-        stream = 0 as std::ffi::c_int;
+        stream = 0;
         while stream < 4 as std::ffi::c_int {
             stream += 1;
             stream;
@@ -1365,7 +1365,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
         if op[3 as std::ffi::c_int as usize] == olimit {
             break;
         }
-        stream = 1 as std::ffi::c_int;
+        stream = 1;
         while stream < 4 as std::ffi::c_int {
             if ip[stream as usize] < ip[(stream - 1 as std::ffi::c_int) as usize] {
                 break 's_33;
@@ -1373,7 +1373,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             stream += 1;
             stream;
         }
-        stream = 1 as std::ffi::c_int;
+        stream = 1;
         while stream < 4 as std::ffi::c_int {
             stream += 1;
             stream;
@@ -1660,7 +1660,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
         / 4 as std::ffi::c_int as usize;
     let mut segmentEnd = dst as *mut u8;
     let mut i: std::ffi::c_int = 0;
-    i = 0 as std::ffi::c_int;
+    i = 0;
     while i < 4 as std::ffi::c_int {
         let mut bit = BIT_DStream_t {
             bitContainer: 0,
@@ -2101,7 +2101,7 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
             }
             _ => {
                 let mut i: std::ffi::c_int = 0;
-                i = 0 as std::ffi::c_int;
+                i = 0;
                 while i < skipSize {
                     libc::memcpy(
                         DTable.offset(i as isize).offset(0)
@@ -2131,7 +2131,7 @@ unsafe extern "C" fn HUF_fillDTableX2Level2(
                         ::core::mem::size_of::<u64>()
                             as usize,
                     );
-                    i += 8 as std::ffi::c_int;
+                    i += 8;
                 }
             }
         }
@@ -2171,7 +2171,7 @@ unsafe extern "C" fn HUF_fillDTableX2(
     let minBits = nbBitsBaseline.wrapping_sub(maxWeight);
     let mut w: std::ffi::c_int = 0;
     let wEnd = maxWeight as std::ffi::c_int + 1 as std::ffi::c_int;
-    w = 1 as std::ffi::c_int;
+    w = 1;
     while w < wEnd {
         let begin = *rankStart.offset(w as isize) as std::ffi::c_int;
         let end = *rankStart.offset((w + 1 as std::ffi::c_int) as isize)
@@ -2184,7 +2184,7 @@ unsafe extern "C" fn HUF_fillDTableX2(
             let mut minWeight = nbBits.wrapping_add(scaleLog as u32) as std::ffi::c_int;
             let mut s: std::ffi::c_int = 0;
             if minWeight < 1 as std::ffi::c_int {
-                minWeight = 1 as std::ffi::c_int;
+                minWeight = 1;
             }
             s = begin;
             while s != end {
@@ -2289,7 +2289,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     }
     let mut w: u32 = 0;
     let mut nextRankStart: u32 = 0;
-    w = 1 as std::ffi::c_int as u32;
+    w = 1;
     while w < maxW.wrapping_add(1) {
         let mut curr = nextRankStart;
         nextRankStart = nextRankStart.wrapping_add((*wksp).rankStats[w as usize]);
@@ -2301,7 +2301,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     *rankStart
         .offset(maxW.wrapping_add(1) as isize) = nextRankStart;
     let mut s: u32 = 0;
-    s = 0 as std::ffi::c_int as u32;
+    s = 0;
     while s < nbSymbols {
         let w_0 = (*wksp).weightList[s as usize] as u32;
         let ref mut fresh26 = *rankStart.offset(w_0 as isize);
@@ -2312,14 +2312,14 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
         s = s.wrapping_add(1);
         s;
     }
-    *rankStart.offset(0) = 0 as std::ffi::c_int as u32;
+    *rankStart.offset(0) = 0;
     let rankVal0 = ((*wksp).rankVal[0 as std::ffi::c_int as usize]).as_mut_ptr();
     let rescale = maxTableLog
         .wrapping_sub(tableLog)
         .wrapping_sub(1) as std::ffi::c_int;
     let mut nextRankVal: u32 = 0;
     let mut w_1: u32 = 0;
-    w_1 = 1 as std::ffi::c_int as u32;
+    w_1 = 1;
     while w_1 < maxW.wrapping_add(1) {
         let mut curr_0 = nextRankVal;
         nextRankVal = nextRankVal
@@ -2338,7 +2338,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     {
         let rankValPtr = ((*wksp).rankVal[consumed as usize]).as_mut_ptr();
         let mut w_2: u32 = 0;
-        w_2 = 1 as std::ffi::c_int as u32;
+        w_2 = 1;
         while w_2 < maxW.wrapping_add(1) {
             *rankValPtr
                 .offset(w_2 as isize) = *rankVal0.offset(w_2 as isize) >> consumed;
@@ -2358,7 +2358,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
         tableLog.wrapping_add(1),
     );
     dtd.tableLog = maxTableLog as u8;
-    dtd.tableType = 1 as std::ffi::c_int as u8;
+    dtd.tableType = 1;
     libc::memcpy(
         DTable as *mut std::ffi::c_void,
         &mut dtd as *mut DTableDesc as *const std::ffi::c_void,
@@ -2788,14 +2788,14 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
     's_45: loop {
         let mut olimit = 0 as *mut u8;
         let mut stream: std::ffi::c_int = 0;
-        stream = 0 as std::ffi::c_int;
+        stream = 0;
         while stream < 4 as std::ffi::c_int {
             stream += 1;
             stream;
         }
         let mut iters = (ip[0 as std::ffi::c_int as usize]).offset_from(ilowest)
             as std::ffi::c_long as usize / 7 as std::ffi::c_int as usize;
-        stream = 0 as std::ffi::c_int;
+        stream = 0;
         while stream < 4 as std::ffi::c_int {
             let oiters = (oend[stream as usize]).offset_from(op[stream as usize])
                 as std::ffi::c_long as usize / 10 as std::ffi::c_int as usize;
@@ -2808,7 +2808,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
         if op[3 as std::ffi::c_int as usize] == olimit {
             break;
         }
-        stream = 1 as std::ffi::c_int;
+        stream = 1;
         while stream < 4 as std::ffi::c_int {
             if ip[stream as usize] < ip[(stream - 1 as std::ffi::c_int) as usize] {
                 break 's_45;
@@ -2816,7 +2816,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             stream += 1;
             stream;
         }
-        stream = 1 as std::ffi::c_int;
+        stream = 1;
         while stream < 4 as std::ffi::c_int {
             stream += 1;
             stream;
@@ -3302,7 +3302,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
         / 4 as std::ffi::c_int as usize;
     let mut segmentEnd = dst as *mut u8;
     let mut i: std::ffi::c_int = 0;
-    i = 0 as std::ffi::c_int;
+    i = 0;
     while i < 4 as std::ffi::c_int {
         let mut bit = BIT_DStream_t {
             bitContainer: 0,

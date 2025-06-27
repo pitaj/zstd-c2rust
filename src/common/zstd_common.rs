@@ -52,9 +52,9 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: usize) -> ERR_enum {
 unsafe extern "C" fn ERR_getErrorName(mut code: usize) -> *const std::ffi::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
 }
-pub const ZSTD_VERSION_MAJOR: std::ffi::c_int = 1 as std::ffi::c_int;
-pub const ZSTD_VERSION_MINOR: std::ffi::c_int = 5 as std::ffi::c_int;
-pub const ZSTD_VERSION_RELEASE: std::ffi::c_int = 8 as std::ffi::c_int;
+pub const ZSTD_VERSION_MAJOR: std::ffi::c_int = 1;
+pub const ZSTD_VERSION_MINOR: std::ffi::c_int = 5;
+pub const ZSTD_VERSION_RELEASE: std::ffi::c_int = 8;
 pub const ZSTD_VERSION_NUMBER: std::ffi::c_int = ZSTD_VERSION_MAJOR
     * 100 as std::ffi::c_int * 100 as std::ffi::c_int
     + ZSTD_VERSION_MINOR * 100 as std::ffi::c_int + ZSTD_VERSION_RELEASE;

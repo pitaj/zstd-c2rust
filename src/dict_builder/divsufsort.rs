@@ -43,13 +43,13 @@ pub struct C2RustUnnamed_1 {
     pub c: *mut std::ffi::c_int,
     pub d: std::ffi::c_int,
 }
-pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
-pub const ALPHABET_SIZE: std::ffi::c_int = 256 as std::ffi::c_int;
-pub const BUCKET_A_SIZE: std::ffi::c_int = 256 as std::ffi::c_int;
+pub const NULL: std::ffi::c_int = 0;
+pub const ALPHABET_SIZE: std::ffi::c_int = 256;
+pub const BUCKET_A_SIZE: std::ffi::c_int = 256;
 pub const BUCKET_B_SIZE: std::ffi::c_int = ALPHABET_SIZE * ALPHABET_SIZE;
-pub const SS_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8 as std::ffi::c_int;
-pub const SS_BLOCKSIZE: std::ffi::c_int = 1024 as std::ffi::c_int;
-pub const TR_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8 as std::ffi::c_int;
+pub const SS_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8;
+pub const SS_BLOCKSIZE: std::ffi::c_int = 1024;
+pub const TR_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8;
 static mut lg_table: [std::ffi::c_int; 256] = [
     -(1 as std::ffi::c_int),
     0 as std::ffi::c_int,
@@ -1029,7 +1029,7 @@ unsafe extern "C" fn ss_mintrosort(
     let mut limit: std::ffi::c_int = 0;
     let mut v: std::ffi::c_int = 0;
     let mut x: std::ffi::c_int = 0;
-    ssize = 0 as std::ffi::c_int;
+    ssize = 0;
     limit = ss_ilg(last.offset_from(first) as std::ffi::c_long as std::ffi::c_int);
     loop {
         if last.offset_from(first) as std::ffi::c_long
@@ -1152,7 +1152,7 @@ unsafe extern "C" fn ss_mintrosort(
                             }
                         };
                         last = a;
-                        depth += 1 as std::ffi::c_int;
+                        depth += 1;
                         limit = ss_ilg(
                             a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
                         );
@@ -1210,7 +1210,7 @@ unsafe extern "C" fn ss_mintrosort(
                     limit = -(1 as std::ffi::c_int);
                 } else {
                     last = a;
-                    depth += 1 as std::ffi::c_int;
+                    depth += 1;
                     limit = ss_ilg(
                         a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
                     );
@@ -1645,7 +1645,7 @@ unsafe extern "C" fn ss_mintrosort(
                             };
                             first = b;
                             last = c;
-                            depth += 1 as std::ffi::c_int;
+                            depth += 1;
                             limit = ss_ilg(
                                 c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
                             );
@@ -1883,13 +1883,13 @@ unsafe extern "C" fn ss_mintrosort(
                         };
                         first = b;
                         last = c;
-                        depth += 1 as std::ffi::c_int;
+                        depth += 1;
                         limit = ss_ilg(
                             c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
                         );
                     }
                 } else {
-                    limit += 1 as std::ffi::c_int;
+                    limit += 1;
                     if (*Td
                         .offset(
                             (*PA.offset(*first as isize) - 1 as std::ffi::c_int) as isize,
@@ -1901,7 +1901,7 @@ unsafe extern "C" fn ss_mintrosort(
                                 as std::ffi::c_int,
                         );
                     }
-                    depth += 1 as std::ffi::c_int;
+                    depth += 1;
                 }
             }
         }
@@ -2012,10 +2012,10 @@ unsafe extern "C" fn ss_inplacemerge(
     let mut x: std::ffi::c_int = 0;
     loop {
         if *last.offset(-1_isize) < 0 as std::ffi::c_int {
-            x = 1 as std::ffi::c_int;
+            x = 1;
             p = PA.offset(!*last.offset(-1_isize) as isize);
         } else {
-            x = 0 as std::ffi::c_int;
+            x = 0;
             p = PA.offset(*last.offset(-1_isize) as isize);
         }
         a = first;
@@ -2205,16 +2205,16 @@ unsafe extern "C" fn ss_mergebackward(
         middle,
         last.offset_from(middle) as std::ffi::c_long as std::ffi::c_int,
     );
-    x = 0 as std::ffi::c_int;
+    x = 0;
     if *bufend < 0 as std::ffi::c_int {
         p1 = PA.offset(!*bufend as isize);
-        x |= 1 as std::ffi::c_int;
+        x |= 1;
     } else {
         p1 = PA.offset(*bufend as isize);
     }
     if *middle.offset(-1_isize) < 0 as std::ffi::c_int {
         p2 = PA.offset(!*middle.offset(-1_isize) as isize);
-        x |= 2 as std::ffi::c_int;
+        x |= 2;
     } else {
         p2 = PA.offset(*middle.offset(-1_isize) as isize);
     }
@@ -2237,7 +2237,7 @@ unsafe extern "C" fn ss_mergebackward(
                         break;
                     }
                 }
-                x ^= 1 as std::ffi::c_int;
+                x ^= 1;
             }
             let fresh79 = a;
             a = a.offset(-1);
@@ -2251,7 +2251,7 @@ unsafe extern "C" fn ss_mergebackward(
                 *fresh80 = *a;
                 if *b < 0 as std::ffi::c_int {
                     p1 = PA.offset(!*b as isize);
-                    x |= 1 as std::ffi::c_int;
+                    x |= 1;
                 } else {
                     p1 = PA.offset(*b as isize);
                 }
@@ -2269,7 +2269,7 @@ unsafe extern "C" fn ss_mergebackward(
                         break;
                     }
                 }
-                x ^= 2 as std::ffi::c_int;
+                x ^= 2;
             }
             let fresh83 = a;
             a = a.offset(-1);
@@ -2291,7 +2291,7 @@ unsafe extern "C" fn ss_mergebackward(
                 break;
             } else if *c < 0 as std::ffi::c_int {
                 p2 = PA.offset(!*c as isize);
-                x |= 2 as std::ffi::c_int;
+                x |= 2;
             } else {
                 p2 = PA.offset(*c as isize);
             }
@@ -2308,7 +2308,7 @@ unsafe extern "C" fn ss_mergebackward(
                         break;
                     }
                 }
-                x ^= 1 as std::ffi::c_int;
+                x ^= 1;
             }
             let fresh89 = a;
             a = a.offset(-1);
@@ -2332,7 +2332,7 @@ unsafe extern "C" fn ss_mergebackward(
                             break;
                         }
                     }
-                    x ^= 2 as std::ffi::c_int;
+                    x ^= 2;
                 }
                 let fresh93 = a;
                 a = a.offset(-1);
@@ -2355,13 +2355,13 @@ unsafe extern "C" fn ss_mergebackward(
                 } else {
                     if *b < 0 as std::ffi::c_int {
                         p1 = PA.offset(!*b as isize);
-                        x |= 1 as std::ffi::c_int;
+                        x |= 1;
                     } else {
                         p1 = PA.offset(*b as isize);
                     }
                     if *c < 0 as std::ffi::c_int {
                         p2 = PA.offset(!*c as isize);
-                        x |= 2 as std::ffi::c_int;
+                        x |= 2;
                     } else {
                         p2 = PA.offset(*c as isize);
                     }
@@ -2396,8 +2396,8 @@ unsafe extern "C" fn ss_swapmerge(
     let mut ssize: std::ffi::c_int = 0;
     let mut check: std::ffi::c_int = 0;
     let mut next: std::ffi::c_int = 0;
-    check = 0 as std::ffi::c_int;
-    ssize = 0 as std::ffi::c_int;
+    check = 0;
+    ssize = 0;
     loop {
         if last.offset_from(middle) as std::ffi::c_long <= bufsize as std::ffi::c_long {
             if first < middle && middle < last {
@@ -2496,7 +2496,7 @@ unsafe extern "C" fn ss_swapmerge(
                 return;
             }
         } else {
-            m = 0 as std::ffi::c_int;
+            m = 0;
             len = MIN!(middle - first, last - middle);
             half = len >> 1;
             while (0 as std::ffi::c_int) < len {
@@ -2546,7 +2546,7 @@ unsafe extern "C" fn ss_swapmerge(
                 ss_blockswap(lm, middle, m);
                 r = middle;
                 l = r;
-                next = 0 as std::ffi::c_int;
+                next = 0;
                 if rm < last {
                     if *rm < 0 as std::ffi::c_int {
                         *rm = !*rm;
@@ -2557,15 +2557,15 @@ unsafe extern "C" fn ss_swapmerge(
                                     break;
                                 }
                             }
-                            next |= 4 as std::ffi::c_int;
+                            next |= 4;
                         }
-                        next |= 1 as std::ffi::c_int;
+                        next |= 1;
                     } else if first < lm {
                         while *r < 0 as std::ffi::c_int {
                             r = r.offset(1);
                             r;
                         }
-                        next |= 2 as std::ffi::c_int;
+                        next |= 2;
                     }
                 }
                 if l.offset_from(first) as std::ffi::c_long
@@ -2617,7 +2617,7 @@ unsafe extern "C" fn ss_swapmerge(
                     check = check & 3 as std::ffi::c_int | next & 4 as std::ffi::c_int;
                 } else {
                     if next & 2 as std::ffi::c_int != 0 && r == middle {
-                        next ^= 6 as std::ffi::c_int;
+                        next ^= 6;
                     }
                     if ssize < 32 as std::ffi::c_int {} else {
                         __assert_fail(
@@ -2771,10 +2771,10 @@ unsafe extern "C" fn sssort(
         bufsize = limit;
     } else {
         middle = last;
-        limit = 0 as std::ffi::c_int;
+        limit = 0;
     }
     a = first;
-    i = 0 as std::ffi::c_int;
+    i = 0;
     while (SS_BLOCKSIZE as std::ffi::c_long) < middle.offset_from(a) as std::ffi::c_long
     {
         ss_mintrosort(T, PA, a, a.offset(SS_BLOCKSIZE as isize), depth);
@@ -3157,7 +3157,7 @@ unsafe extern "C" fn trbudget_check(
         return 0 as std::ffi::c_int;
     }
     (*budget).remain += (*budget).incval - size;
-    (*budget).chance -= 1 as std::ffi::c_int;
+    (*budget).chance -= 1;
     return 1 as std::ffi::c_int;
 }
 #[inline]
@@ -3497,7 +3497,7 @@ unsafe extern "C" fn tr_introsort(
     let mut next: std::ffi::c_int = 0;
     let mut ssize: std::ffi::c_int = 0;
     let mut trlink = -(1 as std::ffi::c_int);
-    ssize = 0 as std::ffi::c_int;
+    ssize = 0;
     limit = tr_ilg(last.offset_from(first) as std::ffi::c_long as std::ffi::c_int);
     loop {
         if limit < 0 as std::ffi::c_int {
@@ -5005,8 +5005,8 @@ unsafe extern "C" fn trsort(
     ISAd = ISA.offset(depth as isize);
     while -n < *SA {
         first = SA;
-        skip = 0 as std::ffi::c_int;
-        unsorted = 0 as std::ffi::c_int;
+        skip = 0;
+        unsorted = 0;
         loop {
             t = *first;
             if t < 0 as std::ffi::c_int {
@@ -5015,7 +5015,7 @@ unsafe extern "C" fn trsort(
             } else {
                 if skip != 0 as std::ffi::c_int {
                     *first.offset(skip as isize) = skip;
-                    skip = 0 as std::ffi::c_int;
+                    skip = 0;
                 }
                 last = SA
                     .offset(*ISA.offset(t as isize) as isize)
@@ -5023,7 +5023,7 @@ unsafe extern "C" fn trsort(
                 if (1 as std::ffi::c_long)
                     < last.offset_from(first) as std::ffi::c_long
                 {
-                    budget.count = 0 as std::ffi::c_int;
+                    budget.count = 0;
                     tr_introsort(ISA, ISAd, SA, first, last, &mut budget);
                     if budget.count != 0 as std::ffi::c_int {
                         unsorted += budget.count;
@@ -5070,15 +5070,15 @@ unsafe extern "C" fn sort_typeBstar(
     let mut bufsize: std::ffi::c_int = 0;
     let mut c0: std::ffi::c_int = 0;
     let mut c1: std::ffi::c_int = 0;
-    i = 0 as std::ffi::c_int;
+    i = 0;
     while i < BUCKET_A_SIZE {
-        *bucket_A.offset(i as isize) = 0 as std::ffi::c_int;
+        *bucket_A.offset(i as isize) = 0;
         i += 1;
         i;
     }
-    i = 0 as std::ffi::c_int;
+    i = 0;
     while i < BUCKET_B_SIZE {
-        *bucket_B.offset(i as isize) = 0 as std::ffi::c_int;
+        *bucket_B.offset(i as isize) = 0;
         i += 1;
         i;
     }
@@ -5125,9 +5125,9 @@ unsafe extern "C" fn sort_typeBstar(
         }
     }
     m = n - m;
-    c0 = 0 as std::ffi::c_int;
-    i = 0 as std::ffi::c_int;
-    j = 0 as std::ffi::c_int;
+    c0 = 0;
+    i = 0;
+    j = 0;
     while c0 < ALPHABET_SIZE {
         t = i + BUCKET_A!(c0);
         let ref mut fresh164 = BUCKET_A!(c0);
@@ -5825,14 +5825,14 @@ pub unsafe extern "C" fn divsufsort(
     } else if n == 0 as std::ffi::c_int {
         return 0 as std::ffi::c_int
     } else if n == 1 as std::ffi::c_int {
-        *SA.offset(0) = 0 as std::ffi::c_int;
+        *SA.offset(0) = 0;
         return 0 as std::ffi::c_int;
     } else if n == 2 as std::ffi::c_int {
         m = ((*T.offset(0) as std::ffi::c_int)
             < *T.offset(1) as std::ffi::c_int)
             as std::ffi::c_int;
-        *SA.offset((m ^ 1 as std::ffi::c_int) as isize) = 0 as std::ffi::c_int;
-        *SA.offset(m as isize) = 1 as std::ffi::c_int;
+        *SA.offset((m ^ 1 as std::ffi::c_int) as isize) = 0;
+        *SA.offset(m as isize) = 1;
         return 0 as std::ffi::c_int;
     }
     bucket_A = malloc(
@@ -5917,7 +5917,7 @@ pub unsafe extern "C" fn divbwt(
             .offset(
                 0 as std::ffi::c_int as isize,
             ) = *T.offset((n - 1 as std::ffi::c_int) as isize);
-        i = 0 as std::ffi::c_int;
+        i = 0;
         while i < pidx {
             *U
                 .offset(
@@ -5926,13 +5926,13 @@ pub unsafe extern "C" fn divbwt(
             i += 1;
             i;
         }
-        i += 1 as std::ffi::c_int;
+        i += 1;
         while i < n {
             *U.offset(i as isize) = *B.offset(i as isize) as std::ffi::c_uchar;
             i += 1;
             i;
         }
-        pidx += 1 as std::ffi::c_int;
+        pidx += 1;
     } else {
         pidx = -(2 as std::ffi::c_int);
     }

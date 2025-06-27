@@ -58,14 +58,14 @@ pub type XXH64_state_t = XXH64_state_s;
 pub struct XXH64_canonical_t {
     pub digest: [std::ffi::c_uchar; 8],
 }
-pub const XXH_VERSION_MAJOR: std::ffi::c_int = 0 as std::ffi::c_int;
-pub const XXH_VERSION_MINOR: std::ffi::c_int = 8 as std::ffi::c_int;
-pub const XXH_VERSION_RELEASE: std::ffi::c_int = 2 as std::ffi::c_int;
+pub const XXH_VERSION_MAJOR: std::ffi::c_int = 0;
+pub const XXH_VERSION_MINOR: std::ffi::c_int = 8;
+pub const XXH_VERSION_RELEASE: std::ffi::c_int = 2;
 pub const XXH_VERSION_NUMBER: std::ffi::c_int = XXH_VERSION_MAJOR
     * 100 as std::ffi::c_int * 100 as std::ffi::c_int
     + XXH_VERSION_MINOR * 100 as std::ffi::c_int + XXH_VERSION_RELEASE;
-pub const XXH_FORCE_ALIGN_CHECK: std::ffi::c_int = 0 as std::ffi::c_int;
-pub const XXH32_ENDJMP: std::ffi::c_int = 0 as std::ffi::c_int;
+pub const XXH_FORCE_ALIGN_CHECK: std::ffi::c_int = 0;
+pub const XXH32_ENDJMP: std::ffi::c_int = 0;
 unsafe extern "C" fn XXH_malloc(mut s: usize) -> *mut std::ffi::c_void {
     return malloc(s);
 }
@@ -82,7 +82,7 @@ unsafe extern "C" fn XXH_memcpy(
 unsafe extern "C" fn XXH_read32(mut ptr: *const std::ffi::c_void) -> xxh_u32 {
     return *(ptr as *const xxh_unalign32);
 }
-pub const XXH_CPU_LITTLE_ENDIAN: std::ffi::c_int = 1 as std::ffi::c_int;
+pub const XXH_CPU_LITTLE_ENDIAN: std::ffi::c_int = 1;
 pub const XXH_rotl32: unsafe extern "C" fn(
     std::ffi::c_uint,
     std::ffi::c_uint,
@@ -425,4 +425,4 @@ pub unsafe extern "C" fn ZSTD_XXH64_hashFromCanonical(
 ) -> XXH64_hash_t {
     return XXH_readBE64(src as *const std::ffi::c_void);
 }
-pub const NULL: std::ffi::c_int = 0 as std::ffi::c_int;
+pub const NULL: std::ffi::c_int = 0;
