@@ -743,7 +743,7 @@ unsafe extern "C" fn COVER_selectSegment(
     while pos != bestSegment.end {
         let mut freq = *freqs.offset(*((*ctx).dmerAt).offset(pos as isize) as isize);
         if freq != 0 {
-            newBegin = MIN!(newBegin, pos);
+            newBegin = std::cmp::min(newBegin, pos);
             newEnd = pos.wrapping_add(1);
         }
         pos = pos.wrapping_add(1);
@@ -1107,12 +1107,12 @@ pub unsafe extern "C" fn COVER_computeEpochs(
         num: 0,
         size: 0,
     };
-    epochs.num = MAX!(1, maxDictSize / k / passes);
+    epochs.num = std::cmp::max(1, maxDictSize / k / passes);
     epochs.size = nbDmers / epochs.num;
     if epochs.size >= minEpochSize {
         return epochs;
     }
-    epochs.size = MIN!(minEpochSize, nbDmers);
+    epochs.size = std::cmp::min(minEpochSize, nbDmers);
     epochs.num = nbDmers / epochs.size;
     return epochs;
 }
@@ -1183,7 +1183,7 @@ unsafe extern "C" fn COVER_buildDictionary(
             }
         } else {
             zeroScoreRun = 0;
-            segmentSize = MIN!(segment.end - segment.begin + parameters.d - 1, tail);
+            segmentSize = std::cmp::min(segment.end - segment.begin + parameters.d - 1, tail);
             if segmentSize < parameters.d as usize {
                 break;
             }
@@ -1396,7 +1396,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
         0_usize
     };
     while i < nbSamples {
-        maxSampleSize = MAX!(samplesSizes[i], maxSampleSize);
+        maxSampleSize = std::cmp::max((*samplesSizes.offset(i as isize)), maxSampleSize);
         i = i.wrapping_add(1);
         i;
     }
@@ -1842,7 +1842,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     } else {
         (*parameters).steps
     };
-    let kStepSize = MAX!((kMaxK - kMinK) / kSteps, 1);
+    let kStepSize = std::cmp::max((kMaxK - kMinK) / kSteps, 1);
     let kIterations = (1 as std::ffi::c_uint)
         .wrapping_add(
             kMaxD

@@ -1185,7 +1185,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
     if longOffsets != 0 {
         let ofBits = *ofCodeTable
             .offset(nbSeq.wrapping_sub(1) as isize) as u32;
-        let extraBits = ofBits.wrapping_sub(MIN!(ofBits, STREAM_ACCUMULATOR_MIN - 1));
+        let extraBits = ofBits.wrapping_sub(std::cmp::min(ofBits, STREAM_ACCUMULATOR_MIN - 1));
         if extraBits != 0 {
             BIT_addBits(
                 &mut blockStream,
@@ -1272,7 +1272,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
         }
         if longOffsets != 0 {
             let extraBits_0 = ofBits_0
-                .wrapping_sub(MIN!(ofBits, STREAM_ACCUMULATOR_MIN - 1));
+                .wrapping_sub(std::cmp::min(ofBits, STREAM_ACCUMULATOR_MIN - 1));
             if extraBits_0 != 0 {
                 BIT_addBits(
                     &mut blockStream,

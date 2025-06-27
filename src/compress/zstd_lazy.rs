@@ -419,7 +419,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
     mut mEnd: *const u8,
     mut iStart: *const u8,
 ) -> usize {
-    let vEnd = MIN!(ip + (mEnd - match), iEnd);
+    let vEnd = std::cmp::min(ip + (mEnd - match), iEnd);
     let matchLength = ZSTD_count(ip, match_0, vEnd);
     if match_0.offset(matchLength as isize) != mEnd {
         return matchLength;
@@ -798,7 +798,7 @@ unsafe extern "C" fn ZSTD_insertDUBT1(
     while nbCompares != 0 && matchIndex > windowLow {
         let nextPtr = bt
             .offset((2_u32 * (matchIndex & btMask)) as isize);
-        let mut matchLength = MIN!(commonLengthSmaller, commonLengthLarger);
+        let mut matchLength = std::cmp::min(commonLengthSmaller, commonLengthLarger);
         if dictMode as std::ffi::c_uint
             != ZSTD_extDict as std::ffi::c_int as std::ffi::c_uint
             || (matchIndex as usize).wrapping_add(matchLength) >= dictLimit as usize
@@ -910,7 +910,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBetterDictMatch(
     while nbCompares != 0 && dictMatchIndex > dictLowLimit {
         let nextPtr = dictBt
             .offset((2_u32 * (dictMatchIndex & btMask)) as isize);
-        let mut matchLength = MIN!(commonLengthSmaller, commonLengthLarger);
+        let mut matchLength = std::cmp::min(commonLengthSmaller, commonLengthLarger);
         let mut match_0 = dictBase.offset(dictMatchIndex as isize);
         matchLength = matchLength
             .wrapping_add(
@@ -1000,7 +1000,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
     } else {
         curr.wrapping_sub(btMask)
     };
-    let unsortLimit = MAX!(btLow, windowLow);
+    let unsortLimit = std::cmp::max(btLow, windowLow);
     let mut nextCandidate = bt
         .offset((2_u32 * (matchIndex & btMask)) as isize);
     let mut unsortedMark = bt
@@ -1059,7 +1059,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
     while nbCompares != 0 && matchIndex > windowLow {
         let nextPtr = bt
             .offset((2_u32 * (matchIndex & btMask)) as isize);
-        let mut matchLength = MIN!(commonLengthSmaller, commonLengthLarger);
+        let mut matchLength = std::cmp::min(commonLengthSmaller, commonLengthLarger);
         let mut match_0 = 0 as *const u8;
         if dictMode as std::ffi::c_uint
             != ZSTD_extDict as std::ffi::c_int as std::ffi::c_uint
@@ -1751,7 +1751,7 @@ unsafe extern "C" fn ZSTD_row_fillHashCache(
         (iLimit.offset_from(base.offset(idx as isize)) as std::ffi::c_long
             + 1 as std::ffi::c_long) as u32
     };
-    let lim = idx.wrapping_add(MIN!(ZSTD_ROW_HASH_CACHE_SIZE, maxElemsToPrefetch));
+    let lim = idx.wrapping_add(std::cmp::min(ZSTD_ROW_HASH_CACHE_SIZE, maxElemsToPrefetch));
     while idx < lim {
         let hash = ZSTD_hashPtrSalted(
             base.offset(idx as isize) as *const std::ffi::c_void,
@@ -1877,7 +1877,7 @@ pub unsafe extern "C" fn ZSTD_row_update(
     let rowLog = BOUNDED!(4, ms -> cParams.searchLog, 6);
     let rowMask = ((1 as std::ffi::c_uint) << rowLog)
         .wrapping_sub(1);
-    let mls = MIN!(ms -> cParams.minMatch, 6);
+    let mls = std::cmp::min((*ms).cParams.minMatch, 6);
     ZSTD_row_update_internal(ms, ip, mls, rowLog, rowMask, 0);
 }
 #[inline(always)]
@@ -1972,7 +1972,7 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
     let lowLimit = if isDictionary != 0 { lowestValid } else { withinMaxDistance };
     let rowEntries = (1 as std::ffi::c_uint) << rowLog;
     let rowMask = rowEntries.wrapping_sub(1);
-    let cappedSearchLog = MIN!(cParams -> searchLog, rowLog);
+    let cappedSearchLog = std::cmp::min((*cParams).searchLog, rowLog);
     let groupWidth = ZSTD_row_matchMaskGroupWidth(rowEntries);
     let hashSalt = (*ms).hashSalt;
     let mut nbAttempts = (1 as std::ffi::c_uint) << cappedSearchLog;

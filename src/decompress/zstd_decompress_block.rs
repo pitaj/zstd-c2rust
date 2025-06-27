@@ -1311,7 +1311,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             let lhlCode_0 = (*istart.offset(0)
                 as std::ffi::c_int >> 2 & 3 as std::ffi::c_int)
                 as u32;
-            let mut expectedWriteSize_0 = MIN!(blockSizeMax, dstCapacity);
+            let mut expectedWriteSize_0 = std::cmp::min(blockSizeMax, dstCapacity);
             match lhlCode_0 {
                 1 => {
                     lhSize_0 = 2;
@@ -1414,7 +1414,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 as u32;
             let mut litSize_1: usize = 0;
             let mut lhSize_1: usize = 0;
-            let mut expectedWriteSize_1 = MIN!(blockSizeMax, dstCapacity);
+            let mut expectedWriteSize_1 = std::cmp::min(blockSizeMax, dstCapacity);
             match lhlCode_1 {
                 1 => {
                     lhSize_1 = 2;
@@ -1511,7 +1511,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
         >> 2 & 3 as std::ffi::c_int) as u32;
     let lhc = MEM_readLE32(istart as *const std::ffi::c_void);
     let mut hufSuccess: usize = 0;
-    let mut expectedWriteSize = MIN!(blockSizeMax, dstCapacity);
+    let mut expectedWriteSize = std::cmp::min(blockSizeMax, dstCapacity);
     let flags = 0 as std::ffi::c_int
         | (if ZSTD_DCtx_get_bmi2(dctx) != 0 {
             HUF_flags_bmi2 as std::ffi::c_int
@@ -4758,7 +4758,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             matchLength: 0,
             offset: 0,
         }; 8];
-        let seqAdvance = MIN!(nbSeq, ADVANCED_SEQS);
+        let seqAdvance = std::cmp::min(nbSeq, ADVANCED_SEQS);
         let mut seqState = seqState_t {
             DStream: BIT_DStream_t {
                 bitContainer: 0,
@@ -5304,8 +5304,8 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
         u = 0;
         while u < max {
             info
-                .maxNbAdditionalBits = MAX!(
-                info.maxNbAdditionalBits, table[u].nbAdditionalBits
+                .maxNbAdditionalBits = std::cmp::max(
+                info.maxNbAdditionalBits, (*table.offset(u as isize)).nbAdditionalBits
             );
             if (*table.offset(u as isize)).nbAdditionalBits as std::ffi::c_int
                 > 22

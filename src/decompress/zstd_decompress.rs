@@ -947,7 +947,7 @@ unsafe extern "C" fn ZSTD_limitCopy(
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
 ) -> usize {
-    let length = MIN!(dstCapacity, srcSize);
+    let length = std::cmp::min(dstCapacity, srcSize);
     if length > 0 {
         libc::memcpy(
             ZSTD_memcpy!(dst, src, length),
@@ -1836,7 +1836,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
             && format as std::ffi::c_uint
                 != ZSTD_f_zstd1_magicless as std::ffi::c_int as std::ffi::c_uint
         {
-            let toCopy = MIN!(4, srcSize);
+            let toCopy = std::cmp::min(4, srcSize);
             let mut hbuf: [std::ffi::c_uchar; 4] = [0; 4];
             MEM_writeLE32(hbuf.as_mut_ptr() as *mut std::ffi::c_void, ZSTD_MAGICNUMBER);
             libc::memcpy(
@@ -1991,7 +1991,7 @@ pub unsafe extern "C" fn ZSTD_getFrameHeader_advanced(
     (*zfhPtr).frameType = ZSTD_frame;
     (*zfhPtr).frameContentSize = frameContentSize as std::ffi::c_ulonglong;
     (*zfhPtr).windowSize = windowSize as std::ffi::c_ulonglong;
-    (*zfhPtr).blockSizeMax = MIN!(windowSize, ZSTD_BLOCKSIZE_MAX) as std::ffi::c_uint;
+    (*zfhPtr).blockSizeMax = std::cmp::min(windowSize, ZSTD_BLOCKSIZE_MAX) as std::ffi::c_uint;
     (*zfhPtr).dictID = dictID;
     (*zfhPtr).checksumFlag = checksumFlag;
     return 0;
@@ -2388,7 +2388,7 @@ pub unsafe extern "C" fn ZSTD_decompressionMargin(
                 );
             margin = margin
                 .wrapping_add(3_usize * frameSizeInfo.nbBlocks);
-            maxBlockSize = MAX!(maxBlockSize, zfh.blockSizeMax);
+            maxBlockSize = std::cmp::max(maxBlockSize, zfh.blockSizeMax);
         } else {
             margin = margin.wrapping_add(compressedSize);
         }
@@ -2549,8 +2549,8 @@ unsafe extern "C" fn ZSTD_decompressFrame(
     if (*dctx).maxBlockSizeParam != 0 {
         (*dctx)
             .fParams
-            .blockSizeMax = MIN!(
-            dctx -> fParams.blockSizeMax, (unsigned) dctx -> maxBlockSizeParam
+            .blockSizeMax = std::cmp::min(
+            (*dctx).fParams.blockSizeMax, (unsigned) (*dctx).maxBlockSizeParam
         );
     }
     loop {
@@ -3968,7 +3968,7 @@ unsafe extern "C" fn ZSTD_decodingBufferSize_internal(
     mut frameContentSize: std::ffi::c_ulonglong,
     mut blockSizeMax: usize,
 ) -> usize {
-    let blockSize = MIN!((usize) MIN(windowSize, ZSTD_BLOCKSIZE_MAX), blockSizeMax);
+    let blockSize = std::cmp::min((usize) MIN(windowSize, ZSTD_BLOCKSIZE_MAX), blockSizeMax);
     let neededRBSize = windowSize
         .wrapping_add(
             (blockSize * 2_usize) as std::ffi::c_ulonglong,
@@ -3976,7 +3976,7 @@ unsafe extern "C" fn ZSTD_decodingBufferSize_internal(
         .wrapping_add(
             (WILDCOPY_OVERLENGTH * 2 as std::ffi::c_int) as std::ffi::c_ulonglong,
         );
-    let neededSize = MIN!(frameContentSize, neededRBSize);
+    let neededSize = std::cmp::min(frameContentSize, neededRBSize);
     let minRBSize = neededSize as usize;
     if minRBSize as std::ffi::c_ulonglong != neededSize {
         return -(ZSTD_error_frameParameter_windowTooLarge as std::ffi::c_int) as usize;
@@ -3996,7 +3996,7 @@ pub unsafe extern "C" fn ZSTD_decodingBufferSize_min(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_estimateDStreamSize(mut windowSize: usize) -> usize {
-    let blockSize = MIN!(windowSize, ZSTD_BLOCKSIZE_MAX);
+    let blockSize = std::cmp::min(windowSize, ZSTD_BLOCKSIZE_MAX);
     let inBuffSize = blockSize;
     let outBuffSize = ZSTD_decodingBufferSize_min(
         windowSize as std::ffi::c_ulonglong,
@@ -4353,8 +4353,8 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 "First few bytes detected incorrect"
                             );
                         }
-                        return MAX!(
-                            (usize) ZSTD_FRAMEHEADERSIZE_MIN(zds -> format), hSize
+                        return std::cmp::max(
+                            (usize) ZSTD_FRAMEHEADERSIZE_MIN((*zds).format), hSize
                         )
                             .wrapping_sub((*zds).lhSize)
                             .wrapping_add(ZSTD_blockHeaderSize);
@@ -4473,8 +4473,8 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             }
                             (*zds)
                                 .fParams
-                                .windowSize = MAX!(
-                                zds -> fParams.windowSize, 1U << ZSTD_WINDOWLOG_ABSOLUTEMIN
+                                .windowSize = std::cmp::max(
+                                (*zds).fParams.windowSize, 1U << ZSTD_WINDOWLOG_ABSOLUTEMIN
                             );
                             if (*zds).fParams.windowSize
                                 > (*zds).maxWindowSize as std::ffi::c_ulonglong
@@ -4485,12 +4485,12 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                             if (*zds).maxBlockSizeParam != 0 {
                                 (*zds)
                                     .fParams
-                                    .blockSizeMax = MIN!(
-                                    zds -> fParams.blockSizeMax, (unsigned) zds ->
+                                    .blockSizeMax = std::cmp::min(
+                                    (*zds).fParams.blockSizeMax, (unsigned) zds ->
                                     maxBlockSizeParam
                                 );
                             }
-                            let neededInBuffSize = MAX!(zds -> fParams.blockSizeMax, 4);
+                            let neededInBuffSize = std::cmp::max((*zds).fParams.blockSizeMax, 4);
                             let neededOutBuffSize = if (*zds).outBufferMode
                                 as std::ffi::c_uint
                                 == ZSTD_bm_buffered as std::ffi::c_int as std::ffi::c_uint

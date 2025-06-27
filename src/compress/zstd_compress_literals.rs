@@ -299,7 +299,7 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     mut strategy: ZSTD_strategy,
     mut huf_repeat: HUF_repeat,
 ) -> usize {
-    let shift = MIN!(9 - (int) strategy, 3);
+    let shift = std::cmp::min(9 - (int) strategy, 3);
     let mintc = if huf_repeat as std::ffi::c_uint
         == HUF_repeat_valid as std::ffi::c_int as std::ffi::c_uint
     {

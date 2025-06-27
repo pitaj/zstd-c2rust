@@ -497,7 +497,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
     mut mEnd: *const u8,
     mut iStart: *const u8,
 ) -> usize {
-    let vEnd = MIN!(ip + (mEnd - match), iEnd);
+    let vEnd = std::cmp::min(ip + (mEnd - match), iEnd);
     let matchLength = ZSTD_count(ip, match_0, vEnd);
     if match_0.offset(matchLength as isize) != mEnd {
         return matchLength;
@@ -538,11 +538,11 @@ unsafe extern "C" fn ZSTD_window_canOverflowCorrect(
     let cycleSize = (1 as std::ffi::c_uint) << cycleLog;
     let curr = (src as *const u8).offset_from(window.base) as std::ffi::c_long as u32;
     let minIndexToOverflowCorrect = cycleSize
-        .wrapping_add(MAX!(maxDist, cycleSize))
+        .wrapping_add(std::cmp::max(maxDist, cycleSize))
         .wrapping_add(ZSTD_WINDOW_START_INDEX as u32);
     let adjustment = (window.nbOverflowCorrections)
         .wrapping_add(1);
-    let adjustedIndex = MAX!(
+    let adjustedIndex = std::cmp::max(
         minIndexToOverflowCorrect * adjustment, minIndexToOverflowCorrect
     );
     let indexLargeEnough = (curr > adjustedIndex) as std::ffi::c_int as u32;
@@ -588,13 +588,13 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
         as u32;
     let currentCycle = curr & cycleMask;
     let currentCycleCorrection = if currentCycle < ZSTD_WINDOW_START_INDEX as u32 {
-        MAX!(cycleSize, ZSTD_WINDOW_START_INDEX)
+        std::cmp::max(cycleSize, ZSTD_WINDOW_START_INDEX)
     } else {
         0_u32
     };
     let newCurrent = currentCycle
         .wrapping_add(currentCycleCorrection)
-        .wrapping_add(MAX!(maxDist, cycleSize));
+        .wrapping_add(std::cmp::max(maxDist, cycleSize));
     let correction = curr.wrapping_sub(newCurrent);
     ZSTD_WINDOW_OVERFLOW_CORRECT_FREQUENTLY == 0;
     (*window).base = ((*window).base).offset(correction as isize);
@@ -1010,7 +1010,7 @@ unsafe extern "C" fn ZSTD_ldm_gear_init(
     mut state: *mut ldmRollingHashState_t,
     mut params: *const ldmParams_t,
 ) {
-    let mut maxBitsInMask = MIN!(params -> minMatchLength, 64);
+    let mut maxBitsInMask = std::cmp::min((*params).minMatchLength, 64);
     let mut hashRateLog = (*params).hashRateLog;
     (*state).rolling = !0_u32 as u64;
     if hashRateLog > 0
@@ -1221,12 +1221,12 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
             LDM_BUCKET_SIZE_LOG, (u32) cParams -> strategy, ZSTD_LDM_BUCKETSIZELOG_MAX
         );
     }
-    (*params).bucketSizeLog = MIN!(params -> bucketSizeLog, params -> hashLog);
+    (*params).bucketSizeLog = std::cmp::min((*params).bucketSizeLog, (*params).hashLog);
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_ldm_getTableSize(mut params: ldmParams_t) -> usize {
     let ldmHSize = 1_usize << params.hashLog;
-    let ldmBucketSizeLog = MIN!(params.bucketSizeLog, params.hashLog);
+    let ldmBucketSizeLog = std::cmp::min(params.bucketSizeLog, params.hashLog);
     let ldmBucketSize = 1_usize
         << (params.hashLog as usize).wrapping_sub(ldmBucketSizeLog);
     let totalSize = (ZSTD_cwksp_alloc_size(ldmBucketSize))
@@ -1423,7 +1423,7 @@ unsafe extern "C" fn ZSTD_ldm_limitTableUpdate(
     if curr > ((*ms).nextToUpdate).wrapping_add(1024) {
         (*ms)
             .nextToUpdate = curr
-            .wrapping_sub(MIN!(512, curr - ms -> nextToUpdate - 1024));
+            .wrapping_sub(std::cmp::min(512, curr - (*ms).nextToUpdate - 1024));
     }
 }
 unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(

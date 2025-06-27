@@ -2208,7 +2208,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
     if nbWorkers < 1 {
         return NULL_0 as *mut ZSTDMT_CCtx;
     }
-    nbWorkers = MIN!(nbWorkers, ZSTDMT_NBWORKERS_MAX);
+    nbWorkers = std::cmp::min(nbWorkers, ZSTDMT_NBWORKERS_MAX);
     if (cMem.customAlloc).is_some() as std::ffi::c_int
         ^ (cMem.customFree).is_some() as std::ffi::c_int != 0
     {
@@ -2517,13 +2517,13 @@ unsafe extern "C" fn ZSTDMT_computeTargetJobLog(
     if (*params).ldmParams.enableLdm as std::ffi::c_uint
         == ZSTD_ps_enable as std::ffi::c_int as std::ffi::c_uint
     {
-        jobLog = MAX!(
-            21, ZSTD_cycleLog(params -> cParams.chainLog, params -> cParams.strategy) + 3
+        jobLog = std::cmp::max(
+            21, ZSTD_cycleLog((*params).cParams.chainLog, (*params).cParams.strategy) + 3
         );
     } else {
-        jobLog = MAX!(20, params -> cParams.windowLog + 2);
+        jobLog = std::cmp::max(20, (*params).cParams.windowLog + 2);
     }
-    return MIN!(jobLog, (unsigned) ZSTDMT_JOBLOG_MAX);
+    return std::cmp::min(jobLog, (unsigned) ZSTDMT_JOBLOG_MAX);
 }
 unsafe extern "C" fn ZSTDMT_overlapLog_default(
     mut strat: ZSTD_strategy,
@@ -2558,7 +2558,7 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
     if (*params).ldmParams.enableLdm as std::ffi::c_uint
         == ZSTD_ps_enable as std::ffi::c_int as std::ffi::c_uint
     {
-        ovLog = MIN!(params -> cParams.windowLog, ZSTDMT_computeTargetJobLog(params) - 2)
+        ovLog = std::cmp::min((*params).cParams.windowLog, ZSTDMT_computeTargetJobLog(params) - 2)
             .wrapping_sub(overlapRLog as std::ffi::c_uint) as std::ffi::c_int;
     }
     return if ovLog == 0 {
@@ -2669,9 +2669,9 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
         + ((*mtctx).targetPrefixSize > 0)
             as std::ffi::c_int) as usize;
     let slackSize = (*mtctx).targetSectionSize * nbSlackBuffers;
-    let nbWorkers = MAX!(mtctx -> params.nbWorkers, 1);
+    let nbWorkers = std::cmp::max((*mtctx).params.nbWorkers, 1);
     let sectionsSize = (*mtctx).targetSectionSize * nbWorkers;
-    let capacity = MAX!(windowSize, sectionsSize).wrapping_add(slackSize);
+    let capacity = std::cmp::max(windowSize, sectionsSize).wrapping_add(slackSize);
     if (*mtctx).roundBuff.capacity < capacity {
         if !((*mtctx).roundBuff.buffer).is_null() {
             ZSTD_customFree(
@@ -2806,7 +2806,7 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
         (*mtctx).inBuff.buffer = g_nullBuffer;
         (*mtctx).inBuff.filled = 0;
         if endFrame == 0 {
-            let newPrefixSize = MIN!(srcSize, mtctx -> targetPrefixSize);
+            let newPrefixSize = std::cmp::min(srcSize, (*mtctx).targetPrefixSize);
             (*mtctx)
                 .inBuff
                 .prefix
@@ -2904,8 +2904,8 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
             .frameChecksumNeeded = 0;
     }
     if cSize > 0 {
-        let toFlush = MIN!(
-            cSize - mtctx -> jobs[wJobID].dstFlushed, output -> size - output -> pos
+        let toFlush = std::cmp::min(
+            cSize - (*mtctx).(*jobs.offset(wJobID as isize)).dstFlushed, (*output).size - (*output).pos
         );
         if toFlush > 0 {
             libc::memcpy(
@@ -3116,8 +3116,8 @@ unsafe extern "C" fn findSynchronizationPoint(
     let mut prev = 0 as *const u8;
     let mut pos: usize = 0;
     syncPoint
-        .toLoad = MIN!(
-        input.size - input.pos, mtctx -> targetSectionSize - mtctx -> inBuff.filled
+        .toLoad = std::cmp::min(
+        input.size - input.pos, (*mtctx).targetSectionSize - (*mtctx).inBuff.filled
     );
     syncPoint.flush = 0;
     if (*mtctx).params.rsyncable == 0 {
@@ -3279,7 +3279,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
         endOp,
     );
     if (*input).pos < (*input).size {
-        return MAX!(remainingToFlush, 1);
+        return std::cmp::max(remainingToFlush, 1);
     }
     return remainingToFlush;
 }

@@ -1686,7 +1686,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                     (*table.offset(u as isize)).length as usize,
                 ) != 0
                 {
-                    let addedLength_1 = MAX!(elt.length - table[u].length, 1);
+                    let addedLength_1 = std::cmp::max(elt.length - (*table.offset(u as isize)).length, 1);
                     (*table.offset(u as isize)).pos = elt.pos;
                     let ref mut fresh6 = (*table.offset(u as isize)).savings;
                     *fresh6 = (*fresh6)
@@ -1695,7 +1695,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                                 / elt.length as usize) as u32,
                         );
                     (*table.offset(u as isize))
-                        .length = MIN!(elt.length, table[u].length + 1);
+                        .length = std::cmp::min(elt.length, (*table.offset(u as isize)).length + 1);
                     return u;
                 }
             }
@@ -2015,7 +2015,7 @@ unsafe extern "C" fn ZDICT_countEStats(
     mut srcSize: usize,
     mut notificationLevel: u32,
 ) {
-    let blockSizeMax = MIN!(ZSTD_BLOCKSIZE_MAX, 1 << params -> cParams.windowLog);
+    let blockSizeMax = std::cmp::min(ZSTD_BLOCKSIZE_MAX, 1 << (*params).cParams.windowLog);
     let mut cSize: usize = 0;
     if srcSize > blockSizeMax {
         srcSize = blockSizeMax;
@@ -2671,7 +2671,7 @@ unsafe extern "C" fn ZDICT_maxRep(mut reps: *const u32) -> u32 {
     let mut r: std::ffi::c_int = 0;
     r = 1;
     while r < ZSTD_REP_NUM {
-        maxRep = MAX!(maxRep, reps[r]);
+        maxRep = std::cmp::max(maxRep, (*reps.offset(r as isize)));
         r += 1;
         r;
     }
@@ -2847,7 +2847,7 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
             dictContentSize,
         );
     }
-    return MIN!(dictBufferCapacity, hSize + dictContentSize);
+    return std::cmp::min(dictBufferCapacity, hSize + dictContentSize);
 }
 unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     mut dictBuffer: *mut std::ffi::c_void,
@@ -2914,7 +2914,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         notificationLevel,
     );
     if params.zParams.notificationLevel >= 3 {
-        let nb = MIN!(25, dictList[0].pos);
+        let nb = std::cmp::min(25, (*dictList.offset(0 as isize)).pos);
         let dictContentSize = ZDICT_dictSize(dictList);
         let mut u: std::ffi::c_uint = 0;
         if DISPLAYLEVEL!(
@@ -2946,7 +2946,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         while u < nb {
             let pos = (*dictList.offset(u as isize)).pos;
             let length = (*dictList.offset(u as isize)).length;
-            let printedLength = MIN!(40, length);
+            let printedLength = std::cmp::min(40, length);
             if pos as usize > samplesBuffSize
                 || pos.wrapping_add(length) as usize > samplesBuffSize
             {

@@ -1755,7 +1755,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
     let mut mlCodePtr: *const u8 = (*seqStorePtr).mlCode;
     let mut ofCodePtr: *const u8 = (*seqStorePtr).ofCode;
     let minTarget = ZSTD_TARGETCBLOCKSIZE_MIN as usize;
-    let targetCBlockSize = MAX!(minTarget, cctxParams -> targetCBlockSize);
+    let targetCBlockSize = std::cmp::max(minTarget, (*cctxParams).targetCBlockSize);
     let mut writeLitEntropy = ((*entropyMetadata).hufMetadata.hType as std::ffi::c_uint
         == set_compressed as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_int;
     let mut writeSeqEntropy: std::ffi::c_int = 1;
@@ -1781,7 +1781,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
         };
         let avgSeqCost = (ebs.estBlockSize).wrapping_sub(ebs.estLitSize)
             * BYTESCALE as usize / nbSeqs;
-        let nbSubBlocks = MAX!(
+        let nbSubBlocks = std::cmp::max(
             (ebs.estBlockSize + (targetCBlockSize / 2)) / targetCBlockSize, 1
         );
         let mut n: usize = 0;

@@ -2497,7 +2497,7 @@ unsafe extern "C" fn ss_swapmerge(
             }
         } else {
             m = 0;
-            len = MIN!(middle - first, last - middle);
+            len = std::cmp::min(middle - first, last - middle);
             half = len >> 1;
             while (0 as std::ffi::c_int) < len {
                 if ss_compare(

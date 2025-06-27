@@ -423,7 +423,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
     mut mEnd: *const u8,
     mut iStart: *const u8,
 ) -> usize {
-    let vEnd = MIN!(ip + (mEnd - match), iEnd);
+    let vEnd = std::cmp::min(ip + (mEnd - match), iEnd);
     let matchLength = ZSTD_count(ip, match_0, vEnd);
     if match_0.offset(matchLength as isize) != mEnd {
         return matchLength;

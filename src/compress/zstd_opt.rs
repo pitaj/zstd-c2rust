@@ -737,7 +737,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
     mut mEnd: *const u8,
     mut iStart: *const u8,
 ) -> usize {
-    let vEnd = MIN!(ip + (mEnd - match), iEnd);
+    let vEnd = std::cmp::min(ip + (mEnd - match), iEnd);
     let matchLength = ZSTD_count(ip, match_0, vEnd);
     if match_0.offset(matchLength as isize) != mEnd {
         return matchLength;
@@ -1705,7 +1705,7 @@ unsafe extern "C" fn ZSTD_insertBt1(
     while nbCompares != 0 && matchIndex >= windowLow {
         let nextPtr = bt
             .offset((2_u32 * (matchIndex & btMask)) as isize);
-        let mut matchLength = MIN!(commonLengthSmaller, commonLengthLarger);
+        let mut matchLength = std::cmp::min(commonLengthSmaller, commonLengthLarger);
         if extDict == 0
             || (matchIndex as usize).wrapping_add(matchLength) >= dictLimit as usize
         {
@@ -1838,7 +1838,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
     mls: u32,
 ) -> u32 {
     let cParams: *const ZSTD_compressionParameters = &mut (*ms).cParams;
-    let sufficient_len = MIN!(cParams -> targetLength, ZSTD_OPT_NUM - 1);
+    let sufficient_len = std::cmp::min((*cParams).targetLength, ZSTD_OPT_NUM - 1);
     let base = (*ms).window.base;
     let curr = ip.offset_from(base) as std::ffi::c_long as u32;
     let hashLog = (*cParams).hashLog;
@@ -2089,7 +2089,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
         let nextPtr = bt
             .offset((2_u32 * (matchIndex & btMask)) as isize);
         let mut match_2 = 0 as *const u8;
-        let mut matchLength = MIN!(commonLengthSmaller, commonLengthLarger);
+        let mut matchLength = std::cmp::min(commonLengthSmaller, commonLengthLarger);
         if dictMode as std::ffi::c_uint
             == ZSTD_noDict as std::ffi::c_int as std::ffi::c_uint
             || dictMode as std::ffi::c_uint
@@ -2183,7 +2183,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
                 .offset(
                     (2_u32 * (dictMatchIndex & dmsBtMask)) as isize,
                 );
-            let mut matchLength_0 = MIN!(commonLengthSmaller, commonLengthLarger);
+            let mut matchLength_0 = std::cmp::min(commonLengthSmaller, commonLengthLarger);
             let mut match_3 = dmsBase.offset(dictMatchIndex as isize);
             matchLength_0 = matchLength_0
                 .wrapping_add(
@@ -2719,7 +2719,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
     let prefixStart = base.offset((*ms).window.dictLimit as isize);
     let cParams: *const ZSTD_compressionParameters = &mut (*ms).cParams;
     let mut getAllMatches = ZSTD_selectBtGetAllMatches(ms, dictMode);
-    let sufficient_len = MIN!(cParams -> targetLength, ZSTD_OPT_NUM - 1);
+    let sufficient_len = std::cmp::min((*cParams).targetLength, ZSTD_OPT_NUM - 1);
     let minMatch = (if (*cParams).minMatch == 3 {
         3 as std::ffi::c_int
     } else {

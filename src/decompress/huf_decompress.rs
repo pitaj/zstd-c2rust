@@ -774,7 +774,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     }
     let mut dtd = HUF_getDTableDesc(DTable);
     let maxTableLog = (dtd.maxTableLog as std::ffi::c_int + 1 as std::ffi::c_int) as u32;
-    let targetTableLog = MIN!(maxTableLog, HUF_DECODER_FAST_TABLELOG);
+    let targetTableLog = std::cmp::min(maxTableLog, HUF_DECODER_FAST_TABLELOG);
     tableLog = HUF_rescaleStats(
         ((*wksp).huffWeight).as_mut_ptr(),
         ((*wksp).rankVal).as_mut_ptr(),
@@ -1344,7 +1344,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
             as std::ffi::c_long as usize / 5;
         let iiters = (ip[0]).offset_from(ilowest)
             as std::ffi::c_long as usize / 7;
-        let iters = MIN!(oiters, iiters);
+        let iters = std::cmp::min(oiters, iiters);
         let symbols = iters * 5;
         olimit = (op[3]).offset(symbols as isize);
         if op[3] == olimit {
@@ -2772,7 +2772,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
         while stream < 4 {
             let oiters = (oend[stream as usize]).offset_from(op[stream as usize])
                 as std::ffi::c_long as usize / 10;
-            iters = MIN!(iters, oiters);
+            iters = std::cmp::min(iters, oiters);
             stream += 1;
             stream;
         }

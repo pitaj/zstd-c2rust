@@ -1942,11 +1942,11 @@ unsafe extern "C" fn ZSTD_window_canOverflowCorrect(
     let cycleSize = (1 as std::ffi::c_uint) << cycleLog;
     let curr = (src as *const u8).offset_from(window.base) as std::ffi::c_long as u32;
     let minIndexToOverflowCorrect = cycleSize
-        .wrapping_add(MAX!(maxDist, cycleSize))
+        .wrapping_add(std::cmp::max(maxDist, cycleSize))
         .wrapping_add(ZSTD_WINDOW_START_INDEX as u32);
     let adjustment = (window.nbOverflowCorrections)
         .wrapping_add(1);
-    let adjustedIndex = MAX!(
+    let adjustedIndex = std::cmp::max(
         minIndexToOverflowCorrect * adjustment, minIndexToOverflowCorrect
     );
     let indexLargeEnough = (curr > adjustedIndex) as std::ffi::c_int as u32;
@@ -1992,13 +1992,13 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
         as u32;
     let currentCycle = curr & cycleMask;
     let currentCycleCorrection = if currentCycle < ZSTD_WINDOW_START_INDEX as u32 {
-        MAX!(cycleSize, ZSTD_WINDOW_START_INDEX)
+        std::cmp::max(cycleSize, ZSTD_WINDOW_START_INDEX)
     } else {
         0_u32
     };
     let newCurrent = currentCycle
         .wrapping_add(currentCycleCorrection)
-        .wrapping_add(MAX!(maxDist, cycleSize));
+        .wrapping_add(std::cmp::max(maxDist, cycleSize));
     let correction = curr.wrapping_sub(newCurrent);
     ZSTD_WINDOW_OVERFLOW_CORRECT_FREQUENTLY == 0;
     (*window).base = ((*window).base).offset(correction as isize);
@@ -2538,7 +2538,7 @@ unsafe extern "C" fn ZSTD_limitCopy(
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
 ) -> usize {
-    let length = MIN!(dstCapacity, srcSize);
+    let length = std::cmp::min(dstCapacity, srcSize);
     if length > 0 {
         libc::memcpy(
             ZSTD_memcpy!(dst, src, length),
@@ -4531,7 +4531,7 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
         }
         130 => {
             if value != 0 {
-                value = MAX!(value, ZSTD_TARGETCBLOCKSIZE_MIN);
+                value = std::cmp::max(value, ZSTD_TARGETCBLOCKSIZE_MIN);
                 if ZSTD_cParam_withinBounds(ZSTD_c_targetCBlockSize, value) == 0 {
                     return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
                         as usize;
@@ -5463,7 +5463,7 @@ unsafe extern "C" fn ZSTD_sizeof_matchState(
     let hashLog3 = if forCCtx != 0
         && (*cParams).minMatch == 3
     {
-        MIN!(ZSTD_HASHLOG3_MAX, cParams -> windowLog)
+        std::cmp::min(ZSTD_HASHLOG3_MAX, (*cParams).windowLog)
     } else {
         0 as std::ffi::c_uint
     };
@@ -5568,7 +5568,7 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
 ) -> usize {
     let windowSize = BOUNDED!(1ULL, 1ULL << cParams -> windowLog, pledgedSrcSize)
         as usize;
-    let blockSize = MIN!(ZSTD_resolveMaxBlockSize(maxBlockSize), windowSize);
+    let blockSize = std::cmp::min(ZSTD_resolveMaxBlockSize(maxBlockSize), windowSize);
     let maxNbSeq = ZSTD_maxNbSeq(blockSize, (*cParams).minMatch, useSequenceProducer);
     let tokenSpace = (ZSTD_cwksp_alloc_size(
         (WILDCOPY_OVERLENGTH as usize).wrapping_add(blockSize),
@@ -5710,7 +5710,7 @@ pub unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCParams(
         noRowCCtxSize = ZSTD_estimateCCtxSize_usingCCtxParams(&mut initialParams);
         initialParams.useRowMatchFinder = ZSTD_ps_enable;
         rowCCtxSize = ZSTD_estimateCCtxSize_usingCCtxParams(&mut initialParams);
-        return MAX!(noRowCCtxSize, rowCCtxSize);
+        return std::cmp::max(noRowCCtxSize, rowCCtxSize);
     } else {
         return ZSTD_estimateCCtxSize_usingCCtxParams(&mut initialParams)
     };
@@ -5728,7 +5728,7 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_internal(
             0,
             ZSTD_cpm_noAttachDict,
         );
-        largestSize = MAX!(ZSTD_estimateCCtxSize_usingCParams(cParams), largestSize);
+        largestSize = std::cmp::max(ZSTD_estimateCCtxSize_usingCParams(cParams), largestSize);
         tier += 1;
         tier;
     }
@@ -5740,7 +5740,7 @@ pub unsafe extern "C" fn ZSTD_estimateCCtxSize(
 ) -> usize {
     let mut level: std::ffi::c_int = 0;
     let mut memBudget: usize = 0;
-    level = MIN!(compressionLevel, 1);
+    level = std::cmp::min(compressionLevel, 1);
     while level <= compressionLevel {
         let newMB = ZSTD_estimateCCtxSize_internal(level);
         if newMB > memBudget {
@@ -5764,8 +5764,8 @@ pub unsafe extern "C" fn ZSTD_estimateCStreamSize_usingCCtxParams(
         0,
         ZSTD_cpm_noAttachDict,
     );
-    let blockSize = MIN!(
-        ZSTD_resolveMaxBlockSize(params -> maxBlockSize), (usize) 1 << cParams.windowLog
+    let blockSize = std::cmp::min(
+        ZSTD_resolveMaxBlockSize((*params).maxBlockSize), (usize) 1 << cParams.windowLog
     );
     let inBuffSize = if (*params).inBufferMode as std::ffi::c_uint
         == ZSTD_bm_buffered as std::ffi::c_int as std::ffi::c_uint
@@ -5809,7 +5809,7 @@ pub unsafe extern "C" fn ZSTD_estimateCStreamSize_usingCParams(
         noRowCCtxSize = ZSTD_estimateCStreamSize_usingCCtxParams(&mut initialParams);
         initialParams.useRowMatchFinder = ZSTD_ps_enable;
         rowCCtxSize = ZSTD_estimateCStreamSize_usingCCtxParams(&mut initialParams);
-        return MAX!(noRowCCtxSize, rowCCtxSize);
+        return std::cmp::max(noRowCCtxSize, rowCCtxSize);
     } else {
         return ZSTD_estimateCStreamSize_usingCCtxParams(&mut initialParams)
     };
@@ -5831,7 +5831,7 @@ pub unsafe extern "C" fn ZSTD_estimateCStreamSize(
 ) -> usize {
     let mut level: std::ffi::c_int = 0;
     let mut memBudget: usize = 0;
-    level = MIN!(compressionLevel, 1);
+    level = std::cmp::min(compressionLevel, 1);
     while level <= compressionLevel {
         let newMB = ZSTD_estimateCStreamSize_internal(level);
         if newMB > memBudget {
@@ -5950,7 +5950,7 @@ unsafe extern "C" fn ZSTD_reset_matchState(
         == ZSTD_resetTarget_CCtx as std::ffi::c_int as std::ffi::c_uint
         && (*cParams).minMatch == 3
     {
-        MIN!(ZSTD_HASHLOG3_MAX, cParams -> windowLog)
+        std::cmp::min(ZSTD_HASHLOG3_MAX, (*cParams).windowLog)
     } else {
         0 as std::ffi::c_uint
     };
@@ -6153,7 +6153,7 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
     } else {
         pledgedSrcSize
     };
-    let blockSize = MIN!(params -> maxBlockSize, windowSize);
+    let blockSize = std::cmp::min((*params).maxBlockSize, windowSize);
     let maxNbSeq = ZSTD_maxNbSeq(
         blockSize,
         (*params).cParams.minMatch,
@@ -9419,7 +9419,7 @@ unsafe extern "C" fn ZSTD_optimalBlockSize(
             < (128 as std::ffi::c_int
                 * ((1 as std::ffi::c_int) << 10)) as usize
     {
-        return MIN!(srcSize, blockSizeMax);
+        return std::cmp::min(srcSize, blockSizeMax);
     }
     if savings < 3 {
         return (128 as std::ffi::c_int
@@ -9899,7 +9899,7 @@ pub unsafe extern "C" fn ZSTD_compressContinue(
 }
 unsafe extern "C" fn ZSTD_getBlockSize_deprecated(mut cctx: *const ZSTD_CCtx) -> usize {
     let cParams = (*cctx).appliedParams.cParams;
-    return MIN!(cctx -> appliedParams.maxBlockSize, (usize) 1 << cParams.windowLog);
+    return std::cmp::min((*cctx).appliedParams.maxBlockSize, (usize) 1 << cParams.windowLog);
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_getBlockSize(mut cctx: *const ZSTD_CCtx) -> usize {
@@ -9973,7 +9973,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
         let shortCacheMaxDictSize = ((1 as std::ffi::c_uint)
             << 32 - ZSTD_SHORT_CACHE_TAG_BITS)
             .wrapping_sub(ZSTD_WINDOW_START_INDEX as std::ffi::c_uint);
-        maxDictSize = MIN!(maxDictSize, shortCacheMaxDictSize);
+        maxDictSize = std::cmp::min(maxDictSize, shortCacheMaxDictSize);
     }
     if srcSize > maxDictSize as usize {
         ip = iend.offset(-(maxDictSize as isize));
@@ -10012,7 +10012,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
         ZSTD_ldm_fillHashTable(ls, ip, iend, &(*params).ldmParams);
     }
     let mut maxDictSize_0 = (1 as std::ffi::c_uint)
-        << MIN!(MAX(params -> cParams.hashLog + 3, params -> cParams.chainLog + 1), 31);
+        << std::cmp::min(MAX((*params).cParams.hashLog + 3, (*params).cParams.chainLog + 1), 31);
     if srcSize > maxDictSize_0 as usize {
         ip = iend.offset(-(maxDictSize_0 as isize));
         src = ip as *const std::ffi::c_void;
@@ -10272,7 +10272,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         .offcode_repeatMode = ZSTD_dictNCountRepeat(
         offcodeNCount.as_mut_ptr(),
         offcodeMaxValue,
-        MIN!(offcodeMax, MaxOff),
+        std::cmp::min(offcodeMax, MaxOff),
     );
     let mut u: u32 = 0;
     u = 0;
@@ -12131,14 +12131,14 @@ unsafe extern "C" fn ZSTD_compressBegin_usingCDict_internal(
         (*cdict).compressionLevel,
     );
     if pledgedSrcSize != ZSTD_CONTENTSIZE_UNKNOWN {
-        let limitedSrcSize = MIN!(pledgedSrcSize, 1U << 19) as u32;
+        let limitedSrcSize = std::cmp::min(pledgedSrcSize, 1U << 19) as u32;
         let limitedSrcLog = if limitedSrcSize > 1 {
             (ZSTD_highbit32(limitedSrcSize.wrapping_sub(1)))
                 .wrapping_add(1)
         } else {
             1 as std::ffi::c_uint
         };
-        cctxParams.cParams.windowLog = MAX!(cctxParams.cParams.windowLog, limitedSrcLog);
+        cctxParams.cParams.windowLog = std::cmp::max(cctxParams.cParams.windowLog, limitedSrcLog);
     }
     return ZSTD_compressBegin_internal(
         cctx,
@@ -12681,7 +12681,7 @@ unsafe extern "C" fn ZSTD_compressStream_generic(
                             let iSize = if inputBuffered != 0 {
                                 ((*zcs).inBuffPos).wrapping_sub((*zcs).inToCompress)
                             } else {
-                                MIN!((usize) (iend - ip), zcs -> blockSizeMax)
+                                std::cmp::min((usize) (iend - ip), (*zcs).blockSizeMax)
                             };
                             if oSize >= ZSTD_compressBound(iSize)
                                 || (*zcs).appliedParams.outBufferMode as std::ffi::c_uint
@@ -13755,7 +13755,7 @@ unsafe extern "C" fn determine_blockSize(
     if mode as std::ffi::c_uint
         == ZSTD_sf_noBlockDelimiters as std::ffi::c_int as std::ffi::c_uint
     {
-        return MIN!(remaining, blockSize);
+        return std::cmp::min(remaining, blockSize);
     }
     let explicitBlockSize = blockSize_explicitDelimiter(inSeqs, inSeqsSize, seqPos);
     let err_code = FORWARD_IF_ERROR!(
@@ -15726,7 +15726,7 @@ unsafe extern "C" fn ZSTD_getCParams_internal(
     }
     let mut cp = ZSTD_defaultCParameters[tableID as usize][row as usize];
     if compressionLevel < 0 {
-        let clampedCompressionLevel = MAX!(ZSTD_minCLevel(), compressionLevel);
+        let clampedCompressionLevel = std::cmp::max(ZSTD_minCLevel(), compressionLevel);
         cp.targetLength = -clampedCompressionLevel as std::ffi::c_uint;
     }
     return ZSTD_adjustCParams_internal(cp, srcSizeHint, dictSize, mode, ZSTD_ps_auto);

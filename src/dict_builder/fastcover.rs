@@ -604,7 +604,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
     let f = (*ctx).f;
     let d = (*ctx).d;
     let skip = (*ctx).accelParams.skip;
-    let readLength = MAX!(d, 8);
+    let readLength = std::cmp::max(d, 8);
     let mut i: usize = 0;
     i = 0;
     while i < (*ctx).nbTrainSamples {
@@ -902,7 +902,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
             }
         } else {
             zeroScoreRun = 0;
-            segmentSize = MIN!(segment.end - segment.begin + parameters.d - 1, tail);
+            segmentSize = std::cmp::min(segment.end - segment.begin + parameters.d - 1, tail);
             if segmentSize < parameters.d as usize {
                 break;
             }
@@ -1292,7 +1292,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     } else {
         (*parameters).steps
     };
-    let kStepSize = MAX!((kMaxK - kMinK) / kSteps, 1);
+    let kStepSize = std::cmp::max((kMaxK - kMinK) / kSteps, 1);
     let kIterations = (1 as std::ffi::c_uint)
         .wrapping_add(
             kMaxD
