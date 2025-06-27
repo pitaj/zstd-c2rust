@@ -154,7 +154,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     );
     let mut cached = MEM_read32(ip as *const std::ffi::c_void);
     ip = ip.offset(4);
-    while ip < iend.offset(-(15 as std::ffi::c_int as isize)) {
+    while ip < iend.offset(-15_isize) {
         let mut c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
         ip = ip.offset(4);
@@ -224,7 +224,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh19 = (*fresh19).wrapping_add(1);
         *fresh19;
     }
-    ip = ip.offset(-(4 as std::ffi::c_int as isize));
+    ip = ip.offset(-4_isize);
     while ip < iend {
         let fresh20 = ip;
         ip = ip.offset(1);

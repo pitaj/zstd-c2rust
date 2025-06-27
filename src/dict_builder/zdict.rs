@@ -811,7 +811,7 @@ unsafe extern "C" fn ERR_getErrorCode(mut code: usize) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return (0 as std::ffi::c_int as usize).wrapping_sub(code) as ERR_enum;
+    return 0_usize.wrapping_sub(code) as ERR_enum;
 }
 unsafe extern "C" fn ERR_getErrorName(mut code: usize) -> *const std::ffi::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
@@ -1309,7 +1309,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
                 .offset(
                     *suffix
                         .offset(start as isize)
-                        .offset(-(1 as std::ffi::c_int as isize)) as isize,
+                        .offset(-1_isize) as isize,
                 ) as *const std::ffi::c_void,
         );
         if length_0 >= MINMATCHLENGTH as usize {

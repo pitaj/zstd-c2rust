@@ -335,7 +335,7 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
 static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
-        >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
+        >> 64_u32.wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
@@ -345,7 +345,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
 }
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return (u * prime8bytes ^ s) >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
+    return (u * prime8bytes ^ s) >> 64_u32.wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
@@ -820,7 +820,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     }
     (*ctx)
         .freqs = calloc(
-        (1 as std::ffi::c_int as u64) << f,
+        1_u64 << f,
         ::core::mem::size_of::<u32>(),
     ) as *mut u32;
     if ((*ctx).freqs).is_null() {
@@ -952,13 +952,13 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
     let mut dictBufferCapacity = (*data).dictBufferCapacity;
     let mut totalCompressedSize = ERROR!(GENERIC);
     let mut segmentFreqs = calloc(
-        (1 as std::ffi::c_int as u64) << (*ctx).f,
+        1_u64 << (*ctx).f,
         ::core::mem::size_of::<u16>(),
     ) as *mut u16;
     let dict = malloc(dictBufferCapacity) as *mut u8;
     let mut selection = COVER_dictSelectionError(ERROR!(GENERIC));
     let mut freqs = malloc(
-        ((1 as std::ffi::c_int as u64) << (*ctx).f)
+        (1_u64 << (*ctx).f)
             .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     let displayLevel = (*ctx).displayLevel;
@@ -977,7 +977,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
         memcpy(
             freqs as *mut std::ffi::c_void,
             (*ctx).freqs as *const std::ffi::c_void,
-            ((1 as std::ffi::c_int as u64) << (*ctx).f)
+            (1_u64 << (*ctx).f)
                 .wrapping_mul(::core::mem::size_of::<u32>()),
         );
         let tail = FASTCOVER_buildDictionary(
@@ -1193,7 +1193,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         fflush(stderr);
     }
     let mut segmentFreqs = calloc(
-        (1 as std::ffi::c_int as u64) << parameters.f,
+        1_u64 << parameters.f,
         ::core::mem::size_of::<u16>(),
     ) as *mut u16;
     let tail = FASTCOVER_buildDictionary(

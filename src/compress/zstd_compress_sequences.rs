@@ -926,7 +926,7 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
             let mult = (10 as std::ffi::c_int as std::ffi::c_uint)
                 .wrapping_sub(strategy as std::ffi::c_uint) as usize;
             let baseLog = 3 as std::ffi::c_int as usize;
-            let dynamicFse_nbSeq_min = ((1 as std::ffi::c_int as usize)
+            let dynamicFse_nbSeq_min = (1_usize
                 << defaultNormLog) * mult >> baseLog;
             if *repeatMode as std::ffi::c_uint
                 == FSE_repeat_valid as std::ffi::c_int as std::ffi::c_uint

@@ -680,7 +680,7 @@ unsafe extern "C" fn HUF_initRemainingDStream(
         return ERROR!(corruption_detected);
     }
     if (*args).ip[stream as usize]
-        < ((*args).iend[stream as usize]).offset(-(8 as std::ffi::c_int as isize))
+        < ((*args).iend[stream as usize]).offset(-8_isize)
     {
         return ERROR!(corruption_detected);
     }
@@ -996,7 +996,7 @@ unsafe extern "C" fn HUF_decodeStreamX1(
         while (BIT_reloadDStream(bitDPtr) as std::ffi::c_uint
             == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
             as std::ffi::c_int
-            & (p < pEnd.offset(-(3 as std::ffi::c_int as isize))) as std::ffi::c_int != 0
+            & (p < pEnd.offset(-3_isize)) as std::ffi::c_int != 0
         {
             if HUF_DECODE_SYMBOLX1_2!(p, bitDPtr) != 0 {
                 let fresh3 = p;
@@ -1084,7 +1084,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
     let istart = cSrc as *const u8;
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
-    let olimit = oend.offset(-(3 as std::ffi::c_int as isize));
+    let olimit = oend.offset(-3_isize);
     let dtPtr = DTable.offset(1) as *const std::ffi::c_void;
     let dt = dtPtr as *const HUF_DEltX1;
     let mut bitD1 = BIT_DStream_t {
@@ -2431,7 +2431,7 @@ unsafe extern "C" fn HUF_decodeStreamX2(
             while (BIT_reloadDStream(bitDPtr) as std::ffi::c_uint
                 == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
                 as std::ffi::c_int
-                & (p < pEnd.offset(-(9 as std::ffi::c_int as isize))) as std::ffi::c_int
+                & (p < pEnd.offset(-9_isize)) as std::ffi::c_int
                 != 0
             {
                 p = p.offset(HUF_DECODE_SYMBOLX2_0!(p, bitDPtr) as isize);
@@ -2474,12 +2474,12 @@ unsafe extern "C" fn HUF_decodeStreamX2(
         while (BIT_reloadDStream(bitDPtr) as std::ffi::c_uint
             == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
             as std::ffi::c_int
-            & (p <= pEnd.offset(-(2 as std::ffi::c_int as isize))) as std::ffi::c_int
+            & (p <= pEnd.offset(-2_isize)) as std::ffi::c_int
             != 0
         {
             p = p.offset(HUF_DECODE_SYMBOLX2_0!(p, bitDPtr) as isize);
         }
-        while p <= pEnd.offset(-(2 as std::ffi::c_int as isize)) {
+        while p <= pEnd.offset(-2_isize) {
             p = p.offset(HUF_DECODE_SYMBOLX2_0!(p, bitDPtr) as isize);
         }
     }

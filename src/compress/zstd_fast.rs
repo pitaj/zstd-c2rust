@@ -398,14 +398,14 @@ unsafe extern "C" fn ZSTD_count(
             }
         }
     }
-    if MEM_64bits() != 0 && pIn < pInLimit.offset(-(3 as std::ffi::c_int as isize))
+    if MEM_64bits() != 0 && pIn < pInLimit.offset(-3_isize)
         && MEM_read32(pMatch as *const std::ffi::c_void)
             == MEM_read32(pIn as *const std::ffi::c_void)
     {
         pIn = pIn.offset(4);
         pMatch = pMatch.offset(4);
     }
-    if pIn < pInLimit.offset(-(1 as std::ffi::c_int as isize))
+    if pIn < pInLimit.offset(-1_isize)
         && MEM_read16(pMatch as *const std::ffi::c_void) as std::ffi::c_int
             == MEM_read16(pIn as *const std::ffi::c_void) as std::ffi::c_int
     {
@@ -436,7 +436,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
 }
 static mut prime4bytes: u32 = 2654435761 as std::ffi::c_uint;
 unsafe extern "C" fn ZSTD_hash4(mut u: u32, mut h: u32, mut s: u32) -> u32 {
-    return (u * prime4bytes ^ s) >> (32 as std::ffi::c_int as u32).wrapping_sub(h);
+    return (u * prime4bytes ^ s) >> 32_u32.wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash4Ptr(
     mut ptr: *const std::ffi::c_void,
@@ -447,7 +447,7 @@ unsafe extern "C" fn ZSTD_hash4Ptr(
 static mut prime5bytes: u64 = 889523592379 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 40 as std::ffi::c_int) * prime5bytes ^ s)
-        >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
+        >> 64_u32.wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash5Ptr(
     mut p: *const std::ffi::c_void,
@@ -458,7 +458,7 @@ unsafe extern "C" fn ZSTD_hash5Ptr(
 static mut prime6bytes: u64 = 227718039650203 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
-        >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
+        >> 64_u32.wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash6Ptr(
     mut p: *const std::ffi::c_void,
@@ -469,7 +469,7 @@ unsafe extern "C" fn ZSTD_hash6Ptr(
 static mut prime7bytes: u64 = 58295818150454627 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 56 as std::ffi::c_int) * prime7bytes ^ s)
-        >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
+        >> 64_u32.wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash7Ptr(
     mut p: *const std::ffi::c_void,
@@ -479,7 +479,7 @@ unsafe extern "C" fn ZSTD_hash7Ptr(
 }
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return (u * prime8bytes ^ s) >> (64 as std::ffi::c_int as u32).wrapping_sub(h);
+    return (u * prime8bytes ^ s) >> 64_u32.wrapping_sub(h);
 }
 unsafe extern "C" fn ZSTD_hash8Ptr(
     mut p: *const std::ffi::c_void,
@@ -1030,12 +1030,12 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
             *hashTable
                 .offset(
                     ZSTD_hashPtr(
-                        ip0.offset(-(2 as std::ffi::c_int as isize))
+                        ip0.offset(-2_isize)
                             as *const std::ffi::c_void,
                         hlog,
                         mls,
                     ) as isize,
-                ) = ip0.offset(-(2 as std::ffi::c_int as isize)).offset_from(base)
+                ) = ip0.offset(-2_isize).offset_from(base)
                 as std::ffi::c_long as u32;
             if rep_offset2 > 0 as std::ffi::c_int as u32 {
                 while ip0 <= ilimit
@@ -1365,7 +1365,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_dictMatchState_generic(
     let endIndex = (istart.offset_from(base) as std::ffi::c_long as usize)
         .wrapping_add(srcSize) as u32;
     if (*ms).prefetchCDictTables != 0 {
-        let hashTableBytes = ((1 as std::ffi::c_int as usize) << (*dictCParams).hashLog)
+        let hashTableBytes = (1_usize << (*dictCParams).hashLog)
             .wrapping_mul(::core::mem::size_of::<u32>());
         let _ptr = PREFETCH_AREA!(dictHashTable, hashTableBytes);
         let _size = PREFETCH_AREA!(dictHashTable, hashTableBytes);
@@ -1572,12 +1572,12 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_dictMatchState_generic(
             *hashTable
                 .offset(
                     ZSTD_hashPtr(
-                        ip0.offset(-(2 as std::ffi::c_int as isize))
+                        ip0.offset(-2_isize)
                             as *const std::ffi::c_void,
                         hlog,
                         mls,
                     ) as isize,
-                ) = ip0.offset(-(2 as std::ffi::c_int as isize)).offset_from(base)
+                ) = ip0.offset(-2_isize).offset_from(base)
                 as std::ffi::c_long as u32;
             while ip0 <= ilimit {
                 let current2 = ip0.offset_from(base) as std::ffi::c_long as u32;
@@ -1777,7 +1777,7 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
     let prefixStart = base.offset(prefixStartIndex as isize);
     let dictEnd = dictBase.offset(prefixStartIndex as isize);
     let iend = istart.offset(srcSize as isize);
-    let ilimit = iend.offset(-(8 as std::ffi::c_int as isize));
+    let ilimit = iend.offset(-8_isize);
     let mut offset_1 = *rep.offset(0);
     let mut offset_2 = *rep.offset(1);
     let mut offsetSaved1: u32 = 0;
@@ -1979,12 +1979,12 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
             *hashTable
                 .offset(
                     ZSTD_hashPtr(
-                        ip0.offset(-(2 as std::ffi::c_int as isize))
+                        ip0.offset(-2_isize)
                             as *const std::ffi::c_void,
                         hlog,
                         mls,
                     ) as isize,
-                ) = ip0.offset(-(2 as std::ffi::c_int as isize)).offset_from(base)
+                ) = ip0.offset(-2_isize).offset_from(base)
                 as std::ffi::c_long as u32;
             while ip0 <= ilimit {
                 let repIndex2 = (ip0.offset_from(base) as std::ffi::c_long as u32)

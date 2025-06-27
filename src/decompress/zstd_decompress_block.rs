@@ -675,7 +675,7 @@ unsafe extern "C" fn BIT_getMiddleBits(
         .wrapping_mul(8)
         .wrapping_sub(1) as u32;
     return bitContainer >> (start & regMask)
-        & ((1 as std::ffi::c_int as u64) << nbBits)
+        & (1_u64 << nbBits)
             .wrapping_sub(1);
 }
 #[inline(always)]
@@ -5330,7 +5330,7 @@ unsafe extern "C" fn ZSTD_maxShortOffset() -> usize {
     if MEM_64bits() != 0 {
         return -(1 as std::ffi::c_int) as usize
     } else {
-        let maxOffbase = ((1 as std::ffi::c_int as usize)
+        let maxOffbase = (1_usize
             << ((if MEM_32bits() != 0 {
                 STREAM_ACCUMULATOR_MIN_32
             } else {

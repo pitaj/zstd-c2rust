@@ -469,14 +469,14 @@ unsafe extern "C" fn ZSTD_count(
             }
         }
     }
-    if MEM_64bits() != 0 && pIn < pInLimit.offset(-(3 as std::ffi::c_int as isize))
+    if MEM_64bits() != 0 && pIn < pInLimit.offset(-3_isize)
         && MEM_read32(pMatch as *const std::ffi::c_void)
             == MEM_read32(pIn as *const std::ffi::c_void)
     {
         pIn = pIn.offset(4);
         pMatch = pMatch.offset(4);
     }
-    if pIn < pInLimit.offset(-(1 as std::ffi::c_int as isize))
+    if pIn < pInLimit.offset(-1_isize)
         && MEM_read16(pMatch as *const std::ffi::c_void) as std::ffi::c_int
             == MEM_read16(pIn as *const std::ffi::c_void) as std::ffi::c_int
     {
@@ -1012,17 +1012,17 @@ unsafe extern "C" fn ZSTD_ldm_gear_init(
 ) {
     let mut maxBitsInMask = MIN!(params -> minMatchLength, 64);
     let mut hashRateLog = (*params).hashRateLog;
-    (*state).rolling = !(0 as std::ffi::c_int as u32) as u64;
+    (*state).rolling = !0_u32 as u64;
     if hashRateLog > 0 as std::ffi::c_int as std::ffi::c_uint
         && hashRateLog <= maxBitsInMask
     {
         (*state)
-            .stopMask = ((1 as std::ffi::c_int as u64) << hashRateLog)
+            .stopMask = (1_u64 << hashRateLog)
             .wrapping_sub(1)
             << maxBitsInMask.wrapping_sub(hashRateLog);
     } else {
         (*state)
-            .stopMask = ((1 as std::ffi::c_int as u64) << hashRateLog)
+            .stopMask = (1_u64 << hashRateLog)
             .wrapping_sub(1);
     };
 }
@@ -1225,9 +1225,9 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_ldm_getTableSize(mut params: ldmParams_t) -> usize {
-    let ldmHSize = (1 as std::ffi::c_int as usize) << params.hashLog;
+    let ldmHSize = 1_usize << params.hashLog;
     let ldmBucketSizeLog = MIN!(params.bucketSizeLog, params.hashLog);
-    let ldmBucketSize = (1 as std::ffi::c_int as usize)
+    let ldmBucketSize = 1_usize
         << (params.hashLog as usize).wrapping_sub(ldmBucketSizeLog);
     let totalSize = (ZSTD_cwksp_alloc_size(ldmBucketSize))
         .wrapping_add(
@@ -1394,7 +1394,7 @@ pub unsafe extern "C" fn ZSTD_ldm_fillHashTable(
                     0 as std::ffi::c_int as XXH64_hash_t,
                 );
                 let hash = (xxhash
-                    & ((1 as std::ffi::c_int as u32) << hBits)
+                    & (1_u32 << hBits)
                         .wrapping_sub(1) as u64) as u32;
                 let mut entry = ldmEntry_t {
                     offset: 0,
@@ -1496,7 +1496,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
                 0 as std::ffi::c_int as XXH64_hash_t,
             );
             let hash = (xxhash
-                & ((1 as std::ffi::c_int as u32) << hBits)
+                & (1_u32 << hBits)
                     .wrapping_sub(1) as u64) as u32;
             let ref mut fresh32 = (*candidates.offset(n as isize)).split;
             *fresh32 = split;

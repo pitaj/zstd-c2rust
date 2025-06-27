@@ -1577,13 +1577,13 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
     {
         let mut cMem = params.customMem;
         let hashLog = params.ldmParams.hashLog;
-        let hashSize = ((1 as std::ffi::c_int as usize) << hashLog)
+        let hashSize = (1_usize << hashLog)
             .wrapping_mul(::core::mem::size_of::<ldmEntry_t>());
         let bucketLog = (params.ldmParams.hashLog)
             .wrapping_sub(params.ldmParams.bucketSizeLog);
         let prevBucketLog = ((*serialState).params.ldmParams.hashLog)
             .wrapping_sub((*serialState).params.ldmParams.bucketSizeLog);
-        let numBuckets = (1 as std::ffi::c_int as usize) << bucketLog;
+        let numBuckets = 1_usize << bucketLog;
         ZSTDMT_setNbSeq(seqPool, ZSTD_ldm_getMaxNbSeq(params.ldmParams, jobSize));
         ZSTD_window_init(&mut (*serialState).ldmState.window);
         if ((*serialState).ldmState.hashTable).is_null()
@@ -2564,7 +2564,7 @@ unsafe extern "C" fn ZSTDMT_computeOverlapSize(
     return if ovLog == 0 as std::ffi::c_int {
         0 as std::ffi::c_int as usize
     } else {
-        (1 as std::ffi::c_int as usize) << ovLog
+        1_usize << ovLog
     };
 }
 #[no_mangle]
