@@ -1063,40 +1063,7 @@ unsafe extern "C" fn ss_mintrosort(
                     if (1 as std::ffi::c_long)
                         < a.offset_from(first) as std::ffi::c_long
                     {
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                437,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_14736: {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    437,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
+                        STACK_PUSH!(???, #L437);
                         last = a;
                         depth += 1;
                         limit = ss_ilg(
@@ -1109,49 +1076,9 @@ unsafe extern "C" fn ss_mintrosort(
                 } else if (1 as std::ffi::c_long)
                     < last.offset_from(a) as std::ffi::c_long
                 {
-                    if ssize < 16 {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8
-                                as *const std::ffi::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
-                            444,
-                            (*::core::mem::transmute::<
-                                &[u8; 74],
-                                &[std::ffi::c_char; 74],
-                            >(
-                                b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    'c_14607: {
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                444,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                    };
-                    stack[ssize as usize].a = first;
-                    stack[ssize as usize].b = a;
-                    stack[ssize as usize].c = depth + 1;
-                    let fresh32 = ssize;
-                    ssize = ssize + 1;
-                    stack[fresh32 as usize]
-                        .d = ss_ilg(
+                    STACK_PUSH!(first, a, depth + 1, ss_ilg(
                         a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
-                    );
+                    )); // #L444
                     first = a;
                     limit = -(1 as std::ffi::c_int);
                 } else {
@@ -1321,234 +1248,22 @@ unsafe extern "C" fn ss_mintrosort(
                         if last.offset_from(c) as std::ffi::c_long
                             <= c.offset_from(b) as std::ffi::c_long
                         {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    494,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_13070: {
-                                if ssize < 16 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        494,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 74],
-                                            &[std::ffi::c_char; 74],
-                                        >(
-                                            b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
-                            stack[ssize as usize].a = b;
-                            stack[ssize as usize].b = c;
-                            stack[ssize as usize].c = depth + 1;
-                            let fresh57 = ssize;
-                            ssize = ssize + 1;
-                            stack[fresh57 as usize]
-                                .d = ss_ilg(
+                            STACK_PUSH!(b, c, depth + 1, ss_ilg(
                                 c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
-                            );
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    495,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_12976: {
-                                if ssize < 16 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        495,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 74],
-                                            &[std::ffi::c_char; 74],
-                                        >(
-                                            b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
+                            )); // #L494
+                            STACK_PUSH!(???, #L495);
                             last = a;
                         } else if a.offset_from(first) as std::ffi::c_long
                             <= c.offset_from(b) as std::ffi::c_long
                         {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    498,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_12872: {
-                                if ssize < 16 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        498,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 74],
-                                            &[std::ffi::c_char; 74],
-                                        >(
-                                            b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    499,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_12787: {
-                                if ssize < 16 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        499,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 74],
-                                            &[std::ffi::c_char; 74],
-                                        >(
-                                            b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
-                            stack[ssize as usize].a = b;
-                            stack[ssize as usize].b = c;
-                            stack[ssize as usize].c = depth + 1;
-                            let fresh58 = ssize;
-                            ssize = ssize + 1;
-                            stack[fresh58 as usize]
-                                .d = ss_ilg(
+                            STACK_PUSH!(???, #L498);
+                            STACK_PUSH!(b, c, depth + 1, ss_ilg(
                                 c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
-                            );
+                            )); // #L499
                             last = a;
                         } else {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    502,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_12686: {
-                                if ssize < 16 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        502,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 74],
-                                            &[std::ffi::c_char; 74],
-                                        >(
-                                            b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    503,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_12601: {
-                                if ssize < 16 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        503,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 74],
-                                            &[std::ffi::c_char; 74],
-                                        >(
-                                            b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
+                            STACK_PUSH!(???, #L502);
+                            STACK_PUSH!(???, #L503);
                             first = b;
                             last = c;
                             depth += 1;
@@ -1559,234 +1274,22 @@ unsafe extern "C" fn ss_mintrosort(
                     } else if a.offset_from(first) as std::ffi::c_long
                         <= c.offset_from(b) as std::ffi::c_long
                     {
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                508,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_12469: {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    508,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
-                        stack[ssize as usize].a = b;
-                        stack[ssize as usize].b = c;
-                        stack[ssize as usize].c = depth + 1;
-                        let fresh59 = ssize;
-                        ssize = ssize + 1;
-                        stack[fresh59 as usize]
-                            .d = ss_ilg(
+                        STACK_PUSH!(b, c, depth + 1, ss_ilg(
                             c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
-                        );
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                509,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_12375: {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    509,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
+                        )); // #L508
+                        STACK_PUSH!(???, #L509);
                         first = c;
                     } else if last.offset_from(c) as std::ffi::c_long
                         <= c.offset_from(b) as std::ffi::c_long
                     {
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                512,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_12271: {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    512,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                513,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_12186: {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    513,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
-                        stack[ssize as usize].a = b;
-                        stack[ssize as usize].b = c;
-                        stack[ssize as usize].c = depth + 1;
-                        let fresh60 = ssize;
-                        ssize = ssize + 1;
-                        stack[fresh60 as usize]
-                            .d = ss_ilg(
+                        STACK_PUSH!(???, #L512);
+                        STACK_PUSH!(b, c, depth + 1, ss_ilg(
                             c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
-                        );
+                        )); // #L513
                         first = c;
                     } else {
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                516,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_12085: {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    516,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
-                        if ssize < 16 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                517,
-                                (*::core::mem::transmute::<
-                                    &[u8; 74],
-                                    &[std::ffi::c_char; 74],
-                                >(
-                                    b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_11998: {
-                            if ssize < 16 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    517,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 74],
-                                        &[std::ffi::c_char; 74],
-                                    >(
-                                        b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
+                        STACK_PUSH!(???, #L516);
+                        STACK_PUSH!(???, #L517);
                         first = b;
                         last = c;
                         depth += 1;
@@ -2473,47 +1976,7 @@ unsafe extern "C" fn ss_swapmerge(
                 if l.offset_from(first) as std::ffi::c_long
                     <= last.offset_from(r) as std::ffi::c_long
                 {
-                    if ssize < 32 {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8
-                                as *const std::ffi::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
-                            810,
-                            (*::core::mem::transmute::<
-                                &[u8; 92],
-                                &[std::ffi::c_char; 92],
-                            >(
-                                b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    'c_16232: {
-                        if ssize < 32 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                810,
-                                (*::core::mem::transmute::<
-                                    &[u8; 92],
-                                    &[std::ffi::c_char; 92],
-                                >(
-                                    b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                    };
-                    stack[ssize as usize].a = r;
-                    stack[ssize as usize].b = rm;
-                    stack[ssize as usize].c = last;
-                    let fresh101 = ssize;
-                    ssize = ssize + 1;
-                    stack[fresh101 as usize]
-                        .d = next & 3 as std::ffi::c_int | check & 4;
+                    STACK_PUSH!(r, rm, last, next & 3 as std::ffi::c_int | check & 4); // #L810
                     middle = lm;
                     last = l;
                     check = check & 3 as std::ffi::c_int | next & 4;
@@ -2521,47 +1984,7 @@ unsafe extern "C" fn ss_swapmerge(
                     if next & 2 as std::ffi::c_int != 0 && r == middle {
                         next ^= 6;
                     }
-                    if ssize < 32 {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8
-                                as *const std::ffi::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
-                            814,
-                            (*::core::mem::transmute::<
-                                &[u8; 92],
-                                &[std::ffi::c_char; 92],
-                            >(
-                                b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    'c_16096: {
-                        if ssize < 32 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                814,
-                                (*::core::mem::transmute::<
-                                    &[u8; 92],
-                                    &[std::ffi::c_char; 92],
-                                >(
-                                    b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                    };
-                    stack[ssize as usize].a = first;
-                    stack[ssize as usize].b = lm;
-                    stack[ssize as usize].c = l;
-                    let fresh102 = ssize;
-                    ssize = ssize + 1;
-                    stack[fresh102 as usize]
-                        .d = check & 3 as std::ffi::c_int | next & 4;
+                    STACK_PUSH!(first, lm, l, check & 3 as std::ffi::c_int | next & 4); // #L814
                     first = r;
                     middle = rm;
                     check = next & 3 as std::ffi::c_int | check & 4;
@@ -3349,74 +2772,8 @@ unsafe extern "C" fn tr_introsort(
                 if (1 as std::ffi::c_long)
                     < b.offset_from(a) as std::ffi::c_long
                 {
-                    if ssize < 64 {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8
-                                as *const std::ffi::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
-                            1204,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[std::ffi::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    'c_10233: {
-                        if ssize < 64 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                1204,
-                                (*::core::mem::transmute::<
-                                    &[u8; 73],
-                                    &[std::ffi::c_char; 73],
-                                >(
-                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                    };
-                    if ssize < 64 {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8
-                                as *const std::ffi::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
-                            1205,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[std::ffi::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    'c_10137: {
-                        if ssize < 64 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                1205,
-                                (*::core::mem::transmute::<
-                                    &[u8; 73],
-                                    &[std::ffi::c_char; 73],
-                                >(
-                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                    };
+                    STACK_PUSH!(???, #L1204);
+                    STACK_PUSH!(???, #L1205);
                     trlink = ssize - 2;
                 }
                 if a.offset_from(first) as std::ffi::c_long
@@ -3425,40 +2782,7 @@ unsafe extern "C" fn tr_introsort(
                     if (1 as std::ffi::c_long)
                         < a.offset_from(first) as std::ffi::c_long
                     {
-                        if ssize < 64 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                1210,
-                                (*::core::mem::transmute::<
-                                    &[u8; 73],
-                                    &[std::ffi::c_char; 73],
-                                >(
-                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                        'c_10007: {
-                            if ssize < 64 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    1210,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[std::ffi::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                        };
+                        STACK_PUSH!(???, #L1210);
                         last = a;
                         limit = tr_ilg(
                             a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
@@ -3508,40 +2832,7 @@ unsafe extern "C" fn tr_introsort(
                 } else if (1 as std::ffi::c_long)
                     < last.offset_from(b) as std::ffi::c_long
                 {
-                    if ssize < 64 {} else {
-                        __assert_fail(
-                            b"ssize < STACK_SIZE\0" as *const u8
-                                as *const std::ffi::c_char,
-                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
-                            1219,
-                            (*::core::mem::transmute::<
-                                &[u8; 73],
-                                &[std::ffi::c_char; 73],
-                            >(
-                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                            ))
-                                .as_ptr(),
-                        );
-                    }
-                    'c_9744: {
-                        if ssize < 64 {} else {
-                            __assert_fail(
-                                b"ssize < STACK_SIZE\0" as *const u8
-                                    as *const std::ffi::c_char,
-                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                                1219,
-                                (*::core::mem::transmute::<
-                                    &[u8; 73],
-                                    &[std::ffi::c_char; 73],
-                                >(
-                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                ))
-                                    .as_ptr(),
-                            );
-                        }
-                    };
+                    STACK_PUSH!(???, #L1219);
                     first = b;
                     limit = tr_ilg(
                         last.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
@@ -3702,80 +2993,14 @@ unsafe extern "C" fn tr_introsort(
                         if a.offset_from(first) as std::ffi::c_long
                             <= last.offset_from(a) as std::ffi::c_long
                         {
-                            if ssize < 64 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    1252,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[std::ffi::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_8625: {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1252,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
+                            STACK_PUSH!(???, #L1252);
                             ISAd = ISAd.offset(incr as isize);
                             last = a;
                             limit = next;
                         } else if (1 as std::ffi::c_long)
                             < last.offset_from(a) as std::ffi::c_long
                         {
-                            if ssize < 64 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    1256,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[std::ffi::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_8505: {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1256,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
+                            STACK_PUSH!(???, #L1256);
                             first = a;
                             limit = -(3 as std::ffi::c_int);
                         } else {
@@ -3946,112 +3171,13 @@ unsafe extern "C" fn tr_introsort(
                                 if (1 as std::ffi::c_long)
                                     < a.offset_from(first) as std::ffi::c_long
                                 {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1311,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                    'c_6062: {
-                                        if ssize < 64 {} else {
-                                            __assert_fail(
-                                                b"ssize < STACK_SIZE\0" as *const u8
-                                                    as *const std::ffi::c_char,
-                                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                    as *const u8 as *const std::ffi::c_char,
-                                                1311,
-                                                (*::core::mem::transmute::<
-                                                    &[u8; 73],
-                                                    &[std::ffi::c_char; 73],
-                                                >(
-                                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                                ))
-                                                    .as_ptr(),
-                                            );
-                                        }
-                                    };
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1312,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                    'c_5963: {
-                                        if ssize < 64 {} else {
-                                            __assert_fail(
-                                                b"ssize < STACK_SIZE\0" as *const u8
-                                                    as *const std::ffi::c_char,
-                                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                    as *const u8 as *const std::ffi::c_char,
-                                                1312,
-                                                (*::core::mem::transmute::<
-                                                    &[u8; 73],
-                                                    &[std::ffi::c_char; 73],
-                                                >(
-                                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                                ))
-                                                    .as_ptr(),
-                                            );
-                                        }
-                                    };
+                                    STACK_PUSH!(???, #L1311);
+                                    STACK_PUSH!(???, #L1312);
                                     last = a;
                                 } else if (1 as std::ffi::c_long)
                                     < last.offset_from(b) as std::ffi::c_long
                                 {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1315,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                    'c_5852: {
-                                        if ssize < 64 {} else {
-                                            __assert_fail(
-                                                b"ssize < STACK_SIZE\0" as *const u8
-                                                    as *const std::ffi::c_char,
-                                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                    as *const u8 as *const std::ffi::c_char,
-                                                1315,
-                                                (*::core::mem::transmute::<
-                                                    &[u8; 73],
-                                                    &[std::ffi::c_char; 73],
-                                                >(
-                                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                                ))
-                                                    .as_ptr(),
-                                            );
-                                        }
-                                    };
+                                    STACK_PUSH!(???, #L1315);
                                     first = b;
                                 } else {
                                     ISAd = ISAd.offset(incr as isize);
@@ -4065,184 +3191,19 @@ unsafe extern "C" fn tr_introsort(
                                 if (1 as std::ffi::c_long)
                                     < a.offset_from(first) as std::ffi::c_long
                                 {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1322,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                    'c_5700: {
-                                        if ssize < 64 {} else {
-                                            __assert_fail(
-                                                b"ssize < STACK_SIZE\0" as *const u8
-                                                    as *const std::ffi::c_char,
-                                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                    as *const u8 as *const std::ffi::c_char,
-                                                1322,
-                                                (*::core::mem::transmute::<
-                                                    &[u8; 73],
-                                                    &[std::ffi::c_char; 73],
-                                                >(
-                                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                                ))
-                                                    .as_ptr(),
-                                            );
-                                        }
-                                    };
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1323,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                    'c_5604: {
-                                        if ssize < 64 {} else {
-                                            __assert_fail(
-                                                b"ssize < STACK_SIZE\0" as *const u8
-                                                    as *const std::ffi::c_char,
-                                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                    as *const u8 as *const std::ffi::c_char,
-                                                1323,
-                                                (*::core::mem::transmute::<
-                                                    &[u8; 73],
-                                                    &[std::ffi::c_char; 73],
-                                                >(
-                                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                                ))
-                                                    .as_ptr(),
-                                            );
-                                        }
-                                    };
+                                    STACK_PUSH!(???, #L1322);
+                                    STACK_PUSH!(???, #L1323);
                                     last = a;
                                 } else {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1326,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                    'c_5498: {
-                                        if ssize < 64 {} else {
-                                            __assert_fail(
-                                                b"ssize < STACK_SIZE\0" as *const u8
-                                                    as *const std::ffi::c_char,
-                                                b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                    as *const u8 as *const std::ffi::c_char,
-                                                1326,
-                                                (*::core::mem::transmute::<
-                                                    &[u8; 73],
-                                                    &[std::ffi::c_char; 73],
-                                                >(
-                                                    b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                                ))
-                                                    .as_ptr(),
-                                            );
-                                        }
-                                    };
+                                    STACK_PUSH!(???, #L1326);
                                     ISAd = ISAd.offset(incr as isize);
                                     first = a;
                                     last = b;
                                     limit = next;
                                 }
                             } else {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1330,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_5377: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1330,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1331,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_5281: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1331,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
+                                STACK_PUSH!(???, #L1330);
+                                STACK_PUSH!(???, #L1331);
                                 ISAd = ISAd.offset(incr as isize);
                                 first = a;
                                 last = b;
@@ -4254,112 +3215,13 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
                             {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1337,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_5136: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1337,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1338,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_5037: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1338,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
+                                STACK_PUSH!(???, #L1337);
+                                STACK_PUSH!(???, #L1338);
                                 first = b;
                             } else if (1 as std::ffi::c_long)
                                 < a.offset_from(first) as std::ffi::c_long
                             {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1341,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_4926: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1341,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
+                                STACK_PUSH!(???, #L1341);
                                 last = a;
                             } else {
                                 ISAd = ISAd.offset(incr as isize);
@@ -4373,184 +3235,19 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
                             {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1348,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_4774: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1348,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1349,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_4678: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1349,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
+                                STACK_PUSH!(???, #L1348);
+                                STACK_PUSH!(???, #L1349);
                                 first = b;
                             } else {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1352,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_4572: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1352,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
+                                STACK_PUSH!(???, #L1352);
                                 ISAd = ISAd.offset(incr as isize);
                                 first = a;
                                 last = b;
                                 limit = next;
                             }
                         } else {
-                            if ssize < 64 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    1356,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[std::ffi::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_4451: {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1356,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
-                            if ssize < 64 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    1357,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[std::ffi::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_4355: {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1357,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
+                            STACK_PUSH!(???, #L1356);
+                            STACK_PUSH!(???, #L1357);
                             ISAd = ISAd.offset(incr as isize);
                             first = a;
                             last = b;
@@ -4569,40 +3266,7 @@ unsafe extern "C" fn tr_introsort(
                             if (1 as std::ffi::c_long)
                                 < a.offset_from(first) as std::ffi::c_long
                             {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1365,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                                'c_4178: {
-                                    if ssize < 64 {} else {
-                                        __assert_fail(
-                                            b"ssize < STACK_SIZE\0" as *const u8
-                                                as *const std::ffi::c_char,
-                                            b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                            1365,
-                                            (*::core::mem::transmute::<
-                                                &[u8; 73],
-                                                &[std::ffi::c_char; 73],
-                                            >(
-                                                b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                            ))
-                                                .as_ptr(),
-                                        );
-                                    }
-                                };
+                                STACK_PUSH!(???, #L1365);
                                 last = a;
                             } else if (1 as std::ffi::c_long)
                                 < last.offset_from(b) as std::ffi::c_long
@@ -4646,40 +3310,7 @@ unsafe extern "C" fn tr_introsort(
                         } else if (1 as std::ffi::c_long)
                             < last.offset_from(b) as std::ffi::c_long
                         {
-                            if ssize < 64 {} else {
-                                __assert_fail(
-                                    b"ssize < STACK_SIZE\0" as *const u8
-                                        as *const std::ffi::c_char,
-                                    b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                    1374,
-                                    (*::core::mem::transmute::<
-                                        &[u8; 73],
-                                        &[std::ffi::c_char; 73],
-                                    >(
-                                        b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                    ))
-                                        .as_ptr(),
-                                );
-                            }
-                            'c_3945: {
-                                if ssize < 64 {} else {
-                                    __assert_fail(
-                                        b"ssize < STACK_SIZE\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                        b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
-                                        1374,
-                                        (*::core::mem::transmute::<
-                                            &[u8; 73],
-                                            &[std::ffi::c_char; 73],
-                                        >(
-                                            b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
-                                        ))
-                                            .as_ptr(),
-                                    );
-                                }
-                            };
+                            STACK_PUSH!(???, #L1374);
                             first = b;
                         } else if (1 as std::ffi::c_long)
                             < a.offset_from(first) as std::ffi::c_long
