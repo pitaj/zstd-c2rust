@@ -2544,7 +2544,7 @@ unsafe extern "C" fn ZSTD_selectBtGetAllMatches(
         ZSTD_BT_GET_ALL_MATCHES_ARRAY!(extDict),
         ZSTD_BT_GET_ALL_MATCHES_ARRAY!(dictMatchState),
     ];
-    let mls = BOUNDED!(3, ms -> cParams.minMatch, 6);
+    let mls = BOUNDED!(3, (*ms).cParams.minMatch, 6);
     return getAllMatchesFns[dictMode as std::ffi::c_int
         as usize][mls.wrapping_sub(3) as usize];
 }

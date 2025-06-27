@@ -2801,7 +2801,7 @@ unsafe extern "C" fn ZSTD_nextSrcSizeToDecompressWithInputSize(
     {
         return (*dctx).expected;
     }
-    return BOUNDED!(1, inputSize, dctx -> expected);
+    return BOUNDED!(1, inputSize, (*dctx).expected);
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_nextInputType(

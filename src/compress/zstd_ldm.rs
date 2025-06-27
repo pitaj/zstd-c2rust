@@ -1192,7 +1192,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
     if (*params).hashLog == 0 {
         (*params)
             .hashLog = BOUNDED!(
-            ZSTD_HASHLOG_MIN, params -> windowLog - params -> hashRateLog,
+            ZSTD_HASHLOG_MIN, (*params).windowLog - (*params).hashRateLog,
             ZSTD_HASHLOG_MAX
         );
     }
@@ -1208,7 +1208,7 @@ pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
     if (*params).bucketSizeLog == 0 {
         (*params)
             .bucketSizeLog = BOUNDED!(
-            LDM_BUCKET_SIZE_LOG, (u32) cParams -> strategy, ZSTD_LDM_BUCKETSIZELOG_MAX
+            LDM_BUCKET_SIZE_LOG, (u32) (*cParams).strategy, ZSTD_LDM_BUCKETSIZELOG_MAX
         );
     }
     (*params).bucketSizeLog = std::cmp::min((*params).bucketSizeLog, (*params).hashLog);

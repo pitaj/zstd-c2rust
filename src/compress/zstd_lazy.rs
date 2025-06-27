@@ -1864,7 +1864,7 @@ pub unsafe extern "C" fn ZSTD_row_update(
     ms: *mut ZSTD_MatchState_t,
     mut ip: *const u8,
 ) {
-    let rowLog = BOUNDED!(4, ms -> cParams.searchLog, 6);
+    let rowLog = BOUNDED!(4, (*ms).cParams.searchLog, 6);
     let rowMask = ((1 as std::ffi::c_uint) << rowLog)
         .wrapping_sub(1);
     let mls = std::cmp::min((*ms).cParams.minMatch, 6);
@@ -3792,8 +3792,8 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
     let base = (*ms).window.base;
     let prefixLowestIndex = (*ms).window.dictLimit;
     let prefixLowest = base.offset(prefixLowestIndex as isize);
-    let mls = BOUNDED!(4, ms -> cParams.minMatch, 6);
-    let rowLog = BOUNDED!(4, ms -> cParams.searchLog, 6);
+    let mls = BOUNDED!(4, (*ms).cParams.minMatch, 6);
+    let rowLog = BOUNDED!(4, (*ms).cParams.searchLog, 6);
     let mut offset_1 = *rep.offset(0);
     let mut offset_2 = *rep.offset(1);
     let mut offsetSaved1: u32 = 0;
@@ -4764,8 +4764,8 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
     let dictEnd = dictBase.offset(dictLimit as isize);
     let dictStart = dictBase.offset((*ms).window.lowLimit as isize);
     let windowLog = (*ms).cParams.windowLog;
-    let mls = BOUNDED!(4, ms -> cParams.minMatch, 6);
-    let rowLog = BOUNDED!(4, ms -> cParams.searchLog, 6);
+    let mls = BOUNDED!(4, (*ms).cParams.minMatch, 6);
+    let rowLog = BOUNDED!(4, (*ms).cParams.searchLog, 6);
     let mut offset_1 = *rep.offset(0);
     let mut offset_2 = *rep.offset(1);
     (*ms).lazySkipping = 0;

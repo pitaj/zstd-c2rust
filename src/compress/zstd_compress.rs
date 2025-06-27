@@ -5414,7 +5414,7 @@ unsafe extern "C" fn ZSTD_estimateCCtxSize_usingCCtxParams_internal(
     mut useSequenceProducer: std::ffi::c_int,
     mut maxBlockSize: usize,
 ) -> usize {
-    let windowSize = BOUNDED!(1ULL, 1ULL << cParams -> windowLog, pledgedSrcSize)
+    let windowSize = BOUNDED!(1ULL, 1ULL << (*cParams).windowLog, pledgedSrcSize)
         as usize;
     let blockSize = std::cmp::min(ZSTD_resolveMaxBlockSize(maxBlockSize), windowSize);
     let maxNbSeq = ZSTD_maxNbSeq(blockSize, (*cParams).minMatch, useSequenceProducer);
@@ -5854,7 +5854,7 @@ unsafe extern "C" fn ZSTD_reset_matchState(
             libc::memset((*ms).tagTable, 0, (tagTableSize) as usize);
             (*ms).hashSalt = 0;
         }
-        let rowLog = BOUNDED!(4, cParams -> searchLog, 6);
+        let rowLog = BOUNDED!(4, (*cParams).searchLog, 6);
         (*ms).rowHashLog = ((*cParams).hashLog).wrapping_sub(rowLog);
     }
     if forWho as std::ffi::c_uint
