@@ -39,28 +39,23 @@ pub const ZSTD_error_version_unsupported: ZSTD_ErrorCode = 12;
 pub const ZSTD_error_prefix_unknown: ZSTD_ErrorCode = 10;
 pub const ZSTD_error_GENERIC: ZSTD_ErrorCode = 1;
 pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
-
-pub const fn ERROR(code: ZSTD_ErrorCode) -> usize {
-    return -(code as std::ffi::c_int) as usize;
-}
-
 pub type ERR_enum = ZSTD_ErrorCode;
-unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > -(ZSTD_error_maxCode as std::ffi::c_int) as usize) as std::ffi::c_int
-        as std::ffi::c_uint;
+pub type size_t = std::ffi::c_ulong;
+unsafe extern "C" fn ERR_isError(mut code: size_t) -> std::ffi::c_uint {
+    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
-unsafe extern "C" fn ERR_getErrorCode(mut code: usize) -> ERR_enum {
+unsafe extern "C" fn ERR_getErrorCode(mut code: size_t) -> ERR_enum {
     if ERR_isError(code) == 0 {
         return ZSTD_error_no_error;
     }
-    return 0_usize.wrapping_sub(code) as ERR_enum;
+    return (0 as std::ffi::c_int as size_t).wrapping_sub(code) as ERR_enum;
 }
-unsafe extern "C" fn ERR_getErrorName(mut code: usize) -> *const std::ffi::c_char {
+unsafe extern "C" fn ERR_getErrorName(mut code: size_t) -> *const std::ffi::c_char {
     return ERR_getErrorString(ERR_getErrorCode(code));
 }
-pub const ZSTD_VERSION_MAJOR: std::ffi::c_int = 1;
-pub const ZSTD_VERSION_MINOR: std::ffi::c_int = 5;
-pub const ZSTD_VERSION_RELEASE: std::ffi::c_int = 8;
+pub const ZSTD_VERSION_MAJOR: std::ffi::c_int = 1 as std::ffi::c_int;
+pub const ZSTD_VERSION_MINOR: std::ffi::c_int = 5 as std::ffi::c_int;
+pub const ZSTD_VERSION_RELEASE: std::ffi::c_int = 8 as std::ffi::c_int;
 pub const ZSTD_VERSION_NUMBER: std::ffi::c_int = ZSTD_VERSION_MAJOR
     * 100 as std::ffi::c_int * 100 as std::ffi::c_int
     + ZSTD_VERSION_MINOR * 100 as std::ffi::c_int + ZSTD_VERSION_RELEASE;
@@ -73,15 +68,15 @@ pub unsafe extern "C" fn ZSTD_versionString() -> *const std::ffi::c_char {
     return b"1.5.8\0" as *const u8 as *const std::ffi::c_char;
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_isError(mut code: usize) -> std::ffi::c_uint {
+pub unsafe extern "C" fn ZSTD_isError(mut code: size_t) -> std::ffi::c_uint {
     return ERR_isError(code);
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_getErrorName(mut code: usize) -> *const std::ffi::c_char {
+pub unsafe extern "C" fn ZSTD_getErrorName(mut code: size_t) -> *const std::ffi::c_char {
     return ERR_getErrorName(code);
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_getErrorCode(mut code: usize) -> ZSTD_ErrorCode {
+pub unsafe extern "C" fn ZSTD_getErrorCode(mut code: size_t) -> ZSTD_ErrorCode {
     return ERR_getErrorCode(code);
 }
 #[no_mangle]
@@ -92,5 +87,5 @@ pub unsafe extern "C" fn ZSTD_getErrorString(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_isDeterministicBuild() -> std::ffi::c_int {
-    return 1;
+    return 1 as std::ffi::c_int;
 }
