@@ -1643,6 +1643,14 @@ unsafe extern "C" fn ZSTD_cParam_withinBounds(
     }
     return 1;
 }
+macro_rules! BOUNDCHECK {
+    ($cParam:expr, $val:expr) => {
+        if ZSTD_cParam_withinBounds($cParam, $val) == 0 {
+            return ERROR(ZSTD_error_parameter_outOfBound);
+        }
+    }
+}
+
 #[inline]
 unsafe extern "C" fn ZSTD_noCompressBlock(
     mut dst: *mut std::ffi::c_void,
@@ -4261,9 +4269,7 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
 ) -> usize {
     match param as std::ffi::c_uint {
         10 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam2, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam2, value);
             (*CCtxParams).format = value as ZSTD_format_e;
             return (*CCtxParams).format as usize;
         }
@@ -4283,67 +4289,47 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
         }
         101 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_windowLog, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_windowLog, value);
             }
             (*CCtxParams).cParams.windowLog = value as u32;
             return (*CCtxParams).cParams.windowLog as usize;
         }
         102 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_hashLog, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_hashLog, value);
             }
             (*CCtxParams).cParams.hashLog = value as u32;
             return (*CCtxParams).cParams.hashLog as usize;
         }
         103 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_chainLog, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_chainLog, value);
             }
             (*CCtxParams).cParams.chainLog = value as u32;
             return (*CCtxParams).cParams.chainLog as usize;
         }
         104 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_searchLog, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_searchLog, value);
             }
             (*CCtxParams).cParams.searchLog = value as u32;
             return value as usize;
         }
         105 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_minMatch, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_minMatch, value);
             }
             (*CCtxParams).cParams.minMatch = value as u32;
             return (*CCtxParams).cParams.minMatch as usize;
         }
         106 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_targetLength, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_targetLength, value);
             (*CCtxParams).cParams.targetLength = value as u32;
             return (*CCtxParams).cParams.targetLength as usize;
         }
         107 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_strategy, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_strategy, value);
             }
             (*CCtxParams).cParams.strategy = value as ZSTD_strategy;
             return (*CCtxParams).cParams.strategy as usize;
@@ -4372,25 +4358,19 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
         }
         1001 => {
             let pref = value as ZSTD_dictAttachPref_e;
-            if ZSTD_cParam_withinBounds(
+            BOUNDCHECK!(
                 ZSTD_c_experimentalParam4,
                 pref as std::ffi::c_int,
-            ) == 0
-            {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            );
             (*CCtxParams).attachDictPref = pref;
             return (*CCtxParams).attachDictPref as usize;
         }
         1002 => {
             let lcm = value as ZSTD_ParamSwitch_e;
-            if ZSTD_cParam_withinBounds(
+            BOUNDCHECK!(
                 ZSTD_c_experimentalParam5,
                 lcm as std::ffi::c_int,
-            ) == 0
-            {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            );
             (*CCtxParams).literalCompressionMode = lcm;
             return (*CCtxParams).literalCompressionMode as usize;
         }
@@ -4432,48 +4412,34 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
             return (*CCtxParams).enableDedicatedDictSearch as usize;
         }
         160 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_enableLongDistanceMatching, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_enableLongDistanceMatching, value);
             (*CCtxParams).ldmParams.enableLdm = value as ZSTD_ParamSwitch_e;
             return (*CCtxParams).ldmParams.enableLdm as usize;
         }
         161 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_ldmHashLog, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_ldmHashLog, value);
             }
             (*CCtxParams).ldmParams.hashLog = value as u32;
             return (*CCtxParams).ldmParams.hashLog as usize;
         }
         162 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_ldmMinMatch, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_ldmMinMatch, value);
             }
             (*CCtxParams).ldmParams.minMatchLength = value as u32;
             return (*CCtxParams).ldmParams.minMatchLength as usize;
         }
         163 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_ldmBucketSizeLog, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_ldmBucketSizeLog, value);
             }
             (*CCtxParams).ldmParams.bucketSizeLog = value as u32;
             return (*CCtxParams).ldmParams.bucketSizeLog as usize;
         }
         164 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_ldmHashRateLog, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_ldmHashRateLog, value);
             }
             (*CCtxParams).ldmParams.hashRateLog = value as u32;
             return (*CCtxParams).ldmParams.hashRateLog as usize;
@@ -4481,108 +4447,77 @@ pub unsafe extern "C" fn ZSTD_CCtxParams_setParameter(
         130 => {
             if value != 0 {
                 value = std::cmp::max(value, ZSTD_TARGETCBLOCKSIZE_MIN);
-                if ZSTD_cParam_withinBounds(ZSTD_c_targetCBlockSize, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_targetCBlockSize, value);
             }
             (*CCtxParams).targetCBlockSize = value as u32 as usize;
             return (*CCtxParams).targetCBlockSize;
         }
         1004 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam7, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_experimentalParam7, value);
             }
             (*CCtxParams).srcSizeHint = value;
             return (*CCtxParams).srcSizeHint as usize;
         }
         1006 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam9, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam9, value);
             (*CCtxParams).inBufferMode = value as ZSTD_bufferMode_e;
             return (*CCtxParams).inBufferMode as usize;
         }
         1007 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam10, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam10, value);
             (*CCtxParams).outBufferMode = value as ZSTD_bufferMode_e;
             return (*CCtxParams).outBufferMode as usize;
         }
         1008 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam11, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam11, value);
             (*CCtxParams).blockDelimiters = value as ZSTD_SequenceFormat_e;
             return (*CCtxParams).blockDelimiters as usize;
         }
         1009 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam12, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam12, value);
             (*CCtxParams).validateSequences = value;
             return (*CCtxParams).validateSequences as usize;
         }
         1010 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam13, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam13, value);
             (*CCtxParams).postBlockSplitter = value as ZSTD_ParamSwitch_e;
             return (*CCtxParams).postBlockSplitter as usize;
         }
         1017 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam20, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam20, value);
             (*CCtxParams).preBlockSplitter_level = value;
             return (*CCtxParams).preBlockSplitter_level as usize;
         }
         1011 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam14, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam14, value);
             (*CCtxParams).useRowMatchFinder = value as ZSTD_ParamSwitch_e;
             return (*CCtxParams).useRowMatchFinder as usize;
         }
         1012 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam15, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam15, value);
             (*CCtxParams).deterministicRefPrefix = (value != 0) as std::ffi::c_int;
             return (*CCtxParams).deterministicRefPrefix as usize;
         }
         1013 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam16, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam16, value);
             (*CCtxParams).prefetchCDictTables = value as ZSTD_ParamSwitch_e;
             return (*CCtxParams).prefetchCDictTables as usize;
         }
         1014 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam17, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam17, value);
             (*CCtxParams).enableMatchFinderFallback = value;
             return (*CCtxParams).enableMatchFinderFallback as usize;
         }
         1015 => {
             if value != 0 {
-                if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam18, value) == 0 {
-                    return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
-                        as usize;
-                }
+                BOUNDCHECK!(ZSTD_c_experimentalParam18, value);
             }
             (*CCtxParams).maxBlockSize = value as usize;
             return (*CCtxParams).maxBlockSize;
         }
         1016 => {
-            if ZSTD_cParam_withinBounds(ZSTD_c_experimentalParam19, value) == 0 {
-                return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-            }
+            BOUNDCHECK!(ZSTD_c_experimentalParam19, value);
             (*CCtxParams).searchForExternalRepcodes = value as ZSTD_ParamSwitch_e;
             return (*CCtxParams).searchForExternalRepcodes as usize;
         }
@@ -4988,43 +4923,15 @@ pub unsafe extern "C" fn ZSTD_CCtx_reset(
 pub unsafe extern "C" fn ZSTD_checkCParams(
     mut cParams: ZSTD_compressionParameters,
 ) -> usize {
-    if ZSTD_cParam_withinBounds(ZSTD_c_windowLog, cParams.windowLog as std::ffi::c_int)
-        == 0
-    {
-        return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-    }
-    if ZSTD_cParam_withinBounds(ZSTD_c_chainLog, cParams.chainLog as std::ffi::c_int)
-        == 0
-    {
-        return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-    }
-    if ZSTD_cParam_withinBounds(ZSTD_c_hashLog, cParams.hashLog as std::ffi::c_int) == 0
-    {
-        return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-    }
-    if ZSTD_cParam_withinBounds(ZSTD_c_searchLog, cParams.searchLog as std::ffi::c_int)
-        == 0
-    {
-        return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-    }
-    if ZSTD_cParam_withinBounds(ZSTD_c_minMatch, cParams.minMatch as std::ffi::c_int)
-        == 0
-    {
-        return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-    }
-    if ZSTD_cParam_withinBounds(
-        ZSTD_c_targetLength,
-        cParams.targetLength as std::ffi::c_int,
-    ) == 0
-    {
-        return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-    }
-    if ZSTD_cParam_withinBounds(ZSTD_c_strategy, cParams.strategy as std::ffi::c_int)
-        == 0
-    {
-        return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int) as usize;
-    }
-    return 0;
+    BOUNDCHECK!(ZSTD_c_windowLog, cParams.windowLog);
+    BOUNDCHECK!(ZSTD_c_chainLog, cParams.chainLog);
+    BOUNDCHECK!(ZSTD_c_hashLog, cParams.hashLog);
+    BOUNDCHECK!(ZSTD_c_searchLog, cParams.searchLog);
+    BOUNDCHECK!(ZSTD_c_minMatch, cParams.minMatch);
+    BOUNDCHECK!(ZSTD_c_targetLength, cParams.targetLength);
+    BOUNDCHECK!(ZSTD_c_strategy, cParams.strategy);
+
+    0
 }
 unsafe extern "C" fn ZSTD_clampCParams(
     mut cParams: ZSTD_compressionParameters,

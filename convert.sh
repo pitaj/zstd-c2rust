@@ -493,6 +493,15 @@ case $1 in
 
     ;;
 
+  boundcheck)
+    # if ZSTD_cParam_withinBounds(ZSTD_c_searchLog, value) == 0 {
+    #     return -(ZSTD_error_parameter_outOfBound as std::ffi::c_int)
+    #         as usize;
+    # }
+    perl -i -p0e 's/if ZSTD_cParam_withinBounds\(([^\)]+)\)[^\}]*}/BOUNDCHECK!($1);/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -541,6 +550,7 @@ case $1 in
     ./convert.sh bt-get-all-matches
     ./convert.sh fse-getsymbol
     ./convert.sh fse-flushbits
+    ./convert.sh boundcheck
 
     ;;
 
