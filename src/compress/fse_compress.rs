@@ -876,7 +876,7 @@ unsafe extern "C" fn FSE_normalizeM2(
     let mid = ((1 as std::ffi::c_ulonglong)
         << vStepLog.wrapping_sub(1))
         .wrapping_sub(1) as u64;
-    let rStep = ZSTD_div64!((((u64) 1 << vStepLog) * ToDistribute) + mid, (u32) total);
+    let rStep = (((1_u64 << vStepLog) * u64::from(ToDistribute)) + mid) / (total as u64);
     let mut tmpTotal = mid;
     s = 0;
     while s <= maxSymbolValue {
@@ -936,7 +936,7 @@ pub unsafe extern "C" fn FSE_normalizeCount(
     }) as std::ffi::c_short;
     let scale = (62 as std::ffi::c_uint).wrapping_sub(tableLog)
         as u64;
-    let step = ZSTD_div64!((u64) 1 << 62, (u32) total);
+    let step = (1_u64 << 62) / (total as u64);
     let vStep = ((1 as std::ffi::c_ulonglong)
         << scale.wrapping_sub(20)) as u64;
     let mut stillToDistribute = (1 as std::ffi::c_int) << tableLog;
