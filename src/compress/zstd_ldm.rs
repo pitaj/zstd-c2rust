@@ -1023,29 +1023,22 @@ unsafe extern "C" fn ZSTD_ldm_gear_reset(
 ) {
     let mut hash = (*state).rolling;
     let mut n: usize = 0;
-    while n.wrapping_add(3) < minMatchLength {
-        let ref mut fresh2 = GEAR_ITER_ONCE!();
-        *fresh2 = GEAR_ITER_ONCE!();
-        let ref mut fresh3 = GEAR_ITER_ONCE!();
-        *fresh3 = (*fresh3).wrapping_add(GEAR_ITER_ONCE!());
-        let ref mut fresh4 = GEAR_ITER_ONCE!();
-        *fresh4 = GEAR_ITER_ONCE!();
-        let ref mut fresh5 = GEAR_ITER_ONCE!();
-        *fresh5 = (*fresh5).wrapping_add(GEAR_ITER_ONCE!());
-        let ref mut fresh6 = GEAR_ITER_ONCE!();
-        *fresh6 = GEAR_ITER_ONCE!();
-        let ref mut fresh7 = GEAR_ITER_ONCE!();
-        *fresh7 = (*fresh7).wrapping_add(GEAR_ITER_ONCE!());
-        let ref mut fresh8 = GEAR_ITER_ONCE!();
-        *fresh8 = GEAR_ITER_ONCE!();
-        let ref mut fresh9 = GEAR_ITER_ONCE!();
-        *fresh9 = (*fresh9).wrapping_add(GEAR_ITER_ONCE!());
+
+    macro_rules! GEAR_ITER_ONCE {
+        () => {
+            hash = (hash << 1) + ZSTD_ldm_gearTab[*data.add(n) & 0xFF];
+            n += 1;
+        }
+    }
+
+    while n + 3 < minMatchLength {
+        GEAR_ITER_ONCE();
+        GEAR_ITER_ONCE();
+        GEAR_ITER_ONCE();
+        GEAR_ITER_ONCE();
     }
     while n < minMatchLength {
-        let ref mut fresh10 = GEAR_ITER_ONCE!();
-        *fresh10 = GEAR_ITER_ONCE!();
-        let ref mut fresh11 = GEAR_ITER_ONCE!();
-        *fresh11 = (*fresh11).wrapping_add(GEAR_ITER_ONCE!());
+        GEAR_ITER_ONCE();
     }
 }
 unsafe extern "C" fn ZSTD_ldm_gear_feed(
@@ -1055,118 +1048,39 @@ unsafe extern "C" fn ZSTD_ldm_gear_feed(
     mut splits: *mut usize,
     mut numSplits: *mut std::ffi::c_uint,
 ) -> usize {
-    let mut current_block: u64;
     let mut n: usize = 0;
-    let mut hash: u64 = 0;
-    let mut mask: u64 = 0;
-    hash = (*state).rolling;
-    mask = (*state).stopMask;
-    n = 0;
-    loop {
-        if !(n.wrapping_add(3) < size) {
-            current_block = 5689316957504528238;
-            break;
-        }
-        let ref mut fresh12 = GEAR_ITER_ONCE!();
-        *fresh12 = GEAR_ITER_ONCE!();
-        let ref mut fresh13 = GEAR_ITER_ONCE!();
-        *fresh13 = (*fresh13).wrapping_add(GEAR_ITER_ONCE!());
-        if (hash & mask == 0) as std::ffi::c_int
-            as std::ffi::c_long != 0
-        {
-            let ref mut fresh14 = GEAR_ITER_ONCE!();
-            *fresh14 = GEAR_ITER_ONCE!();
-            let ref mut fresh15 = GEAR_ITER_ONCE!();
-            *fresh15 = (*fresh15).wrapping_add(GEAR_ITER_ONCE!());
-            if GEAR_ITER_ONCE!() == LDM_BATCH_SIZE as std::ffi::c_uint {
-                current_block = 11031558638553359174;
-                break;
+    let mut hash: u64 = (*state).rolling;
+    let mut mask: u64 = (*state).stopMask;
+
+    'done: {
+        macro_rules! GEAR_ITER_ONCE {
+            () => {
+                hash = (hash << 1) + ZSTD_ldm_gearTab[*data.add(n) & 0xFF];
+                n += 1;
+
+                if UNLIKELY!((hash & mask) == 0) {
+                    splits.offset(*numSplits as isize) = n;
+                    *numSplits += 1;
+                    if *numSplits == LDM_BATCH_SIZE {
+                        break 'done;
+                    }
+                }
             }
         }
-        let ref mut fresh16 = GEAR_ITER_ONCE!();
-        *fresh16 = GEAR_ITER_ONCE!();
-        let ref mut fresh17 = GEAR_ITER_ONCE!();
-        *fresh17 = (*fresh17).wrapping_add(GEAR_ITER_ONCE!());
-        if (hash & mask == 0) as std::ffi::c_int
-            as std::ffi::c_long != 0
-        {
-            let ref mut fresh18 = GEAR_ITER_ONCE!();
-            *fresh18 = GEAR_ITER_ONCE!();
-            let ref mut fresh19 = GEAR_ITER_ONCE!();
-            *fresh19 = (*fresh19).wrapping_add(GEAR_ITER_ONCE!());
-            if GEAR_ITER_ONCE!() == LDM_BATCH_SIZE as std::ffi::c_uint {
-                current_block = 11031558638553359174;
-                break;
-            }
+
+        while n + 3 < size {
+            GEAR_ITER_ONCE();
+            GEAR_ITER_ONCE();
+            GEAR_ITER_ONCE();
+            GEAR_ITER_ONCE();
         }
-        let ref mut fresh20 = GEAR_ITER_ONCE!();
-        *fresh20 = GEAR_ITER_ONCE!();
-        let ref mut fresh21 = GEAR_ITER_ONCE!();
-        *fresh21 = (*fresh21).wrapping_add(GEAR_ITER_ONCE!());
-        if (hash & mask == 0) as std::ffi::c_int
-            as std::ffi::c_long != 0
-        {
-            let ref mut fresh22 = GEAR_ITER_ONCE!();
-            *fresh22 = GEAR_ITER_ONCE!();
-            let ref mut fresh23 = GEAR_ITER_ONCE!();
-            *fresh23 = (*fresh23).wrapping_add(GEAR_ITER_ONCE!());
-            if GEAR_ITER_ONCE!() == LDM_BATCH_SIZE as std::ffi::c_uint {
-                current_block = 11031558638553359174;
-                break;
-            }
-        }
-        let ref mut fresh24 = GEAR_ITER_ONCE!();
-        *fresh24 = GEAR_ITER_ONCE!();
-        let ref mut fresh25 = GEAR_ITER_ONCE!();
-        *fresh25 = (*fresh25).wrapping_add(GEAR_ITER_ONCE!());
-        if !((hash & mask == 0) as std::ffi::c_int
-            as std::ffi::c_long != 0)
-        {
-            continue;
-        }
-        let ref mut fresh26 = GEAR_ITER_ONCE!();
-        *fresh26 = GEAR_ITER_ONCE!();
-        let ref mut fresh27 = GEAR_ITER_ONCE!();
-        *fresh27 = (*fresh27).wrapping_add(GEAR_ITER_ONCE!());
-        if GEAR_ITER_ONCE!() == LDM_BATCH_SIZE as std::ffi::c_uint {
-            current_block = 11031558638553359174;
-            break;
+        while n < size {
+            GEAR_ITER_ONCE();
         }
     }
-    loop {
-        match current_block {
-            11031558638553359174 => {
-                (*state).rolling = hash;
-                break;
-            }
-            _ => {
-                if !(n < size) {
-                    current_block = 11031558638553359174;
-                    continue;
-                }
-                let ref mut fresh28 = GEAR_ITER_ONCE!();
-                *fresh28 = GEAR_ITER_ONCE!();
-                let ref mut fresh29 = GEAR_ITER_ONCE!();
-                *fresh29 = (*fresh29).wrapping_add(GEAR_ITER_ONCE!());
-                if !((hash & mask == 0) as std::ffi::c_int
-                    as std::ffi::c_long != 0)
-                {
-                    current_block = 5689316957504528238;
-                    continue;
-                }
-                let ref mut fresh30 = GEAR_ITER_ONCE!();
-                *fresh30 = GEAR_ITER_ONCE!();
-                let ref mut fresh31 = GEAR_ITER_ONCE!();
-                *fresh31 = (*fresh31).wrapping_add(GEAR_ITER_ONCE!());
-                if GEAR_ITER_ONCE!() == LDM_BATCH_SIZE as std::ffi::c_uint {
-                    current_block = 11031558638553359174;
-                } else {
-                    current_block = 5689316957504528238;
-                }
-            }
-        }
-    }
-    return n;
+
+    (*state).rolling = hash;
+    n
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_ldm_adjustParameters(
