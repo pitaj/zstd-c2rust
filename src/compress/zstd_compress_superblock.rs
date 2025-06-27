@@ -873,10 +873,10 @@ static mut LL_defaultNorm: [i16; 36] = [
     1,
     1,
     1,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
+    -1,
+    -1,
+    -1,
+    -1,
 ];
 pub const LL_DEFAULTNORMLOG: std::ffi::c_int = 6;
 static mut LL_defaultNormLog: u32 = LL_DEFAULTNORMLOG as u32;
@@ -982,13 +982,13 @@ static mut ML_defaultNorm: [i16; 53] = [
     1,
     1,
     1,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
 ];
 pub const ML_DEFAULTNORMLOG: std::ffi::c_int = 6;
 static mut ML_defaultNormLog: u32 = ML_DEFAULTNORMLOG as u32;
@@ -1017,11 +1017,11 @@ static mut OF_defaultNorm: [i16; 29] = [
     1,
     1,
     1,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
-    -(1 as std::ffi::c_int) as i16,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
 ];
 pub const OF_DEFAULTNORMLOG: std::ffi::c_int = 5;
 static mut OF_defaultNormLog: u32 = OF_DEFAULTNORMLOG as u32;
