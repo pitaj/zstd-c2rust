@@ -1453,6 +1453,13 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_search(
     }
     return ml;
 }
+
+macro_rules! NEXT_IN_CHAIN {
+    (chainTable, $d:expr, $mask:expr) => {
+        chainTable.offset(($d & $mask) as isize)
+    }
+}
+
 #[inline(always)]
 unsafe extern "C" fn ZSTD_insertAndFindFirstIndex_internal(
     mut ms: *mut ZSTD_MatchState_t,
@@ -1475,7 +1482,7 @@ unsafe extern "C" fn ZSTD_insertAndFindFirstIndex_internal(
             hashLog,
             mls,
         );
-        let ref mut fresh3 = NEXT_IN_CHAIN!(idx, chainMask);
+        let ref mut fresh3 = NEXT_IN_CHAIN!(chainTable, idx, chainMask);
         *fresh3 = *hashTable.offset(h as isize);
         *hashTable.offset(h as isize) = idx;
         idx = idx.wrapping_add(1);
@@ -1614,7 +1621,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch(
         if matchIndex <= minChain {
             break;
         }
-        matchIndex = NEXT_IN_CHAIN!(matchIndex, chainMask);
+        matchIndex = NEXT_IN_CHAIN!(chainTable, matchIndex, chainMask);
         nbAttempts = nbAttempts.wrapping_sub(1);
         nbAttempts;
     }
