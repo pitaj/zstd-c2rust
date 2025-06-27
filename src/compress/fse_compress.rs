@@ -1061,7 +1061,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         FSE_initCState2(&mut CState2, ct, *ip as u32);
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
-        if FSE_FLUSHBITS!(& bitC) != 0 {} else {};
+        FSE_FLUSHBITS!(addr_of!(bitC));
     } else {
         ip = ip.offset(-1);
         FSE_initCState2(&mut CState2, ct, *ip as u32);
@@ -1078,7 +1078,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
         FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as std::ffi::c_uint);
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
-        if FSE_FLUSHBITS!(& bitC) != 0 {} else {};
+        FSE_FLUSHBITS!(addr_of!(bitC));
     }
     while ip > istart {
         ip = ip.offset(-1);
@@ -1088,7 +1088,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
             < (FSE_MAX_TABLELOG * 2 as std::ffi::c_int + 7 as std::ffi::c_int)
                 as std::ffi::c_ulong
         {
-            if FSE_FLUSHBITS!(& bitC) != 0 {} else {};
+            FSE_FLUSHBITS!(addr_of!(bitC));
         }
         ip = ip.offset(-1);
         FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
@@ -1102,7 +1102,7 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
             ip = ip.offset(-1);
             FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
         }
-        if FSE_FLUSHBITS!(& bitC) != 0 {} else {};
+        FSE_FLUSHBITS!(addr_of!(bitC));
     }
     FSE_flushCState(&mut bitC, &mut CState2);
     FSE_flushCState(&mut bitC, &mut CState1);
