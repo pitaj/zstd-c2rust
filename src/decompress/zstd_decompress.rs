@@ -1652,7 +1652,7 @@ pub unsafe extern "C" fn ZSTD_initStaticDCtx(
     mut workspaceSize: usize,
 ) -> *mut ZSTD_DCtx {
     let dctx = workspace as *mut ZSTD_DCtx;
-    if workspace as usize & 7 as usize != 0 {
+    if workspace as usize & 7_usize != 0 {
         return NULL as *mut ZSTD_DCtx;
     }
     if workspaceSize < ::core::mem::size_of::<ZSTD_DCtx>() {
@@ -2387,7 +2387,7 @@ pub unsafe extern "C" fn ZSTD_decompressionMargin(
                     }) as usize,
                 );
             margin = margin
-                .wrapping_add(3 as usize * frameSizeInfo.nbBlocks);
+                .wrapping_add(3_usize * frameSizeInfo.nbBlocks);
             maxBlockSize = MAX!(maxBlockSize, zfh.blockSizeMax);
         } else {
             margin = margin.wrapping_add(compressedSize);
@@ -3971,7 +3971,7 @@ unsafe extern "C" fn ZSTD_decodingBufferSize_internal(
     let blockSize = MIN!((usize) MIN(windowSize, ZSTD_BLOCKSIZE_MAX), blockSizeMax);
     let neededRBSize = windowSize
         .wrapping_add(
-            (blockSize * 2 as usize) as std::ffi::c_ulonglong,
+            (blockSize * 2_usize) as std::ffi::c_ulonglong,
         )
         .wrapping_add(
             (WILDCOPY_OVERLENGTH * 2 as std::ffi::c_int) as std::ffi::c_ulonglong,
@@ -4101,7 +4101,7 @@ unsafe extern "C" fn ZSTD_decompressContinueStream(
         == ZSTD_bm_buffered as std::ffi::c_int as std::ffi::c_uint
     {
         let dstSize = if isSkipFrame != 0 {
-            0 as usize
+            0_usize
         } else {
             ((*zds).outBuffSize).wrapping_sub((*zds).outStart)
         };
@@ -4124,7 +4124,7 @@ unsafe extern "C" fn ZSTD_decompressContinueStream(
         }
     } else {
         let dstSize_0 = if isSkipFrame != 0 {
-            0 as usize
+            0_usize
         } else {
             oend.offset_from(*op) as std::ffi::c_long as usize
         };
@@ -4281,7 +4281,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                         let dictSize = if !ddict.is_null() {
                             ZSTD_DDict_dictSize(ddict)
                         } else {
-                            0 as usize
+                            0_usize
                         };
                         if (*zds).staticSize != 0 {
                             return -(ZSTD_error_memory_allocation as std::ffi::c_int)
@@ -4501,7 +4501,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                     (*zds).fParams.blockSizeMax as usize,
                                 )
                             } else {
-                                0 as usize
+                                0_usize
                             };
                             ZSTD_DCtx_updateOversizedDuration(
                                 zds,

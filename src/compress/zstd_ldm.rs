@@ -590,7 +590,7 @@ unsafe extern "C" fn ZSTD_window_correctOverflow(
     let currentCycleCorrection = if currentCycle < ZSTD_WINDOW_START_INDEX as u32 {
         MAX!(cycleSize, ZSTD_WINDOW_START_INDEX)
     } else {
-        0 as u32
+        0_u32
     };
     let newCurrent = currentCycle
         .wrapping_add(currentCycleCorrection)
@@ -626,7 +626,7 @@ unsafe extern "C" fn ZSTD_window_enforceMaxDist(
     let loadedDictEnd = if !loadedDictEndPtr.is_null() {
         *loadedDictEndPtr
     } else {
-        0 as u32
+        0_u32
     };
     if blockEndIdx > maxDist.wrapping_add(loadedDictEnd) {
         let newLowLimit = blockEndIdx.wrapping_sub(maxDist);
@@ -691,7 +691,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as usize >= length {
+        if 16_usize >= length {
             return;
         }
         op = op.offset(16);
@@ -1243,7 +1243,7 @@ pub unsafe extern "C" fn ZSTD_ldm_getTableSize(mut params: ldmParams_t) -> usize
     {
         totalSize
     } else {
-        0 as usize
+        0_usize
     };
 }
 #[no_mangle]
@@ -1256,7 +1256,7 @@ pub unsafe extern "C" fn ZSTD_ldm_getMaxNbSeq(
     {
         maxChunkSize / params.minMatchLength as usize
     } else {
-        0 as usize
+        0_usize
     };
 }
 unsafe extern "C" fn ZSTD_ldm_getBucket(

@@ -548,7 +548,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
     while n < maxSymbolValue {
         *op
             .offset(
-                (n / 2 as u32)
+                (n / 2_u32)
                     .wrapping_add(1) as isize,
             ) = ((((*wksp).huffWeight[n as usize] as std::ffi::c_int)
             << 4)
@@ -766,7 +766,7 @@ unsafe extern "C" fn HUF_setMaxHeight(
                     break;
                 }
                 let highTotal = (*huffNode.offset(highPos as isize)).count;
-                let lowTotal = 2 as u32
+                let lowTotal = 2_u32
                     * (*huffNode.offset(lowPos as isize)).count;
                 if highTotal <= lowTotal {
                     break;

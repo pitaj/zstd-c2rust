@@ -1429,7 +1429,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
     } else if (*hufMetadata).hType as std::ffi::c_uint
         == set_rle as std::ffi::c_int as std::ffi::c_uint
     {
-        return 1 as usize
+        return 1_usize
     } else if (*hufMetadata).hType as std::ffi::c_uint
         == set_compressed as std::ffi::c_int as std::ffi::c_uint
         || (*hufMetadata).hType as std::ffi::c_uint
@@ -1689,7 +1689,7 @@ unsafe extern "C" fn sizeBlockSequences(
     let mut n: usize = 0;
     let mut budget: usize = 0;
     let mut inSize: usize = 0;
-    let headerSize = firstSubBlock as usize * 120 as usize
+    let headerSize = firstSubBlock as usize * 120_usize
         * BYTESCALE as usize;
     budget = budget.wrapping_add(headerSize);
     budget = budget

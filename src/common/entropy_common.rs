@@ -235,7 +235,7 @@ unsafe extern "C" fn FSE_readNCount_body(
                 .wrapping_add((3 as std::ffi::c_int * repeats) as std::ffi::c_uint);
             bitStream >>= 2 * repeats;
             bitCount += 2 as std::ffi::c_int * repeats;
-            charnum = charnum.wrapping_add(bitStream & 3 as u32);
+            charnum = charnum.wrapping_add(bitStream & 3_u32);
             bitCount += 2;
             if charnum >= maxSV1 {
                 break;
@@ -458,12 +458,12 @@ unsafe extern "C" fn HUF_readStats_body(
             *huffWeight
                 .offset(
                     n as isize,
-                ) = (*ip.offset((n / 2 as u32) as isize)
+                ) = (*ip.offset((n / 2_u32) as isize)
                 as std::ffi::c_int >> 4) as u8;
             *huffWeight
                 .offset(
                     n.wrapping_add(1) as isize,
-                ) = (*ip.offset((n / 2 as u32) as isize)
+                ) = (*ip.offset((n / 2_u32) as isize)
                 as std::ffi::c_int & 15 as std::ffi::c_int) as u8;
             n = n.wrapping_add(2);
         }
@@ -534,7 +534,7 @@ unsafe extern "C" fn HUF_readStats_body(
     *fresh2 = (*fresh2).wrapping_add(1);
     *fresh2;
     if *rankStats.offset(1) < 2
-        || *rankStats.offset(1) & 1 as u32
+        || *rankStats.offset(1) & 1_u32
             != 0
     {
         return ERROR!(corruption_detected);

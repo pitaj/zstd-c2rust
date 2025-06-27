@@ -535,13 +535,13 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
             (if dictLoadMethod as std::ffi::c_uint
                 == ZSTD_dlm_byRef as std::ffi::c_int as std::ffi::c_uint
             {
-                0 as usize
+                0_usize
             } else {
                 dictSize
             }),
         );
     let ddict = sBuffer as *mut ZSTD_DDict;
-    if sBuffer as usize & 7 as usize != 0 {
+    if sBuffer as usize & 7_usize != 0 {
         return NULL as *const ZSTD_DDict;
     }
     if sBufferSize < neededSpace {
@@ -585,7 +585,7 @@ pub unsafe extern "C" fn ZSTD_estimateDDictSize(
             (if dictLoadMethod as std::ffi::c_uint
                 == ZSTD_dlm_byRef as std::ffi::c_int as std::ffi::c_uint
             {
-                0 as usize
+                0_usize
             } else {
                 dictSize
             }),
@@ -601,7 +601,7 @@ pub unsafe extern "C" fn ZSTD_sizeof_DDict(mut ddict: *const ZSTD_DDict) -> usiz
             (if !((*ddict).dictBuffer).is_null() {
                 (*ddict).dictSize
             } else {
-                0 as usize
+                0_usize
             }),
         );
 }

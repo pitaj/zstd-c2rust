@@ -503,7 +503,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     (*bitD).ptr = ((*bitD).ptr).offset(-(nbBytes as isize));
     (*bitD)
         .bitsConsumed = ((*bitD).bitsConsumed)
-        .wrapping_sub(nbBytes * 8 as u32);
+        .wrapping_sub(nbBytes * 8_u32);
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return result;
 }
@@ -625,19 +625,19 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
         .op[1] = ((*args).op[0])
         .offset(
             (dstSize.wrapping_add(3)
-                / 4 as usize) as isize,
+                / 4_usize) as isize,
         );
     (*args)
         .op[2] = ((*args).op[1])
         .offset(
             (dstSize.wrapping_add(3)
-                / 4 as usize) as isize,
+                / 4_usize) as isize,
         );
     (*args)
         .op[3] = ((*args).op[2])
         .offset(
             (dstSize.wrapping_add(3)
-                / 4 as usize) as isize,
+                / 4_usize) as isize,
         );
     if (*args).op[3] >= oend {
         return 0;
@@ -714,7 +714,7 @@ unsafe extern "C" fn HUF_rescaleStats(
                 + (if *huffWeight.offset(s as isize) as std::ffi::c_int
                     == 0
                 {
-                    0 as u32
+                    0_u32
                 } else {
                     scale
                 }) as u8 as std::ffi::c_int) as u8;
@@ -2777,7 +2777,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
             stream;
         }
         olimit = (op[3])
-            .offset((iters * 5 as usize) as isize);
+            .offset((iters * 5_usize) as isize);
         if op[3] == olimit {
             break;
         }
@@ -3728,9 +3728,9 @@ pub unsafe extern "C" fn HUF_selectDecoder(
     mut cSrcSize: usize,
 ) -> u32 {
     let Q = if cSrcSize >= dstSize {
-        15 as u32
+        15_u32
     } else {
-        (cSrcSize * 16 as usize / dstSize) as u32
+        (cSrcSize * 16_usize / dstSize) as u32
     };
     let D256 = (dstSize >> 8) as u32;
     let DTime0 = (algoTime[Q as usize][0].tableTime)

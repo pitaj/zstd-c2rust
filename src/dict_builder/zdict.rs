@@ -1604,7 +1604,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                 *fresh1 = (*fresh1).wrapping_add(elt.savings * addedLength / elt.length);
                 let ref mut fresh2 = (*table.offset(u as isize)).savings;
                 *fresh2 = (*fresh2)
-                    .wrapping_add(elt.length / 8 as u32);
+                    .wrapping_add(elt.length / 8_u32);
                 elt = *table.offset(u as isize);
                 while u > 1
                     && (*table
@@ -1639,7 +1639,7 @@ unsafe extern "C" fn ZDICT_tryMerge(
                         as std::ffi::c_int;
                 let ref mut fresh3 = (*table.offset(u as isize)).savings;
                 *fresh3 = (*fresh3)
-                    .wrapping_add(elt.length / 8 as u32);
+                    .wrapping_add(elt.length / 8_u32);
                 if addedLength_0 > 0 {
                     let ref mut fresh4 = (*table.offset(u as isize)).length;
                     *fresh4 = (*fresh4 as std::ffi::c_uint)
@@ -2861,7 +2861,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         10000 as std::ffi::c_uint
     } else {
         nbSamples
-    }) > (maxDictSize / 16 as usize) as u32
+    }) > (maxDictSize / 16_usize) as u32
     {
         if 10000 as std::ffi::c_uint > nbSamples {
             10000 as std::ffi::c_uint
@@ -2869,7 +2869,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             nbSamples
         }
     } else {
-        (maxDictSize / 16 as usize) as u32
+        (maxDictSize / 16_usize) as u32
     };
     let dictList = malloc(
         (dictListSize as std::ffi::c_ulong)
@@ -2987,7 +2987,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         free(dictList as *mut std::ffi::c_void);
         return ERROR!(dictionaryCreation_failed);
     }
-    if (dictContentSize_0 as usize) < targetDictSize / 4 as usize {
+    if (dictContentSize_0 as usize) < targetDictSize / 4_usize {
         if DISPLAYLEVEL!(
             2,
             "!  warning : selected content significantly smaller than requested (%u < %u) \n",
@@ -3043,7 +3043,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             }
         }
     }
-    if dictContentSize_0 as usize > targetDictSize * 3 as usize
+    if dictContentSize_0 as usize > targetDictSize * 3_usize
         && nbSamples > (2 as std::ffi::c_int * MINRATIO) as std::ffi::c_uint
         && selectivity > 1
     {

@@ -772,7 +772,7 @@ unsafe extern "C" fn BIT_reloadDStream(
     (*bitD).ptr = ((*bitD).ptr).offset(-(nbBytes as isize));
     (*bitD)
         .bitsConsumed = ((*bitD).bitsConsumed)
-        .wrapping_sub(nbBytes * 8 as u32);
+        .wrapping_sub(nbBytes * 8_u32);
     (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
     return result;
 }
@@ -1108,7 +1108,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     } else {
         ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
-        if 16 as usize >= length {
+        if 16_usize >= length {
             return;
         }
         op = op.offset(16);
@@ -1158,7 +1158,7 @@ pub unsafe extern "C" fn ZSTD_getcBlockSize(
     let cSize = cBlockHeader >> 3;
     (*bpPtr).lastBlock = cBlockHeader & 1;
     (*bpPtr)
-        .blockType = (cBlockHeader >> 1 & 3 as u32)
+        .blockType = (cBlockHeader >> 1 & 3_u32)
         as blockType_e;
     (*bpPtr).origSize = cSize;
     if (*bpPtr).blockType as std::ffi::c_uint
