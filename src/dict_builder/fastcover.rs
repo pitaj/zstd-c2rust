@@ -465,7 +465,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
     let k = parameters.k;
     let d = parameters.d;
     let f = (*ctx).f;
-    let dmersInK = k.wrapping_sub(d).wrapping_add(1 as std::ffi::c_int as u32);
+    let dmersInK = k.wrapping_sub(d).wrapping_add(1);
     let mut bestSegment = {
         let mut init = COVER_segment_t {
             begin: 0 as std::ffi::c_int as u32,
@@ -495,11 +495,11 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
                 .score = (activeSegment.score).wrapping_add(*freqs.offset(idx as isize));
         }
         activeSegment
-            .end = (activeSegment.end).wrapping_add(1 as std::ffi::c_int as u32);
+            .end = (activeSegment.end).wrapping_add(1);
         let ref mut fresh0 = *segmentFreqs.offset(idx as isize);
         *fresh0 = (*fresh0 as std::ffi::c_int + 1 as std::ffi::c_int) as u16;
         if (activeSegment.end).wrapping_sub(activeSegment.begin)
-            == dmersInK.wrapping_add(1 as std::ffi::c_int as u32)
+            == dmersInK.wrapping_add(1)
         {
             let delIndex = FASTCOVER_hashPtrToIndex(
                 ((*ctx).samples).offset(activeSegment.begin as isize)
@@ -517,7 +517,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
                     .wrapping_sub(*freqs.offset(delIndex as isize));
             }
             activeSegment
-                .begin = (activeSegment.begin).wrapping_add(1 as std::ffi::c_int as u32);
+                .begin = (activeSegment.begin).wrapping_add(1);
         }
         if activeSegment.score > bestSegment.score {
             bestSegment = activeSegment;
@@ -533,7 +533,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
         let ref mut fresh2 = *segmentFreqs.offset(delIndex_0 as isize);
         *fresh2 = (*fresh2 as std::ffi::c_int - 1 as std::ffi::c_int) as u16;
         activeSegment
-            .begin = (activeSegment.begin).wrapping_add(1 as std::ffi::c_int as u32);
+            .begin = (activeSegment.begin).wrapping_add(1);
     }
     let mut pos: u32 = 0;
     pos = bestSegment.begin;
@@ -610,7 +610,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
     while i < (*ctx).nbTrainSamples {
         let mut start = *((*ctx).offsets).offset(i as isize);
         let currSampleEnd = *((*ctx).offsets)
-            .offset(i.wrapping_add(1 as std::ffi::c_int as usize) as isize);
+            .offset(i.wrapping_add(1) as isize);
         while start.wrapping_add(readLength as usize) <= currSampleEnd {
             let dmerIndex = FASTCOVER_hashPtrToIndex(
                 ((*ctx).samples).offset(start as isize) as *const std::ffi::c_void,
@@ -622,7 +622,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
             *fresh3;
             start = start
                 .wrapping_add(skip as usize)
-                .wrapping_add(1 as std::ffi::c_int as usize);
+                .wrapping_add(1);
         }
         i = i.wrapping_add(1);
         i;
@@ -777,13 +777,13 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
                 ::core::mem::size_of::<u64>()
             }),
         )
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_ulong);
+        .wrapping_add(1);
     (*ctx).d = d;
     (*ctx).f = f;
     (*ctx).accelParams = accelParams;
     (*ctx)
         .offsets = calloc(
-        nbSamples.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+        nbSamples.wrapping_add(1)
             as std::ffi::c_ulong,
         ::core::mem::size_of::<usize>(),
     ) as *mut usize;
@@ -803,17 +803,17 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     }
     let mut i: u32 = 0;
     *((*ctx).offsets)
-        .offset(0 as std::ffi::c_int as isize) = 0 as std::ffi::c_int as usize;
+        .offset(0) = 0 as std::ffi::c_int as usize;
     i = 1 as std::ffi::c_int as u32;
     while i <= nbSamples {
         *((*ctx).offsets)
             .offset(
                 i as isize,
             ) = (*((*ctx).offsets)
-            .offset(i.wrapping_sub(1 as std::ffi::c_int as u32) as isize))
+            .offset(i.wrapping_sub(1) as isize))
             .wrapping_add(
                 *samplesSizes
-                    .offset(i.wrapping_sub(1 as std::ffi::c_int as u32) as isize),
+                    .offset(i.wrapping_sub(1) as isize),
             );
         i = i.wrapping_add(1);
         i;
@@ -932,7 +932,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
                 }
             }
         }
-        epoch = epoch.wrapping_add(1 as std::ffi::c_int as usize)
+        epoch = epoch.wrapping_add(1)
             % epochs.num as usize;
     }
     if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 as std::ffi::c_int {
@@ -1297,7 +1297,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         .wrapping_add(
             kMaxD
                 .wrapping_sub(kMinD)
-                .wrapping_div(2 as std::ffi::c_int as std::ffi::c_uint),
+                .wrapping_div(2),
         )
         .wrapping_mul(
             (1 as std::ffi::c_int as std::ffi::c_uint)
@@ -1596,7 +1596,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                             stderr,
                             b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
                             iteration
-                                .wrapping_mul(100 as std::ffi::c_int as std::ffi::c_uint)
+                                .wrapping_mul(100)
                                 .wrapping_div(kIterations),
                         );
                         fflush(stderr);
@@ -1609,7 +1609,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         }
         COVER_best_wait(&mut best);
         FASTCOVER_ctx_destroy(&mut ctx);
-        d = d.wrapping_add(2 as std::ffi::c_int as std::ffi::c_uint);
+        d = d.wrapping_add(2);
     }
     if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 as std::ffi::c_int {
         fprintf(

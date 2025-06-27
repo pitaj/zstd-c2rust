@@ -84,7 +84,7 @@ pub unsafe extern "C" fn HIST_count_simple(
     libc::memset(
         count as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
-        (maxSymbolValue.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+        (maxSymbolValue.wrapping_add(1)
             as std::ffi::c_ulong)
             .wrapping_mul(
                 ::core::mem::size_of::<std::ffi::c_uint>(),
@@ -128,13 +128,13 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     let mut ip = source as *const u8;
     let iend = ip.offset(sourceSize as isize);
     let countSize = ((*maxSymbolValuePtr)
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_ulong)
+        .wrapping_add(1) as std::ffi::c_ulong)
         .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>());
     let mut max: std::ffi::c_uint = 0;
     let Counting1 = workSpace;
-    let Counting2 = Counting1.offset(256 as std::ffi::c_int as isize);
-    let Counting3 = Counting2.offset(256 as std::ffi::c_int as isize);
-    let Counting4 = Counting3.offset(256 as std::ffi::c_int as isize);
+    let Counting2 = Counting1.offset(256);
+    let Counting3 = Counting2.offset(256);
+    let Counting4 = Counting3.offset(256);
     if sourceSize == 0 {
         libc::memset(
             ZSTD_memset!(count, 0, countSize),
@@ -153,11 +153,11 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
             ) as usize,
     );
     let mut cached = MEM_read32(ip as *const std::ffi::c_void);
-    ip = ip.offset(4 as std::ffi::c_int as isize);
+    ip = ip.offset(4);
     while ip < iend.offset(-(15 as std::ffi::c_int as isize)) {
         let mut c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
-        ip = ip.offset(4 as std::ffi::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh4 = *Counting1.offset(c as u8 as isize);
         *fresh4 = (*fresh4).wrapping_add(1);
         *fresh4;
@@ -174,7 +174,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh7;
         c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
-        ip = ip.offset(4 as std::ffi::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh8 = *Counting1.offset(c as u8 as isize);
         *fresh8 = (*fresh8).wrapping_add(1);
         *fresh8;
@@ -191,7 +191,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh11;
         c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
-        ip = ip.offset(4 as std::ffi::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh12 = *Counting1.offset(c as u8 as isize);
         *fresh12 = (*fresh12).wrapping_add(1);
         *fresh12;
@@ -208,7 +208,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh15;
         c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
-        ip = ip.offset(4 as std::ffi::c_int as isize);
+        ip = ip.offset(4);
         let ref mut fresh16 = *Counting1.offset(c as u8 as isize);
         *fresh16 = (*fresh16).wrapping_add(1);
         *fresh16;

@@ -226,7 +226,7 @@ unsafe extern "C" fn POOL_thread(
         }
         let job = *((*ctx).queue).offset((*ctx).queueHead as isize);
         (*ctx)
-            .queueHead = ((*ctx).queueHead).wrapping_add(1 as std::ffi::c_int as usize)
+            .queueHead = ((*ctx).queueHead).wrapping_add(1)
             % (*ctx).queueSize;
         (*ctx).numThreadsBusy = ((*ctx).numThreadsBusy).wrapping_add(1);
         (*ctx).numThreadsBusy;
@@ -281,7 +281,7 @@ pub unsafe extern "C" fn POOL_create_advanced(
     if ctx.is_null() {
         return NULL_0 as *mut POOL_ctx;
     }
-    (*ctx).queueSize = queueSize.wrapping_add(1 as std::ffi::c_int as usize);
+    (*ctx).queueSize = queueSize.wrapping_add(1);
     (*ctx)
         .queue = ZSTD_customCalloc(
         ((*ctx).queueSize)
@@ -475,7 +475,7 @@ pub unsafe extern "C" fn POOL_resize(
 unsafe extern "C" fn isQueueFull(mut ctx: *const POOL_ctx) -> std::ffi::c_int {
     if (*ctx).queueSize > 1 as std::ffi::c_int as usize {
         return ((*ctx).queueHead
-            == ((*ctx).queueTail).wrapping_add(1 as std::ffi::c_int as usize)
+            == ((*ctx).queueTail).wrapping_add(1)
                 % (*ctx).queueSize) as std::ffi::c_int
     } else {
         return ((*ctx).numThreadsBusy == (*ctx).threadLimit || (*ctx).queueEmpty == 0)
@@ -499,7 +499,7 @@ unsafe extern "C" fn POOL_add_internal(
     (*ctx).queueEmpty = 0 as std::ffi::c_int;
     *((*ctx).queue).offset((*ctx).queueTail as isize) = job;
     (*ctx)
-        .queueTail = ((*ctx).queueTail).wrapping_add(1 as std::ffi::c_int as usize)
+        .queueTail = ((*ctx).queueTail).wrapping_add(1)
         % (*ctx).queueSize;
     ZSTD_pthread_cond_signal!(
         & ctx -> queuePopCond

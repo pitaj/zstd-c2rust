@@ -303,15 +303,15 @@ unsafe extern "C" fn FSE_initCState(
     let tableLog = MEM_read16(ptr) as u32;
     (*statePtr).value = (1 as std::ffi::c_int as ptrdiff_t) << tableLog;
     (*statePtr)
-        .stateTable = u16ptr.offset(2 as std::ffi::c_int as isize)
+        .stateTable = u16ptr.offset(2)
         as *const std::ffi::c_void;
     (*statePtr)
         .symbolTT = ct
-        .offset(1 as std::ffi::c_int as isize)
+        .offset(1)
         .offset(
             (if tableLog != 0 {
                 (1 as std::ffi::c_int)
-                    << tableLog.wrapping_sub(1 as std::ffi::c_int as u32)
+                    << tableLog.wrapping_sub(1)
             } else {
                 1 as std::ffi::c_int
             }) as isize,
@@ -378,7 +378,7 @@ unsafe extern "C" fn FSE_bitCost(
     let mut symbolTT = symbolTTPtr as *const FSE_symbolCompressionTransform;
     let minNbBits = (*symbolTT.offset(symbolValue as isize)).deltaNbBits
         >> 16;
-    let threshold = minNbBits.wrapping_add(1 as std::ffi::c_int as u32)
+    let threshold = minNbBits.wrapping_add(1)
         << 16;
     let tableSize = ((1 as std::ffi::c_int) << tableLog) as u32;
     let deltaFromThreshold = threshold
@@ -388,7 +388,7 @@ unsafe extern "C" fn FSE_bitCost(
         );
     let normalizedDeltaFromThreshold = deltaFromThreshold << accuracyLog >> tableLog;
     let bitMultiplier = ((1 as std::ffi::c_int) << accuracyLog) as u32;
-    return (minNbBits.wrapping_add(1 as std::ffi::c_int as u32) * bitMultiplier)
+    return (minNbBits.wrapping_add(1) * bitMultiplier)
         .wrapping_sub(normalizedDeltaFromThreshold);
 }
 static mut BIT_mask: [std::ffi::c_uint; 32] = [
@@ -763,7 +763,7 @@ unsafe extern "C" fn ZSTD_getFSEMaxSymbolValue(
     let mut ptr = ctable as *const std::ffi::c_void;
     let mut u16ptr = ptr as *const u16;
     let maxSymbolValue = MEM_read16(
-        u16ptr.offset(1 as std::ffi::c_int as isize) as *const std::ffi::c_void,
+        u16ptr.offset(1) as *const std::ffi::c_void,
     ) as u32;
     return maxSymbolValue;
 }
@@ -851,7 +851,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
     s = 0 as std::ffi::c_int as std::ffi::c_uint;
     while s <= max {
         let tableLog = cstate.stateLog;
-        let badCost = tableLog.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+        let badCost = tableLog.wrapping_add(1)
             << kAccuracyLog;
         let bitCost = FSE_bitCost(cstate.symbolTT, tableLog, s, kAccuracyLog);
         if !(*count.offset(s as isize) == 0 as std::ffi::c_int as std::ffi::c_uint) {
@@ -936,7 +936,7 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
             }
             if nbSeq < dynamicFse_nbSeq_min
                 || mostFrequent
-                    < nbSeq >> defaultNormLog.wrapping_sub(1 as std::ffi::c_int as u32)
+                    < nbSeq >> defaultNormLog.wrapping_sub(1)
             {
                 *repeatMode = FSE_repeat_none;
                 return set_basic;
@@ -1004,7 +1004,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
             if dstCapacity == 0 as std::ffi::c_int as usize {
                 return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
             }
-            *op = *codeTable.offset(0 as std::ffi::c_int as isize);
+            *op = *codeTable.offset(0);
             return 1 as std::ffi::c_int as usize;
         }
         3 => {
@@ -1040,7 +1040,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
                 .offset(
                     *codeTable
                         .offset(
-                            nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize,
+                            nbSeq.wrapping_sub(1) as isize,
                         ) as isize,
                 ) > 1 as std::ffi::c_int as std::ffi::c_uint
             {
@@ -1048,7 +1048,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
                     .offset(
                         *codeTable
                             .offset(
-                                nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize,
+                                nbSeq.wrapping_sub(1) as isize,
                             ) as isize,
                     );
                 *fresh0 = (*fresh0).wrapping_sub(1);
@@ -1145,27 +1145,27 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
     FSE_initCState2(
         &mut stateMatchLength,
         CTable_MatchLength,
-        *mlCodeTable.offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize)
+        *mlCodeTable.offset(nbSeq.wrapping_sub(1) as isize)
             as u32,
     );
     FSE_initCState2(
         &mut stateOffsetBits,
         CTable_OffsetBits,
-        *ofCodeTable.offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize)
+        *ofCodeTable.offset(nbSeq.wrapping_sub(1) as isize)
             as u32,
     );
     FSE_initCState2(
         &mut stateLitLength,
         CTable_LitLength,
-        *llCodeTable.offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize)
+        *llCodeTable.offset(nbSeq.wrapping_sub(1) as isize)
             as u32,
     );
     BIT_addBits(
         &mut blockStream,
-        (*sequences.offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize))
+        (*sequences.offset(nbSeq.wrapping_sub(1) as isize))
             .litLength as BitContainerType,
         LL_bits[*llCodeTable
-            .offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize)
+            .offset(nbSeq.wrapping_sub(1) as isize)
             as usize] as std::ffi::c_uint,
     );
     if MEM_32bits() != 0 {
@@ -1173,10 +1173,10 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
     }
     BIT_addBits(
         &mut blockStream,
-        (*sequences.offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize))
+        (*sequences.offset(nbSeq.wrapping_sub(1) as isize))
             .mlBase as BitContainerType,
         ML_bits[*mlCodeTable
-            .offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize)
+            .offset(nbSeq.wrapping_sub(1) as isize)
             as usize] as std::ffi::c_uint,
     );
     if MEM_32bits() != 0 {
@@ -1184,13 +1184,13 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
     }
     if longOffsets != 0 {
         let ofBits = *ofCodeTable
-            .offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize) as u32;
+            .offset(nbSeq.wrapping_sub(1) as isize) as u32;
         let extraBits = ofBits.wrapping_sub(MIN!(ofBits, STREAM_ACCUMULATOR_MIN - 1));
         if extraBits != 0 {
             BIT_addBits(
                 &mut blockStream,
                 (*sequences
-                    .offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize))
+                    .offset(nbSeq.wrapping_sub(1) as isize))
                     .offBase as BitContainerType,
                 extraBits,
             );
@@ -1199,7 +1199,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
         BIT_addBits(
             &mut blockStream,
             ((*sequences
-                .offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize))
+                .offset(nbSeq.wrapping_sub(1) as isize))
                 .offBase >> extraBits) as BitContainerType,
             ofBits.wrapping_sub(extraBits),
         );
@@ -1207,16 +1207,16 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
         BIT_addBits(
             &mut blockStream,
             (*sequences
-                .offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize))
+                .offset(nbSeq.wrapping_sub(1) as isize))
                 .offBase as BitContainerType,
             *ofCodeTable
-                .offset(nbSeq.wrapping_sub(1 as std::ffi::c_int as usize) as isize)
+                .offset(nbSeq.wrapping_sub(1) as isize)
                 as std::ffi::c_uint,
         );
     }
     BIT_flushBits(&mut blockStream);
     let mut n: usize = 0;
-    n = nbSeq.wrapping_sub(2 as std::ffi::c_int as usize);
+    n = nbSeq.wrapping_sub(2);
     while n < nbSeq {
         let llCode = *llCodeTable.offset(n as isize);
         let ofCode = *ofCodeTable.offset(n as isize);

@@ -395,9 +395,9 @@ unsafe extern "C" fn COVER_map_init(
 ) -> std::ffi::c_int {
     (*map)
         .sizeLog = (ZSTD_highbit32(size))
-        .wrapping_add(2 as std::ffi::c_int as std::ffi::c_uint);
+        .wrapping_add(2);
     (*map).size = (1 as std::ffi::c_int as u32) << (*map).sizeLog;
-    (*map).sizeMask = ((*map).size).wrapping_sub(1 as std::ffi::c_int as u32);
+    (*map).sizeMask = ((*map).size).wrapping_sub(1);
     (*map)
         .data = malloc(
         ((*map).size as std::ffi::c_ulong)
@@ -431,7 +431,7 @@ unsafe extern "C" fn COVER_map_index(mut map: *mut COVER_map_t, mut key: u32) ->
         if (*pos).key == key {
             return i;
         }
-        i = i.wrapping_add(1 as std::ffi::c_int as u32) & (*map).sizeMask;
+        i = i.wrapping_add(1) & (*map).sizeMask;
     };
 }
 unsafe extern "C" fn COVER_map_at(mut map: *mut COVER_map_t, mut key: u32) -> *mut u32 {
@@ -454,7 +454,7 @@ unsafe extern "C" fn COVER_map_remove(mut map: *mut COVER_map_t, mut key: u32) {
     if (*del).value == MAP_EMPTY_VALUE as u32 {
         return;
     }
-    i = i.wrapping_add(1 as std::ffi::c_int as u32) & (*map).sizeMask;
+    i = i.wrapping_add(1) & (*map).sizeMask;
     loop {
         let pos: *mut COVER_map_pair_t = &mut *((*map).data).offset(i as isize)
             as *mut COVER_map_pair_t;
@@ -471,7 +471,7 @@ unsafe extern "C" fn COVER_map_remove(mut map: *mut COVER_map_t, mut key: u32) {
             shift = shift.wrapping_add(1);
             shift;
         }
-        i = i.wrapping_add(1 as std::ffi::c_int as u32) & (*map).sizeMask;
+        i = i.wrapping_add(1) & (*map).sizeMask;
     };
 }
 unsafe extern "C" fn COVER_map_destroy(mut map: *mut COVER_map_t) {
@@ -519,7 +519,7 @@ unsafe extern "C" fn COVER_cmp8(
     } else {
         ((1 as std::ffi::c_int as u64)
             << (8 as std::ffi::c_int as std::ffi::c_uint).wrapping_mul((*ctx).d))
-            .wrapping_sub(1 as std::ffi::c_int as u64)
+            .wrapping_sub(1)
     };
     let lhs = MEM_readLE64(
         ((*ctx).samples).offset(*(lp as *const u32) as isize) as *const std::ffi::c_void,
@@ -595,7 +595,7 @@ unsafe extern "C" fn COVER_lower_bound(
             ptr = ptr.offset(1);
             first = ptr;
             count = count
-                .wrapping_sub(step.wrapping_add(1 as std::ffi::c_int as usize));
+                .wrapping_sub(step.wrapping_add(1));
         } else {
             count = step;
         }
@@ -658,19 +658,19 @@ unsafe extern "C" fn COVER_group(
     let mut curOffsetPtr: *const usize = (*ctx).offsets;
     let mut offsetsEnd: *const usize = ((*ctx).offsets)
         .offset((*ctx).nbSamples as isize);
-    let mut curSampleEnd = *((*ctx).offsets).offset(0 as std::ffi::c_int as isize);
+    let mut curSampleEnd = *((*ctx).offsets).offset(0);
     while grpPtr != grpEnd {
         *((*ctx).dmerAt).offset(*grpPtr as isize) = dmerId;
         if !((*grpPtr as usize) < curSampleEnd) {
-            freq = freq.wrapping_add(1 as std::ffi::c_int as u32);
-            if grpPtr.offset(1 as std::ffi::c_int as isize) != grpEnd {
+            freq = freq.wrapping_add(1);
+            if grpPtr.offset(1) != grpEnd {
                 let mut sampleEndPtr = COVER_lower_bound(
                     curOffsetPtr,
                     offsetsEnd,
                     *grpPtr as usize,
                 );
                 curSampleEnd = *sampleEndPtr;
-                curOffsetPtr = sampleEndPtr.offset(1 as std::ffi::c_int as isize);
+                curOffsetPtr = sampleEndPtr.offset(1);
             }
         }
         grpPtr = grpPtr.offset(1);
@@ -688,7 +688,7 @@ unsafe extern "C" fn COVER_selectSegment(
 ) -> COVER_segment_t {
     let k = parameters.k;
     let d = parameters.d;
-    let dmersInK = k.wrapping_sub(d).wrapping_add(1 as std::ffi::c_int as u32);
+    let dmersInK = k.wrapping_sub(d).wrapping_add(1);
     let mut bestSegment = {
         let mut init = COVER_segment_t {
             begin: 0 as std::ffi::c_int as u32,
@@ -715,16 +715,16 @@ unsafe extern "C" fn COVER_selectSegment(
                 .wrapping_add(*freqs.offset(newDmer as isize));
         }
         activeSegment
-            .end = (activeSegment.end).wrapping_add(1 as std::ffi::c_int as u32);
-        *newDmerOcc = (*newDmerOcc).wrapping_add(1 as std::ffi::c_int as u32);
+            .end = (activeSegment.end).wrapping_add(1);
+        *newDmerOcc = (*newDmerOcc).wrapping_add(1);
         if (activeSegment.end).wrapping_sub(activeSegment.begin)
-            == dmersInK.wrapping_add(1 as std::ffi::c_int as u32)
+            == dmersInK.wrapping_add(1)
         {
             let mut delDmer = *((*ctx).dmerAt).offset(activeSegment.begin as isize);
             let mut delDmerOcc = COVER_map_at(activeDmers, delDmer);
             activeSegment
-                .begin = (activeSegment.begin).wrapping_add(1 as std::ffi::c_int as u32);
-            *delDmerOcc = (*delDmerOcc).wrapping_sub(1 as std::ffi::c_int as u32);
+                .begin = (activeSegment.begin).wrapping_add(1);
+            *delDmerOcc = (*delDmerOcc).wrapping_sub(1);
             if *delDmerOcc == 0 as std::ffi::c_int as u32 {
                 COVER_map_remove(activeDmers, delDmer);
                 activeSegment
@@ -744,7 +744,7 @@ unsafe extern "C" fn COVER_selectSegment(
         let mut freq = *freqs.offset(*((*ctx).dmerAt).offset(pos as isize) as isize);
         if freq != 0 as std::ffi::c_int as u32 {
             newBegin = MIN!(newBegin, pos);
-            newEnd = pos.wrapping_add(1 as std::ffi::c_int as u32);
+            newEnd = pos.wrapping_add(1);
         }
         pos = pos.wrapping_add(1);
         pos;
@@ -953,7 +953,7 @@ unsafe extern "C" fn COVER_ctx_init(
                 ::core::mem::size_of::<u64>()
             }),
         )
-        .wrapping_add(1 as std::ffi::c_int as std::ffi::c_ulong);
+        .wrapping_add(1);
     (*ctx)
         .suffix = malloc(
         ((*ctx).suffixSize)
@@ -966,7 +966,7 @@ unsafe extern "C" fn COVER_ctx_init(
     ) as *mut u32;
     (*ctx)
         .offsets = malloc(
-        (nbSamples.wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint)
+        (nbSamples.wrapping_add(1)
             as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<usize>()),
     ) as *mut usize;
@@ -990,17 +990,17 @@ unsafe extern "C" fn COVER_ctx_init(
     (*ctx).d = d;
     let mut i: u32 = 0;
     *((*ctx).offsets)
-        .offset(0 as std::ffi::c_int as isize) = 0 as std::ffi::c_int as usize;
+        .offset(0) = 0 as std::ffi::c_int as usize;
     i = 1 as std::ffi::c_int as u32;
     while i <= nbSamples {
         *((*ctx).offsets)
             .offset(
                 i as isize,
             ) = (*((*ctx).offsets)
-            .offset(i.wrapping_sub(1 as std::ffi::c_int as u32) as isize))
+            .offset(i.wrapping_sub(1) as isize))
             .wrapping_add(
                 *samplesSizes
-                    .offset(i.wrapping_sub(1 as std::ffi::c_int as u32) as isize),
+                    .offset(i.wrapping_sub(1) as isize),
             );
         i = i.wrapping_add(1);
         i;
@@ -1213,7 +1213,7 @@ unsafe extern "C" fn COVER_buildDictionary(
                 }
             }
         }
-        epoch = epoch.wrapping_add(1 as std::ffi::c_int as usize)
+        epoch = epoch.wrapping_add(1)
             % epochs.num as usize;
     }
     if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 as std::ffi::c_int {
@@ -1313,7 +1313,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
         &mut activeDmers,
         (parameters.k)
             .wrapping_sub(parameters.d)
-            .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint),
+            .wrapping_add(1),
     ) == 0
     {
         if DISPLAYLEVEL!(1, "Failed to allocate dmer map: out of memory\n")
@@ -1731,7 +1731,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
         &mut activeDmers,
         (parameters.k)
             .wrapping_sub(parameters.d)
-            .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint),
+            .wrapping_add(1),
     ) == 0
     {
         if DISPLAYLEVEL!(1, "Failed to allocate dmer map: out of memory\n")
@@ -1847,7 +1847,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         .wrapping_add(
             kMaxD
                 .wrapping_sub(kMinD)
-                .wrapping_div(2 as std::ffi::c_int as std::ffi::c_uint),
+                .wrapping_div(2),
         )
         .wrapping_mul(
             (1 as std::ffi::c_int as std::ffi::c_uint)
@@ -2108,7 +2108,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                             stderr,
                             b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
                             iteration
-                                .wrapping_mul(100 as std::ffi::c_int as std::ffi::c_uint)
+                                .wrapping_mul(100)
                                 .wrapping_div(kIterations),
                         );
                         fflush(stderr);
@@ -2121,7 +2121,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         }
         COVER_best_wait(&mut best);
         COVER_ctx_destroy(&mut ctx);
-        d = d.wrapping_add(2 as std::ffi::c_int as std::ffi::c_uint);
+        d = d.wrapping_add(2);
     }
     if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 as std::ffi::c_int {
         fprintf(

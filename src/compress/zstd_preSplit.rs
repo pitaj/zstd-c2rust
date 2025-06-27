@@ -40,7 +40,7 @@ unsafe extern "C" fn hash2(
     mut hashLog: std::ffi::c_uint,
 ) -> std::ffi::c_uint {
     if hashLog == 8 as std::ffi::c_int as std::ffi::c_uint {
-        return *(p as *const u8).offset(0 as std::ffi::c_int as isize) as u32;
+        return *(p as *const u8).offset(0) as u32;
     }
     return (MEM_read16(p) as u32).wrapping_mul(KNUTH)
         >> (32 as std::ffi::c_int as std::ffi::c_uint).wrapping_sub(hashLog);
@@ -63,7 +63,7 @@ unsafe extern "C" fn addEvents_generic(
     let mut p = src as *const std::ffi::c_char;
     let mut limit = srcSize
         .wrapping_sub(HASHLENGTH as usize)
-        .wrapping_add(1 as std::ffi::c_int as usize);
+        .wrapping_add(1);
     let mut n: usize = 0;
     n = 0 as std::ffi::c_int as usize;
     while n < limit {

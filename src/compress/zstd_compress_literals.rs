@@ -136,7 +136,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u
         MEM_write16(memPtr, val);
     } else {
         let mut p = memPtr as *mut u8;
-        *p.offset(0 as std::ffi::c_int as isize) = val as u8;
+        *p.offset(0) = val as u8;
         *p
             .offset(
                 1 as std::ffi::c_int as isize,
@@ -147,7 +147,7 @@ unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u
 unsafe extern "C" fn MEM_writeLE24(mut memPtr: *mut std::ffi::c_void, mut val: u32) {
     MEM_writeLE16(memPtr, val as u16);
     *(memPtr as *mut u8)
-        .offset(2 as std::ffi::c_int as isize) = (val >> 16) as u8;
+        .offset(2) = (val >> 16) as u8;
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
@@ -173,11 +173,11 @@ unsafe extern "C" fn ZSTD_minGain(
     let minlog = if strat as std::ffi::c_uint
         >= ZSTD_btultra as std::ffi::c_int as std::ffi::c_uint
     {
-        (strat as u32).wrapping_sub(1 as std::ffi::c_int as u32)
+        (strat as u32).wrapping_sub(1)
     } else {
         6 as std::ffi::c_int as u32
     };
-    return (srcSize >> minlog).wrapping_add(2 as std::ffi::c_int as usize);
+    return (srcSize >> minlog).wrapping_add(2);
 }
 pub const LitHufLog: std::ffi::c_int = 11 as std::ffi::c_int;
 pub const HUF_SYMBOLVALUE_MAX: std::ffi::c_int = 255 as std::ffi::c_int;
@@ -237,7 +237,7 @@ unsafe extern "C" fn allBytesIdentical(
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
 ) -> std::ffi::c_int {
-    let b = *(src as *const u8).offset(0 as std::ffi::c_int as isize);
+    let b = *(src as *const u8).offset(0);
     let mut p: usize = 0;
     p = 1 as std::ffi::c_int as usize;
     while p < srcSize {
@@ -293,7 +293,7 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
         _ => {}
     }
     *ostart.offset(flSize as isize) = *(src as *const u8);
-    return flSize.wrapping_add(1 as std::ffi::c_int as u32) as usize;
+    return flSize.wrapping_add(1) as usize;
 }
 unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     mut strategy: ZSTD_strategy,
@@ -348,7 +348,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     if srcSize < ZSTD_minLiteralsToCompress(strategy, (*prevHuf).repeatMode) {
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
     }
-    if dstCapacity < lhSize.wrapping_add(1 as std::ffi::c_int as usize) {
+    if dstCapacity < lhSize.wrapping_add(1) {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     let mut repeat = (*prevHuf).repeatMode;
