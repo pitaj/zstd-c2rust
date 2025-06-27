@@ -459,6 +459,12 @@ case $1 in
 
     ;;
 
+  zstd-gen-record-fingerprint)
+    # ZSTD_GEN_RECORD_FINGERPRINT!
+    perl -i -p0e 's/unsafe extern "C" fn (ZSTD_recordFingerprint)_(\d+)\([^{]*{[^}]*ZSTD_GEN_RECORD_FINGERPRINT!\(\2, (\d+)\)[^}]*}/ZSTD_GEN_RECORD_FINGERPRINT!($1_$2, $3);/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -502,6 +508,7 @@ case $1 in
     ./convert.sh zstd-gen-fn
     ./convert.sh bounded
     ./convert.sh huf-decode-symbol
+    ./convert.sh zstd-gen-record-fingerprint
 
     ;;
 
