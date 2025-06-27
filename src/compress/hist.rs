@@ -1,12 +1,5 @@
 use ::libc;
-pub type size_t = std::ffi::c_ulong;
-pub type __uint8_t = std::ffi::c_uchar;
-pub type __uint32_t = std::ffi::c_uint;
-pub type uint8_t = __uint8_t;
-pub type uint32_t = __uint32_t;
-pub type BYTE = uint8_t;
-pub type U32 = uint32_t;
-pub type unalign32 = U32;
+pub type unalign32 = u32;
 pub type C2RustUnnamed = std::ffi::c_uint;
 pub const ZSTD_error_maxCode: C2RustUnnamed = 120;
 pub const ZSTD_error_externalSequences_invalid: C2RustUnnamed = 107;
@@ -48,26 +41,26 @@ pub type HIST_checkInput_e = std::ffi::c_uint;
 pub const checkMaxSymbolValue: HIST_checkInput_e = 1;
 pub const trustInput: HIST_checkInput_e = 0;
 #[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> U32 {
+unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
     return *(ptr as *const unalign32);
 }
-unsafe extern "C" fn ERR_isError(mut code: size_t) -> std::ffi::c_uint {
+unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
     return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 pub const HIST_WKSP_SIZE_U32: std::ffi::c_int = 1024 as std::ffi::c_int;
 pub const HIST_WKSP_SIZE: std::ffi::c_ulong = (HIST_WKSP_SIZE_U32 as std::ffi::c_ulong)
     .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong);
 #[no_mangle]
-pub unsafe extern "C" fn HIST_isError(mut code: size_t) -> std::ffi::c_uint {
+pub unsafe extern "C" fn HIST_isError(mut code: usize) -> std::ffi::c_uint {
     return ERR_isError(code);
 }
 #[no_mangle]
 pub unsafe extern "C" fn HIST_add(
     mut count: *mut std::ffi::c_uint,
     mut src: *const std::ffi::c_void,
-    mut srcSize: size_t,
+    mut srcSize: usize,
 ) {
-    let mut ip = src as *const BYTE;
+    let mut ip = src as *const u8;
     let end = ip.offset(srcSize as isize);
     while ip < end {
         let fresh0 = ip;
@@ -82,9 +75,9 @@ pub unsafe extern "C" fn HIST_count_simple(
     mut count: *mut std::ffi::c_uint,
     mut maxSymbolValuePtr: *mut std::ffi::c_uint,
     mut src: *const std::ffi::c_void,
-    mut srcSize: size_t,
+    mut srcSize: usize,
 ) -> std::ffi::c_uint {
-    let mut ip = src as *const BYTE;
+    let mut ip = src as *const u8;
     let end = ip.offset(srcSize as isize);
     let mut maxSymbolValue = *maxSymbolValuePtr;
     let mut largestCount = 0 as std::ffi::c_int as std::ffi::c_uint;
@@ -95,9 +88,9 @@ pub unsafe extern "C" fn HIST_count_simple(
             as std::ffi::c_ulong)
             .wrapping_mul(
                 ::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong,
-            ) as libc::size_t,
+            ) as usize,
     );
-    if srcSize == 0 as std::ffi::c_int as size_t {
+    if srcSize == 0 as std::ffi::c_int as usize {
         *maxSymbolValuePtr = 0 as std::ffi::c_int as std::ffi::c_uint;
         return 0 as std::ffi::c_int as std::ffi::c_uint;
     }
@@ -113,8 +106,8 @@ pub unsafe extern "C" fn HIST_count_simple(
         maxSymbolValue;
     }
     *maxSymbolValuePtr = maxSymbolValue;
-    let mut s: U32 = 0;
-    s = 0 as std::ffi::c_int as U32;
+    let mut s: u32 = 0;
+    s = 0 as std::ffi::c_int as u32;
     while s <= maxSymbolValue {
         if *count.offset(s as isize) > largestCount {
             largestCount = *count.offset(s as isize);
@@ -128,11 +121,11 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     mut count: *mut std::ffi::c_uint,
     mut maxSymbolValuePtr: *mut std::ffi::c_uint,
     mut source: *const std::ffi::c_void,
-    mut sourceSize: size_t,
+    mut sourceSize: usize,
     mut check: HIST_checkInput_e,
-    workSpace: *mut U32,
-) -> size_t {
-    let mut ip = source as *const BYTE;
+    workSpace: *mut u32,
+) -> usize {
+    let mut ip = source as *const u8;
     let iend = ip.offset(sourceSize as isize);
     let countSize = ((*maxSymbolValuePtr)
         .wrapping_add(1 as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_ulong)
@@ -146,10 +139,10 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         libc::memset(
             ZSTD_memset!(count, 0, countSize),
             ZSTD_memset!(count, 0, countSize),
-            ZSTD_memset!(count, 0, countSize) as libc::size_t,
+            ZSTD_memset!(count, 0, countSize) as usize,
         );
         *maxSymbolValuePtr = 0 as std::ffi::c_int as std::ffi::c_uint;
-        return 0 as std::ffi::c_int as size_t;
+        return 0 as std::ffi::c_int as usize;
     }
     libc::memset(
         workSpace as *mut std::ffi::c_void,
@@ -157,7 +150,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         ((4 as std::ffi::c_int * 256 as std::ffi::c_int) as std::ffi::c_ulong)
             .wrapping_mul(
                 ::core::mem::size_of::<std::ffi::c_uint>() as std::ffi::c_ulong,
-            ) as libc::size_t,
+            ) as usize,
     );
     let mut cached = MEM_read32(ip as *const std::ffi::c_void);
     ip = ip.offset(4 as std::ffi::c_int as isize);
@@ -165,15 +158,15 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         let mut c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
         ip = ip.offset(4 as std::ffi::c_int as isize);
-        let ref mut fresh4 = *Counting1.offset(c as BYTE as isize);
+        let ref mut fresh4 = *Counting1.offset(c as u8 as isize);
         *fresh4 = (*fresh4).wrapping_add(1);
         *fresh4;
         let ref mut fresh5 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
         *fresh5 = (*fresh5).wrapping_add(1);
         *fresh5;
         let ref mut fresh6 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
         *fresh6 = (*fresh6).wrapping_add(1);
         *fresh6;
         let ref mut fresh7 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
@@ -182,15 +175,15 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
         ip = ip.offset(4 as std::ffi::c_int as isize);
-        let ref mut fresh8 = *Counting1.offset(c as BYTE as isize);
+        let ref mut fresh8 = *Counting1.offset(c as u8 as isize);
         *fresh8 = (*fresh8).wrapping_add(1);
         *fresh8;
         let ref mut fresh9 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
         *fresh9 = (*fresh9).wrapping_add(1);
         *fresh9;
         let ref mut fresh10 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
         *fresh10 = (*fresh10).wrapping_add(1);
         *fresh10;
         let ref mut fresh11 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
@@ -199,15 +192,15 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
         ip = ip.offset(4 as std::ffi::c_int as isize);
-        let ref mut fresh12 = *Counting1.offset(c as BYTE as isize);
+        let ref mut fresh12 = *Counting1.offset(c as u8 as isize);
         *fresh12 = (*fresh12).wrapping_add(1);
         *fresh12;
         let ref mut fresh13 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
         *fresh13 = (*fresh13).wrapping_add(1);
         *fresh13;
         let ref mut fresh14 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
         *fresh14 = (*fresh14).wrapping_add(1);
         *fresh14;
         let ref mut fresh15 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
@@ -216,15 +209,15 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         c = cached;
         cached = MEM_read32(ip as *const std::ffi::c_void);
         ip = ip.offset(4 as std::ffi::c_int as isize);
-        let ref mut fresh16 = *Counting1.offset(c as BYTE as isize);
+        let ref mut fresh16 = *Counting1.offset(c as u8 as isize);
         *fresh16 = (*fresh16).wrapping_add(1);
         *fresh16;
         let ref mut fresh17 = *Counting2
-            .offset((c >> 8 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 8 as std::ffi::c_int) as u8 as isize);
         *fresh17 = (*fresh17).wrapping_add(1);
         *fresh17;
         let ref mut fresh18 = *Counting3
-            .offset((c >> 16 as std::ffi::c_int) as BYTE as isize);
+            .offset((c >> 16 as std::ffi::c_int) as u8 as isize);
         *fresh18 = (*fresh18).wrapping_add(1);
         *fresh18;
         let ref mut fresh19 = *Counting4.offset((c >> 24 as std::ffi::c_int) as isize);
@@ -239,9 +232,9 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         *fresh21 = (*fresh21).wrapping_add(1);
         *fresh21;
     }
-    let mut s: U32 = 0;
-    s = 0 as std::ffi::c_int as U32;
-    while s < 256 as std::ffi::c_int as U32 {
+    let mut s: u32 = 0;
+    s = 0 as std::ffi::c_int as u32;
+    while s < 256 as std::ffi::c_int as u32 {
         let ref mut fresh22 = *Counting1.offset(s as isize);
         *fresh22 = (*fresh22)
             .wrapping_add(
@@ -267,23 +260,23 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
     libc::memmove(
         ZSTD_memmove!(count, Counting1, countSize),
         ZSTD_memmove!(count, Counting1, countSize),
-        ZSTD_memmove!(count, Counting1, countSize) as libc::size_t,
+        ZSTD_memmove!(count, Counting1, countSize) as usize,
     );
-    return max as size_t;
+    return max as usize;
 }
 #[no_mangle]
 pub unsafe extern "C" fn HIST_countFast_wksp(
     mut count: *mut std::ffi::c_uint,
     mut maxSymbolValuePtr: *mut std::ffi::c_uint,
     mut source: *const std::ffi::c_void,
-    mut sourceSize: size_t,
+    mut sourceSize: usize,
     mut workSpace: *mut std::ffi::c_void,
-    mut workSpaceSize: size_t,
-) -> size_t {
-    if sourceSize < 1500 as std::ffi::c_int as size_t {
-        return HIST_count_simple(count, maxSymbolValuePtr, source, sourceSize) as size_t;
+    mut workSpaceSize: usize,
+) -> usize {
+    if sourceSize < 1500 as std::ffi::c_int as usize {
+        return HIST_count_simple(count, maxSymbolValuePtr, source, sourceSize) as usize;
     }
-    if workSpace as size_t & 3 as std::ffi::c_int as size_t != 0 {
+    if workSpace as usize & 3 as std::ffi::c_int as usize != 0 {
         return ERROR!(GENERIC);
     }
     if workSpaceSize < HIST_WKSP_SIZE {
@@ -295,7 +288,7 @@ pub unsafe extern "C" fn HIST_countFast_wksp(
         source,
         sourceSize,
         trustInput,
-        workSpace as *mut U32,
+        workSpace as *mut u32,
     );
 }
 #[no_mangle]
@@ -303,11 +296,11 @@ pub unsafe extern "C" fn HIST_count_wksp(
     mut count: *mut std::ffi::c_uint,
     mut maxSymbolValuePtr: *mut std::ffi::c_uint,
     mut source: *const std::ffi::c_void,
-    mut sourceSize: size_t,
+    mut sourceSize: usize,
     mut workSpace: *mut std::ffi::c_void,
-    mut workSpaceSize: size_t,
-) -> size_t {
-    if workSpace as size_t & 3 as std::ffi::c_int as size_t != 0 {
+    mut workSpaceSize: usize,
+) -> usize {
+    if workSpace as usize & 3 as std::ffi::c_int as usize != 0 {
         return ERROR!(GENERIC);
     }
     if workSpaceSize < HIST_WKSP_SIZE {
@@ -320,7 +313,7 @@ pub unsafe extern "C" fn HIST_count_wksp(
             source,
             sourceSize,
             checkMaxSymbolValue,
-            workSpace as *mut U32,
+            workSpace as *mut u32,
         );
     }
     *maxSymbolValuePtr = 255 as std::ffi::c_int as std::ffi::c_uint;
@@ -338,8 +331,8 @@ pub unsafe extern "C" fn HIST_countFast(
     mut count: *mut std::ffi::c_uint,
     mut maxSymbolValuePtr: *mut std::ffi::c_uint,
     mut source: *const std::ffi::c_void,
-    mut sourceSize: size_t,
-) -> size_t {
+    mut sourceSize: usize,
+) -> usize {
     let mut tmpCounters: [std::ffi::c_uint; 1024] = [0; 1024];
     return HIST_countFast_wksp(
         count,
@@ -355,8 +348,8 @@ pub unsafe extern "C" fn HIST_count(
     mut count: *mut std::ffi::c_uint,
     mut maxSymbolValuePtr: *mut std::ffi::c_uint,
     mut src: *const std::ffi::c_void,
-    mut srcSize: size_t,
-) -> size_t {
+    mut srcSize: usize,
+) -> usize {
     let mut tmpCounters: [std::ffi::c_uint; 1024] = [0; 1024];
     return HIST_count_wksp(
         count,

@@ -9,7 +9,6 @@ extern "C" {
     fn malloc(_: std::ffi::c_ulong) -> *mut std::ffi::c_void;
     fn free(_: *mut std::ffi::c_void);
 }
-pub type size_t = std::ffi::c_ulong;
 pub type trbudget_t = _trbudget_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -5884,7 +5883,7 @@ pub unsafe extern "C" fn divbwt(
     B = A;
     if B.is_null() {
         B = malloc(
-            ((n + 1 as std::ffi::c_int) as size_t)
+            ((n + 1 as std::ffi::c_int) as usize)
                 .wrapping_mul(
                     ::core::mem::size_of::<std::ffi::c_int>() as std::ffi::c_ulong,
                 ),
