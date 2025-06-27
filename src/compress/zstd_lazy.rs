@@ -765,8 +765,8 @@ unsafe extern "C" fn ZSTD_insertDUBT1(
     let btLog = ((*cParams).chainLog)
         .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint);
     let btMask = (((1 as std::ffi::c_int) << btLog) - 1 as std::ffi::c_int) as u32;
-    let mut commonLengthSmaller = 0 as std::ffi::c_int as usize;
-    let mut commonLengthLarger = 0 as std::ffi::c_int as usize;
+    let mut commonLengthSmaller: usize = 0;
+    let mut commonLengthLarger: usize = 0;
     let base = (*ms).window.base;
     let dictBase = (*ms).window.dictBase;
     let dictLimit = (*ms).window.dictLimit;
@@ -905,8 +905,8 @@ unsafe extern "C" fn ZSTD_DUBT_findBetterDictMatch(
     } else {
         dictHighLimit.wrapping_sub(btMask)
     };
-    let mut commonLengthSmaller = 0 as std::ffi::c_int as usize;
-    let mut commonLengthLarger = 0 as std::ffi::c_int as usize;
+    let mut commonLengthSmaller: usize = 0;
+    let mut commonLengthLarger: usize = 0;
     while nbCompares != 0 && dictMatchIndex > dictLowLimit {
         let nextPtr = dictBt
             .offset((2 as std::ffi::c_int as u32 * (dictMatchIndex & btMask)) as isize);
@@ -1008,7 +1008,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
         .offset(1 as std::ffi::c_int as isize);
     let mut nbCompares = (1 as std::ffi::c_uint) << (*cParams).searchLog;
     let mut nbCandidates = nbCompares;
-    let mut previousCandidate = 0 as std::ffi::c_int as u32;
+    let mut previousCandidate: u32 = 0;
     while matchIndex > unsortLimit && *unsortedMark == ZSTD_DUBT_UNSORTED_MARK as u32
         && nbCandidates > 1 as std::ffi::c_int as u32
     {
@@ -1038,8 +1038,8 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
         nbCandidates = nbCandidates.wrapping_add(1);
         nbCandidates;
     }
-    let mut commonLengthSmaller = 0 as std::ffi::c_int as usize;
-    let mut commonLengthLarger = 0 as std::ffi::c_int as usize;
+    let mut commonLengthSmaller: usize = 0;
+    let mut commonLengthLarger: usize = 0;
     let dictBase = (*ms).window.dictBase;
     let dictLimit = (*ms).window.dictLimit;
     let dictEnd = dictBase.offset(dictLimit as isize);
@@ -1053,7 +1053,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
         .wrapping_add(8 as std::ffi::c_int as u32)
         .wrapping_add(1 as std::ffi::c_int as u32);
     let mut dummy32: u32 = 0;
-    let mut bestLength = 0 as std::ffi::c_int as usize;
+    let mut bestLength: usize = 0;
     matchIndex = *hashTable.offset(h as isize);
     *hashTable.offset(h as isize) = curr;
     while nbCompares != 0 && matchIndex > windowLow {
@@ -1232,11 +1232,11 @@ pub unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_loadDictionary(
         idx = idx.wrapping_add(1);
         idx;
     }
-    let mut chainPos = 0 as std::ffi::c_int as u32;
+    let mut chainPos: u32 = 0;
     hashIdx = 0 as std::ffi::c_int as u32;
     while hashIdx < (1 as std::ffi::c_uint) << hashLog {
         let mut count: u32 = 0;
-        let mut countBeyondMinChain = 0 as std::ffi::c_int as u32;
+        let mut countBeyondMinChain: u32 = 0;
         let mut i = *tmpHashTable.offset(hashIdx as isize);
         count = 0 as std::ffi::c_int as u32;
         while i >= tmpMinChain && count < cacheSize {
@@ -1377,7 +1377,7 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_search(
     let chainIndex = chainPackedPointer >> 8 as std::ffi::c_int;
     ddsAttempt = 0 as std::ffi::c_int as u32;
     while ddsAttempt < bucketLimit {
-        let mut currentMl = 0 as std::ffi::c_int as usize;
+        let mut currentMl: usize = 0;
         let mut match_0 = 0 as *const u8;
         matchIndex = *((*dms).hashTable)
             .offset(ddsIdx.wrapping_add(ddsAttempt as usize) as isize);
@@ -1431,7 +1431,7 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_search(
     }
     chainAttempt = 0 as std::ffi::c_int as u32;
     while chainAttempt < chainLimit {
-        let mut currentMl_0 = 0 as std::ffi::c_int as usize;
+        let mut currentMl_0: usize = 0;
         let mut match_1 = 0 as *const u8;
         matchIndex = *((*dms).chainTable).offset(chainIndex_0 as isize);
         match_1 = ddsBase.offset(matchIndex as isize);
@@ -1582,7 +1582,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch(
     while (matchIndex >= lowLimit) as std::ffi::c_int
         & (nbAttempts > 0 as std::ffi::c_int as u32) as std::ffi::c_int != 0
     {
-        let mut currentMl = 0 as std::ffi::c_int as usize;
+        let mut currentMl: usize = 0;
         if dictMode as std::ffi::c_uint
             != ZSTD_extDict as std::ffi::c_int as std::ffi::c_uint
             || matchIndex >= dictLimit
@@ -1667,7 +1667,7 @@ unsafe extern "C" fn ZSTD_HcFindBestMatch(
         while (matchIndex >= dmsLowestIndex) as std::ffi::c_int
             & (nbAttempts > 0 as std::ffi::c_int as u32) as std::ffi::c_int != 0
         {
-            let mut currentMl_0 = 0 as std::ffi::c_int as usize;
+            let mut currentMl_0: usize = 0;
             let match_2 = dmsBase.offset(matchIndex as isize);
             if MEM_read32(match_2 as *const std::ffi::c_void)
                 == MEM_read32(ip as *const std::ffi::c_void)
@@ -1979,9 +1979,9 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
     let mut ml = (4 as std::ffi::c_int - 1 as std::ffi::c_int) as usize;
     let mut hash: u32 = 0;
     let dms = (*ms).dictMatchState;
-    let mut ddsIdx = 0 as std::ffi::c_int as usize;
-    let mut ddsExtraAttempts = 0 as std::ffi::c_int as u32;
-    let mut dmsTag = 0 as std::ffi::c_int as u32;
+    let mut ddsIdx: usize = 0;
+    let mut ddsExtraAttempts: u32 = 0;
+    let mut dmsTag: u32 = 0;
     let mut dmsRow = NULL as *mut u32;
     let mut dmsTagRow = NULL as *mut u8;
     if dictMode as std::ffi::c_uint
@@ -2049,8 +2049,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
     let mut tagRow = tagTable.offset(relRow as isize);
     let headGrouped = (*tagRow as u32 & rowMask) * groupWidth;
     let mut matchBuffer: [u32; 64] = [0; 64];
-    let mut numMatches = 0 as std::ffi::c_int as usize;
-    let mut currMatch = 0 as std::ffi::c_int as usize;
+    let mut numMatches: usize = 0;
+    let mut currMatch: usize = 0;
     let mut matches = ZSTD_row_getMatchMask(
         tagRow,
         tag as u8,
@@ -2085,7 +2085,7 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
     *row.offset(pos as isize) = fresh5;
     while currMatch < numMatches {
         let matchIndex_0 = matchBuffer[currMatch as usize];
-        let mut currentMl = 0 as std::ffi::c_int as usize;
+        let mut currentMl: usize = 0;
         if dictMode as std::ffi::c_uint
             != ZSTD_extDict as std::ffi::c_int as std::ffi::c_uint
             || matchIndex_0 >= dictLimit
@@ -2152,8 +2152,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
         let dmsIndexDelta = dictLimit.wrapping_sub(dmsSize);
         let headGrouped_0 = (*dmsTagRow as u32 & rowMask) * groupWidth;
         let mut matchBuffer_0: [u32; 64] = [0; 64];
-        let mut numMatches_0 = 0 as std::ffi::c_int as usize;
-        let mut currMatch_0 = 0 as std::ffi::c_int as usize;
+        let mut numMatches_0: usize = 0;
+        let mut currMatch_0: usize = 0;
         let mut matches_0 = ZSTD_row_getMatchMask(
             dmsTagRow,
             dmsTag as u8,
@@ -2180,7 +2180,7 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
         }
         while currMatch_0 < numMatches_0 {
             let matchIndex_2 = matchBuffer_0[currMatch_0 as usize];
-            let mut currentMl_0 = 0 as std::ffi::c_int as usize;
+            let mut currentMl_0: usize = 0;
             let match_2 = dmsBase.offset(matchIndex_2 as isize);
             if MEM_read32(match_2 as *const std::ffi::c_void)
                 == MEM_read32(ip as *const std::ffi::c_void)
@@ -3806,8 +3806,8 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
     let rowLog = BOUNDED!(4, ms -> cParams.searchLog, 6);
     let mut offset_1 = *rep.offset(0 as std::ffi::c_int as isize);
     let mut offset_2 = *rep.offset(1 as std::ffi::c_int as isize);
-    let mut offsetSaved1 = 0 as std::ffi::c_int as u32;
-    let mut offsetSaved2 = 0 as std::ffi::c_int as u32;
+    let mut offsetSaved1: u32 = 0;
+    let mut offsetSaved2: u32 = 0;
     let isDMS = (dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint)
         as std::ffi::c_int;
@@ -3864,7 +3864,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
     }
     asm!(".p2align 5", options(preserves_flags, att_syntax));
     while ip < ilimit {
-        let mut matchLength = 0 as std::ffi::c_int as usize;
+        let mut matchLength: usize = 0;
         let mut offBase = REPCODE1_TO_OFFBASE as usize;
         let mut start = ip.offset(1 as std::ffi::c_int as isize);
         if isDxS != 0 {
@@ -3951,7 +3951,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                 match current_block {
                     5724314487386020709 => {}
                     _ => {
-                        let mut offbaseFound = 999999999 as std::ffi::c_int as usize;
+                        let mut offbaseFound: usize = 999999999;
                         let ml2 = ZSTD_searchMax(
                             ms,
                             ip,
@@ -4055,7 +4055,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                             }
                                         }
                                     }
-                                    let mut ofbCandidate = 999999999 as std::ffi::c_int
+                                    let mut ofbCandidate: std::ffi::c_int = 999999999
                                         as usize;
                                     let ml2_0 = ZSTD_searchMax(
                                         ms,
@@ -4161,7 +4161,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
                                                 }
                                             }
                                         }
-                                        let mut ofbCandidate_0 = 999999999 as std::ffi::c_int
+                                        let mut ofbCandidate_0: std::ffi::c_int = 999999999
                                             as usize;
                                         let ml2_1 = ZSTD_searchMax(
                                             ms,
@@ -4788,7 +4788,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
     asm!(".p2align 5", options(preserves_flags, att_syntax));
     let mut current_block_61: u64;
     while ip < ilimit {
-        let mut matchLength = 0 as std::ffi::c_int as usize;
+        let mut matchLength: usize = 0;
         let mut offBase = REPCODE1_TO_OFFBASE as usize;
         let mut start = ip.offset(1 as std::ffi::c_int as isize);
         let mut curr = ip.offset_from(base) as std::ffi::c_long as u32;
@@ -4836,7 +4836,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
         }
         match current_block_61 {
             12147880666119273379 => {
-                let mut ofbCandidate = 999999999 as std::ffi::c_int as usize;
+                let mut ofbCandidate: usize = 999999999;
                 let ml2 = ZSTD_searchMax(
                     ms,
                     ip,
@@ -4919,7 +4919,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
                                     }
                                 }
                             }
-                            let mut ofbCandidate_0 = 999999999 as std::ffi::c_int
+                            let mut ofbCandidate_0: std::ffi::c_int = 999999999
                                 as usize;
                             let ml2_0 = ZSTD_searchMax(
                                 ms,
@@ -5002,7 +5002,7 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_extDict_generic(
                                         }
                                     }
                                 }
-                                let mut ofbCandidate_1 = 999999999 as std::ffi::c_int
+                                let mut ofbCandidate_1: std::ffi::c_int = 999999999
                                     as usize;
                                 let ml2_1 = ZSTD_searchMax(
                                     ms,

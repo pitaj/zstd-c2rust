@@ -292,7 +292,7 @@ pub unsafe extern "C" fn POOL_create_advanced(
     (*ctx).queueTail = 0 as std::ffi::c_int as usize;
     (*ctx).numThreadsBusy = 0 as std::ffi::c_int as usize;
     (*ctx).queueEmpty = 1 as std::ffi::c_int;
-    let mut error = 0 as std::ffi::c_int;
+    let mut error: std::ffi::c_int = 0;
     error |= ZSTD_pthread_mutex_init!(& ctx -> queueMutex, NULL);
     error |= ZSTD_pthread_cond_init!(& ctx -> queuePushCond, NULL);
     error |= ZSTD_pthread_cond_init!(& ctx -> queuePopCond, NULL);

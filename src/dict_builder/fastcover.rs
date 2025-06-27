@@ -865,8 +865,8 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
     );
     let maxZeroScoreRun = 10 as std::ffi::c_int as usize;
     let displayLevel = (*ctx).displayLevel;
-    let mut zeroScoreRun = 0 as std::ffi::c_int as usize;
-    let mut lastUpdateTime = 0 as std::ffi::c_int as clock_t;
+    let mut zeroScoreRun: usize = 0;
+    let mut lastUpdateTime: clock_t = 0;
     let mut epoch: usize = 0;
     if DISPLAYLEVEL!(
         2, "Breaking content into %u epochs of size %u\n", (u32) epochs.num, (u32) epochs
@@ -1315,7 +1315,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     };
     let shrinkDict = 0 as std::ffi::c_int as std::ffi::c_uint;
     let displayLevel = (*parameters).zParams.notificationLevel as std::ffi::c_int;
-    let mut iteration = 1 as std::ffi::c_int as std::ffi::c_uint;
+    let mut iteration: std::ffi::c_uint = 1;
     let mut d: std::ffi::c_uint = 0;
     let mut k: std::ffi::c_uint = 0;
     let mut best = COVER_best_s {
@@ -1370,8 +1370,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         compressedSize: 0,
     };
     let mut pool = NULL as *mut POOL_ctx;
-    let mut warned = 0 as std::ffi::c_int;
-    let mut lastUpdateTime = 0 as std::ffi::c_int as clock_t;
+    let mut warned: std::ffi::c_int = 0;
+    let mut lastUpdateTime: clock_t = 0;
     if splitPoint <= 0 as std::ffi::c_int as std::ffi::c_double
         || splitPoint > 1 as std::ffi::c_int as std::ffi::c_double
     {

@@ -958,7 +958,7 @@ static mut kNullRawSeqStore: RawSeqStore_t = {
 pub const ZSTD_WINDOW_START_INDEX: std::ffi::c_int = 2 as std::ffi::c_int;
 static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
 unsafe extern "C" fn ZSTD_ipow(mut base: u64, mut exponent: u64) -> u64 {
-    let mut power = 1 as std::ffi::c_int as u64;
+    let mut power: u64 = 1;
     while exponent != 0 {
         if exponent & 1 as std::ffi::c_int as u64 != 0 {
             power = power * base;
@@ -1050,7 +1050,7 @@ unsafe extern "C" fn ZSTD_window_update(
     mut forceNonContiguous: std::ffi::c_int,
 ) -> u32 {
     let ip = src as *const u8;
-    let mut contiguous = 1 as std::ffi::c_int as u32;
+    let mut contiguous: u32 = 1;
     if srcSize == 0 as std::ffi::c_int as usize {
         return contiguous;
     }
@@ -1243,7 +1243,7 @@ unsafe extern "C" fn ZSTDMT_sizeof_bufferPool(
     let arraySize = ((*bufPool).totalBuffers as std::ffi::c_ulong)
         .wrapping_mul(::core::mem::size_of::<Buffer>());
     let mut u: std::ffi::c_uint = 0;
-    let mut totalBufferSize = 0 as std::ffi::c_int as usize;
+    let mut totalBufferSize: usize = 0;
     ZSTD_pthread_mutex_lock!(
         & bufPool -> poolMutex
     )(ZSTD_pthread_mutex_lock!(& bufPool -> poolMutex));
@@ -1489,7 +1489,7 @@ unsafe extern "C" fn ZSTDMT_sizeof_CCtxPool(
     let poolSize = ::core::mem::size_of::<ZSTDMT_CCtxPool>();
     let arraySize = ((*cctxPool).totalCCtx as std::ffi::c_ulong)
         .wrapping_mul(::core::mem::size_of::<*mut ZSTD_CCtx>());
-    let mut totalCCtxSize = 0 as std::ffi::c_int as usize;
+    let mut totalCCtxSize: usize = 0;
     let mut u: std::ffi::c_uint = 0;
     u = 0 as std::ffi::c_int as std::ffi::c_uint;
     while u < nbWorkers {
@@ -1660,7 +1660,7 @@ unsafe extern "C" fn ZSTDMT_serialState_reset(
 unsafe extern "C" fn ZSTDMT_serialState_init(
     mut serialState: *mut SerialState,
 ) -> std::ffi::c_int {
-    let mut initError = 0 as std::ffi::c_int;
+    let mut initError: std::ffi::c_int = 0;
     libc::memset(
         serialState as *mut std::ffi::c_void,
         0 as std::ffi::c_int,
@@ -1805,7 +1805,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
     let cctx = ZSTDMT_getCCtx((*job).cctxPool);
     let mut rawSeqStore = ZSTDMT_getSeq((*job).seqPool);
     let mut dstBuff = (*job).dstBuff;
-    let mut lastCBlockSize = 0 as std::ffi::c_int as usize;
+    let mut lastCBlockSize: usize = 0;
     if cctx.is_null() {
         pthread_mutex_lock(&mut (*job).job_mutex);
         (*job).cSize = -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
@@ -2146,7 +2146,7 @@ unsafe extern "C" fn ZSTDMT_createJobsTable(
             ),
         cMem,
     ) as *mut ZSTDMT_jobDescription;
-    let mut initError = 0 as std::ffi::c_int;
+    let mut initError: std::ffi::c_int = 0;
     if jobTable.is_null() {
         return NULL_0 as *mut ZSTDMT_jobDescription;
     }
@@ -3208,7 +3208,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
     mut input: *mut ZSTD_inBuffer,
     mut endOp: ZSTD_EndDirective,
 ) -> usize {
-    let mut forwardInputProgress = 0 as std::ffi::c_int as std::ffi::c_uint;
+    let mut forwardInputProgress: std::ffi::c_uint = 0;
     if (*mtctx).frameEnded != 0
         && endOp as std::ffi::c_uint
             == ZSTD_e_continue as std::ffi::c_int as std::ffi::c_uint

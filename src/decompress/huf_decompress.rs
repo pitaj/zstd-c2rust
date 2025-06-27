@@ -761,8 +761,8 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     mut wkspSize: usize,
     mut flags: std::ffi::c_int,
 ) -> usize {
-    let mut tableLog = 0 as std::ffi::c_int as u32;
-    let mut nbSymbols = 0 as std::ffi::c_int as u32;
+    let mut tableLog: u32 = 0;
+    let mut nbSymbols: u32 = 0;
     let mut iSize: usize = 0;
     let dtPtr = DTable.offset(1 as std::ffi::c_int as isize) as *mut std::ffi::c_void;
     let dt = dtPtr as *mut HUF_DEltX1;
@@ -808,7 +808,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
         ::core::mem::size_of::<DTableDesc>() as usize,
     );
     let mut n: std::ffi::c_int = 0;
-    let mut nextRankStart = 0 as std::ffi::c_int as u32;
+    let mut nextRankStart: u32 = 0;
     let unroll = 4 as std::ffi::c_int;
     let nLimit = nbSymbols as std::ffi::c_int - unroll + 1 as std::ffi::c_int;
     n = 0 as std::ffi::c_int;
@@ -845,7 +845,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     }
     let mut w_1: u32 = 0;
     let mut symbol = (*wksp).rankVal[0 as std::ffi::c_int as usize] as std::ffi::c_int;
-    let mut rankStart = 0 as std::ffi::c_int;
+    let mut rankStart: std::ffi::c_int = 0;
     w_1 = 1 as std::ffi::c_int as u32;
     while w_1 < tableLog.wrapping_add(1 as std::ffi::c_int as u32) {
         let symbolCount = (*wksp).rankVal[w_1 as usize] as std::ffi::c_int;
@@ -1144,7 +1144,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
     let mut op4 = opStart4;
     let dtd = HUF_getDTableDesc(DTable);
     let dtLog = dtd.tableLog as u32;
-    let mut endSignal = 1 as std::ffi::c_int as u32;
+    let mut endSignal: u32 = 1;
     if length4 > cSrcSize {
         return ERROR!(corruption_detected);
     }
@@ -2288,7 +2288,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
         maxW;
     }
     let mut w: u32 = 0;
-    let mut nextRankStart = 0 as std::ffi::c_int as u32;
+    let mut nextRankStart: u32 = 0;
     w = 1 as std::ffi::c_int as u32;
     while w < maxW.wrapping_add(1 as std::ffi::c_int as u32) {
         let mut curr = nextRankStart;
@@ -2317,7 +2317,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     let rescale = maxTableLog
         .wrapping_sub(tableLog)
         .wrapping_sub(1 as std::ffi::c_int as u32) as std::ffi::c_int;
-    let mut nextRankVal = 0 as std::ffi::c_int as u32;
+    let mut nextRankVal: u32 = 0;
     let mut w_1: u32 = 0;
     w_1 = 1 as std::ffi::c_int as u32;
     while w_1 < maxW.wrapping_add(1 as std::ffi::c_int as u32) {
@@ -2604,7 +2604,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
     let mut op2 = opStart2;
     let mut op3 = opStart3;
     let mut op4 = opStart4;
-    let mut endSignal = 1 as std::ffi::c_int as u32;
+    let mut endSignal: u32 = 1;
     let dtd = HUF_getDTableDesc(DTable);
     let dtLog = dtd.tableLog as u32;
     if length4 > cSrcSize {

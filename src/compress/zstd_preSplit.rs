@@ -165,7 +165,7 @@ unsafe extern "C" fn fpDistance(
     mut fp2: *const Fingerprint,
     mut hashLog: std::ffi::c_uint,
 ) -> u64 {
-    let mut distance = 0 as std::ffi::c_int as u64;
+    let mut distance: u64 = 0;
     let mut n: usize = 0;
     n = 0 as std::ffi::c_int as usize;
     while n < (1 as std::ffi::c_int as usize) << hashLog {
@@ -263,7 +263,7 @@ unsafe extern "C" fn ZSTD_splitBlock_byChunks(
     let fpstats = workspace as *mut FPStats;
     let mut p = blockStart as *const std::ffi::c_char;
     let mut penalty = THRESHOLD_PENALTY;
-    let mut pos = 0 as std::ffi::c_int as usize;
+    let mut pos: usize = 0;
     initStats(fpstats);
     record_f
         .expect(

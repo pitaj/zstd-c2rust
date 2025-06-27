@@ -450,7 +450,7 @@ unsafe extern "C" fn COVER_map_remove(mut map: *mut COVER_map_t, mut key: u32) {
     let mut i = COVER_map_index(map, key);
     let mut del: *mut COVER_map_pair_t = &mut *((*map).data).offset(i as isize)
         as *mut COVER_map_pair_t;
-    let mut shift = 1 as std::ffi::c_int as u32;
+    let mut shift: u32 = 1;
     if (*del).value == MAP_EMPTY_VALUE as u32 {
         return;
     }
@@ -486,7 +486,7 @@ pub unsafe extern "C" fn COVER_sum(
     mut samplesSizes: *const usize,
     mut nbSamples: std::ffi::c_uint,
 ) -> usize {
-    let mut sum = 0 as std::ffi::c_int as usize;
+    let mut sum: usize = 0;
     let mut i: std::ffi::c_uint = 0;
     i = 0 as std::ffi::c_int as std::ffi::c_uint;
     while i < nbSamples {
@@ -623,7 +623,7 @@ unsafe extern "C" fn COVER_groupBy(
     >,
 ) {
     let mut ptr = data as *const u8;
-    let mut num = 0 as std::ffi::c_int as usize;
+    let mut num: usize = 0;
     while num < count {
         let mut grpEnd = ptr.offset(size as isize);
         num = num.wrapping_add(1);
@@ -654,7 +654,7 @@ unsafe extern "C" fn COVER_group(
     let mut grpPtr = group as *const u32;
     let mut grpEnd = groupEnd as *const u32;
     let dmerId = grpPtr.offset_from((*ctx).suffix) as std::ffi::c_long as u32;
-    let mut freq = 0 as std::ffi::c_int as u32;
+    let mut freq: u32 = 0;
     let mut curOffsetPtr: *const usize = (*ctx).offsets;
     let mut offsetsEnd: *const usize = ((*ctx).offsets)
         .offset((*ctx).nbSamples as isize);
@@ -1145,9 +1145,9 @@ unsafe extern "C" fn COVER_buildDictionary(
     } else {
         epochs.num >> 3 as std::ffi::c_int
     }) as usize;
-    let mut zeroScoreRun = 0 as std::ffi::c_int as usize;
+    let mut zeroScoreRun: usize = 0;
     let mut epoch: usize = 0;
-    let mut lastUpdateTime = 0 as std::ffi::c_int as clock_t;
+    let mut lastUpdateTime: clock_t = 0;
     let displayLevel = (*ctx).displayLevel;
     if DISPLAYLEVEL!(
         2, "Breaking content into %u epochs of size %u\n", (u32) epochs.num, (u32) epochs
@@ -1389,7 +1389,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
     let mut dst = 0 as *mut std::ffi::c_void;
     let mut dstCapacity: usize = 0;
     let mut i: usize = 0;
-    let mut maxSampleSize = 0 as std::ffi::c_int as usize;
+    let mut maxSampleSize: usize = 0;
     i = if parameters.splitPoint < 1.0f64 {
         nbTrainSamples
     } else {
@@ -1600,8 +1600,8 @@ pub unsafe extern "C" fn COVER_selectDict(
     mut offsets: *mut usize,
     mut totalCompressedSize: usize,
 ) -> COVER_dictSelection_t {
-    let mut largestDict = 0 as std::ffi::c_int as usize;
-    let mut largestCompressed = 0 as std::ffi::c_int as usize;
+    let mut largestDict: usize = 0;
+    let mut largestCompressed: usize = 0;
     let mut customDictContentEnd = customDictContent.offset(dictContentSize as isize);
     let mut largestDictbuffer = malloc(dictBufferCapacity) as *mut u8;
     let mut candidateDictBuffer = malloc(dictBufferCapacity) as *mut u8;
@@ -1855,7 +1855,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         );
     let shrinkDict = 0 as std::ffi::c_int as std::ffi::c_uint;
     let mut displayLevel = (*parameters).zParams.notificationLevel as std::ffi::c_int;
-    let mut iteration = 1 as std::ffi::c_int as std::ffi::c_uint;
+    let mut iteration: std::ffi::c_uint = 1;
     let mut d: std::ffi::c_uint = 0;
     let mut k: std::ffi::c_uint = 0;
     let mut best = COVER_best_s {
@@ -1910,8 +1910,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         compressedSize: 0,
     };
     let mut pool = NULL as *mut POOL_ctx;
-    let mut warned = 0 as std::ffi::c_int;
-    let mut lastUpdateTime = 0 as std::ffi::c_int as clock_t;
+    let mut warned: std::ffi::c_int = 0;
+    let mut lastUpdateTime: clock_t = 0;
     if splitPoint <= 0 as std::ffi::c_int as std::ffi::c_double
         || splitPoint > 1 as std::ffi::c_int as std::ffi::c_double
     {

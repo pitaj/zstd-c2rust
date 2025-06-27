@@ -1028,7 +1028,7 @@ unsafe extern "C" fn ss_mintrosort(
     let mut ssize: std::ffi::c_int = 0;
     let mut limit: std::ffi::c_int = 0;
     let mut v: std::ffi::c_int = 0;
-    let mut x = 0 as std::ffi::c_int;
+    let mut x: std::ffi::c_int = 0;
     ssize = 0 as std::ffi::c_int;
     limit = ss_ilg(last.offset_from(first) as std::ffi::c_long as std::ffi::c_int);
     loop {
@@ -3178,7 +3178,7 @@ unsafe extern "C" fn tr_partition(
     let mut f = 0 as *mut std::ffi::c_int;
     let mut t: std::ffi::c_int = 0;
     let mut s: std::ffi::c_int = 0;
-    let mut x = 0 as std::ffi::c_int;
+    let mut x: std::ffi::c_int = 0;
     b = middle.offset(-(1 as std::ffi::c_int as isize));
     loop {
         b = b.offset(1);
@@ -3491,7 +3491,7 @@ unsafe extern "C" fn tr_introsort(
     let mut c = 0 as *mut std::ffi::c_int;
     let mut t: std::ffi::c_int = 0;
     let mut v: std::ffi::c_int = 0;
-    let mut x = 0 as std::ffi::c_int;
+    let mut x: std::ffi::c_int = 0;
     let mut incr = ISAd.offset_from(ISA) as std::ffi::c_long as std::ffi::c_int;
     let mut limit: std::ffi::c_int = 0;
     let mut next: std::ffi::c_int = 0;
@@ -5819,7 +5819,7 @@ pub unsafe extern "C" fn divsufsort(
     let mut bucket_A = 0 as *mut std::ffi::c_int;
     let mut bucket_B = 0 as *mut std::ffi::c_int;
     let mut m: std::ffi::c_int = 0;
-    let mut err = 0 as std::ffi::c_int;
+    let mut err: std::ffi::c_int = 0;
     if T.is_null() || SA.is_null() || n < 0 as std::ffi::c_int {
         return -(1 as std::ffi::c_int)
     } else if n == 0 as std::ffi::c_int {

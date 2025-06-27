@@ -1135,7 +1135,7 @@ unsafe extern "C" fn sum_u32(
     mut nbElts: usize,
 ) -> u32 {
     let mut n: usize = 0;
-    let mut total = 0 as std::ffi::c_int as u32;
+    let mut total: u32 = 0;
     n = 0 as std::ffi::c_int as usize;
     while n < nbElts {
         total = (total as std::ffi::c_uint).wrapping_add(*table.offset(n as isize))
@@ -1152,7 +1152,7 @@ unsafe extern "C" fn ZSTD_downscaleStats(
     mut base1: base_directive_e,
 ) -> u32 {
     let mut s: u32 = 0;
-    let mut sum = 0 as std::ffi::c_int as u32;
+    let mut sum: u32 = 0;
     s = 0 as std::ffi::c_int as u32;
     while s < lastEltIndex.wrapping_add(1 as std::ffi::c_int as u32) {
         let base = (if base1 as std::ffi::c_uint != 0 {
@@ -1677,8 +1677,8 @@ unsafe extern "C" fn ZSTD_insertBt1(
         .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint);
     let btMask = (((1 as std::ffi::c_int) << btLog) - 1 as std::ffi::c_int) as u32;
     let mut matchIndex = *hashTable.offset(h as isize);
-    let mut commonLengthSmaller = 0 as std::ffi::c_int as usize;
-    let mut commonLengthLarger = 0 as std::ffi::c_int as usize;
+    let mut commonLengthSmaller: usize = 0;
+    let mut commonLengthLarger: usize = 0;
     let base = (*ms).window.base;
     let dictBase = (*ms).window.dictBase;
     let dictLimit = (*ms).window.dictLimit;
@@ -1699,7 +1699,7 @@ unsafe extern "C" fn ZSTD_insertBt1(
     let mut matchEndIdx = curr
         .wrapping_add(8 as std::ffi::c_int as u32)
         .wrapping_add(1 as std::ffi::c_int as u32);
-    let mut bestLength = 8 as std::ffi::c_int as usize;
+    let mut bestLength: usize = 8;
     let mut nbCompares = (1 as std::ffi::c_uint) << (*cParams).searchLog;
     *hashTable.offset(h as isize) = curr;
     while nbCompares != 0 && matchIndex >= windowLow {
@@ -1772,7 +1772,7 @@ unsafe extern "C" fn ZSTD_insertBt1(
     }
     *largerPtr = 0 as std::ffi::c_int as u32;
     *smallerPtr = *largerPtr;
-    let mut positions = 0 as std::ffi::c_int as u32;
+    let mut positions: u32 = 0;
     if bestLength > 384 as std::ffi::c_int as usize {
         positions = if (192 as std::ffi::c_int as u32)
             < bestLength.wrapping_sub(384 as std::ffi::c_int as usize) as u32
@@ -1855,8 +1855,8 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
         .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint);
     let btMask = ((1 as std::ffi::c_uint) << btLog)
         .wrapping_sub(1 as std::ffi::c_int as std::ffi::c_uint);
-    let mut commonLengthSmaller = 0 as std::ffi::c_int as usize;
-    let mut commonLengthLarger = 0 as std::ffi::c_int as usize;
+    let mut commonLengthSmaller: usize = 0;
+    let mut commonLengthLarger: usize = 0;
     let dictBase = (*ms).window.dictBase;
     let dictLimit = (*ms).window.dictLimit;
     let dictEnd = dictBase.offset(dictLimit as isize);
@@ -1877,7 +1877,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
         .wrapping_add(8 as std::ffi::c_int as u32)
         .wrapping_add(1 as std::ffi::c_int as u32);
     let mut dummy32: u32 = 0;
-    let mut mnum = 0 as std::ffi::c_int as u32;
+    let mut mnum: u32 = 0;
     let mut nbCompares = (1 as std::ffi::c_uint) << (*cParams).searchLog;
     let mut dms = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
@@ -1971,7 +1971,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
             *rep.offset(repCode as isize)
         };
         let repIndex = curr.wrapping_sub(repOffset);
-        let mut repLen = 0 as std::ffi::c_int as u32;
+        let mut repLen: u32 = 0;
         if repOffset.wrapping_sub(1 as std::ffi::c_int as u32)
             < curr.wrapping_sub(dictLimit)
         {
@@ -2770,7 +2770,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
     ip = ip.offset((ip == prefixStart) as std::ffi::c_int as isize);
     while ip < ilimit {
         let mut cur: u32 = 0;
-        let mut last_pos = 0 as std::ffi::c_int as u32;
+        let mut last_pos: u32 = 0;
         let litlen = ip.offset_from(anchor) as std::ffi::c_long as u32;
         let ll0 = (litlen == 0) as std::ffi::c_int as u32;
         let mut nbMatches = getAllMatches

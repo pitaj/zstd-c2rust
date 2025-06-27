@@ -1260,7 +1260,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
                 as *const std::ffi::c_void,
         );
         let mut u: u32 = 0;
-        let mut patternEnd = 6 as std::ffi::c_int as u32;
+        let mut patternEnd: u32 = 6;
         while MEM_read16(
             b.offset(pos as isize).offset(patternEnd as isize) as *const std::ffi::c_void,
         ) as std::ffi::c_int == pattern16 as std::ffi::c_int
@@ -1362,11 +1362,11 @@ unsafe extern "C" fn ZDICT_analyzePos(
     }
     mml = MINMATCHLENGTH as u32;
     loop {
-        let mut currentChar = 0 as std::ffi::c_int as u8;
-        let mut currentCount = 0 as std::ffi::c_int as u32;
+        let mut currentChar: u8 = 0;
+        let mut currentCount: u32 = 0;
         let mut currentID = refinedStart;
         let mut id: u32 = 0;
-        let mut selectedCount = 0 as std::ffi::c_int as u32;
+        let mut selectedCount: u32 = 0;
         let mut selectedID = currentID;
         id = refinedStart;
         while id < refinedEnd {
@@ -1731,7 +1731,7 @@ unsafe extern "C" fn ZDICT_insertDictItem(
 ) {
     let mut mergeId = ZDICT_tryMerge(table, elt, 0 as std::ffi::c_int as u32, buffer);
     if mergeId != 0 {
-        let mut newMerge = 1 as std::ffi::c_int as u32;
+        let mut newMerge: u32 = 1;
         while newMerge != 0 {
             newMerge = ZDICT_tryMerge(
                 table,
@@ -1765,7 +1765,7 @@ unsafe extern "C" fn ZDICT_insertDictItem(
 }
 unsafe extern "C" fn ZDICT_dictSize(mut dictList: *const dictItem) -> u32 {
     let mut u: u32 = 0;
-    let mut dictSize = 0 as std::ffi::c_int as u32;
+    let mut dictSize: u32 = 0;
     u = 1 as std::ffi::c_int as u32;
     while u < (*dictList.offset(0 as std::ffi::c_int as isize)).pos {
         dictSize = dictSize.wrapping_add((*dictList.offset(u as isize)).length);
@@ -1804,8 +1804,8 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
         (nbFiles as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
-    let mut result = 0 as std::ffi::c_int as usize;
-    let mut displayClock = 0 as std::ffi::c_int as clock_t;
+    let mut result: usize = 0;
+    let mut displayClock: clock_t = 0;
     let refreshRate = CLOCKS_PER_SEC as __clock_t * 3 as std::ffi::c_int as __clock_t
         / 10 as std::ffi::c_int as __clock_t;
     if DISPLAYLEVEL!(2, "\r%70s\r", "") >= 2 as std::ffi::c_int as u32 {
@@ -1992,7 +1992,7 @@ unsafe extern "C" fn ZDICT_fillNoise(
     let prime1 = 2654435761 as std::ffi::c_uint;
     let prime2 = 2246822519 as std::ffi::c_uint;
     let mut acc = prime1;
-    let mut p = 0 as std::ffi::c_int as usize;
+    let mut p: usize = 0;
     p = 0 as std::ffi::c_int as usize;
     while p < length {
         acc = acc.wrapping_mul(prime2);
@@ -2126,7 +2126,7 @@ unsafe extern "C" fn ZDICT_totalSampleSize(
     mut fileSizes: *const usize,
     mut nbFiles: std::ffi::c_uint,
 ) -> usize {
-    let mut total = 0 as std::ffi::c_int as usize;
+    let mut total: usize = 0;
     let mut u: std::ffi::c_uint = 0;
     u = 0 as std::ffi::c_int as std::ffi::c_uint;
     while u < nbFiles {
@@ -2243,14 +2243,14 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         },
     };
     let mut u: u32 = 0;
-    let mut huffLog = 11 as std::ffi::c_int as u32;
+    let mut huffLog: u32 = 11;
     let mut Offlog = OffFSELog as u32;
     let mut mlLog = MLFSELog as u32;
     let mut llLog = LLFSELog as u32;
     let mut total: u32 = 0;
-    let mut pos = 0 as std::ffi::c_int as usize;
+    let mut pos: usize = 0;
     let mut errorCode: usize = 0;
-    let mut eSize = 0 as std::ffi::c_int as usize;
+    let mut eSize: usize = 0;
     let totalSrcSize = ZDICT_totalSampleSize(fileSizes, nbFiles);
     let averageSampleSize = totalSrcSize
         / nbFiles.wrapping_add((nbFiles == 0) as std::ffi::c_int as std::ffi::c_uint)
@@ -2790,7 +2790,7 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
         params.compressionLevel
     };
     let notificationLevel = params.notificationLevel;
-    let mut hSize = 8 as std::ffi::c_int as usize;
+    let mut hSize: usize = 8;
     if DISPLAYLEVEL!(2, "\r%70s\r", "") >= 2 as std::ffi::c_int as u32 {
         fprintf(
             stderr,
@@ -2891,7 +2891,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     };
     let targetDictSize = maxDictSize;
     let samplesBuffSize = ZDICT_totalSampleSize(samplesSizes, nbSamples);
-    let mut dictSize = 0 as std::ffi::c_int as usize;
+    let mut dictSize: usize = 0;
     let notificationLevel = params.zParams.notificationLevel;
     if dictList.is_null() {
         return ERROR!(memory_allocation);
@@ -3096,7 +3096,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         }
     }
     let max = (*dictList).pos;
-    let mut currentSize = 0 as std::ffi::c_int as u32;
+    let mut currentSize: u32 = 0;
     let mut n: u32 = 0;
     n = 1 as std::ffi::c_int as u32;
     while n < max {

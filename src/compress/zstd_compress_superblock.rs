@@ -1071,7 +1071,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
     } else {
         set_repeat as std::ffi::c_int as std::ffi::c_uint
     }) as SymbolEncodingType_e;
-    let mut cLitSize = 0 as std::ffi::c_int as usize;
+    let mut cLitSize: usize = 0;
     *entropyWritten = 0 as std::ffi::c_int;
     if litSize == 0 as std::ffi::c_int as usize
         || (*hufMetadata).hType as std::ffi::c_uint
@@ -1206,8 +1206,8 @@ unsafe extern "C" fn ZSTD_seqDecompressedSize(
     mut litSize: usize,
     mut lastSubBlock: std::ffi::c_int,
 ) -> usize {
-    let mut matchLengthSum = 0 as std::ffi::c_int as usize;
-    let mut litLengthSum = 0 as std::ffi::c_int as usize;
+    let mut matchLengthSum: usize = 0;
+    let mut litLengthSum: usize = 0;
     let mut n: usize = 0;
     n = 0 as std::ffi::c_int as usize;
     while n < nbSeqs {
@@ -1420,8 +1420,8 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
     mut writeEntropy: std::ffi::c_int,
 ) -> usize {
     let countWksp = workspace as *mut std::ffi::c_uint;
-    let mut maxSymbolValue = 255 as std::ffi::c_int as std::ffi::c_uint;
-    let mut literalSectionHeaderSize = 3 as std::ffi::c_int as usize;
+    let mut maxSymbolValue: std::ffi::c_uint = 255;
+    let mut literalSectionHeaderSize: usize = 3;
     if (*hufMetadata).hType as std::ffi::c_uint
         == set_basic as std::ffi::c_int as std::ffi::c_uint
     {
@@ -1475,7 +1475,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_symbolType(
     let mut ctp = codeTable;
     let ctStart = ctp;
     let ctEnd = ctStart.offset(nbSeq as isize);
-    let mut cSymbolTypeSizeEstimateInBits = 0 as std::ffi::c_int as usize;
+    let mut cSymbolTypeSizeEstimateInBits: usize = 0;
     let mut max = maxCode;
     HIST_countFast_wksp(
         countWksp,
@@ -1530,7 +1530,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_sequences(
     mut writeEntropy: std::ffi::c_int,
 ) -> usize {
     let sequencesSectionHeaderSize = 3 as std::ffi::c_int as usize;
-    let mut cSeqSizeEstimate = 0 as std::ffi::c_int as usize;
+    let mut cSeqSizeEstimate: usize = 0;
     if nbSeq == 0 as std::ffi::c_int as usize {
         return sequencesSectionHeaderSize;
     }
@@ -1664,7 +1664,7 @@ unsafe extern "C" fn countLiterals(
     mut seqCount: usize,
 ) -> usize {
     let mut n: usize = 0;
-    let mut total = 0 as std::ffi::c_int as usize;
+    let mut total: usize = 0;
     n = 0 as std::ffi::c_int as usize;
     while n < seqCount {
         total = total
@@ -1687,8 +1687,8 @@ unsafe extern "C" fn sizeBlockSequences(
     mut firstSubBlock: std::ffi::c_int,
 ) -> usize {
     let mut n: usize = 0;
-    let mut budget = 0 as std::ffi::c_int as usize;
-    let mut inSize = 0 as std::ffi::c_int as usize;
+    let mut budget: usize = 0;
+    let mut inSize: usize = 0;
     let headerSize = firstSubBlock as usize * 120 as std::ffi::c_int as usize
         * BYTESCALE as usize;
     budget = budget.wrapping_add(headerSize);
@@ -1758,7 +1758,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
     let targetCBlockSize = MAX!(minTarget, cctxParams -> targetCBlockSize);
     let mut writeLitEntropy = ((*entropyMetadata).hufMetadata.hType as std::ffi::c_uint
         == set_compressed as std::ffi::c_int as std::ffi::c_uint) as std::ffi::c_int;
-    let mut writeSeqEntropy = 1 as std::ffi::c_int;
+    let mut writeSeqEntropy: std::ffi::c_int = 1;
     if nbSeqs > 0 as std::ffi::c_int as usize {
         let ebs = ZSTD_estimateSubBlockSize(
             lp,
@@ -1786,7 +1786,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
         );
         let mut n: usize = 0;
         let mut avgBlockBudget: usize = 0;
-        let mut blockBudgetSupp = 0 as std::ffi::c_int as usize;
+        let mut blockBudgetSupp: usize = 0;
         avgBlockBudget = ebs.estBlockSize * BYTESCALE as usize / nbSubBlocks;
         if ebs.estBlockSize > srcSize {
             return 0 as std::ffi::c_int as usize;
@@ -1804,8 +1804,8 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             if sp.offset(seqCount as isize) == send {
                 break;
             }
-            let mut litEntropyWritten = 0 as std::ffi::c_int;
-            let mut seqEntropyWritten = 0 as std::ffi::c_int;
+            let mut litEntropyWritten: std::ffi::c_int = 0;
+            let mut seqEntropyWritten: std::ffi::c_int = 0;
             let mut litSize = countLiterals(seqStorePtr, sp, seqCount);
             let decompressedSize = ZSTD_seqDecompressedSize(
                 seqStorePtr,
@@ -1858,8 +1858,8 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             n;
         }
     }
-    let mut litEntropyWritten_0 = 0 as std::ffi::c_int;
-    let mut seqEntropyWritten_0 = 0 as std::ffi::c_int;
+    let mut litEntropyWritten_0: std::ffi::c_int = 0;
+    let mut seqEntropyWritten_0: std::ffi::c_int = 0;
     let mut litSize_0 = lend.offset_from(lp) as std::ffi::c_long as usize;
     let mut seqCount_0 = send.offset_from(sp) as std::ffi::c_long as usize;
     let decompressedSize_0 = ZSTD_seqDecompressedSize(
