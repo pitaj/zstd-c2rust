@@ -1026,7 +1026,7 @@ static mut OF_defaultNorm: [i16; 29] = [
 pub const OF_DEFAULTNORMLOG: std::ffi::c_int = 5;
 static mut OF_defaultNormLog: u32 = OF_DEFAULTNORMLOG as u32;
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -1489,7 +1489,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_symbolType(
         cSymbolTypeSizeEstimateInBits = if max <= defaultMax {
             ZSTD_crossEntropyCost(defaultNorm, defaultNormLog, countWksp, max)
         } else {
-            ERROR!(GENERIC)
+            ERROR(ZSTD_error_GENERIC)
         };
     } else if type_0 as std::ffi::c_uint
         == set_rle as std::ffi::c_int as std::ffi::c_uint

@@ -805,7 +805,7 @@ unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32:
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 unsafe extern "C" fn ERR_getErrorCode(mut code: usize) -> ERR_enum {
     if ERR_isError(code) == 0 {
@@ -959,14 +959,14 @@ pub unsafe extern "C" fn ZDICT_getDictHeaderSize(
     if dictSize <= 8
         || MEM_readLE32(dictBuffer) != ZSTD_MAGIC_DICTIONARY
     {
-        return ERROR!(dictionary_corrupted);
+        return ERROR(ZSTD_error_dictionary_corrupted);
     }
     let mut bs = malloc(
         ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
     ) as *mut ZSTD_compressedBlockState_t;
     let mut wksp = malloc(HUF_WORKSPACE_SIZE as std::ffi::c_ulong) as *mut u32;
     if bs.is_null() || wksp.is_null() {
-        headerSize = ERROR!(memory_allocation);
+        headerSize = ERROR(ZSTD_error_memory_allocation);
     } else {
         ZSTD_reset_compressedBlockState(bs);
         headerSize = ZSTD_loadCEntropy(
@@ -1819,7 +1819,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
     if suffix0.is_null() || reverseSuffix.is_null() || doneMarks.is_null()
         || filePos.is_null()
     {
-        result = ERROR!(memory_allocation);
+        result = ERROR(ZSTD_error_memory_allocation);
     } else {
         if minRatio < MINRATIO as std::ffi::c_uint {
             minRatio = MINRATIO as std::ffi::c_uint;
@@ -1862,7 +1862,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             0,
         );
         if divSuftSortResult != 0 {
-            result = ERROR!(GENERIC);
+            result = ERROR(ZSTD_error_GENERIC);
         } else {
             *suffix.offset(bufferSize as isize) = bufferSize as std::ffi::c_uint;
             *suffix0
@@ -2258,7 +2258,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
     let mut dstPtr = dstBuffer as *mut u8;
     let mut wksp: [u32; 1216] = [0; 1216];
     if offcodeMax > OFFCODE_MAX as u32 {
-        eSize = ERROR!(dictionaryCreation_failed);
+        eSize = ERROR(ZSTD_error_dictionaryCreation_failed);
     } else {
         u = 0;
         while u < 256 {
@@ -2317,7 +2317,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         esr.zc = ZSTD_createCCtx();
         esr.workPlace = malloc(ZSTD_BLOCKSIZE_MAX as std::ffi::c_ulong);
         if (esr.dict).is_null() || (esr.zc).is_null() || (esr.workPlace).is_null() {
-            eSize = ERROR!(memory_allocation);
+            eSize = ERROR(ZSTD_error_memory_allocation);
             if DISPLAYLEVEL!(1, "Not enough memory \n")
                 >= 1
             {
@@ -2621,7 +2621,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                             maxDstSize = maxDstSize.wrapping_sub(lhSize);
                                             eSize = eSize.wrapping_add(lhSize);
                                             if maxDstSize < 12 {
-                                                eSize = ERROR!(dstSize_tooSmall);
+                                                eSize = ERROR(ZSTD_error_dstSize_tooSmall);
                                                 if DISPLAYLEVEL!(
                                                     1, "not enough space to write RepOffsets \n"
                                                 ) >= 1
@@ -2699,10 +2699,10 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
     let minContentSize = ZDICT_maxRep(repStartValue.as_ptr()) as usize;
     let mut paddingSize: usize = 0;
     if dictBufferCapacity < dictContentSize {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     MEM_writeLE32(header.as_mut_ptr() as *mut std::ffi::c_void, ZSTD_MAGIC_DICTIONARY);
     let randomID = ZSTD_XXH64(
@@ -2892,15 +2892,15 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     let mut dictSize: usize = 0;
     let notificationLevel = params.zParams.notificationLevel;
     if dictList.is_null() {
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     if maxDictSize < ZDICT_DICTSIZE_MIN as usize {
         free(dictList as *mut std::ffi::c_void);
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     if samplesBuffSize < ZDICT_MIN_SAMPLES_SIZE as usize {
         free(dictList as *mut std::ffi::c_void);
-        return ERROR!(dictionaryCreation_failed);
+        return ERROR(ZSTD_error_dictionaryCreation_failed);
     }
     ZDICT_initDictItem(dictList);
     ZDICT_trainBuffer_legacy(
@@ -2951,7 +2951,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                 || pos.wrapping_add(length) as usize > samplesBuffSize
             {
                 free(dictList as *mut std::ffi::c_void);
-                return ERROR!(GENERIC);
+                return ERROR(ZSTD_error_GENERIC);
             }
             if DISPLAYLEVEL!(
                 3, "%3u:%3u bytes at pos %8u, savings %7u bytes |", u, length, pos,
@@ -2985,7 +2985,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     let mut dictContentSize_0 = ZDICT_dictSize(dictList);
     if dictContentSize_0 < ZDICT_CONTENTSIZE_MIN as std::ffi::c_uint {
         free(dictList as *mut std::ffi::c_void);
-        return ERROR!(dictionaryCreation_failed);
+        return ERROR(ZSTD_error_dictionaryCreation_failed);
     }
     if (dictContentSize_0 as usize) < targetDictSize / 4_usize {
         if DISPLAYLEVEL!(
@@ -3118,7 +3118,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         ptr = ptr.offset(-(l as isize));
         if ptr < dictBuffer as *mut u8 {
             free(dictList as *mut std::ffi::c_void);
-            return ERROR!(GENERIC);
+            return ERROR(ZSTD_error_GENERIC);
         }
         memcpy(
             ptr as *mut std::ffi::c_void,
@@ -3159,7 +3159,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_legacy(
     }
     newBuff = malloc(sBuffSize.wrapping_add(NOISELENGTH as usize));
     if newBuff.is_null() {
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     memcpy(newBuff, samplesBuffer, sBuffSize);
     ZDICT_fillNoise(

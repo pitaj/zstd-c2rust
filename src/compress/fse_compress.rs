@@ -120,7 +120,7 @@ unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: u
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
@@ -182,7 +182,7 @@ unsafe extern "C" fn BIT_initCStream(
             -(::core::mem::size_of::<BitContainerType>() as isize),
         );
     if dstCapacity <= ::core::mem::size_of::<BitContainerType>() {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     return 0;
 }
@@ -363,7 +363,7 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
     if FSE_BUILD_CTABLE_WORKSPACE_SIZE!(maxSymbolValue, tableLog)
         > wkspSize as std::ffi::c_ulonglong
     {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     *tableU16.offset(-2) = tableLog as u16;
     *tableU16.offset(-1) = maxSymbolValue as u16;
@@ -602,7 +602,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                 if writeIsSafe == 0
                     && out > oend.offset(-2_isize)
                 {
-                    return ERROR!(dstSize_tooSmall);
+                    return ERROR(ZSTD_error_dstSize_tooSmall);
                 }
                 *out.offset(0) = bitStream as u8;
                 *out
@@ -626,7 +626,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
                 if writeIsSafe == 0
                     && out > oend.offset(-2_isize)
                 {
-                    return ERROR!(dstSize_tooSmall);
+                    return ERROR(ZSTD_error_dstSize_tooSmall);
                 }
                 *out.offset(0) = bitStream as u8;
                 *out
@@ -653,7 +653,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
         bitCount -= (count < max) as std::ffi::c_int;
         previousIs0 = (count == 1) as std::ffi::c_int;
         if remaining < 1 {
-            return ERROR!(GENERIC);
+            return ERROR(ZSTD_error_GENERIC);
         }
         while remaining < threshold {
             nbBits -= 1;
@@ -662,7 +662,7 @@ unsafe extern "C" fn FSE_writeNCount_generic(
         }
         if bitCount > 16 {
             if writeIsSafe == 0 && out > oend.offset(-2_isize) {
-                return ERROR!(dstSize_tooSmall);
+                return ERROR(ZSTD_error_dstSize_tooSmall);
             }
             *out.offset(0) = bitStream as u8;
             *out
@@ -675,10 +675,10 @@ unsafe extern "C" fn FSE_writeNCount_generic(
         }
     }
     if remaining != 1 {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     if writeIsSafe == 0 && out > oend.offset(-2_isize) {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     *out.offset(0) = bitStream as u8;
     *out
@@ -698,10 +698,10 @@ pub unsafe extern "C" fn FSE_writeNCount(
     mut tableLog: std::ffi::c_uint,
 ) -> usize {
     if tableLog > FSE_MAX_TABLELOG as std::ffi::c_uint {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     if tableLog < FSE_MIN_TABLELOG as std::ffi::c_uint {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     if bufferSize < FSE_NCountWriteBound(maxSymbolValue, tableLog) {
         return FSE_writeNCount_generic(
@@ -888,7 +888,7 @@ unsafe extern "C" fn FSE_normalizeM2(
             let sEnd = (end >> vStepLog) as u32;
             let weight = sEnd.wrapping_sub(sStart);
             if weight < 1 {
-                return ERROR!(GENERIC);
+                return ERROR(ZSTD_error_GENERIC);
             }
             *norm.offset(s as isize) = weight as std::ffi::c_short;
             tmpTotal = end;
@@ -911,13 +911,13 @@ pub unsafe extern "C" fn FSE_normalizeCount(
         tableLog = FSE_DEFAULT_TABLELOG as std::ffi::c_uint;
     }
     if tableLog < FSE_MIN_TABLELOG as std::ffi::c_uint {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     if tableLog > FSE_MAX_TABLELOG as std::ffi::c_uint {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     if tableLog < FSE_minTableLog(total, maxSymbolValue) {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     static mut rtbTable: [u32; 8] = [
         0,

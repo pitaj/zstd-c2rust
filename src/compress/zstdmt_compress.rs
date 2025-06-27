@@ -1156,7 +1156,7 @@ unsafe extern "C" fn ZSTD_customFree(
     }
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -1864,7 +1864,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                         );
                         if ERR_isError(initError) != 0 {
                             pthread_mutex_lock(&mut (*job).job_mutex);
-                            let ref mut fresh4 = JOB_ERROR!(initError);
+                            let ref mut fresh4 = JOB_ERROR(ZSTD_error_initError);
                             *fresh4 = initError;
                             pthread_mutex_unlock(&mut (*job).job_mutex);
                             current_block = 12352469457211969742;
@@ -1884,7 +1884,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                         );
                         if ERR_isError(forceWindowError) != 0 {
                             pthread_mutex_lock(&mut (*job).job_mutex);
-                            let ref mut fresh5 = JOB_ERROR!(forceWindowError);
+                            let ref mut fresh5 = JOB_ERROR(ZSTD_error_forceWindowError);
                             *fresh5 = forceWindowError;
                             pthread_mutex_unlock(&mut (*job).job_mutex);
                             current_block = 12352469457211969742;
@@ -1897,7 +1897,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                 );
                                 if ERR_isError(err) != 0 {
                                     pthread_mutex_lock(&mut (*job).job_mutex);
-                                    let ref mut fresh6 = JOB_ERROR!(err);
+                                    let ref mut fresh6 = JOB_ERROR(ZSTD_error_err);
                                     *fresh6 = err;
                                     pthread_mutex_unlock(&mut (*job).job_mutex);
                                     current_block = 12352469457211969742;
@@ -1922,7 +1922,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                     );
                                     if ERR_isError(initError_0) != 0 {
                                         pthread_mutex_lock(&mut (*job).job_mutex);
-                                        let ref mut fresh7 = JOB_ERROR!(initError);
+                                        let ref mut fresh7 = JOB_ERROR(ZSTD_error_initError);
                                         *fresh7 = initError_0;
                                         pthread_mutex_unlock(&mut (*job).job_mutex);
                                         current_block = 12352469457211969742;
@@ -1951,7 +1951,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                 );
                                 if ERR_isError(hSize) != 0 {
                                     pthread_mutex_lock(&mut (*job).job_mutex);
-                                    let ref mut fresh8 = JOB_ERROR!(hSize);
+                                    let ref mut fresh8 = JOB_ERROR(ZSTD_error_hSize);
                                     *fresh8 = hSize;
                                     pthread_mutex_unlock(&mut (*job).job_mutex);
                                     current_block = 12352469457211969742;
@@ -1994,7 +1994,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                         );
                                         if ERR_isError(cSize) != 0 {
                                             pthread_mutex_lock(&mut (*job).job_mutex);
-                                            let ref mut fresh9 = JOB_ERROR!(cSize);
+                                            let ref mut fresh9 = JOB_ERROR(ZSTD_error_cSize);
                                             *fresh9 = cSize;
                                             pthread_mutex_unlock(&mut (*job).job_mutex);
                                             current_block = 12352469457211969742;
@@ -2052,7 +2052,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                                 };
                                                 if ERR_isError(cSize_0) != 0 {
                                                     pthread_mutex_lock(&mut (*job).job_mutex);
-                                                    let ref mut fresh10 = JOB_ERROR!(cSize);
+                                                    let ref mut fresh10 = JOB_ERROR(ZSTD_error_cSize);
                                                     *fresh10 = cSize_0;
                                                     pthread_mutex_unlock(&mut (*job).job_mutex);
                                                     current_block = 12352469457211969742;
@@ -2180,7 +2180,7 @@ unsafe extern "C" fn ZSTDMT_expandJobsTable(
         (*mtctx).jobIDMask = 0;
         (*mtctx).jobs = ZSTDMT_createJobsTable(&mut nbJobs, (*mtctx).cMem);
         if ((*mtctx).jobs).is_null() {
-            return ERROR!(memory_allocation);
+            return ERROR(ZSTD_error_memory_allocation);
         }
         (*mtctx).jobIDMask = nbJobs.wrapping_sub(1);
     }
@@ -2369,7 +2369,7 @@ unsafe extern "C" fn ZSTDMT_resize(
     mut nbWorkers: std::ffi::c_uint,
 ) -> usize {
     if POOL_resize((*mtctx).factory, nbWorkers as usize) != 0 {
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     let err_code = FORWARD_IF_ERROR!(ZSTDMT_expandJobsTable(mtctx, nbWorkers), "");
     if FORWARD_IF_ERROR!(ZSTDMT_expandJobsTable(mtctx, nbWorkers), "") != 0 {
@@ -2381,7 +2381,7 @@ unsafe extern "C" fn ZSTDMT_resize(
         BUF_POOL_MAX_NB_BUFFERS!(nbWorkers),
     );
     if ((*mtctx).bufPool).is_null() {
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     (*mtctx)
         .cctxPool = ZSTDMT_expandCCtxPool(
@@ -2389,11 +2389,11 @@ unsafe extern "C" fn ZSTDMT_resize(
         nbWorkers as std::ffi::c_int,
     );
     if ((*mtctx).cctxPool).is_null() {
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     (*mtctx).seqPool = ZSTDMT_expandSeqPool((*mtctx).seqPool, nbWorkers);
     if ((*mtctx).seqPool).is_null() {
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     ZSTDMT_CCtxParam_setNbWorkers(&mut (*mtctx).params, nbWorkers);
     return 0;
@@ -2627,7 +2627,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
         );
         (*mtctx).cdict = (*mtctx).cdictLocal;
         if ((*mtctx).cdictLocal).is_null() {
-            return ERROR!(memory_allocation);
+            return ERROR(ZSTD_error_memory_allocation);
         }
     } else {
         (*mtctx).cdictLocal = NULL_0 as *mut ZSTD_CDict;
@@ -2684,7 +2684,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
             .buffer = ZSTD_customMalloc(capacity, (*mtctx).cMem) as *mut u8;
         if ((*mtctx).roundBuff.buffer).is_null() {
             (*mtctx).roundBuff.capacity = 0;
-            return ERROR!(memory_allocation);
+            return ERROR(ZSTD_error_memory_allocation);
         }
         (*mtctx).roundBuff.capacity = capacity;
     }
@@ -2722,7 +2722,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
             );
             (*mtctx).cdict = (*mtctx).cdictLocal;
             if ((*mtctx).cdictLocal).is_null() {
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
         }
     } else {
@@ -2738,14 +2738,14 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
         dictContentType,
     ) != 0
     {
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     return 0;
 }
 unsafe extern "C" fn ZSTDMT_writeLastEmptyBlock(mut job: *mut ZSTDMT_jobDescription) {
     (*job).dstBuff = ZSTDMT_getBuffer((*job).bufPool);
     if ((*job).dstBuff.start).is_null() {
-        (*job).cSize = ERROR!(memory_allocation);
+        (*job).cSize = ERROR(ZSTD_error_memory_allocation);
         return;
     }
     (*job).src = kNullRange;
@@ -3213,7 +3213,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
         && endOp as std::ffi::c_uint
             == ZSTD_e_continue as std::ffi::c_int as std::ffi::c_uint
     {
-        return ERROR!(stage_wrong);
+        return ERROR(ZSTD_error_stage_wrong);
     }
     if (*mtctx).jobReady == 0 && (*input).size > (*input).pos {
         if ((*mtctx).inBuff.buffer.start).is_null() {

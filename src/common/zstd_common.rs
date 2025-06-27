@@ -41,7 +41,7 @@ pub const ZSTD_error_GENERIC: ZSTD_ErrorCode = 1;
 pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
 pub type ERR_enum = ZSTD_ErrorCode;
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 unsafe extern "C" fn ERR_getErrorCode(mut code: usize) -> ERR_enum {
     if ERR_isError(code) == 0 {

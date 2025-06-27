@@ -299,7 +299,7 @@ unsafe extern "C" fn ZSTD_customFree(
     }
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -365,7 +365,7 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
         if dictContentType as std::ffi::c_uint
             == ZSTD_dct_fullDict as std::ffi::c_int as std::ffi::c_uint
         {
-            return ERROR!(dictionary_corrupted);
+            return ERROR(ZSTD_error_dictionary_corrupted);
         }
         return 0;
     }
@@ -374,7 +374,7 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
         if dictContentType as std::ffi::c_uint
             == ZSTD_dct_fullDict as std::ffi::c_int as std::ffi::c_uint
         {
-            return ERROR!(dictionary_corrupted);
+            return ERROR(ZSTD_error_dictionary_corrupted);
         }
         return 0;
     }
@@ -413,7 +413,7 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
         (*ddict).dictBuffer = internalBuffer;
         (*ddict).dictContent = internalBuffer;
         if internalBuffer.is_null() {
-            return ERROR!(memory_allocation);
+            return ERROR(ZSTD_error_memory_allocation);
         }
         libc::memcpy(
             ZSTD_memcpy!(internalBuffer, dict, dictSize),

@@ -340,7 +340,7 @@ unsafe extern "C" fn MEM_readST(mut ptr: *const std::ffi::c_void) -> usize {
     return *(ptr as *const unalignArch);
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 pub const HASH_READ_SIZE: std::ffi::c_int = 8;
 pub const ZSTD_WINDOW_START_INDEX: std::ffi::c_int = 2;
@@ -1628,7 +1628,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
                     mLength = forwardMatchLength.wrapping_add(backwardMatchLength);
                     let seq = ((*rawSeqStore).seq).offset((*rawSeqStore).size as isize);
                     if (*rawSeqStore).size == (*rawSeqStore).capacity {
-                        return ERROR!(dstSize_tooSmall);
+                        return ERROR(ZSTD_error_dstSize_tooSmall);
                     }
                     (*seq)
                         .litLength = split_0

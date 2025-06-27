@@ -363,7 +363,7 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
@@ -872,7 +872,7 @@ unsafe extern "C" fn COVER_ctx_init(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if nbTrainSamples < 5 {
         if DISPLAYLEVEL!(
@@ -887,7 +887,7 @@ unsafe extern "C" fn COVER_ctx_init(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if nbTestSamples < 1 {
         if DISPLAYLEVEL!(
@@ -902,7 +902,7 @@ unsafe extern "C" fn COVER_ctx_init(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     memset(
         ctx as *mut std::ffi::c_void,
@@ -984,7 +984,7 @@ unsafe extern "C" fn COVER_ctx_init(
             fflush(stderr);
         }
         COVER_ctx_destroy(ctx);
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     (*ctx).freqs = NULL as *mut u32;
     (*ctx).d = d;
@@ -1266,7 +1266,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
             );
             fflush(stderr);
         }
-        return ERROR!(parameter_outOfBound);
+        return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if nbSamples == 0 {
         if DISPLAYLEVEL!(1, "Cover must have at least one input file\n")
@@ -1279,7 +1279,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
         if DISPLAYLEVEL!(
@@ -1294,7 +1294,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
             );
             fflush(stderr);
         }
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     let initVal = COVER_ctx_init(
         &mut ctx,
@@ -1327,7 +1327,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
             fflush(stderr);
         }
         COVER_ctx_destroy(&mut ctx);
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     if DISPLAYLEVEL!(2, "Building dictionary\n") >= 2 {
         fprintf(
@@ -1383,7 +1383,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
     dict: *mut u8,
     mut dictBufferCapacity: usize,
 ) -> usize {
-    let mut totalCompressedSize = ERROR!(GENERIC);
+    let mut totalCompressedSize = ERROR(ZSTD_error_GENERIC);
     let mut cctx = 0 as *mut ZSTD_CCtx;
     let mut cdict = 0 as *mut ZSTD_CDict;
     let mut dst = 0 as *mut std::ffi::c_void;
@@ -1527,7 +1527,7 @@ pub unsafe extern "C" fn COVER_best_finish(
             }
             (*best).dict = malloc(dictSize);
             if ((*best).dict).is_null() {
-                (*best).compressedSize = ERROR!(GENERIC);
+                (*best).compressedSize = ERROR(ZSTD_error_GENERIC);
                 (*best).dictSize = 0;
                 ZSTD_pthread_cond_signal!(
                     & best -> cond
@@ -1713,7 +1713,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
     let ctx = (*data).ctx;
     let parameters = (*data).parameters;
     let mut dictBufferCapacity = (*data).dictBufferCapacity;
-    let mut totalCompressedSize = ERROR!(GENERIC);
+    let mut totalCompressedSize = ERROR(ZSTD_error_GENERIC);
     let mut activeDmers = COVER_map_s {
         data: 0 as *mut COVER_map_pair_t,
         sizeLog: 0,
@@ -1721,7 +1721,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
         sizeMask: 0,
     };
     let dict = malloc(dictBufferCapacity) as *mut u8;
-    let mut selection = COVER_dictSelectionError(ERROR!(GENERIC));
+    let mut selection = COVER_dictSelectionError(ERROR(ZSTD_error_GENERIC));
     let freqs = malloc(
         ((*ctx).suffixSize)
             .wrapping_mul(::core::mem::size_of::<u32>()),
@@ -1922,7 +1922,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             );
             fflush(stderr);
         }
-        return ERROR!(parameter_outOfBound);
+        return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if kMinK < kMaxD || kMaxK < kMinK {
         if DISPLAYLEVEL!(1, "Incorrect parameters\n") >= 1 {
@@ -1932,7 +1932,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             );
             fflush(stderr);
         }
-        return ERROR!(parameter_outOfBound);
+        return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if nbSamples == 0 {
         if DISPLAYLEVEL!(1, "Cover must have at least one input file\n")
@@ -1945,7 +1945,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
         if DISPLAYLEVEL!(
@@ -1960,12 +1960,12 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             );
             fflush(stderr);
         }
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     if nbThreads > 1 {
         pool = POOL_create(nbThreads as usize, 1);
         if pool.is_null() {
-            return ERROR!(memory_allocation);
+            return ERROR(ZSTD_error_memory_allocation);
         }
     }
     COVER_best_init(&mut best);
@@ -2055,7 +2055,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                 COVER_best_destroy(&mut best);
                 COVER_ctx_destroy(&mut ctx);
                 POOL_free(pool);
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             (*data).ctx = &mut ctx;
             (*data).best = &mut best;

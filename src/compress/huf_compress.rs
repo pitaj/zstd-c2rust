@@ -256,7 +256,7 @@ unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: u
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
@@ -314,7 +314,7 @@ unsafe extern "C" fn HUF_compressWeights(
     if workspaceSize
         < ::core::mem::size_of::<HUF_CompressWeightsWksp>()
     {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     if wtSize <= 1 {
         return 0;
@@ -473,10 +473,10 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
     ) as *mut HUF_WriteCTableWksp;
     if workspaceSize < ::core::mem::size_of::<HUF_WriteCTableWksp>()
     {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     if maxSymbolValue > HUF_SYMBOLVALUE_MAX as std::ffi::c_uint {
-        return ERROR!(maxSymbolValue_tooLarge);
+        return ERROR(ZSTD_error_maxSymbolValue_tooLarge);
     }
     (*wksp).bitsToWeight[0] = 0;
     n = 1;
@@ -499,7 +499,7 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
         n;
     }
     if maxDstSize < 1 {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     let hSize = HUF_compressWeights(
         op.offset(1) as *mut std::ffi::c_void,
@@ -527,14 +527,14 @@ pub unsafe extern "C" fn HUF_writeCTable_wksp(
     if maxSymbolValue
         > (256 as std::ffi::c_int - 128 as std::ffi::c_int) as std::ffi::c_uint
     {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     if maxSymbolValue
         .wrapping_add(1)
         .wrapping_div(2)
         .wrapping_add(1) as usize > maxDstSize
     {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     *op
         .offset(
@@ -589,12 +589,12 @@ pub unsafe extern "C" fn HUF_readCTable(
     *hasZeroWeights = (rankVal[0]
         > 0) as std::ffi::c_int as std::ffi::c_uint;
     if tableLog > HUF_TABLELOG_MAX as u32 {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     if nbSymbols
         > (*maxSymbolValuePtr).wrapping_add(1)
     {
-        return ERROR!(maxSymbolValue_tooSmall);
+        return ERROR(ZSTD_error_maxSymbolValue_tooSmall);
     }
     *maxSymbolValuePtr = nbSymbols.wrapping_sub(1);
     HUF_writeCTableHeader(CTable, tableLog, *maxSymbolValuePtr);
@@ -1183,13 +1183,13 @@ pub unsafe extern "C" fn HUF_buildCTable_wksp(
     if wkspSize
         < ::core::mem::size_of::<HUF_buildCTable_wksp_tables>()
     {
-        return ERROR!(workSpace_tooSmall);
+        return ERROR(ZSTD_error_workSpace_tooSmall);
     }
     if maxNbBits == 0 {
         maxNbBits = HUF_TABLELOG_DEFAULT as u32;
     }
     if maxSymbolValue > HUF_SYMBOLVALUE_MAX as u32 {
-        return ERROR!(maxSymbolValue_tooLarge);
+        return ERROR(ZSTD_error_maxSymbolValue_tooLarge);
     }
     libc::memset(
         huffNode0 as *mut std::ffi::c_void,
@@ -1205,7 +1205,7 @@ pub unsafe extern "C" fn HUF_buildCTable_wksp(
     nonNullRank = HUF_buildTree(huffNode, maxSymbolValue);
     maxNbBits = HUF_setMaxHeight(huffNode, nonNullRank as u32, maxNbBits);
     if maxNbBits > HUF_TABLELOG_MAX as u32 {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     HUF_buildCTableFromTree(CTable, huffNode, nonNullRank, maxSymbolValue, maxNbBits);
     return maxNbBits as usize;
@@ -1280,7 +1280,7 @@ unsafe extern "C" fn HUF_initCStream(
         .offset(dstCapacity as isize)
         .offset(-(::core::mem::size_of::<usize>() as isize));
     if dstCapacity <= ::core::mem::size_of::<usize>() {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     return 0;
 }
@@ -1987,7 +1987,7 @@ unsafe extern "C" fn HUF_compress_internal(
     let oend = ostart.offset(dstSize as isize);
     let mut op = ostart;
     if wkspSize < ::core::mem::size_of::<HUF_compress_tables_t>() {
-        return ERROR!(workSpace_tooSmall);
+        return ERROR(ZSTD_error_workSpace_tooSmall);
     }
     if srcSize == 0 {
         return 0;
@@ -1996,13 +1996,13 @@ unsafe extern "C" fn HUF_compress_internal(
         return 0;
     }
     if srcSize > HUF_BLOCKSIZE_MAX as usize {
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if huffLog > HUF_TABLELOG_MAX as std::ffi::c_uint {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     if maxSymbolValue > HUF_SYMBOLVALUE_MAX as std::ffi::c_uint {
-        return ERROR!(maxSymbolValue_tooLarge);
+        return ERROR(ZSTD_error_maxSymbolValue_tooLarge);
     }
     if maxSymbolValue == 0 {
         maxSymbolValue = HUF_SYMBOLVALUE_MAX as std::ffi::c_uint;

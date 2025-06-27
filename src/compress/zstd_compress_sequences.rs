@@ -190,7 +190,7 @@ unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: u
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -442,7 +442,7 @@ unsafe extern "C" fn BIT_initCStream(
             -(::core::mem::size_of::<BitContainerType>() as isize),
         );
     if dstCapacity <= ::core::mem::size_of::<BitContainerType>() {
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     return 0;
 }
@@ -846,7 +846,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
     };
     FSE_initCState(&mut cstate, ctable);
     if ZSTD_getFSEMaxSymbolValue(ctable) < max {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     s = 0;
     while s <= max {
@@ -856,7 +856,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
         let bitCost = FSE_bitCost(cstate.symbolTT, tableLog, s, kAccuracyLog);
         if !(*count.offset(s as isize) == 0) {
             if bitCost >= badCost {
-                return ERROR!(GENERIC);
+                return ERROR(ZSTD_error_GENERIC);
             }
             cost = cost
                 .wrapping_add(*count.offset(s as isize) as usize * bitCost as usize);
@@ -946,14 +946,14 @@ pub unsafe extern "C" fn ZSTD_selectEncodingType(
         let basicCost = if isDefaultAllowed as std::ffi::c_uint != 0 {
             ZSTD_crossEntropyCost(defaultNorm, defaultNormLog, count, max)
         } else {
-            ERROR!(GENERIC)
+            ERROR(ZSTD_error_GENERIC)
         };
         let repeatCost = if *repeatMode as std::ffi::c_uint
             != FSE_repeat_none as std::ffi::c_int as std::ffi::c_uint
         {
             ZSTD_fseBitCost(prevCTable, count, max)
         } else {
-            ERROR!(GENERIC)
+            ERROR(ZSTD_error_GENERIC)
         };
         let NCountCost = ZSTD_NCountCost(count, max, nbSeq, FSELog);
         let compressedCost = (NCountCost << 3)

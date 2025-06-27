@@ -355,7 +355,7 @@ unsafe extern "C" fn ZSTD_hash8Ptr(
 }
 pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 pub const ZDICT_DICTSIZE_MIN: std::ffi::c_int = 256;
 pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000;
@@ -696,7 +696,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if nbTrainSamples < 5 {
         if DISPLAYLEVEL!(
@@ -711,7 +711,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if nbTestSamples < 1 {
         if DISPLAYLEVEL!(
@@ -726,7 +726,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     memset(
         ctx as *mut std::ffi::c_void,
@@ -799,7 +799,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             fflush(stderr);
         }
         FASTCOVER_ctx_destroy(ctx);
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     let mut i: u32 = 0;
     *((*ctx).offsets)
@@ -835,7 +835,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             fflush(stderr);
         }
         FASTCOVER_ctx_destroy(ctx);
-        return ERROR!(memory_allocation);
+        return ERROR(ZSTD_error_memory_allocation);
     }
     if DISPLAYLEVEL!(2, "Computing frequencies\n") >= 2 {
         fprintf(
@@ -950,13 +950,13 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
     let ctx = (*data).ctx;
     let parameters = (*data).parameters;
     let mut dictBufferCapacity = (*data).dictBufferCapacity;
-    let mut totalCompressedSize = ERROR!(GENERIC);
+    let mut totalCompressedSize = ERROR(ZSTD_error_GENERIC);
     let mut segmentFreqs = calloc(
         1_u64 << (*ctx).f,
         ::core::mem::size_of::<u16>(),
     ) as *mut u16;
     let dict = malloc(dictBufferCapacity) as *mut u8;
-    let mut selection = COVER_dictSelectionError(ERROR!(GENERIC));
+    let mut selection = COVER_dictSelectionError(ERROR(ZSTD_error_GENERIC));
     let mut freqs = malloc(
         (1_u64 << (*ctx).f)
             .wrapping_mul(::core::mem::size_of::<u32>()),
@@ -1131,7 +1131,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
             );
             fflush(stderr);
         }
-        return ERROR!(parameter_outOfBound);
+        return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if nbSamples == 0 {
         if DISPLAYLEVEL!(1, "FASTCOVER must have at least one input file\n")
@@ -1144,7 +1144,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
         if DISPLAYLEVEL!(
@@ -1159,7 +1159,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
             );
             fflush(stderr);
         }
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     accelParams = FASTCOVER_defaultAccelParameters[parameters.accel as usize];
     let initVal = FASTCOVER_ctx_init(
@@ -1382,7 +1382,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             );
             fflush(stderr);
         }
-        return ERROR!(parameter_outOfBound);
+        return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if accel == 0
         || accel > FASTCOVER_MAX_ACCEL as std::ffi::c_uint
@@ -1394,14 +1394,14 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             );
             fflush(stderr);
         }
-        return ERROR!(parameter_outOfBound);
+        return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if kMinK < kMaxD || kMaxK < kMinK {
         if DISPLAYLEVEL!(1, "Incorrect k\n") >= 1 {
             fprintf(stderr, b"Incorrect k\n\0" as *const u8 as *const std::ffi::c_char);
             fflush(stderr);
         }
-        return ERROR!(parameter_outOfBound);
+        return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if nbSamples == 0 {
         if DISPLAYLEVEL!(1, "FASTCOVER must have at least one input file\n")
@@ -1414,7 +1414,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             );
             fflush(stderr);
         }
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
         if DISPLAYLEVEL!(
@@ -1429,12 +1429,12 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             );
             fflush(stderr);
         }
-        return ERROR!(dstSize_tooSmall);
+        return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     if nbThreads > 1 {
         pool = POOL_create(nbThreads as usize, 1);
         if pool.is_null() {
-            return ERROR!(memory_allocation);
+            return ERROR(ZSTD_error_memory_allocation);
         }
     }
     COVER_best_init(&mut best);
@@ -1537,7 +1537,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 COVER_best_destroy(&mut best);
                 FASTCOVER_ctx_destroy(&mut ctx);
                 POOL_free(pool);
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             (*data).ctx = &mut ctx;
             (*data).best = &mut best;

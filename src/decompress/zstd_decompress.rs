@@ -1008,7 +1008,7 @@ unsafe extern "C" fn ZSTD_customFree(
     }
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -1167,7 +1167,7 @@ unsafe extern "C" fn ZSTD_decompressLegacy(
             let mut result: usize = 0;
             let zd = ZSTDv05_createDCtx();
             if zd.is_null() {
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             result = ZSTDv05_decompress_usingDict(
                 zd,
@@ -1185,7 +1185,7 @@ unsafe extern "C" fn ZSTD_decompressLegacy(
             let mut result_0: usize = 0;
             let zd_0 = ZSTDv06_createDCtx();
             if zd_0.is_null() {
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             result_0 = ZSTDv06_decompress_usingDict(
                 zd_0,
@@ -1203,7 +1203,7 @@ unsafe extern "C" fn ZSTD_decompressLegacy(
             let mut result_1: usize = 0;
             let zd_1 = ZSTDv07_createDCtx();
             if zd_1.is_null() {
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             result_1 = ZSTDv07_decompress_usingDict(
                 zd_1,
@@ -1217,7 +1217,7 @@ unsafe extern "C" fn ZSTD_decompressLegacy(
             ZSTDv07_freeDCtx(zd_1);
             return result_1;
         }
-        _ => return ERROR!(prefix_unknown),
+        _ => return ERROR(ZSTD_error_prefix_unknown),
     };
 }
 #[inline]
@@ -1257,14 +1257,14 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfoLegacy(
             );
         }
         _ => {
-            frameSizeInfo.compressedSize = ERROR!(prefix_unknown);
+            frameSizeInfo.compressedSize = ERROR(ZSTD_error_prefix_unknown);
             frameSizeInfo.decompressedBound = ZSTD_CONTENTSIZE_ERROR;
         }
     }
     if ERR_isError(frameSizeInfo.compressedSize) == 0
         && frameSizeInfo.compressedSize > srcSize
     {
-        frameSizeInfo.compressedSize = ERROR!(srcSize_wrong);
+        frameSizeInfo.compressedSize = ERROR(ZSTD_error_srcSize_wrong);
         frameSizeInfo.decompressedBound = ZSTD_CONTENTSIZE_ERROR;
     }
     if frameSizeInfo.decompressedBound != ZSTD_CONTENTSIZE_ERROR {
@@ -1291,7 +1291,7 @@ unsafe extern "C" fn ZSTD_freeLegacyStreamContext(
         5 => return ZBUFFv05_freeDCtx(legacyContext as *mut ZBUFFv05_DCtx),
         6 => return ZBUFFv06_freeDCtx(legacyContext as *mut ZBUFFv06_DCtx),
         7 => return ZBUFFv07_freeDCtx(legacyContext as *mut ZBUFFv07_DCtx),
-        1 | 2 | 3 | _ => return ERROR!(version_unsupported),
+        1 | 2 | 3 | _ => return ERROR(ZSTD_error_version_unsupported),
     };
 }
 #[inline]
@@ -1317,7 +1317,7 @@ unsafe extern "C" fn ZSTD_initLegacyStream(
                 *legacyContext as *mut ZBUFFv05_DCtx
             };
             if dctx.is_null() {
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             ZBUFFv05_decompressInitDictionary(dctx, dict, dictSize);
             *legacyContext = dctx as *mut std::ffi::c_void;
@@ -1330,7 +1330,7 @@ unsafe extern "C" fn ZSTD_initLegacyStream(
                 *legacyContext as *mut ZBUFFv06_DCtx
             };
             if dctx_0.is_null() {
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             ZBUFFv06_decompressInitDictionary(dctx_0, dict, dictSize);
             *legacyContext = dctx_0 as *mut std::ffi::c_void;
@@ -1343,7 +1343,7 @@ unsafe extern "C" fn ZSTD_initLegacyStream(
                 *legacyContext as *mut ZBUFFv07_DCtx
             };
             if dctx_1.is_null() {
-                return ERROR!(memory_allocation);
+                return ERROR(ZSTD_error_memory_allocation);
             }
             ZBUFFv07_decompressInitDictionary(dctx_1, dict, dictSize);
             *legacyContext = dctx_1 as *mut std::ffi::c_void;
@@ -1424,7 +1424,7 @@ unsafe extern "C" fn ZSTD_decompressLegacyStream(
             (*input).pos = ((*input).pos).wrapping_add(readSize_1);
             return hintSize_1;
         }
-        1 | 2 | 3 | _ => return ERROR!(version_unsupported),
+        1 | 2 | 3 | _ => return ERROR(ZSTD_error_version_unsupported),
     };
 }
 pub const NULL: std::ffi::c_int = 0;
@@ -2257,7 +2257,7 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfo(
             return ZSTD_errorFrameSizeInfo(ret);
         }
         if ret > 0 {
-            return ZSTD_errorFrameSizeInfo(ERROR!(srcSize_wrong));
+            return ZSTD_errorFrameSizeInfo(ERROR(ZSTD_error_srcSize_wrong));
         }
         ip = ip.offset(zfh.headerSize as isize);
         remainingSize = remainingSize.wrapping_sub(zfh.headerSize as usize);
@@ -2276,7 +2276,7 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfo(
                 return ZSTD_errorFrameSizeInfo(cBlockSize);
             }
             if ZSTD_blockHeaderSize.wrapping_add(cBlockSize) > remainingSize {
-                return ZSTD_errorFrameSizeInfo(ERROR!(srcSize_wrong));
+                return ZSTD_errorFrameSizeInfo(ERROR(ZSTD_error_srcSize_wrong));
             }
             ip = ip.offset(ZSTD_blockHeaderSize.wrapping_add(cBlockSize) as isize);
             remainingSize = remainingSize
@@ -2289,7 +2289,7 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfo(
         }
         if zfh.checksumFlag != 0 {
             if remainingSize < 4 {
-                return ZSTD_errorFrameSizeInfo(ERROR!(srcSize_wrong));
+                return ZSTD_errorFrameSizeInfo(ERROR(ZSTD_error_srcSize_wrong));
             }
             ip = ip.offset(4);
         }
@@ -2372,7 +2372,7 @@ pub unsafe extern "C" fn ZSTD_decompressionMargin(
         if ERR_isError(compressedSize) != 0
             || decompressedBound == ZSTD_CONTENTSIZE_ERROR
         {
-            return ERROR!(corruption_detected);
+            return ERROR(ZSTD_error_corruption_detected);
         }
         if zfh.frameType as std::ffi::c_uint
             == ZSTD_frame as std::ffi::c_int as std::ffi::c_uint
@@ -3798,7 +3798,7 @@ pub unsafe extern "C" fn ZSTD_dParam_getBounds(
         }
         _ => {}
     }
-    bounds.error = ERROR!(parameter_unsupported);
+    bounds.error = ERROR(ZSTD_error_parameter_unsupported);
     return bounds;
 }
 unsafe extern "C" fn ZSTD_dParam_withinBounds(

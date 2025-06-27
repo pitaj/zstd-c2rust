@@ -143,7 +143,7 @@ unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize 
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -171,7 +171,7 @@ unsafe extern "C" fn BIT_initDStream(
             0,
             ::core::mem::size_of::<BIT_DStream_t>() as usize,
         );
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     (*bitD).start = srcBuffer as *const std::ffi::c_char;
     (*bitD)
@@ -198,7 +198,7 @@ unsafe extern "C" fn BIT_initDStream(
             0 as std::ffi::c_uint
         };
         if lastByte as std::ffi::c_int == 0 {
-            return ERROR!(GENERIC);
+            return ERROR(ZSTD_error_GENERIC);
         }
     } else {
         (*bitD).ptr = (*bitD).start;
@@ -317,7 +317,7 @@ unsafe extern "C" fn BIT_initDStream(
             0 as std::ffi::c_uint
         };
         if lastByte_0 as std::ffi::c_int == 0 {
-            return ERROR!(corruption_detected);
+            return ERROR(ZSTD_error_corruption_detected);
         }
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
@@ -503,13 +503,13 @@ unsafe extern "C" fn FSE_buildDTable_internal(
     if FSE_BUILD_DTABLE_WKSP_SIZE!(tableLog, maxSymbolValue)
         > wkspSize as std::ffi::c_ulonglong
     {
-        return ERROR!(maxSymbolValue_tooLarge);
+        return ERROR(ZSTD_error_maxSymbolValue_tooLarge);
     }
     if maxSymbolValue > FSE_MAX_SYMBOL_VALUE as std::ffi::c_uint {
-        return ERROR!(maxSymbolValue_tooLarge);
+        return ERROR(ZSTD_error_maxSymbolValue_tooLarge);
     }
     if tableLog > FSE_MAX_TABLELOG as std::ffi::c_uint {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     let mut DTableH = FSE_DTableHeader {
         tableLog: 0,
@@ -611,7 +611,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
             s_2;
         }
         if position_0 != 0 {
-            return ERROR!(GENERIC);
+            return ERROR(ZSTD_error_GENERIC);
         }
     }
     let mut u_0: u32 = 0;
@@ -728,7 +728,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
     }
     loop {
         if op > omax.offset(-2_isize) {
-            return ERROR!(dstSize_tooSmall);
+            return ERROR(ZSTD_error_dstSize_tooSmall);
         }
         let fresh3 = op;
         op = op.offset(1);
@@ -742,7 +742,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
             break;
         } else {
             if op > omax.offset(-2_isize) {
-                return ERROR!(dstSize_tooSmall);
+                return ERROR(ZSTD_error_dstSize_tooSmall);
             }
             let fresh5 = op;
             op = op.offset(1);
@@ -780,7 +780,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         .wrapping_div(::core::mem::size_of::<FSE_DTable>());
     let dtable = (workSpace as *mut FSE_DTable).offset(dtablePos as isize);
     if wkspSize < ::core::mem::size_of::<FSE_DecompressWksp>() {
-        return ERROR!(GENERIC);
+        return ERROR(ZSTD_error_GENERIC);
     }
     let NCountLength = FSE_readNCount_bmi2(
         ((*wksp).ncount).as_mut_ptr(),
@@ -794,14 +794,14 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         return NCountLength;
     }
     if tableLog > maxLog {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     ip = ip.offset(NCountLength as isize);
     cSrcSize = cSrcSize.wrapping_sub(NCountLength);
     if FSE_DECOMPRESS_WKSP_SIZE!(tableLog, maxSymbolValue)
         > wkspSize as std::ffi::c_ulonglong
     {
-        return ERROR!(tableLog_tooLarge);
+        return ERROR(ZSTD_error_tableLog_tooLarge);
     }
     workSpace = (workSpace as *mut u8)
         .offset(

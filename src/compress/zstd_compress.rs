@@ -2981,7 +2981,7 @@ unsafe extern "C" fn ZSTD_customFree(
     }
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -3347,7 +3347,7 @@ pub const NULL: std::ffi::c_int = 0;
 pub unsafe extern "C" fn ZSTD_compressBound(mut srcSize: usize) -> usize {
     let r = ZSTD_COMPRESSBOUND!(srcSize);
     if r == 0 {
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     return r;
 }
@@ -4221,7 +4221,7 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
             return bounds;
         }
         _ => {
-            bounds.error = ERROR!(parameter_unsupported);
+            bounds.error = ERROR(ZSTD_error_parameter_unsupported);
             return bounds;
         }
     };
@@ -7331,7 +7331,7 @@ unsafe extern "C" fn ZSTD_entropyCompressSeqStore_wExtLitBuffer(
     if cSize == 0 {
         return 0;
     }
-    if (cSize == ERROR!(dstSize_tooSmall)) as std::ffi::c_int
+    if (cSize == ERROR(ZSTD_error_dstSize_tooSmall)) as std::ffi::c_int
         & (blockSize <= dstCapacity) as std::ffi::c_int != 0
     {
         return 0;
@@ -9298,7 +9298,7 @@ unsafe extern "C" fn ZSTD_compressBlock_targetCBlockSize_body(
             srcSize,
             lastBlock,
         );
-        if cSize != ERROR!(dstSize_tooSmall) {
+        if cSize != ERROR(ZSTD_error_dstSize_tooSmall) {
             let maxCSize = srcSize
                 .wrapping_sub(
                     ZSTD_minGain(srcSize, (*zc).appliedParams.cParams.strategy),
@@ -14215,7 +14215,7 @@ pub unsafe extern "C" fn ZSTD_get1BlockSummary(
             blockSize: 0,
             litSize: 0,
         };
-        bs.nbSequences = ERROR!(externalSequences_invalid);
+        bs.nbSequences = ERROR(ZSTD_error_externalSequences_invalid);
         return bs;
     }
     let mut bs_0 = BlockSummary {

@@ -478,7 +478,7 @@ unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize 
     };
 }
 unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR!(maxCode)) as std::ffi::c_int as std::ffi::c_uint;
+    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -508,7 +508,7 @@ unsafe extern "C" fn BIT_initDStream(
             0,
             ::core::mem::size_of::<BIT_DStream_t>() as usize,
         );
-        return ERROR!(srcSize_wrong);
+        return ERROR(ZSTD_error_srcSize_wrong);
     }
     (*bitD).start = srcBuffer as *const std::ffi::c_char;
     (*bitD)
@@ -535,7 +535,7 @@ unsafe extern "C" fn BIT_initDStream(
             0 as std::ffi::c_uint
         };
         if lastByte as std::ffi::c_int == 0 {
-            return ERROR!(GENERIC);
+            return ERROR(ZSTD_error_GENERIC);
         }
     } else {
         (*bitD).ptr = (*bitD).start;
@@ -654,7 +654,7 @@ unsafe extern "C" fn BIT_initDStream(
             0 as std::ffi::c_uint
         };
         if lastByte_0 as std::ffi::c_int == 0 {
-            return ERROR!(corruption_detected);
+            return ERROR(ZSTD_error_corruption_detected);
         }
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
