@@ -481,6 +481,12 @@ case $1 in
 
     ;;
 
+  fse-getsymbol)
+    # & in FSE_GETSYMBOL!
+    perl -i -p0e 's/\b(FSE_GETSYMBOL!\()& ?([^)]+)\)/$1addr_of!($2))/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -527,6 +533,7 @@ case $1 in
     ./convert.sh zstd-gen-record-fingerprint
     ./convert.sh weight
     ./convert.sh bt-get-all-matches
+    ./convert.sh fse-getsymbol
 
     ;;
 
