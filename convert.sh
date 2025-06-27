@@ -432,6 +432,14 @@ case $1 in
 
     ;;
 
+  bounded)
+    # fix -> in BOUNDED
+    perl -i -p0e 's/\b(BOUNDED!\(\n?.*?)\b(\w+) -> /$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(BOUNDED!\(\n?.*?)\b(\w+) -> /$1(*$2)./gm'  src/*/*.rs
+    perl -i -p0e 's/\b(BOUNDED!\(\n?.*?)\b(\w+) -> /$1(*$2)./gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -473,6 +481,7 @@ case $1 in
     ./convert.sh stack-push
     ./convert.sh prefetch-area
     ./convert.sh zstd-gen-fn
+    ./convert.sh bounded
 
     ;;
 
