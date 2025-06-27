@@ -1040,9 +1040,7 @@ unsafe extern "C" fn ss_mintrosort(
                     );
                 }
             };
-            if STACK_POP!(first, last, depth, limit) != 0 {
-                return;
-            }
+            STACK_POP!(stack, first, last, depth, limit);
         } else {
             Td = T.offset(depth as isize);
             let fresh31 = limit;
@@ -2387,9 +2385,7 @@ unsafe extern "C" fn ss_swapmerge(
                     );
                 }
             };
-            if STACK_POP!(first, middle, last, check) != 0 {
-                return;
-            }
+            STACK_POP!(stack, first, middle, last, check);
         } else if middle.offset_from(first) as std::ffi::c_long
             <= bufsize as std::ffi::c_long
         {
@@ -2436,9 +2432,7 @@ unsafe extern "C" fn ss_swapmerge(
                     );
                 }
             };
-            if STACK_POP!(first, middle, last, check) != 0 {
-                return;
-            }
+            STACK_POP!(stack, first, middle, last, check);
         } else {
             m = 0;
             len = std::cmp::min(middle - first, last - middle);
@@ -2667,9 +2661,7 @@ unsafe extern "C" fn ss_swapmerge(
                         );
                     }
                 };
-                if STACK_POP!(first, middle, last, check) != 0 {
-                    return;
-                }
+                STACK_POP!(stack, first, middle, last, check);
             }
         }
     };
@@ -3581,9 +3573,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                         };
-                        if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                            return;
-                        }
+                        STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                     }
                 } else if (1 as std::ffi::c_long)
                     < last.offset_from(b) as std::ffi::c_long
@@ -3666,9 +3656,7 @@ unsafe extern "C" fn tr_introsort(
                             );
                         }
                     };
-                    if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                        return;
-                    }
+                    STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                 }
             } else if limit == -(2 as std::ffi::c_int) {
                 ssize -= 1;
@@ -3730,9 +3718,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     }
                 };
-                if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                    return;
-                }
+                STACK_POP5!(stack, ISAd, first, last, limit, trlink);
             } else {
                 if 0 as std::ffi::c_int <= *first {
                     a = first;
@@ -3909,9 +3895,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                             };
-                            if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                                return;
-                            }
+                            STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                         }
                     }
                 } else {
@@ -3947,9 +3931,7 @@ unsafe extern "C" fn tr_introsort(
                             );
                         }
                     };
-                    if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                        return;
-                    }
+                    STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                 }
             }
         } else if last.offset_from(first) as std::ffi::c_long
@@ -4731,9 +4713,7 @@ unsafe extern "C" fn tr_introsort(
                                         );
                                     }
                                 };
-                                if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                                    return;
-                                }
+                                STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                             }
                         } else if (1 as std::ffi::c_long)
                             < last.offset_from(b) as std::ffi::c_long
@@ -4810,9 +4790,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                             };
-                            if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                                return;
-                            }
+                            STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                         }
                     }
                 } else if trbudget_check(
@@ -4860,9 +4838,7 @@ unsafe extern "C" fn tr_introsort(
                             );
                         }
                     };
-                    if STACK_POP5!(ISAd, first, last, limit, trlink) != 0 {
-                        return;
-                    }
+                    STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                 }
             }
         }
