@@ -580,7 +580,7 @@ unsafe extern "C" fn ZSTD_window_enforceMaxDist(
             *loadedDictEndPtr = 0;
         }
         if !dictMatchStatePtr.is_null() {
-            *dictMatchStatePtr = NULL as *const ZSTD_MatchState_t;
+            *dictMatchStatePtr = std::ptr::null();
         }
     }
 }
@@ -1257,18 +1257,15 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
     let dictBase = if extDict != 0 {
         (*ldmState).window.dictBase
     } else {
-        NULL as *const u8
-    };
+        std::ptr::null()};
     let dictStart = if extDict != 0 {
         dictBase.offset(lowestIndex as isize)
     } else {
-        NULL as *const u8
-    };
+        std::ptr::null()};
     let dictEnd = if extDict != 0 {
         dictBase.offset(dictLimit as isize)
     } else {
-        NULL as *const u8
-    };
+        std::ptr::null()};
     let lowPrefixPtr = base.offset(dictLimit as isize);
     let istart = src as *const u8;
     let iend = istart.offset(srcSize as isize);
@@ -1337,8 +1334,8 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
             let checksum = (*candidates.offset(n as isize)).checksum;
             let hash_0 = (*candidates.offset(n as isize)).hash;
             let bucket = (*candidates.offset(n as isize)).bucket;
-            let mut cur = 0 as *const ldmEntry_t;
-            let mut bestEntry = NULL as *const ldmEntry_t;
+            let mut cur = std::ptr::null();
+            let mut bestEntry = std::ptr::null();
             let mut newEntry = ldmEntry_t {
                 offset: 0,
                 checksum: 0,
@@ -1550,7 +1547,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
             chunkEnd as *const std::ffi::c_void,
             maxDist,
             &mut (*ldmState).loadedDictEnd,
-            NULL as *mut *const ZSTD_MatchState_t,
+            std::ptr::null_mut(),
         );
         newLeftoverSize = ZSTD_ldm_generateSequences_internal(
             ldmState,

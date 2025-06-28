@@ -260,7 +260,7 @@ pub const ZSTD_BLOCKSIZE_MAX: std::ffi::c_int = (1 as std::ffi::c_int)
     << ZSTD_BLOCKSIZELOG_MAX;
 static mut kNullRawSeqStore: RawSeqStore_t = {
     let mut init = RawSeqStore_t {
-        seq: NULL as *mut rawSeq,
+        seq: std::ptr::null_mut(),
         pos: 0,
         posInSequence: 0,
         size: 0,
@@ -1063,8 +1063,8 @@ unsafe extern "C" fn ZSTD_rescaleFreqs(
             let mut ll: std::ffi::c_uint = 0;
             let mut llstate = FSE_CState_t {
                 value: 0,
-                stateTable: 0 as *const std::ffi::c_void,
-                symbolTT: 0 as *const std::ffi::c_void,
+                stateTable: std::ptr::null(),
+                symbolTT: std::ptr::null(),
                 stateLog: 0,
             };
             FSE_initCState(
@@ -1094,8 +1094,8 @@ unsafe extern "C" fn ZSTD_rescaleFreqs(
             let mut ml: std::ffi::c_uint = 0;
             let mut mlstate = FSE_CState_t {
                 value: 0,
-                stateTable: 0 as *const std::ffi::c_void,
-                symbolTT: 0 as *const std::ffi::c_void,
+                stateTable: std::ptr::null(),
+                symbolTT: std::ptr::null(),
                 stateLog: 0,
             };
             FSE_initCState(
@@ -1125,8 +1125,8 @@ unsafe extern "C" fn ZSTD_rescaleFreqs(
             let mut of: std::ffi::c_uint = 0;
             let mut ofstate = FSE_CState_t {
                 value: 0,
-                stateTable: 0 as *const std::ffi::c_void,
-                symbolTT: 0 as *const std::ffi::c_void,
+                stateTable: std::ptr::null(),
+                symbolTT: std::ptr::null(),
                 stateLog: 0,
             };
             FSE_initCState(
@@ -1513,7 +1513,7 @@ unsafe extern "C" fn ZSTD_insertBt1(
     let dictLimit = (*ms).window.dictLimit;
     let dictEnd = dictBase.offset(dictLimit as isize);
     let prefixStart = base.offset(dictLimit as isize);
-    let mut match_0 = 0 as *const u8;
+    let mut match_0 = std::ptr::null();
     let curr = ip.offset_from(base) as std::ffi::c_long as u32;
     let btLow = if btMask >= curr {
         0_u32
@@ -1713,29 +1713,25 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
     {
         (*ms).dictMatchState
     } else {
-        NULL as *const ZSTD_MatchState_t
-    };
+        std::ptr::null()};
     let dmsCParams = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
     {
         &(*dms).cParams
     } else {
-        NULL as *const ZSTD_compressionParameters
-    };
+        std::ptr::null()};
     let dmsBase = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
     {
         (*dms).window.base
     } else {
-        NULL as *const u8
-    };
+        std::ptr::null()};
     let dmsEnd = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
     {
         (*dms).window.nextSrc
     } else {
-        NULL as *const u8
-    };
+        std::ptr::null()};
     let dmsHighLimit = if dictMode as std::ffi::c_uint
         == ZSTD_dictMatchState as std::ffi::c_int as std::ffi::c_uint
     {
@@ -1917,7 +1913,7 @@ unsafe extern "C" fn ZSTD_insertBtAndGetAllMatches(
     while nbCompares != 0 && matchIndex >= matchLow {
         let nextPtr = bt
             .offset((2_u32 * (matchIndex & btMask)) as isize);
-        let mut match_2 = 0 as *const u8;
+        let mut match_2 = std::ptr::null();
         let mut matchLength = std::cmp::min(commonLengthSmaller, commonLengthLarger);
         if dictMode as std::ffi::c_uint
             == ZSTD_noDict as std::ffi::c_int as std::ffi::c_uint
@@ -2566,7 +2562,7 @@ unsafe extern "C" fn ZSTD_compressBlock_opt_generic(
     };
     let mut optLdm = ZSTD_optLdm_t {
         seqStore: RawSeqStore_t {
-            seq: 0 as *mut rawSeq,
+            seq: std::ptr::null_mut(),
             pos: 0,
             posInSequence: 0,
             size: 0,

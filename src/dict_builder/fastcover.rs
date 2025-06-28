@@ -519,9 +519,9 @@ unsafe extern "C" fn FASTCOVER_ctx_destroy(mut ctx: *mut FASTCOVER_ctx_t) {
         return;
     }
     libc::free((*ctx).freqs as *mut std::ffi::c_void);
-    (*ctx).freqs = NULL as *mut u32;
+    (*ctx).freqs = std::ptr::null_mut();
     libc::free((*ctx).offsets as *mut std::ffi::c_void);
-    (*ctx).offsets = NULL as *mut usize;
+    (*ctx).offsets = std::ptr::null_mut();
 }
 unsafe extern "C" fn FASTCOVER_computeFrequency(
     mut freqs: *mut u32,
@@ -854,14 +854,14 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
 ) -> usize {
     let dict = dictBuffer as *mut u8;
     let mut ctx = FASTCOVER_ctx_t {
-        samples: 0 as *const u8,
-        offsets: 0 as *mut usize,
-        samplesSizes: 0 as *const usize,
+        samples: std::ptr::null(),
+        offsets: std::ptr::null_mut(),
+        samplesSizes: std::ptr::null(),
         nbSamples: 0,
         nbTrainSamples: 0,
         nbTestSamples: 0,
         nbDmers: 0,
-        freqs: 0 as *mut u32,
+        freqs: std::ptr::null_mut(),
         d: 0,
         f: 0,
         accelParams: FASTCOVER_accel_t {
@@ -1070,8 +1070,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 __spins: 0,
                 __elision: 0,
                 __list: __pthread_internal_list {
-                    __prev: 0 as *mut __pthread_internal_list,
-                    __next: 0 as *mut __pthread_internal_list,
+                    __prev: std::ptr::null_mut(),
+                    __next: std::ptr::null_mut(),
                 },
             },
         },
@@ -1092,7 +1092,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             },
         },
         liveJobs: 0,
-        dict: 0 as *mut std::ffi::c_void,
+        dict: std::ptr::null_mut(),
         dictSize: 0,
         parameters: ZDICT_cover_params_t {
             k: 0,
@@ -1110,7 +1110,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         },
         compressedSize: 0,
     };
-    let mut pool = NULL as *mut POOL_ctx;
+    let mut pool = std::ptr::null_mut();
     let mut warned: std::ffi::c_int = 0;
     let mut lastUpdateTime: clock_t = 0;
     if splitPoint <= 0.0
@@ -1155,14 +1155,14 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     d = kMinD;
     while d <= kMaxD {
         let mut ctx = FASTCOVER_ctx_t {
-            samples: 0 as *const u8,
-            offsets: 0 as *mut usize,
-            samplesSizes: 0 as *const usize,
+            samples: std::ptr::null(),
+            offsets: std::ptr::null_mut(),
+            samplesSizes: std::ptr::null(),
             nbSamples: 0,
             nbTrainSamples: 0,
             nbTestSamples: 0,
             nbDmers: 0,
-            freqs: 0 as *mut u32,
+            freqs: std::ptr::null_mut(),
             d: 0,
             f: 0,
             accelParams: FASTCOVER_accel_t {

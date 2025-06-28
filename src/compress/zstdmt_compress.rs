@@ -1203,7 +1203,7 @@ unsafe extern "C" fn ZSTDMT_expandBufferPool(
     }
     let cMem = (*srcBufPool).cMem;
     let bSize = (*srcBufPool).bufferSize;
-    let mut newBufPool = 0 as *mut ZSTDMT_bufferPool;
+    let mut newBufPool = std::ptr::null_mut();
     ZSTDMT_freeBufferPool(srcBufPool);
     newBufPool = ZSTDMT_createBufferPool(maxNbBuffers, cMem);
     if newBufPool.is_null() {
@@ -1236,7 +1236,7 @@ unsafe extern "C" fn ZSTDMT_getBuffer(mut bufPool: *mut ZSTDMT_bufferPool) -> Bu
         & bufPool -> poolMutex
     )(ZSTD_pthread_mutex_unlock!(& bufPool -> poolMutex));
     let mut buffer = buffer_s {
-        start: 0 as *mut std::ffi::c_void,
+        start: std::ptr::null_mut(),
         capacity: 0,
     };
     let start = ZSTD_customMalloc(bSize, (*bufPool).cMem);
@@ -1283,7 +1283,7 @@ unsafe extern "C" fn bufferToSeq(mut buffer: Buffer) -> RawSeqStore_t {
 }
 unsafe extern "C" fn seqToBuffer(mut seq: RawSeqStore_t) -> Buffer {
     let mut buffer = buffer_s {
-        start: 0 as *mut std::ffi::c_void,
+        start: std::ptr::null_mut(),
         capacity: 0,
     };
     buffer.start = seq.seq as *mut std::ffi::c_void;
@@ -2113,7 +2113,7 @@ unsafe extern "C" fn ZSTDMT_createCCtx_advanced_internal(
     mut cMem: ZSTD_customMem,
     mut pool: *mut ZSTD_threadPool,
 ) -> *mut ZSTDMT_CCtx {
-    let mut mtctx = 0 as *mut ZSTDMT_CCtx;
+    let mut mtctx = std::ptr::null_mut();
     let mut nbJobs = nbWorkers.wrapping_add(2);
     let mut initError: std::ffi::c_int = 0;
     if nbWorkers < 1 {
@@ -2925,11 +2925,11 @@ unsafe extern "C" fn ZSTDMT_doesOverlapWindow(
     mut window: ZSTD_window_t,
 ) -> std::ffi::c_int {
     let mut extDict = Range {
-        start: 0 as *const std::ffi::c_void,
+        start: std::ptr::null(),
         size: 0,
     };
     let mut prefix = Range {
-        start: 0 as *const std::ffi::c_void,
+        start: std::ptr::null(),
         size: 0,
     };
     extDict
@@ -2973,7 +2973,7 @@ unsafe extern "C" fn ZSTDMT_tryGetInputRange(
     let spaceLeft = ((*mtctx).roundBuff.capacity).wrapping_sub((*mtctx).roundBuff.pos);
     let spaceNeeded = (*mtctx).targetSectionSize;
     let mut buffer = buffer_s {
-        start: 0 as *mut std::ffi::c_void,
+        start: std::ptr::null_mut(),
         capacity: 0,
     };
     if spaceLeft < spaceNeeded {
@@ -3010,7 +3010,7 @@ unsafe extern "C" fn findSynchronizationPoint(
     let hitMask = (*mtctx).rsync.hitMask;
     let mut syncPoint = SyncPoint { toLoad: 0, flush: 0 };
     let mut hash: u64 = 0;
-    let mut prev = 0 as *const u8;
+    let mut prev = std::ptr::null();
     let mut pos: usize = 0;
     syncPoint
         .toLoad = std::cmp::min(

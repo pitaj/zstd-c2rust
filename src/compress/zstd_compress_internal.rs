@@ -431,7 +431,7 @@ pub struct RawSeqStore_t {
 }
 
 static kNullRawSeqStore: RawSeqStore_t = RawSeqStore_t {
-    seq: NULL as *mut rawSeq,
+    seq: std::ptr::null_mut(),
     pos: 0,
     posInSequence: 0,
     size: 0,
@@ -2020,7 +2020,7 @@ pub unsafe fn ZSTD_window_enforceMaxDist(
             *loadedDictEndPtr = 0;
         }
         if !dictMatchStatePtr.is_null() {
-            *dictMatchStatePtr = NULL as *const ZSTD_MatchState_t;
+            *dictMatchStatePtr = std::ptr::null();
         }
     }
 }
@@ -2058,7 +2058,7 @@ pub unsafe fn ZSTD_checkDictValidity(
              */
         DEBUGLOG!(6, "invalidating dictionary for current block (distance > windowSize)");
         *loadedDictEndPtr = 0;
-        *dictMatchStatePtr = NULL as *const ZSTD_MatchState_t;
+        *dictMatchStatePtr = std::ptr::null();
     } else {
         if *loadedDictEndPtr != 0 {
             DEBUGLOG!(6, "dictionary considered valid for current block");
@@ -2909,9 +2909,9 @@ pub unsafe extern "C" fn ZSTD_CCtx_trace(
             dictionarySize: 0,
             uncompressedSize: 0,
             compressedSize: 0,
-            params: 0 as *const ZSTD_CCtx_params_s,
-            cctx: 0 as *const ZSTD_CCtx_s,
-            dctx: 0 as *const ZSTD_DCtx_s,
+            params: std::ptr::null(),
+            cctx: std::ptr::null(),
+            dctx: std::ptr::null(),
         };
         libc::memset(
             &mut trace as *mut ZSTD_Trace as *mut std::ffi::c_void,

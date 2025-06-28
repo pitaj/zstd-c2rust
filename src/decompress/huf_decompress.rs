@@ -891,9 +891,9 @@ unsafe extern "C" fn HUF_decompress1X1_usingDTable_internal_body(
     let mut bitD = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let dtd = HUF_getDTableDesc(DTable);
     let dtLog = dtd.tableLog as u32;
@@ -930,30 +930,30 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
     let mut bitD1 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let mut bitD2 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let mut bitD3 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let mut bitD4 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let length1 = MEM_readLE16(istart as *const std::ffi::c_void) as usize;
     let length2 = MEM_readLE16(
@@ -1115,8 +1115,8 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
     mut args: *mut HUF_DecompressFastArgs,
 ) {
     let mut bits: [u64; 4] = [0; 4];
-    let mut ip: [*const u8; 4] = [0 as *const u8; 4];
-    let mut op: [*mut u8; 4] = [0 as *mut u8; 4];
+    let mut ip: [*const u8; 4] = [std::ptr::null(); 4];
+    let mut op: [*mut u8; 4] = [std::ptr::null_mut(); 4];
     let dtable = (*args).dt as *const u16;
     let oend = (*args).oend;
     let ilowest = (*args).ilowest;
@@ -1136,7 +1136,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast_c_loop(
         ::core::mem::size_of::<[*mut u8; 4]>() as usize,
     );
     's_33: loop {
-        let mut olimit = 0 as *mut u8;
+        let mut olimit = std::ptr::null_mut();
         let mut stream: std::ffi::c_int = 0;
         stream = 0;
         while stream < 4 {
@@ -1408,13 +1408,13 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
     let ilowest = cSrc as *const u8;
     let oend = ZSTD_maybeNullPtrAdd(dst, dstSize as ptrdiff_t) as *mut u8;
     let mut args = HUF_DecompressFastArgs {
-        ip: [0 as *const u8; 4],
-        op: [0 as *mut u8; 4],
+        ip: [std::ptr::null(); 4],
+        op: [std::ptr::null_mut(); 4],
         bits: [0; 4],
-        dt: 0 as *const std::ffi::c_void,
-        ilowest: 0 as *const u8,
-        oend: 0 as *mut u8,
-        iend: [0 as *const u8; 4],
+        dt: std::ptr::null(),
+        ilowest: std::ptr::null(),
+        oend: std::ptr::null_mut(),
+        iend: [std::ptr::null(); 4],
     };
     let ret = HUF_DecompressFastArgs_init(
         &mut args,
@@ -1438,9 +1438,9 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
         let mut bit = BIT_DStream_t {
             bitContainer: 0,
             bitsConsumed: 0,
-            ptr: 0 as *const std::ffi::c_char,
-            start: 0 as *const std::ffi::c_char,
-            limitPtr: 0 as *const std::ffi::c_char,
+            ptr: std::ptr::null(),
+            start: std::ptr::null(),
+            limitPtr: std::ptr::null(),
         };
         if segmentSize <= oend.offset_from(segmentEnd) as std::ffi::c_long as usize {
             segmentEnd = segmentEnd.offset(segmentSize as isize);
@@ -1675,7 +1675,7 @@ unsafe extern "C" fn HUF_fillDTableX2ForWeight(
 ) {
     let length = (1 as std::ffi::c_uint)
         << (tableLog.wrapping_sub(nbBits) & 0x1f as std::ffi::c_int as u32);
-    let mut ptr = 0 as *const sortedSymbol_t;
+    let mut ptr = std::ptr::null();
     match length {
         1 => {
             ptr = begin;
@@ -2003,7 +2003,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     let mut dtPtr = DTable.offset(1)
         as *mut std::ffi::c_void;
     let dt = dtPtr as *mut HUF_DEltX2;
-    let mut rankStart = 0 as *mut u32;
+    let mut rankStart = std::ptr::null_mut();
     let wksp = workSpace as *mut HUF_ReadDTableX2_Workspace;
     if ::core::mem::size_of::<HUF_ReadDTableX2_Workspace>()
         > wkspSize
@@ -2254,9 +2254,9 @@ unsafe extern "C" fn HUF_decompress1X2_usingDTable_internal_body(
     let mut bitD = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let _var_err__ = BIT_initDStream(&mut bitD, cSrc, cSrcSize);
     if ERR_isError(_var_err__) {
@@ -2303,30 +2303,30 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
     let mut bitD1 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let mut bitD2 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let mut bitD3 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let mut bitD4 = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let length1 = MEM_readLE16(istart as *const std::ffi::c_void) as usize;
     let length2 = MEM_readLE16(
@@ -2488,9 +2488,9 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
     mut args: *mut HUF_DecompressFastArgs,
 ) {
     let mut bits: [u64; 4] = [0; 4];
-    let mut ip: [*const u8; 4] = [0 as *const u8; 4];
-    let mut op: [*mut u8; 4] = [0 as *mut u8; 4];
-    let mut oend: [*mut u8; 4] = [0 as *mut u8; 4];
+    let mut ip: [*const u8; 4] = [std::ptr::null(); 4];
+    let mut op: [*mut u8; 4] = [std::ptr::null_mut(); 4];
+    let mut oend: [*mut u8; 4] = [std::ptr::null_mut(); 4];
     let dtable = (*args).dt as *const HUF_DEltX2;
     let ilowest = (*args).ilowest;
     libc::memcpy(
@@ -2513,7 +2513,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast_c_loop(
     oend[2] = op[3];
     oend[3] = (*args).oend;
     's_45: loop {
-        let mut olimit = 0 as *mut u8;
+        let mut olimit = std::ptr::null_mut();
         let mut stream: std::ffi::c_int = 0;
         stream = 0;
         while stream < 4 {
@@ -2969,13 +2969,13 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
     let ilowest = cSrc as *const u8;
     let oend = ZSTD_maybeNullPtrAdd(dst, dstSize as ptrdiff_t) as *mut u8;
     let mut args = HUF_DecompressFastArgs {
-        ip: [0 as *const u8; 4],
-        op: [0 as *mut u8; 4],
+        ip: [std::ptr::null(); 4],
+        op: [std::ptr::null_mut(); 4],
         bits: [0; 4],
-        dt: 0 as *const std::ffi::c_void,
-        ilowest: 0 as *const u8,
-        oend: 0 as *mut u8,
-        iend: [0 as *const u8; 4],
+        dt: std::ptr::null(),
+        ilowest: std::ptr::null(),
+        oend: std::ptr::null_mut(),
+        iend: [std::ptr::null(); 4],
     };
     let ret = HUF_DecompressFastArgs_init(
         &mut args,
@@ -2999,9 +2999,9 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
         let mut bit = BIT_DStream_t {
             bitContainer: 0,
             bitsConsumed: 0,
-            ptr: 0 as *const std::ffi::c_char,
-            start: 0 as *const std::ffi::c_char,
-            limitPtr: 0 as *const std::ffi::c_char,
+            ptr: std::ptr::null(),
+            start: std::ptr::null(),
+            limitPtr: std::ptr::null(),
         };
         if segmentSize <= oend.offset_from(segmentEnd) as std::ffi::c_long as usize {
             segmentEnd = segmentEnd.offset(segmentSize as isize);

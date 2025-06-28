@@ -662,18 +662,18 @@ unsafe extern "C" fn ZSTD_compressBlock_doubleFast_noDict_generic(
     let mut offset: u32 = 0;
     let mut curr: u32 = 0;
     let kStepIncr = ((1 as std::ffi::c_int) << kSearchStrength) as usize;
-    let mut nextStep = 0 as *const u8;
+    let mut nextStep = std::ptr::null();
     let mut step: usize = 0;
     let mut hl0: usize = 0;
     let mut hl1: usize = 0;
     let mut idxl0: u32 = 0;
     let mut idxl1: u32 = 0;
-    let mut matchl0 = 0 as *const u8;
-    let mut matchs0 = 0 as *const u8;
-    let mut matchl1 = 0 as *const u8;
-    let mut matchs0_safe = 0 as *const u8;
+    let mut matchl0 = std::ptr::null();
+    let mut matchs0 = std::ptr::null();
+    let mut matchl1 = std::ptr::null();
+    let mut matchs0_safe = std::ptr::null();
     let mut ip = istart;
-    let mut ip1 = 0 as *const u8;
+    let mut ip1 = std::ptr::null();
     let dummy: [u8; 10] = [
         0x12 as std::ffi::c_int as u8,
         0x34 as std::ffi::c_int as u8,

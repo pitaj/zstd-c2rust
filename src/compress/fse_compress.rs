@@ -931,20 +931,20 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
     let mut bitC = BIT_CStream_t {
         bitContainer: 0,
         bitPos: 0,
-        startPtr: 0 as *mut std::ffi::c_char,
-        ptr: 0 as *mut std::ffi::c_char,
-        endPtr: 0 as *mut std::ffi::c_char,
+        startPtr: std::ptr::null_mut(),
+        ptr: std::ptr::null_mut(),
+        endPtr: std::ptr::null_mut(),
     };
     let mut CState1 = FSE_CState_t {
         value: 0,
-        stateTable: 0 as *const std::ffi::c_void,
-        symbolTT: 0 as *const std::ffi::c_void,
+        stateTable: std::ptr::null(),
+        symbolTT: std::ptr::null(),
         stateLog: 0,
     };
     let mut CState2 = FSE_CState_t {
         value: 0,
-        stateTable: 0 as *const std::ffi::c_void,
-        symbolTT: 0 as *const std::ffi::c_void,
+        stateTable: std::ptr::null(),
+        symbolTT: std::ptr::null(),
         stateLog: 0,
     };
     if srcSize <= 2 {

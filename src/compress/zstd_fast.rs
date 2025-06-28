@@ -679,9 +679,9 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
     let ilimit = iend.offset(-(HASH_READ_SIZE as isize));
     let mut anchor = istart;
     let mut ip0 = istart;
-    let mut ip1 = 0 as *const u8;
-    let mut ip2 = 0 as *const u8;
-    let mut ip3 = 0 as *const u8;
+    let mut ip1 = std::ptr::null();
+    let mut ip2 = std::ptr::null();
+    let mut ip3 = std::ptr::null();
     let mut current0: u32 = 0;
     let mut rep_offset1 = *rep.offset(0);
     let mut rep_offset2 = *rep.offset(1);
@@ -691,10 +691,10 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_noDict_generic(
     let mut hash1: usize = 0;
     let mut matchIdx: u32 = 0;
     let mut offcode: u32 = 0;
-    let mut match0 = 0 as *const u8;
+    let mut match0 = std::ptr::null();
     let mut mLength: usize = 0;
     let mut step: usize = 0;
-    let mut nextStep = 0 as *const u8;
+    let mut nextStep = std::ptr::null();
     let kStepIncr = ((1 as std::ffi::c_int) << kSearchStrength - 1 as std::ffi::c_int)
         as usize;
     let matchFound: ZSTD_match4Found = if useCmov != 0 {
@@ -1429,20 +1429,20 @@ unsafe extern "C" fn ZSTD_compressBlock_fast_extDict_generic(
     let mut offsetSaved1: u32 = 0;
     let mut offsetSaved2: u32 = 0;
     let mut ip0 = istart;
-    let mut ip1 = 0 as *const u8;
-    let mut ip2 = 0 as *const u8;
-    let mut ip3 = 0 as *const u8;
+    let mut ip1 = std::ptr::null();
+    let mut ip2 = std::ptr::null();
+    let mut ip3 = std::ptr::null();
     let mut current0: u32 = 0;
     let mut hash0: usize = 0;
     let mut hash1: usize = 0;
     let mut idx: u32 = 0;
-    let mut idxBase = 0 as *const u8;
+    let mut idxBase = std::ptr::null();
     let mut offcode: u32 = 0;
-    let mut match0 = 0 as *const u8;
+    let mut match0 = std::ptr::null();
     let mut mLength: usize = 0;
-    let mut matchEnd = 0 as *const u8;
+    let mut matchEnd = std::ptr::null();
     let mut step: usize = 0;
-    let mut nextStep = 0 as *const u8;
+    let mut nextStep = std::ptr::null();
     let kStepIncr = ((1 as std::ffi::c_int) << kSearchStrength - 1 as std::ffi::c_int)
         as usize;
     if prefixStartIndex == dictStartIndex {

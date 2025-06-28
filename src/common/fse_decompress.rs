@@ -566,17 +566,17 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
     let mut bitD = BIT_DStream_t {
         bitContainer: 0,
         bitsConsumed: 0,
-        ptr: 0 as *const std::ffi::c_char,
-        start: 0 as *const std::ffi::c_char,
-        limitPtr: 0 as *const std::ffi::c_char,
+        ptr: std::ptr::null(),
+        start: std::ptr::null(),
+        limitPtr: std::ptr::null(),
     };
     let mut state1 = FSE_DState_t {
         state: 0,
-        table: 0 as *const std::ffi::c_void,
+        table: std::ptr::null(),
     };
     let mut state2 = FSE_DState_t {
         state: 0,
-        table: 0 as *const std::ffi::c_void,
+        table: std::ptr::null(),
     };
     let _var_err__ = BIT_initDStream(&mut bitD, cSrc, cSrcSize);
     if ERR_isError(_var_err__) {

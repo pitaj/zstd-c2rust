@@ -342,7 +342,7 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
         == ZSTD_dlm_byRef as std::ffi::c_int as std::ffi::c_uint || dict.is_null()
         || dictSize == 0
     {
-        (*ddict).dictBuffer = NULL as *mut std::ffi::c_void;
+        (*ddict).dictBuffer = std::ptr::null_mut();
         (*ddict).dictContent = dict;
         if dict.is_null() {
             dictSize = 0;
@@ -376,14 +376,14 @@ pub unsafe extern "C" fn ZSTD_createDDict_advanced(
     if (customMem.customAlloc).is_none() as std::ffi::c_int
         ^ (customMem.customFree).is_none() as std::ffi::c_int != 0
     {
-        return NULL as *mut ZSTD_DDict;
+        return std::ptr::null_mut();
     }
     let ddict = ZSTD_customMalloc(
         ::core::mem::size_of::<ZSTD_DDict>(),
         customMem,
     ) as *mut ZSTD_DDict;
     if ddict.is_null() {
-        return NULL as *mut ZSTD_DDict;
+        return std::ptr::null_mut();
     }
     (*ddict).cMem = customMem;
     let initResult = ZSTD_initDDict_internal(
@@ -395,7 +395,7 @@ pub unsafe extern "C" fn ZSTD_createDDict_advanced(
     );
     if ERR_isError(initResult) {
         ZSTD_freeDDict(ddict);
-        return NULL as *mut ZSTD_DDict;
+        return std::ptr::null_mut();
     }
     return ddict;
 }
@@ -414,7 +414,7 @@ pub unsafe extern "C" fn ZSTD_createDDict(
                 libc::intptr_t,
                 ZSTD_freeFunction,
             >(NULL as libc::intptr_t),
-            opaque: NULL as *mut std::ffi::c_void,
+            opaque: std::ptr::null_mut(),
         };
         init
     };
@@ -441,7 +441,7 @@ pub unsafe extern "C" fn ZSTD_createDDict_byReference(
                 libc::intptr_t,
                 ZSTD_freeFunction,
             >(NULL as libc::intptr_t),
-            opaque: NULL as *mut std::ffi::c_void,
+            opaque: std::ptr::null_mut(),
         };
         init
     };
@@ -474,10 +474,10 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
         );
     let ddict = sBuffer as *mut ZSTD_DDict;
     if sBuffer as usize & 7_usize != 0 {
-        return NULL as *const ZSTD_DDict;
+        return std::ptr::null();
     }
     if sBufferSize < neededSpace {
-        return NULL as *const ZSTD_DDict;
+        return std::ptr::null();
     }
     if dictLoadMethod as std::ffi::c_uint
         == ZSTD_dlm_byCopy as std::ffi::c_int as std::ffi::c_uint
@@ -489,7 +489,7 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
         ZSTD_initDDict_internal(ddict, dict, dictSize, ZSTD_dlm_byRef, dictContentType),
     ) != 0
     {
-        return NULL as *const ZSTD_DDict;
+        return std::ptr::null();
     }
     return ddict;
 }

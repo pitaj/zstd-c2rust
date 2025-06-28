@@ -548,7 +548,7 @@ unsafe extern "C" fn ZSTD_insertDUBT1(
     };
     let dictEnd = dictBase.offset(dictLimit as isize);
     let prefixStart = base.offset(dictLimit as isize);
-    let mut match_0 = 0 as *const u8;
+    let mut match_0 = std::ptr::null();
     let mut smallerPtr = bt
         .offset((2_u32 * (curr & btMask)) as isize);
     let mut largerPtr = smallerPtr.offset(1);
@@ -826,7 +826,7 @@ unsafe extern "C" fn ZSTD_DUBT_findBestMatch(
         let nextPtr = bt
             .offset((2_u32 * (matchIndex & btMask)) as isize);
         let mut matchLength = std::cmp::min(commonLengthSmaller, commonLengthLarger);
-        let mut match_0 = 0 as *const u8;
+        let mut match_0 = std::ptr::null();
         if dictMode as std::ffi::c_uint
             != ZSTD_extDict as std::ffi::c_int as std::ffi::c_uint
             || (matchIndex as usize).wrapping_add(matchLength) >= dictLimit as usize
@@ -1144,7 +1144,7 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_search(
     ddsAttempt = 0;
     while ddsAttempt < bucketLimit {
         let mut currentMl: usize = 0;
-        let mut match_0 = 0 as *const u8;
+        let mut match_0 = std::ptr::null();
         matchIndex = *((*dms).hashTable)
             .offset(ddsIdx.wrapping_add(ddsAttempt as usize) as isize);
         match_0 = ddsBase.offset(matchIndex as isize);
@@ -1198,7 +1198,7 @@ unsafe extern "C" fn ZSTD_dedicatedDictSearch_lazy_search(
     chainAttempt = 0;
     while chainAttempt < chainLimit {
         let mut currentMl_0: usize = 0;
-        let mut match_1 = 0 as *const u8;
+        let mut match_1 = std::ptr::null();
         matchIndex = *((*dms).chainTable).offset(chainIndex_0 as isize);
         match_1 = ddsBase.offset(matchIndex as isize);
         if MEM_read32(match_1 as *const std::ffi::c_void)
@@ -1755,8 +1755,8 @@ unsafe extern "C" fn ZSTD_RowFindBestMatch(
     let mut ddsIdx: usize = 0;
     let mut ddsExtraAttempts: u32 = 0;
     let mut dmsTag: u32 = 0;
-    let mut dmsRow = NULL as *mut u32;
-    let mut dmsTagRow = NULL as *mut u8;
+    let mut dmsRow = std::ptr::null_mut();
+    let mut dmsTagRow = std::ptr::null_mut();
     if dictMode as std::ffi::c_uint
         == ZSTD_dedicatedDictSearch as std::ffi::c_int as std::ffi::c_uint
     {
@@ -3594,13 +3594,12 @@ unsafe extern "C" fn ZSTD_compressBlock_lazy_generic(
     } else {
         0_u32
     };
-    let dictBase = if isDxS != 0 { (*dms).window.base } else { NULL as *const u8 };
+    let dictBase = if isDxS != 0 { (*dms).window.base } else { std::ptr::null()};
     let dictLowest = if isDxS != 0 {
         dictBase.offset(dictLowestIndex as isize)
     } else {
-        NULL as *const u8
-    };
-    let dictEnd = if isDxS != 0 { (*dms).window.nextSrc } else { NULL as *const u8 };
+        std::ptr::null()};
+    let dictEnd = if isDxS != 0 { (*dms).window.nextSrc } else { std::ptr::null()};
     let dictIndexDelta = if isDxS != 0 {
         prefixLowestIndex
             .wrapping_sub(dictEnd.offset_from(dictBase) as std::ffi::c_long as u32)

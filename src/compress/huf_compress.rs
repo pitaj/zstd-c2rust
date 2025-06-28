@@ -175,7 +175,7 @@ unsafe extern "C" fn HUF_alignUpWorkspace(
         return aligned as *mut std::ffi::c_void;
     } else {
         *workspaceSizePtr = 0;
-        return NULL as *mut std::ffi::c_void;
+        return std::ptr::null_mut();
     };
 }
 pub const MAX_FSE_TABLELOG_FOR_HUFF_HEADER: std::ffi::c_int = 6;
@@ -1362,9 +1362,9 @@ unsafe extern "C" fn HUF_compress1X_usingCTable_internal_body(
     let mut bitC = HUF_CStream_t {
         bitContainer: [0; 2],
         bitPos: [0; 2],
-        startPtr: 0 as *mut u8,
-        ptr: 0 as *mut u8,
-        endPtr: 0 as *mut u8,
+        startPtr: std::ptr::null_mut(),
+        ptr: std::ptr::null_mut(),
+        endPtr: std::ptr::null_mut(),
     };
     if dstSize < 8 {
         return 0;

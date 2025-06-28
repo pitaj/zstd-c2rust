@@ -398,7 +398,7 @@ unsafe extern "C" fn COVER_map_destroy(mut map: *mut COVER_map_t) {
     if !((*map).data).is_null() {
         libc::free((*map).data as *mut std::ffi::c_void);
     }
-    (*map).data = NULL as *mut COVER_map_pair_t;
+    (*map).data = std::ptr::null_mut();
     (*map).size = 0;
 }
 #[no_mangle]
@@ -711,19 +711,19 @@ unsafe extern "C" fn COVER_ctx_destroy(mut ctx: *mut COVER_ctx_t) {
     }
     if !((*ctx).suffix).is_null() {
         libc::free((*ctx).suffix as *mut std::ffi::c_void);
-        (*ctx).suffix = NULL as *mut u32;
+        (*ctx).suffix = std::ptr::null_mut();
     }
     if !((*ctx).freqs).is_null() {
         libc::free((*ctx).freqs as *mut std::ffi::c_void);
-        (*ctx).freqs = NULL as *mut u32;
+        (*ctx).freqs = std::ptr::null_mut();
     }
     if !((*ctx).dmerAt).is_null() {
         libc::free((*ctx).dmerAt as *mut std::ffi::c_void);
-        (*ctx).dmerAt = NULL as *mut u32;
+        (*ctx).dmerAt = std::ptr::null_mut();
     }
     if !((*ctx).offsets).is_null() {
         libc::free((*ctx).offsets as *mut std::ffi::c_void);
-        (*ctx).offsets = NULL as *mut usize;
+        (*ctx).offsets = std::ptr::null_mut();
     }
 }
 unsafe extern "C" fn COVER_ctx_init(
@@ -851,7 +851,7 @@ unsafe extern "C" fn COVER_ctx_init(
         COVER_ctx_destroy(ctx);
         return ERROR(ZSTD_error_memory_allocation);
     }
-    (*ctx).freqs = NULL as *mut u32;
+    (*ctx).freqs = std::ptr::null_mut();
     (*ctx).d = d;
     let mut i: u32 = 0;
     *((*ctx).offsets)
@@ -914,7 +914,7 @@ unsafe extern "C" fn COVER_ctx_init(
         ),
     );
     (*ctx).freqs = (*ctx).suffix;
-    (*ctx).suffix = NULL as *mut u32;
+    (*ctx).suffix = std::ptr::null_mut();
     return 0;
 }
 #[no_mangle]
@@ -1057,21 +1057,21 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
 ) -> usize {
     let dict = dictBuffer as *mut u8;
     let mut ctx = COVER_ctx_t {
-        samples: 0 as *const u8,
-        offsets: 0 as *mut usize,
-        samplesSizes: 0 as *const usize,
+        samples: std::ptr::null(),
+        offsets: std::ptr::null_mut(),
+        samplesSizes: std::ptr::null(),
         nbSamples: 0,
         nbTrainSamples: 0,
         nbTestSamples: 0,
-        suffix: 0 as *mut u32,
+        suffix: std::ptr::null_mut(),
         suffixSize: 0,
-        freqs: 0 as *mut u32,
-        dmerAt: 0 as *mut u32,
+        freqs: std::ptr::null_mut(),
+        dmerAt: std::ptr::null_mut(),
         d: 0,
         displayLevel: 0,
     };
     let mut activeDmers = COVER_map_s {
-        data: 0 as *mut COVER_map_pair_t,
+        data: std::ptr::null_mut(),
         sizeLog: 0,
         size: 0,
         sizeMask: 0,
@@ -1152,9 +1152,9 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
     mut dictBufferCapacity: usize,
 ) -> usize {
     let mut totalCompressedSize = ERROR(ZSTD_error_GENERIC);
-    let mut cctx = 0 as *mut ZSTD_CCtx;
-    let mut cdict = 0 as *mut ZSTD_CDict;
-    let mut dst = 0 as *mut std::ffi::c_void;
+    let mut cctx = std::ptr::null_mut();
+    let mut cdict = std::ptr::null_mut();
+    let mut dst = std::ptr::null_mut();
     let mut dstCapacity: usize = 0;
     let mut i: usize = 0;
     let mut maxSampleSize: usize = 0;
@@ -1216,7 +1216,7 @@ pub unsafe extern "C" fn COVER_best_init(mut best: *mut COVER_best_t) {
         return;
     }
     (*best).liveJobs = 0;
-    (*best).dict = NULL as *mut std::ffi::c_void;
+    (*best).dict = std::ptr::null_mut();
     (*best).dictSize = 0;
     (*best).compressedSize = -1;
     libc::memset(
@@ -1328,7 +1328,7 @@ unsafe extern "C" fn setDictSelection(
     mut csz: usize,
 ) -> COVER_dictSelection_t {
     let mut ds = COVER_dictSelection {
-        dictContent: 0 as *mut u8,
+        dictContent: std::ptr::null_mut(),
         dictSize: 0,
         totalCompressedSize: 0,
     };
@@ -1341,7 +1341,7 @@ unsafe extern "C" fn setDictSelection(
 pub unsafe extern "C" fn COVER_dictSelectionError(
     mut error: usize,
 ) -> COVER_dictSelection_t {
-    return setDictSelection(NULL as *mut u8, 0, error);
+    return setDictSelection(std::ptr::null_mut(), 0, error);
 }
 #[no_mangle]
 pub unsafe extern "C" fn COVER_dictSelectionIsError(
@@ -1483,7 +1483,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
     let mut dictBufferCapacity = (*data).dictBufferCapacity;
     let mut totalCompressedSize = ERROR(ZSTD_error_GENERIC);
     let mut activeDmers = COVER_map_s {
-        data: 0 as *mut COVER_map_pair_t,
+        data: std::ptr::null_mut(),
         sizeLog: 0,
         size: 0,
         sizeMask: 0,
@@ -1611,8 +1611,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
                 __spins: 0,
                 __elision: 0,
                 __list: __pthread_internal_list {
-                    __prev: 0 as *mut __pthread_internal_list,
-                    __next: 0 as *mut __pthread_internal_list,
+                    __prev: std::ptr::null_mut(),
+                    __next: std::ptr::null_mut(),
                 },
             },
         },
@@ -1633,7 +1633,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             },
         },
         liveJobs: 0,
-        dict: 0 as *mut std::ffi::c_void,
+        dict: std::ptr::null_mut(),
         dictSize: 0,
         parameters: ZDICT_cover_params_t {
             k: 0,
@@ -1651,7 +1651,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
         },
         compressedSize: 0,
     };
-    let mut pool = NULL as *mut POOL_ctx;
+    let mut pool = std::ptr::null_mut();
     let mut warned: std::ffi::c_int = 0;
     let mut lastUpdateTime: clock_t = 0;
     if splitPoint <= 0.0
@@ -1683,16 +1683,16 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     d = kMinD;
     while d <= kMaxD {
         let mut ctx = COVER_ctx_t {
-            samples: 0 as *const u8,
-            offsets: 0 as *mut usize,
-            samplesSizes: 0 as *const usize,
+            samples: std::ptr::null(),
+            offsets: std::ptr::null_mut(),
+            samplesSizes: std::ptr::null(),
             nbSamples: 0,
             nbTrainSamples: 0,
             nbTestSamples: 0,
-            suffix: 0 as *mut u32,
+            suffix: std::ptr::null_mut(),
             suffixSize: 0,
-            freqs: 0 as *mut u32,
-            dmerAt: 0 as *mut u32,
+            freqs: std::ptr::null_mut(),
+            dmerAt: std::ptr::null_mut(),
             d: 0,
             displayLevel: 0,
         };

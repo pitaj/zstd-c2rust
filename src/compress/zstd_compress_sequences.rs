@@ -738,8 +738,8 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
     let mut s: std::ffi::c_uint = 0;
     let mut cstate = FSE_CState_t {
         value: 0,
-        stateTable: 0 as *const std::ffi::c_void,
-        symbolTT: 0 as *const std::ffi::c_void,
+        stateTable: std::ptr::null(),
+        symbolTT: std::ptr::null(),
         stateLog: 0,
     };
     FSE_initCState(&mut cstate, ctable);
@@ -972,26 +972,26 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
     let mut blockStream = BIT_CStream_t {
         bitContainer: 0,
         bitPos: 0,
-        startPtr: 0 as *mut std::ffi::c_char,
-        ptr: 0 as *mut std::ffi::c_char,
-        endPtr: 0 as *mut std::ffi::c_char,
+        startPtr: std::ptr::null_mut(),
+        ptr: std::ptr::null_mut(),
+        endPtr: std::ptr::null_mut(),
     };
     let mut stateMatchLength = FSE_CState_t {
         value: 0,
-        stateTable: 0 as *const std::ffi::c_void,
-        symbolTT: 0 as *const std::ffi::c_void,
+        stateTable: std::ptr::null(),
+        symbolTT: std::ptr::null(),
         stateLog: 0,
     };
     let mut stateOffsetBits = FSE_CState_t {
         value: 0,
-        stateTable: 0 as *const std::ffi::c_void,
-        symbolTT: 0 as *const std::ffi::c_void,
+        stateTable: std::ptr::null(),
+        symbolTT: std::ptr::null(),
         stateLog: 0,
     };
     let mut stateLitLength = FSE_CState_t {
         value: 0,
-        stateTable: 0 as *const std::ffi::c_void,
-        symbolTT: 0 as *const std::ffi::c_void,
+        stateTable: std::ptr::null(),
+        symbolTT: std::ptr::null(),
         stateLog: 0,
     };
     if ERR_isError(BIT_initCStream(&mut blockStream, dst, dstCapacity)) != 0 {

@@ -1147,7 +1147,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstCapacity as isize);
     let mut op = ostart;
-    let mut seqHead = 0 as *mut u8;
+    let mut seqHead = std::ptr::null_mut();
     *entropyWritten = 0;
     if (oend.offset_from(op) as std::ffi::c_long)
         < (3 as std::ffi::c_int + 1 as std::ffi::c_int) as std::ffi::c_long
@@ -1426,7 +1426,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_sequences(
                 MaxOff as std::ffi::c_uint,
                 nbSeq,
                 ((*fseTables).offcodeCTable).as_ptr(),
-                NULL as *const u8,
+                std::ptr::null(),
                 OF_defaultNorm.as_ptr(),
                 OF_defaultNormLog,
                 DefaultMaxOff as u32,
@@ -1813,7 +1813,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
         FORWARD_IF_ERROR!(cSize, "ZSTD_noCompressBlock failed");
         op = op.offset(cSize_1 as isize);
         if sp < send {
-            let mut seq = 0 as *const SeqDef;
+            let mut seq = std::ptr::null();
             let mut rep = repcodes_s { rep: [0; 3] };
             libc::memcpy(
                 &mut rep as *mut Repcodes_t as *mut std::ffi::c_void,

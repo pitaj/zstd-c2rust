@@ -4068,21 +4068,21 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             DStream: BIT_DStream_t {
                 bitContainer: 0,
                 bitsConsumed: 0,
-                ptr: 0 as *const std::ffi::c_char,
-                start: 0 as *const std::ffi::c_char,
-                limitPtr: 0 as *const std::ffi::c_char,
+                ptr: std::ptr::null(),
+                start: std::ptr::null(),
+                limitPtr: std::ptr::null(),
             },
             stateLL: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             stateOffb: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             stateML: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             prevOffset: [0; 3],
         };
@@ -4316,21 +4316,21 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
             DStream: BIT_DStream_t {
                 bitContainer: 0,
                 bitsConsumed: 0,
-                ptr: 0 as *const std::ffi::c_char,
-                start: 0 as *const std::ffi::c_char,
-                limitPtr: 0 as *const std::ffi::c_char,
+                ptr: std::ptr::null(),
+                start: std::ptr::null(),
+                limitPtr: std::ptr::null(),
             },
             stateLL: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             stateOffb: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             stateML: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             prevOffset: [0; 3],
         };
@@ -4497,21 +4497,21 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             DStream: BIT_DStream_t {
                 bitContainer: 0,
                 bitsConsumed: 0,
-                ptr: 0 as *const std::ffi::c_char,
-                start: 0 as *const std::ffi::c_char,
-                limitPtr: 0 as *const std::ffi::c_char,
+                ptr: std::ptr::null(),
+                start: std::ptr::null(),
+                limitPtr: std::ptr::null(),
             },
             stateLL: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             stateOffb: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             stateML: ZSTD_fseState {
                 state: 0,
-                table: 0 as *const ZSTD_seqSymbol,
+                table: std::ptr::null(),
             },
             prevOffset: [0; 3],
         };

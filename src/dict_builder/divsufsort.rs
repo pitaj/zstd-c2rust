@@ -621,10 +621,10 @@ unsafe extern "C" fn ss_compare(
     mut p2: *const std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) -> std::ffi::c_int {
-    let mut U1 = 0 as *const std::ffi::c_uchar;
-    let mut U2 = 0 as *const std::ffi::c_uchar;
-    let mut U1n = 0 as *const std::ffi::c_uchar;
-    let mut U2n = 0 as *const std::ffi::c_uchar;
+    let mut U1 = std::ptr::null();
+    let mut U2 = std::ptr::null();
+    let mut U1n = std::ptr::null();
+    let mut U2n = std::ptr::null();
     U1 = T.offset(depth as isize).offset(*p1 as isize);
     U2 = T.offset(depth as isize).offset(*p2 as isize);
     U1n = T
@@ -658,8 +658,8 @@ unsafe extern "C" fn ss_insertionsort(
     mut last: *mut std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) {
-    let mut i = 0 as *mut std::ffi::c_int;
-    let mut j = 0 as *mut std::ffi::c_int;
+    let mut i = std::ptr::null_mut();
+    let mut j = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     let mut r: std::ffi::c_int = 0;
     i = last.offset(-2_isize);
@@ -782,7 +782,7 @@ unsafe extern "C" fn ss_median3(
     mut v2: *mut std::ffi::c_int,
     mut v3: *mut std::ffi::c_int,
 ) -> *mut std::ffi::c_int {
-    let mut t = 0 as *mut std::ffi::c_int;
+    let mut t = std::ptr::null_mut();
     if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
     {
@@ -811,7 +811,7 @@ unsafe extern "C" fn ss_median5(
     mut v4: *mut std::ffi::c_int,
     mut v5: *mut std::ffi::c_int,
 ) -> *mut std::ffi::c_int {
-    let mut t = 0 as *mut std::ffi::c_int;
+    let mut t = std::ptr::null_mut();
     if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
         > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
     {
@@ -853,7 +853,7 @@ unsafe extern "C" fn ss_pivot(
     mut first: *mut std::ffi::c_int,
     mut last: *mut std::ffi::c_int,
 ) -> *mut std::ffi::c_int {
-    let mut middle = 0 as *mut std::ffi::c_int;
+    let mut middle = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     t = last.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
     middle = first.offset((t / 2 as std::ffi::c_int) as isize);
@@ -912,8 +912,8 @@ unsafe extern "C" fn ss_partition(
     mut last: *mut std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) -> *mut std::ffi::c_int {
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     a = first.offset(-1_isize);
     b = last;
@@ -959,18 +959,18 @@ unsafe extern "C" fn ss_mintrosort(
     mut depth: std::ffi::c_int,
 ) {
     let mut stack: [C2RustUnnamed_0; 16] = [C2RustUnnamed_0 {
-        a: 0 as *mut std::ffi::c_int,
-        b: 0 as *mut std::ffi::c_int,
+        a: std::ptr::null_mut(),
+        b: std::ptr::null_mut(),
         c: 0,
         d: 0,
     }; 16];
-    let mut Td = 0 as *const std::ffi::c_uchar;
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
-    let mut c = 0 as *mut std::ffi::c_int;
-    let mut d = 0 as *mut std::ffi::c_int;
-    let mut e = 0 as *mut std::ffi::c_int;
-    let mut f = 0 as *mut std::ffi::c_int;
+    let mut Td = std::ptr::null();
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
+    let mut c = std::ptr::null_mut();
+    let mut d = std::ptr::null_mut();
+    let mut e = std::ptr::null_mut();
+    let mut f = std::ptr::null_mut();
     let mut s: std::ffi::c_int = 0;
     let mut t: std::ffi::c_int = 0;
     let mut ssize: std::ffi::c_int = 0;
@@ -1341,8 +1341,8 @@ unsafe extern "C" fn ss_rotate(
     mut middle: *mut std::ffi::c_int,
     mut last: *mut std::ffi::c_int,
 ) {
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     let mut l: std::ffi::c_int = 0;
     let mut r: std::ffi::c_int = 0;
@@ -1411,9 +1411,9 @@ unsafe extern "C" fn ss_inplacemerge(
     mut last: *mut std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) {
-    let mut p = 0 as *const std::ffi::c_int;
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
+    let mut p = std::ptr::null();
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
     let mut len: std::ffi::c_int = 0;
     let mut half: std::ffi::c_int = 0;
     let mut q: std::ffi::c_int = 0;
@@ -1483,10 +1483,10 @@ unsafe extern "C" fn ss_mergeforward(
     mut buf: *mut std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) {
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
-    let mut c = 0 as *mut std::ffi::c_int;
-    let mut bufend = 0 as *mut std::ffi::c_int;
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
+    let mut c = std::ptr::null_mut();
+    let mut bufend = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     let mut r: std::ffi::c_int = 0;
     bufend = buf
@@ -1597,12 +1597,12 @@ unsafe extern "C" fn ss_mergebackward(
     mut buf: *mut std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) {
-    let mut p1 = 0 as *const std::ffi::c_int;
-    let mut p2 = 0 as *const std::ffi::c_int;
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
-    let mut c = 0 as *mut std::ffi::c_int;
-    let mut bufend = 0 as *mut std::ffi::c_int;
+    let mut p1 = std::ptr::null();
+    let mut p2 = std::ptr::null();
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
+    let mut c = std::ptr::null_mut();
+    let mut bufend = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     let mut r: std::ffi::c_int = 0;
     let mut x: std::ffi::c_int = 0;
@@ -1790,15 +1790,15 @@ unsafe extern "C" fn ss_swapmerge(
     mut depth: std::ffi::c_int,
 ) {
     let mut stack: [C2RustUnnamed_1; 32] = [C2RustUnnamed_1 {
-        a: 0 as *mut std::ffi::c_int,
-        b: 0 as *mut std::ffi::c_int,
-        c: 0 as *mut std::ffi::c_int,
+        a: std::ptr::null_mut(),
+        b: std::ptr::null_mut(),
+        c: std::ptr::null_mut(),
         d: 0,
     }; 32];
-    let mut l = 0 as *mut std::ffi::c_int;
-    let mut r = 0 as *mut std::ffi::c_int;
-    let mut lm = 0 as *mut std::ffi::c_int;
-    let mut rm = 0 as *mut std::ffi::c_int;
+    let mut l = std::ptr::null_mut();
+    let mut r = std::ptr::null_mut();
+    let mut lm = std::ptr::null_mut();
+    let mut rm = std::ptr::null_mut();
     let mut m: std::ffi::c_int = 0;
     let mut len: std::ffi::c_int = 0;
     let mut half: std::ffi::c_int = 0;
@@ -1902,7 +1902,7 @@ unsafe extern "C" fn ss_swapmerge(
             STACK_POP!(stack, first, middle, last, check);
         } else {
             m = 0;
-            len = std::cmp::min(middle - first, last - middle);
+            len = std::cmp::min(middle.offset_from(first), last.offset_from(middle));
             half = len >> 1;
             while (0 as std::ffi::c_int) < len {
                 if ss_compare(
@@ -2064,10 +2064,10 @@ unsafe extern "C" fn sssort(
     mut n: std::ffi::c_int,
     mut lastsuffix: std::ffi::c_int,
 ) {
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
-    let mut middle = 0 as *mut std::ffi::c_int;
-    let mut curbuf = 0 as *mut std::ffi::c_int;
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
+    let mut middle = std::ptr::null_mut();
+    let mut curbuf = std::ptr::null_mut();
     let mut j: std::ffi::c_int = 0;
     let mut k: std::ffi::c_int = 0;
     let mut curbufsize: std::ffi::c_int = 0;
@@ -2193,8 +2193,8 @@ unsafe extern "C" fn tr_insertionsort(
     mut first: *mut std::ffi::c_int,
     mut last: *mut std::ffi::c_int,
 ) {
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     let mut r: std::ffi::c_int = 0;
     a = first.offset(1);
@@ -2307,7 +2307,7 @@ unsafe extern "C" fn tr_median3(
     mut v2: *mut std::ffi::c_int,
     mut v3: *mut std::ffi::c_int,
 ) -> *mut std::ffi::c_int {
-    let mut t = 0 as *mut std::ffi::c_int;
+    let mut t = std::ptr::null_mut();
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v2 as isize) {
         SWAP!(v1, v2);
     }
@@ -2329,7 +2329,7 @@ unsafe extern "C" fn tr_median5(
     mut v4: *mut std::ffi::c_int,
     mut v5: *mut std::ffi::c_int,
 ) -> *mut std::ffi::c_int {
-    let mut t = 0 as *mut std::ffi::c_int;
+    let mut t = std::ptr::null_mut();
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v3 as isize) {
         SWAP!(v2, v3);
     }
@@ -2358,7 +2358,7 @@ unsafe extern "C" fn tr_pivot(
     mut first: *mut std::ffi::c_int,
     mut last: *mut std::ffi::c_int,
 ) -> *mut std::ffi::c_int {
-    let mut middle = 0 as *mut std::ffi::c_int;
+    let mut middle = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     t = last.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
     middle = first.offset((t / 2 as std::ffi::c_int) as isize);
@@ -2442,12 +2442,12 @@ unsafe extern "C" fn tr_partition(
     mut pb: *mut *mut std::ffi::c_int,
     mut v: std::ffi::c_int,
 ) {
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
-    let mut c = 0 as *mut std::ffi::c_int;
-    let mut d = 0 as *mut std::ffi::c_int;
-    let mut e = 0 as *mut std::ffi::c_int;
-    let mut f = 0 as *mut std::ffi::c_int;
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
+    let mut c = std::ptr::null_mut();
+    let mut d = std::ptr::null_mut();
+    let mut e = std::ptr::null_mut();
+    let mut f = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     let mut s: std::ffi::c_int = 0;
     let mut x: std::ffi::c_int = 0;
@@ -2598,9 +2598,9 @@ unsafe extern "C" fn tr_copy(
     mut last: *mut std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) {
-    let mut c = 0 as *mut std::ffi::c_int;
-    let mut d = 0 as *mut std::ffi::c_int;
-    let mut e = 0 as *mut std::ffi::c_int;
+    let mut c = std::ptr::null_mut();
+    let mut d = std::ptr::null_mut();
+    let mut e = std::ptr::null_mut();
     let mut s: std::ffi::c_int = 0;
     let mut v: std::ffi::c_int = 0;
     v = (b.offset_from(SA) as std::ffi::c_long
@@ -2646,9 +2646,9 @@ unsafe extern "C" fn tr_partialcopy(
     mut last: *mut std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) {
-    let mut c = 0 as *mut std::ffi::c_int;
-    let mut d = 0 as *mut std::ffi::c_int;
-    let mut e = 0 as *mut std::ffi::c_int;
+    let mut c = std::ptr::null_mut();
+    let mut d = std::ptr::null_mut();
+    let mut e = std::ptr::null_mut();
     let mut s: std::ffi::c_int = 0;
     let mut v: std::ffi::c_int = 0;
     let mut rank: std::ffi::c_int = 0;
@@ -2717,15 +2717,15 @@ unsafe extern "C" fn tr_introsort(
     mut budget: *mut trbudget_t,
 ) {
     let mut stack: [C2RustUnnamed; 64] = [C2RustUnnamed {
-        a: 0 as *const std::ffi::c_int,
-        b: 0 as *mut std::ffi::c_int,
-        c: 0 as *mut std::ffi::c_int,
+        a: std::ptr::null(),
+        b: std::ptr::null_mut(),
+        c: std::ptr::null_mut(),
         d: 0,
         e: 0,
     }; 64];
-    let mut a = 0 as *mut std::ffi::c_int;
-    let mut b = 0 as *mut std::ffi::c_int;
-    let mut c = 0 as *mut std::ffi::c_int;
+    let mut a = std::ptr::null_mut();
+    let mut b = std::ptr::null_mut();
+    let mut c = std::ptr::null_mut();
     let mut t: std::ffi::c_int = 0;
     let mut v: std::ffi::c_int = 0;
     let mut x: std::ffi::c_int = 0;
@@ -3409,9 +3409,9 @@ unsafe extern "C" fn trsort(
     mut n: std::ffi::c_int,
     mut depth: std::ffi::c_int,
 ) {
-    let mut ISAd = 0 as *mut std::ffi::c_int;
-    let mut first = 0 as *mut std::ffi::c_int;
-    let mut last = 0 as *mut std::ffi::c_int;
+    let mut ISAd = std::ptr::null_mut();
+    let mut first = std::ptr::null_mut();
+    let mut last = std::ptr::null_mut();
     let mut budget = _trbudget_t {
         chance: 0,
         remain: 0,
@@ -3483,9 +3483,9 @@ unsafe extern "C" fn sort_typeBstar(
     mut n: std::ffi::c_int,
     mut openMP: std::ffi::c_int,
 ) -> std::ffi::c_int {
-    let mut PAb = 0 as *mut std::ffi::c_int;
-    let mut ISAb = 0 as *mut std::ffi::c_int;
-    let mut buf = 0 as *mut std::ffi::c_int;
+    let mut PAb = std::ptr::null_mut();
+    let mut ISAb = std::ptr::null_mut();
+    let mut buf = std::ptr::null_mut();
     let mut i: std::ffi::c_int = 0;
     let mut j: std::ffi::c_int = 0;
     let mut k: std::ffi::c_int = 0;
@@ -3735,9 +3735,9 @@ unsafe extern "C" fn construct_SA(
     mut n: std::ffi::c_int,
     mut m: std::ffi::c_int,
 ) {
-    let mut i = 0 as *mut std::ffi::c_int;
-    let mut j = 0 as *mut std::ffi::c_int;
-    let mut k = 0 as *mut std::ffi::c_int;
+    let mut i = std::ptr::null_mut();
+    let mut j = std::ptr::null_mut();
+    let mut k = std::ptr::null_mut();
     let mut s: std::ffi::c_int = 0;
     let mut c0: std::ffi::c_int = 0;
     let mut c1: std::ffi::c_int = 0;
@@ -3749,7 +3749,7 @@ unsafe extern "C" fn construct_SA(
             j = SA
                 .offset(BUCKET_A!(c1 + 1) as isize)
                 .offset(-1_isize);
-            k = NULL as *mut std::ffi::c_int;
+            k = std::ptr::null_mut();
             c2 = -(1 as std::ffi::c_int);
             while i <= j {
                 s = *j;
@@ -3912,10 +3912,10 @@ unsafe extern "C" fn construct_BWT(
     mut n: std::ffi::c_int,
     mut m: std::ffi::c_int,
 ) -> std::ffi::c_int {
-    let mut i = 0 as *mut std::ffi::c_int;
-    let mut j = 0 as *mut std::ffi::c_int;
-    let mut k = 0 as *mut std::ffi::c_int;
-    let mut orig = 0 as *mut std::ffi::c_int;
+    let mut i = std::ptr::null_mut();
+    let mut j = std::ptr::null_mut();
+    let mut k = std::ptr::null_mut();
+    let mut orig = std::ptr::null_mut();
     let mut s: std::ffi::c_int = 0;
     let mut c0: std::ffi::c_int = 0;
     let mut c1: std::ffi::c_int = 0;
@@ -3927,7 +3927,7 @@ unsafe extern "C" fn construct_BWT(
             j = SA
                 .offset(BUCKET_A!(c1 + 1) as isize)
                 .offset(-1_isize);
-            k = NULL as *mut std::ffi::c_int;
+            k = std::ptr::null_mut();
             c2 = -(1 as std::ffi::c_int);
             while i <= j {
                 s = *j;
@@ -4057,10 +4057,10 @@ unsafe extern "C" fn construct_BWT_indexes(
     mut num_indexes: *mut std::ffi::c_uchar,
     mut indexes: *mut std::ffi::c_int,
 ) -> std::ffi::c_int {
-    let mut i = 0 as *mut std::ffi::c_int;
-    let mut j = 0 as *mut std::ffi::c_int;
-    let mut k = 0 as *mut std::ffi::c_int;
-    let mut orig = 0 as *mut std::ffi::c_int;
+    let mut i = std::ptr::null_mut();
+    let mut j = std::ptr::null_mut();
+    let mut k = std::ptr::null_mut();
+    let mut orig = std::ptr::null_mut();
     let mut s: std::ffi::c_int = 0;
     let mut c0: std::ffi::c_int = 0;
     let mut c1: std::ffi::c_int = 0;
@@ -4081,7 +4081,7 @@ unsafe extern "C" fn construct_BWT_indexes(
             j = SA
                 .offset(BUCKET_A!(c1 + 1) as isize)
                 .offset(-1_isize);
-            k = NULL as *mut std::ffi::c_int;
+            k = std::ptr::null_mut();
             c2 = -(1 as std::ffi::c_int);
             while i <= j {
                 s = *j;
@@ -4240,8 +4240,8 @@ pub unsafe extern "C" fn divsufsort(
     mut n: std::ffi::c_int,
     mut openMP: std::ffi::c_int,
 ) -> std::ffi::c_int {
-    let mut bucket_A = 0 as *mut std::ffi::c_int;
-    let mut bucket_B = 0 as *mut std::ffi::c_int;
+    let mut bucket_A = std::ptr::null_mut();
+    let mut bucket_B = std::ptr::null_mut();
     let mut m: std::ffi::c_int = 0;
     let mut err: std::ffi::c_int = 0;
     if T.is_null() || SA.is_null() || n < 0 {
@@ -4260,11 +4260,11 @@ pub unsafe extern "C" fn divsufsort(
         return 0;
     }
     bucket_A = libc::malloc(
-        (BUCKET_A_SIZE as std::ffi::c_ulong)
+        BUCKET_A_SIZE
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     bucket_B = libc::malloc(
-        (BUCKET_B_SIZE as std::ffi::c_ulong)
+        BUCKET_B_SIZE
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     if !bucket_A.is_null() && !bucket_B.is_null() {
@@ -4287,9 +4287,9 @@ pub unsafe extern "C" fn divbwt(
     mut indexes: *mut std::ffi::c_int,
     mut openMP: std::ffi::c_int,
 ) -> std::ffi::c_int {
-    let mut B = 0 as *mut std::ffi::c_int;
-    let mut bucket_A = 0 as *mut std::ffi::c_int;
-    let mut bucket_B = 0 as *mut std::ffi::c_int;
+    let mut B = std::ptr::null_mut();
+    let mut bucket_A = std::ptr::null_mut();
+    let mut bucket_B = std::ptr::null_mut();
     let mut m: std::ffi::c_int = 0;
     let mut pidx: std::ffi::c_int = 0;
     let mut i: std::ffi::c_int = 0;
@@ -4314,11 +4314,11 @@ pub unsafe extern "C" fn divbwt(
         ) as *mut std::ffi::c_int;
     }
     bucket_A = libc::malloc(
-        (BUCKET_A_SIZE as std::ffi::c_ulong)
+        BUCKET_A_SIZE
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     bucket_B = libc::malloc(
-        (BUCKET_B_SIZE as std::ffi::c_ulong)
+        BUCKET_B_SIZE
             .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
     ) as *mut std::ffi::c_int;
     if !B.is_null() && !bucket_A.is_null() && !bucket_B.is_null() {

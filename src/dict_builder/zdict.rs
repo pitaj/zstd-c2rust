@@ -719,7 +719,7 @@ static mut ZSTD_defaultCMem: ZSTD_customMem = unsafe {
                 libc::intptr_t,
                 ZSTD_freeFunction,
             >(NULL as libc::intptr_t),
-            opaque: NULL as *mut std::ffi::c_void,
+            opaque: std::ptr::null_mut(),
         };
         init
     }
@@ -1811,7 +1811,7 @@ unsafe extern "C" fn ZDICT_countEStats(
     }
     if cSize != 0 {
         let seqStorePtr = ZSTD_getSeqStore(esr.zc);
-        let mut bytePtr = 0 as *const u8;
+        let mut bytePtr = std::ptr::null();
         bytePtr = (*seqStorePtr).litStart;
         while bytePtr < (*seqStorePtr).lit as *const u8 {
             let ref mut fresh8 = *countLit.offset(*bytePtr as isize);
@@ -1973,9 +1973,9 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
     }; 4];
     let mut esr = {
         let mut init = EStats_ress_t {
-            dict: NULL as *mut ZSTD_CDict,
-            zc: NULL as *mut ZSTD_CCtx,
-            workPlace: NULL as *mut std::ffi::c_void,
+            dict: std::ptr::null_mut(),
+            zc: std::ptr::null_mut(),
+            workPlace: std::ptr::null_mut(),
         };
         init
     };
@@ -2648,7 +2648,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_legacy(
     mut params: ZDICT_legacy_params_t,
 ) -> usize {
     let mut result: usize = 0;
-    let mut newBuff = 0 as *mut std::ffi::c_void;
+    let mut newBuff = std::ptr::null_mut();
     let sBuffSize = ZDICT_totalSampleSize(samplesSizes, nbSamples);
     if sBuffSize < ZDICT_MIN_SAMPLES_SIZE as usize {
         return 0;

@@ -559,6 +559,15 @@ case $1 in
     
     ;;
 
+  ptr-null)
+    perl -i -p0e 's/\bNULL as \*mut [^\(\){};,]*/std::ptr::null_mut()/gm'  src/*/*.rs
+    perl -i -p0e 's/\bNULL as \*const [^\(\){};,]*/std::ptr::null()/gm'  src/*/*.rs
+  
+    perl -i -p0e 's/\b0 as \*mut [^\(\){};,]*/std::ptr::null_mut()/gm'  src/*/*.rs
+    perl -i -p0e 's/\b0 as \*const [^\(\){};,]*/std::ptr::null()/gm'  src/*/*.rs
+    
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -613,6 +622,7 @@ case $1 in
     ./convert.sh mem-64bits-littleendian
     ./convert.sh zstd-error
     ./convert.sh zstd-mem
+    ./convert.sh ptr-null
 
     ;;
 

@@ -159,7 +159,7 @@ static mut ZSTD_defaultCMem: ZSTD_customMem = unsafe {
                 libc::intptr_t,
                 ZSTD_freeFunction,
             >(NULL as libc::intptr_t),
-            opaque: NULL as *mut std::ffi::c_void,
+            opaque: std::ptr::null_mut(),
         };
         init
     }
@@ -264,7 +264,7 @@ pub unsafe extern "C" fn POOL_create_advanced(
     mut queueSize: usize,
     mut customMem: ZSTD_customMem,
 ) -> *mut POOL_ctx {
-    let mut ctx = 0 as *mut POOL_ctx;
+    let mut ctx = std::ptr::null_mut();
     if numThreads == 0 {
         return NULL_0 as *mut POOL_ctx;
     }
@@ -483,7 +483,7 @@ unsafe extern "C" fn POOL_add_internal(
 ) {
     let mut job = POOL_job_s {
         function: None,
-        opaque: 0 as *mut std::ffi::c_void,
+        opaque: std::ptr::null_mut(),
     };
     job.function = function;
     job.opaque = opaque;
