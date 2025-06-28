@@ -1,4 +1,5 @@
 use ::libc;
+use crate::common::fse_h::*;
 extern "C" {
     fn FSE_readNCount_bmi2(
         normalizedCounter: *mut std::ffi::c_short,
@@ -63,7 +64,6 @@ pub const BIT_DStream_overflow: BIT_DStream_status = 3;
 pub const BIT_DStream_completed: BIT_DStream_status = 2;
 pub const BIT_DStream_endOfBuffer: BIT_DStream_status = 1;
 pub const BIT_DStream_unfinished: BIT_DStream_status = 0;
-pub type FSE_DTable = std::ffi::c_uint;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct FSE_decode_t {
@@ -500,7 +500,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
     let maxSV1 = maxSymbolValue.wrapping_add(1);
     let tableSize = ((1 as std::ffi::c_int) << tableLog) as u32;
     let mut highThreshold = tableSize.wrapping_sub(1);
-    if FSE_BUILD_DTABLE_WKSP_SIZE!(tableLog, maxSymbolValue)
+    if FSE_BUILD_DTABLE_WKSP_SIZE(tableLog, maxSymbolValue)
         > wkspSize as std::ffi::c_ulonglong
     {
         return ERROR(ZSTD_error_maxSymbolValue_tooLarge);
@@ -548,7 +548,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
     );
     if highThreshold == tableSize.wrapping_sub(1) {
         let tableMask = tableSize.wrapping_sub(1) as usize;
-        let step = FSE_TABLESTEP!(tableSize);
+        let step = FSE_TABLESTEP(tableSize);
         let add = 0x101010101010101 as std::ffi::c_ulonglong as u64;
         let mut pos: usize = 0;
         let mut sv: u64 = 0;
@@ -591,7 +591,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
         }
     } else {
         let tableMask_0 = tableSize.wrapping_sub(1);
-        let step_0 = FSE_TABLESTEP!(tableSize);
+        let step_0 = FSE_TABLESTEP(tableSize);
         let mut s_2: u32 = 0;
         let mut position_0: u32 = 0;
         s_2 = 0;
@@ -690,6 +690,17 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
     {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
+
+    macro_rules! FSE_GETSYMBOL {
+        ($statePtr:expr) => {
+            if fast != 0 {
+                FSE_decodeSymbolFast($statePtr, addr_of!(bitD))
+            } else {
+                FSE_decodeSymbol($statePtr, addr_of!(bitD))
+            }
+        }
+    }
+
     while (BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
         == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
         as std::ffi::c_int & (op < olimit) as std::ffi::c_int != 0
@@ -798,7 +809,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
     }
     ip = ip.offset(NCountLength as isize);
     cSrcSize = cSrcSize.wrapping_sub(NCountLength);
-    if FSE_DECOMPRESS_WKSP_SIZE!(tableLog, maxSymbolValue)
+    if FSE_DECOMPRESS_WKSP_SIZE(tableLog, maxSymbolValue)
         > wkspSize as std::ffi::c_ulonglong
     {
         return ERROR(ZSTD_error_tableLog_tooLarge);
@@ -807,11 +818,11 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         .offset(
             ::core::mem::size_of::<FSE_DecompressWksp>() as isize,
         )
-        .offset(FSE_DTABLE_SIZE!(tableLog) as isize) as *mut std::ffi::c_void;
+        .offset(FSE_DTABLE_SIZE(tableLog) as isize) as *mut std::ffi::c_void;
     wkspSize = (wkspSize as std::ffi::c_ulong)
         .wrapping_sub(
             (::core::mem::size_of::<FSE_DecompressWksp>())
-                .wrapping_add(FSE_DTABLE_SIZE!(tableLog)),
+                .wrapping_add(FSE_DTABLE_SIZE(tableLog)),
         ) as usize as usize;
     let _var_err__ = FSE_buildDTable_internal(
         dtable,

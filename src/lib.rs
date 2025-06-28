@@ -23,6 +23,7 @@ extern crate libc;
 pub mod zstd_h;
 
 pub mod common {
+pub mod fse_h;
 pub mod debug;
 pub mod entropy_common;
 pub mod error_private;

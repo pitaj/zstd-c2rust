@@ -1,6 +1,7 @@
 use crate::__m128i_u;
 use crate::__m128i_u;
 use ::libc;
+use crate::common::fse_h::*;
 #[cfg(target_arch = "x86")]
 pub use core::arch::x86::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 #[cfg(target_arch = "x86_64")]
@@ -3167,7 +3168,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
     );
     if highThreshold == tableSize.wrapping_sub(1) {
         let tableMask = tableSize.wrapping_sub(1) as usize;
-        let step = FSE_TABLESTEP!(tableSize);
+        let step = FSE_TABLESTEP(tableSize);
         let add = 0x101010101010101 as std::ffi::c_ulonglong as u64;
         let mut pos: usize = 0;
         let mut sv: u64 = 0;
@@ -3210,7 +3211,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
         }
     } else {
         let tableMask_0 = tableSize.wrapping_sub(1);
-        let step_0 = FSE_TABLESTEP!(tableSize);
+        let step_0 = FSE_TABLESTEP(tableSize);
         let mut s_2: u32 = 0;
         let mut position_0: u32 = 0;
         s_2 = 0;

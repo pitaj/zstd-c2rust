@@ -1,4 +1,5 @@
 use ::libc;
+use crate::common::fse_h::*;
 pub type ptrdiff_t = std::ffi::c_long;
 pub type unalign16 = u16;
 pub type unalign32 = u32;
@@ -354,13 +355,13 @@ pub unsafe extern "C" fn FSE_buildCTable_wksp(
             }) as isize,
         ) as *mut std::ffi::c_void;
     let symbolTT = FSCT as *mut FSE_symbolCompressionTransform;
-    let step = FSE_TABLESTEP!(tableSize);
+    let step = FSE_TABLESTEP(tableSize);
     let maxSV1 = maxSymbolValue.wrapping_add(1);
     let mut cumul = workSpace as *mut u16;
     let tableSymbol = cumul
         .offset(maxSV1.wrapping_add(1) as isize) as *mut u8;
     let mut highThreshold = tableSize.wrapping_sub(1);
-    if FSE_BUILD_CTABLE_WORKSPACE_SIZE!(maxSymbolValue, tableLog)
+    if FSE_BUILD_CTABLE_WORKSPACE_SIZE(maxSymbolValue, tableLog)
         > wkspSize as std::ffi::c_ulonglong
     {
         return ERROR(ZSTD_error_tableLog_tooLarge);
@@ -1054,6 +1055,17 @@ unsafe extern "C" fn FSE_compress_usingCTable_generic(
     if ERR_isError(initError) != 0 {
         return 0;
     }
+
+    macro_rules! FSE_FLUSHBITS {
+        ($s:expr) => {
+            if fast {
+                BIT_flushBitsFast($s)
+            } else {
+                BIT_flushBits($s)
+            }
+        };
+    }
+
     if srcSize & 1_usize != 0 {
         ip = ip.offset(-1);
         FSE_initCState2(&mut CState1, ct, *ip as u32);
@@ -1116,7 +1128,7 @@ pub unsafe extern "C" fn FSE_compress_usingCTable(
     mut srcSize: usize,
     mut ct: *const FSE_CTable,
 ) -> usize {
-    let fast = (dstSize >= FSE_BLOCKBOUND!(srcSize)) as std::ffi::c_int
+    let fast = (dstSize >= FSE_BLOCKBOUND(srcSize)) as std::ffi::c_int
         as std::ffi::c_uint;
     if fast != 0 {
         return FSE_compress_usingCTable_generic(
@@ -1140,5 +1152,5 @@ pub unsafe extern "C" fn FSE_compress_usingCTable(
 }
 #[no_mangle]
 pub unsafe extern "C" fn FSE_compressBound(mut size: usize) -> usize {
-    return FSE_COMPRESSBOUND!(size);
+    return FSE_COMPRESSBOUND(size);
 }
