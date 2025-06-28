@@ -287,27 +287,7 @@ pub struct COVER_dictSelection {
     pub totalCompressedSize: usize,
 }
 use crate::common::mem::*;
-static mut prime6bytes: u64 = 227718039650203;
-unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
-        >> 64_u32.wrapping_sub(h);
-}
-unsafe extern "C" fn ZSTD_hash6Ptr(
-    mut p: *const std::ffi::c_void,
-    mut h: u32,
-) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0);
-}
-static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
-unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return (u * prime8bytes ^ s) >> 64_u32.wrapping_sub(h);
-}
-unsafe extern "C" fn ZSTD_hash8Ptr(
-    mut p: *const std::ffi::c_void,
-    mut h: u32,
-) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0);
-}
+use crate::compress::zstd_compress_internal::*;
 pub const ZDICT_DICTSIZE_MIN: std::ffi::c_int = 256;
 pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000;
 pub const NULL: std::ffi::c_int = 0;

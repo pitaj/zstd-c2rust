@@ -1,5 +1,4 @@
 use crate::__m128i_u;
-use crate::__m128i_u;
 use ::libc;
 #[cfg(target_arch = "x86")]
 pub use core::arch::x86::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
@@ -7,6 +6,8 @@ pub use core::arch::x86::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 pub use core::arch::x86_64::{__m128i, _mm_loadu_si128, _mm_storeu_si128};
 use core::arch::asm;
 use crate::zstd_h::*;
+use crate::compress::zstd_compress_internal::*;
+
 extern "C" {
     pub type ZSTDMT_CCtx_s;
     pub type POOL_ctx_s;

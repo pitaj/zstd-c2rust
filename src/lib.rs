@@ -43,6 +43,7 @@ pub mod fse_compress;
 pub mod hist;
 pub mod huf_compress;
 pub mod zstd_compress;
+pub mod zstd_compress_internal;
 pub mod zstd_compress_literals;
 pub mod zstd_compress_sequences;
 pub mod zstd_compress_superblock;

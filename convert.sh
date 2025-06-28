@@ -553,6 +553,12 @@ case $1 in
     
     ;;
 
+
+  zstd-compress-internal)
+    perl -i -p0e 's/(static mut prime\dbytes:[^;]*;([\s\n]*(#\[[^\]]*\][\s\n]*)?unsafe extern "C" fn ZSTD_hash[^{]*{(?:{[^{}]+}|[^{}])*})+\n?)+/use crate::compress::zstd_compress_internal::*;\n/gm'  src/*/*.rs
+    
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile

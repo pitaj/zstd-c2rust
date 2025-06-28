@@ -385,73 +385,7 @@ unsafe extern "C" fn ZSTD_count_2segments(
     return matchLength
         .wrapping_add(ZSTD_count(ip.offset(matchLength as isize), iStart, iEnd));
 }
-static mut prime4bytes: u32 = 2654435761;
-unsafe extern "C" fn ZSTD_hash4(mut u: u32, mut h: u32, mut s: u32) -> u32 {
-    return (u * prime4bytes ^ s) >> 32_u32.wrapping_sub(h);
-}
-unsafe extern "C" fn ZSTD_hash4Ptr(
-    mut ptr: *const std::ffi::c_void,
-    mut h: u32,
-) -> usize {
-    return ZSTD_hash4(MEM_readLE32(ptr), h, 0) as usize;
-}
-static mut prime5bytes: u64 = 889523592379;
-unsafe extern "C" fn ZSTD_hash5(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 - 40 as std::ffi::c_int) * prime5bytes ^ s)
-        >> 64_u32.wrapping_sub(h);
-}
-unsafe extern "C" fn ZSTD_hash5Ptr(
-    mut p: *const std::ffi::c_void,
-    mut h: u32,
-) -> usize {
-    return ZSTD_hash5(MEM_readLE64(p), h, 0);
-}
-static mut prime6bytes: u64 = 227718039650203;
-unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)
-        >> 64_u32.wrapping_sub(h);
-}
-unsafe extern "C" fn ZSTD_hash6Ptr(
-    mut p: *const std::ffi::c_void,
-    mut h: u32,
-) -> usize {
-    return ZSTD_hash6(MEM_readLE64(p), h, 0);
-}
-static mut prime7bytes: u64 = 58295818150454627;
-unsafe extern "C" fn ZSTD_hash7(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return ((u << 64 - 56 as std::ffi::c_int) * prime7bytes ^ s)
-        >> 64_u32.wrapping_sub(h);
-}
-unsafe extern "C" fn ZSTD_hash7Ptr(
-    mut p: *const std::ffi::c_void,
-    mut h: u32,
-) -> usize {
-    return ZSTD_hash7(MEM_readLE64(p), h, 0);
-}
-static mut prime8bytes: u64 = 0xcf1bbcdcb7a56463 as std::ffi::c_ulonglong as u64;
-unsafe extern "C" fn ZSTD_hash8(mut u: u64, mut h: u32, mut s: u64) -> usize {
-    return (u * prime8bytes ^ s) >> 64_u32.wrapping_sub(h);
-}
-unsafe extern "C" fn ZSTD_hash8Ptr(
-    mut p: *const std::ffi::c_void,
-    mut h: u32,
-) -> usize {
-    return ZSTD_hash8(MEM_readLE64(p), h, 0);
-}
-#[inline(always)]
-unsafe extern "C" fn ZSTD_hashPtr(
-    mut p: *const std::ffi::c_void,
-    mut hBits: u32,
-    mut mls: u32,
-) -> usize {
-    match mls {
-        5 => return ZSTD_hash5Ptr(p, hBits),
-        6 => return ZSTD_hash6Ptr(p, hBits),
-        7 => return ZSTD_hash7Ptr(p, hBits),
-        8 => return ZSTD_hash8Ptr(p, hBits),
-        4 | _ => return ZSTD_hash4Ptr(p, hBits),
-    };
-}
+use crate::compress::zstd_compress_internal::*;
 #[inline]
 unsafe extern "C" fn ZSTD_getLowestMatchIndex(
     mut ms: *const ZSTD_MatchState_t,
