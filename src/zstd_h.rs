@@ -13,3 +13,5 @@ pub const fn ZSTD_FRAMEHEADERSIZE_PREFIX(format: ZSTD_format_e) -> usize {
         1
     }
 }
+
+pub const MEM_32bits: bool = usize::BITS == 32;

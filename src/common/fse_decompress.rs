@@ -88,12 +88,7 @@ pub struct FSE_DState_t {
     pub state: usize,
     pub table: *const std::ffi::c_void,
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
     return 1;
@@ -136,7 +131,7 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize {
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         return MEM_readLE32(memPtr) as usize
     } else {
         return MEM_readLE64(memPtr)

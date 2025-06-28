@@ -66,12 +66,7 @@ pub struct FSE_symbolCompressionTransform {
     pub deltaFindState: std::ffi::c_int,
     pub deltaNbBits: u32,
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
     return 1;
@@ -114,7 +109,7 @@ unsafe extern "C" fn MEM_writeLE64(mut memPtr: *mut std::ffi::c_void, mut val64:
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: usize) {
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         MEM_writeLE32(memPtr, val as u32);
     } else {
         MEM_writeLE64(memPtr, val);

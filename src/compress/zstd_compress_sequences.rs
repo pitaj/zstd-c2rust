@@ -135,12 +135,7 @@ pub struct ZSTD_BuildCTableWksp {
     pub norm: [i16; 53],
     pub wksp: [u32; 285],
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
     return 1;
@@ -183,7 +178,7 @@ unsafe extern "C" fn MEM_writeLE64(mut memPtr: *mut std::ffi::c_void, mut val64:
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: usize) {
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         MEM_writeLE32(memPtr, val as u32);
     } else {
         MEM_writeLE64(memPtr, val);
@@ -1115,7 +1110,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
             .offset(nbSeq.wrapping_sub(1) as isize)
             as usize] as std::ffi::c_uint,
     );
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         BIT_flushBits(&mut blockStream);
     }
     BIT_addBits(
@@ -1126,7 +1121,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
             .offset(nbSeq.wrapping_sub(1) as isize)
             as usize] as std::ffi::c_uint,
     );
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         BIT_flushBits(&mut blockStream);
     }
     if longOffsets != 0 {
@@ -1181,7 +1176,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
             &mut stateMatchLength,
             mlCode as std::ffi::c_uint,
         );
-        if MEM_32bits() != 0 {
+        if MEM_32bits {
             BIT_flushBits(&mut blockStream);
         }
         FSE_encodeSymbol(
@@ -1189,7 +1184,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
             &mut stateLitLength,
             llCode as std::ffi::c_uint,
         );
-        if MEM_32bits() != 0
+        if MEM_32bits
             || ofBits_0.wrapping_add(mlBits).wrapping_add(llBits)
                 >= (64 as std::ffi::c_int - 7 as std::ffi::c_int
                     - (LLFSELog + MLFSELog + OffFSELog)) as u32
@@ -1201,7 +1196,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
             (*sequences.offset(n as isize)).litLength as BitContainerType,
             llBits,
         );
-        if MEM_32bits() != 0
+        if MEM_32bits
             && llBits.wrapping_add(mlBits) > 24
         {
             BIT_flushBits(&mut blockStream);
@@ -1211,7 +1206,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
             (*sequences.offset(n as isize)).mlBase as BitContainerType,
             mlBits,
         );
-        if MEM_32bits() != 0
+        if MEM_32bits
             || ofBits_0.wrapping_add(mlBits).wrapping_add(llBits)
                 > 56
         {

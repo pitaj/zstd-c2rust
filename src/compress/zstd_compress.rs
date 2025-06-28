@@ -2133,12 +2133,7 @@ unsafe extern "C" fn ZSTD_hasExtSeqProd(
 ) -> std::ffi::c_int {
     return ((*params).extSeqProdFunc).is_some() as std::ffi::c_int;
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
@@ -4042,7 +4037,7 @@ pub unsafe extern "C" fn ZSTD_cParam_getBounds(
         401 => {
             bounds.lowerBound = 0;
             bounds
-                .upperBound = if MEM_32bits() != 0 {
+                .upperBound = if MEM_32bits {
                 512 as std::ffi::c_int
                     * ((1 as std::ffi::c_int) << 20)
             } else {
@@ -6583,9 +6578,9 @@ pub unsafe extern "C" fn ZSTD_seqToCodes(
         *llCodeTable.offset(u as isize) = ZSTD_LLcode(llv) as u8;
         *ofCodeTable.offset(u as isize) = ofCode as u8;
         *mlCodeTable.offset(u as isize) = ZSTD_MLcode(mlv) as u8;
-        if MEM_32bits() != 0
+        if MEM_32bits
             && ofCode
-                >= (if MEM_32bits() != 0 {
+                >= (if MEM_32bits {
                     STREAM_ACCUMULATOR_MIN_32
                 } else {
                     STREAM_ACCUMULATOR_MIN_64

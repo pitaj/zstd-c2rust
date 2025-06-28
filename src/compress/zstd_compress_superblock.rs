@@ -739,12 +739,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
         }
     };
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
     return 1;
@@ -1227,7 +1222,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
     mut entropyWritten: *mut std::ffi::c_int,
 ) -> usize {
     let longOffsets = ((*cctxParams).cParams.windowLog
-        > (if MEM_32bits() != 0 {
+        > (if MEM_32bits {
             STREAM_ACCUMULATOR_MIN_32
         } else {
             STREAM_ACCUMULATOR_MIN_64

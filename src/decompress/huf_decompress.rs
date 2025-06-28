@@ -163,12 +163,7 @@ unsafe extern "C" fn ZSTD_maybeNullPtrAdd(
         ptr
     };
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
@@ -236,7 +231,7 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize {
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         return MEM_readLE32(memPtr) as usize
     } else {
         return MEM_readLE64(memPtr)
@@ -560,7 +555,7 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
     let dtLog = (HUF_getDTableDesc(DTable)).tableLog as u32;
     let istart = src as *const u8;
     let oend = ZSTD_maybeNullPtrAdd(dst, dstSize as ptrdiff_t) as *mut u8;
-    if MEM_isLittleEndian() == 0 || MEM_32bits() != 0 {
+    if MEM_isLittleEndian() == 0 || MEM_32bits {
         return 0;
     }
     if dstSize == 0 {
@@ -991,7 +986,7 @@ unsafe extern "C" fn HUF_decodeStreamX1(
     } else {
         BIT_reloadDStream(bitDPtr);
     }
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         while (BIT_reloadDStream(bitDPtr) as std::ffi::c_uint
             == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
             as std::ffi::c_int & (p < pEnd) as std::ffi::c_int != 0

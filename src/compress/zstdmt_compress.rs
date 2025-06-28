@@ -1081,12 +1081,7 @@ unsafe extern "C" fn ZSTD_window_update(
     }
     return contiguous;
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
     return 1;
@@ -2576,14 +2571,14 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
         params.jobSize = ZSTDMT_JOBSIZE_MIN as usize;
     }
     if params.jobSize
-        > (if MEM_32bits() != 0 {
+        > (if MEM_32bits {
             512 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)
         } else {
             1024 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)
         }) as usize
     {
         params
-            .jobSize = (if MEM_32bits() != 0 {
+            .jobSize = (if MEM_32bits {
             512 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)
         } else {
             1024 as std::ffi::c_int * ((1 as std::ffi::c_int) << 20)

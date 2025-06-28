@@ -395,12 +395,7 @@ unsafe extern "C" fn ZSTD_maybeNullPtrAdd(
         ptr
     };
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
     return (::core::mem::size_of::<usize>()
@@ -472,7 +467,7 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize {
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         return MEM_readLE32(memPtr) as usize
     } else {
         return MEM_readLE64(memPtr)
@@ -3825,7 +3820,7 @@ unsafe extern "C" fn ZSTD_execSequence(
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
     let mut match_0: *const u8 = oLitEnd.offset(-(sequence.offset as isize));
     if (iLitEnd > litLimit || oMatchEnd > oend_w
-        || MEM_32bits() != 0
+        || MEM_32bits
             && (oend.offset_from(op) as std::ffi::c_long as usize)
                 < sequenceLength.wrapping_add(32))
         as std::ffi::c_int as std::ffi::c_long != 0
@@ -3909,7 +3904,7 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
     let iLitEnd = (*litPtr).offset(sequence.litLength as isize);
     let mut match_0: *const u8 = oLitEnd.offset(-(sequence.offset as isize));
     if (iLitEnd > litLimit || oMatchEnd > oend_w as *mut u8
-        || MEM_32bits() != 0
+        || MEM_32bits
             && (oend.offset_from(op) as std::ffi::c_long as usize)
                 < sequenceLength.wrapping_add(32))
         as std::ffi::c_int as std::ffi::c_long != 0
@@ -4028,7 +4023,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
     let ofnbBits = (*ofDInfo).nbBits as u32;
     let mut offset: usize = 0;
     if ofBits as std::ffi::c_int > 1 {
-        if MEM_32bits() != 0 && longOffsets as std::ffi::c_uint != 0
+        if MEM_32bits && longOffsets as std::ffi::c_uint != 0
             && ofBits as std::ffi::c_int >= STREAM_ACCUMULATOR_MIN_32
         {
             let extraBits = (if ZSTD_WINDOWLOG_MAX_32 > STREAM_ACCUMULATOR_MIN_32 {
@@ -4054,7 +4049,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                         ofBits as std::ffi::c_uint,
                     ),
                 );
-            if MEM_32bits() != 0 {
+            if MEM_32bits {
                 BIT_reloadDStream(&mut (*seqState).DStream);
             }
         }
@@ -4107,7 +4102,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                 BIT_readBitsFast(&mut (*seqState).DStream, mlBits as std::ffi::c_uint),
             );
     }
-    if MEM_32bits() != 0
+    if MEM_32bits
         && mlBits as std::ffi::c_int + llBits as std::ffi::c_int
             >= STREAM_ACCUMULATOR_MIN_32
                 - (if ZSTD_WINDOWLOG_MAX_32 > STREAM_ACCUMULATOR_MIN_32 {
@@ -4133,7 +4128,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                 BIT_readBitsFast(&mut (*seqState).DStream, llBits as std::ffi::c_uint),
             );
     }
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         BIT_reloadDStream(&mut (*seqState).DStream);
     }
     if isLastSeq == 0 {
@@ -4149,7 +4144,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
             mlNext,
             mlnbBits,
         );
-        if MEM_32bits() != 0 {
+        if MEM_32bits {
             BIT_reloadDStream(&mut (*seqState).DStream);
         }
         ZSTD_updateFseStateWithDInfo(
@@ -5172,7 +5167,7 @@ unsafe extern "C" fn ZSTD_maxShortOffset() -> usize {
         return -(1 as std::ffi::c_int) as usize
     } else {
         let maxOffbase = (1_usize
-            << ((if MEM_32bits() != 0 {
+            << ((if MEM_32bits {
                 STREAM_ACCUMULATOR_MIN_32
             } else {
                 STREAM_ACCUMULATOR_MIN_64
@@ -5218,7 +5213,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         ZSTD_maybeNullPtrAdd(dst, blockSizeMax as ptrdiff_t),
         (*dctx).virtualStart as *const u8 as *const std::ffi::c_void,
     );
-    let mut isLongOffset = (MEM_32bits() != 0
+    let mut isLongOffset = (MEM_32bits
         && totalHistorySize > ZSTD_maxShortOffset()) as std::ffi::c_int
         as ZSTD_longOffset_e;
     let mut usePrefetchDecoder = (*dctx).ddictIsCold;
@@ -5256,7 +5251,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         let info = ZSTD_getOffsetInfo((*dctx).OFTptr, nbSeq);
         if isLongOffset as std::ffi::c_uint != 0
             && info.maxNbAdditionalBits
-                <= (if MEM_32bits() != 0 {
+                <= (if MEM_32bits {
                     STREAM_ACCUMULATOR_MIN_32
                 } else {
                     STREAM_ACCUMULATOR_MIN_64

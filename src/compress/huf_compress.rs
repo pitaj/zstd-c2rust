@@ -188,12 +188,7 @@ pub union C2RustUnnamed_1 {
     pub writeCTable_wksp: HUF_WriteCTableWksp,
     pub hist_wksp: [u32; 1024],
 }
-#[inline]
-unsafe extern "C" fn MEM_32bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 4) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
+use crate::zstd_h::MEM_32bits;
 #[inline]
 unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
     return 1;
@@ -249,7 +244,7 @@ unsafe extern "C" fn MEM_writeLE64(mut memPtr: *mut std::ffi::c_void, mut val64:
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: usize) {
-    if MEM_32bits() != 0 {
+    if MEM_32bits {
         MEM_writeLE32(memPtr, val as u32);
     } else {
         MEM_writeLE64(memPtr, val);
@@ -1500,11 +1495,11 @@ unsafe extern "C" fn HUF_compress1X_usingCTable_internal_body(
             ip,
             srcSize,
             ct,
-            if MEM_32bits() != 0 { 2 as std::ffi::c_int } else { 4 as std::ffi::c_int },
+            if MEM_32bits { 2 as std::ffi::c_int } else { 4 as std::ffi::c_int },
             0,
             0,
         );
-    } else if MEM_32bits() != 0 {
+    } else if MEM_32bits {
         match tableLog {
             11 => {
                 HUF_compress1X_usingCTable_internal_body_loop(

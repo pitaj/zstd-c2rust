@@ -502,6 +502,15 @@ case $1 in
 
     ;;
 
+  mem-32bits)
+    # if MEM_32bits() != 0 {
+    perl -i -p0e 's/\bMEM_32bits\(\) != 0/MEM_32bits/gm'  src/*/*.rs
+
+    # unsafe extern "C" fn MEM_32bits()
+    perl -i -p0e 's/#\[inline\][^\(;]*fn MEM_32bits\(\)[^}]*}/use crate::zstd_h::MEM_32bits;/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -551,6 +560,7 @@ case $1 in
     ./convert.sh fse-getsymbol
     ./convert.sh fse-flushbits
     ./convert.sh boundcheck
+    ./convert.sh mem-32bits
 
     ;;
 
