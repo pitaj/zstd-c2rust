@@ -539,6 +539,13 @@ case $1 in
 
     ;;
 
+  zstd-mem)
+    perl -i -p0e 's/(?:(?:#\[(no_mangle|inline)\][\s\n]*)*(?:pub[\s\n]*)?unsafe extern "C" fn MEM_\w*\([^{]+{(?:{[^{}]+}|[^{}])*}\n?)+/use crate::common::mem::*;\n/gm'  src/*/*.rs
+    
+    perl -i -p0e 's/use crate::zstd_h::MEM_[^;]*;\n?//gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -592,6 +599,7 @@ case $1 in
     ./convert.sh mem-32bits
     ./convert.sh mem-64bits-littleendian
     ./convert.sh zstd-error
+    ./convert.sh zstd-mem
 
     ;;
 

@@ -1045,24 +1045,7 @@ unsafe extern "C" fn ZSTD_window_update(
     }
     return contiguous;
 }
-use crate::zstd_h::MEM_32bits;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_write32(mut memPtr: *mut std::ffi::c_void, mut value: u32) {
-    *(memPtr as *mut unalign32) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian {
-        MEM_write32(memPtr, val32);
-    } else {
-        MEM_write32(memPtr, MEM_swap32(val32));
-    };
-}
+use crate::common::mem::*;
 pub const ZSTDMT_JOBSIZE_MIN: std::ffi::c_int = 512 as std::ffi::c_int
     * ((1 as std::ffi::c_int) << 10);
 #[inline]

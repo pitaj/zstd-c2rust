@@ -286,23 +286,7 @@ pub struct COVER_dictSelection {
     pub dictSize: usize,
     pub totalCompressedSize: usize,
 }
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
-    return *(ptr as *const unalign64);
-}
-#[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian {
-        return MEM_read64(memPtr)
-    } else {
-        return MEM_swap64(MEM_read64(memPtr))
-    };
-}
+use crate::common::mem::*;
 static mut prime6bytes: u64 = 227718039650203;
 unsafe extern "C" fn ZSTD_hash6(mut u: u64, mut h: u32, mut s: u64) -> usize {
     return ((u << 64 - 48 as std::ffi::c_int) * prime6bytes ^ s)

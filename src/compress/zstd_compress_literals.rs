@@ -78,46 +78,7 @@ pub type huf_compress_f = Option::<
         std::ffi::c_int,
     ) -> usize,
 >;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_write16(mut memPtr: *mut std::ffi::c_void, mut value: u16) {
-    *(memPtr as *mut unalign16) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_write32(mut memPtr: *mut std::ffi::c_void, mut value: u32) {
-    *(memPtr as *mut unalign32) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u16) {
-    if MEM_isLittleEndian {
-        MEM_write16(memPtr, val);
-    } else {
-        let mut p = memPtr as *mut u8;
-        *p.offset(0) = val as u8;
-        *p
-            .offset(
-                1,
-            ) = (val as std::ffi::c_int >> 8) as u8;
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE24(mut memPtr: *mut std::ffi::c_void, mut val: u32) {
-    MEM_writeLE16(memPtr, val as u16);
-    *(memPtr as *mut u8)
-        .offset(2) = (val >> 16) as u8;
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian {
-        MEM_write32(memPtr, val32);
-    } else {
-        MEM_write32(memPtr, MEM_swap32(val32));
-    };
-}
+use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,

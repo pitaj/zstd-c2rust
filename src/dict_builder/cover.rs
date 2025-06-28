@@ -293,23 +293,7 @@ pub struct COVER_dictSelection {
     pub totalCompressedSize: usize,
 }
 pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
-    return *(ptr as *const unalign64);
-}
-#[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian {
-        return MEM_read64(memPtr)
-    } else {
-        return MEM_swap64(MEM_read64(memPtr))
-    };
-}
+use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
     return val.leading_zeros() as i32 as std::ffi::c_uint;

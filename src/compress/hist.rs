@@ -4,10 +4,7 @@ use crate::common::error::*;
 pub type HIST_checkInput_e = std::ffi::c_uint;
 pub const checkMaxSymbolValue: HIST_checkInput_e = 1;
 pub const trustInput: HIST_checkInput_e = 0;
-#[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
-    return *(ptr as *const unalign32);
-}
+use crate::common::mem::*;
 pub const HIST_WKSP_SIZE_U32: std::ffi::c_int = 1024;
 pub const HIST_WKSP_SIZE: std::ffi::c_ulong = (HIST_WKSP_SIZE_U32 as std::ffi::c_ulong)
     .wrapping_mul(::core::mem::size_of::<std::ffi::c_uint>());

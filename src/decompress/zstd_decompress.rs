@@ -719,66 +719,7 @@ static mut ML_base: [u32; 53] = [
     0x8003 as std::ffi::c_int as u32,
     0x10003 as std::ffi::c_int as u32,
 ];
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
-    return *(ptr as *const unalign16);
-}
-#[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
-    return *(ptr as *const unalign32);
-}
-#[inline]
-unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
-    return *(ptr as *const unalign64);
-}
-#[inline]
-unsafe extern "C" fn MEM_write32(mut memPtr: *mut std::ffi::c_void, mut value: u32) {
-    *(memPtr as *mut unalign32) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE16(mut memPtr: *const std::ffi::c_void) -> u16 {
-    if MEM_isLittleEndian {
-        return MEM_read16(memPtr)
-    } else {
-        let mut p = memPtr as *const u8;
-        return (*p.offset(0) as std::ffi::c_int
-            + ((*p.offset(1) as std::ffi::c_int)
-                << 8)) as u16;
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian {
-        return MEM_read32(memPtr)
-    } else {
-        return MEM_swap32(MEM_read32(memPtr))
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian {
-        MEM_write32(memPtr, val32);
-    } else {
-        MEM_write32(memPtr, MEM_swap32(val32));
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian {
-        return MEM_read64(memPtr)
-    } else {
-        return MEM_swap64(MEM_read64(memPtr))
-    };
-}
+use crate::common::mem::*;
 static mut repStartValue: [u32; 3] = [
     1,
     4,

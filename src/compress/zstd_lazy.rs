@@ -213,48 +213,7 @@ pub const search_rowHash: searchMethod_e = 2;
 pub const search_binaryTree: searchMethod_e = 1;
 pub const search_hashChain: searchMethod_e = 0;
 pub type ZSTD_VecMask = u64;
-use crate::zstd_h::MEM_64bits;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
-    return *(ptr as *const unalign16);
-}
-#[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
-    return *(ptr as *const unalign32);
-}
-#[inline]
-unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
-    return *(ptr as *const unalign64);
-}
-#[inline]
-unsafe extern "C" fn MEM_readST(mut ptr: *const std::ffi::c_void) -> usize {
-    return *(ptr as *const unalignArch);
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian {
-        return MEM_read32(memPtr)
-    } else {
-        return MEM_swap32(MEM_read32(memPtr))
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian {
-        return MEM_read64(memPtr)
-    } else {
-        return MEM_swap64(MEM_read64(memPtr))
-    };
-}
+use crate::common::mem::*;
 pub const kSearchStrength: std::ffi::c_int = 8;
 pub const ZSTD_DUBT_UNSORTED_MARK: std::ffi::c_int = 1;
 pub const ZSTD_ROW_HASH_CACHE_SIZE: std::ffi::c_int = 8;

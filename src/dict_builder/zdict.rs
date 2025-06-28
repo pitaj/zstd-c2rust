@@ -701,48 +701,7 @@ pub const MINRATIO: std::ffi::c_int = 4;
 pub const ZDICT_MAX_SAMPLES_SIZE: std::ffi::c_uint = (2000 as std::ffi::c_uint)
     << 20;
 pub const ZDICT_MIN_SAMPLES_SIZE: std::ffi::c_int = ZDICT_CONTENTSIZE_MIN * MINRATIO;
-use crate::zstd_h::MEM_64bits;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
-    return *(ptr as *const unalign16);
-}
-#[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
-    return *(ptr as *const unalign32);
-}
-#[inline]
-unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
-    return *(ptr as *const unalign64);
-}
-#[inline]
-unsafe extern "C" fn MEM_readST(mut ptr: *const std::ffi::c_void) -> usize {
-    return *(ptr as *const unalignArch);
-}
-#[inline]
-unsafe extern "C" fn MEM_write32(mut memPtr: *mut std::ffi::c_void, mut value: u32) {
-    *(memPtr as *mut unalign32) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian {
-        return MEM_read32(memPtr)
-    } else {
-        return MEM_swap32(MEM_read32(memPtr))
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian {
-        MEM_write32(memPtr, val32);
-    } else {
-        MEM_write32(memPtr, MEM_swap32(val32));
-    };
-}
+use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,

@@ -22,10 +22,7 @@ pub struct FPStats {
 pub type RecordEvents_f = Option::<
     unsafe extern "C" fn(*mut Fingerprint, *const std::ffi::c_void, usize) -> (),
 >;
-#[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
-    return *(ptr as *const unalign16);
-}
+use crate::common::mem::*;
 pub const THRESHOLD_PENALTY_RATE: std::ffi::c_int = 16;
 pub const THRESHOLD_BASE: std::ffi::c_int = THRESHOLD_PENALTY_RATE
     - 2;

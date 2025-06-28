@@ -213,23 +213,7 @@ pub const ZSTD_dlm_byRef: ZSTD_dictLoadMethod_e = 1;
 pub const ZSTD_dlm_byCopy: ZSTD_dictLoadMethod_e = 0;
 pub type unalign32 = u32;
 pub const ZSTD_MAGIC_DICTIONARY: std::ffi::c_uint = 0xec30a437 as std::ffi::c_uint;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
-    return *(ptr as *const unalign32);
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian {
-        return MEM_read32(memPtr)
-    } else {
-        return MEM_swap32(MEM_read32(memPtr))
-    };
-}
+use crate::common::mem::*;
 pub const ZSTD_FRAMEIDSIZE: std::ffi::c_int = 4;
 #[inline]
 unsafe extern "C" fn ZSTD_customMalloc(

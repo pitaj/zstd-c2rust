@@ -99,52 +99,7 @@ pub struct ZSTD_BuildCTableWksp {
     pub norm: [i16; 53],
     pub wksp: [u32; 285],
 }
-use crate::zstd_h::MEM_32bits;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
-    return *(ptr as *const unalign16);
-}
-#[inline]
-unsafe extern "C" fn MEM_write32(mut memPtr: *mut std::ffi::c_void, mut value: u32) {
-    *(memPtr as *mut unalign32) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_write64(mut memPtr: *mut std::ffi::c_void, mut value: u64) {
-    *(memPtr as *mut unalign64) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian {
-        MEM_write32(memPtr, val32);
-    } else {
-        MEM_write32(memPtr, MEM_swap32(val32));
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE64(mut memPtr: *mut std::ffi::c_void, mut val64: u64) {
-    if MEM_isLittleEndian {
-        MEM_write64(memPtr, val64);
-    } else {
-        MEM_write64(memPtr, MEM_swap64(val64));
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: usize) {
-    if MEM_32bits {
-        MEM_writeLE32(memPtr, val as u32);
-    } else {
-        MEM_writeLE64(memPtr, val);
-    };
-}
+use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,

@@ -152,65 +152,7 @@ pub union C2RustUnnamed_1 {
     pub writeCTable_wksp: HUF_WriteCTableWksp,
     pub hist_wksp: [u32; 1024],
 }
-use crate::zstd_h::MEM_32bits;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_write16(mut memPtr: *mut std::ffi::c_void, mut value: u16) {
-    *(memPtr as *mut unalign16) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_write32(mut memPtr: *mut std::ffi::c_void, mut value: u32) {
-    *(memPtr as *mut unalign32) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_write64(mut memPtr: *mut std::ffi::c_void, mut value: u64) {
-    *(memPtr as *mut unalign64) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u16) {
-    if MEM_isLittleEndian {
-        MEM_write16(memPtr, val);
-    } else {
-        let mut p = memPtr as *mut u8;
-        *p.offset(0) = val as u8;
-        *p
-            .offset(
-                1,
-            ) = (val as std::ffi::c_int >> 8) as u8;
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian {
-        MEM_write32(memPtr, val32);
-    } else {
-        MEM_write32(memPtr, MEM_swap32(val32));
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLE64(mut memPtr: *mut std::ffi::c_void, mut val64: u64) {
-    if MEM_isLittleEndian {
-        MEM_write64(memPtr, val64);
-    } else {
-        MEM_write64(memPtr, MEM_swap64(val64));
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_writeLEST(mut memPtr: *mut std::ffi::c_void, mut val: usize) {
-    if MEM_32bits {
-        MEM_writeLE32(memPtr, val as u32);
-    } else {
-        MEM_writeLE64(memPtr, val);
-    };
-}
+use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
     return val.leading_zeros() as i32 as std::ffi::c_uint;

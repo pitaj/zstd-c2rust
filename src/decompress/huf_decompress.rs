@@ -127,72 +127,7 @@ unsafe extern "C" fn ZSTD_maybeNullPtrAdd(
         ptr
     };
 }
-use crate::zstd_h::MEM_32bits;
-use crate::zstd_h::MEM_64bits;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
-    return *(ptr as *const unalign16);
-}
-#[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
-    return *(ptr as *const unalign32);
-}
-#[inline]
-unsafe extern "C" fn MEM_read64(mut ptr: *const std::ffi::c_void) -> u64 {
-    return *(ptr as *const unalign64);
-}
-#[inline]
-unsafe extern "C" fn MEM_write16(mut memPtr: *mut std::ffi::c_void, mut value: u16) {
-    *(memPtr as *mut unalign16) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_write64(mut memPtr: *mut std::ffi::c_void, mut value: u64) {
-    *(memPtr as *mut unalign64) = value;
-}
-#[inline]
-unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
-    return in_0.swap_bytes();
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE16(mut memPtr: *const std::ffi::c_void) -> u16 {
-    if MEM_isLittleEndian {
-        return MEM_read16(memPtr)
-    } else {
-        let mut p = memPtr as *const u8;
-        return (*p.offset(0) as std::ffi::c_int
-            + ((*p.offset(1) as std::ffi::c_int)
-                << 8)) as u16;
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian {
-        return MEM_read32(memPtr)
-    } else {
-        return MEM_swap32(MEM_read32(memPtr))
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian {
-        return MEM_read64(memPtr)
-    } else {
-        return MEM_swap64(MEM_read64(memPtr))
-    };
-}
-#[inline]
-unsafe extern "C" fn MEM_readLEST(mut memPtr: *const std::ffi::c_void) -> usize {
-    if MEM_32bits {
-        return MEM_readLE32(memPtr) as usize
-    } else {
-        return MEM_readLE64(memPtr)
-    };
-}
+use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,

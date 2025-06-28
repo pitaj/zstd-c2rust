@@ -281,20 +281,7 @@ pub struct ldmRollingHashState_t {
     pub rolling: u64,
     pub stopMask: u64,
 }
-use crate::zstd_h::MEM_64bits;
-use crate::zstd_h::MEM_isLittleEndian;
-#[inline]
-unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
-    return *(ptr as *const unalign16);
-}
-#[inline]
-unsafe extern "C" fn MEM_read32(mut ptr: *const std::ffi::c_void) -> u32 {
-    return *(ptr as *const unalign32);
-}
-#[inline]
-unsafe extern "C" fn MEM_readST(mut ptr: *const std::ffi::c_void) -> usize {
-    return *(ptr as *const unalignArch);
-}
+use crate::common::mem::*;
 pub const HASH_READ_SIZE: std::ffi::c_int = 8;
 pub const ZSTD_WINDOW_START_INDEX: std::ffi::c_int = 2;
 pub const LDM_BATCH_SIZE: std::ffi::c_int = 64;

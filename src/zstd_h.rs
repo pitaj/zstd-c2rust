@@ -14,10 +14,6 @@ pub const fn ZSTD_FRAMEHEADERSIZE_PREFIX(format: ZSTD_format_e) -> usize {
     }
 }
 
-pub const MEM_32bits: bool = usize::BITS == 32;
-pub const MEM_64bits: bool = usize::BITS == 64;
-pub const MEM_isLittleEndian: bool = true;
-
 /* *************************************
  *  Default constant
  ***************************************/
