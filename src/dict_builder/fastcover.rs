@@ -17,11 +17,11 @@ const FASTCOVER_MAX_SAMPLES_SIZE: usize = if ::core::mem::size_of::<usize>() == 
 } else {
     GB(1)
 };
-const FASTCOVER_MAX_F: usize = 31;
-const FASTCOVER_MAX_ACCEL: usize = 10;
-const FASTCOVER_DEFAULT_SPLITPOINT: usize = 0.75;
-const DEFAULT_F: usize = 20;
-const DEFAULT_ACCEL: usize = 1;
+const FASTCOVER_MAX_F: std::ffi::c_uint = 31;
+const FASTCOVER_MAX_ACCEL: std::ffi::c_uint = 10;
+const FASTCOVER_DEFAULT_SPLITPOINT: f64 = 0.75;
+const DEFAULT_F: std::ffi::c_uint = 20;
+const DEFAULT_ACCEL: std::ffi::c_uint = 1;
 
 extern "C" {
     pub type _IO_wide_data;
@@ -367,11 +367,6 @@ unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
 pub const ZDICT_DICTSIZE_MIN: std::ffi::c_int = 256;
 pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000;
 pub const NULL: std::ffi::c_int = 0;
-pub const FASTCOVER_MAX_F: std::ffi::c_int = 31;
-pub const FASTCOVER_MAX_ACCEL: std::ffi::c_int = 10;
-pub const FASTCOVER_DEFAULT_SPLITPOINT: std::ffi::c_double = 0.75f64;
-pub const DEFAULT_F: std::ffi::c_int = 20;
-pub const DEFAULT_ACCEL: std::ffi::c_int = 1;
 unsafe extern "C" fn FASTCOVER_hashPtrToIndex(
     mut p: *const std::ffi::c_void,
     mut f: u32,
@@ -578,7 +573,7 @@ unsafe extern "C" fn FASTCOVER_checkParameters(
     if parameters.d > parameters.k {
         return 0;
     }
-    if f > FASTCOVER_MAX_F as std::ffi::c_uint
+    if f > FASTCOVER_MAX_F
         || f == 0
     {
         return 0;
@@ -973,13 +968,13 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
     parameters.splitPoint = 1.0f64;
     parameters
         .f = if parameters.f == 0 {
-        DEFAULT_F as std::ffi::c_uint
+        DEFAULT_F
     } else {
         parameters.f
     };
     parameters
         .accel = if parameters.accel == 0 {
-        DEFAULT_ACCEL as std::ffi::c_uint
+        DEFAULT_ACCEL
     } else {
         parameters.accel
     };
@@ -1126,12 +1121,12 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 .wrapping_add(kMaxK.wrapping_sub(kMinK).wrapping_div(kStepSize)),
         );
     let f = if (*parameters).f == 0 {
-        DEFAULT_F as std::ffi::c_uint
+        DEFAULT_F
     } else {
         (*parameters).f
     };
     let accel = if (*parameters).accel == 0 {
-        DEFAULT_ACCEL as std::ffi::c_uint
+        DEFAULT_ACCEL
     } else {
         (*parameters).accel
     };
@@ -1201,7 +1196,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if accel == 0
-        || accel > FASTCOVER_MAX_ACCEL as std::ffi::c_uint
+        || accel > FASTCOVER_MAX_ACCEL
     {
         DISPLAYLEVEL!(1, "Incorrect accel\n");
         return ERROR(ZSTD_error_parameter_outOfBound);
@@ -1283,7 +1278,6 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         while k <= kMaxK {
             let mut data = libc::malloc(
                 ::core::mem::size_of::<FASTCOVER_tryParameters_data_t>()
-                    as std::ffi::c_ulong,
             ) as *mut FASTCOVER_tryParameters_data_t;
             DISPLAYLEVEL!(3, "k=%u\n", k);
             if data.is_null() {
