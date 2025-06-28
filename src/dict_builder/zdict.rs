@@ -934,7 +934,7 @@ pub unsafe extern "C" fn ZDICT_getDictHeaderSize(
     let mut bs = libc::malloc(
         ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
     ) as *mut ZSTD_compressedBlockState_t;
-    let mut wksp = libc::malloc(HUF_WORKSPACE_SIZE as std::ffi::c_ulong) as *mut u32;
+    let mut wksp = libc::malloc(HUF_WORKSPACE_SIZE) as *mut u32;
     if bs.is_null() || wksp.is_null() {
         headerSize = ERROR(ZSTD_error_memory_allocation);
     } else {
