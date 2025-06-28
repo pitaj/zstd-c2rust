@@ -567,7 +567,7 @@ pub const ZSTD_CONTENTSIZE_UNKNOWN: std::ffi::c_ulonglong = (0 as std::ffi::c_ul
     .wrapping_sub(1);
 pub const ZSTD_CONTENTSIZE_ERROR: std::ffi::c_ulonglong = (0 as std::ffi::c_ulonglong)
     .wrapping_sub(2);
-pub const ZSTD_SKIPPABLEHEADERSIZE: std::ffi::c_int = 8;
+pub const ZSTD_SKIPPABLEHEADERSIZE: usize = 8;
 pub const ZSTD_WINDOWLOG_MAX_32: std::ffi::c_int = 30;
 pub const ZSTD_WINDOWLOG_MAX_64: std::ffi::c_int = 31;
 pub const ZSTD_BLOCKSIZE_MAX_MIN: std::ffi::c_int = (1 as std::ffi::c_int)
@@ -2051,7 +2051,7 @@ pub unsafe extern "C" fn ZSTD_readSkippableFrame(
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
     if skippableContentSize > 0 && !dst.is_null() {
-        libc::memcpy(dst, (const u8 *) src + ZSTD_SKIPPABLEHEADERSIZE, (skippableContentSize) as usize);
+        libc::memcpy(dst, src.byte_add(ZSTD_SKIPPABLEHEADERSIZE), skippableContentSize);
     }
     if !magicVariant.is_null() {
         *magicVariant = magicNumber.wrapping_sub(ZSTD_MAGIC_SKIPPABLE_START as u32);
@@ -3791,7 +3791,7 @@ unsafe extern "C" fn ZSTD_decodingBufferSize_internal(
     mut frameContentSize: std::ffi::c_ulonglong,
     mut blockSizeMax: usize,
 ) -> usize {
-    let blockSize = std::cmp::min((usize) MIN(windowSize, ZSTD_BLOCKSIZE_MAX), blockSizeMax);
+    let blockSize = std::cmp::min(std::cmp::min(windowSize, ZSTD_BLOCKSIZE_MAX) as usize, blockSizeMax);
     let neededRBSize = windowSize
         .wrapping_add(
             (blockSize * 2_usize) as std::ffi::c_ulonglong,
@@ -4242,8 +4242,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 (*zds)
                                     .fParams
                                     .blockSizeMax = std::cmp::min(
-                                    (*zds).fParams.blockSizeMax, (unsigned) zds ->
-                                    maxBlockSizeParam
+                                    (*zds).fParams.blockSizeMax, (*zds).maxBlockSizeParam as std::ffi::c_uint
                                 );
                             }
                             let neededInBuffSize = std::cmp::max((*zds).fParams.blockSizeMax, 4);

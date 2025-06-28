@@ -127,6 +127,15 @@ pub const HUF_flags_suspectUncompressible: C2RustUnnamed_0 = 8;
 pub const HUF_flags_preferRepeat: C2RustUnnamed_0 = 4;
 pub const HUF_flags_optimalDepth: C2RustUnnamed_0 = 2;
 pub const HUF_flags_bmi2: C2RustUnnamed_0 = 1;
+
+const ZSTD_DECODER_INTERNAL_BUFFER: usize = 1 << 16; // TODO: configurable?
+
+const ZSTD_LBMIN: usize = 64;
+const ZSTD_LBMAX: usize = 128_usize << 10;
+
+/* extra buffer, compensates when dst is not large enough to store litBuffer */
+const ZSTD_LITBUFFEREXTRASIZE: usize = ZSTD_DECODER_INTERNAL_BUFFER.clamp(ZSTD_LBMIN, ZSTD_LBMAX);
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_DCtx_s {
@@ -1558,9 +1567,10 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     if (*dctx).litBufferLocation as std::ffi::c_uint
         == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
     {
-        libc::memcpy((*dctx).litExtraBuffer, (*dctx).litBufferEnd - ZSTD_LITBUFFEREXTRASIZE, (ZSTD_LITBUFFEREXTRASIZE) as usize);
-        libc::memmove((*dctx).litBuffer + ZSTD_LITBUFFEREXTRASIZE - WILDCOPY_OVERLENGTH, dctx
-                -> litBuffer, (litSize - ZSTD_LITBUFFEREXTRASIZE) as usize);
+        libc::memcpy((*dctx).litExtraBuffer, (*dctx).litBufferEnd.add(ZSTD_LITBUFFEREXTRASIZE), ZSTD_LITBUFFEREXTRASIZE);
+        libc::memmove(
+            (*dctx).litBuffer.add(ZSTD_LITBUFFEREXTRASIZE).sub(WILDCOPY_OVERLENGTH),
+            (*dctx).litBuffer, litSize - ZSTD_LITBUFFEREXTRASIZE);
         (*dctx)
             .litBuffer = ((*dctx).litBuffer)
             .offset(
@@ -3727,11 +3737,11 @@ unsafe extern "C" fn ZSTD_execSequenceEnd(
         match_0 = dictEnd
             .offset(-(prefixStart.offset_from(match_0) as std::ffi::c_long as isize));
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
+            libc::memmove(oLitEnd, match_0, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(oLitEnd, match, (length1) as usize);
+        libc::memmove(oLitEnd, match_0, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
@@ -3784,11 +3794,11 @@ unsafe extern "C" fn ZSTD_execSequenceEndSplitLitBuffer(
         match_0 = dictEnd
             .offset(-(prefixStart.offset_from(match_0) as std::ffi::c_long as isize));
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
+            libc::memmove(oLitEnd, match_0, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(oLitEnd, match, (length1) as usize);
+        libc::memmove(oLitEnd, match_0, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
@@ -3857,11 +3867,11 @@ unsafe extern "C" fn ZSTD_execSequence(
         match_0 = dictEnd
             .offset(match_0.offset_from(prefixStart) as std::ffi::c_long as isize);
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
+            libc::memmove(oLitEnd, match_0, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(oLitEnd, match, (length1) as usize);
+        libc::memmove(oLitEnd, match_0, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
@@ -3942,11 +3952,11 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
         match_0 = dictEnd
             .offset(match_0.offset_from(prefixStart) as std::ffi::c_long as isize);
         if match_0.offset(sequence.matchLength as isize) <= dictEnd {
-            libc::memmove(oLitEnd, match, (sequence.matchLength) as usize);
+            libc::memmove(oLitEnd, match_0, (sequence.matchLength) as usize);
             return sequenceLength;
         }
         let length1 = dictEnd.offset_from(match_0) as std::ffi::c_long as usize;
-        libc::memmove(oLitEnd, match, (length1) as usize);
+        libc::memmove(oLitEnd, match_0, (length1) as usize);
         op = oLitEnd.offset(length1 as isize);
         sequence.matchLength = (sequence.matchLength).wrapping_sub(length1);
         match_0 = prefixStart;
