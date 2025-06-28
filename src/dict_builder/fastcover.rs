@@ -560,8 +560,8 @@ unsafe extern "C" fn FASTCOVER_checkParameters(
     {
         return 0;
     }
-    if parameters.splitPoint <= 0
-        || parameters.splitPoint > 1
+    if parameters.splitPoint <= 0.0
+        || parameters.splitPoint > 1.0
     {
         return 0;
     }
@@ -1356,8 +1356,8 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     let mut pool = NULL as *mut POOL_ctx;
     let mut warned: std::ffi::c_int = 0;
     let mut lastUpdateTime: clock_t = 0;
-    if splitPoint <= 0
-        || splitPoint > 1
+    if splitPoint <= 0.0
+        || splitPoint > 1.0
     {
         if DISPLAYLEVEL!(1, "Incorrect splitPoint\n") >= 1 {
             fprintf(

@@ -208,7 +208,7 @@ case $1 in
   splitpoint-float)
     # parameters.splitPoint <= 0
     # parameters.splitPoint > 1
-    perl -i -p0e 's/(splitPoint [><=]+ \d+)(^\.)/$1.0$2/gm' src/*/*.rs
+    perl -i -p0e 's/(splitPoint [><=]+ \d+)([^\.])/$1.0$2/gm' src/*/*.rs
 
     ;;
 
