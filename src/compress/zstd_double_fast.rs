@@ -571,36 +571,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     };
 }
-#[inline]
-unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.trailing_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> std::ffi::c_uint {
-    return (val as std::ffi::c_ulonglong).trailing_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint {
-    return (val as std::ffi::c_ulonglong).leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
-    if MEM_isLittleEndian {
-        if MEM_64bits {
-            return ZSTD_countTrailingZeros64(val) >> 3
-        } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3
-        }
-    } else if MEM_64bits {
-        return ZSTD_countLeadingZeros64(val) >> 3
-    } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3
-    };
-}
+use crate::common::bits::*;
 unsafe extern "C" fn ZSTD_fillDoubleHashTableForCDict(
     mut ms: *mut ZSTD_MatchState_t,
     mut end: *const std::ffi::c_void,

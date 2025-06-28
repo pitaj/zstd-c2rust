@@ -153,15 +153,7 @@ pub union C2RustUnnamed_1 {
     pub hist_wksp: [u32; 1024],
 }
 use crate::common::mem::*;
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_uint)
-        .wrapping_sub(ZSTD_countLeadingZeros32(val));
-}
+use crate::common::bits::*;
 pub const HUF_BLOCKSIZE_MAX: std::ffi::c_int = 128 as std::ffi::c_int
     * 1024;
 pub const HUF_TABLELOG_MAX: std::ffi::c_int = 12;

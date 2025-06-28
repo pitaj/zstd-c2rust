@@ -548,6 +548,11 @@ case $1 in
 
     ;;
 
+  bits)
+    perl -i -p0e 's/(?:(?:#\[[^\]]+\][\s\n]*)*unsafe extern "C" fn ZSTD_(?:count(?:Trailing|Leading)Zeros|highbit32|NbCommonBytes|rotateRight)\w*\([^{]*{(?:[^{}]|{(?:[^{}]|{[^{}]*})*})*}\n?)+/use crate::common::bits::*;\n/gm'  src/*/*.rs
+    
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile

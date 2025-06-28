@@ -294,15 +294,7 @@ pub struct COVER_dictSelection {
 }
 pub const CLOCKS_PER_SEC: std::ffi::c_int = 1000000;
 use crate::common::mem::*;
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_uint)
-        .wrapping_sub(ZSTD_countLeadingZeros32(val));
-}
+use crate::common::bits::*;
 pub const ZDICT_DICTSIZE_MIN: std::ffi::c_int = 256;
 pub const NULL: std::ffi::c_int = 0;
 pub const COVER_DEFAULT_SPLITPOINT: std::ffi::c_double = 1.0f64;

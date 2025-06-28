@@ -2842,49 +2842,7 @@ unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,
     mut args: ...
 ) {}
-#[inline]
-unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.trailing_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_countTrailingZeros64(mut val: u64) -> std::ffi::c_uint {
-    return (val as std::ffi::c_ulonglong).trailing_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint {
-    return (val as std::ffi::c_ulonglong).leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
-    if MEM_isLittleEndian {
-        if MEM_64bits {
-            return ZSTD_countTrailingZeros64(val) >> 3
-        } else {
-            return ZSTD_countTrailingZeros32(val as u32) >> 3
-        }
-    } else if MEM_64bits {
-        return ZSTD_countLeadingZeros64(val) >> 3
-    } else {
-        return ZSTD_countLeadingZeros32(val as u32) >> 3
-    };
-}
-#[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_uint)
-        .wrapping_sub(ZSTD_countLeadingZeros32(val));
-}
-#[inline]
-unsafe extern "C" fn ZSTD_rotateRight_U64(value: u64, mut count: u32) -> u64 {
-    count &= 0x3f as std::ffi::c_int as u32;
-    return value >> count
-        | value
-            << ((0 as std::ffi::c_uint).wrapping_sub(count)
-                & 0x3f as std::ffi::c_int as std::ffi::c_uint);
-}
+use crate::common::bits::*;
 pub const STREAM_ACCUMULATOR_MIN_32: std::ffi::c_int = 25;
 pub const STREAM_ACCUMULATOR_MIN_64: std::ffi::c_int = 57;
 #[inline]

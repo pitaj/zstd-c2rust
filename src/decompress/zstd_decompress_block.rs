@@ -374,15 +374,7 @@ unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,
     mut args: ...
 ) {}
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_uint)
-        .wrapping_sub(ZSTD_countLeadingZeros32(val));
-}
+use crate::common::bits::*;
 pub const STREAM_ACCUMULATOR_MIN_32: std::ffi::c_int = 25;
 pub const STREAM_ACCUMULATOR_MIN_64: std::ffi::c_int = 57;
 #[inline]

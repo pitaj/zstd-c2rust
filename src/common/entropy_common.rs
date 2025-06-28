@@ -29,19 +29,7 @@ pub const FSE_VERSION_NUMBER: std::ffi::c_int = FSE_VERSION_MAJOR
     + FSE_VERSION_MINOR * 100 as std::ffi::c_int + FSE_VERSION_RELEASE;
 pub const FSE_MIN_TABLELOG: std::ffi::c_int = 5;
 pub const FSE_TABLELOG_ABSOLUTE_MAX: std::ffi::c_int = 15;
-#[inline]
-unsafe extern "C" fn ZSTD_countTrailingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.trailing_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_uint)
-        .wrapping_sub(ZSTD_countLeadingZeros32(val));
-}
+use crate::common::bits::*;
 pub const HUF_TABLELOG_MAX: std::ffi::c_int = 12;
 #[no_mangle]
 pub unsafe extern "C" fn FSE_versionNumber() -> std::ffi::c_uint {

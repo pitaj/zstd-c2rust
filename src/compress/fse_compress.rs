@@ -31,15 +31,7 @@ pub struct FSE_symbolCompressionTransform {
     pub deltaNbBits: u32,
 }
 use crate::common::mem::*;
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_uint)
-        .wrapping_sub(ZSTD_countLeadingZeros32(val));
-}
+use crate::common::bits::*;
 static mut BIT_mask: [std::ffi::c_uint; 32] = [
     0,
     1,

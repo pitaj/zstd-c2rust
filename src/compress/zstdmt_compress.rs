@@ -1091,15 +1091,7 @@ unsafe extern "C" fn _force_has_format_string(
     mut format: *const std::ffi::c_char,
     mut args: ...
 ) {}
-#[inline]
-unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
-    return val.leading_zeros() as i32 as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
-    return (31 as std::ffi::c_uint)
-        .wrapping_sub(ZSTD_countLeadingZeros32(val));
-}
+use crate::common::bits::*;
 pub const NULL: std::ffi::c_int = 0;
 pub const NULL_0: std::ffi::c_int = 0;
 static mut g_nullBuffer: Buffer = {
