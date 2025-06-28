@@ -1883,7 +1883,7 @@ unsafe extern "C" fn ZSTD_count(
             }
         }
     }
-    if MEM_64bits() != 0 && pIn < pInLimit.offset(-3_isize)
+    if MEM_64bits && pIn < pInLimit.offset(-3_isize)
         && MEM_read32(pMatch as *const std::ffi::c_void)
             == MEM_read32(pIn as *const std::ffi::c_void)
     {
@@ -1969,7 +1969,7 @@ unsafe extern "C" fn ZSTD_window_needOverflowCorrection(
     let curr = (srcEnd as *const u8).offset_from(window.base) as std::ffi::c_long
         as u32;
     return (curr
-        > (if MEM_64bits() != 0 {
+        > (if MEM_64bits {
             (3500 as std::ffi::c_uint)
                 .wrapping_mul(
                     ((1 as std::ffi::c_int) << 20) as std::ffi::c_uint,
@@ -2134,16 +2134,8 @@ unsafe extern "C" fn ZSTD_hasExtSeqProd(
     return ((*params).extSeqProdFunc).is_some() as std::ffi::c_int;
 }
 use crate::zstd_h::MEM_32bits;
-#[inline]
-unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 8) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1;
-}
+use crate::zstd_h::MEM_64bits;
+use crate::zstd_h::MEM_isLittleEndian;
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
     return *(ptr as *const unalign16);
@@ -2178,7 +2170,7 @@ unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u16) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write16(memPtr, val);
     } else {
         let mut p = memPtr as *mut u8;
@@ -2197,7 +2189,7 @@ unsafe extern "C" fn MEM_writeLE24(mut memPtr: *mut std::ffi::c_void, mut val: u
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read32(memPtr)
     } else {
         return MEM_swap32(MEM_read32(memPtr))
@@ -2205,7 +2197,7 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write32(memPtr, val32);
     } else {
         MEM_write32(memPtr, MEM_swap32(val32));
@@ -2213,7 +2205,7 @@ unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32:
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE64(mut memPtr: *mut std::ffi::c_void, mut val64: u64) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write64(memPtr, val64);
     } else {
         MEM_write64(memPtr, MEM_swap64(val64));
@@ -2985,13 +2977,13 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 }
 #[inline]
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
-    if MEM_isLittleEndian() != 0 {
-        if MEM_64bits() != 0 {
+    if MEM_isLittleEndian {
+        if MEM_64bits {
             return ZSTD_countTrailingZeros64(val) >> 3
         } else {
             return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
-    } else if MEM_64bits() != 0 {
+    } else if MEM_64bits {
         return ZSTD_countLeadingZeros64(val) >> 3
     } else {
         return ZSTD_countLeadingZeros32(val as u32) >> 3
@@ -5804,7 +5796,7 @@ pub const ZSTD_INDEXOVERFLOW_MARGIN: std::ffi::c_int = 16 as std::ffi::c_int
     * ((1 as std::ffi::c_int) << 20);
 unsafe extern "C" fn ZSTD_indexTooCloseToMax(mut w: ZSTD_window_t) -> std::ffi::c_int {
     return ((w.nextSrc).offset_from(w.base) as std::ffi::c_long as usize
-        > (if MEM_64bits() != 0 {
+        > (if MEM_64bits {
             (3500 as std::ffi::c_uint)
                 .wrapping_mul(
                     ((1 as std::ffi::c_int) << 20) as std::ffi::c_uint,
@@ -5822,7 +5814,7 @@ unsafe extern "C" fn ZSTD_dictTooBig(loadedDictSize: usize) -> std::ffi::c_int {
     return (loadedDictSize
         > (u32::MAX)
             .wrapping_sub(
-                (if MEM_64bits() != 0 {
+                (if MEM_64bits {
                     (3500 as std::ffi::c_uint)
                         .wrapping_mul(
                             ((1 as std::ffi::c_int) << 20)
@@ -9417,7 +9409,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
         == ZSTD_ps_enable as std::ffi::c_int as std::ffi::c_uint && !ls.is_null())
         as std::ffi::c_int;
     ZSTD_assertEqualCParams((*params).cParams, (*ms).cParams);
-    let mut maxDictSize = (if MEM_64bits() != 0 {
+    let mut maxDictSize = (if MEM_64bits {
         (3500 as std::ffi::c_uint)
             .wrapping_mul(
                 ((1 as std::ffi::c_int) << 20) as std::ffi::c_uint,
@@ -9447,7 +9439,7 @@ unsafe extern "C" fn ZSTD_loadDictionaryContent(
     if srcSize
         > (u32::MAX)
             .wrapping_sub(
-                (if MEM_64bits() != 0 {
+                (if MEM_64bits {
                     (3500 as std::ffi::c_uint)
                         .wrapping_mul(
                             ((1 as std::ffi::c_int) << 20)

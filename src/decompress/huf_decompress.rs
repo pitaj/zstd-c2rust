@@ -164,16 +164,8 @@ unsafe extern "C" fn ZSTD_maybeNullPtrAdd(
     };
 }
 use crate::zstd_h::MEM_32bits;
-#[inline]
-unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 8) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1;
-}
+use crate::zstd_h::MEM_64bits;
+use crate::zstd_h::MEM_isLittleEndian;
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
     return *(ptr as *const unalign16);
@@ -204,7 +196,7 @@ unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE16(mut memPtr: *const std::ffi::c_void) -> u16 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read16(memPtr)
     } else {
         let mut p = memPtr as *const u8;
@@ -215,7 +207,7 @@ unsafe extern "C" fn MEM_readLE16(mut memPtr: *const std::ffi::c_void) -> u16 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read32(memPtr)
     } else {
         return MEM_swap32(MEM_read32(memPtr))
@@ -223,7 +215,7 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read64(memPtr)
     } else {
         return MEM_swap64(MEM_read64(memPtr))
@@ -678,7 +670,7 @@ unsafe extern "C" fn HUF_initRemainingDStream(
 }
 unsafe extern "C" fn HUF_DEltX1_set4(mut symbol: u8, mut nbBits: u8) -> u64 {
     let mut D4: u64 = 0;
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         D4 = (((symbol as std::ffi::c_int) << 8)
             + nbBits as std::ffi::c_int) as u64;
     } else {
@@ -1741,7 +1733,7 @@ unsafe extern "C" fn HUF_buildDEltX2U32(
     mut level: std::ffi::c_int,
 ) -> u32 {
     let mut seq: u32 = 0;
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         seq = if level == 1 {
             symbol
         } else {
@@ -2309,7 +2301,7 @@ unsafe extern "C" fn HUF_decodeStreamX2(
     if pEnd.offset_from(p) as std::ffi::c_long as usize
         >= ::core::mem::size_of::<BitContainerType>()
     {
-        if dtLog <= 11 && MEM_64bits() != 0 {
+        if dtLog <= 11 && MEM_64bits {
             while (BIT_reloadDStream(bitDPtr) as std::ffi::c_uint
                 == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
                 as std::ffi::c_int

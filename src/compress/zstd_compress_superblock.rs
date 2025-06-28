@@ -740,10 +740,7 @@ unsafe extern "C" fn ZSTD_updateRep(mut rep: *mut u32, offBase: u32, ll0: u32) {
     };
 }
 use crate::zstd_h::MEM_32bits;
-#[inline]
-unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1;
-}
+use crate::zstd_h::MEM_isLittleEndian;
 #[inline]
 unsafe extern "C" fn MEM_write16(mut memPtr: *mut std::ffi::c_void, mut value: u16) {
     *(memPtr as *mut unalign16) = value;
@@ -758,7 +755,7 @@ unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE16(mut memPtr: *mut std::ffi::c_void, mut val: u16) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write16(memPtr, val);
     } else {
         let mut p = memPtr as *mut u8;
@@ -777,7 +774,7 @@ unsafe extern "C" fn MEM_writeLE24(mut memPtr: *mut std::ffi::c_void, mut val: u
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write32(memPtr, val32);
     } else {
         MEM_write32(memPtr, MEM_swap32(val32));

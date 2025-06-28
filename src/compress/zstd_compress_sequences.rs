@@ -136,10 +136,7 @@ pub struct ZSTD_BuildCTableWksp {
     pub wksp: [u32; 285],
 }
 use crate::zstd_h::MEM_32bits;
-#[inline]
-unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1;
-}
+use crate::zstd_h::MEM_isLittleEndian;
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
     return *(ptr as *const unalign16);
@@ -162,7 +159,7 @@ unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write32(memPtr, val32);
     } else {
         MEM_write32(memPtr, MEM_swap32(val32));
@@ -170,7 +167,7 @@ unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32:
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE64(mut memPtr: *mut std::ffi::c_void, mut val64: u64) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write64(memPtr, val64);
     } else {
         MEM_write64(memPtr, MEM_swap64(val64));

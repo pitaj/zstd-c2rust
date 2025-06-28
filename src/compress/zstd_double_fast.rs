@@ -204,16 +204,8 @@ pub type ZSTD_tableFillPurpose_e = std::ffi::c_uint;
 pub const ZSTD_tfp_forCDict: ZSTD_tableFillPurpose_e = 1;
 pub const ZSTD_tfp_forCCtx: ZSTD_tableFillPurpose_e = 0;
 pub const CACHELINE_SIZE: std::ffi::c_int = 64;
-#[inline]
-unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 8) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1;
-}
+use crate::zstd_h::MEM_64bits;
+use crate::zstd_h::MEM_isLittleEndian;
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
     return *(ptr as *const unalign16);
@@ -240,7 +232,7 @@ unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read32(memPtr)
     } else {
         return MEM_swap32(MEM_read32(memPtr))
@@ -248,7 +240,7 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read64(memPtr)
     } else {
         return MEM_swap64(MEM_read64(memPtr))
@@ -395,7 +387,7 @@ unsafe extern "C" fn ZSTD_count(
             }
         }
     }
-    if MEM_64bits() != 0 && pIn < pInLimit.offset(-3_isize)
+    if MEM_64bits && pIn < pInLimit.offset(-3_isize)
         && MEM_read32(pMatch as *const std::ffi::c_void)
             == MEM_read32(pIn as *const std::ffi::c_void)
     {
@@ -638,13 +630,13 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 }
 #[inline]
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
-    if MEM_isLittleEndian() != 0 {
-        if MEM_64bits() != 0 {
+    if MEM_isLittleEndian {
+        if MEM_64bits {
             return ZSTD_countTrailingZeros64(val) >> 3
         } else {
             return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
-    } else if MEM_64bits() != 0 {
+    } else if MEM_64bits {
         return ZSTD_countLeadingZeros64(val) >> 3
     } else {
         return ZSTD_countLeadingZeros32(val as u32) >> 3

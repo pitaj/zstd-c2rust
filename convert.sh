@@ -511,6 +511,21 @@ case $1 in
 
     ;;
 
+  mem-64bits-littleendian)
+    # if MEM_64bits() != 0 {
+    perl -i -p0e 's/\bMEM_64bits\(\) != 0/MEM_64bits/gm'  src/*/*.rs
+
+    # unsafe extern "C" fn MEM_64bits()
+    perl -i -p0e 's/#\[inline\][^\(;]*fn MEM_64bits\(\)[^}]*}/use crate::zstd_h::MEM_64bits;/gm'  src/*/*.rs
+
+    # if MEM_isLittleEndian() != 0 {
+    perl -i -p0e 's/\MEM_isLittleEndian\(\) != 0/MEM_isLittleEndian/gm'  src/*/*.rs
+
+    # unsafe extern "C" fn MEM_isLittleEndian()
+    perl -i -p0e 's/#\[inline\][^\(;]*fn MEM_isLittleEndian\(\)[^}]*}/use crate::zstd_h::MEM_isLittleEndian;/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -561,6 +576,7 @@ case $1 in
     ./convert.sh fse-flushbits
     ./convert.sh boundcheck
     ./convert.sh mem-32bits
+    ./convert.sh mem-64bits-littleendian
 
     ;;
 

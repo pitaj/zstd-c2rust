@@ -739,16 +739,8 @@ pub const MINRATIO: std::ffi::c_int = 4;
 pub const ZDICT_MAX_SAMPLES_SIZE: std::ffi::c_uint = (2000 as std::ffi::c_uint)
     << 20;
 pub const ZDICT_MIN_SAMPLES_SIZE: std::ffi::c_int = ZDICT_CONTENTSIZE_MIN * MINRATIO;
-#[inline]
-unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 8) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1;
-}
+use crate::zstd_h::MEM_64bits;
+use crate::zstd_h::MEM_isLittleEndian;
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
     return *(ptr as *const unalign16);
@@ -775,7 +767,7 @@ unsafe extern "C" fn MEM_swap32(mut in_0: u32) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read32(memPtr)
     } else {
         return MEM_swap32(MEM_read32(memPtr))
@@ -783,7 +775,7 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32: u32) {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         MEM_write32(memPtr, val32);
     } else {
         MEM_write32(memPtr, MEM_swap32(val32));
@@ -824,13 +816,13 @@ unsafe extern "C" fn ZSTD_countLeadingZeros64(mut val: u64) -> std::ffi::c_uint 
 }
 #[inline]
 unsafe extern "C" fn ZSTD_NbCommonBytes(mut val: usize) -> std::ffi::c_uint {
-    if MEM_isLittleEndian() != 0 {
-        if MEM_64bits() != 0 {
+    if MEM_isLittleEndian {
+        if MEM_64bits {
             return ZSTD_countTrailingZeros64(val as u64) >> 3
         } else {
             return ZSTD_countTrailingZeros32(val as u32) >> 3
         }
-    } else if MEM_64bits() != 0 {
+    } else if MEM_64bits {
         return ZSTD_countLeadingZeros64(val as u64) >> 3
     } else {
         return ZSTD_countLeadingZeros32(val as u32) >> 3

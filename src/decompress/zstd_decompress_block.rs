@@ -405,16 +405,8 @@ unsafe extern "C" fn ZSTD_maybeNullPtrAdd(
     };
 }
 use crate::zstd_h::MEM_32bits;
-#[inline]
-unsafe extern "C" fn MEM_64bits() -> std::ffi::c_uint {
-    return (::core::mem::size_of::<usize>()
-        == 8) as std::ffi::c_int
-        as std::ffi::c_uint;
-}
-#[inline]
-unsafe extern "C" fn MEM_isLittleEndian() -> std::ffi::c_uint {
-    return 1;
-}
+use crate::zstd_h::MEM_64bits;
+use crate::zstd_h::MEM_isLittleEndian;
 #[inline]
 unsafe extern "C" fn MEM_read16(mut ptr: *const std::ffi::c_void) -> u16 {
     return *(ptr as *const unalign16);
@@ -441,7 +433,7 @@ unsafe extern "C" fn MEM_swap64(mut in_0: u64) -> u64 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE16(mut memPtr: *const std::ffi::c_void) -> u16 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read16(memPtr)
     } else {
         let mut p = memPtr as *const u8;
@@ -460,7 +452,7 @@ unsafe extern "C" fn MEM_readLE24(mut memPtr: *const std::ffi::c_void) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read32(memPtr)
     } else {
         return MEM_swap32(MEM_read32(memPtr))
@@ -468,7 +460,7 @@ unsafe extern "C" fn MEM_readLE32(mut memPtr: *const std::ffi::c_void) -> u32 {
 }
 #[inline]
 unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
-    if MEM_isLittleEndian() != 0 {
+    if MEM_isLittleEndian {
         return MEM_read64(memPtr)
     } else {
         return MEM_swap64(MEM_read64(memPtr))
@@ -4123,7 +4115,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
     {
         BIT_reloadDStream(&mut (*seqState).DStream);
     }
-    if MEM_64bits() != 0
+    if MEM_64bits
         && (totalBits as std::ffi::c_int
             >= 57
                 - (9 as std::ffi::c_int + 9 as std::ffi::c_int + 8 as std::ffi::c_int))
@@ -5173,7 +5165,7 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
     return info;
 }
 unsafe extern "C" fn ZSTD_maxShortOffset() -> usize {
-    if MEM_64bits() != 0 {
+    if MEM_64bits {
         return -(1 as std::ffi::c_int) as usize
     } else {
         let maxOffbase = (1_usize
@@ -5244,7 +5236,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
     {
         return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
     }
-    if MEM_64bits() != 0
+    if MEM_64bits
         && ::core::mem::size_of::<usize>()
             == ::core::mem::size_of::<*mut std::ffi::c_void>()
         && (-(1 as std::ffi::c_int) as usize).wrapping_sub(dst as usize)
@@ -5270,7 +5262,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
             isLongOffset = ZSTD_lo_isRegularOffset;
         }
         if usePrefetchDecoder == 0 {
-            let minShare = (if MEM_64bits() != 0 {
+            let minShare = (if MEM_64bits {
                 7 as std::ffi::c_int
             } else {
                 20 as std::ffi::c_int
