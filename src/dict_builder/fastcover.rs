@@ -1,5 +1,28 @@
 use ::libc;
 use ::c2rust_bitfields;
+use crate::common::zstd_internal_h::*;
+
+/*-*************************************
+*  Constants
+***************************************/
+/**
+* There are 32bit indexes used to ref samples, so limit samples size to 4GB
+* on 64bit builds.
+* For 32bit builds we choose 1 GB.
+* Most 32bit platforms have 2GB user-mode addressable space and we allocate a large
+* contiguous buffer, so 1GB is already a high limit.
+*/
+const FASTCOVER_MAX_SAMPLES_SIZE: usize = if ::core::mem::size_of::<usize>() == 8 {
+    std::ffi::c_uint::MAX
+} else {
+    GB(1)
+};
+const FASTCOVER_MAX_F: usize = 31;
+const FASTCOVER_MAX_ACCEL: usize = 10;
+const FASTCOVER_DEFAULT_SPLITPOINT: usize = 0.75;
+const DEFAULT_F: usize = 20;
+const DEFAULT_ACCEL: usize = 1;
+
 extern "C" {
     pub type _IO_wide_data;
     pub type _IO_codecvt;
@@ -647,21 +670,8 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     };
     (*ctx).displayLevel = displayLevel;
     if totalSamplesSize
-        < (if d as std::ffi::c_ulong > ::core::mem::size_of::<u64>()
-        {
-            d as std::ffi::c_ulong
-        } else {
-            ::core::mem::size_of::<u64>()
-        })
-        || totalSamplesSize
-            >= (if ::core::mem::size_of::<usize>()
-                == 8
-            {
-                -(1 as std::ffi::c_int) as std::ffi::c_uint
-            } else {
-                (1 as std::ffi::c_uint)
-                    .wrapping_mul((1 as std::ffi::c_uint) << 30)
-            }) as usize
+        < std::cmp::max(d as usize, ::core::mem::size_of::<u64>())
+        || totalSamplesSize >= FASTCOVER_MAX_SAMPLES_SIZE
     {
         if displayLevel >= 1 {
             fprintf(
@@ -669,14 +679,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
                 b"Total samples size is too large (%u MB), maximum size is %u MB\n\0"
                     as *const u8 as *const std::ffi::c_char,
                 (totalSamplesSize >> 20) as std::ffi::c_uint,
-                (if ::core::mem::size_of::<usize>()
-                    == 8
-                {
-                    -(1 as std::ffi::c_int) as std::ffi::c_uint
-                } else {
-                    (1 as std::ffi::c_uint)
-                        .wrapping_mul((1 as std::ffi::c_uint) << 30)
-                }) >> 20,
+                FASTCOVER_MAX_SAMPLES_SIZE >> 20,
             );
             fflush(stderr);
         }
@@ -752,15 +755,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     (*ctx).nbTestSamples = nbTestSamples as usize;
     (*ctx)
         .nbDmers = trainingSamplesSize
-        .wrapping_sub(
-            (if d as std::ffi::c_ulong
-                > ::core::mem::size_of::<u64>()
-            {
-                d as std::ffi::c_ulong
-            } else {
-                ::core::mem::size_of::<u64>()
-            }),
-        )
+        .wrapping_sub(std::cmp::max(d as usize, ::core::mem::size_of::<u64>()))
         .wrapping_add(1);
     (*ctx).d = d;
     (*ctx).f = f;
@@ -768,7 +763,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     (*ctx)
         .offsets = libc::calloc(
         nbSamples.wrapping_add(1)
-            as std::ffi::c_ulong,
+            as usize,
         ::core::mem::size_of::<usize>(),
     ) as *mut usize;
     if ((*ctx).offsets).is_null() {
@@ -804,7 +799,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
     }
     (*ctx)
         .freqs = libc::calloc(
-        1_u64 << f,
+        1_usize << f,
         ::core::mem::size_of::<u32>(),
     ) as *mut u32;
     if ((*ctx).freqs).is_null() {
@@ -886,7 +881,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
             }
         } else {
             zeroScoreRun = 0;
-            segmentSize = std::cmp::min(segment.end - segment.begin + parameters.d - 1, tail);
+            segmentSize = std::cmp::min((segment.end - segment.begin + parameters.d - 1) as usize, tail);
             if segmentSize < parameters.d as usize {
                 break;
             }
@@ -936,13 +931,13 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
     let mut dictBufferCapacity = (*data).dictBufferCapacity;
     let mut totalCompressedSize = ERROR(ZSTD_error_GENERIC);
     let mut segmentFreqs = libc::calloc(
-        1_u64 << (*ctx).f,
+        1_usize << (*ctx).f,
         ::core::mem::size_of::<u16>(),
     ) as *mut u16;
     let dict = libc::malloc(dictBufferCapacity) as *mut u8;
     let mut selection = COVER_dictSelectionError(ERROR(ZSTD_error_GENERIC));
     let mut freqs = libc::malloc(
-        (1_u64 << (*ctx).f)
+        (1_usize << (*ctx).f)
             .wrapping_mul(::core::mem::size_of::<u32>()),
     ) as *mut u32;
     let displayLevel = (*ctx).displayLevel;
@@ -961,7 +956,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
         libc::memcpy(
             freqs as *mut std::ffi::c_void,
             (*ctx).freqs as *const std::ffi::c_void,
-            (1_u64 << (*ctx).f)
+            (1_usize << (*ctx).f)
                 .wrapping_mul(::core::mem::size_of::<u32>()),
         );
         let tail = FASTCOVER_buildDictionary(
@@ -1177,7 +1172,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         fflush(stderr);
     }
     let mut segmentFreqs = libc::calloc(
-        1_u64 << parameters.f,
+        1_usize << parameters.f,
         ::core::mem::size_of::<u16>(),
     ) as *mut u16;
     let tail = FASTCOVER_buildDictionary(
