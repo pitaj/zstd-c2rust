@@ -12,7 +12,7 @@
  *           This is the only supported way to use the error list < v1.3.1
  *  note 3 : ZSTD_isError() is always correct, whatever the library version.
  **********************************************/
-pub type ZSTD_ErrorCode = std::ffi::c_uint;
+pub type ZSTD_ErrorCode = usize;
 pub const ZSTD_error_maxCode: ZSTD_ErrorCode = 120;
 pub const ZSTD_error_externalSequences_invalid: ZSTD_ErrorCode = 107;
 pub const ZSTD_error_sequenceProducer_failed: ZSTD_ErrorCode = 106;
@@ -51,7 +51,7 @@ pub const ZSTD_error_GENERIC: ZSTD_ErrorCode = 1;
 pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
 
 pub const fn ERROR(code: ZSTD_ErrorCode) -> usize {
-    -(code as std::ffi::c_int) as usize
+    -(code as isize) as usize
 }
 
 pub const fn ERR_isError(code: ZSTD_ErrorCode) -> bool {

@@ -1597,7 +1597,7 @@ unsafe extern "C" fn ZSTD_cParam_withinBounds(
     mut value: std::ffi::c_int,
 ) -> std::ffi::c_int {
     let bounds = ZSTD_cParam_getBounds(cParam);
-    if ERR_isError(bounds.error) != 0 {
+    if ERR_isError(bounds.error) {
         return 0;
     }
     if value < bounds.lowerBound {
@@ -4082,7 +4082,7 @@ unsafe extern "C" fn ZSTD_cParam_clampBounds(
     mut value: *mut std::ffi::c_int,
 ) -> usize {
     let bounds = ZSTD_cParam_getBounds(cParam);
-    if ERR_isError(bounds.error) != 0 {
+    if ERR_isError(bounds.error) {
         return bounds.error;
     }
     if *value < bounds.lowerBound {
@@ -6563,7 +6563,7 @@ unsafe extern "C" fn ZSTD_buildSequencesStatistics(
         entropyWorkspace,
         entropyWkspSize,
     );
-    if ERR_isError(countSize) != 0 {
+    if ERR_isError(countSize) {
         stats.size = countSize;
         return stats;
     }
@@ -6618,7 +6618,7 @@ unsafe extern "C" fn ZSTD_buildSequencesStatistics(
         entropyWorkspace,
         entropyWkspSize,
     );
-    if ERR_isError(countSize_0) != 0 {
+    if ERR_isError(countSize_0) {
         stats.size = countSize_0;
         return stats;
     }
@@ -6668,7 +6668,7 @@ unsafe extern "C" fn ZSTD_buildSequencesStatistics(
         entropyWorkspace,
         entropyWkspSize,
     );
-    if ERR_isError(countSize_1) != 0 {
+    if ERR_isError(countSize_1) {
         stats.size = countSize_1;
         return stats;
     }
@@ -7919,7 +7919,7 @@ unsafe extern "C" fn ZSTD_estimateBlockSize_literal(
             workspace,
             wkspSize,
         );
-        if ERR_isError(largest) != 0 {
+        if ERR_isError(largest) {
             return litSize;
         }
         let mut cLitSizeEstimate = HUF_estimateCompressedSize(
@@ -7983,7 +7983,7 @@ unsafe extern "C" fn ZSTD_estimateBlockSize_symbolType(
     {
         cSymbolTypeSizeEstimateInBits = ZSTD_fseBitCost(fseCTable, countWksp, max);
     }
-    if ERR_isError(cSymbolTypeSizeEstimateInBits) != 0 {
+    if ERR_isError(cSymbolTypeSizeEstimateInBits) {
         return nbSeq * 10;
     }
     while ctp < ctEnd {
@@ -8401,7 +8401,7 @@ unsafe extern "C" fn ZSTD_deriveBlockSplitsHelper(
         secondHalfSeqStore,
         zc,
     );
-    if ERR_isError(estimatedOriginalSize) != 0
+    if ERR_isError(estimatedOriginalSize)
         || ERR_isError(estimatedFirstHalfSize) != 0
         || ERR_isError(estimatedSecondHalfSize) != 0
     {
@@ -9458,7 +9458,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     {
         (*bs).entropy.huf.repeatMode = HUF_repeat_valid;
     }
-    if ERR_isError(hufHeaderSize) != 0 {
+    if ERR_isError(hufHeaderSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     dictPtr = dictPtr.offset(hufHeaderSize as isize);
@@ -9470,7 +9470,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(offcodeHeaderSize) != 0 {
+    if ERR_isError(offcodeHeaderSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     if offcodeLog > 8 {
@@ -9501,7 +9501,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(matchlengthHeaderSize) != 0 {
+    if ERR_isError(matchlengthHeaderSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     if matchlengthLog > 9 {
@@ -9540,7 +9540,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(litlengthHeaderSize) != 0 {
+    if ERR_isError(litlengthHeaderSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     if litlengthLog > 9 {
@@ -12284,7 +12284,7 @@ pub unsafe extern "C" fn ZSTD_compressStream2(
                 .wrapping_add(
                     ((*output).pos).wrapping_sub(opos) as std::ffi::c_ulonglong,
                 );
-            if ERR_isError(flushMin) != 0
+            if ERR_isError(flushMin)
                 || endOp as std::ffi::c_uint
                     == ZSTD_e_end as std::ffi::c_int as std::ffi::c_uint
                     && flushMin == 0

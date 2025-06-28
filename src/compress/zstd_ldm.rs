@@ -1588,7 +1588,7 @@ pub unsafe extern "C" fn ZSTD_ldm_generateSequences(
             chunkStart as *const std::ffi::c_void,
             chunkSize,
         );
-        if ERR_isError(newLeftoverSize) != 0 {
+        if ERR_isError(newLeftoverSize) {
             return newLeftoverSize;
         }
         if prevSize < (*sequences).size {

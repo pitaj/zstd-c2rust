@@ -587,7 +587,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         table: 0 as *const std::ffi::c_void,
     };
     let _var_err__ = BIT_initDStream(&mut bitD, cSrc, cSrcSize);
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     FSE_initDState(&mut state1, &mut bitD, dt);
@@ -708,7 +708,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         cSrcSize,
         bmi2,
     );
-    if ERR_isError(NCountLength) != 0 {
+    if ERR_isError(NCountLength) {
         return NCountLength;
     }
     if tableLog > maxLog {
@@ -739,7 +739,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         workSpace,
         wkspSize,
     );
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     let mut ptr = dtable as *const std::ffi::c_void;

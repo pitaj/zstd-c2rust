@@ -1481,7 +1481,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             .litBufferEnd = ((*dctx).litBufferEnd)
             .offset(-(WILDCOPY_OVERLENGTH as isize));
     }
-    if ERR_isError(hufSuccess) != 0 {
+    if ERR_isError(hufSuccess) {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
     (*dctx).litPtr = (*dctx).litBuffer;
@@ -3283,7 +3283,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
                 src,
                 srcSize,
             );
-            if ERR_isError(headerSize) != 0 {
+            if ERR_isError(headerSize) {
                 return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
             }
             if tableLog > maxLog {
@@ -3380,7 +3380,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         ::core::mem::size_of::<[u32; 640]>(),
         ZSTD_DCtx_get_bmi2(dctx),
     );
-    if ERR_isError(llhSize) != 0 {
+    if ERR_isError(llhSize) {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
     ip = ip.offset(llhSize as isize);
@@ -3402,7 +3402,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         ::core::mem::size_of::<[u32; 640]>(),
         ZSTD_DCtx_get_bmi2(dctx),
     );
-    if ERR_isError(ofhSize) != 0 {
+    if ERR_isError(ofhSize) {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
     ip = ip.offset(ofhSize as isize);
@@ -3424,7 +3424,7 @@ pub unsafe extern "C" fn ZSTD_decodeSeqHeaders(
         ::core::mem::size_of::<[u32; 640]>(),
         ZSTD_DCtx_get_bmi2(dctx),
     );
-    if ERR_isError(mlhSize) != 0 {
+    if ERR_isError(mlhSize) {
         return -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize;
     }
     ip = ip.offset(mlhSize as isize);
@@ -4624,7 +4624,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                     dictStart,
                     dictEnd,
                 );
-                if ERR_isError(oneSeqSize) != 0 {
+                if ERR_isError(oneSeqSize) {
                     return oneSeqSize;
                 }
                 prefetchPos = ZSTD_prefetchMatch(
@@ -4668,7 +4668,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                         dictEnd,
                     )
                 };
-                if ERR_isError(oneSeqSize_0) != 0 {
+                if ERR_isError(oneSeqSize_0) {
                     return oneSeqSize_0;
                 }
                 prefetchPos = ZSTD_prefetchMatch(
@@ -4744,7 +4744,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                     dictStart,
                     dictEnd,
                 );
-                if ERR_isError(oneSeqSize_1) != 0 {
+                if ERR_isError(oneSeqSize_1) {
                     return oneSeqSize_1;
                 }
                 op = op.offset(oneSeqSize_1 as isize);
@@ -4777,7 +4777,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                         dictEnd,
                     )
                 };
-                if ERR_isError(oneSeqSize_2) != 0 {
+                if ERR_isError(oneSeqSize_2) {
                     return oneSeqSize_2;
                 }
                 op = op.offset(oneSeqSize_2 as isize);
@@ -5092,7 +5092,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         dstCapacity,
         streaming,
     );
-    if ERR_isError(litCSize) != 0 {
+    if ERR_isError(litCSize) {
         return litCSize;
     }
     ip = ip.offset(litCSize as isize);
@@ -5117,7 +5117,7 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         ip as *const std::ffi::c_void,
         srcSize,
     );
-    if ERR_isError(seqHSize) != 0 {
+    if ERR_isError(seqHSize) {
         return seqHSize;
     }
     ip = ip.offset(seqHSize as isize);

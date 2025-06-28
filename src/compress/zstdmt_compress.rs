@@ -1781,7 +1781,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                             &mut jobParams,
                             (*job).fullFrameSize,
                         );
-                        if ERR_isError(initError) != 0 {
+                        if ERR_isError(initError) {
                             pthread_mutex_lock(&mut (*job).job_mutex);
                             let ref mut fresh4 = JOB_ERROR(ZSTD_error_initError);
                             *fresh4 = initError;
@@ -1801,7 +1801,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                             ZSTD_c_forceMaxWindow as ZSTD_cParameter,
                             ((*job).firstJob == 0) as std::ffi::c_int,
                         );
-                        if ERR_isError(forceWindowError) != 0 {
+                        if ERR_isError(forceWindowError) {
                             pthread_mutex_lock(&mut (*job).job_mutex);
                             let ref mut fresh5 = JOB_ERROR(ZSTD_error_forceWindowError);
                             *fresh5 = forceWindowError;
@@ -1814,7 +1814,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                     ZSTD_c_deterministicRefPrefix as ZSTD_cParameter,
                                     0,
                                 );
-                                if ERR_isError(err) != 0 {
+                                if ERR_isError(err) {
                                     pthread_mutex_lock(&mut (*job).job_mutex);
                                     let ref mut fresh6 = JOB_ERROR(ZSTD_error_err);
                                     *fresh6 = err;
@@ -1839,7 +1839,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                         &mut jobParams,
                                         pledgedSrcSize as std::ffi::c_ulonglong,
                                     );
-                                    if ERR_isError(initError_0) != 0 {
+                                    if ERR_isError(initError_0) {
                                         pthread_mutex_lock(&mut (*job).job_mutex);
                                         let ref mut fresh7 = JOB_ERROR(ZSTD_error_initError);
                                         *fresh7 = initError_0;
@@ -1868,7 +1868,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                     (*job).src.start,
                                     0,
                                 );
-                                if ERR_isError(hSize) != 0 {
+                                if ERR_isError(hSize) {
                                     pthread_mutex_lock(&mut (*job).job_mutex);
                                     let ref mut fresh8 = JOB_ERROR(ZSTD_error_hSize);
                                     *fresh8 = hSize;
@@ -1911,7 +1911,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                             ip as *const std::ffi::c_void,
                                             chunkSize,
                                         );
-                                        if ERR_isError(cSize) != 0 {
+                                        if ERR_isError(cSize) {
                                             pthread_mutex_lock(&mut (*job).job_mutex);
                                             let ref mut fresh9 = JOB_ERROR(ZSTD_error_cSize);
                                             *fresh9 = cSize;
@@ -1969,7 +1969,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
                                                         lastBlockSize,
                                                     )
                                                 };
-                                                if ERR_isError(cSize_0) != 0 {
+                                                if ERR_isError(cSize_0) {
                                                     pthread_mutex_lock(&mut (*job).job_mutex);
                                                     let ref mut fresh10 = JOB_ERROR(ZSTD_error_cSize);
                                                     *fresh10 = cSize_0;
@@ -2363,12 +2363,12 @@ pub unsafe extern "C" fn ZSTDMT_getFrameProgression(
             & jobPtr -> job_mutex
         )(ZSTD_pthread_mutex_lock!(& jobPtr -> job_mutex));
         let cResult = (*jobPtr).cSize;
-        let produced = if ERR_isError(cResult) != 0 {
+        let produced = if ERR_isError(cResult) {
             0_usize
         } else {
             cResult
         };
-        let flushed = if ERR_isError(cResult) != 0 {
+        let flushed = if ERR_isError(cResult) {
             0_usize
         } else {
             (*jobPtr).dstFlushed
@@ -2409,12 +2409,12 @@ pub unsafe extern "C" fn ZSTDMT_toFlushNow(mut mtctx: *mut ZSTDMT_CCtx) -> usize
         & jobPtr -> job_mutex
     )(ZSTD_pthread_mutex_lock!(& jobPtr -> job_mutex));
     let cResult = (*jobPtr).cSize;
-    let produced = if ERR_isError(cResult) != 0 {
+    let produced = if ERR_isError(cResult) {
         0_usize
     } else {
         cResult
     };
-    let flushed = if ERR_isError(cResult) != 0 {
+    let flushed = if ERR_isError(cResult) {
         0_usize
     } else {
         (*jobPtr).dstFlushed
@@ -2805,7 +2805,7 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
     ZSTD_pthread_mutex_unlock!(
         & mtctx -> jobs[wJobID].job_mutex
     )(ZSTD_pthread_mutex_unlock!(& mtctx -> jobs[wJobID].job_mutex));
-    if ERR_isError(cSize) != 0 {
+    if ERR_isError(cSize) {
         ZSTDMT_waitForAllJobsCompleted(mtctx);
         ZSTDMT_releaseAllJobResources(mtctx);
         return cSize;

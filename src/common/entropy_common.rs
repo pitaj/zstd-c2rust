@@ -85,7 +85,7 @@ unsafe extern "C" fn FSE_readNCount_body(
             buffer.as_mut_ptr() as *const std::ffi::c_void,
             ::core::mem::size_of::<[std::ffi::c_char; 8]>(),
         );
-        if ERR_isError(countSize) != 0 {
+        if ERR_isError(countSize) {
             return countSize;
         }
         if countSize > hbSize {
@@ -392,7 +392,7 @@ unsafe extern "C" fn HUF_readStats_body(
             wkspSize,
             bmi2,
         );
-        if ERR_isError(oSize) != 0 {
+        if ERR_isError(oSize) {
             return oSize;
         }
     }

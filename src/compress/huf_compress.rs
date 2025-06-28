@@ -234,7 +234,7 @@ unsafe extern "C" fn HUF_compressWeights(
         maxSymbolValue,
         0,
     );
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     let hSize = FSE_writeNCount(
@@ -260,7 +260,7 @@ unsafe extern "C" fn HUF_compressWeights(
         ((*wksp).scratchBuffer).as_mut_ptr() as *mut std::ffi::c_void,
         ::core::mem::size_of::<[u32; 41]>(),
     );
-    if ERR_isError(_var_err___0) != 0 {
+    if ERR_isError(_var_err___0) {
         return _var_err___0;
     }
     let cSize = FSE_compress_usingCTable(
@@ -477,7 +477,7 @@ pub unsafe extern "C" fn HUF_readCTable(
         src,
         srcSize,
     );
-    if ERR_isError(readSize) != 0 {
+    if ERR_isError(readSize) {
         return readSize;
     }
     *hasZeroWeights = (rankVal[0]
@@ -1383,7 +1383,7 @@ unsafe extern "C" fn HUF_compress1X_usingCTable_internal_body(
         op as *mut std::ffi::c_void,
         oend.offset_from(op) as std::ffi::c_long as usize,
     );
-    if ERR_isError(initErr) != 0 {
+    if ERR_isError(initErr) {
         return 0;
     }
     if dstSize < HUF_tightCompressBound(srcSize, tableLog as usize)
@@ -1739,7 +1739,7 @@ unsafe extern "C" fn HUF_compressCTable_internal(
             flags,
         )
     };
-    if ERR_isError(cSize) != 0 {
+    if ERR_isError(cSize) {
         return cSize;
     }
     if cSize == 0 {
@@ -2027,7 +2027,7 @@ unsafe extern "C" fn HUF_compress_internal(
         ::core::mem::size_of::<HUF_buildCTable_wksp_tables>(),
     );
     let _var_err__ = maxBits;
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     huffLog = maxBits as u32;

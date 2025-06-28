@@ -1828,7 +1828,7 @@ unsafe extern "C" fn ZDICT_countEStats(
         srcSize = blockSizeMax;
     }
     let errorCode = ZSTD_compressBegin_usingCDict_deprecated(esr.zc, esr.dict);
-    if ERR_isError(errorCode) != 0 {
+    if ERR_isError(errorCode) {
         DISPLAYLEVEL!(1, "warning : ZSTD_compressBegin_usingCDict failed \n");
         return;
     }
@@ -1839,7 +1839,7 @@ unsafe extern "C" fn ZDICT_countEStats(
         src,
         srcSize,
     );
-    if ERR_isError(cSize) != 0 {
+    if ERR_isError(cSize) {
         DISPLAYLEVEL!(3, "warning : could not compress sample size %u \n", (unsigned) srcSize);
         return;
     }
@@ -2143,7 +2143,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 wksp.as_mut_ptr() as *mut std::ffi::c_void,
                 ::core::mem::size_of::<[u32; 1216]>(),
             );
-            if ERR_isError(maxNbBits) != 0 {
+            if ERR_isError(maxNbBits) {
                 eSize = maxNbBits;
                 DISPLAYLEVEL!(1, " HUF_buildCTable error \n");
             } else {
@@ -2187,7 +2187,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     offcodeMax,
                     1,
                 );
-                if ERR_isError(errorCode) != 0 {
+                if ERR_isError(errorCode) {
                     eSize = errorCode;
                     DISPLAYLEVEL!(1, "FSE_normalizeCount error with offcodeCount \n");
                 } else {
@@ -2208,7 +2208,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         MaxML as std::ffi::c_uint,
                         1,
                     );
-                    if ERR_isError(errorCode) != 0 {
+                    if ERR_isError(errorCode) {
                         eSize = errorCode;
                         DISPLAYLEVEL!(1, "FSE_normalizeCount error with matchLengthCount \n");
                     } else {
@@ -2229,7 +2229,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                             MaxLL as std::ffi::c_uint,
                             1,
                         );
-                        if ERR_isError(errorCode) != 0 {
+                        if ERR_isError(errorCode) {
                             eSize = errorCode;
                             DISPLAYLEVEL!(1, "FSE_normalizeCount error with litLengthCount \n");
                         } else {
@@ -2243,7 +2243,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                 wksp.as_mut_ptr() as *mut std::ffi::c_void,
                                 ::core::mem::size_of::<[u32; 1216]>(),
                             );
-                            if ERR_isError(hhSize) != 0 {
+                            if ERR_isError(hhSize) {
                                 eSize = hhSize;
                                 DISPLAYLEVEL!(1, "HUF_writeCTable error \n");
                             } else {
@@ -2257,7 +2257,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                     OFFCODE_MAX as std::ffi::c_uint,
                                     Offlog,
                                 );
-                                if ERR_isError(ohSize) != 0 {
+                                if ERR_isError(ohSize) {
                                     eSize = ohSize;
                                     DISPLAYLEVEL!(1, "FSE_writeNCount error with offcodeNCount \n");
                                 } else {
@@ -2271,7 +2271,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                         MaxML as std::ffi::c_uint,
                                         mlLog,
                                     );
-                                    if ERR_isError(mhSize) != 0 {
+                                    if ERR_isError(mhSize) {
                                         eSize = mhSize;
                                         DISPLAYLEVEL!(1, "FSE_writeNCount error with matchLengthNCount \n");
                                     } else {
@@ -2285,7 +2285,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                             MaxLL as std::ffi::c_uint,
                                             llLog,
                                         );
-                                        if ERR_isError(lhSize) != 0 {
+                                        if ERR_isError(lhSize) {
                                             eSize = lhSize;
                                             DISPLAYLEVEL!(1, "FSE_writeNCount error with litlengthNCount \n");
                                         } else {
@@ -2396,7 +2396,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
         dictContentSize,
         notificationLevel,
     );
-    if ERR_isError(eSize) != 0 {
+    if ERR_isError(eSize) {
         return eSize;
     }
     hSize = hSize.wrapping_add(eSize);
@@ -2457,7 +2457,7 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
         dictContentSize,
         notificationLevel,
     );
-    if ERR_isError(eSize) != 0 {
+    if ERR_isError(eSize) {
         return eSize;
     }
     hSize = hSize.wrapping_add(eSize);

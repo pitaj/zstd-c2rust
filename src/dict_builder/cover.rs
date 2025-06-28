@@ -1107,7 +1107,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
         parameters.splitPoint,
         displayLevel,
     );
-    if ERR_isError(initVal) != 0 {
+    if ERR_isError(initVal) {
         return initVal;
     }
     COVER_warnOnSmallCorpus(dictBufferCapacity, ctx.suffixSize, displayLevel);
@@ -1201,7 +1201,7 @@ pub unsafe extern "C" fn COVER_checkTotalCompressedSize(
                 *samplesSizes.offset(i as isize),
                 cdict,
             );
-            if ERR_isError(size) != 0 {
+            if ERR_isError(size) {
                 totalCompressedSize = size;
                 break;
             } else {
@@ -1403,7 +1403,7 @@ pub unsafe extern "C" fn COVER_selectDict(
         nbFinalizeSamples,
         params.zParams,
     );
-    if ERR_isError(dictContentSize) != 0 {
+    if ERR_isError(dictContentSize) {
         libc::free(largestDictbuffer as *mut std::ffi::c_void);
         libc::free(candidateDictBuffer as *mut std::ffi::c_void);
         return COVER_dictSelectionError(dictContentSize);
@@ -1418,7 +1418,7 @@ pub unsafe extern "C" fn COVER_selectDict(
         largestDictbuffer,
         dictContentSize,
     );
-    if ERR_isError(totalCompressedSize) != 0 {
+    if ERR_isError(totalCompressedSize) {
         libc::free(largestDictbuffer as *mut std::ffi::c_void);
         libc::free(candidateDictBuffer as *mut std::ffi::c_void);
         return COVER_dictSelectionError(totalCompressedSize);
@@ -1447,7 +1447,7 @@ pub unsafe extern "C" fn COVER_selectDict(
             nbFinalizeSamples,
             params.zParams,
         );
-        if ERR_isError(dictContentSize) != 0 {
+        if ERR_isError(dictContentSize) {
             libc::free(largestDictbuffer as *mut std::ffi::c_void);
             libc::free(candidateDictBuffer as *mut std::ffi::c_void);
             return COVER_dictSelectionError(dictContentSize);
@@ -1462,7 +1462,7 @@ pub unsafe extern "C" fn COVER_selectDict(
             candidateDictBuffer,
             dictContentSize,
         );
-        if ERR_isError(totalCompressedSize) != 0 {
+        if ERR_isError(totalCompressedSize) {
             libc::free(largestDictbuffer as *mut std::ffi::c_void);
             libc::free(candidateDictBuffer as *mut std::ffi::c_void);
             return COVER_dictSelectionError(totalCompressedSize);
@@ -1719,7 +1719,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
             splitPoint,
             childDisplayLevel,
         );
-        if ERR_isError(initVal) != 0 {
+        if ERR_isError(initVal) {
             DISPLAYLEVEL!(1, "Failed to initialize context\n");
             COVER_best_destroy(&mut best);
             POOL_free(pool);
@@ -1801,7 +1801,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_cover(
     }
     DISPLAYLEVEL!(2, "\r%79s\r", "");
     let dictSize = best.dictSize;
-    if ERR_isError(best.compressedSize) != 0 {
+    if ERR_isError(best.compressedSize) {
         let compressedSize = best.compressedSize;
         COVER_best_destroy(&mut best);
         POOL_free(pool);

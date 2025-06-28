@@ -537,6 +537,8 @@ case $1 in
 
     perl -i -p0e 's/\b\w*[^R]_(isError|getErrorCode)/ERR_$1/gm'  src/*/*.rs
 
+    perl -i -p0e 's/(if ERR_isError\([^\)]*\)) != 0/$1/gm'  src/*/*.rs
+
     ;;
 
   zstd-mem)

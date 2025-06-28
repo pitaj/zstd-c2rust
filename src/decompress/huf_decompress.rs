@@ -651,7 +651,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
         ::core::mem::size_of::<[u32; 219]>(),
         flags,
     );
-    if ERR_isError(iSize) != 0 {
+    if ERR_isError(iSize) {
         return iSize;
     }
     let mut dtd = HUF_getDTableDesc(DTable);
@@ -910,7 +910,7 @@ unsafe extern "C" fn HUF_decompress1X1_usingDTable_internal_body(
     let dtd = HUF_getDTableDesc(DTable);
     let dtLog = dtd.tableLog as u32;
     let _var_err__ = BIT_initDStream(&mut bitD, cSrc, cSrcSize);
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     HUF_decodeStreamX1(op, &mut bitD, oend, dt, dtLog);
@@ -1008,7 +1008,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
         istart1 as *const std::ffi::c_void,
         length1,
     );
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     let _var_err___0 = BIT_initDStream(
@@ -1016,7 +1016,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
         istart2 as *const std::ffi::c_void,
         length2,
     );
-    if ERR_isError(_var_err___0) != 0 {
+    if ERR_isError(_var_err___0) {
         return _var_err___0;
     }
     let _var_err___1 = BIT_initDStream(
@@ -1024,7 +1024,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
         istart3 as *const std::ffi::c_void,
         length3,
     );
-    if ERR_isError(_var_err___1) != 0 {
+    if ERR_isError(_var_err___1) {
         return _var_err___1;
     }
     let _var_err___2 = BIT_initDStream(
@@ -1032,7 +1032,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
         istart4 as *const std::ffi::c_void,
         length4,
     );
-    if ERR_isError(_var_err___2) != 0 {
+    if ERR_isError(_var_err___2) {
         return _var_err___2;
     }
     if oend.offset_from(op4) as std::ffi::c_long as usize
@@ -1604,7 +1604,7 @@ unsafe extern "C" fn HUF_decompress4X1_DCtx_wksp(
 ) -> usize {
     let mut ip = cSrc as *const u8;
     let hSize = HUF_readDTableX1_wksp(dctx, cSrc, cSrcSize, workSpace, wkspSize, flags);
-    if ERR_isError(hSize) != 0 {
+    if ERR_isError(hSize) {
         return hSize;
     }
     if hSize >= cSrcSize {
@@ -2048,7 +2048,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
         ::core::mem::size_of::<[u32; 219]>(),
         flags,
     );
-    if ERR_isError(iSize) != 0 {
+    if ERR_isError(iSize) {
         return iSize;
     }
     if tableLog > maxTableLog {
@@ -2271,7 +2271,7 @@ unsafe extern "C" fn HUF_decompress1X2_usingDTable_internal_body(
         limitPtr: 0 as *const std::ffi::c_char,
     };
     let _var_err__ = BIT_initDStream(&mut bitD, cSrc, cSrcSize);
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     let ostart = dst as *mut u8;
@@ -2381,7 +2381,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
         istart1 as *const std::ffi::c_void,
         length1,
     );
-    if ERR_isError(_var_err__) != 0 {
+    if ERR_isError(_var_err__) {
         return _var_err__;
     }
     let _var_err___0 = BIT_initDStream(
@@ -2389,7 +2389,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
         istart2 as *const std::ffi::c_void,
         length2,
     );
-    if ERR_isError(_var_err___0) != 0 {
+    if ERR_isError(_var_err___0) {
         return _var_err___0;
     }
     let _var_err___1 = BIT_initDStream(
@@ -2397,7 +2397,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
         istart3 as *const std::ffi::c_void,
         length3,
     );
-    if ERR_isError(_var_err___1) != 0 {
+    if ERR_isError(_var_err___1) {
         return _var_err___1;
     }
     let _var_err___2 = BIT_initDStream(
@@ -2405,7 +2405,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
         istart4 as *const std::ffi::c_void,
         length4,
     );
-    if ERR_isError(_var_err___2) != 0 {
+    if ERR_isError(_var_err___2) {
         return _var_err___2;
     }
     if oend.offset_from(op4) as std::ffi::c_long as usize
@@ -3166,7 +3166,7 @@ pub unsafe extern "C" fn HUF_decompress1X2_DCtx_wksp(
 ) -> usize {
     let mut ip = cSrc as *const u8;
     let hSize = HUF_readDTableX2_wksp(DCtx, cSrc, cSrcSize, workSpace, wkspSize, flags);
-    if ERR_isError(hSize) != 0 {
+    if ERR_isError(hSize) {
         return hSize;
     }
     if hSize >= cSrcSize {
@@ -3202,7 +3202,7 @@ unsafe extern "C" fn HUF_decompress4X2_DCtx_wksp(
         wkspSize,
         flags,
     );
-    if ERR_isError(hSize) != 0 {
+    if ERR_isError(hSize) {
         return hSize;
     }
     if hSize >= cSrcSize {
@@ -3592,7 +3592,7 @@ pub unsafe extern "C" fn HUF_decompress1X1_DCtx_wksp(
 ) -> usize {
     let mut ip = cSrc as *const u8;
     let hSize = HUF_readDTableX1_wksp(dctx, cSrc, cSrcSize, workSpace, wkspSize, flags);
-    if ERR_isError(hSize) != 0 {
+    if ERR_isError(hSize) {
         return hSize;
     }
     if hSize >= cSrcSize {

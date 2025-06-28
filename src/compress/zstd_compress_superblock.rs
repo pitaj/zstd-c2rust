@@ -1327,7 +1327,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
             workspace,
             wkspSize,
         );
-        if ERR_isError(largest) != 0 {
+        if ERR_isError(largest) {
             return litSize;
         }
         let mut cLitSizeEstimate = HUF_estimateCompressedSize(
@@ -1386,7 +1386,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_symbolType(
     {
         cSymbolTypeSizeEstimateInBits = ZSTD_fseBitCost(fseCTable, countWksp, max);
     }
-    if ERR_isError(cSymbolTypeSizeEstimateInBits) != 0 {
+    if ERR_isError(cSymbolTypeSizeEstimateInBits) {
         return nbSeq * 10;
     }
     while ctp < ctEnd {

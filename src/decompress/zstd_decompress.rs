@@ -1967,7 +1967,7 @@ pub unsafe extern "C" fn ZSTD_findDecompressedSize(
             == ZSTD_MAGIC_SKIPPABLE_START as std::ffi::c_uint
         {
             let skippableSize = readSkippableFrameSize(src, srcSize);
-            if ERR_isError(skippableSize) != 0 {
+            if ERR_isError(skippableSize) {
                 return ZSTD_CONTENTSIZE_ERROR;
             }
             src = (src as *const u8).offset(skippableSize as isize)
@@ -1983,7 +1983,7 @@ pub unsafe extern "C" fn ZSTD_findDecompressedSize(
             }
             totalDstSize = totalDstSize.wrapping_add(fcs);
             let frameSrcSize = ZSTD_findFrameCompressedSize(src, srcSize);
-            if ERR_isError(frameSrcSize) != 0 {
+            if ERR_isError(frameSrcSize) {
                 return ZSTD_CONTENTSIZE_ERROR;
             }
             src = (src as *const u8).offset(frameSrcSize as isize)
@@ -2019,7 +2019,7 @@ unsafe extern "C" fn ZSTD_decodeFrameHeader(
         headerSize,
         (*dctx).format,
     );
-    if ERR_isError(result) != 0 {
+    if ERR_isError(result) {
         return result;
     }
     if result > 0 {
@@ -2104,7 +2104,7 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfo(
             _reserved2: 0,
         };
         let ret = ZSTD_getFrameHeader_advanced(&mut zfh, src, srcSize, format);
-        if ERR_isError(ret) != 0 {
+        if ERR_isError(ret) {
             return ZSTD_errorFrameSizeInfo(ret);
         }
         if ret > 0 {
@@ -2123,7 +2123,7 @@ unsafe extern "C" fn ZSTD_findFrameSizeInfo(
                 remainingSize,
                 &mut blockProperties,
             );
-            if ERR_isError(cBlockSize) != 0 {
+            if ERR_isError(cBlockSize) {
                 return ZSTD_errorFrameSizeInfo(cBlockSize);
             }
             if ZSTD_blockHeaderSize.wrapping_add(cBlockSize) > remainingSize {
@@ -2182,7 +2182,7 @@ pub unsafe extern "C" fn ZSTD_decompressBound(
         let frameSizeInfo = ZSTD_findFrameSizeInfo(src, srcSize, ZSTD_f_zstd1);
         let compressedSize = frameSizeInfo.compressedSize;
         let decompressedBound = frameSizeInfo.decompressedBound;
-        if ERR_isError(compressedSize) != 0
+        if ERR_isError(compressedSize)
             || decompressedBound == ZSTD_CONTENTSIZE_ERROR
         {
             return ZSTD_CONTENTSIZE_ERROR;
@@ -2217,7 +2217,7 @@ pub unsafe extern "C" fn ZSTD_decompressionMargin(
             _reserved2: 0,
         };
         FORWARD_IF_ERROR!(ZSTD_getFrameHeader(addr_of!(zfh), src, srcSize), "");
-        if ERR_isError(compressedSize) != 0
+        if ERR_isError(compressedSize)
             || decompressedBound == ZSTD_CONTENTSIZE_ERROR
         {
             return ERROR(ZSTD_error_corruption_detected);
@@ -2372,7 +2372,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
         ZSTD_FRAMEHEADERSIZE_PREFIX((*dctx).format),
         (*dctx).format,
     );
-    if ERR_isError(frameHeaderSize) != 0 {
+    if ERR_isError(frameHeaderSize) {
         return frameHeaderSize;
     }
     if remainingSrcSize < frameHeaderSize.wrapping_add(ZSTD_blockHeaderSize) {
@@ -2403,7 +2403,7 @@ unsafe extern "C" fn ZSTD_decompressFrame(
             remainingSrcSize,
             &mut blockProperties,
         );
-        if ERR_isError(cBlockSize) != 0 {
+        if ERR_isError(cBlockSize) {
             return cBlockSize;
         }
         ip = ip.offset(ZSTD_blockHeaderSize as isize);
@@ -2517,7 +2517,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
         {
             let mut decodedSize: usize = 0;
             let frameSize = ZSTD_findFrameCompressedSizeLegacy(src, srcSize);
-            if ERR_isError(frameSize) != 0 {
+            if ERR_isError(frameSize) {
                 return frameSize;
             }
             if (*dctx).staticSize != 0 {
@@ -2531,7 +2531,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
                 dict,
                 dictSize,
             );
-            if ERR_isError(decodedSize) != 0 {
+            if ERR_isError(decodedSize) {
                 return decodedSize;
             }
             let expectedSize = ZSTD_getFrameContentSize(src, srcSize);
@@ -2595,7 +2595,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
             {
                 return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
             }
-            if ERR_isError(res) != 0 {
+            if ERR_isError(res) {
                 return res;
             }
             if res != 0 {
@@ -2780,7 +2780,7 @@ pub unsafe extern "C" fn ZSTD_decompressContinue(
                 origSize: 0,
             };
             let cBlockSize = ZSTD_getcBlockSize(src, ZSTD_blockHeaderSize, &mut bp);
-            if ERR_isError(cBlockSize) != 0 {
+            if ERR_isError(cBlockSize) {
                 return cBlockSize;
             }
             if cBlockSize > (*dctx).fParams.blockSizeMax as usize {
@@ -2978,7 +2978,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
         workspaceSize,
         0,
     );
-    if ERR_isError(hSize) != 0 {
+    if ERR_isError(hSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     dictPtr = dictPtr.offset(hSize as isize);
@@ -2992,7 +2992,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(offcodeHeaderSize) != 0 {
+    if ERR_isError(offcodeHeaderSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     if offcodeMaxValue > 31 {
@@ -3023,7 +3023,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(matchlengthHeaderSize) != 0 {
+    if ERR_isError(matchlengthHeaderSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     if matchlengthMaxValue > 52 {
@@ -3054,7 +3054,7 @@ pub unsafe extern "C" fn ZSTD_loadDEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(litlengthHeaderSize) != 0 {
+    if ERR_isError(litlengthHeaderSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     if litlengthMaxValue > 35 {
@@ -3113,7 +3113,7 @@ unsafe extern "C" fn ZSTD_decompress_insertDictionary(
             as *const std::ffi::c_void,
     );
     let eSize = ZSTD_loadDEntropy(&mut (*dctx).entropy, dict, dictSize);
-    if ERR_isError(eSize) != 0 {
+    if ERR_isError(eSize) {
         return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
     }
     dict = (dict as *const std::ffi::c_char).offset(eSize as isize)
@@ -3230,7 +3230,7 @@ pub unsafe extern "C" fn ZSTD_getDictID_fromFrame(
         init
     };
     let hError = ZSTD_getFrameHeader(&mut zfp, src, srcSize);
-    if ERR_isError(hError) != 0 {
+    if ERR_isError(hError) {
         return 0;
     }
     return zfp.dictID;
@@ -3526,7 +3526,7 @@ unsafe extern "C" fn ZSTD_dParam_withinBounds(
     mut value: std::ffi::c_int,
 ) -> std::ffi::c_int {
     let bounds = ZSTD_dParam_getBounds(dParam);
-    if ERR_isError(bounds.error) != 0 {
+    if ERR_isError(bounds.error) {
         return 0;
     }
     if value < bounds.lowerBound {
@@ -3749,7 +3749,7 @@ pub unsafe extern "C" fn ZSTD_estimateDStreamSize_fromFrame(
         _reserved2: 0,
     };
     let err = ZSTD_getFrameHeader(&mut zfh, src, srcSize);
-    if ERR_isError(err) != 0 {
+    if ERR_isError(err) {
         return err;
     }
     if err > 0 {
@@ -3977,7 +3977,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                 {
                     ZSTD_DCtx_selectFrameDDict(zds);
                 }
-                if ERR_isError(hSize) != 0 {
+                if ERR_isError(hSize) {
                     let legacyVersion = ZSTD_isLegacy(
                         istart as *const std::ffi::c_void,
                         iend.offset_from(istart) as std::ffi::c_long as usize,
@@ -4063,7 +4063,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 cSize,
                                 ZSTD_getDDict(zds),
                             );
-                            if ERR_isError(decompressedSize) != 0 {
+                            if ERR_isError(decompressedSize) {
                                 return decompressedSize;
                             }
                             ip = istart.offset(cSize as isize);

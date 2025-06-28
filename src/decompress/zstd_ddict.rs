@@ -393,7 +393,7 @@ pub unsafe extern "C" fn ZSTD_createDDict_advanced(
         dictLoadMethod,
         dictContentType,
     );
-    if ERR_isError(initResult) != 0 {
+    if ERR_isError(initResult) {
         ZSTD_freeDDict(ddict);
         return NULL as *mut ZSTD_DDict;
     }
