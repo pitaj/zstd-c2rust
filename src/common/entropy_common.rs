@@ -76,9 +76,7 @@ unsafe extern "C" fn FSE_readNCount_body(
         if ERR_isError(countSize) {
             return countSize;
         }
-        if countSize > hbSize {
-            return ERROR(ZSTD_error_corruption_detected);
-        }
+        RETURN_ERROR_IF!(countSize > hbSize, ZSTD_error_corruption_detected);
         return countSize;
     }
     libc::memset(
@@ -93,9 +91,7 @@ unsafe extern "C" fn FSE_readNCount_body(
     bitStream = MEM_readLE32(ip as *const std::ffi::c_void);
     nbBits = (bitStream & 0xf as std::ffi::c_int as u32)
         .wrapping_add(FSE_MIN_TABLELOG as u32) as std::ffi::c_int;
-    if nbBits > FSE_TABLELOG_ABSOLUTE_MAX {
-        return ERROR(ZSTD_error_tableLog_tooLarge);
-    }
+    RETURN_ERROR_IF!(nbBits > FSE_TABLELOG_ABSOLUTE_MAX, ZSTD_error_tableLog_tooLarge);
     bitStream >>= 4;
     bitCount = 4;
     *tableLogPtr = nbBits as std::ffi::c_uint;
@@ -209,15 +205,9 @@ unsafe extern "C" fn FSE_readNCount_body(
         }
         bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
     }
-    if remaining != 1 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if charnum > maxSV1 {
-        return ERROR(ZSTD_error_maxSymbolValue_tooSmall);
-    }
-    if bitCount > 32 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(remaining != 1, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(charnum > maxSV1, ZSTD_error_maxSymbolValue_tooSmall);
+    RETURN_ERROR_IF!(bitCount > 32, ZSTD_error_corruption_detected);
     *maxSVPtr = charnum.wrapping_sub(1);
     ip = ip.offset((bitCount + 7 as std::ffi::c_int >> 3) as isize);
     return ip.offset_from(istart) as std::ffi::c_long as usize;
@@ -336,20 +326,14 @@ unsafe extern "C" fn HUF_readStats_body(
     let mut ip = src as *const u8;
     let mut iSize: usize = 0;
     let mut oSize: usize = 0;
-    if srcSize == 0 {
-        return ERROR(ZSTD_error_srcSize_wrong);
-    }
+    RETURN_ERROR_IF!(srcSize == 0, ZSTD_error_srcSize_wrong);
     iSize = *ip.offset(0) as usize;
     if iSize >= 128 {
         oSize = iSize.wrapping_sub(127);
         iSize = oSize.wrapping_add(1)
             / 2;
-        if iSize.wrapping_add(1) > srcSize {
-            return ERROR(ZSTD_error_srcSize_wrong);
-        }
-        if oSize >= hwSize {
-            return ERROR(ZSTD_error_corruption_detected);
-        }
+        RETURN_ERROR_IF!(iSize.wrapping_add(1) > srcSize, ZSTD_error_srcSize_wrong);
+        RETURN_ERROR_IF!(oSize >= hwSize, ZSTD_error_corruption_detected);
         ip = ip.offset(1);
         let mut n: u32 = 0;
         n = 0;
@@ -367,9 +351,7 @@ unsafe extern "C" fn HUF_readStats_body(
             n = n.wrapping_add(2);
         }
     } else {
-        if iSize.wrapping_add(1) > srcSize {
-            return ERROR(ZSTD_error_srcSize_wrong);
-        }
+        RETURN_ERROR_IF!(iSize.wrapping_add(1) > srcSize, ZSTD_error_srcSize_wrong);
         oSize = FSE_decompress_wksp_bmi2(
             huffWeight as *mut std::ffi::c_void,
             hwSize.wrapping_sub(1),
@@ -395,9 +377,7 @@ unsafe extern "C" fn HUF_readStats_body(
     let mut n_0: u32 = 0;
     n_0 = 0;
     while (n_0 as usize) < oSize {
-        if *huffWeight.offset(n_0 as isize) as std::ffi::c_int > HUF_TABLELOG_MAX {
-            return ERROR(ZSTD_error_corruption_detected);
-        }
+        RETURN_ERROR_IF!(*huffWeight.offset(n_0 as isize) as std::ffi::c_int > HUF_TABLELOG_MAX, ZSTD_error_corruption_detected);
         let ref mut fresh1 = *rankStats
             .offset(*huffWeight.offset(n_0 as isize) as isize);
         *fresh1 = (*fresh1).wrapping_add(1);
@@ -411,33 +391,24 @@ unsafe extern "C" fn HUF_readStats_body(
         n_0 = n_0.wrapping_add(1);
         n_0;
     }
-    if weightTotal == 0 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(weightTotal == 0, ZSTD_error_corruption_detected);
     let tableLog = (ZSTD_highbit32(weightTotal))
         .wrapping_add(1);
-    if tableLog > HUF_TABLELOG_MAX as u32 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(tableLog > HUF_TABLELOG_MAX as u32, ZSTD_error_corruption_detected);
     *tableLogPtr = tableLog;
     let total = ((1 as std::ffi::c_int) << tableLog) as u32;
     let rest = total.wrapping_sub(weightTotal);
     let verif = ((1 as std::ffi::c_int) << ZSTD_highbit32(rest)) as u32;
     let lastWeight = (ZSTD_highbit32(rest))
         .wrapping_add(1);
-    if verif != rest {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(verif != rest, ZSTD_error_corruption_detected);
     *huffWeight.offset(oSize as isize) = lastWeight as u8;
     let ref mut fresh2 = *rankStats.offset(lastWeight as isize);
     *fresh2 = (*fresh2).wrapping_add(1);
     *fresh2;
-    if *rankStats.offset(1) < 2
+    RETURN_ERROR_IF!(*rankStats.offset(1) < 2
         || *rankStats.offset(1) & 1_u32
-            != 0
-    {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+            != 0, ZSTD_error_corruption_detected);
     *nbSymbolsPtr = oSize.wrapping_add(1) as u32;
     return iSize.wrapping_add(1);
 }

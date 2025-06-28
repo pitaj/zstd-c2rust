@@ -1438,9 +1438,7 @@ unsafe extern "C" fn ZSTD_ldm_generateSequences_internal(
                         .wrapping_sub((*bestEntry).offset);
                     mLength = forwardMatchLength.wrapping_add(backwardMatchLength);
                     let seq = ((*rawSeqStore).seq).offset((*rawSeqStore).size as isize);
-                    if (*rawSeqStore).size == (*rawSeqStore).capacity {
-                        return ERROR(ZSTD_error_dstSize_tooSmall);
-                    }
+                    RETURN_ERROR_IF!((*rawSeqStore).size == (*rawSeqStore).capacity, ZSTD_error_dstSize_tooSmall);
                     (*seq)
                         .litLength = split_0
                         .offset(-(backwardMatchLength as isize))

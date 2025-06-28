@@ -1114,9 +1114,7 @@ pub unsafe fn ZSTD_noCompressBlock(
     let cBlockHeader24 = lastBlock
         .wrapping_add((bt_raw as u32) << 1)
         .wrapping_add((srcSize << 3) as u32);
-    if srcSize.wrapping_add(ZSTD_blockHeaderSize) > dstCapacity {
-        return ERROR(ZSTD_error_dstSize_tooSmall);
-    }
+    RETURN_ERROR_IF!(srcSize.wrapping_add(ZSTD_blockHeaderSize) > dstCapacity, ZSTD_error_dstSize_tooSmall);
     MEM_writeLE24(dst, cBlockHeader24);
     libc::memcpy(dst.byte_add(ZSTD_blockHeaderSize), src, srcSize);
     return ZSTD_blockHeaderSize.wrapping_add(srcSize);
@@ -1134,9 +1132,7 @@ pub unsafe fn ZSTD_rleCompressBlock(
     let cBlockHeader = lastBlock
         .wrapping_add((bt_rle as u32) << 1)
         .wrapping_add((srcSize << 3) as u32);
-    if dstCapacity < 4 {
-        return ERROR(ZSTD_error_dstSize_tooSmall);
-    }
+    RETURN_ERROR_IF!(dstCapacity < 4, ZSTD_error_dstSize_tooSmall);
     MEM_writeLE24(op as *mut std::ffi::c_void, cBlockHeader);
     *op.offset(3) = src;
     return 4;
@@ -2316,9 +2312,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     {
         (*bs).entropy.huf.repeatMode = HUF_repeat_valid;
     }
-    if ERR_isError(hufHeaderSize) {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(ERR_isError(hufHeaderSize), ZSTD_error_dictionary_corrupted);
     dictPtr = dictPtr.offset(hufHeaderSize as isize);
     let mut offcodeLog: std::ffi::c_uint = 0;
     let offcodeHeaderSize = FSE_readNCount(
@@ -2328,13 +2322,9 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(offcodeHeaderSize) {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
-    if offcodeLog > 8 {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
-    if ERR_isError(
+    RETURN_ERROR_IF!(ERR_isError(offcodeHeaderSize), ZSTD_error_dictionary_corrupted);
+    RETURN_ERROR_IF!(offcodeLog > 8, ZSTD_error_dictionary_corrupted);
+    RETURN_ERROR_IF!(ERR_isError(
         FSE_buildCTable_wksp(
             ((*bs).entropy.fse.offcodeCTable).as_mut_ptr(),
             offcodeNCount.as_mut_ptr(),
@@ -2344,10 +2334,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
             (((8 as std::ffi::c_int) << 10) + 512 as std::ffi::c_int)
                 as usize,
         ),
-    ) != 0
-    {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
+    ) != 0, ZSTD_error_dictionary_corrupted);
     dictPtr = dictPtr.offset(offcodeHeaderSize as isize);
     let mut matchlengthNCount: [std::ffi::c_short; 53] = [0; 53];
     let mut matchlengthMaxValue = MaxML as std::ffi::c_uint;
@@ -2359,13 +2346,9 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(matchlengthHeaderSize) {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
-    if matchlengthLog > 9 {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
-    if ERR_isError(
+    RETURN_ERROR_IF!(ERR_isError(matchlengthHeaderSize), ZSTD_error_dictionary_corrupted);
+    RETURN_ERROR_IF!(matchlengthLog > 9, ZSTD_error_dictionary_corrupted);
+    RETURN_ERROR_IF!(ERR_isError(
         FSE_buildCTable_wksp(
             ((*bs).entropy.fse.matchlengthCTable).as_mut_ptr(),
             matchlengthNCount.as_mut_ptr(),
@@ -2375,10 +2358,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
             (((8 as std::ffi::c_int) << 10) + 512 as std::ffi::c_int)
                 as usize,
         ),
-    ) != 0
-    {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
+    ) != 0, ZSTD_error_dictionary_corrupted);
     (*bs)
         .entropy
         .fse
@@ -2398,13 +2378,9 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         dictPtr as *const std::ffi::c_void,
         dictEnd.offset_from(dictPtr) as std::ffi::c_long as usize,
     );
-    if ERR_isError(litlengthHeaderSize) {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
-    if litlengthLog > 9 {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
-    if ERR_isError(
+    RETURN_ERROR_IF!(ERR_isError(litlengthHeaderSize), ZSTD_error_dictionary_corrupted);
+    RETURN_ERROR_IF!(litlengthLog > 9, ZSTD_error_dictionary_corrupted);
+    RETURN_ERROR_IF!(ERR_isError(
         FSE_buildCTable_wksp(
             ((*bs).entropy.fse.litlengthCTable).as_mut_ptr(),
             litlengthNCount.as_mut_ptr(),
@@ -2414,10 +2390,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
             (((8 as std::ffi::c_int) << 10) + 512 as std::ffi::c_int)
                 as usize,
         ),
-    ) != 0
-    {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
+    ) != 0, ZSTD_error_dictionary_corrupted);
     (*bs)
         .entropy
         .fse
@@ -2427,9 +2400,7 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
         MaxLL as std::ffi::c_uint,
     );
     dictPtr = dictPtr.offset(litlengthHeaderSize as isize);
-    if dictPtr.offset(12) > dictEnd {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(dictPtr.offset(12) > dictEnd, ZSTD_error_dictionary_corrupted);
     (*bs)
         .rep[0] = MEM_readLE32(
         dictPtr.offset(0) as *const std::ffi::c_void,
@@ -2470,12 +2441,8 @@ pub unsafe extern "C" fn ZSTD_loadCEntropy(
     let mut u: u32 = 0;
     u = 0;
     while u < 3 {
-        if (*bs).rep[u as usize] == 0 {
-            return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-        }
-        if (*bs).rep[u as usize] as usize > dictContentSize {
-            return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-        }
+        RETURN_ERROR_IF!((*bs).rep[u as usize] == 0, ZSTD_error_dictionary_corrupted);
+        RETURN_ERROR_IF!((*bs).rep[u as usize] as usize > dictContentSize, ZSTD_error_dictionary_corrupted);
         u = u.wrapping_add(1);
         u;
     }
@@ -2517,9 +2484,7 @@ pub unsafe extern "C" fn ZSTD_convertBlockSequences(
 ) -> usize {
     let mut updatedRepcodes = repcodes_s { rep: [0; 3] };
     let mut seqNb: usize = 0;
-    if nbSequences >= (*cctx).seqStore.maxNbSeq {
-        return -(ZSTD_error_externalSequences_invalid as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(nbSequences >= (*cctx).seqStore.maxNbSeq, ZSTD_error_externalSequences_invalid);
     libc::memcpy(
         (updatedRepcodes.rep).as_mut_ptr() as *mut std::ffi::c_void,
         ((*(*cctx).blockState.prevCBlock).rep).as_mut_ptr() as *const std::ffi::c_void,
@@ -2838,9 +2803,7 @@ pub unsafe extern "C" fn ZSTD_writeLastEmptyBlock(
     mut dst: *mut std::ffi::c_void,
     mut dstCapacity: usize,
 ) -> usize {
-    if dstCapacity < ZSTD_blockHeaderSize {
-        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(dstCapacity < ZSTD_blockHeaderSize, ZSTD_error_dstSize_tooSmall);
     let cBlockHeader24 = 1_u32
         .wrapping_add((bt_raw as std::ffi::c_int as u32) << 1);
     MEM_writeLE24(dst, cBlockHeader24);
@@ -3013,12 +2976,9 @@ pub unsafe extern "C" fn ZSTD_compressEnd_public(
     );
     FORWARD_IF_ERROR!(endResult, "ZSTD_writeEpilogue failed");
     if (*cctx).pledgedSrcSizePlusOne != 0 {
-        if (*cctx).pledgedSrcSizePlusOne
+        RETURN_ERROR_IF!((*cctx).pledgedSrcSizePlusOne
             != ((*cctx).consumedSrcSize)
-                .wrapping_add(1)
-        {
-            return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
-        }
+                .wrapping_add(1), ZSTD_error_srcSize_wrong);
     }
     ZSTD_CCtx_trace(cctx, endResult);
     return cSize.wrapping_add(endResult);
@@ -3033,9 +2993,7 @@ pub unsafe extern "C" fn ZSTD_compressBlock_deprecated(
     mut srcSize: usize,
 ) -> usize {
     let blockSizeMax = ZSTD_getBlockSize_deprecated(cctx);
-    if srcSize > blockSizeMax {
-        return -(ZSTD_error_srcSize_wrong as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(srcSize > blockSizeMax, ZSTD_error_srcSize_wrong);
     return ZSTD_compressContinue_internal(
         cctx,
         dst,

@@ -657,9 +657,7 @@ unsafe extern "C" fn ZSTD_noCompressBlock(
     let cBlockHeader24 = lastBlock
         .wrapping_add((bt_raw as std::ffi::c_int as u32) << 1)
         .wrapping_add((srcSize << 3) as u32);
-    if srcSize.wrapping_add(ZSTD_blockHeaderSize) > dstCapacity {
-        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(srcSize.wrapping_add(ZSTD_blockHeaderSize) > dstCapacity, ZSTD_error_dstSize_tooSmall);
     MEM_writeLE24(dst, cBlockHeader24);
     libc::memcpy((u8 *) dst + ZSTD_blockHeaderSize, src, (srcSize) as usize);
     return ZSTD_blockHeaderSize.wrapping_add(srcSize);
@@ -1149,11 +1147,8 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
     let mut op = ostart;
     let mut seqHead = std::ptr::null_mut();
     *entropyWritten = 0;
-    if (oend.offset_from(op) as std::ffi::c_long)
-        < (3 as std::ffi::c_int + 1 as std::ffi::c_int) as std::ffi::c_long
-    {
-        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!((oend.offset_from(op) as std::ffi::c_long)
+        < (3 as std::ffi::c_int + 1 as std::ffi::c_int) as std::ffi::c_long, ZSTD_error_dstSize_tooSmall);
     if nbSeq < 128 {
         let fresh0 = op;
         op = op.offset(1);

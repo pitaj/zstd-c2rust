@@ -172,9 +172,7 @@ unsafe extern "C" fn BIT_initDStream(
         } else {
             0 as std::ffi::c_uint
         };
-        if lastByte as std::ffi::c_int == 0 {
-            return ERROR(ZSTD_error_GENERIC);
-        }
+        RETURN_ERROR_IF!(lastByte as std::ffi::c_int == 0, ZSTD_error_GENERIC);
     } else {
         (*bitD).ptr = (*bitD).start;
         (*bitD).bitContainer = *((*bitD).start as *const u8) as BitContainerType;
@@ -291,9 +289,7 @@ unsafe extern "C" fn BIT_initDStream(
         } else {
             0 as std::ffi::c_uint
         };
-        if lastByte_0 as std::ffi::c_int == 0 {
-            return ERROR(ZSTD_error_corruption_detected);
-        }
+        RETURN_ERROR_IF!(lastByte_0 as std::ffi::c_int == 0, ZSTD_error_corruption_detected);
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
@@ -436,9 +432,7 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
     if dstSize == 0 {
         return 0;
     }
-    if srcSize < 10 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(srcSize < 10, ZSTD_error_corruption_detected);
     if dtLog != HUF_DECODER_FAST_TABLELOG as u32 {
         return 0;
     }
@@ -474,9 +468,7 @@ unsafe extern "C" fn HUF_DecompressFastArgs_init(
     {
         return 0;
     }
-    if length4 > srcSize {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(length4 > srcSize, ZSTD_error_corruption_detected);
     (*args)
         .ip[0] = ((*args).iend[1])
         .offset(-(::core::mem::size_of::<u64>() as isize));
@@ -531,14 +523,9 @@ unsafe extern "C" fn HUF_initRemainingDStream(
     mut stream: std::ffi::c_int,
     mut segmentEnd: *mut u8,
 ) -> usize {
-    if (*args).op[stream as usize] > segmentEnd {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if (*args).ip[stream as usize]
-        < ((*args).iend[stream as usize]).offset(-8_isize)
-    {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!((*args).op[stream as usize] > segmentEnd, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!((*args).ip[stream as usize]
+        < ((*args).iend[stream as usize]).offset(-8_isize), ZSTD_error_corruption_detected);
     (*bit)
         .bitContainer = MEM_readLEST(
         (*args).ip[stream as usize] as *const std::ffi::c_void,
@@ -622,11 +609,8 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
     let dtPtr = DTable.offset(1) as *mut std::ffi::c_void;
     let dt = dtPtr as *mut HUF_DEltX1;
     let mut wksp = workSpace as *mut HUF_ReadDTableX1_Workspace;
-    if ::core::mem::size_of::<HUF_ReadDTableX1_Workspace>()
-        > wkspSize
-    {
-        return ERROR(ZSTD_error_tableLog_tooLarge);
-    }
+    RETURN_ERROR_IF!(::core::mem::size_of::<HUF_ReadDTableX1_Workspace>()
+        > wkspSize, ZSTD_error_tableLog_tooLarge);
     iSize = HUF_readStats_wksp(
         ((*wksp).huffWeight).as_mut_ptr(),
         (HUF_SYMBOLVALUE_MAX + 1 as std::ffi::c_int) as usize,
@@ -652,9 +636,7 @@ pub unsafe extern "C" fn HUF_readDTableX1_wksp(
         tableLog,
         targetTableLog,
     );
-    if tableLog > (dtd.maxTableLog as std::ffi::c_int + 1 as std::ffi::c_int) as u32 {
-        return ERROR(ZSTD_error_tableLog_tooLarge);
-    }
+    RETURN_ERROR_IF!(tableLog > (dtd.maxTableLog as std::ffi::c_int + 1 as std::ffi::c_int) as u32, ZSTD_error_tableLog_tooLarge);
     dtd.tableType = 0;
     dtd.tableLog = tableLog as u8;
     libc::memcpy(
@@ -902,9 +884,7 @@ unsafe extern "C" fn HUF_decompress1X1_usingDTable_internal_body(
         return _var_err__;
     }
     HUF_decodeStreamX1(op, &mut bitD, oend, dt, dtLog);
-    if BIT_endOfDStream(&mut bitD) == 0 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(BIT_endOfDStream(&mut bitD) == 0, ZSTD_error_corruption_detected);
     return dstSize;
 }
 #[inline(always)]
@@ -915,12 +895,8 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
     mut cSrcSize: usize,
     mut DTable: *const HUF_DTable,
 ) -> usize {
-    if cSrcSize < 10 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if dstSize < 6 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(cSrcSize < 10, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(dstSize < 6, ZSTD_error_corruption_detected);
     let istart = cSrc as *const u8;
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
@@ -985,12 +961,8 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
     let dtd = HUF_getDTableDesc(DTable);
     let dtLog = dtd.tableLog as u32;
     let mut endSignal: u32 = 1;
-    if length4 > cSrcSize {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if opStart4 > oend {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(length4 > cSrcSize, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(opStart4 > oend, ZSTD_error_corruption_detected);
     let _var_err__ = BIT_initDStream(
         &mut bitD1,
         istart1 as *const std::ffi::c_void,
@@ -1061,24 +1033,16 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_body(
                     as std::ffi::c_int as u32;
         }
     }
-    if op1 > opStart2 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if op2 > opStart3 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if op3 > opStart4 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(op1 > opStart2, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(op2 > opStart3, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(op3 > opStart4, ZSTD_error_corruption_detected);
     HUF_decodeStreamX1(op1, &mut bitD1, opStart2, dt, dtLog);
     HUF_decodeStreamX1(op2, &mut bitD2, opStart3, dt, dtLog);
     HUF_decodeStreamX1(op3, &mut bitD3, opStart4, dt, dtLog);
     HUF_decodeStreamX1(op4, &mut bitD4, oend, dt, dtLog);
     let endCheck = BIT_endOfDStream(&mut bitD1) & BIT_endOfDStream(&mut bitD2)
         & BIT_endOfDStream(&mut bitD3) & BIT_endOfDStream(&mut bitD4);
-    if endCheck == 0 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(endCheck == 0, ZSTD_error_corruption_detected);
     return dstSize;
 }
 unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_bmi2(
@@ -1462,9 +1426,7 @@ unsafe extern "C" fn HUF_decompress4X1_usingDTable_internal_fast(
                     HUF_DECODER_FAST_TABLELOG as u32,
                 ) as isize,
             );
-        if args.op[i as usize] != segmentEnd {
-            return ERROR(ZSTD_error_corruption_detected);
-        }
+        RETURN_ERROR_IF!(args.op[i as usize] != segmentEnd, ZSTD_error_corruption_detected);
         i += 1;
         i;
     }
@@ -1595,9 +1557,7 @@ unsafe extern "C" fn HUF_decompress4X1_DCtx_wksp(
     if ERR_isError(hSize) {
         return hSize;
     }
-    if hSize >= cSrcSize {
-        return ERROR(ZSTD_error_srcSize_wrong);
-    }
+    RETURN_ERROR_IF!(hSize >= cSrcSize, ZSTD_error_srcSize_wrong);
     ip = ip.offset(hSize as isize);
     cSrcSize = cSrcSize.wrapping_sub(hSize);
     return HUF_decompress4X1_usingDTable_internal(
@@ -2005,11 +1965,8 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     let dt = dtPtr as *mut HUF_DEltX2;
     let mut rankStart = std::ptr::null_mut();
     let wksp = workSpace as *mut HUF_ReadDTableX2_Workspace;
-    if ::core::mem::size_of::<HUF_ReadDTableX2_Workspace>()
-        > wkspSize
-    {
-        return ERROR(ZSTD_error_GENERIC);
-    }
+    RETURN_ERROR_IF!(::core::mem::size_of::<HUF_ReadDTableX2_Workspace>()
+        > wkspSize, ZSTD_error_GENERIC);
     rankStart = ((*wksp).rankStart0).as_mut_ptr().offset(1);
     libc::memset(
         ((*wksp).rankStats).as_mut_ptr() as *mut std::ffi::c_void,
@@ -2021,9 +1978,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
         0,
         ::core::mem::size_of::<[u32; 15]>() as usize,
     );
-    if maxTableLog > HUF_TABLELOG_MAX as u32 {
-        return ERROR(ZSTD_error_tableLog_tooLarge);
-    }
+    RETURN_ERROR_IF!(maxTableLog > HUF_TABLELOG_MAX as u32, ZSTD_error_tableLog_tooLarge);
     iSize = HUF_readStats_wksp(
         ((*wksp).weightList).as_mut_ptr(),
         (HUF_SYMBOLVALUE_MAX + 1 as std::ffi::c_int) as usize,
@@ -2039,9 +1994,7 @@ pub unsafe extern "C" fn HUF_readDTableX2_wksp(
     if ERR_isError(iSize) {
         return iSize;
     }
-    if tableLog > maxTableLog {
-        return ERROR(ZSTD_error_tableLog_tooLarge);
-    }
+    RETURN_ERROR_IF!(tableLog > maxTableLog, ZSTD_error_tableLog_tooLarge);
     if tableLog <= HUF_DECODER_FAST_TABLELOG as u32
         && maxTableLog > HUF_DECODER_FAST_TABLELOG as u32
     {
@@ -2271,9 +2224,7 @@ unsafe extern "C" fn HUF_decompress1X2_usingDTable_internal_body(
     let dt = dtPtr as *const HUF_DEltX2;
     let dtd = HUF_getDTableDesc(DTable);
     HUF_decodeStreamX2(ostart, &mut bitD, oend, dt, dtd.tableLog as u32);
-    if BIT_endOfDStream(&mut bitD) == 0 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(BIT_endOfDStream(&mut bitD) == 0, ZSTD_error_corruption_detected);
     return dstSize;
 }
 #[inline(always)]
@@ -2284,12 +2235,8 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
     mut cSrcSize: usize,
     mut DTable: *const HUF_DTable,
 ) -> usize {
-    if cSrcSize < 10 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if dstSize < 6 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(cSrcSize < 10, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(dstSize < 6, ZSTD_error_corruption_detected);
     let istart = cSrc as *const u8;
     let ostart = dst as *mut u8;
     let oend = ostart.offset(dstSize as isize);
@@ -2358,12 +2305,8 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
     let mut endSignal: u32 = 1;
     let dtd = HUF_getDTableDesc(DTable);
     let dtLog = dtd.tableLog as u32;
-    if length4 > cSrcSize {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if opStart4 > oend {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(length4 > cSrcSize, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(opStart4 > oend, ZSTD_error_corruption_detected);
     let _var_err__ = BIT_initDStream(
         &mut bitD1,
         istart1 as *const std::ffi::c_void,
@@ -2434,24 +2377,16 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_body(
                     as std::ffi::c_int as u32;
         }
     }
-    if op1 > opStart2 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if op2 > opStart3 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
-    if op3 > opStart4 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(op1 > opStart2, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(op2 > opStart3, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(op3 > opStart4, ZSTD_error_corruption_detected);
     HUF_decodeStreamX2(op1, &mut bitD1, opStart2, dt, dtLog);
     HUF_decodeStreamX2(op2, &mut bitD2, opStart3, dt, dtLog);
     HUF_decodeStreamX2(op3, &mut bitD3, opStart4, dt, dtLog);
     HUF_decodeStreamX2(op4, &mut bitD4, oend, dt, dtLog);
     let endCheck = BIT_endOfDStream(&mut bitD1) & BIT_endOfDStream(&mut bitD2)
         & BIT_endOfDStream(&mut bitD3) & BIT_endOfDStream(&mut bitD4);
-    if endCheck == 0 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(endCheck == 0, ZSTD_error_corruption_detected);
     return dstSize;
 }
 unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_bmi2(
@@ -3023,9 +2958,7 @@ unsafe extern "C" fn HUF_decompress4X2_usingDTable_internal_fast(
                     HUF_DECODER_FAST_TABLELOG as u32,
                 ) as isize,
             );
-        if args.op[i as usize] != segmentEnd {
-            return ERROR(ZSTD_error_corruption_detected);
-        }
+        RETURN_ERROR_IF!(args.op[i as usize] != segmentEnd, ZSTD_error_corruption_detected);
         i += 1;
         i;
     }
@@ -3157,9 +3090,7 @@ pub unsafe extern "C" fn HUF_decompress1X2_DCtx_wksp(
     if ERR_isError(hSize) {
         return hSize;
     }
-    if hSize >= cSrcSize {
-        return ERROR(ZSTD_error_srcSize_wrong);
-    }
+    RETURN_ERROR_IF!(hSize >= cSrcSize, ZSTD_error_srcSize_wrong);
     ip = ip.offset(hSize as isize);
     cSrcSize = cSrcSize.wrapping_sub(hSize);
     return HUF_decompress1X2_usingDTable_internal(
@@ -3193,9 +3124,7 @@ unsafe extern "C" fn HUF_decompress4X2_DCtx_wksp(
     if ERR_isError(hSize) {
         return hSize;
     }
-    if hSize >= cSrcSize {
-        return ERROR(ZSTD_error_srcSize_wrong);
-    }
+    RETURN_ERROR_IF!(hSize >= cSrcSize, ZSTD_error_srcSize_wrong);
     ip = ip.offset(hSize as isize);
     cSrcSize = cSrcSize.wrapping_sub(hSize);
     return HUF_decompress4X2_usingDTable_internal(
@@ -3498,12 +3427,8 @@ pub unsafe extern "C" fn HUF_decompress1X_DCtx_wksp(
     mut wkspSize: usize,
     mut flags: std::ffi::c_int,
 ) -> usize {
-    if dstSize == 0 {
-        return ERROR(ZSTD_error_dstSize_tooSmall);
-    }
-    if cSrcSize > dstSize {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(dstSize == 0, ZSTD_error_dstSize_tooSmall);
+    RETURN_ERROR_IF!(cSrcSize > dstSize, ZSTD_error_corruption_detected);
     if cSrcSize == dstSize {
         libc::memcpy(dst, cSrc, (dstSize) as usize);
         return dstSize;
@@ -3583,9 +3508,7 @@ pub unsafe extern "C" fn HUF_decompress1X1_DCtx_wksp(
     if ERR_isError(hSize) {
         return hSize;
     }
-    if hSize >= cSrcSize {
-        return ERROR(ZSTD_error_srcSize_wrong);
-    }
+    RETURN_ERROR_IF!(hSize >= cSrcSize, ZSTD_error_srcSize_wrong);
     ip = ip.offset(hSize as isize);
     cSrcSize = cSrcSize.wrapping_sub(hSize);
     return HUF_decompress1X1_usingDTable_internal(
@@ -3638,12 +3561,8 @@ pub unsafe extern "C" fn HUF_decompress4X_hufOnly_wksp(
     mut wkspSize: usize,
     mut flags: std::ffi::c_int,
 ) -> usize {
-    if dstSize == 0 {
-        return ERROR(ZSTD_error_dstSize_tooSmall);
-    }
-    if cSrcSize == 0 {
-        return ERROR(ZSTD_error_corruption_detected);
-    }
+    RETURN_ERROR_IF!(dstSize == 0, ZSTD_error_dstSize_tooSmall);
+    RETURN_ERROR_IF!(cSrcSize == 0, ZSTD_error_corruption_detected);
     let algoNb = HUF_selectDecoder(dstSize, cSrcSize);
     return if algoNb != 0 {
         HUF_decompress4X2_DCtx_wksp(

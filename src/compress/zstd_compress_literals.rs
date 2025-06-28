@@ -112,9 +112,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
     let flSize = (1 as std::ffi::c_int
         + (srcSize > 31) as std::ffi::c_int
         + (srcSize > 4095) as std::ffi::c_int) as u32;
-    if srcSize.wrapping_add(flSize as usize) > dstCapacity {
-        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(srcSize.wrapping_add(flSize as usize) > dstCapacity, ZSTD_error_dstSize_tooSmall);
     match flSize {
         1 => {
             *ostart
@@ -263,9 +261,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     if srcSize < ZSTD_minLiteralsToCompress(strategy, (*prevHuf).repeatMode) {
         return ZSTD_noCompressLiterals(dst, dstCapacity, src, srcSize);
     }
-    if dstCapacity < lhSize.wrapping_add(1) {
-        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(dstCapacity < lhSize.wrapping_add(1), ZSTD_error_dstSize_tooSmall);
     let mut repeat = (*prevHuf).repeatMode;
     let flags = 0 as std::ffi::c_int
         | (if bmi2 != 0 {

@@ -161,6 +161,12 @@ case $1 in
     # ERROR!(maxCode)
     perl -i -p0e 's/ERROR!\((\w+)\)/ERROR(ZSTD_error_$1)/gm'  src/*/*.rs
 
+    # -(ZSTD_error_corruption_detected as std::ffi::c_int) as usize
+    perl -i -p0e 's/-\((ZSTD_error\w+) as [^)]*\) as usize/ERROR($1)/gm'  src/*/*.rs
+    
+    # if ... { return ERROR(...); }
+    perl -i -p0e 's/\bif ([^{}]*?)[\s\n]*{[\s\n]*return ERROR\((\w+)\);[\s\n]*}/RETURN_ERROR_IF!($1, $2);/gm'  src/*/*.rs
+
     ;;
 
   min-max)

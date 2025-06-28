@@ -1139,9 +1139,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     }
     if nbThreads > 1 {
         pool = POOL_create(nbThreads as usize, 1);
-        if pool.is_null() {
-            return ERROR(ZSTD_error_memory_allocation);
-        }
+        RETURN_ERROR_IF!(pool.is_null(), ZSTD_error_memory_allocation);
     }
     COVER_best_init(&mut best);
     libc::memset(

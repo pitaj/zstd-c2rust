@@ -1719,7 +1719,7 @@ unsafe extern "C" fn ZSTDMT_compressionJob(mut jobDescription: *mut std::ffi::c_
     let mut lastCBlockSize: usize = 0;
     if cctx.is_null() {
         pthread_mutex_lock(&mut (*job).job_mutex);
-        (*job).cSize = -(ZSTD_error_memory_allocation as std::ffi::c_int) as usize;
+        (*job).cSize = ERROR(ZSTD_error_memory_allocation);
         pthread_mutex_unlock(&mut (*job).job_mutex);
     } else {
         if (dstBuff.start).is_null() {
@@ -2090,9 +2090,7 @@ unsafe extern "C" fn ZSTDMT_expandJobsTable(
         );
         (*mtctx).jobIDMask = 0;
         (*mtctx).jobs = ZSTDMT_createJobsTable(&mut nbJobs, (*mtctx).cMem);
-        if ((*mtctx).jobs).is_null() {
-            return ERROR(ZSTD_error_memory_allocation);
-        }
+        RETURN_ERROR_IF!(((*mtctx).jobs).is_null(), ZSTD_error_memory_allocation);
         (*mtctx).jobIDMask = nbJobs.wrapping_sub(1);
     }
     return 0;
@@ -2279,30 +2277,22 @@ unsafe extern "C" fn ZSTDMT_resize(
     mut mtctx: *mut ZSTDMT_CCtx,
     mut nbWorkers: std::ffi::c_uint,
 ) -> usize {
-    if POOL_resize((*mtctx).factory, nbWorkers as usize) != 0 {
-        return ERROR(ZSTD_error_memory_allocation);
-    }
+    RETURN_ERROR_IF!(POOL_resize((*mtctx).factory, nbWorkers as usize) != 0, ZSTD_error_memory_allocation);
     FORWARD_IF_ERROR!(ZSTDMT_expandJobsTable(mtctx, nbWorkers), "");
     (*mtctx)
         .bufPool = ZSTDMT_expandBufferPool(
         (*mtctx).bufPool,
         BUF_POOL_MAX_NB_BUFFERS!(nbWorkers),
     );
-    if ((*mtctx).bufPool).is_null() {
-        return ERROR(ZSTD_error_memory_allocation);
-    }
+    RETURN_ERROR_IF!(((*mtctx).bufPool).is_null(), ZSTD_error_memory_allocation);
     (*mtctx)
         .cctxPool = ZSTDMT_expandCCtxPool(
         (*mtctx).cctxPool,
         nbWorkers as std::ffi::c_int,
     );
-    if ((*mtctx).cctxPool).is_null() {
-        return ERROR(ZSTD_error_memory_allocation);
-    }
+    RETURN_ERROR_IF!(((*mtctx).cctxPool).is_null(), ZSTD_error_memory_allocation);
     (*mtctx).seqPool = ZSTDMT_expandSeqPool((*mtctx).seqPool, nbWorkers);
-    if ((*mtctx).seqPool).is_null() {
-        return ERROR(ZSTD_error_memory_allocation);
-    }
+    RETURN_ERROR_IF!(((*mtctx).seqPool).is_null(), ZSTD_error_memory_allocation);
     ZSTDMT_CCtxParam_setNbWorkers(&mut (*mtctx).params, nbWorkers);
     return 0;
 }
@@ -2535,9 +2525,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
             (*mtctx).cMem,
         );
         (*mtctx).cdict = (*mtctx).cdictLocal;
-        if ((*mtctx).cdictLocal).is_null() {
-            return ERROR(ZSTD_error_memory_allocation);
-        }
+        RETURN_ERROR_IF!(((*mtctx).cdictLocal).is_null(), ZSTD_error_memory_allocation);
     } else {
         (*mtctx).cdictLocal = NULL_0 as *mut ZSTD_CDict;
         (*mtctx).cdict = cdict;
@@ -2630,14 +2618,12 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
                 (*mtctx).cMem,
             );
             (*mtctx).cdict = (*mtctx).cdictLocal;
-            if ((*mtctx).cdictLocal).is_null() {
-                return ERROR(ZSTD_error_memory_allocation);
-            }
+            RETURN_ERROR_IF!(((*mtctx).cdictLocal).is_null(), ZSTD_error_memory_allocation);
         }
     } else {
         (*mtctx).cdict = cdict;
     }
-    if ZSTDMT_serialState_reset(
+    RETURN_ERROR_IF!(ZSTDMT_serialState_reset(
         &mut (*mtctx).serial,
         (*mtctx).seqPool,
         params,
@@ -2645,10 +2631,7 @@ pub unsafe extern "C" fn ZSTDMT_initCStream_internal(
         dict,
         dictSize,
         dictContentType,
-    ) != 0
-    {
-        return ERROR(ZSTD_error_memory_allocation);
-    }
+    ) != 0, ZSTD_error_memory_allocation);
     return 0;
 }
 unsafe extern "C" fn ZSTDMT_writeLastEmptyBlock(mut job: *mut ZSTDMT_jobDescription) {
@@ -3106,12 +3089,9 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
     mut endOp: ZSTD_EndDirective,
 ) -> usize {
     let mut forwardInputProgress: std::ffi::c_uint = 0;
-    if (*mtctx).frameEnded != 0
+    RETURN_ERROR_IF!((*mtctx).frameEnded != 0
         && endOp as std::ffi::c_uint
-            == ZSTD_e_continue as std::ffi::c_int as std::ffi::c_uint
-    {
-        return ERROR(ZSTD_error_stage_wrong);
-    }
+            == ZSTD_e_continue as std::ffi::c_int as std::ffi::c_uint, ZSTD_error_stage_wrong);
     if (*mtctx).jobReady == 0 && (*input).size > (*input).pos {
         if ((*mtctx).inBuff.buffer.start).is_null() {
             ZSTDMT_tryGetInputRange(mtctx) == 0;

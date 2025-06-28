@@ -788,11 +788,8 @@ pub unsafe extern "C" fn ZDICT_getDictHeaderSize(
     mut dictSize: usize,
 ) -> usize {
     let mut headerSize: usize = 0;
-    if dictSize <= 8
-        || MEM_readLE32(dictBuffer) != ZSTD_MAGIC_DICTIONARY
-    {
-        return ERROR(ZSTD_error_dictionary_corrupted);
-    }
+    RETURN_ERROR_IF!(dictSize <= 8
+        || MEM_readLE32(dictBuffer) != ZSTD_MAGIC_DICTIONARY, ZSTD_error_dictionary_corrupted);
     let mut bs = libc::malloc(
         ::core::mem::size_of::<ZSTD_compressedBlockState_t>(),
     ) as *mut ZSTD_compressedBlockState_t;
@@ -2326,12 +2323,8 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
     let notificationLevel = params.notificationLevel;
     let minContentSize = ZDICT_maxRep(repStartValue.as_ptr()) as usize;
     let mut paddingSize: usize = 0;
-    if dictBufferCapacity < dictContentSize {
-        return ERROR(ZSTD_error_dstSize_tooSmall);
-    }
-    if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
-        return ERROR(ZSTD_error_dstSize_tooSmall);
-    }
+    RETURN_ERROR_IF!(dictBufferCapacity < dictContentSize, ZSTD_error_dstSize_tooSmall);
+    RETURN_ERROR_IF!(dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize, ZSTD_error_dstSize_tooSmall);
     MEM_writeLE32(header.as_mut_ptr() as *mut std::ffi::c_void, ZSTD_MAGIC_DICTIONARY);
     let randomID = ZSTD_XXH64(
         customDictContent,
@@ -2370,9 +2363,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
         dictContentSize = dictBufferCapacity.wrapping_sub(hSize);
     }
     if dictContentSize < minContentSize {
-        if hSize.wrapping_add(minContentSize) > dictBufferCapacity {
-            return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-        }
+        RETURN_ERROR_IF!(hSize.wrapping_add(minContentSize) > dictBufferCapacity, ZSTD_error_dstSize_tooSmall);
         paddingSize = minContentSize.wrapping_sub(dictContentSize);
     } else {
         paddingSize = 0;
@@ -2499,9 +2490,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     let samplesBuffSize = ZDICT_totalSampleSize(samplesSizes, nbSamples);
     let mut dictSize: usize = 0;
     let notificationLevel = params.zParams.notificationLevel;
-    if dictList.is_null() {
-        return ERROR(ZSTD_error_memory_allocation);
-    }
+    RETURN_ERROR_IF!(dictList.is_null(), ZSTD_error_memory_allocation);
     if maxDictSize < ZDICT_DICTSIZE_MIN as usize {
         libc::free(dictList as *mut std::ffi::c_void);
         return ERROR(ZSTD_error_dstSize_tooSmall);
@@ -2654,9 +2643,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_legacy(
         return 0;
     }
     newBuff = libc::malloc(sBuffSize.wrapping_add(NOISELENGTH as usize));
-    if newBuff.is_null() {
-        return ERROR(ZSTD_error_memory_allocation);
-    }
+    RETURN_ERROR_IF!(newBuff.is_null(), ZSTD_error_memory_allocation);
     libc::memcpy(newBuff, samplesBuffer, sBuffSize);
     ZDICT_fillNoise(
         (newBuff as *mut std::ffi::c_char).offset(sBuffSize as isize)

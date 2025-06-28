@@ -349,9 +349,7 @@ unsafe extern "C" fn BIT_initCStream(
         .offset(
             -(::core::mem::size_of::<BitContainerType>() as isize),
         );
-    if dstCapacity <= ::core::mem::size_of::<BitContainerType>() {
-        return ERROR(ZSTD_error_dstSize_tooSmall);
-    }
+    RETURN_ERROR_IF!(dstCapacity <= ::core::mem::size_of::<BitContainerType>(), ZSTD_error_dstSize_tooSmall);
     return 0;
 }
 #[inline(always)]
@@ -743,9 +741,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
         stateLog: 0,
     };
     FSE_initCState(&mut cstate, ctable);
-    if ZSTD_getFSEMaxSymbolValue(ctable) < max {
-        return ERROR(ZSTD_error_GENERIC);
-    }
+    RETURN_ERROR_IF!(ZSTD_getFSEMaxSymbolValue(ctable) < max, ZSTD_error_GENERIC);
     s = 0;
     while s <= max {
         let tableLog = cstate.stateLog;
@@ -753,9 +749,7 @@ pub unsafe extern "C" fn ZSTD_fseBitCost(
             << kAccuracyLog;
         let bitCost = FSE_bitCost(cstate.symbolTT, tableLog, s, kAccuracyLog);
         if !(*count.offset(s as isize) == 0) {
-            if bitCost >= badCost {
-                return ERROR(ZSTD_error_GENERIC);
-            }
+            RETURN_ERROR_IF!(bitCost >= badCost, ZSTD_error_GENERIC);
             cost = cost
                 .wrapping_add(*count.offset(s as isize) as usize * bitCost as usize);
         }
@@ -894,9 +888,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
             FORWARD_IF_ERROR!(
                 FSE_buildCTable_rle(nextCTable, (u8) max), ""
             );
-            if dstCapacity == 0 {
-                return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-            }
+            RETURN_ERROR_IF!(dstCapacity == 0, ZSTD_error_dstSize_tooSmall);
             *op = *codeTable.offset(0);
             return 1;
         }
@@ -952,7 +944,7 @@ pub unsafe extern "C" fn ZSTD_buildCTable(
             );
             return NCountSize;
         }
-        _ => return -(ZSTD_error_GENERIC as std::ffi::c_int) as usize,
+        _ => return ERROR(ZSTD_error_GENERIC),
     };
 }
 #[inline(always)]
@@ -994,9 +986,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
         symbolTT: std::ptr::null(),
         stateLog: 0,
     };
-    if ERR_isError(BIT_initCStream(&mut blockStream, dst, dstCapacity)) != 0 {
-        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(ERR_isError(BIT_initCStream(&mut blockStream, dst, dstCapacity)) != 0, ZSTD_error_dstSize_tooSmall);
     FSE_initCState2(
         &mut stateMatchLength,
         CTable_MatchLength,
@@ -1157,9 +1147,7 @@ unsafe extern "C" fn ZSTD_encodeSequences_body(
     FSE_flushCState(&mut blockStream, &mut stateOffsetBits);
     FSE_flushCState(&mut blockStream, &mut stateLitLength);
     let streamSize = BIT_closeCStream(&mut blockStream);
-    if streamSize == 0 {
-        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int) as usize;
-    }
+    RETURN_ERROR_IF!(streamSize == 0, ZSTD_error_dstSize_tooSmall);
     return streamSize;
 }
 unsafe extern "C" fn ZSTD_encodeSequences_default(

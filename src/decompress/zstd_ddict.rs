@@ -301,20 +301,14 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
         return 0;
     }
     if (*ddict).dictSize < 8 {
-        if dictContentType as std::ffi::c_uint
-            == ZSTD_dct_fullDict as std::ffi::c_int as std::ffi::c_uint
-        {
-            return ERROR(ZSTD_error_dictionary_corrupted);
-        }
+        RETURN_ERROR_IF!(dictContentType as std::ffi::c_uint
+            == ZSTD_dct_fullDict as std::ffi::c_int as std::ffi::c_uint, ZSTD_error_dictionary_corrupted);
         return 0;
     }
     let magic = MEM_readLE32((*ddict).dictContent);
     if magic != ZSTD_MAGIC_DICTIONARY {
-        if dictContentType as std::ffi::c_uint
-            == ZSTD_dct_fullDict as std::ffi::c_int as std::ffi::c_uint
-        {
-            return ERROR(ZSTD_error_dictionary_corrupted);
-        }
+        RETURN_ERROR_IF!(dictContentType as std::ffi::c_uint
+            == ZSTD_dct_fullDict as std::ffi::c_int as std::ffi::c_uint, ZSTD_error_dictionary_corrupted);
         return 0;
     }
     (*ddict)
@@ -322,12 +316,9 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
         ((*ddict).dictContent as *const std::ffi::c_char)
             .offset(ZSTD_FRAMEIDSIZE as isize) as *const std::ffi::c_void,
     );
-    if ERR_isError(
+    RETURN_ERROR_IF!(ERR_isError(
         ZSTD_loadDEntropy(&mut (*ddict).entropy, (*ddict).dictContent, (*ddict).dictSize),
-    ) != 0
-    {
-        return -(ZSTD_error_dictionary_corrupted as std::ffi::c_int) as usize;
-    }
+    ) != 0, ZSTD_error_dictionary_corrupted);
     (*ddict).entropyPresent = 1;
     return 0;
 }
@@ -351,9 +342,7 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
         let internalBuffer = ZSTD_customMalloc(dictSize, (*ddict).cMem);
         (*ddict).dictBuffer = internalBuffer;
         (*ddict).dictContent = internalBuffer;
-        if internalBuffer.is_null() {
-            return ERROR(ZSTD_error_memory_allocation);
-        }
+        RETURN_ERROR_IF!(internalBuffer.is_null(), ZSTD_error_memory_allocation);
         libc::memcpy(internalBuffer, dict, (dictSize) as usize);
     }
     (*ddict).dictSize = dictSize;

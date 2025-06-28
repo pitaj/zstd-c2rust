@@ -203,9 +203,7 @@ unsafe extern "C" fn HIST_count_parallel_wksp(
         maxSymbolValue = maxSymbolValue.wrapping_sub(1);
         maxSymbolValue;
     }
-    if check as std::ffi::c_uint != 0 && maxSymbolValue > *maxSymbolValuePtr {
-        return ERROR(ZSTD_error_maxSymbolValue_tooSmall);
-    }
+    RETURN_ERROR_IF!(check as std::ffi::c_uint != 0 && maxSymbolValue > *maxSymbolValuePtr, ZSTD_error_maxSymbolValue_tooSmall);
     *maxSymbolValuePtr = maxSymbolValue;
     libc::memmove(count, Counting1, (countSize) as usize);
     return max as usize;
@@ -222,12 +220,8 @@ pub unsafe extern "C" fn HIST_countFast_wksp(
     if sourceSize < 1500 {
         return HIST_count_simple(count, maxSymbolValuePtr, source, sourceSize) as usize;
     }
-    if workSpace as usize & 3_usize != 0 {
-        return ERROR(ZSTD_error_GENERIC);
-    }
-    if workSpaceSize < HIST_WKSP_SIZE {
-        return ERROR(ZSTD_error_workSpace_tooSmall);
-    }
+    RETURN_ERROR_IF!(workSpace as usize & 3_usize != 0, ZSTD_error_GENERIC);
+    RETURN_ERROR_IF!(workSpaceSize < HIST_WKSP_SIZE, ZSTD_error_workSpace_tooSmall);
     return HIST_count_parallel_wksp(
         count,
         maxSymbolValuePtr,
@@ -246,12 +240,8 @@ pub unsafe extern "C" fn HIST_count_wksp(
     mut workSpace: *mut std::ffi::c_void,
     mut workSpaceSize: usize,
 ) -> usize {
-    if workSpace as usize & 3_usize != 0 {
-        return ERROR(ZSTD_error_GENERIC);
-    }
-    if workSpaceSize < HIST_WKSP_SIZE {
-        return ERROR(ZSTD_error_workSpace_tooSmall);
-    }
+    RETURN_ERROR_IF!(workSpace as usize & 3_usize != 0, ZSTD_error_GENERIC);
+    RETURN_ERROR_IF!(workSpaceSize < HIST_WKSP_SIZE, ZSTD_error_workSpace_tooSmall);
     if *maxSymbolValuePtr < 255 {
         return HIST_count_parallel_wksp(
             count,
