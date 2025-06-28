@@ -51,10 +51,23 @@ mod le_on_le {
     pub use MEM_read64 as MEM_readLE64;
     pub use MEM_readST as MEM_readLEST;
 
+    #[inline]
+    pub unsafe fn MEM_readLE24(memPtr: *const c_void) -> u32 {
+        (MEM_readLE16(memPtr) as u32).wrapping_add(
+            (*(memPtr as *const u8).offset(2) as u32) << 16,
+        )
+    }
+
     pub use MEM_write16 as MEM_writeLE16;
     pub use MEM_write32 as MEM_writeLE32;
     pub use MEM_write64 as MEM_writeLE64;
     pub use MEM_writeST as MEM_writeLEST;
+
+    #[inline]
+    pub unsafe fn MEM_writeLE24(memPtr: *mut c_void, value: u32) {
+        MEM_writeLE16(memPtr, val as u16);
+        *(memPtr as *mut u8).offset(2) = (val >> 16) as u8;
+    }
 }
 #[cfg(target_endian = "little")]
 pub use le_on_le::*;
