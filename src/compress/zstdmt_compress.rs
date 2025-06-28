@@ -2491,6 +2491,13 @@ pub unsafe extern "C" fn ZSTDMT_toFlushNow(mut mtctx: *mut ZSTDMT_CCtx) -> usize
     )(ZSTD_pthread_mutex_unlock!(& mtctx -> jobs[wJobID].job_mutex));
     return toFlush;
 }
+
+const ZSTDMT_JOBLOG_MAX: std::ffi::c_uint = if usize::BITS == 32 {
+    29
+} else {
+    30
+};
+
 unsafe extern "C" fn ZSTDMT_computeTargetJobLog(
     mut params: *const ZSTD_CCtx_params,
 ) -> std::ffi::c_uint {
@@ -2504,7 +2511,7 @@ unsafe extern "C" fn ZSTDMT_computeTargetJobLog(
     } else {
         jobLog = std::cmp::max(20, (*params).cParams.windowLog + 2);
     }
-    return std::cmp::min(jobLog, (unsigned) ZSTDMT_JOBLOG_MAX);
+    return std::cmp::min(jobLog, ZSTDMT_JOBLOG_MAX);
 }
 unsafe extern "C" fn ZSTDMT_overlapLog_default(
     mut strat: ZSTD_strategy,
@@ -2819,6 +2826,12 @@ unsafe extern "C" fn ZSTDMT_createCompressionJob(
     }
     return 0;
 }
+/** ZSTDMT_flushProduced() :
+ *  flush whatever data has been produced but not yet flushed in current job.
+ *  move to next job if current one is fully flushed.
+ * `output` : `pos` will be updated with amount of data flushed .
+ * `blockToFlush` : if >0, the function will block and wait if there is no data available to flush .
+ * @return : amount of data remaining within internal buffer, 0 if no more, 1 if unknown but > 0, or an error code */
 unsafe extern "C" fn ZSTDMT_flushProduced(
     mut mtctx: *mut ZSTDMT_CCtx,
     mut output: *mut ZSTD_outBuffer,
@@ -2831,7 +2844,7 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
     )(ZSTD_PTHREAD_MUTEX_LOCK!(& mtctx -> jobs[wJobID].job_mutex));
     if blockToFlush != 0 && (*mtctx).doneJobID < (*mtctx).nextJobID {
         while (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed
-            == (*((*mtctx).jobs).offset(wJobID as isize)).cSize
+            == (*((*mtctx).jobs).offset(wJobID as isize)).cSize /* nothing to flush */
         {
             if (*((*mtctx).jobs).offset(wJobID as isize)).consumed
                 == (*((*mtctx).jobs).offset(wJobID as isize)).src.size
@@ -2850,9 +2863,10 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
             );
         }
     }
-    let mut cSize = (*((*mtctx).jobs).offset(wJobID as isize)).cSize;
-    let srcConsumed = (*((*mtctx).jobs).offset(wJobID as isize)).consumed;
-    let srcSize = (*((*mtctx).jobs).offset(wJobID as isize)).src.size;
+    /* try to flush something */
+    let mut cSize = (*((*mtctx).jobs).offset(wJobID as isize)).cSize; /* shared */
+    let srcConsumed = (*((*mtctx).jobs).offset(wJobID as isize)).consumed; /* shared */
+    let srcSize = (*((*mtctx).jobs).offset(wJobID as isize)).src.size; /* read-only, could be done after mutex lock, but no-declaration-after-statement */
     ZSTD_pthread_mutex_unlock!(
         & mtctx -> jobs[wJobID].job_mutex
     )(ZSTD_pthread_mutex_unlock!(& mtctx -> jobs[wJobID].job_mutex));
@@ -2861,7 +2875,8 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
         ZSTDMT_releaseAllJobResources(mtctx);
         return cSize;
     }
-    if srcConsumed == srcSize
+    /* add frame checksum if necessary (can only happen once) */
+    if srcConsumed == srcSize /* job completed -> worker no longer active */
         && (*((*mtctx).jobs).offset(wJobID as isize)).frameChecksumNeeded != 0
     {
         let checksum = ZSTD_XXH64_digest(&mut (*mtctx).serial.xxhState) as u32;
@@ -2872,19 +2887,19 @@ unsafe extern "C" fn ZSTDMT_flushProduced(
                 as *mut std::ffi::c_void,
             checksum,
         );
-        cSize = cSize.wrapping_add(4);
+        cSize = cSize.wrapping_add(4); /* can write this shared value, as worker is no longer active */
         let ref mut fresh17 = (*((*mtctx).jobs).offset(wJobID as isize)).cSize;
         *fresh17 = (*fresh17).wrapping_add(4);
         (*((*mtctx).jobs).offset(wJobID as isize))
             .frameChecksumNeeded = 0;
     }
-    if cSize > 0 {
+    if cSize > 0 { /* compression is ongoing or completed */
         let toFlush = std::cmp::min(
-            cSize - (*mtctx).(*jobs.offset(wJobID as isize)).dstFlushed, (*output).size - (*output).pos
+            cSize - (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed, (*output).size - (*output).pos
         );
         if toFlush > 0 {
-            libc::memcpy((char *) (*output).dst + (*output).pos, (const char *) mtctx ->
-                    jobs[wJobID].dstBuff.start + mtctx -> jobs[wJobID].dstFlushed, (toFlush) as usize);
+            libc::memcpy((*output).dst.byte_add((*output).pos),
+            (*(*mtctx).jobs.offset(wJobID as isize)).dstBuff.start.byte_add((*(*mtctx).jobs.offset(wJobID as isize)).dstFlushed), toFlush);
         }
         (*output).pos = ((*output).pos).wrapping_add(toFlush);
         let ref mut fresh18 = (*((*mtctx).jobs).offset(wJobID as isize)).dstFlushed;
@@ -3182,7 +3197,7 @@ pub unsafe extern "C" fn ZSTDMT_compressStream_generic(
             {
                 endOp = ZSTD_e_flush;
             }
-            libc::memcpy((char *) (*mtctx).inBuff.buffer.start + (*mtctx).inBuff.filled, (const char *) (*input).src + input -> pos, (syncPoint.toLoad) as usize);
+            libc::memcpy((*mtctx).inBuff.buffer.start.byte_add((*mtctx).inBuff.filled), (*input).src.byte_add((*input).pos), (syncPoint.toLoad) as usize);
             (*input).pos = ((*input).pos).wrapping_add(syncPoint.toLoad);
             (*mtctx)
                 .inBuff
