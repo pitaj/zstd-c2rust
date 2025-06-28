@@ -12,6 +12,7 @@
 #![feature(extern_types)]
 #![feature(label_break_value)]
 #![feature(stdsimd)]
+#![feature(pointer_byte_offsets)]
 
 /// `__m128i` with unaligned memory access
 pub type __m128i_u = [u64; 2];
@@ -24,6 +25,7 @@ pub mod zstd_h;
 
 pub mod common {
 pub mod fse_h;
+pub mod huf_h;
 pub mod debug;
 pub mod entropy_common;
 pub mod error_private;
