@@ -193,43 +193,7 @@ pub union pthread_cond_t {
     pub __size: [std::ffi::c_char; 48],
     pub __align: std::ffi::c_longlong,
 }
-pub type C2RustUnnamed_0 = std::ffi::c_uint;
-pub const ZSTD_error_maxCode: C2RustUnnamed_0 = 120;
-pub const ZSTD_error_externalSequences_invalid: C2RustUnnamed_0 = 107;
-pub const ZSTD_error_sequenceProducer_failed: C2RustUnnamed_0 = 106;
-pub const ZSTD_error_srcBuffer_wrong: C2RustUnnamed_0 = 105;
-pub const ZSTD_error_dstBuffer_wrong: C2RustUnnamed_0 = 104;
-pub const ZSTD_error_seekableIO: C2RustUnnamed_0 = 102;
-pub const ZSTD_error_frameIndex_tooLarge: C2RustUnnamed_0 = 100;
-pub const ZSTD_error_noForwardProgress_inputEmpty: C2RustUnnamed_0 = 82;
-pub const ZSTD_error_noForwardProgress_destFull: C2RustUnnamed_0 = 80;
-pub const ZSTD_error_dstBuffer_null: C2RustUnnamed_0 = 74;
-pub const ZSTD_error_srcSize_wrong: C2RustUnnamed_0 = 72;
-pub const ZSTD_error_dstSize_tooSmall: C2RustUnnamed_0 = 70;
-pub const ZSTD_error_workSpace_tooSmall: C2RustUnnamed_0 = 66;
-pub const ZSTD_error_memory_allocation: C2RustUnnamed_0 = 64;
-pub const ZSTD_error_init_missing: C2RustUnnamed_0 = 62;
-pub const ZSTD_error_stage_wrong: C2RustUnnamed_0 = 60;
-pub const ZSTD_error_stabilityCondition_notRespected: C2RustUnnamed_0 = 50;
-pub const ZSTD_error_cannotProduce_uncompressedBlock: C2RustUnnamed_0 = 49;
-pub const ZSTD_error_maxSymbolValue_tooSmall: C2RustUnnamed_0 = 48;
-pub const ZSTD_error_maxSymbolValue_tooLarge: C2RustUnnamed_0 = 46;
-pub const ZSTD_error_tableLog_tooLarge: C2RustUnnamed_0 = 44;
-pub const ZSTD_error_parameter_outOfBound: C2RustUnnamed_0 = 42;
-pub const ZSTD_error_parameter_combination_unsupported: C2RustUnnamed_0 = 41;
-pub const ZSTD_error_parameter_unsupported: C2RustUnnamed_0 = 40;
-pub const ZSTD_error_dictionaryCreation_failed: C2RustUnnamed_0 = 34;
-pub const ZSTD_error_dictionary_wrong: C2RustUnnamed_0 = 32;
-pub const ZSTD_error_dictionary_corrupted: C2RustUnnamed_0 = 30;
-pub const ZSTD_error_literals_headerWrong: C2RustUnnamed_0 = 24;
-pub const ZSTD_error_checksum_wrong: C2RustUnnamed_0 = 22;
-pub const ZSTD_error_corruption_detected: C2RustUnnamed_0 = 20;
-pub const ZSTD_error_frameParameter_windowTooLarge: C2RustUnnamed_0 = 16;
-pub const ZSTD_error_frameParameter_unsupported: C2RustUnnamed_0 = 14;
-pub const ZSTD_error_version_unsupported: C2RustUnnamed_0 = 12;
-pub const ZSTD_error_prefix_unknown: C2RustUnnamed_0 = 10;
-pub const ZSTD_error_GENERIC: C2RustUnnamed_0 = 1;
-pub const ZSTD_error_no_error: C2RustUnnamed_0 = 0;
+use crate::common::error::*;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_CCtx_s {
@@ -1099,7 +1063,6 @@ unsafe extern "C" fn MEM_writeLE32(mut memPtr: *mut std::ffi::c_void, mut val32:
         MEM_write32(memPtr, MEM_swap32(val32));
     };
 }
-pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 pub const ZSTDMT_JOBSIZE_MIN: std::ffi::c_int = 512 as std::ffi::c_int
     * ((1 as std::ffi::c_int) << 10);
 #[inline]
@@ -1139,9 +1102,6 @@ unsafe extern "C" fn ZSTD_customFree(
             ZSTD_free!(ptr)(ZSTD_free!(ptr));
         }
     }
-}
-unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(

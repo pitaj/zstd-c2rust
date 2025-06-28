@@ -29,7 +29,7 @@ pub mod huf_h;
 pub mod zstd_internal_h;
 pub mod debug;
 pub mod entropy_common;
-pub mod error_private;
+pub mod error;
 pub mod fse_decompress;
 pub mod pool;
 pub mod threading;

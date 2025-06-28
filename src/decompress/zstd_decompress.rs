@@ -11,7 +11,6 @@ extern "C" {
     pub type ZSTDv07_DCtx_s;
     pub type ZSTDv06_DCtx_s;
     pub type ZSTDv05_DCtx_s;
-    fn ZSTD_getErrorCode(functionResult: usize) -> ZSTD_ErrorCode;
     fn ZSTD_freeDDict(ddict: *mut ZSTD_DDict) -> usize;
     fn ZSTD_getDictID_fromDDict(ddict: *const ZSTD_DDict) -> std::ffi::c_uint;
     fn ZSTD_sizeof_DDict(ddict: *const ZSTD_DDict) -> usize;
@@ -195,43 +194,7 @@ extern "C" {
         srcSizePtr: *mut usize,
     ) -> usize;
 }
-pub type ZSTD_ErrorCode = std::ffi::c_uint;
-pub const ZSTD_error_maxCode: ZSTD_ErrorCode = 120;
-pub const ZSTD_error_externalSequences_invalid: ZSTD_ErrorCode = 107;
-pub const ZSTD_error_sequenceProducer_failed: ZSTD_ErrorCode = 106;
-pub const ZSTD_error_srcBuffer_wrong: ZSTD_ErrorCode = 105;
-pub const ZSTD_error_dstBuffer_wrong: ZSTD_ErrorCode = 104;
-pub const ZSTD_error_seekableIO: ZSTD_ErrorCode = 102;
-pub const ZSTD_error_frameIndex_tooLarge: ZSTD_ErrorCode = 100;
-pub const ZSTD_error_noForwardProgress_inputEmpty: ZSTD_ErrorCode = 82;
-pub const ZSTD_error_noForwardProgress_destFull: ZSTD_ErrorCode = 80;
-pub const ZSTD_error_dstBuffer_null: ZSTD_ErrorCode = 74;
-pub const ZSTD_error_srcSize_wrong: ZSTD_ErrorCode = 72;
-pub const ZSTD_error_dstSize_tooSmall: ZSTD_ErrorCode = 70;
-pub const ZSTD_error_workSpace_tooSmall: ZSTD_ErrorCode = 66;
-pub const ZSTD_error_memory_allocation: ZSTD_ErrorCode = 64;
-pub const ZSTD_error_init_missing: ZSTD_ErrorCode = 62;
-pub const ZSTD_error_stage_wrong: ZSTD_ErrorCode = 60;
-pub const ZSTD_error_stabilityCondition_notRespected: ZSTD_ErrorCode = 50;
-pub const ZSTD_error_cannotProduce_uncompressedBlock: ZSTD_ErrorCode = 49;
-pub const ZSTD_error_maxSymbolValue_tooSmall: ZSTD_ErrorCode = 48;
-pub const ZSTD_error_maxSymbolValue_tooLarge: ZSTD_ErrorCode = 46;
-pub const ZSTD_error_tableLog_tooLarge: ZSTD_ErrorCode = 44;
-pub const ZSTD_error_parameter_outOfBound: ZSTD_ErrorCode = 42;
-pub const ZSTD_error_parameter_combination_unsupported: ZSTD_ErrorCode = 41;
-pub const ZSTD_error_parameter_unsupported: ZSTD_ErrorCode = 40;
-pub const ZSTD_error_dictionaryCreation_failed: ZSTD_ErrorCode = 34;
-pub const ZSTD_error_dictionary_wrong: ZSTD_ErrorCode = 32;
-pub const ZSTD_error_dictionary_corrupted: ZSTD_ErrorCode = 30;
-pub const ZSTD_error_literals_headerWrong: ZSTD_ErrorCode = 24;
-pub const ZSTD_error_checksum_wrong: ZSTD_ErrorCode = 22;
-pub const ZSTD_error_corruption_detected: ZSTD_ErrorCode = 20;
-pub const ZSTD_error_frameParameter_windowTooLarge: ZSTD_ErrorCode = 16;
-pub const ZSTD_error_frameParameter_unsupported: ZSTD_ErrorCode = 14;
-pub const ZSTD_error_version_unsupported: ZSTD_ErrorCode = 12;
-pub const ZSTD_error_prefix_unknown: ZSTD_ErrorCode = 10;
-pub const ZSTD_error_GENERIC: ZSTD_ErrorCode = 1;
-pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
+use crate::common::error::*;
 pub type ZSTD_DCtx = ZSTD_DCtx_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -816,7 +779,6 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
         return MEM_swap64(MEM_read64(memPtr))
     };
 }
-pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 static mut repStartValue: [u32; 3] = [
     1,
     4,
@@ -993,9 +955,6 @@ unsafe extern "C" fn ZSTD_customFree(
             ZSTD_free!(ptr)(ZSTD_free!(ptr));
         }
     }
-}
-unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
@@ -2689,7 +2648,7 @@ unsafe extern "C" fn ZSTD_decompressMultiFrame(
                 &mut src,
                 &mut srcSize,
             );
-            if ZSTD_getErrorCode(res) as std::ffi::c_uint
+            if ERR_getErrorCode(res) as std::ffi::c_uint
                 == ZSTD_error_prefix_unknown as std::ffi::c_int as std::ffi::c_uint
                 && moreThan1Frame == 1
             {

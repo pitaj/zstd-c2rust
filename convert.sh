@@ -526,6 +526,19 @@ case $1 in
 
     ;;
 
+  zstd-error)
+    perl -i -p0e 's/pub type \w+ = std::ffi[^;]*;[^;]*ZSTD_error_[^;]*;([^;]*ZSTD_error_[^;]*;)+([^;]*ERR_enum = [^;]*;)?/use crate::common::error::*;/gm'  src/*/*.rs
+
+    perl -i -p0e 's/(?:#\[no_mangle\][\s\n]*)?(?:pub[\s\n]*)?unsafe extern "C" fn (?:HUF|FSE|ZSTD)_\w*Error\w*\([^{]+{(?:{[^{}]+}|[^{}])*}\n?//gm'  src/*/*.rs
+
+    perl -i -p0e 's/pub const (?:ZSTD|FSE|HUF)_isError:[^;]*;\n?//gm'  src/*/*.rs
+
+    perl -i -p0e 's/[\s\n]*fn (ERR|ZSTD|HUF)_\w*Error\w*\([^;]*;//gm'  src/*/*.rs
+
+    perl -i -p0e 's/\b\w*[^R]_(isError|getErrorCode)/ERR_$1/gm'  src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile
@@ -578,6 +591,7 @@ case $1 in
     ./convert.sh boundcheck
     ./convert.sh mem-32bits
     ./convert.sh mem-64bits-littleendian
+    ./convert.sh zstd-error
 
     ;;
 

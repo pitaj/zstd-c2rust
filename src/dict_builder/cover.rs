@@ -75,7 +75,6 @@ extern "C" {
         nbSamples: std::ffi::c_uint,
         parameters: ZDICT_params_t,
     ) -> usize;
-    fn ZDICT_isError(errorCode: usize) -> std::ffi::c_uint;
 }
 pub type __off_t = std::ffi::c_long;
 pub type __off64_t = std::ffi::c_long;
@@ -195,43 +194,7 @@ pub type __compar_d_fn_t = Option::<
     ) -> std::ffi::c_int,
 >;
 pub type unalign64 = u64;
-pub type C2RustUnnamed_0 = std::ffi::c_uint;
-pub const ZSTD_error_maxCode: C2RustUnnamed_0 = 120;
-pub const ZSTD_error_externalSequences_invalid: C2RustUnnamed_0 = 107;
-pub const ZSTD_error_sequenceProducer_failed: C2RustUnnamed_0 = 106;
-pub const ZSTD_error_srcBuffer_wrong: C2RustUnnamed_0 = 105;
-pub const ZSTD_error_dstBuffer_wrong: C2RustUnnamed_0 = 104;
-pub const ZSTD_error_seekableIO: C2RustUnnamed_0 = 102;
-pub const ZSTD_error_frameIndex_tooLarge: C2RustUnnamed_0 = 100;
-pub const ZSTD_error_noForwardProgress_inputEmpty: C2RustUnnamed_0 = 82;
-pub const ZSTD_error_noForwardProgress_destFull: C2RustUnnamed_0 = 80;
-pub const ZSTD_error_dstBuffer_null: C2RustUnnamed_0 = 74;
-pub const ZSTD_error_srcSize_wrong: C2RustUnnamed_0 = 72;
-pub const ZSTD_error_dstSize_tooSmall: C2RustUnnamed_0 = 70;
-pub const ZSTD_error_workSpace_tooSmall: C2RustUnnamed_0 = 66;
-pub const ZSTD_error_memory_allocation: C2RustUnnamed_0 = 64;
-pub const ZSTD_error_init_missing: C2RustUnnamed_0 = 62;
-pub const ZSTD_error_stage_wrong: C2RustUnnamed_0 = 60;
-pub const ZSTD_error_stabilityCondition_notRespected: C2RustUnnamed_0 = 50;
-pub const ZSTD_error_cannotProduce_uncompressedBlock: C2RustUnnamed_0 = 49;
-pub const ZSTD_error_maxSymbolValue_tooSmall: C2RustUnnamed_0 = 48;
-pub const ZSTD_error_maxSymbolValue_tooLarge: C2RustUnnamed_0 = 46;
-pub const ZSTD_error_tableLog_tooLarge: C2RustUnnamed_0 = 44;
-pub const ZSTD_error_parameter_outOfBound: C2RustUnnamed_0 = 42;
-pub const ZSTD_error_parameter_combination_unsupported: C2RustUnnamed_0 = 41;
-pub const ZSTD_error_parameter_unsupported: C2RustUnnamed_0 = 40;
-pub const ZSTD_error_dictionaryCreation_failed: C2RustUnnamed_0 = 34;
-pub const ZSTD_error_dictionary_wrong: C2RustUnnamed_0 = 32;
-pub const ZSTD_error_dictionary_corrupted: C2RustUnnamed_0 = 30;
-pub const ZSTD_error_literals_headerWrong: C2RustUnnamed_0 = 24;
-pub const ZSTD_error_checksum_wrong: C2RustUnnamed_0 = 22;
-pub const ZSTD_error_corruption_detected: C2RustUnnamed_0 = 20;
-pub const ZSTD_error_frameParameter_windowTooLarge: C2RustUnnamed_0 = 16;
-pub const ZSTD_error_frameParameter_unsupported: C2RustUnnamed_0 = 14;
-pub const ZSTD_error_version_unsupported: C2RustUnnamed_0 = 12;
-pub const ZSTD_error_prefix_unknown: C2RustUnnamed_0 = 10;
-pub const ZSTD_error_GENERIC: C2RustUnnamed_0 = 1;
-pub const ZSTD_error_no_error: C2RustUnnamed_0 = 0;
+use crate::common::error::*;
 pub type ZSTD_CCtx = ZSTD_CCtx_s;
 pub type ZSTD_CDict = ZSTD_CDict_s;
 pub type POOL_ctx = POOL_ctx_s;
@@ -347,9 +310,6 @@ unsafe extern "C" fn MEM_readLE64(mut memPtr: *const std::ffi::c_void) -> u64 {
         return MEM_swap64(MEM_read64(memPtr))
     };
 }
-unsafe extern "C" fn ERR_isError(mut code: usize) -> std::ffi::c_uint {
-    return (code > ERROR(ZSTD_error_maxCode)) as std::ffi::c_int as std::ffi::c_uint;
-}
 #[inline]
 unsafe extern "C" fn ZSTD_countLeadingZeros32(mut val: u32) -> std::ffi::c_uint {
     return val.leading_zeros() as i32 as std::ffi::c_uint;
@@ -359,7 +319,6 @@ unsafe extern "C" fn ZSTD_highbit32(mut val: u32) -> std::ffi::c_uint {
     return (31 as std::ffi::c_uint)
         .wrapping_sub(ZSTD_countLeadingZeros32(val));
 }
-pub const ZSTD_isError: unsafe extern "C" fn(usize) -> std::ffi::c_uint = ERR_isError;
 pub const ZDICT_DICTSIZE_MIN: std::ffi::c_int = 256;
 pub const NULL: std::ffi::c_int = 0;
 pub const COVER_DEFAULT_SPLITPOINT: std::ffi::c_double = 1.0f64;
@@ -1460,7 +1419,7 @@ pub unsafe extern "C" fn COVER_selectDict(
         nbFinalizeSamples,
         params.zParams,
     );
-    if ZDICT_isError(dictContentSize) != 0 {
+    if ERR_isError(dictContentSize) != 0 {
         libc::free(largestDictbuffer as *mut std::ffi::c_void);
         libc::free(candidateDictBuffer as *mut std::ffi::c_void);
         return COVER_dictSelectionError(dictContentSize);
@@ -1504,7 +1463,7 @@ pub unsafe extern "C" fn COVER_selectDict(
             nbFinalizeSamples,
             params.zParams,
         );
-        if ZDICT_isError(dictContentSize) != 0 {
+        if ERR_isError(dictContentSize) != 0 {
             libc::free(largestDictbuffer as *mut std::ffi::c_void);
             libc::free(candidateDictBuffer as *mut std::ffi::c_void);
             return COVER_dictSelectionError(dictContentSize);
