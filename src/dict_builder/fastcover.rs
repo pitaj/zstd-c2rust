@@ -686,33 +686,11 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         return ERROR(ZSTD_error_srcSize_wrong);
     }
     if nbTrainSamples < 5 {
-        if DISPLAYLEVEL!(
-            1, "Total number of training samples is %u and is invalid\n", nbTrainSamples
-        ) >= 1
-        {
-            fprintf(
-                stderr,
-                b"Total number of training samples is %u and is invalid\n\0" as *const u8
-                    as *const std::ffi::c_char,
-                nbTrainSamples,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Total number of training samples is %u and is invalid\n", nbTrainSamples);
         return ERROR(ZSTD_error_srcSize_wrong);
     }
     if nbTestSamples < 1 {
-        if DISPLAYLEVEL!(
-            1, "Total number of testing samples is %u and is invalid.\n", nbTestSamples
-        ) >= 1
-        {
-            fprintf(
-                stderr,
-                b"Total number of testing samples is %u and is invalid.\n\0" as *const u8
-                    as *const std::ffi::c_char,
-                nbTestSamples,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Total number of testing samples is %u and is invalid.\n", nbTestSamples);
         return ERROR(ZSTD_error_srcSize_wrong);
     }
     libc::memset(
@@ -720,34 +698,10 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         0,
         ::core::mem::size_of::<FASTCOVER_ctx_t>(),
     );
-    if DISPLAYLEVEL!(
-        2, "Training on %u samples of total size %u\n", nbTrainSamples, (unsigned)
-        trainingSamplesSize
-    ) >= 2
-    {
-        fprintf(
-            stderr,
-            b"Training on %u samples of total size %u\n\0" as *const u8
-                as *const std::ffi::c_char,
-            nbTrainSamples,
-            trainingSamplesSize as std::ffi::c_uint,
-        );
-        fflush(stderr);
-    }
-    if DISPLAYLEVEL!(
-        2, "Testing on %u samples of total size %u\n", nbTestSamples, (unsigned)
-        testSamplesSize
-    ) >= 2
-    {
-        fprintf(
-            stderr,
-            b"Testing on %u samples of total size %u\n\0" as *const u8
-                as *const std::ffi::c_char,
-            nbTestSamples,
-            testSamplesSize as std::ffi::c_uint,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "Training on %u samples of total size %u\n", nbTrainSamples, (unsigned)
+        trainingSamplesSize);
+    DISPLAYLEVEL!(2, "Testing on %u samples of total size %u\n", nbTestSamples, (unsigned)
+        testSamplesSize);
     (*ctx).samples = samples;
     (*ctx).samplesSizes = samplesSizes;
     (*ctx).nbSamples = nbSamples as usize;
@@ -767,16 +721,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         ::core::mem::size_of::<usize>(),
     ) as *mut usize;
     if ((*ctx).offsets).is_null() {
-        if DISPLAYLEVEL!(1, "Failed to allocate scratch buffers \n")
-            >= 1
-        {
-            fprintf(
-                stderr,
-                b"Failed to allocate scratch buffers \n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Failed to allocate scratch buffers \n");
         FASTCOVER_ctx_destroy(ctx);
         return ERROR(ZSTD_error_memory_allocation);
     }
@@ -803,26 +748,11 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         ::core::mem::size_of::<u32>(),
     ) as *mut u32;
     if ((*ctx).freqs).is_null() {
-        if DISPLAYLEVEL!(1, "Failed to allocate frequency table \n")
-            >= 1
-        {
-            fprintf(
-                stderr,
-                b"Failed to allocate frequency table \n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Failed to allocate frequency table \n");
         FASTCOVER_ctx_destroy(ctx);
         return ERROR(ZSTD_error_memory_allocation);
     }
-    if DISPLAYLEVEL!(2, "Computing frequencies\n") >= 2 {
-        fprintf(
-            stderr,
-            b"Computing frequencies\n\0" as *const u8 as *const std::ffi::c_char,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "Computing frequencies\n");
     FASTCOVER_computeFrequency((*ctx).freqs, ctx);
     return 0;
 }
@@ -847,20 +777,8 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
     let mut zeroScoreRun: usize = 0;
     let mut lastUpdateTime: clock_t = 0;
     let mut epoch: usize = 0;
-    if DISPLAYLEVEL!(
-        2, "Breaking content into %u epochs of size %u\n", (u32) epochs.num, (u32) epochs
-        .size
-    ) >= 2
-    {
-        fprintf(
-            stderr,
-            b"Breaking content into %u epochs of size %u\n\0" as *const u8
-                as *const std::ffi::c_char,
-            epochs.num,
-            epochs.size,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "Breaking content into %u epochs of size %u\n", (u32) epochs.num, (u32) epochs
+        .size);
     epoch = 0;
     while tail > 0 {
         let epochBegin = (epoch * epochs.size as usize) as u32;
@@ -914,14 +832,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
         epoch = epoch.wrapping_add(1)
             % epochs.num as usize;
     }
-    if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 {
-        fprintf(
-            stderr,
-            b"\r%79s\r\0" as *const u8 as *const std::ffi::c_char,
-            b"\0" as *const u8 as *const std::ffi::c_char,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "\r%79s\r", "");
     return tail;
 }
 unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
@@ -942,16 +853,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
     ) as *mut u32;
     let displayLevel = (*ctx).displayLevel;
     if segmentFreqs.is_null() || dict.is_null() || freqs.is_null() {
-        if DISPLAYLEVEL!(1, "Failed to allocate buffers: out of memory\n")
-            >= 1
-        {
-            fprintf(
-                stderr,
-                b"Failed to allocate buffers: out of memory\n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Failed to allocate buffers: out of memory\n");
     } else {
         libc::memcpy(
             freqs as *mut std::ffi::c_void,
@@ -984,15 +886,7 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
             totalCompressedSize,
         );
         if COVER_dictSelectionIsError(selection) != 0 {
-            if DISPLAYLEVEL!(1, "Failed to select dictionary\n") >= 1
-            {
-                fprintf(
-                    stderr,
-                    b"Failed to select dictionary\n\0" as *const u8
-                        as *const std::ffi::c_char,
-                );
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(1, "Failed to select dictionary\n");
         }
     }
     libc::free(dict as *mut std::ffi::c_void);
@@ -1102,42 +996,15 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         parameters.accel,
     ) == 0
     {
-        if DISPLAYLEVEL!(1, "FASTCOVER parameters incorrect\n") >= 1 {
-            fprintf(
-                stderr,
-                b"FASTCOVER parameters incorrect\n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "FASTCOVER parameters incorrect\n");
         return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if nbSamples == 0 {
-        if DISPLAYLEVEL!(1, "FASTCOVER must have at least one input file\n")
-            >= 1
-        {
-            fprintf(
-                stderr,
-                b"FASTCOVER must have at least one input file\n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "FASTCOVER must have at least one input file\n");
         return ERROR(ZSTD_error_srcSize_wrong);
     }
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
-        if DISPLAYLEVEL!(
-            1, "dictBufferCapacity must be at least %u\n", ZDICT_DICTSIZE_MIN
-        ) >= 1
-        {
-            fprintf(
-                stderr,
-                b"dictBufferCapacity must be at least %u\n\0" as *const u8
-                    as *const std::ffi::c_char,
-                256,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "dictBufferCapacity must be at least %u\n", ZDICT_DICTSIZE_MIN);
         return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     accelParams = FASTCOVER_defaultAccelParameters[parameters.accel as usize];
@@ -1153,24 +1020,11 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         displayLevel,
     );
     if ERR_isError(initVal) != 0 {
-        if DISPLAYLEVEL!(1, "Failed to initialize context\n") >= 1 {
-            fprintf(
-                stderr,
-                b"Failed to initialize context\n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Failed to initialize context\n");
         return initVal;
     }
     COVER_warnOnSmallCorpus(dictBufferCapacity, ctx.nbDmers, displayLevel);
-    if DISPLAYLEVEL!(2, "Building dictionary\n") >= 2 {
-        fprintf(
-            stderr,
-            b"Building dictionary\n\0" as *const u8 as *const std::ffi::c_char,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "Building dictionary\n");
     let mut segmentFreqs = libc::calloc(
         1_usize << parameters.f,
         ::core::mem::size_of::<u16>(),
@@ -1196,18 +1050,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         coverParams.zParams,
     );
     if ERR_isError(dictionarySize) == 0 {
-        if DISPLAYLEVEL!(
-            2, "Constructed dictionary of size %u\n", (unsigned) dictionarySize
-        ) >= 2
-        {
-            fprintf(
-                stderr,
-                b"Constructed dictionary of size %u\n\0" as *const u8
-                    as *const std::ffi::c_char,
-                dictionarySize as std::ffi::c_uint,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(2, "Constructed dictionary of size %u\n", (unsigned) dictionarySize);
     }
     FASTCOVER_ctx_destroy(&mut ctx);
     libc::free(segmentFreqs as *mut std::ffi::c_void);
@@ -1354,60 +1197,25 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     if splitPoint <= 0.0
         || splitPoint > 1.0
     {
-        if DISPLAYLEVEL!(1, "Incorrect splitPoint\n") >= 1 {
-            fprintf(
-                stderr,
-                b"Incorrect splitPoint\n\0" as *const u8 as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Incorrect splitPoint\n");
         return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if accel == 0
         || accel > FASTCOVER_MAX_ACCEL as std::ffi::c_uint
     {
-        if DISPLAYLEVEL!(1, "Incorrect accel\n") >= 1 {
-            fprintf(
-                stderr,
-                b"Incorrect accel\n\0" as *const u8 as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Incorrect accel\n");
         return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if kMinK < kMaxD || kMaxK < kMinK {
-        if DISPLAYLEVEL!(1, "Incorrect k\n") >= 1 {
-            fprintf(stderr, b"Incorrect k\n\0" as *const u8 as *const std::ffi::c_char);
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "Incorrect k\n");
         return ERROR(ZSTD_error_parameter_outOfBound);
     }
     if nbSamples == 0 {
-        if DISPLAYLEVEL!(1, "FASTCOVER must have at least one input file\n")
-            >= 1
-        {
-            fprintf(
-                stderr,
-                b"FASTCOVER must have at least one input file\n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "FASTCOVER must have at least one input file\n");
         return ERROR(ZSTD_error_srcSize_wrong);
     }
     if dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize {
-        if DISPLAYLEVEL!(
-            1, "dictBufferCapacity must be at least %u\n", ZDICT_DICTSIZE_MIN
-        ) >= 1
-        {
-            fprintf(
-                stderr,
-                b"dictBufferCapacity must be at least %u\n\0" as *const u8
-                    as *const std::ffi::c_char,
-                256,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "dictBufferCapacity must be at least %u\n", ZDICT_DICTSIZE_MIN);
         return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     if nbThreads > 1 {
@@ -1424,17 +1232,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     );
     FASTCOVER_convertToCoverParams(*parameters, &mut coverParams);
     accelParams = FASTCOVER_defaultAccelParameters[accel as usize];
-    if DISPLAYLEVEL!(2, "Trying %u different sets of parameters\n", kIterations)
-        >= 2
-    {
-        fprintf(
-            stderr,
-            b"Trying %u different sets of parameters\n\0" as *const u8
-                as *const std::ffi::c_char,
-            kIterations,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "Trying %u different sets of parameters\n", kIterations);
     d = kMinD;
     while d <= kMaxD {
         let mut ctx = FASTCOVER_ctx_t {
@@ -1454,10 +1252,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             },
             displayLevel: 0,
         };
-        if DISPLAYLEVEL!(3, "d=%u\n", d) >= 3 {
-            fprintf(stderr, b"d=%u\n\0" as *const u8 as *const std::ffi::c_char, d);
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(3, "d=%u\n", d);
         let childDisplayLevel = if displayLevel == 0 {
             0 as std::ffi::c_int
         } else {
@@ -1475,15 +1270,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             childDisplayLevel,
         );
         if ERR_isError(initVal) != 0 {
-            if DISPLAYLEVEL!(1, "Failed to initialize context\n") >= 1
-            {
-                fprintf(
-                    stderr,
-                    b"Failed to initialize context\n\0" as *const u8
-                        as *const std::ffi::c_char,
-                );
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(1, "Failed to initialize context\n");
             COVER_best_destroy(&mut best);
             POOL_free(pool);
             return initVal;
@@ -1498,21 +1285,9 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 ::core::mem::size_of::<FASTCOVER_tryParameters_data_t>()
                     as std::ffi::c_ulong,
             ) as *mut FASTCOVER_tryParameters_data_t;
-            if DISPLAYLEVEL!(3, "k=%u\n", k) >= 3 {
-                fprintf(stderr, b"k=%u\n\0" as *const u8 as *const std::ffi::c_char, k);
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(3, "k=%u\n", k);
             if data.is_null() {
-                if DISPLAYLEVEL!(1, "Failed to allocate parameters\n")
-                    >= 1
-                {
-                    fprintf(
-                        stderr,
-                        b"Failed to allocate parameters\n\0" as *const u8
-                            as *const std::ffi::c_char,
-                    );
-                    fflush(stderr);
-                }
+                DISPLAYLEVEL!(1, "Failed to allocate parameters\n");
                 COVER_best_destroy(&mut best);
                 FASTCOVER_ctx_destroy(&mut ctx);
                 POOL_free(pool);
@@ -1538,16 +1313,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                 accel,
             ) == 0
             {
-                if DISPLAYLEVEL!(1, "FASTCOVER parameters incorrect\n")
-                    >= 1
-                {
-                    fprintf(
-                        stderr,
-                        b"FASTCOVER parameters incorrect\n\0" as *const u8
-                            as *const std::ffi::c_char,
-                    );
-                    fflush(stderr);
-                }
+                DISPLAYLEVEL!(1, "FASTCOVER parameters incorrect\n");
                 libc::free(data as *mut std::ffi::c_void);
             } else {
                 COVER_best_start(&mut best);
@@ -1590,14 +1356,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
         FASTCOVER_ctx_destroy(&mut ctx);
         d = d.wrapping_add(2);
     }
-    if DISPLAYLEVEL!(2, "\r%79s\r", "") >= 2 {
-        fprintf(
-            stderr,
-            b"\r%79s\r\0" as *const u8 as *const std::ffi::c_char,
-            b"\0" as *const u8 as *const std::ffi::c_char,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "\r%79s\r", "");
     let dictSize = best.dictSize;
     if ERR_isError(best.compressedSize) != 0 {
         let compressedSize = best.compressedSize;

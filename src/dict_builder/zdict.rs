@@ -1307,29 +1307,10 @@ unsafe extern "C" fn ZDICT_analyzePos(
     let mut mml: u32 = 0;
     let mut refinedStart = start;
     let mut refinedEnd = end;
-    if DISPLAYLEVEL!(4, "\n") >= 4 {
-        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
-        fflush(stderr);
-    }
-    if DISPLAYLEVEL!(
-        4, "found %3u matches of length >= %i at pos %7u  ", (unsigned) (end - start),
-        MINMATCHLENGTH, (unsigned) pos
-    ) >= 4
-    {
-        fprintf(
-            stderr,
-            b"found %3u matches of length >= %i at pos %7u  \0" as *const u8
-                as *const std::ffi::c_char,
-            end.wrapping_sub(start),
-            7,
-            pos as std::ffi::c_uint,
-        );
-        fflush(stderr);
-    }
-    if DISPLAYLEVEL!(4, "\n") >= 4 {
-        fprintf(stderr, b"\n\0" as *const u8 as *const std::ffi::c_char);
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(4, "\n");
+    DISPLAYLEVEL!(4, "found %3u matches of length >= %i at pos %7u  ", (unsigned) (end - start),
+        MINMATCHLENGTH, (unsigned) pos);
+    DISPLAYLEVEL!(4, "\n");
     mml = MINMATCHLENGTH as u32;
     loop {
         let mut currentChar: u8 = 0;
@@ -1478,24 +1459,9 @@ unsafe extern "C" fn ZDICT_analyzePos(
         u_1 = u_1.wrapping_add(1);
         u_1;
     }
-    if DISPLAYLEVEL!(
-        4, "Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n",
+    DISPLAYLEVEL!(4, "Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n",
         (unsigned) pos, (unsigned) maxLength, (unsigned) savings[maxLength], (double)
-        savings[maxLength] / (double) maxLength
-    ) >= 4
-    {
-        fprintf(
-            stderr,
-            b"Selected dict at position %u, of length %u : saves %u (ratio: %.2f)  \n\0"
-                as *const u8 as *const std::ffi::c_char,
-            pos as std::ffi::c_uint,
-            maxLength as std::ffi::c_uint,
-            savings[maxLength as usize],
-            savings[maxLength as usize] as std::ffi::c_double
-                / maxLength as std::ffi::c_double,
-        );
-        fflush(stderr);
-    }
+        savings[maxLength] / (double) maxLength);
     solution.pos = pos as u32;
     solution.length = maxLength as u32;
     solution.savings = savings[maxLength as usize];
@@ -1778,14 +1744,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
     let mut displayClock: clock_t = 0;
     let refreshRate = CLOCKS_PER_SEC as __clock_t * 3 as __clock_t
         / 10;
-    if DISPLAYLEVEL!(2, "\r%70s\r", "") >= 2 {
-        fprintf(
-            stderr,
-            b"\r%70s\r\0" as *const u8 as *const std::ffi::c_char,
-            b"\0" as *const u8 as *const std::ffi::c_char,
-        );
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "\r%70s\r", "");
     if suffix0.is_null() || reverseSuffix.is_null() || doneMarks.is_null()
         || filePos.is_null()
     {
@@ -1863,24 +1822,8 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                 pos = pos.wrapping_add(1);
                 pos;
             }
-            if DISPLAYLEVEL!(2, "finding patterns ... \n") >= 2
-            {
-                fprintf(
-                    stderr,
-                    b"finding patterns ... \n\0" as *const u8 as *const std::ffi::c_char,
-                );
-                fflush(stderr);
-            }
-            if DISPLAYLEVEL!(3, "minimum ratio : %u \n", minRatio)
-                >= 3
-            {
-                fprintf(
-                    stderr,
-                    b"minimum ratio : %u \n\0" as *const u8 as *const std::ffi::c_char,
-                    minRatio,
-                );
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(2, "finding patterns ... \n");
+            DISPLAYLEVEL!(3, "minimum ratio : %u \n", minRatio);
             let mut cursor: u32 = 0;
             cursor = 0;
             while (cursor as usize) < bufferSize {
@@ -1990,16 +1933,7 @@ unsafe extern "C" fn ZDICT_countEStats(
     }
     let errorCode = ZSTD_compressBegin_usingCDict_deprecated(esr.zc, esr.dict);
     if ERR_isError(errorCode) != 0 {
-        if DISPLAYLEVEL!(1, "warning : ZSTD_compressBegin_usingCDict failed \n")
-            >= 1
-        {
-            fprintf(
-                stderr,
-                b"warning : ZSTD_compressBegin_usingCDict failed \n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(1, "warning : ZSTD_compressBegin_usingCDict failed \n");
         return;
     }
     cSize = ZSTD_compressBlock_deprecated(
@@ -2010,18 +1944,7 @@ unsafe extern "C" fn ZDICT_countEStats(
         srcSize,
     );
     if ERR_isError(cSize) != 0 {
-        if DISPLAYLEVEL!(
-            3, "warning : could not compress sample size %u \n", (unsigned) srcSize
-        ) >= 3
-        {
-            fprintf(
-                stderr,
-                b"warning : could not compress sample size %u \n\0" as *const u8
-                    as *const std::ffi::c_char,
-                srcSize as std::ffi::c_uint,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(3, "warning : could not compress sample size %u \n", (unsigned) srcSize);
         return;
     }
     if cSize != 0 {
@@ -2286,15 +2209,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         esr.workPlace = libc::malloc(ZSTD_BLOCKSIZE_MAX as usize);
         if (esr.dict).is_null() || (esr.zc).is_null() || (esr.workPlace).is_null() {
             eSize = ERROR(ZSTD_error_memory_allocation);
-            if DISPLAYLEVEL!(1, "Not enough memory \n")
-                >= 1
-            {
-                fprintf(
-                    stderr,
-                    b"Not enough memory \n\0" as *const u8 as *const std::ffi::c_char,
-                );
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(1, "Not enough memory \n");
         } else {
             u = 0;
             while u < nbFiles {
@@ -2316,29 +2231,10 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 u;
             }
             if notificationLevel >= 4 {
-                if DISPLAYLEVEL!(4, "Offset Code Frequencies : \n")
-                    >= 4
-                {
-                    fprintf(
-                        stderr,
-                        b"Offset Code Frequencies : \n\0" as *const u8
-                            as *const std::ffi::c_char,
-                    );
-                    fflush(stderr);
-                }
+                DISPLAYLEVEL!(4, "Offset Code Frequencies : \n");
                 u = 0;
                 while u <= offcodeMax {
-                    if DISPLAYLEVEL!(4, "%2u :%7u \n", u, offcodeCount[u])
-                        >= 4
-                    {
-                        fprintf(
-                            stderr,
-                            b"%2u :%7u \n\0" as *const u8 as *const std::ffi::c_char,
-                            u,
-                            offcodeCount[u as usize],
-                        );
-                        fflush(stderr);
-                    }
+                    DISPLAYLEVEL!(4, "%2u :%7u \n", u, offcodeCount[u]);
                     u = u.wrapping_add(1);
                     u;
                 }
@@ -2353,30 +2249,10 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
             );
             if ERR_isError(maxNbBits) != 0 {
                 eSize = maxNbBits;
-                if DISPLAYLEVEL!(1, " HUF_buildCTable error \n")
-                    >= 1
-                {
-                    fprintf(
-                        stderr,
-                        b" HUF_buildCTable error \n\0" as *const u8
-                            as *const std::ffi::c_char,
-                    );
-                    fflush(stderr);
-                }
+                DISPLAYLEVEL!(1, " HUF_buildCTable error \n");
             } else {
                 if maxNbBits == 8 {
-                    if DISPLAYLEVEL!(
-                        2,
-                        "warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n"
-                    ) >= 2
-                    {
-                        fprintf(
-                            stderr,
-                            b"warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n\0"
-                                as *const u8 as *const std::ffi::c_char,
-                        );
-                        fflush(stderr);
-                    }
+                    DISPLAYLEVEL!(2, "warning : pathological dataset : literals are not compressible : samples are noisy or too regular \n");
                     ZDICT_flatLit(countLit.as_mut_ptr());
                     maxNbBits = HUF_buildCTable_wksp(
                         hufTable.as_mut_ptr(),
@@ -2417,16 +2293,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 );
                 if ERR_isError(errorCode) != 0 {
                     eSize = errorCode;
-                    if DISPLAYLEVEL!(1, "FSE_normalizeCount error with offcodeCount \n")
-                        >= 1
-                    {
-                        fprintf(
-                            stderr,
-                            b"FSE_normalizeCount error with offcodeCount \n\0"
-                                as *const u8 as *const std::ffi::c_char,
-                        );
-                        fflush(stderr);
-                    }
+                    DISPLAYLEVEL!(1, "FSE_normalizeCount error with offcodeCount \n");
                 } else {
                     Offlog = errorCode as u32;
                     total = 0;
@@ -2447,17 +2314,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     );
                     if ERR_isError(errorCode) != 0 {
                         eSize = errorCode;
-                        if DISPLAYLEVEL!(
-                            1, "FSE_normalizeCount error with matchLengthCount \n"
-                        ) >= 1
-                        {
-                            fprintf(
-                                stderr,
-                                b"FSE_normalizeCount error with matchLengthCount \n\0"
-                                    as *const u8 as *const std::ffi::c_char,
-                            );
-                            fflush(stderr);
-                        }
+                        DISPLAYLEVEL!(1, "FSE_normalizeCount error with matchLengthCount \n");
                     } else {
                         mlLog = errorCode as u32;
                         total = 0;
@@ -2478,17 +2335,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         );
                         if ERR_isError(errorCode) != 0 {
                             eSize = errorCode;
-                            if DISPLAYLEVEL!(
-                                1, "FSE_normalizeCount error with litLengthCount \n"
-                            ) >= 1
-                            {
-                                fprintf(
-                                    stderr,
-                                    b"FSE_normalizeCount error with litLengthCount \n\0"
-                                        as *const u8 as *const std::ffi::c_char,
-                                );
-                                fflush(stderr);
-                            }
+                            DISPLAYLEVEL!(1, "FSE_normalizeCount error with litLengthCount \n");
                         } else {
                             llLog = errorCode as u32;
                             let hhSize = HUF_writeCTable_wksp(
@@ -2502,16 +2349,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                             );
                             if ERR_isError(hhSize) != 0 {
                                 eSize = hhSize;
-                                if DISPLAYLEVEL!(1, "HUF_writeCTable error \n")
-                                    >= 1
-                                {
-                                    fprintf(
-                                        stderr,
-                                        b"HUF_writeCTable error \n\0" as *const u8
-                                            as *const std::ffi::c_char,
-                                    );
-                                    fflush(stderr);
-                                }
+                                DISPLAYLEVEL!(1, "HUF_writeCTable error \n");
                             } else {
                                 dstPtr = dstPtr.offset(hhSize as isize);
                                 maxDstSize = maxDstSize.wrapping_sub(hhSize);
@@ -2525,17 +2363,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                 );
                                 if ERR_isError(ohSize) != 0 {
                                     eSize = ohSize;
-                                    if DISPLAYLEVEL!(
-                                        1, "FSE_writeNCount error with offcodeNCount \n"
-                                    ) >= 1
-                                    {
-                                        fprintf(
-                                            stderr,
-                                            b"FSE_writeNCount error with offcodeNCount \n\0"
-                                                as *const u8 as *const std::ffi::c_char,
-                                        );
-                                        fflush(stderr);
-                                    }
+                                    DISPLAYLEVEL!(1, "FSE_writeNCount error with offcodeNCount \n");
                                 } else {
                                     dstPtr = dstPtr.offset(ohSize as isize);
                                     maxDstSize = maxDstSize.wrapping_sub(ohSize);
@@ -2549,17 +2377,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                     );
                                     if ERR_isError(mhSize) != 0 {
                                         eSize = mhSize;
-                                        if DISPLAYLEVEL!(
-                                            1, "FSE_writeNCount error with matchLengthNCount \n"
-                                        ) >= 1
-                                        {
-                                            fprintf(
-                                                stderr,
-                                                b"FSE_writeNCount error with matchLengthNCount \n\0"
-                                                    as *const u8 as *const std::ffi::c_char,
-                                            );
-                                            fflush(stderr);
-                                        }
+                                        DISPLAYLEVEL!(1, "FSE_writeNCount error with matchLengthNCount \n");
                                     } else {
                                         dstPtr = dstPtr.offset(mhSize as isize);
                                         maxDstSize = maxDstSize.wrapping_sub(mhSize);
@@ -2573,34 +2391,14 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                         );
                                         if ERR_isError(lhSize) != 0 {
                                             eSize = lhSize;
-                                            if DISPLAYLEVEL!(
-                                                1, "FSE_writeNCount error with litlengthNCount \n"
-                                            ) >= 1
-                                            {
-                                                fprintf(
-                                                    stderr,
-                                                    b"FSE_writeNCount error with litlengthNCount \n\0"
-                                                        as *const u8 as *const std::ffi::c_char,
-                                                );
-                                                fflush(stderr);
-                                            }
+                                            DISPLAYLEVEL!(1, "FSE_writeNCount error with litlengthNCount \n");
                                         } else {
                                             dstPtr = dstPtr.offset(lhSize as isize);
                                             maxDstSize = maxDstSize.wrapping_sub(lhSize);
                                             eSize = eSize.wrapping_add(lhSize);
                                             if maxDstSize < 12 {
                                                 eSize = ERROR(ZSTD_error_dstSize_tooSmall);
-                                                if DISPLAYLEVEL!(
-                                                    1, "not enough space to write RepOffsets \n"
-                                                ) >= 1
-                                                {
-                                                    fprintf(
-                                                        stderr,
-                                                        b"not enough space to write RepOffsets \n\0" as *const u8
-                                                            as *const std::ffi::c_char,
-                                                    );
-                                                    fflush(stderr);
-                                                }
+                                                DISPLAYLEVEL!(1, "not enough space to write RepOffsets \n");
                                             } else {
                                                 MEM_writeLE32(
                                                     dstPtr.offset(0)
@@ -2689,18 +2487,8 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
         dictID,
     );
     hSize = 8;
-    if DISPLAYLEVEL!(2, "\r%70s\r", "") >= 2 {
-        fprintf(
-            stderr,
-            b"\r%70s\r\0" as *const u8 as *const std::ffi::c_char,
-            b"\0" as *const u8 as *const std::ffi::c_char,
-        );
-        fflush(stderr);
-    }
-    if DISPLAYLEVEL!(2, "statistics ... \n") >= 2 {
-        fprintf(stderr, b"statistics ... \n\0" as *const u8 as *const std::ffi::c_char);
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "\r%70s\r", "");
+    DISPLAYLEVEL!(2, "statistics ... \n");
     let eSize = ZDICT_analyzeEntropy(
         header.as_mut_ptr().offset(hSize as isize) as *mut std::ffi::c_void,
         (HBUFFSIZE as usize).wrapping_sub(hSize),
@@ -2757,18 +2545,8 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
     };
     let notificationLevel = params.notificationLevel;
     let mut hSize: usize = 8;
-    if DISPLAYLEVEL!(2, "\r%70s\r", "") >= 2 {
-        fprintf(
-            stderr,
-            b"\r%70s\r\0" as *const u8 as *const std::ffi::c_char,
-            b"\0" as *const u8 as *const std::ffi::c_char,
-        );
-        fflush(stderr);
-    }
-    if DISPLAYLEVEL!(2, "statistics ... \n") >= 2 {
-        fprintf(stderr, b"statistics ... \n\0" as *const u8 as *const std::ffi::c_char);
-        fflush(stderr);
-    }
+    DISPLAYLEVEL!(2, "\r%70s\r", "");
+    DISPLAYLEVEL!(2, "statistics ... \n");
     let eSize = ZDICT_analyzeEntropy(
         (dictBuffer as *mut std::ffi::c_char).offset(hSize as isize)
             as *mut std::ffi::c_void,
@@ -2885,31 +2663,9 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         let nb = std::cmp::min(25, (*dictList.offset(0 as isize)).pos);
         let dictContentSize = ZDICT_dictSize(dictList);
         let mut u: std::ffi::c_uint = 0;
-        if DISPLAYLEVEL!(
-            3, "\n %u segments found, of total size %u \n", (unsigned) dictList[0].pos -
-            1, dictContentSize
-        ) >= 3
-        {
-            fprintf(
-                stderr,
-                b"\n %u segments found, of total size %u \n\0" as *const u8
-                    as *const std::ffi::c_char,
-                ((*dictList.offset(0)).pos)
-                    .wrapping_sub(1),
-                dictContentSize,
-            );
-            fflush(stderr);
-        }
-        if DISPLAYLEVEL!(3, "list %u best segments \n", nb - 1)
-            >= 3
-        {
-            fprintf(
-                stderr,
-                b"list %u best segments \n\0" as *const u8 as *const std::ffi::c_char,
-                nb.wrapping_sub(1),
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(3, "\n %u segments found, of total size %u \n", (unsigned) dictList[0].pos -
+            1, dictContentSize);
+        DISPLAYLEVEL!(3, "list %u best segments \n", nb - 1);
         u = 1;
         while u < nb {
             let pos = (*dictList.offset(u as isize)).pos;
@@ -2921,31 +2677,14 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                 libc::free(dictList as *mut std::ffi::c_void);
                 return ERROR(ZSTD_error_GENERIC);
             }
-            if DISPLAYLEVEL!(
-                3, "%3u:%3u bytes at pos %8u, savings %7u bytes |", u, length, pos,
-                (unsigned) dictList[u].savings
-            ) >= 3
-            {
-                fprintf(
-                    stderr,
-                    b"%3u:%3u bytes at pos %8u, savings %7u bytes |\0" as *const u8
-                        as *const std::ffi::c_char,
-                    u,
-                    length,
-                    pos,
-                    (*dictList.offset(u as isize)).savings,
-                );
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(3, "%3u:%3u bytes at pos %8u, savings %7u bytes |", u, length, pos,
+                (unsigned) dictList[u].savings);
             ZDICT_printHex(
                 (samplesBuffer as *const std::ffi::c_char).offset(pos as isize)
                     as *const std::ffi::c_void,
                 printedLength as usize,
             );
-            if DISPLAYLEVEL!(3, "| \n") >= 3 {
-                fprintf(stderr, b"| \n\0" as *const u8 as *const std::ffi::c_char);
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(3, "| \n");
             u = u.wrapping_add(1);
             u;
         }
@@ -2956,21 +2695,8 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         return ERROR(ZSTD_error_dictionaryCreation_failed);
     }
     if (dictContentSize_0 as usize) < targetDictSize / 4_usize {
-        if DISPLAYLEVEL!(
-            2,
-            "!  warning : selected content significantly smaller than requested (%u < %u) \n",
-            dictContentSize, (unsigned) maxDictSize
-        ) >= 2
-        {
-            fprintf(
-                stderr,
-                b"!  warning : selected content significantly smaller than requested (%u < %u) \n\0"
-                    as *const u8 as *const std::ffi::c_char,
-                dictContentSize_0,
-                maxDictSize as std::ffi::c_uint,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(2, "!  warning : selected content significantly smaller than requested (%u < %u) \n",
+            dictContentSize, (unsigned) maxDictSize);
         if samplesBuffSize < 10 * targetDictSize {
             if notificationLevel >= 2 {
                 fprintf(
@@ -2983,32 +2709,9 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             }
         }
         if minRep > MINRATIO as std::ffi::c_uint {
-            if DISPLAYLEVEL!(
-                2,
-                "!  consider increasing selectivity to produce larger dictionary (-s%u) \n",
-                selectivity + 1
-            ) >= 2
-            {
-                fprintf(
-                    stderr,
-                    b"!  consider increasing selectivity to produce larger dictionary (-s%u) \n\0"
-                        as *const u8 as *const std::ffi::c_char,
-                    selectivity.wrapping_add(1),
-                );
-                fflush(stderr);
-            }
-            if DISPLAYLEVEL!(
-                2,
-                "!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n"
-            ) >= 2
-            {
-                fprintf(
-                    stderr,
-                    b"!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n\0"
-                        as *const u8 as *const std::ffi::c_char,
-                );
-                fflush(stderr);
-            }
+            DISPLAYLEVEL!(2, "!  consider increasing selectivity to produce larger dictionary (-s%u) \n",
+                selectivity + 1);
+            DISPLAYLEVEL!(2, "!  note : larger dictionaries are not necessarily better, test its efficiency on samples \n");
         }
     }
     if dictContentSize_0 as usize > targetDictSize * 3_usize
@@ -3021,45 +2724,11 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             proposedSelectivity = proposedSelectivity.wrapping_sub(1);
             proposedSelectivity;
         }
-        if DISPLAYLEVEL!(
-            2,
-            "!  note : calculated dictionary significantly larger than requested (%u > %u) \n",
-            dictContentSize, (unsigned) maxDictSize
-        ) >= 2
-        {
-            fprintf(
-                stderr,
-                b"!  note : calculated dictionary significantly larger than requested (%u > %u) \n\0"
-                    as *const u8 as *const std::ffi::c_char,
-                dictContentSize_0,
-                maxDictSize as std::ffi::c_uint,
-            );
-            fflush(stderr);
-        }
-        if DISPLAYLEVEL!(
-            2,
-            "!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n",
-            proposedSelectivity
-        ) >= 2
-        {
-            fprintf(
-                stderr,
-                b"!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n\0"
-                    as *const u8 as *const std::ffi::c_char,
-                proposedSelectivity,
-            );
-            fflush(stderr);
-        }
-        if DISPLAYLEVEL!(2, "!  always test dictionary efficiency on real samples \n")
-            >= 2
-        {
-            fprintf(
-                stderr,
-                b"!  always test dictionary efficiency on real samples \n\0" as *const u8
-                    as *const std::ffi::c_char,
-            );
-            fflush(stderr);
-        }
+        DISPLAYLEVEL!(2, "!  note : calculated dictionary significantly larger than requested (%u > %u) \n",
+            dictContentSize, (unsigned) maxDictSize);
+        DISPLAYLEVEL!(2, "!  consider increasing dictionary size, or produce denser dictionary (-s%u) \n",
+            proposedSelectivity);
+        DISPLAYLEVEL!(2, "!  always test dictionary efficiency on real samples \n");
     }
     let max = (*dictList).pos;
     let mut currentSize: u32 = 0;

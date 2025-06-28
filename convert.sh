@@ -233,7 +233,7 @@ case $1 in
     #     );
     #     fflush(stderr);
     # }
-    perl -i -p0e 's/if DISPLAYLEVEL!\([\s\n]*([^,]+),[\s\n]*((?:"(?:\\"|[^"])+"[\s\n*]*?)+)(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?[\s\n]*\)[^\{]+\{[^\}]+\}/display_level!($1, $2$3$4$5$6);/gm' src/*/*.rs
+    perl -i -p0e 's/if DISPLAYLEVEL!\([\s\n]*([^,]+),[\s\n]*((?:"(?:\\"|[^"])+"[\s\n*]*?)+)(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?(?:[\s\n]*(,[\s\n]*(?:\([^\)]+\)|[^,\)]+?)+?)[\s\n]*)?[\s\n]*\)[^\{]+\{[^\}]+\}/DISPLAYLEVEL!($1, $2$3$4$5$6);/gm' src/*/*.rs
 
     ;;
 
@@ -557,6 +557,7 @@ case $1 in
     ./convert.sh min-max
     ./convert.sh libc-alloc-mem
     ./convert.sh splitpoint-float
+    ./convert.sh displaylevel
     ./convert.sh zstd-alloc-mem
     ./convert.sh likely-unlikely
     ./convert.sh copy8-16
