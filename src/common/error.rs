@@ -59,7 +59,7 @@ pub const fn ERR_isError(code: ZSTD_ErrorCode) -> bool {
 }
 
 pub const fn ERR_getErrorCode(code: usize) -> ZSTD_ErrorCode {
-    if ERR_isError(code) == 0 {
+    if ERR_isError(code) {
         return ZSTD_error_no_error;
     }
     return 0_usize.wrapping_sub(code) as ZSTD_ErrorCode;
@@ -107,5 +107,27 @@ pub const fn ERR_getErrorString(code: ZSTD_ErrorCode) -> &'static str {
         106 => "Block-level external sequence producer returned an error code",
         107 => "External sequences are not valid",
         120 | _ => "Unspecified error code",
-    };
+    }
 }
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __RETURN_ERROR_IF {
+    ($cond:expr, $error:expr $(, $reason:literal)?) => {
+        if $cond {
+            return $crate::common::error::ERROR($error);
+        }
+    }
+}
+pub use crate::__RETURN_ERROR_IF as RETURN_ERROR_IF;
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __FORWARD_IF_ERROR {
+    ($err:expr $(, $reason:literal)?) => {
+        if $crate::common::error::ERR_isError($err) {
+            return $err;
+        }
+    }
+}
+pub use crate::__FORWARD_IF_ERROR as FORWARD_IF_ERROR;
