@@ -1,8 +1,7 @@
 [workspace]
-members = [
-]
+members = []
 [package]
-name = "c2rust_out"
+name = "zstd"
 authors = ["C2Rust"]
 version = "0.0.0"
 publish = false
@@ -10,8 +9,9 @@ edition = "2021"
 autobins = false
 
 [lib]
-name = "c2rust_out"
+name = "zstd"
 crate-type = ["staticlib", "rlib"]
 [dependencies]
-c2rust-bitfields= "0.3"
-libc= "0.2"
+c2rust-bitfields = "0.3"
+libc = "0.2"
+twox-hash = "1.6.3" # FIXME: update to v2 after updating rust toolchain

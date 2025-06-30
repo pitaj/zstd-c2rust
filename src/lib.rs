@@ -6,13 +6,15 @@
 #![allow(non_upper_case_globals)]
 #![allow(unused_assignments)]
 #![allow(unused_mut)]
-#![feature(asm)]
-#![feature(c_variadic)]
-#![feature(core_intrinsics)]
-#![feature(extern_types)]
-#![feature(label_break_value)]
-#![feature(stdsimd)]
-#![feature(pointer_byte_offsets)]
+#![feature(asm)] // now stable
+#![feature(c_variadic)] // still unstable
+#![feature(core_intrinsics)] // always unstable
+#![feature(extern_types)] // still unstable
+#![feature(label_break_value)] // now stable
+#![feature(stdsimd)] // still unstable
+#![feature(pointer_byte_offsets)] // now stable
+#![feature(pointer_is_aligned)] // is_aligned_to still unstable
+#![feature(ptr_const_cast)] // now stable
 
 /// `__m128i` with unaligned memory access
 pub type __m128i_u = [u64; 2];
@@ -26,6 +28,7 @@ pub mod zstd_h;
 pub mod common {
 pub mod fse_h;
 pub mod huf_h;
+pub mod bitstream_h;
 pub mod zstd_internal_h;
 pub mod bits;
 pub mod mem;
@@ -35,14 +38,13 @@ pub mod error;
 pub mod fse_decompress;
 pub mod pool;
 pub mod threading;
-pub mod xxhash;
-pub mod zstd_common;
 } // mod common
 pub mod compress {
 pub mod fse_compress;
 pub mod hist;
 pub mod huf_compress;
 pub mod zstd_compress;
+pub mod zstd_cwksp_h;
 pub mod zstd_compress_internal;
 pub mod zstd_compress_literals;
 pub mod zstd_compress_sequences;
@@ -60,6 +62,7 @@ pub mod huf_decompress;
 pub mod zstd_ddict;
 pub mod zstd_decompress;
 pub mod zstd_decompress_block;
+pub mod zstd_decompress_internal;
 } // mod decompress
 pub mod dict_builder {
 pub mod cover;

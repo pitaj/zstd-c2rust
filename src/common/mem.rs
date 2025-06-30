@@ -9,70 +9,67 @@ pub const MEM_isLittleEndian: bool = cfg!(target_endian = "little");
 
 #[inline(always)]
 pub unsafe fn MEM_read16(memPtr: *const c_void) -> u16 {
-    memPtr.cast().read_unaligned()
+    memPtr.cast::<u16>().read_unaligned()
 }
 #[inline(always)]
 pub unsafe fn MEM_read32(memPtr: *const c_void) -> u32 {
-    memPtr.cast().read_unaligned()
+    memPtr.cast::<u32>().read_unaligned()
 }
 #[inline(always)]
 pub unsafe fn MEM_read64(memPtr: *const c_void) -> u64 {
-    memPtr.cast().read_unaligned()
+    memPtr.cast::<u64>().read_unaligned()
 }
 #[inline(always)]
 pub unsafe fn MEM_readST(memPtr: *const c_void) -> usize {
-    memPtr.cast().read_unaligned()
+    memPtr.cast::<usize>().read_unaligned()
 }
 #[inline(always)]
 pub unsafe fn MEM_write16(memPtr: *mut c_void, value: u16) {
-    memPtr.cast().write_unaligned(value);
+    memPtr.cast::<u16>().write_unaligned(value);
 }
 #[inline(always)]
 pub unsafe fn MEM_write32(memPtr: *mut c_void, value: u32) {
-    memPtr.cast().write_unaligned(value);
+    memPtr.cast::<u32>().write_unaligned(value);
 }
 #[inline(always)]
 pub unsafe fn MEM_write64(memPtr: *mut c_void, value: u64) {
-    memPtr.cast().write_unaligned(value);
+    memPtr.cast::<u64>().write_unaligned(value);
 }
 #[inline(always)]
 pub unsafe fn MEM_writeST(memPtr: *mut c_void, value: usize) {
-    memPtr.cast().write_unaligned(value);
+    memPtr.cast::<usize>().write_unaligned(value);
 }
 
 /*=== Little endian unaligned read/write ===*/
 
-#[cfg(target_endian = "little")]
 mod le_on_le {
-    use super::*;
+    use std::ffi::c_void;
 
-    pub use MEM_read16 as MEM_readLE16;
-    pub use MEM_read32 as MEM_readLE32;
-    pub use MEM_read64 as MEM_readLE64;
-    pub use MEM_readST as MEM_readLEST;
+    pub use super::MEM_read16 as MEM_readLE16;
+    pub use super::MEM_read32 as MEM_readLE32;
+    pub use super::MEM_read64 as MEM_readLE64;
+    pub use super::MEM_readST as MEM_readLEST;
 
     #[inline]
     pub unsafe fn MEM_readLE24(memPtr: *const c_void) -> u32 {
-        (MEM_readLE16(memPtr) as u32).wrapping_add(
-            (*(memPtr as *const u8).offset(2) as u32) << 16,
-        )
+        u32::from(MEM_readLE16(memPtr)) + 
+            (u32::from(*memPtr.cast::<u8>().offset(2)) << 16)
     }
 
-    pub use MEM_write16 as MEM_writeLE16;
-    pub use MEM_write32 as MEM_writeLE32;
-    pub use MEM_write64 as MEM_writeLE64;
-    pub use MEM_writeST as MEM_writeLEST;
+    pub use super::MEM_write16 as MEM_writeLE16;
+    pub use super::MEM_write32 as MEM_writeLE32;
+    pub use super::MEM_write64 as MEM_writeLE64;
+    pub use super::MEM_writeST as MEM_writeLEST;
 
     #[inline]
     pub unsafe fn MEM_writeLE24(memPtr: *mut c_void, value: u32) {
-        MEM_writeLE16(memPtr, val as u16);
-        *(memPtr as *mut u8).offset(2) = (val >> 16) as u8;
+        MEM_writeLE16(memPtr, value as u16);
+        *memPtr.cast::<u8>().offset(2) = (value >> 16) as u8;
     }
 }
 #[cfg(target_endian = "little")]
 pub use le_on_le::*;
 
-#[cfg(target_endian = "big")]
 mod le_on_be {
     use super::*;
 
@@ -93,6 +90,11 @@ mod le_on_be {
         MEM_readST(memPtr).swap_bytes()
     }
 
+    #[inline]
+    pub unsafe fn MEM_readLE24(memPtr: *const c_void) -> u32 {
+        todo!()
+    }
+
     #[inline(always)]
     pub unsafe fn MEM_writeLE16(memPtr: *mut c_void, value: u16) {
         MEM_write16(memPtr, value.swap_bytes())
@@ -109,13 +111,17 @@ mod le_on_be {
     pub unsafe fn MEM_writeLEST(memPtr: *mut c_void, value: usize) {
         MEM_writeST(memPtr, value.swap_bytes())
     }
+
+    #[inline]
+    pub unsafe fn MEM_writeLE24(memPtr: *mut c_void, value: u32) {
+        todo!()
+    }
 }
 #[cfg(target_endian = "big")]
 pub use le_on_be::*;
 
 /*=== Big endian unaligned read/write ===*/
 
-#[cfg(target_endian = "little")]
 mod be_on_le {
     use super::*;
 
@@ -156,19 +162,16 @@ mod be_on_le {
 #[cfg(target_endian = "little")]
 pub use be_on_le::*;
 
-#[cfg(target_endian = "big")]
 mod be_on_be {
-    use super::*;
+    pub use super::MEM_read16 as MEM_readBE16;
+    pub use super::MEM_read32 as MEM_readBE32;
+    pub use super::MEM_read64 as MEM_readBE64;
+    pub use super::MEM_readST as MEM_readBEST;
 
-    pub use MEM_read16 as MEM_readBE16;
-    pub use MEM_read32 as MEM_readBE32;
-    pub use MEM_read64 as MEM_readBE64;
-    pub use MEM_readST as MEM_readBEST;
-
-    pub use MEM_write16 as MEM_writeBE16;
-    pub use MEM_write32 as MEM_writeBE32;
-    pub use MEM_write64 as MEM_writeBE64;
-    pub use MEM_writeST as MEM_writeBEST;
+    pub use super::MEM_write16 as MEM_writeBE16;
+    pub use super::MEM_write32 as MEM_writeBE32;
+    pub use super::MEM_write64 as MEM_writeBE64;
+    pub use super::MEM_writeST as MEM_writeBEST;
 }
 #[cfg(target_endian = "big")]
 pub use be_on_be::*;

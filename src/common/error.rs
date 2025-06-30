@@ -50,14 +50,17 @@ pub const ZSTD_error_prefix_unknown: ZSTD_ErrorCode = 10;
 pub const ZSTD_error_GENERIC: ZSTD_ErrorCode = 1;
 pub const ZSTD_error_no_error: ZSTD_ErrorCode = 0;
 
+#[inline(always)]
 pub const fn ERROR(code: ZSTD_ErrorCode) -> usize {
     -(code as isize) as usize
 }
 
+#[inline]
 pub const fn ERR_isError(code: ZSTD_ErrorCode) -> bool {
     code > ERROR(ZSTD_error_maxCode)
 }
 
+#[inline]
 pub const fn ERR_getErrorCode(code: usize) -> ZSTD_ErrorCode {
     if ERR_isError(code) {
         return ZSTD_error_no_error;
@@ -65,10 +68,12 @@ pub const fn ERR_getErrorCode(code: usize) -> ZSTD_ErrorCode {
     return 0_usize.wrapping_sub(code) as ZSTD_ErrorCode;
 }
 
+#[inline]
 pub const fn ERR_getErrorName(code: usize) -> &'static str {
     return ERR_getErrorString(ERR_getErrorCode(code));
 }
 
+#[inline]
 pub const fn ERR_getErrorString(code: ZSTD_ErrorCode) -> &'static str {
     match code {
         0 => "No error detected",

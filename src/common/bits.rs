@@ -1,3 +1,5 @@
+use crate::common::mem::*;
+
 #[inline]
 pub fn ZSTD_countTrailingZeros32(val: u32) -> u32 {
     val.trailing_zeros()

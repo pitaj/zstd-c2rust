@@ -1007,8 +1007,8 @@ unsafe extern "C" fn ZSTD_blockSizeMax(mut dctx: *const ZSTD_DCtx) -> usize {
     }) as usize;
     return blockSizeMax;
 }
-#[no_mangle]
-pub unsafe extern "C" fn ZSTD_getcBlockSize(
+
+pub unsafe fn ZSTD_getcBlockSize(
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
     mut bpPtr: *mut blockProperties_t,
@@ -1017,19 +1017,15 @@ pub unsafe extern "C" fn ZSTD_getcBlockSize(
     let cBlockHeader = MEM_readLE24(src);
     let cSize = cBlockHeader >> 3;
     (*bpPtr).lastBlock = cBlockHeader & 1;
-    (*bpPtr)
-        .blockType = (cBlockHeader >> 1 & 3_u32)
-        as blockType_e;
-    (*bpPtr).origSize = cSize;
-    if (*bpPtr).blockType as std::ffi::c_uint
-        == bt_rle as std::ffi::c_int as std::ffi::c_uint
-    {
+    (*bpPtr).blockType = (cBlockHeader >> 1 & 3_u32) as blockType_e;
+    (*bpPtr).origSize = cSize; /* only useful for RLE */
+    if (*bpPtr).blockType == bt_rle {
         return 1;
     }
-    RETURN_ERROR_IF!((*bpPtr).blockType as std::ffi::c_uint
-        == bt_reserved as std::ffi::c_int as std::ffi::c_uint, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!((*bpPtr).blockType == bt_reserved, ZSTD_error_corruption_detected);
     return cSize as usize;
 }
+
 unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
     mut dctx: *mut ZSTD_DCtx,
     dst: *mut std::ffi::c_void,

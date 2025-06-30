@@ -1611,7 +1611,7 @@ unsafe extern "C" fn ZSTD_cParam_withinBounds(
 }
 macro_rules! BOUNDCHECK {
     ($cParam:expr, $val:expr) => {
-        RETURN_ERROR_IF!(ZSTD_cParam_withinBounds($cParam, $val) == 0, ZSTD_error_parameter_outOfBound);
+        RETURN_ERROR_IF!(ZSTD_cParam_withinBounds($cParam, $val), ZSTD_error_parameter_outOfBound);
     }
 }
 
@@ -3731,293 +3731,95 @@ unsafe extern "C" fn ZSTD_CCtxParams_setZstdParams(
     (*cctxParams).fParams = (*params).fParams;
     (*cctxParams).compressionLevel = ZSTD_NO_CLEVEL;
 }
-#[no_mangle]
-pub unsafe extern "C" fn ZSTD_cParam_getBounds(
-    mut param: ZSTD_cParameter,
-) -> ZSTD_bounds {
-    let mut bounds = {
-        let mut init = ZSTD_bounds {
-            error: 0,
+
+pub fn ZSTD_cParam_getBounds(param: ZSTD_cParameter) -> ZSTD_bounds {
+    match param {
+        ZSTD_c_compressionLevel => ZSTD_bounds { lowerBound: ZSTD_minCLevel(), upperBound: ZSTD_maxCLevel(), error: 0 },
+        ZSTD_c_windowLog => ZSTD_bounds { lowerBound: ZSTD_WINDOWLOG_MIN, upperBound: ZSTD_WINDOWLOG_MAX, error: 0 },
+        ZSTD_c_hashLog => ZSTD_bounds { lowerBound: ZSTD_HASHLOG_MIN, upperBound: ZSTD_HASHLOG_MAX, error: 0 },
+        ZSTD_c_chainLog => ZSTD_bounds { lowerBound: ZSTD_CHAINLOG_MIN, upperBound: ZSTD_CHAINLOG_MAX, error: 0 },
+        ZSTD_c_searchLog => ZSTD_bounds { lowerBound: ZSTD_SEARCHLOG_MIN, upperBound: ZSTD_SEARCHLOG_MAX, error: 0 },
+        ZSTD_c_minMatch => ZSTD_bounds { lowerBound: ZSTD_MINMATCH_MIN, upperBound: ZSTD_MINMATCH_MAX, error: 0 },
+        ZSTD_c_targetLength => ZSTD_bounds { lowerBound: ZSTD_TARGETLENGTH_MIN, upperBound: ZSTD_TARGETLENGTH_MAX, error: 0 },
+        ZSTD_c_strategy => ZSTD_bounds { lowerBound: ZSTD_STRATEGY_MIN, upperBound: ZSTD_STRATEGY_MAX, error: 0 },
+        ZSTD_c_contentSizeFlag => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+        ZSTD_c_checksumFlag => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+        ZSTD_c_dictIDFlag => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+
+        ZSTD_c_nbWorkers => ZSTD_bounds {
             lowerBound: 0,
-            upperBound: 0,
-        };
-        init
-    };
-    match param as std::ffi::c_uint {
-        100 => {
-            bounds.lowerBound = ZSTD_minCLevel();
-            bounds.upperBound = ZSTD_maxCLevel();
-            return bounds;
-        }
-        101 => {
-            bounds.lowerBound = ZSTD_WINDOWLOG_MIN;
-            bounds
-                .upperBound = if ::core::mem::size_of::<usize>()
-                == 4
-            {
-                ZSTD_WINDOWLOG_MAX_32
+            upperBound: if ZSTD_MULTITHREAD {
+                ZSTDMT_NBWORKERS_MAX
             } else {
-                ZSTD_WINDOWLOG_MAX_64
-            };
-            return bounds;
-        }
-        102 => {
-            bounds.lowerBound = ZSTD_HASHLOG_MIN;
-            bounds
-                .upperBound = if (if ::core::mem::size_of::<usize>()
-                as std::ffi::c_ulong == 4
-            {
-                ZSTD_WINDOWLOG_MAX_32
+                0
+            },
+            error: 0,
+        },
+        ZSTD_c_jobSize => ZSTD_bounds {
+            lowerBound: 0,
+            upperBound: if ZSTD_MULTITHREAD {
+                ZSTDMT_JOBSIZE_MAX
             } else {
-                ZSTD_WINDOWLOG_MAX_64
-            }) < 30
-            {
-                if ::core::mem::size_of::<usize>()
-                    == 4
-                {
-                    ZSTD_WINDOWLOG_MAX_32
-                } else {
-                    ZSTD_WINDOWLOG_MAX_64
-                }
-            } else {
-                30 as std::ffi::c_int
-            };
-            return bounds;
+                0
+            },
+            error: 0,
+        },
+        ZSTD_c_overlapLog => if ZSTD_MULTITHREAD {
+            ZSTD_bounds {
+                lowerBound: ZSTD_OVERLAPLOG_MIN,
+                upperBound: ZSTD_OVERLAPLOG_MAX,
+                error: 0,
+            }
+        } else {
+            ZSTD_bounds { lowerBound: 0, upperBound: 0, error: 0 }
+        },
+
+        ZSTD_c_enableDedicatedDictSearch => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+        ZSTD_c_enableLongDistanceMatching => ZSTD_bounds { lowerBound: ZSTD_ps_auto, upperBound: ZSTD_ps_disable, error: 0 },
+        ZSTD_c_ldmHashLog => ZSTD_bounds { lowerBound: ZSTD_LDM_HASHLOG_MIN, upperBound: ZSTD_LDM_HASHLOG_MAX, error: 0 },
+        ZSTD_c_ldmMinMatch => ZSTD_bounds { lowerBound: ZSTD_LDM_MINMATCH_MIN, upperBound: ZSTD_LDM_MINMATCH_MAX, error: 0 },
+        ZSTD_c_ldmBucketSizeLog => ZSTD_bounds { lowerBound: ZSTD_LDM_BUCKETSIZELOG_MIN, upperBound: ZSTD_LDM_BUCKETSIZELOG_MAX, error: 0 },
+        ZSTD_c_ldmHashRateLog => ZSTD_bounds { lowerBound: ZSTD_LDM_HASHRATELOG_MIN, upperBound: ZSTD_LDM_HASHRATELOG_MAX, error: 0 },
+        
+        /* experimental parameters */
+        ZSTD_c_rsyncable => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+        ZSTD_c_forceMaxWindow => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+
+        ZSTD_c_format => {
+            const _: () = assert!(ZSTD_f_zstd1 < ZSTD_f_zstd1_magicless);
+            bounds.lowerBound = ZSTD_f_zstd1;
+            bounds.upperBound = ZSTD_f_zstd1_magicless;   /* note : how to ensure at compile time that this is the highest value enum ? */
         }
-        103 => {
-            bounds.lowerBound = ZSTD_CHAINLOG_MIN;
-            bounds
-                .upperBound = if ::core::mem::size_of::<usize>()
-                == 4
-            {
-                ZSTD_CHAINLOG_MAX_32
-            } else {
-                ZSTD_CHAINLOG_MAX_64
-            };
-            return bounds;
+
+        ZSTD_c_forceAttachDict => {
+            const _: () = assert!(ZSTD_dictDefaultAttach < ZSTD_dictForceLoad);
+            /* note : how to ensure at compile time that this is the highest value enum ? */
+            ZSTD_bounds { lowerBound: ZSTD_dictDefaultAttach, upperBound: ZSTD_dictForceLoad, error: 0 }    
         }
-        104 => {
-            bounds.lowerBound = ZSTD_SEARCHLOG_MIN;
-            bounds
-                .upperBound = (if ::core::mem::size_of::<usize>()
-                == 4
-            {
-                ZSTD_WINDOWLOG_MAX_32
-            } else {
-                ZSTD_WINDOWLOG_MAX_64
-            }) - 1;
-            return bounds;
+
+        ZSTD_c_literalCompressionMode => {
+            const _: () = assert!(ZSTD_ps_auto < ZSTD_ps_enable && ZSTD_ps_enable < ZSTD_ps_disable);
+            ZSTD_bounds { lowerBound: ZSTD_ps_auto, upperBound: ZSTD_ps_disable, error: 0 }
         }
-        105 => {
-            bounds.lowerBound = ZSTD_MINMATCH_MIN;
-            bounds.upperBound = ZSTD_MINMATCH_MAX;
-            return bounds;
-        }
-        106 => {
-            bounds.lowerBound = ZSTD_TARGETLENGTH_MIN;
-            bounds.upperBound = ZSTD_TARGETLENGTH_MAX;
-            return bounds;
-        }
-        107 => {
-            bounds.lowerBound = ZSTD_STRATEGY_MIN;
-            bounds.upperBound = ZSTD_STRATEGY_MAX;
-            return bounds;
-        }
-        200 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        201 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        202 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        400 => {
-            bounds.lowerBound = 0;
-            bounds
-                .upperBound = if ::core::mem::size_of::<*mut std::ffi::c_void>()
-                as std::ffi::c_ulong == 4
-            {
-                64 as std::ffi::c_int
-            } else {
-                256 as std::ffi::c_int
-            };
-            return bounds;
-        }
-        401 => {
-            bounds.lowerBound = 0;
-            bounds
-                .upperBound = if MEM_32bits {
-                512 as std::ffi::c_int
-                    * ((1 as std::ffi::c_int) << 20)
-            } else {
-                1024 as std::ffi::c_int
-                    * ((1 as std::ffi::c_int) << 20)
-            };
-            return bounds;
-        }
-        402 => {
-            bounds.lowerBound = ZSTD_OVERLAPLOG_MIN;
-            bounds.upperBound = ZSTD_OVERLAPLOG_MAX;
-            return bounds;
-        }
-        1005 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        160 => {
-            bounds.lowerBound = ZSTD_ps_auto as std::ffi::c_int;
-            bounds.upperBound = ZSTD_ps_disable as std::ffi::c_int;
-            return bounds;
-        }
-        161 => {
-            bounds.lowerBound = ZSTD_LDM_HASHLOG_MIN;
-            bounds
-                .upperBound = if (if ::core::mem::size_of::<usize>()
-                as std::ffi::c_ulong == 4
-            {
-                ZSTD_WINDOWLOG_MAX_32
-            } else {
-                ZSTD_WINDOWLOG_MAX_64
-            }) < 30
-            {
-                if ::core::mem::size_of::<usize>()
-                    == 4
-                {
-                    ZSTD_WINDOWLOG_MAX_32
-                } else {
-                    ZSTD_WINDOWLOG_MAX_64
-                }
-            } else {
-                30 as std::ffi::c_int
-            };
-            return bounds;
-        }
-        162 => {
-            bounds.lowerBound = ZSTD_LDM_MINMATCH_MIN;
-            bounds.upperBound = ZSTD_LDM_MINMATCH_MAX;
-            return bounds;
-        }
-        163 => {
-            bounds.lowerBound = ZSTD_LDM_BUCKETSIZELOG_MIN;
-            bounds.upperBound = ZSTD_LDM_BUCKETSIZELOG_MAX;
-            return bounds;
-        }
-        164 => {
-            bounds.lowerBound = ZSTD_LDM_HASHRATELOG_MIN;
-            bounds
-                .upperBound = (if ::core::mem::size_of::<usize>()
-                == 4
-            {
-                ZSTD_WINDOWLOG_MAX_32
-            } else {
-                ZSTD_WINDOWLOG_MAX_64
-            }) - ZSTD_HASHLOG_MIN;
-            return bounds;
-        }
-        500 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        1000 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        10 => {
-            bounds.lowerBound = ZSTD_f_zstd1 as std::ffi::c_int;
-            bounds.upperBound = ZSTD_f_zstd1_magicless as std::ffi::c_int;
-            return bounds;
-        }
-        1001 => {
-            bounds.lowerBound = ZSTD_dictDefaultAttach as std::ffi::c_int;
-            bounds.upperBound = ZSTD_dictForceLoad as std::ffi::c_int;
-            return bounds;
-        }
-        1002 => {
-            bounds.lowerBound = ZSTD_ps_auto as std::ffi::c_int;
-            bounds.upperBound = ZSTD_ps_disable as std::ffi::c_int;
-            return bounds;
-        }
-        130 => {
-            bounds.lowerBound = ZSTD_TARGETCBLOCKSIZE_MIN;
-            bounds.upperBound = ZSTD_TARGETCBLOCKSIZE_MAX;
-            return bounds;
-        }
-        1004 => {
-            bounds.lowerBound = ZSTD_SRCSIZEHINT_MIN;
-            bounds.upperBound = ZSTD_SRCSIZEHINT_MAX;
-            return bounds;
-        }
-        1006 | 1007 => {
-            bounds.lowerBound = ZSTD_bm_buffered as std::ffi::c_int;
-            bounds.upperBound = ZSTD_bm_stable as std::ffi::c_int;
-            return bounds;
-        }
-        1008 => {
-            bounds.lowerBound = ZSTD_sf_noBlockDelimiters as std::ffi::c_int;
-            bounds.upperBound = ZSTD_sf_explicitBlockDelimiters as std::ffi::c_int;
-            return bounds;
-        }
-        1009 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        1010 => {
-            bounds.lowerBound = ZSTD_ps_auto as std::ffi::c_int;
-            bounds.upperBound = ZSTD_ps_disable as std::ffi::c_int;
-            return bounds;
-        }
-        1017 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = ZSTD_BLOCKSPLITTER_LEVEL_MAX;
-            return bounds;
-        }
-        1011 => {
-            bounds.lowerBound = ZSTD_ps_auto as std::ffi::c_int;
-            bounds.upperBound = ZSTD_ps_disable as std::ffi::c_int;
-            return bounds;
-        }
-        1012 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        1013 => {
-            bounds.lowerBound = ZSTD_ps_auto as std::ffi::c_int;
-            bounds.upperBound = ZSTD_ps_disable as std::ffi::c_int;
-            return bounds;
-        }
-        1014 => {
-            bounds.lowerBound = 0;
-            bounds.upperBound = 1;
-            return bounds;
-        }
-        1015 => {
-            bounds.lowerBound = ZSTD_BLOCKSIZE_MAX_MIN;
-            bounds.upperBound = ZSTD_BLOCKSIZE_MAX;
-            return bounds;
-        }
-        1016 => {
-            bounds.lowerBound = ZSTD_ps_auto as std::ffi::c_int;
-            bounds.upperBound = ZSTD_ps_disable as std::ffi::c_int;
-            return bounds;
-        }
-        _ => {
-            bounds.error = ERROR(ZSTD_error_parameter_unsupported);
-            return bounds;
-        }
-    };
+
+        ZSTD_c_targetCBlockSize => ZSTD_bounds { lowerBound: ZSTD_TARGETCBLOCKSIZE_MIN, upperBound: ZSTD_TARGETCBLOCKSIZE_MAX, error: 0 },
+        ZSTD_c_srcSizeHint => ZSTD_bounds { lowerBound: ZSTD_SRCSIZEHINT_MIN, upperBound: ZSTD_SRCSIZEHINT_MAX, error: 0 },
+        ZSTD_c_stableInBuffer => ZSTD_bounds { lowerBound: ZSTD_bm_buffered, upperBound: ZSTD_bm_stable, error: 0 },
+        ZSTD_c_blockDelimiters => ZSTD_bounds { lowerBound: ZSTD_sf_noBlockDelimiters, upperBound: ZSTD_sf_explicitBlockDelimiters, error: 0 },
+        ZSTD_c_validateSequences => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+        ZSTD_c_splitAfterSequences => ZSTD_bounds { lowerBound: ZSTD_ps_auto, upperBound: ZSTD_ps_disable, error: 0 },
+        ZSTD_c_blockSplitterLevel => ZSTD_bounds { lowerBound: 0, upperBound: ZSTD_BLOCKSPLITTER_LEVEL_MAX, error: 0 },
+        ZSTD_c_useRowMatchFinder => ZSTD_bounds { lowerBound: ZSTD_ps_auto, upperBound: ZSTD_ps_disable, error: 0 },
+        ZSTD_c_deterministicRefPrefix => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+        ZSTD_c_prefetchCDictTables => ZSTD_bounds { lowerBound: ZSTD_ps_auto, upperBound: ZSTD_ps_disable, error: 0 },
+        ZSTD_c_enableSeqProducerFallback => ZSTD_bounds { lowerBound: 0, upperBound: 1, error: 0 },
+        ZSTD_c_maxBlockSize => ZSTD_bounds { lowerBound: ZSTD_BLOCKSIZE_MAX_MIN, upperBound: ZSTD_BLOCKSIZE_MAX, error: 0 },
+        ZSTD_c_repcodeResolution => ZSTD_bounds { lowerBound: ZSTD_ps_auto, upperBound: ZSTD_ps_disable, error: 0 },
+
+        _ => ZSTD_bounds { error: ERROR(ZSTD_error_parameter_unsupported), lowerBound: 0, upperBound: 0 },
+    }
 }
+
 unsafe extern "C" fn ZSTD_cParam_clampBounds(
     mut cParam: ZSTD_cParameter,
     mut value: *mut std::ffi::c_int,
@@ -4735,15 +4537,20 @@ unsafe extern "C" fn ZSTD_clampCParams(
 
     cParams
 }
-#[no_mangle]
-pub unsafe extern "C" fn ZSTD_cycleLog(
-    mut hashLog: u32,
-    mut strat: ZSTD_strategy,
+
+/** ZSTD_cycleLog() :
+ *  condition for correct operation : hashLog > 1 */
+pub unsafe fn ZSTD_cycleLog(
+    hashLog: u32,
+    strat: ZSTD_strategy,
 ) -> u32 {
-    let btScale = (strat as u32 >= ZSTD_btlazy2 as std::ffi::c_int as u32)
-        as std::ffi::c_int as u32;
-    return hashLog.wrapping_sub(btScale);
+    if strat as u32 >= ZSTD_btlazy2 as u32 {
+        hashLog - 1
+    } else {
+        hashLog + 1
+    }
 }
+
 unsafe extern "C" fn ZSTD_dictAndWindowLog(
     mut windowLog: u32,
     mut srcSize: u64,
@@ -4912,8 +4719,8 @@ unsafe extern "C" fn ZSTD_overrideCParams(
         (*cParams).strategy = (*overrides).strategy;
     }
 }
-#[no_mangle]
-pub unsafe extern "C" fn ZSTD_getCParamsFromCCtxParams(
+
+pub unsafe fn ZSTD_getCParamsFromCCtxParams(
     mut CCtxParams: *const ZSTD_CCtx_params,
     mut srcSizeHint: u64,
     mut dictSize: usize,
@@ -4928,7 +4735,7 @@ pub unsafe extern "C" fn ZSTD_getCParamsFromCCtxParams(
         targetLength: 0,
         strategy: 0,
     };
-    if srcSizeHint as std::ffi::c_ulonglong == ZSTD_CONTENTSIZE_UNKNOWN
+    if srcSizeHint == ZSTD_CONTENTSIZE_UNKNOWN
         && (*CCtxParams).srcSizeHint > 0
     {
         srcSizeHint = (*CCtxParams).srcSizeHint as u64;
@@ -4945,6 +4752,8 @@ pub unsafe extern "C" fn ZSTD_getCParamsFromCCtxParams(
         cParams.windowLog = ZSTD_LDM_DEFAULT_WINDOW_LOG as std::ffi::c_uint;
     }
     ZSTD_overrideCParams(&mut cParams, &(*CCtxParams).cParams);
+    debug_assert!(ZSTD_checkCParams(cParams));
+    /* srcSizeHint == 0 means 0 */
     return ZSTD_adjustCParams_internal(
         cParams,
         srcSizeHint as std::ffi::c_ulonglong,
@@ -4953,6 +4762,7 @@ pub unsafe extern "C" fn ZSTD_getCParamsFromCCtxParams(
         (*CCtxParams).useRowMatchFinder,
     );
 }
+
 unsafe extern "C" fn ZSTD_sizeof_matchState(
     cParams: *const ZSTD_compressionParameters,
     useRowMatchFinder: ZSTD_ParamSwitch_e,
@@ -5907,16 +5717,16 @@ unsafe extern "C" fn ZSTD_resetCCtx_internal(
     (*zc).initialized = 1;
     return 0;
 }
-#[no_mangle]
-pub unsafe extern "C" fn ZSTD_invalidateRepCodes(mut cctx: *mut ZSTD_CCtx) {
-    let mut i: std::ffi::c_int = 0;
-    i = 0;
+
+pub unsafe fn ZSTD_invalidateRepCodes(cctx: *mut ZSTD_CCtx) {
+    let mut i: usize = 0;
     while i < ZSTD_REP_NUM {
-        (*(*cctx).blockState.prevCBlock).rep[i as usize] = 0;
+        (*(*cctx).blockState.prevCBlock).rep[i] = 0;
         i += 1;
-        i;
     }
+    debug_assert!(!ZSTD_window_hasExtDict((*cctx).blockState.matchState.window));
 }
+
 static mut attachDictSizeCutoffs: [usize; 10] = [
     (8 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10)) as usize,
     (8 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10)) as usize,
