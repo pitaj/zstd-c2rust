@@ -599,7 +599,7 @@ pub struct ZSTD_CCtx_s {
     pub pledgedSrcSizePlusOne: std::ffi::c_ulonglong, /* this way, 0 (default) == unknown */
     pub consumedSrcSize: std::ffi::c_ulonglong,
     pub producedCSize: std::ffi::c_ulonglong,
-    pub xxhState: twox_hash::XxHash64,
+    pub xxhState: XXH64_state_t,
     pub customMem: ZSTD_customMem,
     // pub pool: *mut ZSTD_threadPool,
     pub staticSize: usize,
@@ -696,13 +696,13 @@ pub const ZSTD_cpm_attachDict: ZSTD_CParamMode_e = 1;
 pub const ZSTD_cpm_noAttachDict: ZSTD_CParamMode_e = 0;
 
 pub type ZSTD_BlockCompressor_f = Option::<
-    unsafe fn(
+    unsafe extern "C" fn(
         *mut ZSTD_MatchState_t,
         *mut SeqStore_t,
         *mut u32,
         *const std::ffi::c_void,
         usize,
-    ) -> usize,
+    ) -> usize
 >;
 pub use crate::compress::zstd_compress::ZSTD_selectBlockCompressor;
 
@@ -2079,10 +2079,14 @@ pub unsafe fn ZSTD_hasExtSeqProd(
  * their public variants, but avoid the deprecation warnings.
  * =============================================================== */
 
+#[deprecated]
 pub use crate::compress::zstd_compress::ZSTD_compressBegin_usingCDict_deprecated;
 
+#[deprecated]
 pub use crate::compress::zstd_compress::ZSTD_compressContinue_public;
 
+#[deprecated]
 pub use crate::compress::zstd_compress::ZSTD_compressEnd_public;
 
+#[deprecated]
 pub use crate::compress::zstd_compress::ZSTD_compressBlock_deprecated;

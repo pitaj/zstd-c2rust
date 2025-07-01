@@ -167,8 +167,8 @@ pub const ZSTD_BLOCKSIZE_MAX: usize = 1_usize << ZSTD_BLOCKSIZELOG_MAX;
  *           Always ensure return value fits within application's authorized limits.
  *           Each application can set its own limits.
  *  note 6 : This function replaces ZSTD_getDecompressedSize() */
-pub const ZSTD_CONTENTSIZE_UNKNOWN: usize = usize::MAX;
-pub const ZSTD_CONTENTSIZE_ERROR: usize = usize::MAX - 2;
+pub const ZSTD_CONTENTSIZE_UNKNOWN: u64 = u64::MAX;
+pub const ZSTD_CONTENTSIZE_ERROR: u64 = u64::MAX - 2;
 // ZSTDLIB_API unsigned long long ZSTD_getFrameContentSize(const void *src, size_t srcSize);
 
 /*/! ZSTD_findFrameCompressedSize() : Requires v1.4.0+
@@ -228,10 +228,12 @@ pub const fn ZSTD_COMPRESSBOUND(srcSize: usize) -> usize { /* this formula ensur
 // ZSTDLIB_API unsigned     ZSTD_isError(size_t result);      /*/!< tells if a `size_t` function result is an error code */
 // ZSTDLIB_API ZSTD_ErrorCode ZSTD_getErrorCode(size_t functionResult); /* convert a result into an error code, which can be compared to error enum list */
 // ZSTDLIB_API const char*  ZSTD_getErrorName(size_t result); /*/!< provides readable string from a function result */
-// ZSTDLIB_API int          ZSTD_minCLevel(void);             /*/!< minimum negative compression level allowed, requires v1.4.0+ */
-// ZSTDLIB_API int          ZSTD_maxCLevel(void);             /*/!< maximum compression level available */
-///  default compression level, specified by ZSTD_CLEVEL_DEFAULT, requires v1.5.0+
-// ZSTDLIB_API int          ZSTD_defaultCLevel(void);         
+/// minimum negative compression level allowed, requires v1.4.0+
+pub use crate::compress::clevels::ZSTD_minCLevel;
+/// maximum compression level available
+pub use crate::compress::clevels::ZSTD_maxCLevel;
+/// default compression level, specified by ZSTD_CLEVEL_DEFAULT, requires v1.5.0+
+pub use crate::compress::clevels::ZSTD_defaultCLevel;
 
 
 /***************************************
@@ -1246,8 +1248,8 @@ pub const ZSTD_MINMATCH_MAX: std::ffi::c_int = 7;   /* only for ZSTD_fast, other
 pub const ZSTD_MINMATCH_MIN: std::ffi::c_int = 3;   /* only for ZSTD_btopt+, faster strategies are limited to 4 */
 pub const ZSTD_TARGETLENGTH_MAX: std::ffi::c_int = ZSTD_BLOCKSIZE_MAX as _;
 pub const ZSTD_TARGETLENGTH_MIN: std::ffi::c_int = 0;   /* note : comparing this constant to an unsigned results in a tautological test */
-pub const ZSTD_STRATEGY_MIN: std::ffi::c_int = ZSTD_fast as _;
-pub const ZSTD_STRATEGY_MAX: std::ffi::c_int = ZSTD_btultra2 as _;
+pub const ZSTD_STRATEGY_MIN: std::ffi::c_int = ZSTD_fast as std::ffi::c_int;
+pub const ZSTD_STRATEGY_MAX: std::ffi::c_int = ZSTD_btultra2 as std::ffi::c_int;
 pub const ZSTD_BLOCKSIZE_MAX_MIN: std::ffi::c_int = 1 << 10; /* The minimum valid max blocksize. Maximum blocksizes smaller than this make compressBound() inaccurate. */
 
 
@@ -1370,7 +1372,7 @@ pub const ZSTD_dlm_byCopy: ZSTD_dictLoadMethod_e = 0;
 ///  Reference dictionary content -- the dictionary buffer must outlive its users.
 pub const ZSTD_dlm_byRef: ZSTD_dictLoadMethod_e = 1; 
 
-pub type ZSTD_format_e = std::ffi::c_uint;
+pub type ZSTD_format_e = std::ffi::c_int;
 pub const ZSTD_f_zstd1: ZSTD_format_e = 0; /* zstd frame format, specified in zstd_compression_format.md (default) */
 pub const ZSTD_f_zstd1_magicless: ZSTD_format_e = 1; /* Variant of zstd frame format, without initial 4-bytes magic number.
                                  * Useful to save 4 bytes per generated frame.
@@ -1421,7 +1423,7 @@ pub const ZSTD_rmd_refMultipleDDicts: ZSTD_refMultipleDDicts_e = 1;
  * Zstd is making poor choices, it is possible to override that choice with
  * this enum.
  */
-pub type ZSTD_dictAttachPref_e = std::ffi::c_uint;
+pub type ZSTD_dictAttachPref_e = std::ffi::c_int;
 pub const ZSTD_dictDefaultAttach: ZSTD_dictAttachPref_e = 0; /* Use the default heuristic. */
 pub const ZSTD_dictForceAttach: ZSTD_dictAttachPref_e = 1; /* Never copy the dictionary. */
 pub const ZSTD_dictForceCopy: ZSTD_dictAttachPref_e = 2; /* Always copy the dictionary. */
@@ -1441,7 +1443,7 @@ pub const ZSTD_dictForceLoad: ZSTD_dictAttachPref_e = 3; /* Always reload the di
    * Zstd can take a decision on whether or not to enable the feature (ZSTD_ps_auto),
    * but setting the switch to ZSTD_ps_enable or ZSTD_ps_disable force enable/disable the feature.
    */
-pub type ZSTD_ParamSwitch_e = std::ffi::c_uint;
+pub type ZSTD_ParamSwitch_e = std::ffi::c_int;
 pub const ZSTD_ps_auto: ZSTD_ParamSwitch_e = 0; /* Let the library automatically determine whether the feature shall be enabled */
 pub const ZSTD_ps_enable: ZSTD_ParamSwitch_e = 1; /* Force-enable the feature */
 pub const ZSTD_ps_disable: ZSTD_ParamSwitch_e = 2; /* Do not use the feature */
@@ -1571,7 +1573,7 @@ pub const fn ZSTD_DECOMPRESSION_MARGIN(originalSize: usize, blockSize: usize) ->
     blockSize /* One block of margin */
 }
 
-pub type ZSTD_SequenceFormat_e = std::ffi::c_uint;
+pub type ZSTD_SequenceFormat_e = std::ffi::c_int;
 pub const ZSTD_sf_noBlockDelimiters: ZSTD_SequenceFormat_e = 0; /* ZSTD_Sequence[] has no block delimiters, just sequences */
 pub const ZSTD_sf_explicitBlockDelimiters: ZSTD_SequenceFormat_e = 1; /* ZSTD_Sequence[] contains explicit block delimiters */
 pub type ZSTD_sequenceFormat_e = ZSTD_SequenceFormat_e; /* old name */

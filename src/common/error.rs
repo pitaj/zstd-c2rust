@@ -118,7 +118,7 @@ pub const fn ERR_getErrorString(code: ZSTD_ErrorCode) -> &'static str {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! __RETURN_ERROR_IF {
-    ($cond:expr, $error:expr $(, $reason:literal)?) => {
+    ($cond:expr, $error:expr $(, $reason:literal $(, $rest:expr)*)?) => {
         if $cond {
             return $crate::common::error::ERROR($error);
         }

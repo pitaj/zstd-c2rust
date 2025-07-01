@@ -2,6 +2,13 @@ use crate::zstd_h::*;
 use crate::common::mem::*;
 use crate::compress::zstd_compress_internal::ZSTD_window_hasExtDict;
 
+// ==== from xxhash.h ====
+pub type XXH64_state_s = twox_hash::XxHash64;
+pub type XXH64_state_t = XXH64_state_s;
+
+pub type XXH64_hash_t = u64;
+// ==== end  xxhash.h ====
+
 /* this module contains definitions which must be identical
  * across compression, decompression and dictBuilder.
  * It also contains a few functions useful to at least 2 of them
@@ -297,7 +304,7 @@ pub const ZSTD_WORKSPACETOOLARGE_FACTOR: usize = 3;
 pub const ZSTD_WORKSPACETOOLARGE_MAXDURATION: usize = 128;
 
 /* Controls whether the input/output buffer is buffered or stable. */
-pub type ZSTD_bufferMode_e = std::ffi::c_uint;
+pub type ZSTD_bufferMode_e = std::ffi::c_int;
 pub const ZSTD_bm_stable: ZSTD_bufferMode_e = 1; /* ZSTD_inBuffer/ZSTD_outBuffer is stable */
 pub const ZSTD_bm_buffered: ZSTD_bufferMode_e = 0; /* Buffer the input/output */
 
