@@ -1,5 +1,8 @@
 use std::mem::size_of;
 
+use crate::common::mem::*;
+use crate::common::bitstream_h::*;
+
 /*------   Version   ------*/
 macro_rules! version {
     ($major:literal , $minor:literal , $release:literal) => {
@@ -60,32 +63,29 @@ or to save and provide normalized distribution using external method.
 //     @return : recommended tableLog (necessarily <= 'maxTableLog') */
 // FSE_PUBLIC_API unsigned FSE_optimalTableLog(unsigned maxTableLog, size_t srcSize, unsigned maxSymbolValue);
 
-// /*! FSE_normalizeCount():
-//     normalize counts so that sum(count[]) == Power_of_2 (2^tableLog)
-//     'normalizedCounter' is a table of short, of minimum size (maxSymbolValue+1).
-//     useLowProbCount is a boolean parameter which trades off compressed size for
-//     faster header decoding. When it is set to 1, the compressed data will be slightly
-//     smaller. And when it is set to 0, FSE_readNCount() and FSE_buildDTable() will be
-//     faster. If you are compressing a small amount of data (< 2 KB) then useLowProbCount=0
-//     is a good default, since header deserialization makes a big speed difference.
-//     Otherwise, useLowProbCount=1 is a good default, since the speed difference is small.
-//     @return : tableLog,
-//               or an errorCode, which can be tested using FSE_isError() */
-// FSE_PUBLIC_API size_t FSE_normalizeCount(short* normalizedCounter, unsigned tableLog,
-//                     const unsigned* count, size_t srcSize, unsigned maxSymbolValue, unsigned useLowProbCount);
+/** FSE_normalizeCount():
+    normalize counts so that sum(count[]) == Power_of_2 (2^tableLog)
+    'normalizedCounter' is a table of short, of minimum size (maxSymbolValue+1).
+    useLowProbCount is a boolean parameter which trades off compressed size for
+    faster header decoding. When it is set to 1, the compressed data will be slightly
+    smaller. And when it is set to 0, FSE_readNCount() and FSE_buildDTable() will be
+    faster. If you are compressing a small amount of data (< 2 KB) then useLowProbCount=0
+    is a good default, since header deserialization makes a big speed difference.
+    Otherwise, useLowProbCount=1 is a good default, since the speed difference is small.
+    @return : tableLog,
+              or an errorCode, which can be tested using FSE_isError() */
+pub use crate::compress::fse_compress::FSE_normalizeCount;
 
-// /*! FSE_NCountWriteBound():
-//     Provides the maximum possible size of an FSE normalized table, given 'maxSymbolValue' and 'tableLog'.
-//     Typically useful for allocation purpose. */
-// FSE_PUBLIC_API size_t FSE_NCountWriteBound(unsigned maxSymbolValue, unsigned tableLog);
+/** FSE_NCountWriteBound():
+    Provides the maximum possible size of an FSE normalized table, given 'maxSymbolValue' and 'tableLog'.
+    Typically useful for allocation purpose. */
+pub use crate::compress::fse_compress::FSE_NCountWriteBound;
 
-// /*! FSE_writeNCount():
-//     Compactly save 'normalizedCounter' into 'buffer'.
-//     @return : size of the compressed table,
-//               or an errorCode, which can be tested using FSE_isError(). */
-// FSE_PUBLIC_API size_t FSE_writeNCount (void* buffer, size_t bufferSize,
-//                                  const short* normalizedCounter,
-//                                  unsigned maxSymbolValue, unsigned tableLog);
+/** FSE_writeNCount():
+    Compactly save 'normalizedCounter' into 'buffer'.
+    @return : size of the compressed table,
+              or an errorCode, which can be tested using FSE_isError(). */
+pub use crate::compress::fse_compress::FSE_writeNCount;
 
 /* Constructor and Destructor of FSE_CTable.
     Note that FSE_CTable size depends on 'tableLog' and 'maxSymbolValue' */
@@ -228,11 +228,11 @@ pub const fn FSE_CTABLE_SIZE(maxTableLog: u32, maxSymbolValue: u32) -> usize {
  *  FSE advanced API
  ***************************************** */
 
-// unsigned FSE_optimalTableLog_internal(unsigned maxTableLog, size_t srcSize, unsigned maxSymbolValue, unsigned minus);
-// /**< same as FSE_optimalTableLog(), which used `minus==2` */
+/// same as FSE_optimalTableLog(), which used `minus==2`
+pub use crate::compress::fse_compress::FSE_optimalTableLog;
 
-// size_t FSE_buildCTable_rle (FSE_CTable* ct, unsigned char symbolValue);
-// /**< build a fake FSE_CTable, designed to compress always the same symbolValue */
+/// build a fake FSE_CTable, designed to compress always the same symbolValue
+pub use crate::compress::fse_compress::FSE_buildCTable_rle;
 
 
 pub const fn FSE_BUILD_CTABLE_WORKSPACE_SIZE_U32(maxSymbolValue: u32, tableLog: u32) -> usize {
@@ -248,7 +248,7 @@ pub const fn FSE_BUILD_CTABLE_WORKSPACE_SIZE(maxSymbolValue: u32, tableLog: u32)
  * `wkspSize` must be >= `FSE_BUILD_CTABLE_WORKSPACE_SIZE_U32(maxSymbolValue, tableLog)` of `unsigned`.
  * See FSE_buildCTable_wksp() for breakdown of workspace usage.
  */
-// size_t FSE_buildCTable_wksp(FSE_CTable* ct, const short* normalizedCounter, unsigned maxSymbolValue, unsigned tableLog, void* workSpace, size_t wkspSize);
+pub use crate::compress::fse_compress::FSE_buildCTable_wksp;
 
 pub const fn FSE_BUILD_DTABLE_WKSP_SIZE(maxTableLog: u32, maxSymbolValue: u32) -> usize {
     size_of::<std::ffi::c_short>() * ((maxSymbolValue as usize) + 1) + (1_usize << maxTableLog) + 8
@@ -281,7 +281,7 @@ pub const FSE_repeat_valid: FSE_repeat = 2;
 /* *****************************************
 *  FSE symbol compression API
 *******************************************/
-/* !
+/**
    This API consists of small unitary functions, which highly benefit from being inlined.
    Hence their body are included in next section.
 */
@@ -428,46 +428,84 @@ pub struct FSE_symbolCompressionTransform {
     pub deltaNbBits: u32,
 } /* total 8 bytes */
 
-// MEM_STATIC void FSE_initCState(FSE_CState_t* statePtr, const FSE_CTable* ct)
-// {
-//     const void* ptr = ct;
-//     const U16* u16ptr = (const U16*) ptr;
-//     const U32 tableLog = MEM_read16(ptr);
-//     statePtr->value = (ptrdiff_t)1<<tableLog;
-//     statePtr->stateTable = u16ptr+2;
-//     statePtr->symbolTT = ct + 1 + (tableLog ? (1<<(tableLog-1)) : 1);
-//     statePtr->stateLog = tableLog;
-// }
+#[inline]
+pub unsafe fn FSE_initCState(
+    mut statePtr: *mut FSE_CState_t,
+    mut ct: *const FSE_CTable,
+) {
+    let mut ptr = ct as *const std::ffi::c_void;
+    let mut u16ptr = ptr as *const u16;
+    let tableLog = MEM_read16(ptr) as u32;
+    (*statePtr).value = 1_isize << tableLog;
+    (*statePtr)
+        .stateTable = u16ptr.offset(2)
+        as *const std::ffi::c_void;
+    (*statePtr)
+        .symbolTT = ct
+        .offset(1)
+        .offset(
+            if tableLog != 0 {
+                1_isize << tableLog.wrapping_sub(1)
+            } else {
+                1
+            },
+        ) as *const std::ffi::c_void;
+    (*statePtr).stateLog = tableLog;
+}
+
+/** FSE_initCState2() :
+*   Same as FSE_initCState(), but the first symbol to include (which will be the last to be read)
+*   uses the smallest state value possible, saving the cost of this symbol */
+#[inline]
+pub unsafe fn FSE_initCState2(
+    mut statePtr: *mut FSE_CState_t,
+    mut ct: *const FSE_CTable,
+    mut symbol: u32,
+) {
+    FSE_initCState(statePtr, ct);
+    let symbolTT = *((*statePtr).symbolTT as *const FSE_symbolCompressionTransform)
+        .offset(symbol as isize);
+    let mut stateTable = (*statePtr).stateTable as *const u16;
+    let mut nbBitsOut = (symbolTT.deltaNbBits)
+        .wrapping_add(1_u32 << 15)
+        >> 16;
+    (*statePtr)
+        .value = (nbBitsOut << 16).wrapping_sub(symbolTT.deltaNbBits)
+        as isize;
+    (*statePtr)
+        .value = *stateTable
+        .offset(
+            (((*statePtr).value >> nbBitsOut) + symbolTT.deltaFindState as isize),
+        ) as isize;
+}
 
 
-// /*! FSE_initCState2() :
-// *   Same as FSE_initCState(), but the first symbol to include (which will be the last to be read)
-// *   uses the smallest state value possible, saving the cost of this symbol */
-// MEM_STATIC void FSE_initCState2(FSE_CState_t* statePtr, const FSE_CTable* ct, U32 symbol)
-// {
-//     FSE_initCState(statePtr, ct);
-//     {   const FSE_symbolCompressionTransform symbolTT = ((const FSE_symbolCompressionTransform*)(statePtr->symbolTT))[symbol];
-//         const U16* stateTable = (const U16*)(statePtr->stateTable);
-//         U32 nbBitsOut  = (U32)((symbolTT.deltaNbBits + (1<<15)) >> 16);
-//         statePtr->value = (nbBitsOut << 16) - symbolTT.deltaNbBits;
-//         statePtr->value = stateTable[(statePtr->value >> nbBitsOut) + symbolTT.deltaFindState];
-//     }
-// }
+#[inline]
+pub unsafe fn FSE_encodeSymbol(
+    mut bitC: *mut BIT_CStream_t,
+    mut statePtr: *mut FSE_CState_t,
+    mut symbol: std::ffi::c_uint,
+) {
+    let symbolTT = *((*statePtr).symbolTT as *const FSE_symbolCompressionTransform)
+        .offset(symbol as isize);
+    let stateTable = (*statePtr).stateTable as *const u16;
+    let nbBitsOut = ((*statePtr).value + symbolTT.deltaNbBits as isize >> 16) as u32;
+    BIT_addBits(bitC, (*statePtr).value as BitContainerType, nbBitsOut);
+    (*statePtr)
+        .value = *stateTable
+        .offset(
+            ((*statePtr).value >> nbBitsOut) + symbolTT.deltaFindState as isize
+        ) as isize;
+}
 
-// MEM_STATIC void FSE_encodeSymbol(BIT_CStream_t* bitC, FSE_CState_t* statePtr, unsigned symbol)
-// {
-//     FSE_symbolCompressionTransform const symbolTT = ((const FSE_symbolCompressionTransform*)(statePtr->symbolTT))[symbol];
-//     const U16* const stateTable = (const U16*)(statePtr->stateTable);
-//     U32 const nbBitsOut  = (U32)((statePtr->value + symbolTT.deltaNbBits) >> 16);
-//     BIT_addBits(bitC, (BitContainerType)statePtr->value, nbBitsOut);
-//     statePtr->value = stateTable[ (statePtr->value >> nbBitsOut) + symbolTT.deltaFindState];
-// }
-
-// MEM_STATIC void FSE_flushCState(BIT_CStream_t* bitC, const FSE_CState_t* statePtr)
-// {
-//     BIT_addBits(bitC, (BitContainerType)statePtr->value, statePtr->stateLog);
-//     BIT_flushBits(bitC);
-// }
+#[inline]
+pub unsafe fn FSE_flushCState(
+    mut bitC: *mut BIT_CStream_t,
+    mut statePtr: *const FSE_CState_t,
+) {
+    BIT_addBits(bitC, (*statePtr).value as BitContainerType, (*statePtr).stateLog);
+    BIT_flushBits(bitC);
+}
 
 
 // /* FSE_getMaxNbBits() :
@@ -481,26 +519,37 @@ pub struct FSE_symbolCompressionTransform {
 //     return (symbolTT[symbolValue].deltaNbBits + ((1<<16)-1)) >> 16;
 // }
 
-// /* FSE_bitCost() :
-//  * Approximate symbol cost, as fractional value, using fixed-point format (accuracyLog fractional bits)
-//  * note 1 : assume symbolValue is valid (<= maxSymbolValue)
-//  * note 2 : if freq[symbolValue]==0, @return a fake cost of tableLog+1 bits */
-// MEM_STATIC U32 FSE_bitCost(const void* symbolTTPtr, U32 tableLog, U32 symbolValue, U32 accuracyLog)
-// {
-//     const FSE_symbolCompressionTransform* symbolTT = (const FSE_symbolCompressionTransform*) symbolTTPtr;
-//     U32 const minNbBits = symbolTT[symbolValue].deltaNbBits >> 16;
-//     U32 const threshold = (minNbBits+1) << 16;
-//     assert(tableLog < 16);
-//     assert(accuracyLog < 31-tableLog);  /* ensure enough room for renormalization double shift */
-//     {   U32 const tableSize = 1 << tableLog;
-//         U32 const deltaFromThreshold = threshold - (symbolTT[symbolValue].deltaNbBits + tableSize);
-//         U32 const normalizedDeltaFromThreshold = (deltaFromThreshold << accuracyLog) >> tableLog;   /* linear interpolation (very approximate) */
-//         U32 const bitMultiplier = 1 << accuracyLog;
-//         assert(symbolTT[symbolValue].deltaNbBits + tableSize <= threshold);
-//         assert(normalizedDeltaFromThreshold <= bitMultiplier);
-//         return (minNbBits+1)*bitMultiplier - normalizedDeltaFromThreshold;
-//     }
-// }
+/** FSE_bitCost() :
+ * Approximate symbol cost, as fractional value, using fixed-point format (accuracyLog fractional bits)
+ * note 1 : assume symbolValue is valid (<= maxSymbolValue)
+ * note 2 : if freq[symbolValue]==0, @return a fake cost of tableLog+1 bits */
+#[inline]
+pub unsafe extern "C" fn FSE_bitCost(
+    mut symbolTTPtr: *const std::ffi::c_void,
+    mut tableLog: u32,
+    mut symbolValue: u32,
+    mut accuracyLog: u32,
+) -> u32 {
+    let mut symbolTT = symbolTTPtr as *const FSE_symbolCompressionTransform;
+    let minNbBits = (*symbolTT.offset(symbolValue as isize)).deltaNbBits
+        >> 16;
+    let threshold = minNbBits.wrapping_add(1)
+        << 16;
+    debug_assert!(tableLog < 16);
+    debug_assert!(accuracyLog < 31-tableLog);  /* ensure enough room for renormalization double shift */
+    let tableSize = 1_u32 << tableLog;
+    let deltaFromThreshold = threshold
+        .wrapping_sub(
+            ((*symbolTT.offset(symbolValue as isize)).deltaNbBits)
+                .wrapping_add(tableSize),
+        );
+    let normalizedDeltaFromThreshold = (deltaFromThreshold << accuracyLog) >> tableLog;
+    let bitMultiplier = 1_u32 << accuracyLog;
+    debug_assert!((*symbolTT.offset(symbolValue as isize)).deltaNbBits + tableSize <= threshold);
+    debug_assert!(normalizedDeltaFromThreshold <= bitMultiplier);
+    return (minNbBits.wrapping_add(1) * bitMultiplier)
+        .wrapping_sub(normalizedDeltaFromThreshold);
+}
 
 
 /* ======    Decompression    ====== */

@@ -124,21 +124,29 @@ pub const BIT_mask: [u32; BIT_MASK_SIZE] = [
 /*-**************************************************************
 *  bitStream encoding
 ****************************************************************/
-// /*! BIT_initCStream() :
-//  *  `dstCapacity` must be > sizeof(size_t)
-//  *  @return : 0 if success,
-//  *            otherwise an error code (can be tested using ERR_isError()) */
-// MEM_STATIC size_t BIT_initCStream(BIT_CStream_t* bitC,
-//                                   void* startPtr, size_t dstCapacity)
-// {
-//     bitC->bitContainer = 0;
-//     bitC->bitPos = 0;
-//     bitC->startPtr = (char*)startPtr;
-//     bitC->ptr = bitC->startPtr;
-//     bitC->endPtr = bitC->startPtr + dstCapacity - sizeof(bitC->bitContainer);
-//     if (dstCapacity <= sizeof(bitC->bitContainer)) return ERROR(dstSize_tooSmall);
-//     return 0;
-// }
+/** BIT_initCStream() :
+ *  `dstCapacity` must be > sizeof(size_t)
+ *  @return : 0 if success,
+ *            otherwise an error code (can be tested using ERR_isError()) */
+#[inline]
+pub unsafe fn BIT_initCStream(
+    mut bitC: *mut BIT_CStream_t,
+    mut startPtr: *mut std::ffi::c_void,
+    mut dstCapacity: usize,
+) -> usize {
+    (*bitC).bitContainer = 0;
+    (*bitC).bitPos = 0;
+    (*bitC).startPtr = startPtr as *mut std::ffi::c_char;
+    (*bitC).ptr = (*bitC).startPtr;
+    (*bitC)
+        .endPtr = ((*bitC).startPtr)
+        .add(dstCapacity)
+        .sub(
+            ::core::mem::size_of::<BitContainerType>(),
+        );
+    RETURN_ERROR_IF!(dstCapacity <= ::core::mem::size_of::<BitContainerType>(), ZSTD_error_dstSize_tooSmall);
+    return 0;
+}
 
 // FORCE_INLINE_TEMPLATE BitContainerType BIT_getLowerBits(BitContainerType bitContainer, U32 const nbBits)
 // {
@@ -154,73 +162,102 @@ pub const BIT_mask: [u32; BIT_MASK_SIZE] = [
 //     return bitContainer & BIT_mask[nbBits];
 // #endif
 // }
+#[inline(always)]
+pub unsafe fn BIT_getLowerBits(
+    mut bitContainer: BitContainerType,
+    nbBits: u32,
+) -> BitContainerType {
+    // TODO #if STATIC_BMI2 && !defined(ZSTD_NO_INTRINSICS)
+    // #  if (defined(__x86_64__) || defined(_M_X64)) && !defined(__ILP32__)
+    //     return _bzhi_u64(bitContainer, nbBits);
+    // #  else
+    //     DEBUG_STATIC_ASSERT(sizeof(bitContainer) == sizeof(U32));
+    //     return _bzhi_u32(bitContainer, nbBits);
+    // #  endif
+    // #else
+    debug_assert!((nbBits as usize) < BIT_MASK_SIZE);
+    return bitContainer & BIT_mask[nbBits as usize] as BitContainerType;
+}
 
-// /*! BIT_addBits() :
-//  *  can add up to 31 bits into `bitC`.
-//  *  Note : does not check for register overflow ! */
-// MEM_STATIC void BIT_addBits(BIT_CStream_t* bitC,
-//                             BitContainerType value, unsigned nbBits)
-// {
-//     DEBUG_STATIC_ASSERT(BIT_MASK_SIZE == 32);
-//     assert(nbBits < BIT_MASK_SIZE);
-//     assert(nbBits + bitC->bitPos < sizeof(bitC->bitContainer) * 8);
-//     bitC->bitContainer |= BIT_getLowerBits(value, nbBits) << bitC->bitPos;
-//     bitC->bitPos += nbBits;
-// }
+/** BIT_addBits() :
+ *  can add up to 31 bits into `bitC`.
+ *  Note : does not check for register overflow ! */
+#[inline]
+pub unsafe fn BIT_addBits(
+    mut bitC: *mut BIT_CStream_t,
+    mut value: BitContainerType,
+    mut nbBits: std::ffi::c_uint,
+) {
+    const _: () = assert!(BIT_MASK_SIZE == 32);
+    debug_assert!((nbBits as usize) < BIT_MASK_SIZE);
+    debug_assert!(((nbBits + (*bitC).bitPos) as usize) < std::mem::size_of_val(&(*bitC).bitContainer) * 8);
+    (*bitC).bitContainer |= BIT_getLowerBits(value, nbBits) << (*bitC).bitPos;
+    (*bitC).bitPos = ((*bitC).bitPos).wrapping_add(nbBits);
+}
 
-// /*! BIT_addBitsFast() :
-//  *  works only if `value` is _clean_,
-//  *  meaning all high bits above nbBits are 0 */
-// MEM_STATIC void BIT_addBitsFast(BIT_CStream_t* bitC,
-//                                 BitContainerType value, unsigned nbBits)
-// {
-//     assert((value>>nbBits) == 0);
-//     assert(nbBits + bitC->bitPos < sizeof(bitC->bitContainer) * 8);
-//     bitC->bitContainer |= value << bitC->bitPos;
-//     bitC->bitPos += nbBits;
-// }
+/** BIT_addBitsFast() :
+ *  works only if `value` is _clean_,
+ *  meaning all high bits above nbBits are 0 */
+#[inline]
+pub unsafe fn BIT_addBitsFast(
+    mut bitC: *mut BIT_CStream_t,
+    mut value: BitContainerType,
+    mut nbBits: std::ffi::c_uint,
+) {
+    debug_assert!((value >> nbBits) == 0);
+    debug_assert!(((nbBits + (*bitC).bitPos) as usize) < std::mem::size_of_val(&(*bitC).bitContainer) * 8);
+    (*bitC).bitContainer |= value << (*bitC).bitPos;
+    (*bitC).bitPos = ((*bitC).bitPos).wrapping_add(nbBits);
+}
 
-// /*! BIT_flushBitsFast() :
-//  *  assumption : bitContainer has not overflowed
-//  *  unsafe version; does not check buffer overflow */
-// MEM_STATIC void BIT_flushBitsFast(BIT_CStream_t* bitC)
-// {
-//     size_t const nbBytes = bitC->bitPos >> 3;
-//     assert(bitC->bitPos < sizeof(bitC->bitContainer) * 8);
-//     assert(bitC->ptr <= bitC->endPtr);
-//     MEM_writeLEST(bitC->ptr, bitC->bitContainer);
-//     bitC->ptr += nbBytes;
-//     bitC->bitPos &= 7;
-//     bitC->bitContainer >>= nbBytes*8;
-// }
+/** BIT_flushBitsFast() :
+ *  assumption : bitContainer has not overflowed
+ *  unsafe version; does not check buffer overflow */
+#[inline]
+pub unsafe fn BIT_flushBitsFast(mut bitC: *mut BIT_CStream_t) {
+    let nbBytes = ((*bitC).bitPos >> 3) as usize;
+    debug_assert!(((*bitC).bitPos as usize) < std::mem::size_of_val(&(*bitC).bitContainer) * 8);
+    debug_assert!((*bitC).ptr <= (*bitC).endPtr);
+    MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, (*bitC).bitContainer);
+    (*bitC).ptr = ((*bitC).ptr).add(nbBytes);
+    (*bitC).bitPos &= 7;
+    (*bitC).bitContainer >>= nbBytes * 8;
+}
 
-// /*! BIT_flushBits() :
-//  *  assumption : bitContainer has not overflowed
-//  *  safe version; check for buffer overflow, and prevents it.
-//  *  note : does not signal buffer overflow.
-//  *  overflow will be revealed later on using BIT_closeCStream() */
-// MEM_STATIC void BIT_flushBits(BIT_CStream_t* bitC)
-// {
-//     size_t const nbBytes = bitC->bitPos >> 3;
-//     assert(bitC->bitPos < sizeof(bitC->bitContainer) * 8);
-//     assert(bitC->ptr <= bitC->endPtr);
-//     MEM_writeLEST(bitC->ptr, bitC->bitContainer);
-//     bitC->ptr += nbBytes;
-//     if (bitC->ptr > bitC->endPtr) bitC->ptr = bitC->endPtr;
-//     bitC->bitPos &= 7;
-//     bitC->bitContainer >>= nbBytes*8;
-// }
+/** BIT_flushBits() :
+ *  assumption : bitContainer has not overflowed
+ *  safe version; check for buffer overflow, and prevents it.
+ *  note : does not signal buffer overflow.
+ *  overflow will be revealed later on using BIT_closeCStream() */
+#[inline]
+pub unsafe fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
+    let nbBytes = ((*bitC).bitPos >> 3) as usize;
+    debug_assert!(((*bitC).bitPos as usize) < std::mem::size_of_val(&(*bitC).bitContainer) * 8);
+    debug_assert!((*bitC).ptr <= (*bitC).endPtr);
+    MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, (*bitC).bitContainer);
+    (*bitC).ptr = ((*bitC).ptr).add(nbBytes);
+    if (*bitC).ptr > (*bitC).endPtr {
+        (*bitC).ptr = (*bitC).endPtr;
+    }
+    (*bitC).bitPos &= 7;
+    (*bitC).bitContainer >>= nbBytes * 8;
+}
 
-// /*! BIT_closeCStream() :
-//  *  @return : size of CStream, in bytes,
-//  *            or 0 if it could not fit into dstBuffer */
-// MEM_STATIC size_t BIT_closeCStream(BIT_CStream_t* bitC)
-// {
-//     BIT_addBitsFast(bitC, 1, 1);   /* endMark */
-//     BIT_flushBits(bitC);
-//     if (bitC->ptr >= bitC->endPtr) return 0; /* overflow detected */
-//     return (size_t)(bitC->ptr - bitC->startPtr) + (bitC->bitPos > 0);
-// }
+/** BIT_closeCStream() :
+ *  @return : size of CStream, in bytes,
+ *            or 0 if it could not fit into dstBuffer */
+#[inline]
+pub unsafe fn BIT_closeCStream(mut bitC: *mut BIT_CStream_t) -> usize {
+    BIT_addBitsFast(bitC, 1, 1); /* endMark */
+    BIT_flushBits(bitC);
+    if (*bitC).ptr >= (*bitC).endPtr {
+        return 0; /* overflow detected */
+    }
+    return (((*bitC).ptr).offset_from((*bitC).startPtr) as usize)
+        .wrapping_add(
+            ((*bitC).bitPos > 0) as usize,
+        );
+}
 
 
 /*-********************************************************

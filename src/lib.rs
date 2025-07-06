@@ -26,6 +26,7 @@ extern crate libc;
 pub mod zstd_h;
 
 pub mod common {
+pub mod allocations;
 pub mod fse_h;
 pub mod huf_h;
 pub mod bitstream_h;
