@@ -2,6 +2,7 @@ use ::libc;
 use ::c2rust_bitfields;
 use crate::zstd_h::*;
 use crate::common::huf_h::*;
+use crate::common::mem::*;
 extern "C" {
     pub type _IO_wide_data;
     pub type _IO_codecvt;

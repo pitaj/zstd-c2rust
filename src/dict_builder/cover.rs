@@ -303,7 +303,7 @@ unsafe extern "C" fn COVER_map_clear(mut map: *mut COVER_map_t) {
     libc::memset(
         (*map).data as *mut std::ffi::c_void,
         MAP_EMPTY_VALUE,
-        ((*map).size as std::ffi::c_ulong)
+        ((*map).size as usize)
             .wrapping_mul(
                 ::core::mem::size_of::<COVER_map_pair_t>(),
             ),
@@ -320,7 +320,7 @@ unsafe extern "C" fn COVER_map_init(
     (*map).sizeMask = ((*map).size).wrapping_sub(1);
     (*map)
         .data = libc::malloc(
-        ((*map).size as std::ffi::c_ulong)
+        ((*map).size as usize)
             .wrapping_mul(
                 ::core::mem::size_of::<COVER_map_pair_t>(),
             ),
@@ -759,12 +759,7 @@ unsafe extern "C" fn COVER_ctx_init(
     };
     (*ctx).displayLevel = displayLevel;
     if totalSamplesSize
-        < (if d as std::ffi::c_ulong > ::core::mem::size_of::<u64>()
-        {
-            d as std::ffi::c_ulong
-        } else {
-            ::core::mem::size_of::<u64>()
-        })
+        < std::cmp::max(d as usize, ::core::mem::size_of::<u64>())
         || totalSamplesSize
             >= (if ::core::mem::size_of::<usize>()
                 == 8
@@ -818,15 +813,7 @@ unsafe extern "C" fn COVER_ctx_init(
     (*ctx).nbTestSamples = nbTestSamples as usize;
     (*ctx)
         .suffixSize = trainingSamplesSize
-        .wrapping_sub(
-            (if d as std::ffi::c_ulong
-                > ::core::mem::size_of::<u64>()
-            {
-                d as std::ffi::c_ulong
-            } else {
-                ::core::mem::size_of::<u64>()
-            }),
-        )
+        .wrapping_sub(std::cmp::max(d as usize, ::core::mem::size_of::<u64>()))
         .wrapping_add(1);
     (*ctx)
         .suffix = libc::malloc(
@@ -840,8 +827,7 @@ unsafe extern "C" fn COVER_ctx_init(
     ) as *mut u32;
     (*ctx)
         .offsets = libc::malloc(
-        (nbSamples.wrapping_add(1)
-            as std::ffi::c_ulong)
+        (nbSamples.wrapping_add(1) as usize)
             .wrapping_mul(::core::mem::size_of::<usize>()),
     ) as *mut usize;
     if ((*ctx).suffix).is_null() || ((*ctx).dmerAt).is_null()
@@ -924,7 +910,7 @@ pub unsafe extern "C" fn COVER_warnOnSmallCorpus(
     mut displayLevel: std::ffi::c_int,
 ) {
     let ratio = nbDmers as std::ffi::c_double / maxDictSize as std::ffi::c_double;
-    if ratio >= 10 {
+    if ratio >= 10.0 {
         return;
     }
     DISPLAYLEVEL!(1, "WARNING: The maximum dictionary size %u is too large "
@@ -1010,7 +996,7 @@ unsafe extern "C" fn COVER_buildDictionary(
             }
         } else {
             zeroScoreRun = 0;
-            segmentSize = std::cmp::min(segment.end - segment.begin + parameters.d - 1, tail);
+            segmentSize = std::cmp::min((segment.end - segment.begin + parameters.d - 1) as usize, tail);
             if segmentSize < parameters.d as usize {
                 break;
             }
@@ -1133,7 +1119,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_cover(
         nbSamples,
         parameters.zParams,
     );
-    if ERR_isError(dictionarySize) == 0 {
+    if ERR_isError(dictionarySize) {
         DISPLAYLEVEL!(2, "Constructed dictionary of size %u\n", (unsigned) dictionarySize);
     }
     COVER_ctx_destroy(&mut ctx);
@@ -1218,7 +1204,7 @@ pub unsafe extern "C" fn COVER_best_init(mut best: *mut COVER_best_t) {
     (*best).liveJobs = 0;
     (*best).dict = std::ptr::null_mut();
     (*best).dictSize = 0;
-    (*best).compressedSize = -1;
+    (*best).compressedSize = usize::MAX;
     libc::memset(
         &mut (*best).parameters as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
         0,
@@ -1343,12 +1329,12 @@ pub unsafe extern "C" fn COVER_dictSelectionError(
 ) -> COVER_dictSelection_t {
     return setDictSelection(std::ptr::null_mut(), 0, error);
 }
-#[no_mangle]
-pub unsafe extern "C" fn COVER_dictSelectionIsError(
-    mut selection: COVER_dictSelection_t,
-) -> std::ffi::c_uint {
-    return (ERR_isError(selection.totalCompressedSize) != 0
-        || (selection.dictContent).is_null()) as std::ffi::c_int as std::ffi::c_uint;
+
+pub fn COVER_dictSelectionIsError(
+    selection: COVER_dictSelection_t,
+) -> bool {
+    ERR_isError(selection.totalCompressedSize)
+        || (selection.dictContent).is_null()
 }
 #[no_mangle]
 pub unsafe extern "C" fn COVER_dictSelectionFree(mut selection: COVER_dictSelection_t) {
@@ -1533,7 +1519,7 @@ unsafe extern "C" fn COVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
             (*ctx).offsets,
             totalCompressedSize,
         );
-        if COVER_dictSelectionIsError(selection) != 0 {
+        if COVER_dictSelectionIsError(selection) {
             DISPLAYLEVEL!(1, "Failed to select dictionary\n");
         }
     }

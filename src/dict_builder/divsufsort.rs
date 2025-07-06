@@ -42,9 +42,9 @@ pub struct C2RustUnnamed_1 {
     pub d: std::ffi::c_int,
 }
 pub const NULL: std::ffi::c_int = 0;
-pub const ALPHABET_SIZE: std::ffi::c_int = 256;
-pub const BUCKET_A_SIZE: std::ffi::c_int = 256;
-pub const BUCKET_B_SIZE: std::ffi::c_int = ALPHABET_SIZE * ALPHABET_SIZE;
+pub const ALPHABET_SIZE: usize = 256;
+pub const BUCKET_A_SIZE: usize = 256;
+pub const BUCKET_B_SIZE: usize = ALPHABET_SIZE * ALPHABET_SIZE;
 pub const SS_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8;
 pub const SS_BLOCKSIZE: std::ffi::c_int = 1024;
 pub const TR_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8;
@@ -1414,8 +1414,8 @@ unsafe extern "C" fn ss_inplacemerge(
     let mut p = std::ptr::null();
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
-    let mut len: std::ffi::c_int = 0;
-    let mut half: std::ffi::c_int = 0;
+    let mut len: isize = 0;
+    let mut half: isize = 0;
     let mut q: std::ffi::c_int = 0;
     let mut r: std::ffi::c_int = 0;
     let mut x: std::ffi::c_int = 0;

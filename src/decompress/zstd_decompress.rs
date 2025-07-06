@@ -1,5 +1,6 @@
 use ::libc;
 use core::arch::asm;
+use std::ptr::addr_of_mut;
 use crate::zstd_h::*;
 extern "C" {
     pub type ZSTD_DDict_s;
@@ -523,9 +524,8 @@ pub const ZSTD_MAGICNUMBER: std::ffi::c_uint = 0xfd2fb528 as std::ffi::c_uint;
 pub const ZSTD_MAGIC_DICTIONARY: std::ffi::c_uint = 0xec30a437 as std::ffi::c_uint;
 pub const ZSTD_MAGIC_SKIPPABLE_START: std::ffi::c_int = 0x184d2a50 as std::ffi::c_int;
 pub const ZSTD_MAGIC_SKIPPABLE_MASK: std::ffi::c_uint = 0xfffffff0 as std::ffi::c_uint;
-pub const ZSTD_BLOCKSIZELOG_MAX: std::ffi::c_int = 17;
-pub const ZSTD_BLOCKSIZE_MAX: std::ffi::c_int = (1 as std::ffi::c_int)
-    << ZSTD_BLOCKSIZELOG_MAX;
+pub const ZSTD_BLOCKSIZELOG_MAX: u32 = 17;
+pub const ZSTD_BLOCKSIZE_MAX: usize = 1_usize << ZSTD_BLOCKSIZELOG_MAX;
 pub const ZSTD_CONTENTSIZE_UNKNOWN: std::ffi::c_ulonglong = (0 as std::ffi::c_ulonglong)
     .wrapping_sub(1);
 pub const ZSTD_CONTENTSIZE_ERROR: std::ffi::c_ulonglong = (0 as std::ffi::c_ulonglong)
@@ -739,8 +739,7 @@ static mut ZSTD_did_fieldSize: [usize; 4] = [
     4,
 ];
 pub const ZSTD_FRAMEIDSIZE: std::ffi::c_int = 4;
-pub const ZSTD_BLOCKHEADERSIZE: std::ffi::c_int = 3;
-static mut ZSTD_blockHeaderSize: usize = ZSTD_BLOCKHEADERSIZE as usize;
+pub const ZSTD_BLOCKHEADERSIZE: usize = 3;
 pub const MaxML: std::ffi::c_int = 52;
 pub const MaxLL: std::ffi::c_int = 35;
 pub const MaxOff: std::ffi::c_int = 31;
@@ -3253,7 +3252,7 @@ pub unsafe extern "C" fn ZSTD_initDStream_usingDict(
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_initDStream(mut zds: *mut ZSTD_DStream) -> usize {
     FORWARD_IF_ERROR!(ZSTD_DCtx_reset(zds, ZSTD_reset_session_only), "");
-    FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(zds, NULL), "");
+    FORWARD_IF_ERROR!(ZSTD_DCtx_refDDict(zds, std::ptr::null()), "");
     return ZSTD_startingInputLength((*zds).format);
 }
 #[no_mangle]
@@ -3374,7 +3373,7 @@ pub unsafe extern "C" fn ZSTD_dParam_getBounds(
         }
         1005 => {
             bounds.lowerBound = ZSTD_BLOCKSIZE_MAX_MIN;
-            bounds.upperBound = ZSTD_BLOCKSIZE_MAX;
+            bounds.upperBound = ZSTD_BLOCKSIZE_MAX as std::ffi::c_int;
             return bounds;
         }
         _ => {}
@@ -3529,10 +3528,10 @@ unsafe extern "C" fn ZSTD_decodingBufferSize_internal(
     mut frameContentSize: std::ffi::c_ulonglong,
     mut blockSizeMax: usize,
 ) -> usize {
-    let blockSize = std::cmp::min(std::cmp::min(windowSize, ZSTD_BLOCKSIZE_MAX) as usize, blockSizeMax);
+    let blockSize = std::cmp::min(std::cmp::min(windowSize as usize, ZSTD_BLOCKSIZE_MAX) as usize, blockSizeMax);
     let neededRBSize = windowSize
         .wrapping_add(
-            (blockSize * 2_usize) as std::ffi::c_ulonglong,
+            (blockSize * 2) as std::ffi::c_ulonglong,
         )
         .wrapping_add(
             (WILDCOPY_OVERLENGTH * 2 as std::ffi::c_int) as std::ffi::c_ulonglong,
@@ -3848,25 +3847,24 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                 }
                 if hSize != 0 {
                     let toLoad = hSize.wrapping_sub((*zds).lhSize);
-                    let remainingInput = iend.offset_from(ip) as std::ffi::c_long
-                        as usize;
+                    let remainingInput = iend.offset_from(ip) as usize;
                     if toLoad > remainingInput {
                         if remainingInput > 0 {
-                            libc::memcpy((*zds).headerBuffer + (*zds).lhSize, ip, (remainingInput) as usize);
+                            libc::memcpy(addr_of_mut!((*zds).headerBuffer[(*zds).lhSize]).cast(), ip.cast(), remainingInput);
                             (*zds).lhSize = ((*zds).lhSize).wrapping_add(remainingInput);
                         }
                         (*input).pos = (*input).size;
                         FORWARD_IF_ERROR!(
-                            ZSTD_getFrameHeader_advanced(addr_of!((*zds).fParams), (*zds).headerBuffer, (*zds).lhSize, (*zds).format),
+                            ZSTD_getFrameHeader_advanced(addr_of!((*zds).fParams), addr_of!((*zds).headerBuffer).cast(), (*zds).lhSize, (*zds).format),
                             "First few bytes detected incorrect"
                         );
                         return std::cmp::max(
                             ZSTD_FRAMEHEADERSIZE_MIN((*zds).format), hSize
                         )
                             .wrapping_sub((*zds).lhSize)
-                            .wrapping_add(ZSTD_blockHeaderSize);
+                            .wrapping_add(ZSTD_BLOCKHEADERSIZE);
                     }
-                    libc::memcpy((*zds).headerBuffer + (*zds).lhSize, ip, (toLoad) as usize);
+                    libc::memcpy(addr_of_mut!((*zds).headerBuffer[(*zds).lhSize]).cast(), ip.cast(), toLoad);
                     (*zds).lhSize = hSize;
                     ip = ip.offset(toLoad as isize);
                     current_block_402 = 7792909578691485565;
@@ -3949,7 +3947,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                 (*zds).stage = ZSTDds_skipFrame;
                             } else {
                                 FORWARD_IF_ERROR!(
-                                    ZSTD_decodeFrameHeader(zds, (*zds).headerBuffer, (*zds).lhSize), ""
+                                    ZSTD_decodeFrameHeader(zds, addr_of!((*zds).headerBuffer).cast(), (*zds).lhSize), ""
                                 );
                                 (*zds).expected = ZSTD_blockHeaderSize;
                                 (*zds).stage = ZSTDds_decodeBlockHeader;
@@ -3972,11 +3970,8 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                                     (*zds).fParams.blockSizeMax, (*zds).maxBlockSizeParam as std::ffi::c_uint
                                 );
                             }
-                            let neededInBuffSize = std::cmp::max((*zds).fParams.blockSizeMax, 4);
-                            let neededOutBuffSize = if (*zds).outBufferMode
-                                as std::ffi::c_uint
-                                == ZSTD_bm_buffered as std::ffi::c_int as std::ffi::c_uint
-                            {
+                            let neededInBuffSize = std::cmp::max((*zds).fParams.blockSizeMax, 4) as usize;
+                            let neededOutBuffSize = if (*zds).outBufferMode == ZSTD_bm_buffered {
                                 ZSTD_decodingBufferSize_internal(
                                     (*zds).fParams.windowSize,
                                     (*zds).fParams.frameContentSize,
@@ -4050,7 +4045,7 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                     >= neededInSize
                 {
                     FORWARD_IF_ERROR!(
-                        ZSTD_decompressContinueStream(zds, addr_of!(op), oend, ip, neededInSize),
+                        ZSTD_decompressContinueStream(zds, addr_of!(op), oend, ip.cast(), neededInSize),
                         ""
                     );
                     ip = ip.offset(neededInSize as isize);
@@ -4101,8 +4096,8 @@ pub unsafe extern "C" fn ZSTD_decompressStream(
                 } else {
                     (*zds).inPos = 0;
                     FORWARD_IF_ERROR!(
-                        ZSTD_decompressContinueStream(zds, addr_of!(op), oend, (*zds).inBuff,
-                        neededInSize), ""
+                        ZSTD_decompressContinueStream(zds, addr_of!(op), oend, (*zds).inBuff.cast_const().cast(),
+                        neededInSize_0), ""
                     );
                 }
             }
