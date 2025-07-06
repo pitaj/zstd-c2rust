@@ -42,7 +42,7 @@ pub const fn GB(n: usize) -> usize { n*(1_usize << 30) }
 // #define BIT1   2
 // #define BIT0   1
 
-pub const ZSTD_WINDOWLOG_ABSOLUTEMIN: std::ffi::c_int = 10;
+pub const ZSTD_WINDOWLOG_ABSOLUTEMIN: i32 = 10;
 pub const ZSTD_fcs_fieldSize: [usize; 4] = [0, 2, 4, 8];
 pub const ZSTD_did_fieldSize: [usize; 4] = [0, 1, 2, 4];
 
@@ -52,7 +52,7 @@ pub const ZSTD_BLOCKHEADERSIZE: usize = 3;   /* C standard doesn't allow `static
 #[deprecated]
 pub static ZSTD_blockHeaderSize: usize = ZSTD_BLOCKHEADERSIZE;
 
-pub type blockType_e = std::ffi::c_uint;
+pub type blockType_e = u32;
 pub const bt_reserved: blockType_e = 3;
 pub const bt_compressed: blockType_e = 2;
 pub const bt_rle: blockType_e = 1;
@@ -64,7 +64,7 @@ pub const bt_raw: blockType_e = 0;
 pub const MIN_CBLOCK_SIZE: usize = 1 /*litCSize*/ + 1 /* RLE or RAW */;   /* for a non-null block */
 // #define MIN_LITERALS_FOR_4_STREAMS 6
 
-pub type SymbolEncodingType_e = std::ffi::c_uint;
+pub type SymbolEncodingType_e = u32;
 pub const set_repeat: SymbolEncodingType_e = 3;
 pub const set_compressed: SymbolEncodingType_e = 2;
 pub const set_rle: SymbolEncodingType_e = 1;
@@ -222,7 +222,7 @@ pub use crate::__COPY16 as COPY16;
 pub const WILDCOPY_OVERLENGTH: usize = 32;
 pub const WILDCOPY_VECLEN: isize = 16;
 
-pub type ZSTD_overlap_e = std::ffi::c_uint;
+pub type ZSTD_overlap_e = u32;
 pub const ZSTD_overlap_src_before_dst: ZSTD_overlap_e = 1;
 pub const ZSTD_no_overlap: ZSTD_overlap_e = 0;
 
@@ -304,7 +304,7 @@ pub const ZSTD_WORKSPACETOOLARGE_FACTOR: usize = 3;
 pub const ZSTD_WORKSPACETOOLARGE_MAXDURATION: usize = 128;
 
 /* Controls whether the input/output buffer is buffered or stable. */
-pub type ZSTD_bufferMode_e = std::ffi::c_int;
+pub type ZSTD_bufferMode_e = i32;
 pub const ZSTD_bm_stable: ZSTD_bufferMode_e = 1; /* ZSTD_inBuffer/ZSTD_outBuffer is stable */
 pub const ZSTD_bm_buffered: ZSTD_bufferMode_e = 0; /* Buffer the input/output */
 
@@ -324,7 +324,7 @@ pub const ZSTD_bm_buffered: ZSTD_bufferMode_e = 0; /* Buffer the input/output */
 pub struct ZSTD_frameSizeInfo {
     pub nbBlocks: usize,
     pub compressedSize: usize,
-    pub decompressedBound: std::ffi::c_ulonglong,
+    pub decompressedBound: u64,
 } /* decompress & legacy */
 
 /* ZSTD_invalidateRepCodes() :

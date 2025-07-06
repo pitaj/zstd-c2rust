@@ -3,7 +3,7 @@ extern "C" {
     fn __assert_fail(
         __assertion: *const std::ffi::c_char,
         __file: *const std::ffi::c_char,
-        __line: std::ffi::c_uint,
+        __line: u32,
         __function: *const std::ffi::c_char,
     ) -> !;
 }
@@ -11,45 +11,45 @@ pub type trbudget_t = _trbudget_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct _trbudget_t {
-    pub chance: std::ffi::c_int,
-    pub remain: std::ffi::c_int,
-    pub incval: std::ffi::c_int,
-    pub count: std::ffi::c_int,
+    pub chance: i32,
+    pub remain: i32,
+    pub incval: i32,
+    pub count: i32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct C2RustUnnamed {
-    pub a: *const std::ffi::c_int,
-    pub b: *mut std::ffi::c_int,
-    pub c: *mut std::ffi::c_int,
-    pub d: std::ffi::c_int,
-    pub e: std::ffi::c_int,
+    pub a: *const i32,
+    pub b: *mut i32,
+    pub c: *mut i32,
+    pub d: i32,
+    pub e: i32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct C2RustUnnamed_0 {
-    pub a: *mut std::ffi::c_int,
-    pub b: *mut std::ffi::c_int,
-    pub c: std::ffi::c_int,
-    pub d: std::ffi::c_int,
+    pub a: *mut i32,
+    pub b: *mut i32,
+    pub c: i32,
+    pub d: i32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct C2RustUnnamed_1 {
-    pub a: *mut std::ffi::c_int,
-    pub b: *mut std::ffi::c_int,
-    pub c: *mut std::ffi::c_int,
-    pub d: std::ffi::c_int,
+    pub a: *mut i32,
+    pub b: *mut i32,
+    pub c: *mut i32,
+    pub d: i32,
 }
-pub const NULL: std::ffi::c_int = 0;
+pub const NULL: i32 = 0;
 pub const ALPHABET_SIZE: usize = 256;
 pub const BUCKET_A_SIZE: usize = 256;
 pub const BUCKET_B_SIZE: usize = ALPHABET_SIZE * ALPHABET_SIZE;
-pub const SS_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8;
-pub const SS_BLOCKSIZE: std::ffi::c_int = 1024;
-pub const TR_INSERTIONSORT_THRESHOLD: std::ffi::c_int = 8;
-static mut lg_table: [std::ffi::c_int; 256] = [
-    -(1 as std::ffi::c_int),
+pub const SS_INSERTIONSORT_THRESHOLD: i32 = 8;
+pub const SS_BLOCKSIZE: i32 = 1024;
+pub const TR_INSERTIONSORT_THRESHOLD: i32 = 8;
+static mut lg_table: [i32; 256] = [
+    -(1 as i32),
     0,
     1,
     1,
@@ -307,16 +307,16 @@ static mut lg_table: [std::ffi::c_int; 256] = [
     7,
 ];
 #[inline]
-unsafe extern "C" fn ss_ilg(mut n: std::ffi::c_int) -> std::ffi::c_int {
-    return if n & 0xff00 as std::ffi::c_int != 0 {
-        8 as std::ffi::c_int
-            + lg_table[(n >> 8 & 0xff as std::ffi::c_int) as usize]
+unsafe extern "C" fn ss_ilg(mut n: i32) -> i32 {
+    return if n & 0xff00 as i32 != 0 {
+        8 as i32
+            + lg_table[(n >> 8 & 0xff as i32) as usize]
     } else {
-        0 as std::ffi::c_int
-            + lg_table[(n >> 0 & 0xff as std::ffi::c_int) as usize]
+        0 as i32
+            + lg_table[(n >> 0 & 0xff as i32) as usize]
     };
 }
-static mut sqq_table: [std::ffi::c_int; 256] = [
+static mut sqq_table: [i32; 256] = [
     0,
     16,
     22,
@@ -575,52 +575,52 @@ static mut sqq_table: [std::ffi::c_int; 256] = [
     255,
 ];
 #[inline]
-unsafe extern "C" fn ss_isqrt(mut x: std::ffi::c_int) -> std::ffi::c_int {
-    let mut y: std::ffi::c_int = 0;
-    let mut e: std::ffi::c_int = 0;
+unsafe extern "C" fn ss_isqrt(mut x: i32) -> i32 {
+    let mut y: i32 = 0;
+    let mut e: i32 = 0;
     if x >= SS_BLOCKSIZE * SS_BLOCKSIZE {
         return SS_BLOCKSIZE;
     }
-    e = if x as std::ffi::c_uint & 0xffff0000 as std::ffi::c_uint != 0 {
-        if x as std::ffi::c_uint & 0xff000000 as std::ffi::c_uint != 0 {
-            24 as std::ffi::c_int
-                + lg_table[(x >> 24 & 0xff as std::ffi::c_int)
+    e = if x as u32 & 0xffff0000 as u32 != 0 {
+        if x as u32 & 0xff000000 as u32 != 0 {
+            24 as i32
+                + lg_table[(x >> 24 & 0xff as i32)
                     as usize]
         } else {
-            16 as std::ffi::c_int
-                + lg_table[(x >> 16 & 0xff as std::ffi::c_int)
+            16 as i32
+                + lg_table[(x >> 16 & 0xff as i32)
                     as usize]
         }
-    } else if x & 0xff00 as std::ffi::c_int != 0 {
-        8 as std::ffi::c_int
-            + lg_table[(x >> 8 & 0xff as std::ffi::c_int) as usize]
+    } else if x & 0xff00 as i32 != 0 {
+        8 as i32
+            + lg_table[(x >> 8 & 0xff as i32) as usize]
     } else {
-        0 as std::ffi::c_int
-            + lg_table[(x >> 0 & 0xff as std::ffi::c_int) as usize]
+        0 as i32
+            + lg_table[(x >> 0 & 0xff as i32) as usize]
     };
     if e >= 16 {
-        y = sqq_table[(x >> e - 6 as std::ffi::c_int - (e & 1 as std::ffi::c_int))
+        y = sqq_table[(x >> e - 6 as i32 - (e & 1 as i32))
             as usize] << (e >> 1) - 7;
         if e >= 24 {
-            y = y + 1 as std::ffi::c_int + x / y >> 1;
+            y = y + 1 as i32 + x / y >> 1;
         }
-        y = y + 1 as std::ffi::c_int + x / y >> 1;
+        y = y + 1 as i32 + x / y >> 1;
     } else if e >= 8 {
-        y = (sqq_table[(x >> e - 6 as std::ffi::c_int - (e & 1 as std::ffi::c_int))
+        y = (sqq_table[(x >> e - 6 as i32 - (e & 1 as i32))
             as usize] >> 7 - (e >> 1))
             + 1;
     } else {
         return sqq_table[x as usize] >> 4
     }
-    return if x < y * y { y - 1 as std::ffi::c_int } else { y };
+    return if x < y * y { y - 1 as i32 } else { y };
 }
 #[inline]
 unsafe extern "C" fn ss_compare(
     mut T: *const std::ffi::c_uchar,
-    mut p1: *const std::ffi::c_int,
-    mut p2: *const std::ffi::c_int,
-    mut depth: std::ffi::c_int,
-) -> std::ffi::c_int {
+    mut p1: *const i32,
+    mut p2: *const i32,
+    mut depth: i32,
+) -> i32 {
     let mut U1 = std::ptr::null();
     let mut U2 = std::ptr::null();
     let mut U1n = std::ptr::null();
@@ -633,7 +633,7 @@ unsafe extern "C" fn ss_compare(
     U2n = T
         .offset(*p2.offset(1) as isize)
         .offset(2);
-    while U1 < U1n && U2 < U2n && *U1 as std::ffi::c_int == *U2 as std::ffi::c_int {
+    while U1 < U1n && U2 < U2n && *U1 as i32 == *U2 as i32 {
         U1 = U1.offset(1);
         U1;
         U2 = U2.offset(1);
@@ -641,34 +641,34 @@ unsafe extern "C" fn ss_compare(
     }
     return if U1 < U1n {
         if U2 < U2n {
-            *U1 as std::ffi::c_int - *U2 as std::ffi::c_int
+            *U1 as i32 - *U2 as i32
         } else {
-            1 as std::ffi::c_int
+            1 as i32
         }
     } else if U2 < U2n {
-        -(1 as std::ffi::c_int)
+        -(1 as i32)
     } else {
-        0 as std::ffi::c_int
+        0 as i32
     };
 }
 unsafe extern "C" fn ss_insertionsort(
     mut T: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
+    mut depth: i32,
 ) {
     let mut i = std::ptr::null_mut();
     let mut j = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    let mut r: std::ffi::c_int = 0;
+    let mut t: i32 = 0;
+    let mut r: i32 = 0;
     i = last.offset(-2_isize);
     while first <= i {
         t = *i;
         j = i.offset(1);
         loop {
             r = ss_compare(T, PA.offset(t as isize), PA.offset(*j as isize), depth);
-            if !((0 as std::ffi::c_int) < r) {
+            if !((0 as i32) < r) {
                 break;
             }
             loop {
@@ -693,21 +693,21 @@ unsafe extern "C" fn ss_insertionsort(
 #[inline]
 unsafe extern "C" fn ss_fixdown(
     mut Td: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut SA: *mut std::ffi::c_int,
-    mut i: std::ffi::c_int,
-    mut size: std::ffi::c_int,
+    mut PA: *const i32,
+    mut SA: *mut i32,
+    mut i: i32,
+    mut size: i32,
 ) {
-    let mut j: std::ffi::c_int = 0;
-    let mut k: std::ffi::c_int = 0;
-    let mut v: std::ffi::c_int = 0;
-    let mut c: std::ffi::c_int = 0;
-    let mut d: std::ffi::c_int = 0;
-    let mut e: std::ffi::c_int = 0;
+    let mut j: i32 = 0;
+    let mut k: i32 = 0;
+    let mut v: i32 = 0;
+    let mut c: i32 = 0;
+    let mut d: i32 = 0;
+    let mut e: i32 = 0;
     v = *SA.offset(i as isize);
-    c = *Td.offset(*PA.offset(v as isize) as isize) as std::ffi::c_int;
+    c = *Td.offset(*PA.offset(v as isize) as isize) as i32;
     loop {
-        j = 2 as std::ffi::c_int * i + 1;
+        j = 2 as i32 * i + 1;
         if !(j < size) {
             break;
         }
@@ -715,9 +715,9 @@ unsafe extern "C" fn ss_fixdown(
         j = j + 1;
         k = fresh0;
         d = *Td.offset(*PA.offset(*SA.offset(k as isize) as isize) as isize)
-            as std::ffi::c_int;
+            as i32;
         e = *Td.offset(*PA.offset(*SA.offset(j as isize) as isize) as isize)
-            as std::ffi::c_int;
+            as i32;
         if d < e {
             k = j;
             d = e;
@@ -732,40 +732,40 @@ unsafe extern "C" fn ss_fixdown(
 }
 unsafe extern "C" fn ss_heapsort(
     mut Td: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut SA: *mut std::ffi::c_int,
-    mut size: std::ffi::c_int,
+    mut PA: *const i32,
+    mut SA: *mut i32,
+    mut size: i32,
 ) {
-    let mut i: std::ffi::c_int = 0;
-    let mut m: std::ffi::c_int = 0;
-    let mut t: std::ffi::c_int = 0;
+    let mut i: i32 = 0;
+    let mut m: i32 = 0;
+    let mut t: i32 = 0;
     m = size;
-    if size % 2 as std::ffi::c_int == 0 {
+    if size % 2 as i32 == 0 {
         m -= 1;
         m;
         if (*Td
             .offset(
-                *PA.offset(*SA.offset((m / 2 as std::ffi::c_int) as isize) as isize)
+                *PA.offset(*SA.offset((m / 2 as i32) as isize) as isize)
                     as isize,
-            ) as std::ffi::c_int)
+            ) as i32)
             < *Td.offset(*PA.offset(*SA.offset(m as isize) as isize) as isize)
-                as std::ffi::c_int
+                as i32
         {
             SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
         }
     }
-    i = m / 2 as std::ffi::c_int - 1;
-    while 0 as std::ffi::c_int <= i {
+    i = m / 2 as i32 - 1;
+    while 0 as i32 <= i {
         ss_fixdown(Td, PA, SA, i, m);
         i -= 1;
         i;
     }
-    if size % 2 as std::ffi::c_int == 0 {
+    if size % 2 as i32 == 0 {
         SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         ss_fixdown(Td, PA, SA, 0, m);
     }
     i = m - 1;
-    while (0 as std::ffi::c_int) < i {
+    while (0 as i32) < i {
         t = *SA.offset(0);
         *SA.offset(0) = *SA.offset(i as isize);
         ss_fixdown(Td, PA, SA, 0, i);
@@ -777,22 +777,22 @@ unsafe extern "C" fn ss_heapsort(
 #[inline]
 unsafe extern "C" fn ss_median3(
     mut Td: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut v1: *mut std::ffi::c_int,
-    mut v2: *mut std::ffi::c_int,
-    mut v3: *mut std::ffi::c_int,
-) -> *mut std::ffi::c_int {
+    mut PA: *const i32,
+    mut v1: *mut i32,
+    mut v2: *mut i32,
+    mut v3: *mut i32,
+) -> *mut i32 {
     let mut t = std::ptr::null_mut();
-    if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v1 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v2 as isize) as isize) as i32
     {
         SWAP!(v1, v2);
     }
-    if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v2 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v3 as isize) as isize) as i32
     {
-        if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
-            > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
+        if *Td.offset(*PA.offset(*v1 as isize) as isize) as i32
+            > *Td.offset(*PA.offset(*v3 as isize) as isize) as i32
         {
             return v1
         } else {
@@ -804,43 +804,43 @@ unsafe extern "C" fn ss_median3(
 #[inline]
 unsafe extern "C" fn ss_median5(
     mut Td: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut v1: *mut std::ffi::c_int,
-    mut v2: *mut std::ffi::c_int,
-    mut v3: *mut std::ffi::c_int,
-    mut v4: *mut std::ffi::c_int,
-    mut v5: *mut std::ffi::c_int,
-) -> *mut std::ffi::c_int {
+    mut PA: *const i32,
+    mut v1: *mut i32,
+    mut v2: *mut i32,
+    mut v3: *mut i32,
+    mut v4: *mut i32,
+    mut v5: *mut i32,
+) -> *mut i32 {
     let mut t = std::ptr::null_mut();
-    if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v2 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v3 as isize) as isize) as i32
     {
         SWAP!(v2, v3);
     }
-    if *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v5 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v4 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v5 as isize) as isize) as i32
     {
         SWAP!(v4, v5);
     }
-    if *Td.offset(*PA.offset(*v2 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v2 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v4 as isize) as isize) as i32
     {
         SWAP!(v2, v4);
         SWAP!(v3, v5);
     }
-    if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v1 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v3 as isize) as isize) as i32
     {
         SWAP!(v1, v3);
     }
-    if *Td.offset(*PA.offset(*v1 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v1 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v4 as isize) as isize) as i32
     {
         SWAP!(v1, v4);
         SWAP!(v3, v5);
     }
-    if *Td.offset(*PA.offset(*v3 as isize) as isize) as std::ffi::c_int
-        > *Td.offset(*PA.offset(*v4 as isize) as isize) as std::ffi::c_int
+    if *Td.offset(*PA.offset(*v3 as isize) as isize) as i32
+        > *Td.offset(*PA.offset(*v4 as isize) as isize) as i32
     {
         return v4;
     }
@@ -849,14 +849,14 @@ unsafe extern "C" fn ss_median5(
 #[inline]
 unsafe extern "C" fn ss_pivot(
     mut Td: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-) -> *mut std::ffi::c_int {
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
+) -> *mut i32 {
     let mut middle = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    t = last.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
-    middle = first.offset((t / 2 as std::ffi::c_int) as isize);
+    let mut t: i32 = 0;
+    t = last.offset_from(first) as std::ffi::c_long as i32;
+    middle = first.offset((t / 2 as i32) as isize);
     if t <= 512 {
         if t <= 32 {
             return ss_median3(
@@ -907,14 +907,14 @@ unsafe extern "C" fn ss_pivot(
 }
 #[inline]
 unsafe extern "C" fn ss_partition(
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
-) -> *mut std::ffi::c_int {
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
+    mut depth: i32,
+) -> *mut i32 {
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
+    let mut t: i32 = 0;
     a = first.offset(-1_isize);
     b = last;
     loop {
@@ -922,8 +922,8 @@ unsafe extern "C" fn ss_partition(
             a = a.offset(1);
             if !(a < b
                 && *PA.offset(*a as isize) + depth
-                    >= *PA.offset((*a + 1 as std::ffi::c_int) as isize)
-                        + 1 as std::ffi::c_int)
+                    >= *PA.offset((*a + 1 as i32) as isize)
+                        + 1 as i32)
             {
                 break;
             }
@@ -933,8 +933,8 @@ unsafe extern "C" fn ss_partition(
             b = b.offset(-1);
             if !(a < b
                 && *PA.offset(*b as isize) + depth
-                    < *PA.offset((*b + 1 as std::ffi::c_int) as isize)
-                        + 1 as std::ffi::c_int)
+                    < *PA.offset((*b + 1 as i32) as isize)
+                        + 1 as i32)
             {
                 break;
             }
@@ -953,10 +953,10 @@ unsafe extern "C" fn ss_partition(
 }
 unsafe extern "C" fn ss_mintrosort(
     mut T: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
+    mut depth: i32,
 ) {
     let mut stack: [C2RustUnnamed_0; 16] = [C2RustUnnamed_0 {
         a: std::ptr::null_mut(),
@@ -971,14 +971,14 @@ unsafe extern "C" fn ss_mintrosort(
     let mut d = std::ptr::null_mut();
     let mut e = std::ptr::null_mut();
     let mut f = std::ptr::null_mut();
-    let mut s: std::ffi::c_int = 0;
-    let mut t: std::ffi::c_int = 0;
-    let mut ssize: std::ffi::c_int = 0;
-    let mut limit: std::ffi::c_int = 0;
-    let mut v: std::ffi::c_int = 0;
-    let mut x: std::ffi::c_int = 0;
+    let mut s: i32 = 0;
+    let mut t: i32 = 0;
+    let mut ssize: i32 = 0;
+    let mut limit: i32 = 0;
+    let mut v: i32 = 0;
+    let mut x: i32 = 0;
     ssize = 0;
-    limit = ss_ilg(last.offset_from(first) as std::ffi::c_long as std::ffi::c_int);
+    limit = ss_ilg(last.offset_from(first) as std::ffi::c_long as i32);
     loop {
         if last.offset_from(first) as std::ffi::c_long
             <= SS_INSERTIONSORT_THRESHOLD as std::ffi::c_long
@@ -988,7 +988,7 @@ unsafe extern "C" fn ss_mintrosort(
             {
                 ss_insertionsort(T, PA, first, last, depth);
             }
-            if 0 as std::ffi::c_int <= ssize {} else {
+            if 0 as i32 <= ssize {} else {
                 __assert_fail(
                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -1004,7 +1004,7 @@ unsafe extern "C" fn ss_mintrosort(
                 );
             }
             'c_15386: {
-                if 0 as std::ffi::c_int <= ssize {} else {
+                if 0 as i32 <= ssize {} else {
                     __assert_fail(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -1030,14 +1030,14 @@ unsafe extern "C" fn ss_mintrosort(
                     Td,
                     PA,
                     first,
-                    last.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                    last.offset_from(first) as std::ffi::c_long as i32,
                 );
             }
             if limit < 0 {
                 a = first.offset(1);
-                v = *Td.offset(*PA.offset(*first as isize) as isize) as std::ffi::c_int;
+                v = *Td.offset(*PA.offset(*first as isize) as isize) as i32;
                 while a < last {
-                    x = *Td.offset(*PA.offset(*a as isize) as isize) as std::ffi::c_int;
+                    x = *Td.offset(*PA.offset(*a as isize) as isize) as i32;
                     if x != v {
                         if (1 as std::ffi::c_long)
                             < a.offset_from(first) as std::ffi::c_long
@@ -1052,8 +1052,8 @@ unsafe extern "C" fn ss_mintrosort(
                 }
                 if (*Td
                     .offset(
-                        (*PA.offset(*first as isize) - 1 as std::ffi::c_int) as isize,
-                    ) as std::ffi::c_int) < v
+                        (*PA.offset(*first as isize) - 1 as i32) as isize,
+                    ) as i32) < v
                 {
                     first = ss_partition(PA, first, a, depth);
                 }
@@ -1067,30 +1067,30 @@ unsafe extern "C" fn ss_mintrosort(
                         last = a;
                         depth += 1;
                         limit = ss_ilg(
-                            a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                            a.offset_from(first) as std::ffi::c_long as i32,
                         );
                     } else {
                         first = a;
-                        limit = -(1 as std::ffi::c_int);
+                        limit = -(1 as i32);
                     }
                 } else if (1 as std::ffi::c_long)
                     < last.offset_from(a) as std::ffi::c_long
                 {
                     STACK_PUSH!(first, a, depth + 1, ss_ilg(
-                        a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                        a.offset_from(first) as std::ffi::c_long as i32,
                     )); // #L444
                     first = a;
-                    limit = -(1 as std::ffi::c_int);
+                    limit = -(1 as i32);
                 } else {
                     last = a;
                     depth += 1;
                     limit = ss_ilg(
-                        a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                        a.offset_from(first) as std::ffi::c_long as i32,
                     );
                 }
             } else {
                 a = ss_pivot(Td, PA, first, last);
-                v = *Td.offset(*PA.offset(*a as isize) as isize) as std::ffi::c_int;
+                v = *Td.offset(*PA.offset(*a as isize) as isize) as i32;
                 SWAP!(* first, * a);
                 b = first;
                 loop {
@@ -1098,7 +1098,7 @@ unsafe extern "C" fn ss_mintrosort(
                     if !(b < last
                         && {
                             x = *Td.offset(*PA.offset(*b as isize) as isize)
-                                as std::ffi::c_int;
+                                as i32;
                             x == v
                         })
                     {
@@ -1112,7 +1112,7 @@ unsafe extern "C" fn ss_mintrosort(
                         if !(b < last
                             && {
                                 x = *Td.offset(*PA.offset(*b as isize) as isize)
-                                    as std::ffi::c_int;
+                                    as i32;
                                 x <= v
                             })
                         {
@@ -1131,7 +1131,7 @@ unsafe extern "C" fn ss_mintrosort(
                     if !(b < c
                         && {
                             x = *Td.offset(*PA.offset(*c as isize) as isize)
-                                as std::ffi::c_int;
+                                as i32;
                             x == v
                         })
                     {
@@ -1145,7 +1145,7 @@ unsafe extern "C" fn ss_mintrosort(
                         if !(b < c
                             && {
                                 x = *Td.offset(*PA.offset(*c as isize) as isize)
-                                    as std::ffi::c_int;
+                                    as i32;
                                 x >= v
                             })
                         {
@@ -1165,7 +1165,7 @@ unsafe extern "C" fn ss_mintrosort(
                         if !(b < c
                             && {
                                 x = *Td.offset(*PA.offset(*b as isize) as isize)
-                                    as std::ffi::c_int;
+                                    as i32;
                                 x <= v
                             })
                         {
@@ -1182,7 +1182,7 @@ unsafe extern "C" fn ss_mintrosort(
                         if !(b < c
                             && {
                                 x = *Td.offset(*PA.offset(*c as isize) as isize)
-                                    as std::ffi::c_int;
+                                    as i32;
                                 x >= v
                             })
                         {
@@ -1197,14 +1197,14 @@ unsafe extern "C" fn ss_mintrosort(
                 }
                 if a <= d {
                     c = b.offset(-1_isize);
-                    s = a.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
-                    t = b.offset_from(a) as std::ffi::c_long as std::ffi::c_int;
+                    s = a.offset_from(first) as std::ffi::c_long as i32;
+                    t = b.offset_from(a) as std::ffi::c_long as i32;
                     if s > t {
                         s = t;
                     }
                     e = first;
                     f = b.offset(-(s as isize));
-                    while (0 as std::ffi::c_int) < s {
+                    while (0 as i32) < s {
                         SWAP!(* e, * f);
                         s -= 1;
                         s;
@@ -1213,15 +1213,15 @@ unsafe extern "C" fn ss_mintrosort(
                         f = f.offset(1);
                         f;
                     }
-                    s = d.offset_from(c) as std::ffi::c_long as std::ffi::c_int;
+                    s = d.offset_from(c) as std::ffi::c_long as i32;
                     t = (last.offset_from(d) as std::ffi::c_long
-                        - 1 as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as i32;
                     if s > t {
                         s = t;
                     }
                     e = b;
                     f = last.offset(-(s as isize));
-                    while (0 as std::ffi::c_int) < s {
+                    while (0 as i32) < s {
                         SWAP!(* e, * f);
                         s -= 1;
                         s;
@@ -1235,8 +1235,8 @@ unsafe extern "C" fn ss_mintrosort(
                     b = if v
                         <= *Td
                             .offset(
-                                (*PA.offset(*a as isize) - 1 as std::ffi::c_int) as isize,
-                            ) as std::ffi::c_int
+                                (*PA.offset(*a as isize) - 1 as i32) as isize,
+                            ) as i32
                     {
                         a
                     } else {
@@ -1249,7 +1249,7 @@ unsafe extern "C" fn ss_mintrosort(
                             <= c.offset_from(b) as std::ffi::c_long
                         {
                             STACK_PUSH!(b, c, depth + 1, ss_ilg(
-                                c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                                c.offset_from(b) as std::ffi::c_long as i32,
                             )); // #L494
                             STACK_PUSH!(???, #L495);
                             last = a;
@@ -1258,7 +1258,7 @@ unsafe extern "C" fn ss_mintrosort(
                         {
                             STACK_PUSH!(???, #L498);
                             STACK_PUSH!(b, c, depth + 1, ss_ilg(
-                                c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                                c.offset_from(b) as std::ffi::c_long as i32,
                             )); // #L499
                             last = a;
                         } else {
@@ -1268,14 +1268,14 @@ unsafe extern "C" fn ss_mintrosort(
                             last = c;
                             depth += 1;
                             limit = ss_ilg(
-                                c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                                c.offset_from(b) as std::ffi::c_long as i32,
                             );
                         }
                     } else if a.offset_from(first) as std::ffi::c_long
                         <= c.offset_from(b) as std::ffi::c_long
                     {
                         STACK_PUSH!(b, c, depth + 1, ss_ilg(
-                            c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                            c.offset_from(b) as std::ffi::c_long as i32,
                         )); // #L508
                         STACK_PUSH!(???, #L509);
                         first = c;
@@ -1284,7 +1284,7 @@ unsafe extern "C" fn ss_mintrosort(
                     {
                         STACK_PUSH!(???, #L512);
                         STACK_PUSH!(b, c, depth + 1, ss_ilg(
-                            c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                            c.offset_from(b) as std::ffi::c_long as i32,
                         )); // #L513
                         first = c;
                     } else {
@@ -1294,20 +1294,20 @@ unsafe extern "C" fn ss_mintrosort(
                         last = c;
                         depth += 1;
                         limit = ss_ilg(
-                            c.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                            c.offset_from(b) as std::ffi::c_long as i32,
                         );
                     }
                 } else {
                     limit += 1;
                     if (*Td
                         .offset(
-                            (*PA.offset(*first as isize) - 1 as std::ffi::c_int) as isize,
-                        ) as std::ffi::c_int) < v
+                            (*PA.offset(*first as isize) - 1 as i32) as isize,
+                        ) as i32) < v
                     {
                         first = ss_partition(PA, first, last, depth);
                         limit = ss_ilg(
                             last.offset_from(first) as std::ffi::c_long
-                                as std::ffi::c_int,
+                                as i32,
                         );
                     }
                     depth += 1;
@@ -1318,12 +1318,12 @@ unsafe extern "C" fn ss_mintrosort(
 }
 #[inline]
 unsafe extern "C" fn ss_blockswap(
-    mut a: *mut std::ffi::c_int,
-    mut b: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
+    mut a: *mut i32,
+    mut b: *mut i32,
+    mut n: i32,
 ) {
-    let mut t: std::ffi::c_int = 0;
-    while (0 as std::ffi::c_int) < n {
+    let mut t: i32 = 0;
+    while (0 as i32) < n {
         t = *a;
         *a = *b;
         *b = t;
@@ -1337,18 +1337,18 @@ unsafe extern "C" fn ss_blockswap(
 }
 #[inline]
 unsafe extern "C" fn ss_rotate(
-    mut first: *mut std::ffi::c_int,
-    mut middle: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
+    mut first: *mut i32,
+    mut middle: *mut i32,
+    mut last: *mut i32,
 ) {
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    let mut l: std::ffi::c_int = 0;
-    let mut r: std::ffi::c_int = 0;
-    l = middle.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
-    r = last.offset_from(middle) as std::ffi::c_long as std::ffi::c_int;
-    while (0 as std::ffi::c_int) < l && (0 as std::ffi::c_int) < r {
+    let mut t: i32 = 0;
+    let mut l: i32 = 0;
+    let mut r: i32 = 0;
+    l = middle.offset_from(first) as std::ffi::c_long as i32;
+    r = last.offset_from(middle) as std::ffi::c_long as i32;
+    while (0 as i32) < l && (0 as i32) < r {
         if l == r {
             ss_blockswap(first, middle, l);
             break;
@@ -1405,20 +1405,20 @@ unsafe extern "C" fn ss_rotate(
 }
 unsafe extern "C" fn ss_inplacemerge(
     mut T: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut middle: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut middle: *mut i32,
+    mut last: *mut i32,
+    mut depth: i32,
 ) {
     let mut p = std::ptr::null();
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
     let mut len: isize = 0;
     let mut half: isize = 0;
-    let mut q: std::ffi::c_int = 0;
-    let mut r: std::ffi::c_int = 0;
-    let mut x: std::ffi::c_int = 0;
+    let mut q: i32 = 0;
+    let mut r: i32 = 0;
+    let mut x: i32 = 0;
     loop {
         if *last.offset(-1_isize) < 0 {
             x = 1;
@@ -1428,20 +1428,20 @@ unsafe extern "C" fn ss_inplacemerge(
             p = PA.offset(*last.offset(-1_isize) as isize);
         }
         a = first;
-        len = middle.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
+        len = middle.offset_from(first) as std::ffi::c_long as i32;
         half = len >> 1;
-        r = -(1 as std::ffi::c_int);
-        while (0 as std::ffi::c_int) < len {
+        r = -(1 as i32);
+        while (0 as i32) < len {
             b = a.offset(half as isize);
             q = ss_compare(
                 T,
-                PA.offset((if 0 as std::ffi::c_int <= *b { *b } else { !*b }) as isize),
+                PA.offset((if 0 as i32 <= *b { *b } else { !*b }) as isize),
                 p,
                 depth,
             );
             if q < 0 {
                 a = b.offset(1);
-                half -= len & 1 as std::ffi::c_int ^ 1;
+                half -= len & 1 as i32 ^ 1;
             } else {
                 r = q;
             }
@@ -1476,26 +1476,26 @@ unsafe extern "C" fn ss_inplacemerge(
 }
 unsafe extern "C" fn ss_mergeforward(
     mut T: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut middle: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut buf: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut middle: *mut i32,
+    mut last: *mut i32,
+    mut buf: *mut i32,
+    mut depth: i32,
 ) {
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
     let mut c = std::ptr::null_mut();
     let mut bufend = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    let mut r: std::ffi::c_int = 0;
+    let mut t: i32 = 0;
+    let mut r: i32 = 0;
     bufend = buf
         .offset(middle.offset_from(first) as std::ffi::c_long as isize)
         .offset(-1_isize);
     ss_blockswap(
         buf,
         first,
-        middle.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+        middle.offset_from(first) as std::ffi::c_long as i32,
     );
     a = first;
     t = *a;
@@ -1590,12 +1590,12 @@ unsafe extern "C" fn ss_mergeforward(
 }
 unsafe extern "C" fn ss_mergebackward(
     mut T: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut middle: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut buf: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut middle: *mut i32,
+    mut last: *mut i32,
+    mut buf: *mut i32,
+    mut depth: i32,
 ) {
     let mut p1 = std::ptr::null();
     let mut p2 = std::ptr::null();
@@ -1603,16 +1603,16 @@ unsafe extern "C" fn ss_mergebackward(
     let mut b = std::ptr::null_mut();
     let mut c = std::ptr::null_mut();
     let mut bufend = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    let mut r: std::ffi::c_int = 0;
-    let mut x: std::ffi::c_int = 0;
+    let mut t: i32 = 0;
+    let mut r: i32 = 0;
+    let mut x: i32 = 0;
     bufend = buf
         .offset(last.offset_from(middle) as std::ffi::c_long as isize)
         .offset(-1_isize);
     ss_blockswap(
         buf,
         middle,
-        last.offset_from(middle) as std::ffi::c_long as std::ffi::c_int,
+        last.offset_from(middle) as std::ffi::c_long as i32,
     );
     x = 0;
     if *bufend < 0 {
@@ -1633,8 +1633,8 @@ unsafe extern "C" fn ss_mergebackward(
     c = middle.offset(-1_isize);
     loop {
         r = ss_compare(T, p1, p2, depth);
-        if (0 as std::ffi::c_int) < r {
-            if x & 1 as std::ffi::c_int != 0 {
+        if (0 as i32) < r {
+            if x & 1 as i32 != 0 {
                 loop {
                     let fresh77 = a;
                     a = a.offset(-1);
@@ -1666,7 +1666,7 @@ unsafe extern "C" fn ss_mergebackward(
                 }
             }
         } else if r < 0 {
-            if x & 2 as std::ffi::c_int != 0 {
+            if x & 2 as i32 != 0 {
                 loop {
                     let fresh81 = a;
                     a = a.offset(-1);
@@ -1705,7 +1705,7 @@ unsafe extern "C" fn ss_mergebackward(
                 p2 = PA.offset(*c as isize);
             }
         } else {
-            if x & 1 as std::ffi::c_int != 0 {
+            if x & 1 as i32 != 0 {
                 loop {
                     let fresh87 = a;
                     a = a.offset(-1);
@@ -1729,7 +1729,7 @@ unsafe extern "C" fn ss_mergebackward(
                 let fresh90 = b;
                 b = b.offset(-1);
                 *fresh90 = *a;
-                if x & 2 as std::ffi::c_int != 0 {
+                if x & 2 as i32 != 0 {
                     loop {
                         let fresh91 = a;
                         a = a.offset(-1);
@@ -1781,13 +1781,13 @@ unsafe extern "C" fn ss_mergebackward(
 }
 unsafe extern "C" fn ss_swapmerge(
     mut T: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut middle: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut buf: *mut std::ffi::c_int,
-    mut bufsize: std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut middle: *mut i32,
+    mut last: *mut i32,
+    mut buf: *mut i32,
+    mut bufsize: i32,
+    mut depth: i32,
 ) {
     let mut stack: [C2RustUnnamed_1; 32] = [C2RustUnnamed_1 {
         a: std::ptr::null_mut(),
@@ -1799,12 +1799,12 @@ unsafe extern "C" fn ss_swapmerge(
     let mut r = std::ptr::null_mut();
     let mut lm = std::ptr::null_mut();
     let mut rm = std::ptr::null_mut();
-    let mut m: std::ffi::c_int = 0;
-    let mut len: std::ffi::c_int = 0;
-    let mut half: std::ffi::c_int = 0;
-    let mut ssize: std::ffi::c_int = 0;
-    let mut check: std::ffi::c_int = 0;
-    let mut next: std::ffi::c_int = 0;
+    let mut m: i32 = 0;
+    let mut len: i32 = 0;
+    let mut half: i32 = 0;
+    let mut ssize: i32 = 0;
+    let mut check: i32 = 0;
+    let mut next: i32 = 0;
     check = 0;
     ssize = 0;
     loop {
@@ -1820,7 +1820,7 @@ unsafe extern "C" fn ss_swapmerge(
                 let ref mut fresh98 = MERGE_CHECK!(first, last, check);
                 *fresh98 = MERGE_CHECK!(first, last, check);
             }
-            if 0 as std::ffi::c_int <= ssize {} else {
+            if 0 as i32 <= ssize {} else {
                 __assert_fail(
                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -1836,7 +1836,7 @@ unsafe extern "C" fn ss_swapmerge(
                 );
             }
             'c_17274: {
-                if 0 as std::ffi::c_int <= ssize {} else {
+                if 0 as i32 <= ssize {} else {
                     __assert_fail(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -1867,7 +1867,7 @@ unsafe extern "C" fn ss_swapmerge(
                 let ref mut fresh100 = MERGE_CHECK!(first, last, check);
                 *fresh100 = MERGE_CHECK!(first, last, check);
             }
-            if 0 as std::ffi::c_int <= ssize {} else {
+            if 0 as i32 <= ssize {} else {
                 __assert_fail(
                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -1883,7 +1883,7 @@ unsafe extern "C" fn ss_swapmerge(
                 );
             }
             'c_16633: {
-                if 0 as std::ffi::c_int <= ssize {} else {
+                if 0 as i32 <= ssize {} else {
                     __assert_fail(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -1904,12 +1904,12 @@ unsafe extern "C" fn ss_swapmerge(
             m = 0;
             len = std::cmp::min(middle.offset_from(first), last.offset_from(middle));
             half = len >> 1;
-            while (0 as std::ffi::c_int) < len {
+            while (0 as i32) < len {
                 if ss_compare(
                     T,
                     PA
                         .offset(
-                            (if 0 as std::ffi::c_int
+                            (if 0 as i32
                                 <= *middle.offset(m as isize).offset(half as isize)
                             {
                                 *middle.offset(m as isize).offset(half as isize)
@@ -1919,7 +1919,7 @@ unsafe extern "C" fn ss_swapmerge(
                         ),
                     PA
                         .offset(
-                            (if 0 as std::ffi::c_int
+                            (if 0 as i32
                                 <= *middle
                                     .offset(-(m as isize))
                                     .offset(-(half as isize))
@@ -1940,12 +1940,12 @@ unsafe extern "C" fn ss_swapmerge(
                 ) < 0
                 {
                     m += half + 1;
-                    half -= len & 1 as std::ffi::c_int ^ 1;
+                    half -= len & 1 as i32 ^ 1;
                 }
                 len = half;
                 half >>= 1;
             }
-            if (0 as std::ffi::c_int) < m {
+            if (0 as i32) < m {
                 lm = middle.offset(-(m as isize));
                 rm = middle.offset(m as isize);
                 ss_blockswap(lm, middle, m);
@@ -1976,25 +1976,25 @@ unsafe extern "C" fn ss_swapmerge(
                 if l.offset_from(first) as std::ffi::c_long
                     <= last.offset_from(r) as std::ffi::c_long
                 {
-                    STACK_PUSH!(r, rm, last, next & 3 as std::ffi::c_int | check & 4); // #L810
+                    STACK_PUSH!(r, rm, last, next & 3 as i32 | check & 4); // #L810
                     middle = lm;
                     last = l;
-                    check = check & 3 as std::ffi::c_int | next & 4;
+                    check = check & 3 as i32 | next & 4;
                 } else {
-                    if next & 2 as std::ffi::c_int != 0 && r == middle {
+                    if next & 2 as i32 != 0 && r == middle {
                         next ^= 6;
                     }
-                    STACK_PUSH!(first, lm, l, check & 3 as std::ffi::c_int | next & 4); // #L814
+                    STACK_PUSH!(first, lm, l, check & 3 as i32 | next & 4); // #L814
                     first = r;
                     middle = rm;
-                    check = next & 3 as std::ffi::c_int | check & 4;
+                    check = next & 3 as i32 | check & 4;
                 }
             } else {
                 if ss_compare(
                     T,
                     PA
                         .offset(
-                            (if 0 as std::ffi::c_int
+                            (if 0 as i32
                                 <= *middle.offset(-1_isize)
                             {
                                 *middle.offset(-1_isize)
@@ -2016,7 +2016,7 @@ unsafe extern "C" fn ss_swapmerge(
                     let ref mut fresh104 = MERGE_CHECK!(first, last, check);
                     *fresh104 = MERGE_CHECK!(first, last, check);
                 }
-                if 0 as std::ffi::c_int <= ssize {} else {
+                if 0 as i32 <= ssize {} else {
                     __assert_fail(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2032,7 +2032,7 @@ unsafe extern "C" fn ss_swapmerge(
                     );
                 }
                 'c_15739: {
-                    if 0 as std::ffi::c_int <= ssize {} else {
+                    if 0 as i32 <= ssize {} else {
                         __assert_fail(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2055,24 +2055,24 @@ unsafe extern "C" fn ss_swapmerge(
 }
 unsafe extern "C" fn sssort(
     mut T: *const std::ffi::c_uchar,
-    mut PA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut buf: *mut std::ffi::c_int,
-    mut bufsize: std::ffi::c_int,
-    mut depth: std::ffi::c_int,
-    mut n: std::ffi::c_int,
-    mut lastsuffix: std::ffi::c_int,
+    mut PA: *const i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
+    mut buf: *mut i32,
+    mut bufsize: i32,
+    mut depth: i32,
+    mut n: i32,
+    mut lastsuffix: i32,
 ) {
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
     let mut middle = std::ptr::null_mut();
     let mut curbuf = std::ptr::null_mut();
-    let mut j: std::ffi::c_int = 0;
-    let mut k: std::ffi::c_int = 0;
-    let mut curbufsize: std::ffi::c_int = 0;
-    let mut limit: std::ffi::c_int = 0;
-    let mut i: std::ffi::c_int = 0;
+    let mut j: i32 = 0;
+    let mut k: i32 = 0;
+    let mut curbufsize: i32 = 0;
+    let mut limit: i32 = 0;
+    let mut i: i32 = 0;
     if lastsuffix != 0 {
         first = first.offset(1);
         first;
@@ -2081,7 +2081,7 @@ unsafe extern "C" fn sssort(
         && (bufsize as std::ffi::c_long) < last.offset_from(first) as std::ffi::c_long
         && {
             limit = ss_isqrt(
-                last.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                last.offset_from(first) as std::ffi::c_long as i32,
             );
             bufsize < limit
         }
@@ -2102,7 +2102,7 @@ unsafe extern "C" fn sssort(
     {
         ss_mintrosort(T, PA, a, a.offset(SS_BLOCKSIZE as isize), depth);
         curbufsize = last.offset_from(a.offset(SS_BLOCKSIZE as isize))
-            as std::ffi::c_long as std::ffi::c_int;
+            as std::ffi::c_long as i32;
         curbuf = a.offset(SS_BLOCKSIZE as isize);
         if curbufsize <= bufsize {
             curbufsize = bufsize;
@@ -2111,7 +2111,7 @@ unsafe extern "C" fn sssort(
         b = a;
         k = SS_BLOCKSIZE;
         j = i;
-        while j & 1 as std::ffi::c_int != 0 {
+        while j & 1 as i32 != 0 {
             ss_swapmerge(
                 T,
                 PA,
@@ -2133,7 +2133,7 @@ unsafe extern "C" fn sssort(
     ss_mintrosort(T, PA, a, middle, depth);
     k = SS_BLOCKSIZE;
     while i != 0 {
-        if i & 1 as std::ffi::c_int != 0 {
+        if i & 1 as i32 != 0 {
             ss_swapmerge(T, PA, a.offset(-(k as isize)), a, middle, buf, bufsize, depth);
             a = a.offset(-(k as isize));
         }
@@ -2145,7 +2145,7 @@ unsafe extern "C" fn sssort(
         ss_inplacemerge(T, PA, first, middle, last, depth);
     }
     if lastsuffix != 0 {
-        let mut PAi: [std::ffi::c_int; 2] = [0; 2];
+        let mut PAi: [i32; 2] = [0; 2];
         PAi[0] = *PA
             .offset(*first.offset(-1_isize) as isize);
         PAi[1] = n - 2;
@@ -2153,7 +2153,7 @@ unsafe extern "C" fn sssort(
         i = *first.offset(-1_isize);
         while a < last
             && (*a < 0
-                || (0 as std::ffi::c_int)
+                || (0 as i32)
                     < ss_compare(
                         T,
                         &mut *PAi.as_mut_ptr().offset(0),
@@ -2169,41 +2169,41 @@ unsafe extern "C" fn sssort(
     }
 }
 #[inline]
-unsafe extern "C" fn tr_ilg(mut n: std::ffi::c_int) -> std::ffi::c_int {
-    return if n as std::ffi::c_uint & 0xffff0000 as std::ffi::c_uint != 0 {
-        if n as std::ffi::c_uint & 0xff000000 as std::ffi::c_uint != 0 {
-            24 as std::ffi::c_int
-                + lg_table[(n >> 24 & 0xff as std::ffi::c_int)
+unsafe extern "C" fn tr_ilg(mut n: i32) -> i32 {
+    return if n as u32 & 0xffff0000 as u32 != 0 {
+        if n as u32 & 0xff000000 as u32 != 0 {
+            24 as i32
+                + lg_table[(n >> 24 & 0xff as i32)
                     as usize]
         } else {
-            16 as std::ffi::c_int
-                + lg_table[(n >> 16 & 0xff as std::ffi::c_int)
+            16 as i32
+                + lg_table[(n >> 16 & 0xff as i32)
                     as usize]
         }
-    } else if n & 0xff00 as std::ffi::c_int != 0 {
-        8 as std::ffi::c_int
-            + lg_table[(n >> 8 & 0xff as std::ffi::c_int) as usize]
+    } else if n & 0xff00 as i32 != 0 {
+        8 as i32
+            + lg_table[(n >> 8 & 0xff as i32) as usize]
     } else {
-        0 as std::ffi::c_int
-            + lg_table[(n >> 0 & 0xff as std::ffi::c_int) as usize]
+        0 as i32
+            + lg_table[(n >> 0 & 0xff as i32) as usize]
     };
 }
 unsafe extern "C" fn tr_insertionsort(
-    mut ISAd: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
+    mut ISAd: *const i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
 ) {
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    let mut r: std::ffi::c_int = 0;
+    let mut t: i32 = 0;
+    let mut r: i32 = 0;
     a = first.offset(1);
     while a < last {
         t = *a;
         b = a.offset(-1_isize);
         loop {
             r = *ISAd.offset(t as isize) - *ISAd.offset(*b as isize);
-            if !(0 as std::ffi::c_int > r) {
+            if !(0 as i32 > r) {
                 break;
             }
             loop {
@@ -2227,21 +2227,21 @@ unsafe extern "C" fn tr_insertionsort(
 }
 #[inline]
 unsafe extern "C" fn tr_fixdown(
-    mut ISAd: *const std::ffi::c_int,
-    mut SA: *mut std::ffi::c_int,
-    mut i: std::ffi::c_int,
-    mut size: std::ffi::c_int,
+    mut ISAd: *const i32,
+    mut SA: *mut i32,
+    mut i: i32,
+    mut size: i32,
 ) {
-    let mut j: std::ffi::c_int = 0;
-    let mut k: std::ffi::c_int = 0;
-    let mut v: std::ffi::c_int = 0;
-    let mut c: std::ffi::c_int = 0;
-    let mut d: std::ffi::c_int = 0;
-    let mut e: std::ffi::c_int = 0;
+    let mut j: i32 = 0;
+    let mut k: i32 = 0;
+    let mut v: i32 = 0;
+    let mut c: i32 = 0;
+    let mut d: i32 = 0;
+    let mut e: i32 = 0;
     v = *SA.offset(i as isize);
     c = *ISAd.offset(v as isize);
     loop {
-        j = 2 as std::ffi::c_int * i + 1;
+        j = 2 as i32 * i + 1;
         if !(j < size) {
             break;
         }
@@ -2263,35 +2263,35 @@ unsafe extern "C" fn tr_fixdown(
     *SA.offset(i as isize) = v;
 }
 unsafe extern "C" fn tr_heapsort(
-    mut ISAd: *const std::ffi::c_int,
-    mut SA: *mut std::ffi::c_int,
-    mut size: std::ffi::c_int,
+    mut ISAd: *const i32,
+    mut SA: *mut i32,
+    mut size: i32,
 ) {
-    let mut i: std::ffi::c_int = 0;
-    let mut m: std::ffi::c_int = 0;
-    let mut t: std::ffi::c_int = 0;
+    let mut i: i32 = 0;
+    let mut m: i32 = 0;
+    let mut t: i32 = 0;
     m = size;
-    if size % 2 as std::ffi::c_int == 0 {
+    if size % 2 as i32 == 0 {
         m -= 1;
         m;
-        if *ISAd.offset(*SA.offset((m / 2 as std::ffi::c_int) as isize) as isize)
+        if *ISAd.offset(*SA.offset((m / 2 as i32) as isize) as isize)
             < *ISAd.offset(*SA.offset(m as isize) as isize)
         {
             SWAP!((*SA.offset(m as isize)), (*SA.offset(m / 2 as isize)));
         }
     }
-    i = m / 2 as std::ffi::c_int - 1;
-    while 0 as std::ffi::c_int <= i {
+    i = m / 2 as i32 - 1;
+    while 0 as i32 <= i {
         tr_fixdown(ISAd, SA, i, m);
         i -= 1;
         i;
     }
-    if size % 2 as std::ffi::c_int == 0 {
+    if size % 2 as i32 == 0 {
         SWAP!((*SA.offset(0 as isize)), (*SA.offset(m as isize)));
         tr_fixdown(ISAd, SA, 0, m);
     }
     i = m - 1;
-    while (0 as std::ffi::c_int) < i {
+    while (0 as i32) < i {
         t = *SA.offset(0);
         *SA.offset(0) = *SA.offset(i as isize);
         tr_fixdown(ISAd, SA, 0, i);
@@ -2302,11 +2302,11 @@ unsafe extern "C" fn tr_heapsort(
 }
 #[inline]
 unsafe extern "C" fn tr_median3(
-    mut ISAd: *const std::ffi::c_int,
-    mut v1: *mut std::ffi::c_int,
-    mut v2: *mut std::ffi::c_int,
-    mut v3: *mut std::ffi::c_int,
-) -> *mut std::ffi::c_int {
+    mut ISAd: *const i32,
+    mut v1: *mut i32,
+    mut v2: *mut i32,
+    mut v3: *mut i32,
+) -> *mut i32 {
     let mut t = std::ptr::null_mut();
     if *ISAd.offset(*v1 as isize) > *ISAd.offset(*v2 as isize) {
         SWAP!(v1, v2);
@@ -2322,13 +2322,13 @@ unsafe extern "C" fn tr_median3(
 }
 #[inline]
 unsafe extern "C" fn tr_median5(
-    mut ISAd: *const std::ffi::c_int,
-    mut v1: *mut std::ffi::c_int,
-    mut v2: *mut std::ffi::c_int,
-    mut v3: *mut std::ffi::c_int,
-    mut v4: *mut std::ffi::c_int,
-    mut v5: *mut std::ffi::c_int,
-) -> *mut std::ffi::c_int {
+    mut ISAd: *const i32,
+    mut v1: *mut i32,
+    mut v2: *mut i32,
+    mut v3: *mut i32,
+    mut v4: *mut i32,
+    mut v5: *mut i32,
+) -> *mut i32 {
     let mut t = std::ptr::null_mut();
     if *ISAd.offset(*v2 as isize) > *ISAd.offset(*v3 as isize) {
         SWAP!(v2, v3);
@@ -2354,14 +2354,14 @@ unsafe extern "C" fn tr_median5(
 }
 #[inline]
 unsafe extern "C" fn tr_pivot(
-    mut ISAd: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-) -> *mut std::ffi::c_int {
+    mut ISAd: *const i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
+) -> *mut i32 {
     let mut middle = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    t = last.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
-    middle = first.offset((t / 2 as std::ffi::c_int) as isize);
+    let mut t: i32 = 0;
+    t = last.offset_from(first) as std::ffi::c_long as i32;
+    middle = first.offset((t / 2 as i32) as isize);
     if t <= 512 {
         if t <= 32 {
             return tr_median3(
@@ -2408,8 +2408,8 @@ unsafe extern "C" fn tr_pivot(
 #[inline]
 unsafe extern "C" fn trbudget_init(
     mut budget: *mut trbudget_t,
-    mut chance: std::ffi::c_int,
-    mut incval: std::ffi::c_int,
+    mut chance: i32,
+    mut incval: i32,
 ) {
     (*budget).chance = chance;
     (*budget).incval = incval;
@@ -2418,8 +2418,8 @@ unsafe extern "C" fn trbudget_init(
 #[inline]
 unsafe extern "C" fn trbudget_check(
     mut budget: *mut trbudget_t,
-    mut size: std::ffi::c_int,
-) -> std::ffi::c_int {
+    mut size: i32,
+) -> i32 {
     if size <= (*budget).remain {
         (*budget).remain -= size;
         return 1;
@@ -2434,13 +2434,13 @@ unsafe extern "C" fn trbudget_check(
 }
 #[inline]
 unsafe extern "C" fn tr_partition(
-    mut ISAd: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut middle: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut pa: *mut *mut std::ffi::c_int,
-    mut pb: *mut *mut std::ffi::c_int,
-    mut v: std::ffi::c_int,
+    mut ISAd: *const i32,
+    mut first: *mut i32,
+    mut middle: *mut i32,
+    mut last: *mut i32,
+    mut pa: *mut *mut i32,
+    mut pb: *mut *mut i32,
+    mut v: i32,
 ) {
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
@@ -2448,9 +2448,9 @@ unsafe extern "C" fn tr_partition(
     let mut d = std::ptr::null_mut();
     let mut e = std::ptr::null_mut();
     let mut f = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    let mut s: std::ffi::c_int = 0;
-    let mut x: std::ffi::c_int = 0;
+    let mut t: i32 = 0;
+    let mut s: i32 = 0;
+    let mut x: i32 = 0;
     b = middle.offset(-1_isize);
     loop {
         b = b.offset(1);
@@ -2550,14 +2550,14 @@ unsafe extern "C" fn tr_partition(
     }
     if a <= d {
         c = b.offset(-1_isize);
-        s = a.offset_from(first) as std::ffi::c_long as std::ffi::c_int;
-        t = b.offset_from(a) as std::ffi::c_long as std::ffi::c_int;
+        s = a.offset_from(first) as std::ffi::c_long as i32;
+        t = b.offset_from(a) as std::ffi::c_long as i32;
         if s > t {
             s = t;
         }
         e = first;
         f = b.offset(-(s as isize));
-        while (0 as std::ffi::c_int) < s {
+        while (0 as i32) < s {
             SWAP!(* e, * f);
             s -= 1;
             s;
@@ -2566,15 +2566,15 @@ unsafe extern "C" fn tr_partition(
             f = f.offset(1);
             f;
         }
-        s = d.offset_from(c) as std::ffi::c_long as std::ffi::c_int;
+        s = d.offset_from(c) as std::ffi::c_long as i32;
         t = (last.offset_from(d) as std::ffi::c_long
-            - 1 as std::ffi::c_long) as std::ffi::c_int;
+            - 1 as std::ffi::c_long) as i32;
         if s > t {
             s = t;
         }
         e = b;
         f = last.offset(-(s as isize));
-        while (0 as std::ffi::c_int) < s {
+        while (0 as i32) < s {
             SWAP!(* e, * f);
             s -= 1;
             s;
@@ -2590,32 +2590,32 @@ unsafe extern "C" fn tr_partition(
     *pb = last;
 }
 unsafe extern "C" fn tr_copy(
-    mut ISA: *mut std::ffi::c_int,
-    mut SA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut a: *mut std::ffi::c_int,
-    mut b: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut ISA: *mut i32,
+    mut SA: *const i32,
+    mut first: *mut i32,
+    mut a: *mut i32,
+    mut b: *mut i32,
+    mut last: *mut i32,
+    mut depth: i32,
 ) {
     let mut c = std::ptr::null_mut();
     let mut d = std::ptr::null_mut();
     let mut e = std::ptr::null_mut();
-    let mut s: std::ffi::c_int = 0;
-    let mut v: std::ffi::c_int = 0;
+    let mut s: i32 = 0;
+    let mut v: i32 = 0;
     v = (b.offset_from(SA) as std::ffi::c_long
-        - 1 as std::ffi::c_long) as std::ffi::c_int;
+        - 1 as std::ffi::c_long) as i32;
     c = first;
     d = a.offset(-1_isize);
     while c <= d {
         s = *c - depth;
-        if 0 as std::ffi::c_int <= s && *ISA.offset(s as isize) == v {
+        if 0 as i32 <= s && *ISA.offset(s as isize) == v {
             d = d.offset(1);
             *d = s;
             *ISA
                 .offset(
                     s as isize,
-                ) = d.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                ) = d.offset_from(SA) as std::ffi::c_long as i32;
         }
         c = c.offset(1);
         c;
@@ -2625,62 +2625,62 @@ unsafe extern "C" fn tr_copy(
     d = b;
     while e < d {
         s = *c - depth;
-        if 0 as std::ffi::c_int <= s && *ISA.offset(s as isize) == v {
+        if 0 as i32 <= s && *ISA.offset(s as isize) == v {
             d = d.offset(-1);
             *d = s;
             *ISA
                 .offset(
                     s as isize,
-                ) = d.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                ) = d.offset_from(SA) as std::ffi::c_long as i32;
         }
         c = c.offset(-1);
         c;
     }
 }
 unsafe extern "C" fn tr_partialcopy(
-    mut ISA: *mut std::ffi::c_int,
-    mut SA: *const std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut a: *mut std::ffi::c_int,
-    mut b: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut ISA: *mut i32,
+    mut SA: *const i32,
+    mut first: *mut i32,
+    mut a: *mut i32,
+    mut b: *mut i32,
+    mut last: *mut i32,
+    mut depth: i32,
 ) {
     let mut c = std::ptr::null_mut();
     let mut d = std::ptr::null_mut();
     let mut e = std::ptr::null_mut();
-    let mut s: std::ffi::c_int = 0;
-    let mut v: std::ffi::c_int = 0;
-    let mut rank: std::ffi::c_int = 0;
-    let mut lastrank: std::ffi::c_int = 0;
-    let mut newrank = -(1 as std::ffi::c_int);
+    let mut s: i32 = 0;
+    let mut v: i32 = 0;
+    let mut rank: i32 = 0;
+    let mut lastrank: i32 = 0;
+    let mut newrank = -(1 as i32);
     v = (b.offset_from(SA) as std::ffi::c_long
-        - 1 as std::ffi::c_long) as std::ffi::c_int;
-    lastrank = -(1 as std::ffi::c_int);
+        - 1 as std::ffi::c_long) as i32;
+    lastrank = -(1 as i32);
     c = first;
     d = a.offset(-1_isize);
     while c <= d {
         s = *c - depth;
-        if 0 as std::ffi::c_int <= s && *ISA.offset(s as isize) == v {
+        if 0 as i32 <= s && *ISA.offset(s as isize) == v {
             d = d.offset(1);
             *d = s;
             rank = *ISA.offset((s + depth) as isize);
             if lastrank != rank {
                 lastrank = rank;
-                newrank = d.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                newrank = d.offset_from(SA) as std::ffi::c_long as i32;
             }
             *ISA.offset(s as isize) = newrank;
         }
         c = c.offset(1);
         c;
     }
-    lastrank = -(1 as std::ffi::c_int);
+    lastrank = -(1 as i32);
     e = d;
     while first <= e {
         rank = *ISA.offset(*e as isize);
         if lastrank != rank {
             lastrank = rank;
-            newrank = e.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+            newrank = e.offset_from(SA) as std::ffi::c_long as i32;
         }
         if newrank != rank {
             *ISA.offset(*e as isize) = newrank;
@@ -2688,19 +2688,19 @@ unsafe extern "C" fn tr_partialcopy(
         e = e.offset(-1);
         e;
     }
-    lastrank = -(1 as std::ffi::c_int);
+    lastrank = -(1 as i32);
     c = last.offset(-1_isize);
     e = d.offset(1);
     d = b;
     while e < d {
         s = *c - depth;
-        if 0 as std::ffi::c_int <= s && *ISA.offset(s as isize) == v {
+        if 0 as i32 <= s && *ISA.offset(s as isize) == v {
             d = d.offset(-1);
             *d = s;
             rank = *ISA.offset((s + depth) as isize);
             if lastrank != rank {
                 lastrank = rank;
-                newrank = d.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                newrank = d.offset_from(SA) as std::ffi::c_long as i32;
             }
             *ISA.offset(s as isize) = newrank;
         }
@@ -2709,11 +2709,11 @@ unsafe extern "C" fn tr_partialcopy(
     }
 }
 unsafe extern "C" fn tr_introsort(
-    mut ISA: *mut std::ffi::c_int,
-    mut ISAd: *const std::ffi::c_int,
-    mut SA: *mut std::ffi::c_int,
-    mut first: *mut std::ffi::c_int,
-    mut last: *mut std::ffi::c_int,
+    mut ISA: *mut i32,
+    mut ISAd: *const i32,
+    mut SA: *mut i32,
+    mut first: *mut i32,
+    mut last: *mut i32,
     mut budget: *mut trbudget_t,
 ) {
     let mut stack: [C2RustUnnamed; 64] = [C2RustUnnamed {
@@ -2726,19 +2726,19 @@ unsafe extern "C" fn tr_introsort(
     let mut a = std::ptr::null_mut();
     let mut b = std::ptr::null_mut();
     let mut c = std::ptr::null_mut();
-    let mut t: std::ffi::c_int = 0;
-    let mut v: std::ffi::c_int = 0;
-    let mut x: std::ffi::c_int = 0;
-    let mut incr = ISAd.offset_from(ISA) as std::ffi::c_long as std::ffi::c_int;
-    let mut limit: std::ffi::c_int = 0;
-    let mut next: std::ffi::c_int = 0;
-    let mut ssize: std::ffi::c_int = 0;
-    let mut trlink = -(1 as std::ffi::c_int);
+    let mut t: i32 = 0;
+    let mut v: i32 = 0;
+    let mut x: i32 = 0;
+    let mut incr = ISAd.offset_from(ISA) as std::ffi::c_long as i32;
+    let mut limit: i32 = 0;
+    let mut next: i32 = 0;
+    let mut ssize: i32 = 0;
+    let mut trlink = -(1 as i32);
     ssize = 0;
-    limit = tr_ilg(last.offset_from(first) as std::ffi::c_long as std::ffi::c_int);
+    limit = tr_ilg(last.offset_from(first) as std::ffi::c_long as i32);
     loop {
         if limit < 0 {
-            if limit == -(1 as std::ffi::c_int) {
+            if limit == -(1 as i32) {
                 tr_partition(
                     ISAd.offset(-(incr as isize)),
                     first,
@@ -2747,12 +2747,12 @@ unsafe extern "C" fn tr_introsort(
                     &mut a,
                     &mut b,
                     (last.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_long) as std::ffi::c_int,
+                        - 1 as std::ffi::c_long) as i32,
                 );
                 if a < last {
                     c = first;
                     v = (a.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as i32;
                     while c < a {
                         *ISA.offset(*c as isize) = v;
                         c = c.offset(1);
@@ -2762,7 +2762,7 @@ unsafe extern "C" fn tr_introsort(
                 if b < last {
                     c = a;
                     v = (b.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as i32;
                     while c < b {
                         *ISA.offset(*c as isize) = v;
                         c = c.offset(1);
@@ -2785,17 +2785,17 @@ unsafe extern "C" fn tr_introsort(
                         STACK_PUSH!(???, #L1210);
                         last = a;
                         limit = tr_ilg(
-                            a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                            a.offset_from(first) as std::ffi::c_long as i32,
                         );
                     } else if (1 as std::ffi::c_long)
                         < last.offset_from(b) as std::ffi::c_long
                     {
                         first = b;
                         limit = tr_ilg(
-                            last.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                            last.offset_from(b) as std::ffi::c_long as i32,
                         );
                     } else {
-                        if 0 as std::ffi::c_int <= ssize {} else {
+                        if 0 as i32 <= ssize {} else {
                             __assert_fail(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2811,7 +2811,7 @@ unsafe extern "C" fn tr_introsort(
                             );
                         }
                         'c_9863: {
-                            if 0 as std::ffi::c_int <= ssize {} else {
+                            if 0 as i32 <= ssize {} else {
                                 __assert_fail(
                                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2835,17 +2835,17 @@ unsafe extern "C" fn tr_introsort(
                     STACK_PUSH!(???, #L1219);
                     first = b;
                     limit = tr_ilg(
-                        last.offset_from(b) as std::ffi::c_long as std::ffi::c_int,
+                        last.offset_from(b) as std::ffi::c_long as i32,
                     );
                 } else if (1 as std::ffi::c_long)
                     < a.offset_from(first) as std::ffi::c_long
                 {
                     last = a;
                     limit = tr_ilg(
-                        a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                        a.offset_from(first) as std::ffi::c_long as i32,
                     );
                 } else {
-                    if 0 as std::ffi::c_int <= ssize {} else {
+                    if 0 as i32 <= ssize {} else {
                         __assert_fail(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2861,7 +2861,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     }
                     'c_9600: {
-                        if 0 as std::ffi::c_int <= ssize {} else {
+                        if 0 as i32 <= ssize {} else {
                             __assert_fail(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2879,7 +2879,7 @@ unsafe extern "C" fn tr_introsort(
                     };
                     STACK_POP5!(stack, ISAd, first, last, limit, trlink);
                 }
-            } else if limit == -(2 as std::ffi::c_int) {
+            } else if limit == -(2 as i32) {
                 ssize -= 1;
                 a = stack[ssize as usize].b;
                 b = stack[ssize as usize].c;
@@ -2891,11 +2891,11 @@ unsafe extern "C" fn tr_introsort(
                         a,
                         b,
                         last,
-                        ISAd.offset_from(ISA) as std::ffi::c_long as std::ffi::c_int,
+                        ISAd.offset_from(ISA) as std::ffi::c_long as i32,
                     );
                 } else {
-                    if 0 as std::ffi::c_int <= trlink {
-                        stack[trlink as usize].d = -(1 as std::ffi::c_int);
+                    if 0 as i32 <= trlink {
+                        stack[trlink as usize].d = -(1 as i32);
                     }
                     tr_partialcopy(
                         ISA,
@@ -2904,10 +2904,10 @@ unsafe extern "C" fn tr_introsort(
                         a,
                         b,
                         last,
-                        ISAd.offset_from(ISA) as std::ffi::c_long as std::ffi::c_int,
+                        ISAd.offset_from(ISA) as std::ffi::c_long as i32,
                     );
                 }
-                if 0 as std::ffi::c_int <= ssize {} else {
+                if 0 as i32 <= ssize {} else {
                     __assert_fail(
                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2923,7 +2923,7 @@ unsafe extern "C" fn tr_introsort(
                     );
                 }
                 'c_8904: {
-                    if 0 as std::ffi::c_int <= ssize {} else {
+                    if 0 as i32 <= ssize {} else {
                         __assert_fail(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -2941,15 +2941,15 @@ unsafe extern "C" fn tr_introsort(
                 };
                 STACK_POP5!(stack, ISAd, first, last, limit, trlink);
             } else {
-                if 0 as std::ffi::c_int <= *first {
+                if 0 as i32 <= *first {
                     a = first;
                     loop {
                         *ISA
                             .offset(
                                 *a as isize,
-                            ) = a.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                            ) = a.offset_from(SA) as std::ffi::c_long as i32;
                         a = a.offset(1);
-                        if !(a < last && 0 as std::ffi::c_int <= *a) {
+                        if !(a < last && 0 as i32 <= *a) {
                             break;
                         }
                     }
@@ -2968,17 +2968,17 @@ unsafe extern "C" fn tr_introsort(
                         tr_ilg(
                             (a.offset_from(first) as std::ffi::c_long
                                 + 1 as std::ffi::c_long)
-                                as std::ffi::c_int,
+                                as i32,
                         )
                     } else {
-                        -(1 as std::ffi::c_int)
+                        -(1 as i32)
                     };
                     a = a.offset(1);
                     if a < last {
                         b = first;
                         v = (a.offset_from(SA) as std::ffi::c_long
                             - 1 as std::ffi::c_long)
-                            as std::ffi::c_int;
+                            as i32;
                         while b < a {
                             *ISA.offset(*b as isize) = v;
                             b = b.offset(1);
@@ -2987,7 +2987,7 @@ unsafe extern "C" fn tr_introsort(
                     }
                     if trbudget_check(
                         budget,
-                        a.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                        a.offset_from(first) as std::ffi::c_long as i32,
                     ) != 0
                     {
                         if a.offset_from(first) as std::ffi::c_long
@@ -3002,23 +3002,23 @@ unsafe extern "C" fn tr_introsort(
                         {
                             STACK_PUSH!(???, #L1256);
                             first = a;
-                            limit = -(3 as std::ffi::c_int);
+                            limit = -(3 as i32);
                         } else {
                             ISAd = ISAd.offset(incr as isize);
                             last = a;
                             limit = next;
                         }
                     } else {
-                        if 0 as std::ffi::c_int <= trlink {
-                            stack[trlink as usize].d = -(1 as std::ffi::c_int);
+                        if 0 as i32 <= trlink {
+                            stack[trlink as usize].d = -(1 as i32);
                         }
                         if (1 as std::ffi::c_long)
                             < last.offset_from(a) as std::ffi::c_long
                         {
                             first = a;
-                            limit = -(3 as std::ffi::c_int);
+                            limit = -(3 as i32);
                         } else {
-                            if 0 as std::ffi::c_int <= ssize {} else {
+                            if 0 as i32 <= ssize {} else {
                                 __assert_fail(
                                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3034,7 +3034,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                             'c_8341: {
-                                if 0 as std::ffi::c_int <= ssize {} else {
+                                if 0 as i32 <= ssize {} else {
                                     __assert_fail(
                                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3054,7 +3054,7 @@ unsafe extern "C" fn tr_introsort(
                         }
                     }
                 } else {
-                    if 0 as std::ffi::c_int <= ssize {} else {
+                    if 0 as i32 <= ssize {} else {
                         __assert_fail(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3070,7 +3070,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     }
                     'c_8226: {
-                        if 0 as std::ffi::c_int <= ssize {} else {
+                        if 0 as i32 <= ssize {} else {
                             __assert_fail(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3093,7 +3093,7 @@ unsafe extern "C" fn tr_introsort(
             <= TR_INSERTIONSORT_THRESHOLD as std::ffi::c_long
         {
             tr_insertionsort(ISAd, first, last);
-            limit = -(3 as std::ffi::c_int);
+            limit = -(3 as i32);
         } else {
             let fresh157 = limit;
             limit = limit - 1;
@@ -3101,7 +3101,7 @@ unsafe extern "C" fn tr_introsort(
                 tr_heapsort(
                     ISAd,
                     first,
-                    last.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                    last.offset_from(first) as std::ffi::c_long as i32,
                 );
                 a = last.offset(-1_isize);
                 while first < a {
@@ -3114,7 +3114,7 @@ unsafe extern "C" fn tr_introsort(
                     }
                     a = b;
                 }
-                limit = -(3 as std::ffi::c_int);
+                limit = -(3 as i32);
             } else {
                 a = tr_pivot(ISAd, first, last);
                 SWAP!(* first, * a);
@@ -3132,13 +3132,13 @@ unsafe extern "C" fn tr_introsort(
                     != b.offset_from(a) as std::ffi::c_long
                 {
                     next = if *ISA.offset(*a as isize) != v {
-                        tr_ilg(b.offset_from(a) as std::ffi::c_long as std::ffi::c_int)
+                        tr_ilg(b.offset_from(a) as std::ffi::c_long as i32)
                     } else {
-                        -(1 as std::ffi::c_int)
+                        -(1 as i32)
                     };
                     c = first;
                     v = (a.offset_from(SA) as std::ffi::c_long
-                        - 1 as std::ffi::c_long) as std::ffi::c_int;
+                        - 1 as std::ffi::c_long) as i32;
                     while c < a {
                         *ISA.offset(*c as isize) = v;
                         c = c.offset(1);
@@ -3148,7 +3148,7 @@ unsafe extern "C" fn tr_introsort(
                         c = a;
                         v = (b.offset_from(SA) as std::ffi::c_long
                             - 1 as std::ffi::c_long)
-                            as std::ffi::c_int;
+                            as i32;
                         while c < b {
                             *ISA.offset(*c as isize) = v;
                             c = c.offset(1);
@@ -3159,7 +3159,7 @@ unsafe extern "C" fn tr_introsort(
                         < b.offset_from(a) as std::ffi::c_long
                         && trbudget_check(
                             budget,
-                            b.offset_from(a) as std::ffi::c_long as std::ffi::c_int,
+                            b.offset_from(a) as std::ffi::c_long as i32,
                         ) != 0
                     {
                         if a.offset_from(first) as std::ffi::c_long
@@ -3256,9 +3256,9 @@ unsafe extern "C" fn tr_introsort(
                     } else {
                         if (1 as std::ffi::c_long)
                             < b.offset_from(a) as std::ffi::c_long
-                            && 0 as std::ffi::c_int <= trlink
+                            && 0 as i32 <= trlink
                         {
-                            stack[trlink as usize].d = -(1 as std::ffi::c_int);
+                            stack[trlink as usize].d = -(1 as i32);
                         }
                         if a.offset_from(first) as std::ffi::c_long
                             <= last.offset_from(b) as std::ffi::c_long
@@ -3273,7 +3273,7 @@ unsafe extern "C" fn tr_introsort(
                             {
                                 first = b;
                             } else {
-                                if 0 as std::ffi::c_int <= ssize {} else {
+                                if 0 as i32 <= ssize {} else {
                                     __assert_fail(
                                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3289,7 +3289,7 @@ unsafe extern "C" fn tr_introsort(
                                     );
                                 }
                                 'c_4065: {
-                                    if 0 as std::ffi::c_int <= ssize {} else {
+                                    if 0 as i32 <= ssize {} else {
                                         __assert_fail(
                                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3317,7 +3317,7 @@ unsafe extern "C" fn tr_introsort(
                         {
                             last = a;
                         } else {
-                            if 0 as std::ffi::c_int <= ssize {} else {
+                            if 0 as i32 <= ssize {} else {
                                 __assert_fail(
                                     b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3333,7 +3333,7 @@ unsafe extern "C" fn tr_introsort(
                                 );
                             }
                             'c_3830: {
-                                if 0 as std::ffi::c_int <= ssize {} else {
+                                if 0 as i32 <= ssize {} else {
                                     __assert_fail(
                                         b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3354,18 +3354,18 @@ unsafe extern "C" fn tr_introsort(
                     }
                 } else if trbudget_check(
                     budget,
-                    last.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                    last.offset_from(first) as std::ffi::c_long as i32,
                 ) != 0
                 {
                     limit = tr_ilg(
-                        last.offset_from(first) as std::ffi::c_long as std::ffi::c_int,
+                        last.offset_from(first) as std::ffi::c_long as i32,
                     );
                     ISAd = ISAd.offset(incr as isize);
                 } else {
-                    if 0 as std::ffi::c_int <= trlink {
-                        stack[trlink as usize].d = -(1 as std::ffi::c_int);
+                    if 0 as i32 <= trlink {
+                        stack[trlink as usize].d = -(1 as i32);
                     }
-                    if 0 as std::ffi::c_int <= ssize {} else {
+                    if 0 as i32 <= ssize {} else {
                         __assert_fail(
                             b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3381,7 +3381,7 @@ unsafe extern "C" fn tr_introsort(
                         );
                     }
                     'c_3258: {
-                        if 0 as std::ffi::c_int <= ssize {} else {
+                        if 0 as i32 <= ssize {} else {
                             __assert_fail(
                                 b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
@@ -3404,10 +3404,10 @@ unsafe extern "C" fn tr_introsort(
     };
 }
 unsafe extern "C" fn trsort(
-    mut ISA: *mut std::ffi::c_int,
-    mut SA: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
-    mut depth: std::ffi::c_int,
+    mut ISA: *mut i32,
+    mut SA: *mut i32,
+    mut n: i32,
+    mut depth: i32,
 ) {
     let mut ISAd = std::ptr::null_mut();
     let mut first = std::ptr::null_mut();
@@ -3418,12 +3418,12 @@ unsafe extern "C" fn trsort(
         incval: 0,
         count: 0,
     };
-    let mut t: std::ffi::c_int = 0;
-    let mut skip: std::ffi::c_int = 0;
-    let mut unsorted: std::ffi::c_int = 0;
+    let mut t: i32 = 0;
+    let mut skip: i32 = 0;
+    let mut unsorted: i32 = 0;
     trbudget_init(
         &mut budget,
-        tr_ilg(n) * 2 as std::ffi::c_int / 3,
+        tr_ilg(n) * 2 as i32 / 3,
         n,
     );
     ISAd = ISA.offset(depth as isize);
@@ -3453,12 +3453,12 @@ unsafe extern "C" fn trsort(
                         unsorted += budget.count;
                     } else {
                         skip = first.offset_from(last) as std::ffi::c_long
-                            as std::ffi::c_int;
+                            as i32;
                     }
                 } else if last.offset_from(first) as std::ffi::c_long
                     == 1
                 {
-                    skip = -(1 as std::ffi::c_int);
+                    skip = -(1 as i32);
                 }
                 first = last;
             }
@@ -3477,23 +3477,23 @@ unsafe extern "C" fn trsort(
 }
 unsafe extern "C" fn sort_typeBstar(
     mut T: *const std::ffi::c_uchar,
-    mut SA: *mut std::ffi::c_int,
-    mut bucket_A: *mut std::ffi::c_int,
-    mut bucket_B: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
-    mut openMP: std::ffi::c_int,
-) -> std::ffi::c_int {
+    mut SA: *mut i32,
+    mut bucket_A: *mut i32,
+    mut bucket_B: *mut i32,
+    mut n: i32,
+    mut openMP: i32,
+) -> i32 {
     let mut PAb = std::ptr::null_mut();
     let mut ISAb = std::ptr::null_mut();
     let mut buf = std::ptr::null_mut();
-    let mut i: std::ffi::c_int = 0;
-    let mut j: std::ffi::c_int = 0;
-    let mut k: std::ffi::c_int = 0;
-    let mut t: std::ffi::c_int = 0;
-    let mut m: std::ffi::c_int = 0;
-    let mut bufsize: std::ffi::c_int = 0;
-    let mut c0: std::ffi::c_int = 0;
-    let mut c1: std::ffi::c_int = 0;
+    let mut i: i32 = 0;
+    let mut j: i32 = 0;
+    let mut k: i32 = 0;
+    let mut t: i32 = 0;
+    let mut m: i32 = 0;
+    let mut bufsize: i32 = 0;
+    let mut c0: i32 = 0;
+    let mut c1: i32 = 0;
     i = 0;
     while i < BUCKET_A_SIZE {
         *bucket_A.offset(i as isize) = 0;
@@ -3508,23 +3508,23 @@ unsafe extern "C" fn sort_typeBstar(
     }
     i = n - 1;
     m = n;
-    c0 = *T.offset((n - 1 as std::ffi::c_int) as isize) as std::ffi::c_int;
-    while 0 as std::ffi::c_int <= i {
+    c0 = *T.offset((n - 1 as i32) as isize) as i32;
+    while 0 as i32 <= i {
         loop {
             let ref mut fresh161 = BUCKET_A!(c1 = c0);
             *fresh161 += 1;
             *fresh161;
             i -= 1;
-            if !(0 as std::ffi::c_int <= i
+            if !(0 as i32 <= i
                 && {
-                    c0 = *T.offset(i as isize) as std::ffi::c_int;
+                    c0 = *T.offset(i as isize) as i32;
                     c0 >= c1
                 })
             {
                 break;
             }
         }
-        if 0 as std::ffi::c_int <= i {
+        if 0 as i32 <= i {
             let ref mut fresh162 = BUCKET_BSTAR!(c0, c1);
             *fresh162 += 1;
             *fresh162;
@@ -3533,9 +3533,9 @@ unsafe extern "C" fn sort_typeBstar(
             i -= 1;
             i;
             c1 = c0;
-            while 0 as std::ffi::c_int <= i
+            while 0 as i32 <= i
                 && {
-                    c0 = *T.offset(i as isize) as std::ffi::c_int;
+                    c0 = *T.offset(i as isize) as i32;
                     c0 <= c1
                 }
             {
@@ -3569,35 +3569,35 @@ unsafe extern "C" fn sort_typeBstar(
         c0 += 1;
         c0;
     }
-    if (0 as std::ffi::c_int) < m {
+    if (0 as i32) < m {
         PAb = SA.offset(n as isize).offset(-(m as isize));
         ISAb = SA.offset(m as isize);
         i = m - 2;
-        while 0 as std::ffi::c_int <= i {
+        while 0 as i32 <= i {
             t = *PAb.offset(i as isize);
-            c0 = *T.offset(t as isize) as std::ffi::c_int;
-            c1 = *T.offset((t + 1 as std::ffi::c_int) as isize) as std::ffi::c_int;
+            c0 = *T.offset(t as isize) as i32;
+            c1 = *T.offset((t + 1 as i32) as isize) as i32;
             let ref mut fresh166 = BUCKET_BSTAR!(c0, c1);
             *fresh166 -= 1;
             *SA.offset(*fresh166 as isize) = i;
             i -= 1;
             i;
         }
-        t = *PAb.offset((m - 1 as std::ffi::c_int) as isize);
-        c0 = *T.offset(t as isize) as std::ffi::c_int;
-        c1 = *T.offset((t + 1 as std::ffi::c_int) as isize) as std::ffi::c_int;
+        t = *PAb.offset((m - 1 as i32) as isize);
+        c0 = *T.offset(t as isize) as i32;
+        c1 = *T.offset((t + 1 as i32) as isize) as i32;
         let ref mut fresh167 = BUCKET_BSTAR!(c0, c1);
         *fresh167 -= 1;
         *SA.offset(*fresh167 as isize) = m - 1;
         buf = SA.offset(m as isize);
-        bufsize = n - 2 as std::ffi::c_int * m;
+        bufsize = n - 2 as i32 * m;
         c0 = ALPHABET_SIZE - 2;
         j = m;
-        while (0 as std::ffi::c_int) < j {
+        while (0 as i32) < j {
             c1 = ALPHABET_SIZE - 1;
             while c0 < c1 {
                 i = BUCKET_BSTAR!(c0, c1);
-                if (1 as std::ffi::c_int) < j - i {
+                if (1 as i32) < j - i {
                     sssort(
                         T,
                         PAb,
@@ -3607,8 +3607,8 @@ unsafe extern "C" fn sort_typeBstar(
                         bufsize,
                         2,
                         n,
-                        (*SA.offset(i as isize) == m - 1 as std::ffi::c_int)
-                            as std::ffi::c_int,
+                        (*SA.offset(i as isize) == m - 1 as i32)
+                            as i32,
                     );
                 }
                 j = i;
@@ -3619,19 +3619,19 @@ unsafe extern "C" fn sort_typeBstar(
             c0;
         }
         i = m - 1;
-        while 0 as std::ffi::c_int <= i {
-            if 0 as std::ffi::c_int <= *SA.offset(i as isize) {
+        while 0 as i32 <= i {
+            if 0 as i32 <= *SA.offset(i as isize) {
                 j = i;
                 loop {
                     *ISAb.offset(*SA.offset(i as isize) as isize) = i;
                     i -= 1;
-                    if !(0 as std::ffi::c_int <= i
-                        && 0 as std::ffi::c_int <= *SA.offset(i as isize))
+                    if !(0 as i32 <= i
+                        && 0 as i32 <= *SA.offset(i as isize))
                     {
                         break;
                     }
                 }
-                *SA.offset((i + 1 as std::ffi::c_int) as isize) = i - j;
+                *SA.offset((i + 1 as i32) as isize) = i - j;
                 if i <= 0 {
                     break;
                 }
@@ -3653,14 +3653,14 @@ unsafe extern "C" fn sort_typeBstar(
         trsort(ISAb, SA, m, 1);
         i = n - 1;
         j = m;
-        c0 = *T.offset((n - 1 as std::ffi::c_int) as isize) as std::ffi::c_int;
-        while 0 as std::ffi::c_int <= i {
+        c0 = *T.offset((n - 1 as i32) as isize) as i32;
+        while 0 as i32 <= i {
             i -= 1;
             i;
             c1 = c0;
-            while 0 as std::ffi::c_int <= i
+            while 0 as i32 <= i
                 && {
-                    c0 = *T.offset(i as isize) as std::ffi::c_int;
+                    c0 = *T.offset(i as isize) as i32;
                     c0 >= c1
                 }
             {
@@ -3668,14 +3668,14 @@ unsafe extern "C" fn sort_typeBstar(
                 i;
                 c1 = c0;
             }
-            if 0 as std::ffi::c_int <= i {
+            if 0 as i32 <= i {
                 t = i;
                 i -= 1;
                 i;
                 c1 = c0;
-                while 0 as std::ffi::c_int <= i
+                while 0 as i32 <= i
                     && {
-                        c0 = *T.offset(i as isize) as std::ffi::c_int;
+                        c0 = *T.offset(i as isize) as i32;
                         c0 <= c1
                     }
                 {
@@ -3687,7 +3687,7 @@ unsafe extern "C" fn sort_typeBstar(
                 *SA
                     .offset(
                         *ISAb.offset(j as isize) as isize,
-                    ) = if t == 0 || (1 as std::ffi::c_int) < t - i {
+                    ) = if t == 0 || (1 as i32) < t - i {
                     t
                 } else {
                     !t
@@ -3698,7 +3698,7 @@ unsafe extern "C" fn sort_typeBstar(
         *fresh169 = n;
         c0 = ALPHABET_SIZE - 2;
         k = m - 1;
-        while 0 as std::ffi::c_int <= c0 {
+        while 0 as i32 <= c0 {
             i = BUCKET_A!(c0 + 1) - 1;
             c1 = ALPHABET_SIZE - 1;
             while c0 < c1 {
@@ -3729,35 +3729,35 @@ unsafe extern "C" fn sort_typeBstar(
 }
 unsafe extern "C" fn construct_SA(
     mut T: *const std::ffi::c_uchar,
-    mut SA: *mut std::ffi::c_int,
-    mut bucket_A: *mut std::ffi::c_int,
-    mut bucket_B: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
-    mut m: std::ffi::c_int,
+    mut SA: *mut i32,
+    mut bucket_A: *mut i32,
+    mut bucket_B: *mut i32,
+    mut n: i32,
+    mut m: i32,
 ) {
     let mut i = std::ptr::null_mut();
     let mut j = std::ptr::null_mut();
     let mut k = std::ptr::null_mut();
-    let mut s: std::ffi::c_int = 0;
-    let mut c0: std::ffi::c_int = 0;
-    let mut c1: std::ffi::c_int = 0;
-    let mut c2: std::ffi::c_int = 0;
-    if (0 as std::ffi::c_int) < m {
+    let mut s: i32 = 0;
+    let mut c0: i32 = 0;
+    let mut c1: i32 = 0;
+    let mut c2: i32 = 0;
+    if (0 as i32) < m {
         c1 = ALPHABET_SIZE - 2;
-        while 0 as std::ffi::c_int <= c1 {
+        while 0 as i32 <= c1 {
             i = SA.offset(BUCKET_BSTAR!(c1, c1 + 1) as isize);
             j = SA
                 .offset(BUCKET_A!(c1 + 1) as isize)
                 .offset(-1_isize);
             k = std::ptr::null_mut();
-            c2 = -(1 as std::ffi::c_int);
+            c2 = -(1 as i32);
             while i <= j {
                 s = *j;
-                if (0 as std::ffi::c_int) < s {
-                    if (s + 1 as std::ffi::c_int) < n
-                        && *T.offset(s as isize) as std::ffi::c_int
-                            <= *T.offset((s + 1 as std::ffi::c_int) as isize)
-                                as std::ffi::c_int
+                if (0 as i32) < s {
+                    if (s + 1 as i32) < n
+                        && *T.offset(s as isize) as i32
+                            <= *T.offset((s + 1 as i32) as isize)
+                                as i32
                     {} else {
                         __assert_fail(
                             b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
@@ -3775,10 +3775,10 @@ unsafe extern "C" fn construct_SA(
                         );
                     }
                     'c_2348: {
-                        if (s + 1 as std::ffi::c_int) < n
-                            && *T.offset(s as isize) as std::ffi::c_int
-                                <= *T.offset((s + 1 as std::ffi::c_int) as isize)
-                                    as std::ffi::c_int
+                        if (s + 1 as i32) < n
+                            && *T.offset(s as isize) as i32
+                                <= *T.offset((s + 1 as i32) as isize)
+                                    as i32
                         {} else {
                             __assert_fail(
                                 b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
@@ -3798,18 +3798,18 @@ unsafe extern "C" fn construct_SA(
                     };
                     *j = !s;
                     s -= 1;
-                    c0 = *T.offset(s as isize) as std::ffi::c_int;
-                    if (0 as std::ffi::c_int) < s
-                        && *T.offset((s - 1 as std::ffi::c_int) as isize)
-                            as std::ffi::c_int > c0
+                    c0 = *T.offset(s as isize) as i32;
+                    if (0 as i32) < s
+                        && *T.offset((s - 1 as i32) as isize)
+                            as i32 > c0
                     {
                         s = !s;
                     }
                     if c0 != c2 {
-                        if 0 as std::ffi::c_int <= c2 {
+                        if 0 as i32 <= c2 {
                             let ref mut fresh173 = BUCKET_B!(c2, c1);
                             *fresh173 = k.offset_from(SA) as std::ffi::c_long
-                                as std::ffi::c_int;
+                                as i32;
                         }
                         k = SA.offset(BUCKET_B!(c2 = c0, c1) as isize);
                     }
@@ -3818,7 +3818,7 @@ unsafe extern "C" fn construct_SA(
                     *fresh174 = s;
                 } else {
                     if s == 0
-                        && *T.offset(s as isize) as std::ffi::c_int == c1
+                        && *T.offset(s as isize) as i32 == c1
                         || s < 0
                     {} else {
                         __assert_fail(
@@ -3838,7 +3838,7 @@ unsafe extern "C" fn construct_SA(
                     }
                     'c_2011: {
                         if s == 0
-                            && *T.offset(s as isize) as std::ffi::c_int == c1
+                            && *T.offset(s as isize) as i32 == c1
                             || s < 0
                         {} else {
                             __assert_fail(
@@ -3869,29 +3869,29 @@ unsafe extern "C" fn construct_SA(
     k = SA.offset(BUCKET_A!(c2 = T[n - 1]) as isize);
     let fresh175 = k;
     k = k.offset(1);
-    *fresh175 = if (*T.offset((n - 2 as std::ffi::c_int) as isize) as std::ffi::c_int)
+    *fresh175 = if (*T.offset((n - 2 as i32) as isize) as i32)
         < c2
     {
-        !(n - 1 as std::ffi::c_int)
+        !(n - 1 as i32)
     } else {
-        n - 1 as std::ffi::c_int
+        n - 1 as i32
     };
     i = SA;
     j = SA.offset(n as isize);
     while i < j {
         s = *i;
-        if (0 as std::ffi::c_int) < s {
+        if (0 as i32) < s {
             s -= 1;
-            c0 = *T.offset(s as isize) as std::ffi::c_int;
+            c0 = *T.offset(s as isize) as i32;
             if s == 0
-                || (*T.offset((s - 1 as std::ffi::c_int) as isize) as std::ffi::c_int)
+                || (*T.offset((s - 1 as i32) as isize) as i32)
                     < c0
             {
                 s = !s;
             }
             if c0 != c2 {
                 let ref mut fresh176 = BUCKET_A!(c2);
-                *fresh176 = k.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                *fresh176 = k.offset_from(SA) as std::ffi::c_long as i32;
                 k = SA.offset(BUCKET_A!(c2 = c0) as isize);
             }
             let fresh177 = k;
@@ -3906,36 +3906,36 @@ unsafe extern "C" fn construct_SA(
 }
 unsafe extern "C" fn construct_BWT(
     mut T: *const std::ffi::c_uchar,
-    mut SA: *mut std::ffi::c_int,
-    mut bucket_A: *mut std::ffi::c_int,
-    mut bucket_B: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
-    mut m: std::ffi::c_int,
-) -> std::ffi::c_int {
+    mut SA: *mut i32,
+    mut bucket_A: *mut i32,
+    mut bucket_B: *mut i32,
+    mut n: i32,
+    mut m: i32,
+) -> i32 {
     let mut i = std::ptr::null_mut();
     let mut j = std::ptr::null_mut();
     let mut k = std::ptr::null_mut();
     let mut orig = std::ptr::null_mut();
-    let mut s: std::ffi::c_int = 0;
-    let mut c0: std::ffi::c_int = 0;
-    let mut c1: std::ffi::c_int = 0;
-    let mut c2: std::ffi::c_int = 0;
-    if (0 as std::ffi::c_int) < m {
+    let mut s: i32 = 0;
+    let mut c0: i32 = 0;
+    let mut c1: i32 = 0;
+    let mut c2: i32 = 0;
+    if (0 as i32) < m {
         c1 = ALPHABET_SIZE - 2;
-        while 0 as std::ffi::c_int <= c1 {
+        while 0 as i32 <= c1 {
             i = SA.offset(BUCKET_BSTAR!(c1, c1 + 1) as isize);
             j = SA
                 .offset(BUCKET_A!(c1 + 1) as isize)
                 .offset(-1_isize);
             k = std::ptr::null_mut();
-            c2 = -(1 as std::ffi::c_int);
+            c2 = -(1 as i32);
             while i <= j {
                 s = *j;
-                if (0 as std::ffi::c_int) < s {
-                    if (s + 1 as std::ffi::c_int) < n
-                        && *T.offset(s as isize) as std::ffi::c_int
-                            <= *T.offset((s + 1 as std::ffi::c_int) as isize)
-                                as std::ffi::c_int
+                if (0 as i32) < s {
+                    if (s + 1 as i32) < n
+                        && *T.offset(s as isize) as i32
+                            <= *T.offset((s + 1 as i32) as isize)
+                                as i32
                     {} else {
                         __assert_fail(
                             b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
@@ -3953,10 +3953,10 @@ unsafe extern "C" fn construct_BWT(
                         );
                     }
                     'c_21583: {
-                        if (s + 1 as std::ffi::c_int) < n
-                            && *T.offset(s as isize) as std::ffi::c_int
-                                <= *T.offset((s + 1 as std::ffi::c_int) as isize)
-                                    as std::ffi::c_int
+                        if (s + 1 as i32) < n
+                            && *T.offset(s as isize) as i32
+                                <= *T.offset((s + 1 as i32) as isize)
+                                    as i32
                         {} else {
                             __assert_fail(
                                 b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
@@ -3975,19 +3975,19 @@ unsafe extern "C" fn construct_BWT(
                         }
                     };
                     s -= 1;
-                    c0 = *T.offset(s as isize) as std::ffi::c_int;
+                    c0 = *T.offset(s as isize) as i32;
                     *j = !c0;
-                    if (0 as std::ffi::c_int) < s
-                        && *T.offset((s - 1 as std::ffi::c_int) as isize)
-                            as std::ffi::c_int > c0
+                    if (0 as i32) < s
+                        && *T.offset((s - 1 as i32) as isize)
+                            as i32 > c0
                     {
                         s = !s;
                     }
                     if c0 != c2 {
-                        if 0 as std::ffi::c_int <= c2 {
+                        if 0 as i32 <= c2 {
                             let ref mut fresh178 = BUCKET_B!(c2, c1);
                             *fresh178 = k.offset_from(SA) as std::ffi::c_long
-                                as std::ffi::c_int;
+                                as i32;
                         }
                         k = SA.offset(BUCKET_B!(c2 = c0, c1) as isize);
                     }
@@ -4007,31 +4007,31 @@ unsafe extern "C" fn construct_BWT(
     k = SA.offset(BUCKET_A!(c2 = T[n - 1]) as isize);
     let fresh180 = k;
     k = k.offset(1);
-    *fresh180 = if (*T.offset((n - 2 as std::ffi::c_int) as isize) as std::ffi::c_int)
+    *fresh180 = if (*T.offset((n - 2 as i32) as isize) as i32)
         < c2
     {
-        !(*T.offset((n - 2 as std::ffi::c_int) as isize) as std::ffi::c_int)
+        !(*T.offset((n - 2 as i32) as isize) as i32)
     } else {
-        n - 1 as std::ffi::c_int
+        n - 1 as i32
     };
     i = SA;
     j = SA.offset(n as isize);
     orig = SA;
     while i < j {
         s = *i;
-        if (0 as std::ffi::c_int) < s {
+        if (0 as i32) < s {
             s -= 1;
-            c0 = *T.offset(s as isize) as std::ffi::c_int;
+            c0 = *T.offset(s as isize) as i32;
             *i = c0;
-            if (0 as std::ffi::c_int) < s
-                && (*T.offset((s - 1 as std::ffi::c_int) as isize) as std::ffi::c_int)
+            if (0 as i32) < s
+                && (*T.offset((s - 1 as i32) as isize) as i32)
                     < c0
             {
-                s = !(*T.offset((s - 1 as std::ffi::c_int) as isize) as std::ffi::c_int);
+                s = !(*T.offset((s - 1 as i32) as isize) as i32);
             }
             if c0 != c2 {
                 let ref mut fresh181 = BUCKET_A!(c2);
-                *fresh181 = k.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                *fresh181 = k.offset_from(SA) as std::ffi::c_long as i32;
                 k = SA.offset(BUCKET_A!(c2 = c0) as isize);
             }
             let fresh182 = k;
@@ -4045,26 +4045,26 @@ unsafe extern "C" fn construct_BWT(
         i = i.offset(1);
         i;
     }
-    return orig.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+    return orig.offset_from(SA) as std::ffi::c_long as i32;
 }
 unsafe extern "C" fn construct_BWT_indexes(
     mut T: *const std::ffi::c_uchar,
-    mut SA: *mut std::ffi::c_int,
-    mut bucket_A: *mut std::ffi::c_int,
-    mut bucket_B: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
-    mut m: std::ffi::c_int,
+    mut SA: *mut i32,
+    mut bucket_A: *mut i32,
+    mut bucket_B: *mut i32,
+    mut n: i32,
+    mut m: i32,
     mut num_indexes: *mut std::ffi::c_uchar,
-    mut indexes: *mut std::ffi::c_int,
-) -> std::ffi::c_int {
+    mut indexes: *mut i32,
+) -> i32 {
     let mut i = std::ptr::null_mut();
     let mut j = std::ptr::null_mut();
     let mut k = std::ptr::null_mut();
     let mut orig = std::ptr::null_mut();
-    let mut s: std::ffi::c_int = 0;
-    let mut c0: std::ffi::c_int = 0;
-    let mut c1: std::ffi::c_int = 0;
-    let mut c2: std::ffi::c_int = 0;
+    let mut s: i32 = 0;
+    let mut c0: i32 = 0;
+    let mut c1: i32 = 0;
+    let mut c2: i32 = 0;
     let mut mod_0 = n / 8;
     mod_0 |= mod_0 >> 1;
     mod_0 |= mod_0 >> 2;
@@ -4072,24 +4072,24 @@ unsafe extern "C" fn construct_BWT_indexes(
     mod_0 |= mod_0 >> 8;
     mod_0 |= mod_0 >> 16;
     mod_0 >>= 1;
-    *num_indexes = ((n - 1 as std::ffi::c_int) / (mod_0 + 1 as std::ffi::c_int))
+    *num_indexes = ((n - 1 as i32) / (mod_0 + 1 as i32))
         as std::ffi::c_uchar;
-    if (0 as std::ffi::c_int) < m {
+    if (0 as i32) < m {
         c1 = ALPHABET_SIZE - 2;
-        while 0 as std::ffi::c_int <= c1 {
+        while 0 as i32 <= c1 {
             i = SA.offset(BUCKET_BSTAR!(c1, c1 + 1) as isize);
             j = SA
                 .offset(BUCKET_A!(c1 + 1) as isize)
                 .offset(-1_isize);
             k = std::ptr::null_mut();
-            c2 = -(1 as std::ffi::c_int);
+            c2 = -(1 as i32);
             while i <= j {
                 s = *j;
-                if (0 as std::ffi::c_int) < s {
-                    if (s + 1 as std::ffi::c_int) < n
-                        && *T.offset(s as isize) as std::ffi::c_int
-                            <= *T.offset((s + 1 as std::ffi::c_int) as isize)
-                                as std::ffi::c_int
+                if (0 as i32) < s {
+                    if (s + 1 as i32) < n
+                        && *T.offset(s as isize) as i32
+                            <= *T.offset((s + 1 as i32) as isize)
+                                as i32
                     {} else {
                         __assert_fail(
                             b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
@@ -4107,10 +4107,10 @@ unsafe extern "C" fn construct_BWT_indexes(
                         );
                     }
                     'c_20622: {
-                        if (s + 1 as std::ffi::c_int) < n
-                            && *T.offset(s as isize) as std::ffi::c_int
-                                <= *T.offset((s + 1 as std::ffi::c_int) as isize)
-                                    as std::ffi::c_int
+                        if (s + 1 as i32) < n
+                            && *T.offset(s as isize) as i32
+                                <= *T.offset((s + 1 as i32) as isize)
+                                    as i32
                         {} else {
                             __assert_fail(
                                 b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
@@ -4131,24 +4131,24 @@ unsafe extern "C" fn construct_BWT_indexes(
                     if s & mod_0 == 0 {
                         *indexes
                             .offset(
-                                (s / (mod_0 + 1 as std::ffi::c_int) - 1 as std::ffi::c_int)
+                                (s / (mod_0 + 1 as i32) - 1 as i32)
                                     as isize,
-                            ) = j.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                            ) = j.offset_from(SA) as std::ffi::c_long as i32;
                     }
                     s -= 1;
-                    c0 = *T.offset(s as isize) as std::ffi::c_int;
+                    c0 = *T.offset(s as isize) as i32;
                     *j = !c0;
-                    if (0 as std::ffi::c_int) < s
-                        && *T.offset((s - 1 as std::ffi::c_int) as isize)
-                            as std::ffi::c_int > c0
+                    if (0 as i32) < s
+                        && *T.offset((s - 1 as i32) as isize)
+                            as i32 > c0
                     {
                         s = !s;
                     }
                     if c0 != c2 {
-                        if 0 as std::ffi::c_int <= c2 {
+                        if 0 as i32 <= c2 {
                             let ref mut fresh183 = BUCKET_B!(c2, c1);
                             *fresh183 = k.offset_from(SA) as std::ffi::c_long
-                                as std::ffi::c_int;
+                                as i32;
                         }
                         k = SA.offset(BUCKET_B!(c2 = c0, c1) as isize);
                     }
@@ -4166,17 +4166,17 @@ unsafe extern "C" fn construct_BWT_indexes(
         }
     }
     k = SA.offset(BUCKET_A!(c2 = T[n - 1]) as isize);
-    if (*T.offset((n - 2 as std::ffi::c_int) as isize) as std::ffi::c_int) < c2 {
-        if n - 1 as std::ffi::c_int & mod_0 == 0 {
+    if (*T.offset((n - 2 as i32) as isize) as i32) < c2 {
+        if n - 1 as i32 & mod_0 == 0 {
             *indexes
                 .offset(
-                    ((n - 1 as std::ffi::c_int) / (mod_0 + 1 as std::ffi::c_int)
-                        - 1 as std::ffi::c_int) as isize,
-                ) = k.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                    ((n - 1 as i32) / (mod_0 + 1 as i32)
+                        - 1 as i32) as isize,
+                ) = k.offset_from(SA) as std::ffi::c_long as i32;
         }
         let fresh185 = k;
         k = k.offset(1);
-        *fresh185 = !(*T.offset((n - 2 as std::ffi::c_int) as isize) as std::ffi::c_int);
+        *fresh185 = !(*T.offset((n - 2 as i32) as isize) as i32);
     } else {
         let fresh186 = k;
         k = k.offset(1);
@@ -4187,37 +4187,37 @@ unsafe extern "C" fn construct_BWT_indexes(
     orig = SA;
     while i < j {
         s = *i;
-        if (0 as std::ffi::c_int) < s {
+        if (0 as i32) < s {
             if s & mod_0 == 0 {
                 *indexes
                     .offset(
-                        (s / (mod_0 + 1 as std::ffi::c_int) - 1 as std::ffi::c_int)
+                        (s / (mod_0 + 1 as i32) - 1 as i32)
                             as isize,
-                    ) = i.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                    ) = i.offset_from(SA) as std::ffi::c_long as i32;
             }
             s -= 1;
-            c0 = *T.offset(s as isize) as std::ffi::c_int;
+            c0 = *T.offset(s as isize) as i32;
             *i = c0;
             if c0 != c2 {
                 let ref mut fresh187 = BUCKET_A!(c2);
-                *fresh187 = k.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                *fresh187 = k.offset_from(SA) as std::ffi::c_long as i32;
                 k = SA.offset(BUCKET_A!(c2 = c0) as isize);
             }
-            if (0 as std::ffi::c_int) < s
-                && (*T.offset((s - 1 as std::ffi::c_int) as isize) as std::ffi::c_int)
+            if (0 as i32) < s
+                && (*T.offset((s - 1 as i32) as isize) as i32)
                     < c0
             {
                 if s & mod_0 == 0 {
                     *indexes
                         .offset(
-                            (s / (mod_0 + 1 as std::ffi::c_int) - 1 as std::ffi::c_int)
+                            (s / (mod_0 + 1 as i32) - 1 as i32)
                                 as isize,
-                        ) = k.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+                        ) = k.offset_from(SA) as std::ffi::c_long as i32;
                 }
                 let fresh188 = k;
                 k = k.offset(1);
-                *fresh188 = !(*T.offset((s - 1 as std::ffi::c_int) as isize)
-                    as std::ffi::c_int);
+                *fresh188 = !(*T.offset((s - 1 as i32) as isize)
+                    as i32);
             } else {
                 let fresh189 = k;
                 k = k.offset(1);
@@ -4231,47 +4231,47 @@ unsafe extern "C" fn construct_BWT_indexes(
         i = i.offset(1);
         i;
     }
-    return orig.offset_from(SA) as std::ffi::c_long as std::ffi::c_int;
+    return orig.offset_from(SA) as std::ffi::c_long as i32;
 }
 #[no_mangle]
 pub unsafe extern "C" fn divsufsort(
     mut T: *const std::ffi::c_uchar,
-    mut SA: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
-    mut openMP: std::ffi::c_int,
-) -> std::ffi::c_int {
+    mut SA: *mut i32,
+    mut n: i32,
+    mut openMP: i32,
+) -> i32 {
     let mut bucket_A = std::ptr::null_mut();
     let mut bucket_B = std::ptr::null_mut();
-    let mut m: std::ffi::c_int = 0;
-    let mut err: std::ffi::c_int = 0;
+    let mut m: i32 = 0;
+    let mut err: i32 = 0;
     if T.is_null() || SA.is_null() || n < 0 {
-        return -(1 as std::ffi::c_int)
+        return -(1 as i32)
     } else if n == 0 {
-        return 0 as std::ffi::c_int
+        return 0 as i32
     } else if n == 1 {
         *SA.offset(0) = 0;
         return 0;
     } else if n == 2 {
-        m = ((*T.offset(0) as std::ffi::c_int)
-            < *T.offset(1) as std::ffi::c_int)
-            as std::ffi::c_int;
-        *SA.offset((m ^ 1 as std::ffi::c_int) as isize) = 0;
+        m = ((*T.offset(0) as i32)
+            < *T.offset(1) as i32)
+            as i32;
+        *SA.offset((m ^ 1 as i32) as isize) = 0;
         *SA.offset(m as isize) = 1;
         return 0;
     }
     bucket_A = libc::malloc(
         BUCKET_A_SIZE
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
-    ) as *mut std::ffi::c_int;
+            .wrapping_mul(::core::mem::size_of::<i32>()),
+    ) as *mut i32;
     bucket_B = libc::malloc(
         BUCKET_B_SIZE
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
-    ) as *mut std::ffi::c_int;
+            .wrapping_mul(::core::mem::size_of::<i32>()),
+    ) as *mut i32;
     if !bucket_A.is_null() && !bucket_B.is_null() {
         m = sort_typeBstar(T, SA, bucket_A, bucket_B, n, openMP);
         construct_SA(T, SA, bucket_A, bucket_B, n, m);
     } else {
-        err = -(2 as std::ffi::c_int);
+        err = -(2 as i32);
     }
     libc::free(bucket_B as *mut std::ffi::c_void);
     libc::free(bucket_A as *mut std::ffi::c_void);
@@ -4281,20 +4281,20 @@ pub unsafe extern "C" fn divsufsort(
 pub unsafe extern "C" fn divbwt(
     mut T: *const std::ffi::c_uchar,
     mut U: *mut std::ffi::c_uchar,
-    mut A: *mut std::ffi::c_int,
-    mut n: std::ffi::c_int,
+    mut A: *mut i32,
+    mut n: i32,
     mut num_indexes: *mut std::ffi::c_uchar,
-    mut indexes: *mut std::ffi::c_int,
-    mut openMP: std::ffi::c_int,
-) -> std::ffi::c_int {
+    mut indexes: *mut i32,
+    mut openMP: i32,
+) -> i32 {
     let mut B = std::ptr::null_mut();
     let mut bucket_A = std::ptr::null_mut();
     let mut bucket_B = std::ptr::null_mut();
-    let mut m: std::ffi::c_int = 0;
-    let mut pidx: std::ffi::c_int = 0;
-    let mut i: std::ffi::c_int = 0;
+    let mut m: i32 = 0;
+    let mut pidx: i32 = 0;
+    let mut i: i32 = 0;
     if T.is_null() || U.is_null() || n < 0 {
-        return -(1 as std::ffi::c_int)
+        return -(1 as i32)
     } else if n <= 1 {
         if n == 1 {
             *U
@@ -4307,20 +4307,20 @@ pub unsafe extern "C" fn divbwt(
     B = A;
     if B.is_null() {
         B = libc::malloc(
-            ((n + 1 as std::ffi::c_int) as usize)
+            ((n + 1 as i32) as usize)
                 .wrapping_mul(
-                    ::core::mem::size_of::<std::ffi::c_int>(),
+                    ::core::mem::size_of::<i32>(),
                 ),
-        ) as *mut std::ffi::c_int;
+        ) as *mut i32;
     }
     bucket_A = libc::malloc(
         BUCKET_A_SIZE
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
-    ) as *mut std::ffi::c_int;
+            .wrapping_mul(::core::mem::size_of::<i32>()),
+    ) as *mut i32;
     bucket_B = libc::malloc(
         BUCKET_B_SIZE
-            .wrapping_mul(::core::mem::size_of::<std::ffi::c_int>()),
-    ) as *mut std::ffi::c_int;
+            .wrapping_mul(::core::mem::size_of::<i32>()),
+    ) as *mut i32;
     if !B.is_null() && !bucket_A.is_null() && !bucket_B.is_null() {
         m = sort_typeBstar(T, B, bucket_A, bucket_B, n, openMP);
         if num_indexes.is_null() || indexes.is_null() {
@@ -4340,12 +4340,12 @@ pub unsafe extern "C" fn divbwt(
         *U
             .offset(
                 0,
-            ) = *T.offset((n - 1 as std::ffi::c_int) as isize);
+            ) = *T.offset((n - 1 as i32) as isize);
         i = 0;
         while i < pidx {
             *U
                 .offset(
-                    (i + 1 as std::ffi::c_int) as isize,
+                    (i + 1 as i32) as isize,
                 ) = *B.offset(i as isize) as std::ffi::c_uchar;
             i += 1;
             i;
@@ -4358,7 +4358,7 @@ pub unsafe extern "C" fn divbwt(
         }
         pidx += 1;
     } else {
-        pidx = -(2 as std::ffi::c_int);
+        pidx = -(2 as i32);
     }
     libc::free(bucket_B as *mut std::ffi::c_void);
     libc::free(bucket_A as *mut std::ffi::c_void);

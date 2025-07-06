@@ -12,7 +12,7 @@ pub const ZSTD_SLIPBLOCK_WORKSPACESIZE: usize = 8208;
 
 const THRESHOLD_PENALTY_RATE: u64 = 16;
 const THRESHOLD_BASE: i64 = THRESHOLD_PENALTY_RATE as i64 - 2;
-const THRESHOLD_PENALTY: std::ffi::c_int = 3;
+const THRESHOLD_PENALTY: i32 = 3;
 
 const HASHLENGTH: usize = 2;
 const HASHLOG_MAX: u32 = 10;
@@ -26,7 +26,7 @@ const KNUTH: u32 = 0x9e3779b9;
 #[inline(always)]
 unsafe fn hash2(
     mut p: *const c_void,
-    mut hashLog: std::ffi::c_uint,
+    mut hashLog: u32,
 ) -> u32 {
     debug_assert!(hashLog >= 8);
     if hashLog == 8 {
@@ -39,7 +39,7 @@ unsafe fn hash2(
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct Fingerprint {
-    pub events: [std::ffi::c_uint; HASHTABLESIZE],
+    pub events: [u32; HASHTABLESIZE],
     pub nbEvents: usize,
 }
 #[derive(Copy, Clone)]
@@ -63,7 +63,7 @@ unsafe fn addEvents_generic(
     mut src: *const c_void,
     mut srcSize: usize,
     mut samplingRate: usize,
-    mut hashLog: std::ffi::c_uint,
+    mut hashLog: u32,
 ) {
     let mut p = src as *const std::ffi::c_char;
     let mut limit = srcSize + 1 - HASHLENGTH;
@@ -82,12 +82,12 @@ unsafe fn recordFingerprint_generic(
     mut src: *const c_void,
     mut srcSize: usize,
     mut samplingRate: usize,
-    mut hashLog: std::ffi::c_uint,
+    mut hashLog: u32,
 ) {
     libc::memset(
         fp as *mut c_void,
         0,
-        size_of::<std::ffi::c_uint>() * 1_usize << hashLog,
+        size_of::<u32>() * 1_usize << hashLog,
     );
     (*fp).nbEvents = 0;
     addEvents_generic(fp, src, srcSize, samplingRate, hashLog);
@@ -117,7 +117,7 @@ unsafe fn abs64(mut s64: i64) -> u64 {
 unsafe fn fpDistance(
     mut fp1: *const Fingerprint,
     mut fp2: *const Fingerprint,
-    mut hashLog: std::ffi::c_uint,
+    mut hashLog: u32,
 ) -> u64 {
     let mut distance: u64 = 0;
     debug_assert!(hashLog <= HASHLOG_MAX);
@@ -138,8 +138,8 @@ unsafe fn fpDistance(
 unsafe fn compareFingerprints(
     mut ref_0: *const Fingerprint,
     mut newfp: *const Fingerprint,
-    mut penalty: std::ffi::c_int,
-    mut hashLog: std::ffi::c_uint,
+    mut penalty: i32,
+    mut hashLog: u32,
 ) -> bool {
     debug_assert!((*ref_0).nbEvents > 0);
     debug_assert!((*newfp).nbEvents > 0);
@@ -187,7 +187,7 @@ pub const CHUNKSIZE: usize = 8_usize << 10;
 unsafe fn ZSTD_splitBlock_byChunks(
     mut blockStart: *const c_void,
     mut blockSize: usize,
-    mut level: std::ffi::c_int,
+    mut level: i32,
     mut workspace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
@@ -197,7 +197,7 @@ unsafe fn ZSTD_splitBlock_byChunks(
         ZSTD_recordFingerprint_5,
         ZSTD_recordFingerprint_1,
     ];
-    const hashParams: [std::ffi::c_uint; 4] = [
+    const hashParams: [u32; 4] = [
         8,
         9,
         10,
@@ -261,7 +261,7 @@ unsafe fn ZSTD_splitBlock_fromBorders(
     const SEGMENT_SIZE: usize = 512;
 
     let fpstats = workspace as *mut FPStats;
-    let mut middleEvents = workspace.byte_add(512_usize * size_of::<std::ffi::c_uint>()) as *mut Fingerprint;
+    let mut middleEvents = workspace.byte_add(512_usize * size_of::<u32>()) as *mut Fingerprint;
     debug_assert!(blockSize == (128 << 10));
     debug_assert!(!workspace.is_null());
     debug_assert!(workspace.is_aligned_to(align_of::<FPStats>()));
@@ -337,7 +337,7 @@ unsafe fn ZSTD_splitBlock_fromBorders(
 pub unsafe fn ZSTD_splitBlock(
     mut blockStart: *const c_void,
     mut blockSize: usize,
-    mut level: std::ffi::c_int,
+    mut level: i32,
     mut workspace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {

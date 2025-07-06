@@ -71,9 +71,9 @@ pub use __DEBUGLOG as DEBUGLOG;
 /*------   Version   ------*/
 macro_rules! version {
     ($major:literal , $minor:literal , $release:literal) => {
-        pub const ZSTD_VERSION_MAJOR: std::ffi::c_uint = $major;
-        pub const ZSTD_VERSION_MINOR: std::ffi::c_uint = $minor;
-        pub const ZSTD_VERSION_RELEASE: std::ffi::c_uint = $release;
+        pub const ZSTD_VERSION_MAJOR: u32 = $major;
+        pub const ZSTD_VERSION_MINOR: u32 = $minor;
+        pub const ZSTD_VERSION_RELEASE: u32 = $release;
 
         pub const ZSTD_VERSION_STRING: &'static str = concat!($major, ".", $minor, ".", $release);
     }
@@ -81,11 +81,11 @@ macro_rules! version {
 
 version!(1, 5, 8);
 
-pub const ZSTD_VERSION_NUMBER: std::ffi::c_uint = ZSTD_VERSION_MAJOR *100*100 + ZSTD_VERSION_MINOR *100 + ZSTD_VERSION_RELEASE;
+pub const ZSTD_VERSION_NUMBER: u32 = ZSTD_VERSION_MAJOR *100*100 + ZSTD_VERSION_MINOR *100 + ZSTD_VERSION_RELEASE;
 
 /** ZSTD_versionNumber() :
  *  Return runtime library version, the value is (MAJOR*100*100 + MINOR*100 + RELEASE). */
-pub fn ZSTD_versionNumber() -> std::ffi::c_uint {
+pub fn ZSTD_versionNumber() -> u32 {
     ZSTD_VERSION_NUMBER
 }
 
@@ -99,7 +99,7 @@ pub fn ZSTD_versionString() -> &'static str {
  *  Default constant
  ***************************************/
 // #ifndef ZSTD_CLEVEL_DEFAULT
-pub const ZSTD_CLEVEL_DEFAULT: std::ffi::c_int = 3;
+pub const ZSTD_CLEVEL_DEFAULT: i32 = 3;
 
 /* *************************************
  *  Constants
@@ -305,7 +305,7 @@ pub type ZSTD_DCtx = crate::decompress::zstd_decompress_internal::ZSTD_DCtx_s;
 
 
 /* Compression strategies, listed from fastest to strongest */
-pub type ZSTD_strategy = std::ffi::c_uint;
+pub type ZSTD_strategy = u32;
 pub const ZSTD_fast: ZSTD_strategy = 1;
 pub const ZSTD_dfast: ZSTD_strategy = 2;
 pub const ZSTD_greedy: ZSTD_strategy = 3;
@@ -319,7 +319,7 @@ pub const ZSTD_btultra2: ZSTD_strategy = 9;
                          Only the order (from fast to strong) is guaranteed */
 
 
-pub type ZSTD_cParameter = std::ffi::c_uint;
+pub type ZSTD_cParameter = u32;
     /* compression parameters
      * Note: When compressing with a ZSTD_CDict these parameters are superseded
      * by the parameters used to construct the ZSTD_CDict.
@@ -516,8 +516,8 @@ pub const ZSTD_c_experimentalParam20: ZSTD_cParameter = 1017;
 #[repr(C)]
 pub struct ZSTD_bounds {
     pub error: usize,
-    pub lowerBound: std::ffi::c_int,
-    pub upperBound: std::ffi::c_int,
+    pub lowerBound: i32,
+    pub upperBound: i32,
 }
 
 /** ZSTD_cParam_getBounds() :
@@ -559,7 +559,7 @@ pub use crate::compress::zstd_compress::ZSTD_cParam_getBounds;
  */
 // ZSTDLIB_API size_t ZSTD_CCtx_setPledgedSrcSize(ZSTD_CCtx* cctx, unsigned long long pledgedSrcSize);
 
-pub type ZSTD_ResetDirective = std::ffi::c_uint;
+pub type ZSTD_ResetDirective = u32;
 pub const ZSTD_reset_session_and_parameters: ZSTD_ResetDirective = 3;
 pub const ZSTD_reset_parameters: ZSTD_ResetDirective = 2;
 pub const ZSTD_reset_session_only: ZSTD_ResetDirective = 1;
@@ -609,7 +609,7 @@ pub const ZSTD_reset_session_only: ZSTD_ResetDirective = 1;
  *        Therefore, no new decompression function is necessary.
  */
 
-pub type ZSTD_dParameter = std::ffi::c_uint;
+pub type ZSTD_dParameter = u32;
 pub const ZSTD_d_windowLogMax: ZSTD_dParameter = 100;/* Select a size limit (in power of 2) beyond which
                               * the streaming API will refuse to allocate memory buffer
                               * in order to protect the host from unreasonable memory requirements.
@@ -760,7 +760,7 @@ pub type ZSTD_CStream = ZSTD_CCtx;
 // ZSTDLIB_API size_t ZSTD_freeCStream(ZSTD_CStream* zcs);  /* accept NULL pointer */
 
 /*===== Streaming compression functions =====*/
-pub type ZSTD_EndDirective = std::ffi::c_uint;
+pub type ZSTD_EndDirective = u32;
 pub const ZSTD_e_continue: ZSTD_EndDirective = 0; /* collect more data, encoder decides when to output compressed result, for optimal compression ratio */
 pub const ZSTD_e_flush: ZSTD_EndDirective = 1; /* flush any data provided so far,
                         * it creates (at least) one new block, that can be decoded immediately on reception;
@@ -1232,29 +1232,29 @@ pub const ZSTD_FRAMEHEADERSIZE_MAX: usize = 18; /* can be useful for static allo
 pub const ZSTD_SKIPPABLEHEADERSIZE: usize = 8;
 
 /* compression parameter bounds */
-pub const ZSTD_WINDOWLOG_MAX_32: std::ffi::c_int =    30;
-pub const ZSTD_WINDOWLOG_MAX_64: std::ffi::c_int =    31;
-pub const ZSTD_WINDOWLOG_MAX: std::ffi::c_int = if MEM_32bits { ZSTD_WINDOWLOG_MAX_32 } else { ZSTD_WINDOWLOG_MAX_64 };
-pub const ZSTD_WINDOWLOG_MIN: std::ffi::c_int =       10;
-pub const ZSTD_HASHLOG_MAX: std::ffi::c_int = if ZSTD_WINDOWLOG_MAX < 30 { ZSTD_WINDOWLOG_MAX } else { 30 };
-pub const ZSTD_HASHLOG_MIN: std::ffi::c_int =          6;
-pub const ZSTD_CHAINLOG_MAX_32: std::ffi::c_int =     29;
-pub const ZSTD_CHAINLOG_MAX_64: std::ffi::c_int =     30;
-pub const ZSTD_CHAINLOG_MAX: std::ffi::c_int = if MEM_32bits { ZSTD_CHAINLOG_MAX_32 } else { ZSTD_CHAINLOG_MAX_64 };
-pub const ZSTD_CHAINLOG_MIN: std::ffi::c_int =        ZSTD_HASHLOG_MIN;
-pub const ZSTD_SEARCHLOG_MAX: std::ffi::c_int =      ZSTD_WINDOWLOG_MAX-1;
-pub const ZSTD_SEARCHLOG_MIN: std::ffi::c_int =        1;
-pub const ZSTD_MINMATCH_MAX: std::ffi::c_int = 7;   /* only for ZSTD_fast, other strategies are limited to 6 */
-pub const ZSTD_MINMATCH_MIN: std::ffi::c_int = 3;   /* only for ZSTD_btopt+, faster strategies are limited to 4 */
-pub const ZSTD_TARGETLENGTH_MAX: std::ffi::c_int = ZSTD_BLOCKSIZE_MAX as _;
-pub const ZSTD_TARGETLENGTH_MIN: std::ffi::c_int = 0;   /* note : comparing this constant to an unsigned results in a tautological test */
-pub const ZSTD_STRATEGY_MIN: std::ffi::c_int = ZSTD_fast as std::ffi::c_int;
-pub const ZSTD_STRATEGY_MAX: std::ffi::c_int = ZSTD_btultra2 as std::ffi::c_int;
-pub const ZSTD_BLOCKSIZE_MAX_MIN: std::ffi::c_int = 1 << 10; /* The minimum valid max blocksize. Maximum blocksizes smaller than this make compressBound() inaccurate. */
+pub const ZSTD_WINDOWLOG_MAX_32: i32 =    30;
+pub const ZSTD_WINDOWLOG_MAX_64: i32 =    31;
+pub const ZSTD_WINDOWLOG_MAX: i32 = if MEM_32bits { ZSTD_WINDOWLOG_MAX_32 } else { ZSTD_WINDOWLOG_MAX_64 };
+pub const ZSTD_WINDOWLOG_MIN: i32 =       10;
+pub const ZSTD_HASHLOG_MAX: i32 = if ZSTD_WINDOWLOG_MAX < 30 { ZSTD_WINDOWLOG_MAX } else { 30 };
+pub const ZSTD_HASHLOG_MIN: i32 =          6;
+pub const ZSTD_CHAINLOG_MAX_32: i32 =     29;
+pub const ZSTD_CHAINLOG_MAX_64: i32 =     30;
+pub const ZSTD_CHAINLOG_MAX: i32 = if MEM_32bits { ZSTD_CHAINLOG_MAX_32 } else { ZSTD_CHAINLOG_MAX_64 };
+pub const ZSTD_CHAINLOG_MIN: i32 =        ZSTD_HASHLOG_MIN;
+pub const ZSTD_SEARCHLOG_MAX: i32 =      ZSTD_WINDOWLOG_MAX-1;
+pub const ZSTD_SEARCHLOG_MIN: i32 =        1;
+pub const ZSTD_MINMATCH_MAX: i32 = 7;   /* only for ZSTD_fast, other strategies are limited to 6 */
+pub const ZSTD_MINMATCH_MIN: i32 = 3;   /* only for ZSTD_btopt+, faster strategies are limited to 4 */
+pub const ZSTD_TARGETLENGTH_MAX: i32 = ZSTD_BLOCKSIZE_MAX as _;
+pub const ZSTD_TARGETLENGTH_MIN: i32 = 0;   /* note : comparing this constant to an unsigned results in a tautological test */
+pub const ZSTD_STRATEGY_MIN: i32 = ZSTD_fast as i32;
+pub const ZSTD_STRATEGY_MAX: i32 = ZSTD_btultra2 as i32;
+pub const ZSTD_BLOCKSIZE_MAX_MIN: i32 = 1 << 10; /* The minimum valid max blocksize. Maximum blocksizes smaller than this make compressBound() inaccurate. */
 
 
-pub const ZSTD_OVERLAPLOG_MIN: std::ffi::c_int = 0;
-pub const ZSTD_OVERLAPLOG_MAX: std::ffi::c_int = 9;
+pub const ZSTD_OVERLAPLOG_MIN: i32 = 0;
+pub const ZSTD_OVERLAPLOG_MAX: i32 = 9;
 
 pub const ZSTD_WINDOWLOG_LIMIT_DEFAULT: u32 = 27;   /* by default, the streaming decoder will refuse any frame
                                            * requiring larger than (1<<ZSTD_WINDOWLOG_LIMIT_DEFAULT) window size,
@@ -1264,20 +1264,20 @@ pub const ZSTD_WINDOWLOG_LIMIT_DEFAULT: u32 = 27;   /* by default, the streaming
 
 
 /* LDM parameter bounds */
-pub const ZSTD_LDM_HASHLOG_MIN: std::ffi::c_int = ZSTD_HASHLOG_MIN;
-pub const ZSTD_LDM_HASHLOG_MAX: std::ffi::c_int = ZSTD_HASHLOG_MAX;
-pub const ZSTD_LDM_MINMATCH_MIN: std::ffi::c_int = 4;
-pub const ZSTD_LDM_MINMATCH_MAX: std::ffi::c_int = 4096;
-pub const ZSTD_LDM_BUCKETSIZELOG_MIN: std::ffi::c_int = 1;
-pub const ZSTD_LDM_BUCKETSIZELOG_MAX: std::ffi::c_int = 8;
-pub const ZSTD_LDM_HASHRATELOG_MIN: std::ffi::c_int = 0;
-pub const ZSTD_LDM_HASHRATELOG_MAX: std::ffi::c_int = ZSTD_WINDOWLOG_MAX - ZSTD_HASHLOG_MIN;
+pub const ZSTD_LDM_HASHLOG_MIN: i32 = ZSTD_HASHLOG_MIN;
+pub const ZSTD_LDM_HASHLOG_MAX: i32 = ZSTD_HASHLOG_MAX;
+pub const ZSTD_LDM_MINMATCH_MIN: i32 = 4;
+pub const ZSTD_LDM_MINMATCH_MAX: i32 = 4096;
+pub const ZSTD_LDM_BUCKETSIZELOG_MIN: i32 = 1;
+pub const ZSTD_LDM_BUCKETSIZELOG_MAX: i32 = 8;
+pub const ZSTD_LDM_HASHRATELOG_MIN: i32 = 0;
+pub const ZSTD_LDM_HASHRATELOG_MAX: i32 = ZSTD_WINDOWLOG_MAX - ZSTD_HASHLOG_MIN;
 
 /* Advanced parameter bounds */
-pub const ZSTD_TARGETCBLOCKSIZE_MIN: std::ffi::c_int = 1340; /* suitable to fit into an ethernet / wifi / 4G transport frame */
-pub const ZSTD_TARGETCBLOCKSIZE_MAX: std::ffi::c_int = ZSTD_BLOCKSIZE_MAX as _;
-pub const ZSTD_SRCSIZEHINT_MIN: std::ffi::c_int = 0;
-pub const ZSTD_SRCSIZEHINT_MAX: std::ffi::c_int = std::ffi::c_int::MAX;
+pub const ZSTD_TARGETCBLOCKSIZE_MIN: i32 = 1340; /* suitable to fit into an ethernet / wifi / 4G transport frame */
+pub const ZSTD_TARGETCBLOCKSIZE_MAX: i32 = ZSTD_BLOCKSIZE_MAX as _;
+pub const ZSTD_SRCSIZEHINT_MIN: i32 = 0;
+pub const ZSTD_SRCSIZEHINT_MAX: i32 = i32::MAX;
 
 
 /* ---  Advanced types  --- */
@@ -1287,19 +1287,19 @@ pub type ZSTD_CCtx_params = crate::compress::zstd_compress_internal::ZSTD_CCtx_p
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_Sequence {
-    pub offset: std::ffi::c_uint,      /* The offset of the match. (NOT the same as the offset code)
+    pub offset: u32,      /* The offset of the match. (NOT the same as the offset code)
                                * If offset == 0 and matchLength == 0, this sequence represents the last
                                * literals in the block of litLength size.
                                */
 
-    pub litLength: std::ffi::c_uint,   /* Literal length of the sequence. */
-    pub matchLength: std::ffi::c_uint, /* Match length of the sequence. */
+    pub litLength: u32,   /* Literal length of the sequence. */
+    pub matchLength: u32, /* Match length of the sequence. */
 
                               /* Note: Users of this API may provide a sequence with matchLength == litLength == offset == 0.
                                * In this case, we will treat the sequence as a marker for a block boundary.
                                */
 
-    pub rep: std::ffi::c_uint,         /* Represents which repeat offset is represented by the field 'offset'.
+    pub rep: u32,         /* Represents which repeat offset is represented by the field 'offset'.
                                * Ranges from [0, 3].
                                *
                                * Repeat offsets are essentially previous offsets from previous sequences sorted in
@@ -1327,17 +1327,17 @@ pub struct ZSTD_Sequence {
 #[repr(C)]
 pub struct ZSTD_compressionParameters {
     ///  largest match distance : larger == more compression, more memory needed during decompression
-    pub windowLog: std::ffi::c_uint, 
+    pub windowLog: u32, 
     ///  fully searched segment : larger == more compression, slower, more memory (useless for fast)
-    pub chainLog: std::ffi::c_uint, 
+    pub chainLog: u32, 
     ///  dispatch table : larger == faster, more memory
-    pub hashLog: std::ffi::c_uint, 
+    pub hashLog: u32, 
     ///  nb of searches : larger == more compression, slower
-    pub searchLog: std::ffi::c_uint, 
+    pub searchLog: u32, 
     ///  match length searched : larger == faster decompression, sometimes less compression
-    pub minMatch: std::ffi::c_uint, 
+    pub minMatch: u32, 
     ///  acceptable match size for optimal parser (only) : larger == more compression, slower
-    pub targetLength: std::ffi::c_uint, 
+    pub targetLength: u32, 
     ///  see ZSTD_strategy definition above
     pub strategy: ZSTD_strategy, 
 }
@@ -1346,11 +1346,11 @@ pub struct ZSTD_compressionParameters {
 #[repr(C)]
 pub struct ZSTD_frameParameters {
     ///  1: content size will be in frame header (when known)
-    pub contentSizeFlag: std::ffi::c_int, 
+    pub contentSizeFlag: i32, 
     ///  1: generate a 32-bits checksum using XXH64 algorithm at end of frame, for error detection
-    pub checksumFlag: std::ffi::c_int, 
+    pub checksumFlag: i32, 
     ///  1: no dictID will be saved into frame header (dictID is only useful for dictionary compression)
-    pub noDictIDFlag: std::ffi::c_int, 
+    pub noDictIDFlag: i32, 
 }
 
 #[derive(Copy, Clone)]
@@ -1361,30 +1361,30 @@ pub struct ZSTD_parameters {
 }
 
 
-pub type ZSTD_dictContentType_e = std::ffi::c_uint;
+pub type ZSTD_dictContentType_e = u32;
 pub const ZSTD_dct_auto: ZSTD_dictContentType_e = 0; /* dictionary is "full" when starting with ZSTD_MAGIC_DICTIONARY, otherwise it is "rawContent" */
 pub const ZSTD_dct_rawContent: ZSTD_dictContentType_e = 1; /* ensures dictionary is always loaded as rawContent, even if it starts with ZSTD_MAGIC_DICTIONARY */
 pub const ZSTD_dct_fullDict: ZSTD_dictContentType_e = 2; /* refuses to load a dictionary if it does not respect Zstandard's specification, starting with ZSTD_MAGIC_DICTIONARY */
 
-pub type ZSTD_dictLoadMethod_e = std::ffi::c_uint;
+pub type ZSTD_dictLoadMethod_e = u32;
 ///  Copy dictionary content internally
 pub const ZSTD_dlm_byCopy: ZSTD_dictLoadMethod_e = 0; 
 ///  Reference dictionary content -- the dictionary buffer must outlive its users.
 pub const ZSTD_dlm_byRef: ZSTD_dictLoadMethod_e = 1; 
 
-pub type ZSTD_format_e = std::ffi::c_int;
+pub type ZSTD_format_e = i32;
 pub const ZSTD_f_zstd1: ZSTD_format_e = 0; /* zstd frame format, specified in zstd_compression_format.md (default) */
 pub const ZSTD_f_zstd1_magicless: ZSTD_format_e = 1; /* Variant of zstd frame format, without initial 4-bytes magic number.
                                  * Useful to save 4 bytes per generated frame.
                                  * Decoder cannot recognise automatically this format, requiring this instruction. */
 
 
-pub type ZSTD_forceIgnoreChecksum_e = std::ffi::c_uint;
+pub type ZSTD_forceIgnoreChecksum_e = u32;
 /* Note: this enum controls ZSTD_d_forceIgnoreChecksum */
 pub const ZSTD_d_validateChecksum: ZSTD_forceIgnoreChecksum_e = 0;
 pub const ZSTD_d_ignoreChecksum: ZSTD_forceIgnoreChecksum_e = 1;
 
-pub type ZSTD_refMultipleDDicts_e = std::ffi::c_uint;
+pub type ZSTD_refMultipleDDicts_e = u32;
 /* Note: this enum controls ZSTD_d_refMultipleDDicts */
 pub const ZSTD_rmd_refSingleDDict: ZSTD_refMultipleDDicts_e = 0;
 pub const ZSTD_rmd_refMultipleDDicts: ZSTD_refMultipleDDicts_e = 1;
@@ -1423,7 +1423,7 @@ pub const ZSTD_rmd_refMultipleDDicts: ZSTD_refMultipleDDicts_e = 1;
  * Zstd is making poor choices, it is possible to override that choice with
  * this enum.
  */
-pub type ZSTD_dictAttachPref_e = std::ffi::c_int;
+pub type ZSTD_dictAttachPref_e = i32;
 pub const ZSTD_dictDefaultAttach: ZSTD_dictAttachPref_e = 0; /* Use the default heuristic. */
 pub const ZSTD_dictForceAttach: ZSTD_dictAttachPref_e = 1; /* Never copy the dictionary. */
 pub const ZSTD_dictForceCopy: ZSTD_dictAttachPref_e = 2; /* Always copy the dictionary. */
@@ -1443,7 +1443,7 @@ pub const ZSTD_dictForceLoad: ZSTD_dictAttachPref_e = 3; /* Always reload the di
    * Zstd can take a decision on whether or not to enable the feature (ZSTD_ps_auto),
    * but setting the switch to ZSTD_ps_enable or ZSTD_ps_disable force enable/disable the feature.
    */
-pub type ZSTD_ParamSwitch_e = std::ffi::c_int;
+pub type ZSTD_ParamSwitch_e = i32;
 pub const ZSTD_ps_auto: ZSTD_ParamSwitch_e = 0; /* Let the library automatically determine whether the feature shall be enabled */
 pub const ZSTD_ps_enable: ZSTD_ParamSwitch_e = 1; /* Force-enable the feature */
 pub const ZSTD_ps_disable: ZSTD_ParamSwitch_e = 2; /* Do not use the feature */
@@ -1497,7 +1497,7 @@ pub type ZSTD_paramSwitch_e = ZSTD_ParamSwitch_e; /* old name */
  *           or an error code (if srcSize is too small) */
 // ZSTDLIB_STATIC_API size_t ZSTD_frameHeaderSize(const void* src, size_t srcSize);
 
-pub type ZSTD_FrameType_e = std::ffi::c_uint;
+pub type ZSTD_FrameType_e = u32;
 pub const ZSTD_skippableFrame: ZSTD_FrameType_e = 1;
 pub const ZSTD_frame: ZSTD_FrameType_e = 0;
 pub type ZSTD_frameType_e = ZSTD_FrameType_e; /* old name */
@@ -1505,15 +1505,15 @@ pub type ZSTD_frameType_e = ZSTD_FrameType_e; /* old name */
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_FrameHeader {
-    pub frameContentSize: std::ffi::c_ulonglong, /* if == ZSTD_CONTENTSIZE_UNKNOWN, it means this field is not available. 0 means "empty" */
-    pub windowSize: std::ffi::c_ulonglong, /* can be very large, up to <= frameContentSize */
-    pub blockSizeMax: std::ffi::c_uint,
+    pub frameContentSize: u64, /* if == ZSTD_CONTENTSIZE_UNKNOWN, it means this field is not available. 0 means "empty" */
+    pub windowSize: u64, /* can be very large, up to <= frameContentSize */
+    pub blockSizeMax: u32,
     pub frameType: ZSTD_FrameType_e, /* if == ZSTD_skippableFrame, frameContentSize is the size of skippable content */
-    pub headerSize: std::ffi::c_uint,
-    pub dictID: std::ffi::c_uint,
-    pub checksumFlag: std::ffi::c_uint, /* for ZSTD_skippableFrame, contains the skippable magic variant [0-15] */
-    pub _reserved1: std::ffi::c_uint,
-    pub _reserved2: std::ffi::c_uint,
+    pub headerSize: u32,
+    pub dictID: u32,
+    pub checksumFlag: u32, /* for ZSTD_skippableFrame, contains the skippable magic variant [0-15] */
+    pub _reserved1: u32,
+    pub _reserved2: u32,
 }
 pub type ZSTD_frameHeader = ZSTD_FrameHeader; /* old name */
 
@@ -1573,7 +1573,7 @@ pub const fn ZSTD_DECOMPRESSION_MARGIN(originalSize: usize, blockSize: usize) ->
     blockSize /* One block of margin */
 }
 
-pub type ZSTD_SequenceFormat_e = std::ffi::c_int;
+pub type ZSTD_SequenceFormat_e = i32;
 pub const ZSTD_sf_noBlockDelimiters: ZSTD_SequenceFormat_e = 0; /* ZSTD_Sequence[] has no block delimiters, just sequences */
 pub const ZSTD_sf_explicitBlockDelimiters: ZSTD_SequenceFormat_e = 1; /* ZSTD_Sequence[] contains explicit block delimiters */
 pub type ZSTD_sequenceFormat_e = ZSTD_SequenceFormat_e; /* old name */
@@ -2170,7 +2170,7 @@ pub const ZSTD_c_validateSequences: ZSTD_cParameter = ZSTD_c_experimentalParam12
  * Note that currently the first block is never split,
  * to ensure expansion guarantees in presence of incompressible data.
  */
-pub const ZSTD_BLOCKSPLITTER_LEVEL_MAX: std::ffi::c_int = 6;
+pub const ZSTD_BLOCKSPLITTER_LEVEL_MAX: i32 = 6;
 pub const ZSTD_c_blockSplitterLevel: ZSTD_cParameter = ZSTD_c_experimentalParam20;
 
 /* ZSTD_c_splitAfterSequences
@@ -2549,12 +2549,12 @@ pub const ZSTD_d_maxBlockSize: ZSTD_dParameter = ZSTD_d_experimentalParam6;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_frameProgression {
-    pub ingested: std::ffi::c_ulonglong, /* nb input bytes read and buffered */
-    pub consumed: std::ffi::c_ulonglong, /* nb input bytes actually compressed */
-    pub produced: std::ffi::c_ulonglong, /* nb of compressed bytes generated and buffered */
-    pub flushed: std::ffi::c_ulonglong, /* nb of compressed bytes flushed : not provided; can be tracked from caller side */
-    pub currentJobID: std::ffi::c_uint, /* MT only : latest started job nb */
-    pub nbActiveWorkers: std::ffi::c_uint, /* MT only : nb of workers actively compressing at probe time */
+    pub ingested: u64, /* nb input bytes read and buffered */
+    pub consumed: u64, /* nb input bytes actually compressed */
+    pub produced: u64, /* nb of compressed bytes generated and buffered */
+    pub flushed: u64, /* nb of compressed bytes flushed : not provided; can be tracked from caller side */
+    pub currentJobID: u32, /* MT only : latest started job nb */
+    pub nbActiveWorkers: u32, /* MT only : nb of workers actively compressing at probe time */
 }
 
 /* ZSTD_getFrameProgression() :
@@ -2716,7 +2716,7 @@ pub type ZSTD_sequenceProducer_F = Option::<
         usize,
         *const std::ffi::c_void,
         usize,
-        std::ffi::c_int,
+        i32,
         usize,
     ) -> usize,
 >;
@@ -2850,7 +2850,7 @@ pub type ZSTD_sequenceProducer_F = Option::<
 
 /* misc */
 
-pub type ZSTD_nextInputType_e = std::ffi::c_uint;
+pub type ZSTD_nextInputType_e = u32;
 pub const ZSTDnit_frameHeader: ZSTD_nextInputType_e = 0;
 pub const ZSTDnit_blockHeader: ZSTD_nextInputType_e = 1;
 pub const ZSTDnit_block: ZSTD_nextInputType_e = 2;

@@ -7,41 +7,41 @@ extern "C" {
             unsafe extern "C" fn(*mut std::ffi::c_void) -> *mut std::ffi::c_void,
         >,
         __arg: *mut std::ffi::c_void,
-    ) -> std::ffi::c_int;
+    ) -> i32;
     fn pthread_join(
         __th: pthread_t,
         __thread_return: *mut *mut std::ffi::c_void,
-    ) -> std::ffi::c_int;
+    ) -> i32;
     fn pthread_mutex_init(
         __mutex: *mut pthread_mutex_t,
         __mutexattr: *const pthread_mutexattr_t,
-    ) -> std::ffi::c_int;
-    fn pthread_mutex_destroy(__mutex: *mut pthread_mutex_t) -> std::ffi::c_int;
-    fn pthread_mutex_lock(__mutex: *mut pthread_mutex_t) -> std::ffi::c_int;
-    fn pthread_mutex_unlock(__mutex: *mut pthread_mutex_t) -> std::ffi::c_int;
+    ) -> i32;
+    fn pthread_mutex_destroy(__mutex: *mut pthread_mutex_t) -> i32;
+    fn pthread_mutex_lock(__mutex: *mut pthread_mutex_t) -> i32;
+    fn pthread_mutex_unlock(__mutex: *mut pthread_mutex_t) -> i32;
     fn pthread_cond_init(
         __cond: *mut pthread_cond_t,
         __cond_attr: *const pthread_condattr_t,
-    ) -> std::ffi::c_int;
-    fn pthread_cond_destroy(__cond: *mut pthread_cond_t) -> std::ffi::c_int;
-    fn pthread_cond_signal(__cond: *mut pthread_cond_t) -> std::ffi::c_int;
-    fn pthread_cond_broadcast(__cond: *mut pthread_cond_t) -> std::ffi::c_int;
+    ) -> i32;
+    fn pthread_cond_destroy(__cond: *mut pthread_cond_t) -> i32;
+    fn pthread_cond_signal(__cond: *mut pthread_cond_t) -> i32;
+    fn pthread_cond_broadcast(__cond: *mut pthread_cond_t) -> i32;
     fn pthread_cond_wait(
         __cond: *mut pthread_cond_t,
         __mutex: *mut pthread_mutex_t,
-    ) -> std::ffi::c_int;
+    ) -> i32;
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union __atomic_wide_counter {
-    pub __value64: std::ffi::c_ulonglong,
+    pub __value64: u64,
     pub __value32: C2RustUnnamed,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct C2RustUnnamed {
-    pub __low: std::ffi::c_uint,
-    pub __high: std::ffi::c_uint,
+    pub __low: u32,
+    pub __high: u32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -53,13 +53,13 @@ pub type __pthread_list_t = __pthread_internal_list;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct __pthread_mutex_s {
-    pub __lock: std::ffi::c_int,
-    pub __count: std::ffi::c_uint,
-    pub __owner: std::ffi::c_int,
-    pub __nusers: std::ffi::c_uint,
-    pub __kind: std::ffi::c_int,
-    pub __spins: std::ffi::c_short,
-    pub __elision: std::ffi::c_short,
+    pub __lock: i32,
+    pub __count: u32,
+    pub __owner: i32,
+    pub __nusers: u32,
+    pub __kind: i32,
+    pub __spins: i16,
+    pub __elision: i16,
     pub __list: __pthread_list_t,
 }
 #[derive(Copy, Clone)]
@@ -67,25 +67,25 @@ pub struct __pthread_mutex_s {
 pub struct __pthread_cond_s {
     pub __wseq: __atomic_wide_counter,
     pub __g1_start: __atomic_wide_counter,
-    pub __g_size: [std::ffi::c_uint; 2],
-    pub __g1_orig_size: std::ffi::c_uint,
-    pub __wrefs: std::ffi::c_uint,
-    pub __g_signals: [std::ffi::c_uint; 2],
-    pub __unused_initialized_1: std::ffi::c_uint,
-    pub __unused_initialized_2: std::ffi::c_uint,
+    pub __g_size: [u32; 2],
+    pub __g1_orig_size: u32,
+    pub __wrefs: u32,
+    pub __g_signals: [u32; 2],
+    pub __unused_initialized_1: u32,
+    pub __unused_initialized_2: u32,
 }
 pub type pthread_t = std::ffi::c_ulong;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_mutexattr_t {
     pub __size: [std::ffi::c_char; 4],
-    pub __align: std::ffi::c_int,
+    pub __align: i32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_condattr_t {
     pub __size: [std::ffi::c_char; 4],
-    pub __align: std::ffi::c_int,
+    pub __align: i32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -105,7 +105,7 @@ pub union pthread_mutex_t {
 pub union pthread_cond_t {
     pub __data: __pthread_cond_s,
     pub __size: [std::ffi::c_char; 48],
-    pub __align: std::ffi::c_longlong,
+    pub __align: i64,
 }
 pub type ZSTD_allocFunction = Option::<
     unsafe extern "C" fn(*mut std::ffi::c_void, usize) -> *mut std::ffi::c_void,
@@ -132,11 +132,11 @@ pub struct POOL_ctx_s {
     pub queueTail: usize,
     pub queueSize: usize,
     pub numThreadsBusy: usize,
-    pub queueEmpty: std::ffi::c_int,
+    pub queueEmpty: i32,
     pub queueMutex: pthread_mutex_t,
     pub queuePushCond: pthread_cond_t,
     pub queuePopCond: pthread_cond_t,
-    pub shutdown: std::ffi::c_int,
+    pub shutdown: i32,
 }
 pub type POOL_job = POOL_job_s;
 #[derive(Copy, Clone)]
@@ -191,8 +191,8 @@ unsafe extern "C" fn ZSTD_customFree(
         }
     }
 }
-pub const NULL: std::ffi::c_int = 0;
-pub const NULL_0: std::ffi::c_int = 0;
+pub const NULL: i32 = 0;
+pub const NULL_0: i32 = 0;
 unsafe extern "C" fn POOL_thread(
     mut opaque: *mut std::ffi::c_void,
 ) -> *mut std::ffi::c_void {
@@ -224,7 +224,7 @@ unsafe extern "C" fn POOL_thread(
             % (*ctx).queueSize;
         (*ctx).numThreadsBusy = ((*ctx).numThreadsBusy).wrapping_add(1);
         (*ctx).numThreadsBusy;
-        (*ctx).queueEmpty = ((*ctx).queueHead == (*ctx).queueTail) as std::ffi::c_int;
+        (*ctx).queueEmpty = ((*ctx).queueHead == (*ctx).queueTail) as i32;
         ZSTD_pthread_cond_signal!(
             & ctx -> queuePushCond
         )(ZSTD_pthread_cond_signal!(& ctx -> queuePushCond));
@@ -286,7 +286,7 @@ pub unsafe extern "C" fn POOL_create_advanced(
     (*ctx).queueTail = 0;
     (*ctx).numThreadsBusy = 0;
     (*ctx).queueEmpty = 1;
-    let mut error: std::ffi::c_int = 0;
+    let mut error: i32 = 0;
     error |= ZSTD_pthread_mutex_init!(& ctx -> queueMutex, NULL);
     error |= ZSTD_pthread_cond_init!(& ctx -> queuePushCond, NULL);
     error |= ZSTD_pthread_cond_init!(& ctx -> queuePopCond, NULL);
@@ -406,7 +406,7 @@ pub unsafe extern "C" fn POOL_sizeof(mut ctx: *const POOL_ctx) -> usize {
 unsafe extern "C" fn POOL_resize_internal(
     mut ctx: *mut POOL_ctx,
     mut numThreads: usize,
-) -> std::ffi::c_int {
+) -> i32 {
     if numThreads <= (*ctx).threadCapacity {
         if numThreads == 0 {
             return 1;
@@ -449,8 +449,8 @@ unsafe extern "C" fn POOL_resize_internal(
 pub unsafe extern "C" fn POOL_resize(
     mut ctx: *mut POOL_ctx,
     mut numThreads: usize,
-) -> std::ffi::c_int {
-    let mut result: std::ffi::c_int = 0;
+) -> i32 {
+    let mut result: i32 = 0;
     if ctx.is_null() {
         return 1;
     }
@@ -466,14 +466,14 @@ pub unsafe extern "C" fn POOL_resize(
     )(ZSTD_pthread_mutex_unlock!(& ctx -> queueMutex));
     return result;
 }
-unsafe extern "C" fn isQueueFull(mut ctx: *const POOL_ctx) -> std::ffi::c_int {
+unsafe extern "C" fn isQueueFull(mut ctx: *const POOL_ctx) -> i32 {
     if (*ctx).queueSize > 1 {
         return ((*ctx).queueHead
             == ((*ctx).queueTail).wrapping_add(1)
-                % (*ctx).queueSize) as std::ffi::c_int
+                % (*ctx).queueSize) as i32
     } else {
         return ((*ctx).numThreadsBusy == (*ctx).threadLimit || (*ctx).queueEmpty == 0)
-            as std::ffi::c_int
+            as i32
     };
 }
 unsafe extern "C" fn POOL_add_internal(
@@ -526,7 +526,7 @@ pub unsafe extern "C" fn POOL_tryAdd(
     mut ctx: *mut POOL_ctx,
     mut function: POOL_function,
     mut opaque: *mut std::ffi::c_void,
-) -> std::ffi::c_int {
+) -> i32 {
     ZSTD_pthread_mutex_lock!(
         & ctx -> queueMutex
     )(ZSTD_pthread_mutex_lock!(& ctx -> queueMutex));

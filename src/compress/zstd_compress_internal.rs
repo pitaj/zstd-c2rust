@@ -28,13 +28,13 @@ pub const ZSTD_DUBT_UNSORTED_MARK: u32 = 1; /* For btlazy2 strategy, index ZSTD_
 /*-*************************************
 *  Context memory management
 ***************************************/
-pub type ZSTD_compressionStage_e = std::ffi::c_uint;
+pub type ZSTD_compressionStage_e = u32;
 pub const ZSTDcs_ending: ZSTD_compressionStage_e = 3;
 pub const ZSTDcs_ongoing: ZSTD_compressionStage_e = 2;
 pub const ZSTDcs_init: ZSTD_compressionStage_e = 1;
 pub const ZSTDcs_created: ZSTD_compressionStage_e = 0;
 
-pub type ZSTD_cStreamStage = std::ffi::c_uint;
+pub type ZSTD_cStreamStage = u32;
 pub const zcss_flush: ZSTD_cStreamStage = 2;
 pub const zcss_load: ZSTD_cStreamStage = 1;
 pub const zcss_init: ZSTD_cStreamStage = 0;
@@ -97,7 +97,7 @@ pub struct SeqDef_s {
 }
 
 /* Controls whether seqStore has a single "long" litLength or matchLength. See SeqStore_t. */
-pub type ZSTD_longLengthType_e = std::ffi::c_uint;
+pub type ZSTD_longLengthType_e = u32;
 pub const ZSTD_llt_matchLength: ZSTD_longLengthType_e = 2; /* represents a long match */
 pub const ZSTD_llt_literalLength: ZSTD_longLengthType_e = 1; /* represents a long literal */
 pub const ZSTD_llt_none: ZSTD_longLengthType_e = 0; /* no longLengthType */
@@ -177,7 +177,7 @@ pub unsafe fn ZSTD_getSeqStore(
 /* compress, dictBuilder, decodeCorpus (shouldn't get its definition from here) */
 pub unsafe fn ZSTD_seqToCodes(
     mut seqStorePtr: *const SeqStore_t,
-) -> std::ffi::c_int {
+) -> i32 {
     let sequences: *const SeqDef = (*seqStorePtr).sequencesStart;
     let llCodeTable = (*seqStorePtr).llCode;
     let ofCodeTable = (*seqStorePtr).ofCode;
@@ -185,7 +185,7 @@ pub unsafe fn ZSTD_seqToCodes(
     let nbSeq = ((*seqStorePtr).sequences).offset_from((*seqStorePtr).sequencesStart)
         as std::ffi::c_long as u32;
     let mut u: u32 = 0;
-    let mut longOffsets: std::ffi::c_int = 0;
+    let mut longOffsets: i32 = 0;
     u = 0;
     while u < nbSeq {
         let llv = (*sequences.offset(u as isize)).litLength as u32;
@@ -207,13 +207,13 @@ pub unsafe fn ZSTD_seqToCodes(
         u = u.wrapping_add(1);
         u;
     }
-    if (*seqStorePtr).longLengthType as std::ffi::c_uint
-        == ZSTD_llt_literalLength as std::ffi::c_int as std::ffi::c_uint
+    if (*seqStorePtr).longLengthType as u32
+        == ZSTD_llt_literalLength as i32 as u32
     {
         *llCodeTable.offset((*seqStorePtr).longLengthPos as isize) = MaxLL as u8;
     }
-    if (*seqStorePtr).longLengthType as std::ffi::c_uint
-        == ZSTD_llt_matchLength as std::ffi::c_int as std::ffi::c_uint
+    if (*seqStorePtr).longLengthType as u32
+        == ZSTD_llt_matchLength as i32 as u32
     {
         *mlCodeTable.offset((*seqStorePtr).longLengthPos as isize) = MaxML as u8;
     }
@@ -306,14 +306,14 @@ const kNullRawSeqStore: RawSeqStore_t = RawSeqStore_t {
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_optimal_t {
-    pub price: std::ffi::c_int, /* price from beginning of segment to this position */
+    pub price: i32, /* price from beginning of segment to this position */
     pub off: u32, /* offset of previous match */
     pub mlen: u32, /* length of previous match */
     pub litlen: u32, /* nb of literals since previous match */
     pub rep: [u32; 3], /* offset history after previous match */
 }
 
-pub type ZSTD_OptPrice_e = std::ffi::c_uint;
+pub type ZSTD_OptPrice_e = u32;
 pub const zop_predef: ZSTD_OptPrice_e = 1;
 pub const zop_dynamic: ZSTD_OptPrice_e = 0;
 
@@ -323,10 +323,10 @@ pub const ZSTD_OPT_SIZE: u32 = ZSTD_OPT_NUM + 3;
 #[repr(C)]
 pub struct optState_t {
     /* All tables are allocated inside cctx->workspace by ZSTD_resetCCtx_internal() */
-    pub litFreq: *mut std::ffi::c_uint, /* table of literals statistics, of size 256 */
-    pub litLengthFreq: *mut std::ffi::c_uint, /* table of litLength statistics, of size (MaxLL+1) */
-    pub matchLengthFreq: *mut std::ffi::c_uint, /* table of matchLength statistics, of size (MaxML+1) */
-    pub offCodeFreq: *mut std::ffi::c_uint, /* table of offCode statistics, of size (MaxOff+1) */
+    pub litFreq: *mut u32, /* table of literals statistics, of size 256 */
+    pub litLengthFreq: *mut u32, /* table of litLength statistics, of size (MaxLL+1) */
+    pub matchLengthFreq: *mut u32, /* table of matchLength statistics, of size (MaxML+1) */
+    pub offCodeFreq: *mut u32, /* table of offCode statistics, of size (MaxOff+1) */
     pub matchTable: *mut ZSTD_match_t, /* list of found matches, of size ZSTD_OPT_SIZE */
     pub priceTable: *mut ZSTD_optimal_t, /* All positions tracked by optimal parser, of size ZSTD_OPT_SIZE */
     
@@ -391,8 +391,8 @@ pub struct ZSTD_MatchState_t {
     pub hashTable3: *mut u32,
     pub chainTable: *mut u32,
     
-    pub forceNonContiguous: std::ffi::c_int, /* Non-zero if we should force non-contiguous load for the next window update. */
-    pub dedicatedDictSearch: std::ffi::c_int, /* Indicates whether this matchState is using the
+    pub forceNonContiguous: i32, /* Non-zero if we should force non-contiguous load for the next window update. */
+    pub dedicatedDictSearch: i32, /* Indicates whether this matchState is using the
                             * dedicated dictionary search structure.
                             */
     pub opt: optState_t, /* optimal parser state */
@@ -403,14 +403,14 @@ pub struct ZSTD_MatchState_t {
     /* Controls prefetching in some dictMatchState matchfinders.
     * This behavior is controlled from the cctx ms.
     * This parameter has no effect in the cdict ms. */
-    pub prefetchCDictTables: std::ffi::c_int,
+    pub prefetchCDictTables: i32,
 
     /* When == 0, lazy match finders insert every position.
     * When != 0, lazy match finders only insert positions they search.
     * This allows them to skip much faster over incompressible data,
     * at a small cost to compression ratio.
     */
-    pub lazySkipping: std::ffi::c_int,
+    pub lazySkipping: i32,
 }
 
 #[derive(Copy, Clone)]
@@ -464,7 +464,7 @@ pub struct ldmParams_t {
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct SeqCollector {
-    pub collectSequences: std::ffi::c_int,
+    pub collectSequences: i32,
     pub seqStart: *mut ZSTD_Sequence,
     pub seqIndex: usize,
     pub maxSequences: usize,
@@ -477,13 +477,13 @@ pub struct ZSTD_CCtx_params_s {
     pub cParams: ZSTD_compressionParameters,
     pub fParams: ZSTD_frameParameters,
 
-    pub compressionLevel: std::ffi::c_int,
-    pub forceWindow: std::ffi::c_int, /* force back-references to respect limit of
+    pub compressionLevel: i32,
+    pub forceWindow: i32, /* force back-references to respect limit of
                                 * 1<<wLog, even for dictionary */
     pub targetCBlockSize: usize, /* Tries to fit compressed block size to be around targetCBlockSize.
                                 * No target when targetCBlockSize == 0.
                                 * There is no guarantee on compressed block size */
-    pub srcSizeHint: std::ffi::c_int, /* User's best guess of source size.
+    pub srcSizeHint: i32, /* User's best guess of source size.
                                 * Hint is not valid when srcSizeHint == 0.
                                 * There is no guarantee that hint is close to actual source size */
 
@@ -491,16 +491,16 @@ pub struct ZSTD_CCtx_params_s {
     pub literalCompressionMode: ZSTD_ParamSwitch_e,
 
     /* Multithreading: used to pass parameters to mtctx */
-    pub nbWorkers: std::ffi::c_int,
+    pub nbWorkers: i32,
     pub jobSize: usize,
-    pub overlapLog: std::ffi::c_int,
-    pub rsyncable: std::ffi::c_int,
+    pub overlapLog: i32,
+    pub rsyncable: i32,
 
     /* Long distance matching parameters */
     pub ldmParams: ldmParams_t,
 
     /* Dedicated dict search algorithm trigger */
-    pub enableDedicatedDictSearch: std::ffi::c_int,
+    pub enableDedicatedDictSearch: i32,
 
     /* Input/output buffer modes */
     pub inBufferMode: ZSTD_bufferMode_e,
@@ -508,7 +508,7 @@ pub struct ZSTD_CCtx_params_s {
 
     /* Sequence compression API */
     pub blockDelimiters: ZSTD_SequenceFormat_e,
-    pub validateSequences: std::ffi::c_int,
+    pub validateSequences: i32,
 
     /* Block splitting
      * @postBlockSplitter executes split analysis after sequences are produced,
@@ -521,7 +521,7 @@ pub struct ZSTD_CCtx_params_s {
      * Highest @preBlockSplitter_level combines well with @postBlockSplitter.
      */
     pub postBlockSplitter: ZSTD_ParamSwitch_e,
-    pub preBlockSplitter_level: std::ffi::c_int,
+    pub preBlockSplitter_level: i32,
 
     /* Adjust the max block size*/
     pub maxBlockSize: usize,
@@ -530,7 +530,7 @@ pub struct ZSTD_CCtx_params_s {
     pub useRowMatchFinder: ZSTD_ParamSwitch_e,
 
     /* Always load a dictionary in ext-dict mode (not prefix mode)? */
-    pub deterministicRefPrefix: std::ffi::c_int,
+    pub deterministicRefPrefix: i32,
 
     /* Internal use, for createCCtxParams() and freeCCtxParams() only */
     pub customMem: ZSTD_customMem,
@@ -540,7 +540,7 @@ pub struct ZSTD_CCtx_params_s {
 
     /* Controls whether zstd will fall back to an internal matchfinder
      * if the external matchfinder returns an error code. */
-    pub enableMatchFinderFallback: std::ffi::c_int,
+    pub enableMatchFinderFallback: i32,
     
     /* Parameters for the external sequence producer API.
      * Users set these parameters through ZSTD_registerSequenceProducer().
@@ -552,7 +552,7 @@ pub struct ZSTD_CCtx_params_s {
     pub searchForExternalRepcodes: ZSTD_ParamSwitch_e,
 }
 
-pub const COMPRESS_SEQUENCES_WORKSPACE_SIZE: usize = std::mem::size_of::<std::ffi::c_uint>() * (MaxSeq as usize + 2);
+pub const COMPRESS_SEQUENCES_WORKSPACE_SIZE: usize = std::mem::size_of::<u32>() * (MaxSeq as usize + 2);
 pub const ENTROPY_WORKSPACE_SIZE: usize = HUF_WORKSPACE_SIZE + COMPRESS_SEQUENCES_WORKSPACE_SIZE;
 pub const TMP_WORKSPACE_SIZE: usize = std::cmp::max(ENTROPY_WORKSPACE_SIZE, ZSTD_SLIPBLOCK_WORKSPACESIZE);
 
@@ -561,7 +561,7 @@ pub const TMP_WORKSPACE_SIZE: usize = std::cmp::max(ENTROPY_WORKSPACE_SIZE, ZSTD
  * source buffer to user-provided destination buffer (ZSTDb_not_buffered), or
  * whether the context needs to buffer the input/output (ZSTDb_buffered).
  */
-pub type ZSTD_buffered_policy_e = std::ffi::c_uint;
+pub type ZSTD_buffered_policy_e = u32;
 pub const ZSTDb_buffered: ZSTD_buffered_policy_e = 1;
 pub const ZSTDb_not_buffered: ZSTD_buffered_policy_e = 0;
 
@@ -586,8 +586,8 @@ pub struct ZSTD_blockSplitCtx {
 #[repr(C)]
 pub struct ZSTD_CCtx_s {
     pub stage: ZSTD_compressionStage_e,
-    pub cParamsChanged: std::ffi::c_int, /* == 1 if cParams(except wlog) or compression level are changed in requestedParams. Triggers transmission of new params to ZSTDMT (if available) then reset to 0. */
-    pub bmi2: std::ffi::c_int, /* == 1 if the CPU supports BMI2 and 0 otherwise. CPU support is determined dynamically once per context lifetime. */
+    pub cParamsChanged: i32, /* == 1 if cParams(except wlog) or compression level are changed in requestedParams. Triggers transmission of new params to ZSTDMT (if available) then reset to 0. */
+    pub bmi2: i32, /* == 1 if the CPU supports BMI2 and 0 otherwise. CPU support is determined dynamically once per context lifetime. */
     pub requestedParams: ZSTD_CCtx_params,
     pub appliedParams: ZSTD_CCtx_params,
     pub simpleApiParams: ZSTD_CCtx_params, /* Param storage used by the simple API - not sticky. Must only be used in top-level simple API functions for storage. */
@@ -596,16 +596,16 @@ pub struct ZSTD_CCtx_s {
 
     pub workspace: ZSTD_cwksp, /* manages buffer for dynamic allocations */
     pub blockSizeMax: usize,
-    pub pledgedSrcSizePlusOne: std::ffi::c_ulonglong, /* this way, 0 (default) == unknown */
-    pub consumedSrcSize: std::ffi::c_ulonglong,
-    pub producedCSize: std::ffi::c_ulonglong,
+    pub pledgedSrcSizePlusOne: u64, /* this way, 0 (default) == unknown */
+    pub consumedSrcSize: u64,
+    pub producedCSize: u64,
     pub xxhState: XXH64_state_t,
     pub customMem: ZSTD_customMem,
     // pub pool: *mut ZSTD_threadPool,
     pub staticSize: usize,
     pub seqCollector: SeqCollector,
-    pub isFirstBlock: std::ffi::c_int,
-    pub initialized: std::ffi::c_int,
+    pub isFirstBlock: i32,
+    pub initialized: i32,
 
     pub seqStore: SeqStore_t, /* sequences storage ptrs */
     pub ldmState: ldmState_t, /* long distance matching state */
@@ -658,21 +658,21 @@ pub struct ZSTD_CCtx_s {
     pub extSeqBufCapacity: usize,
 }
 
-pub type ZSTD_dictTableLoadMethod_e = std::ffi::c_uint;
+pub type ZSTD_dictTableLoadMethod_e = u32;
 pub const ZSTD_dtlm_full: ZSTD_dictTableLoadMethod_e = 1;
 pub const ZSTD_dtlm_fast: ZSTD_dictTableLoadMethod_e = 0;
 
-pub type ZSTD_tableFillPurpose_e = std::ffi::c_uint;
+pub type ZSTD_tableFillPurpose_e = u32;
 pub const ZSTD_tfp_forCDict: ZSTD_tableFillPurpose_e = 1;
 pub const ZSTD_tfp_forCCtx: ZSTD_tableFillPurpose_e = 0;
 
-pub type ZSTD_dictMode_e = std::ffi::c_uint;
+pub type ZSTD_dictMode_e = u32;
 pub const ZSTD_dedicatedDictSearch: ZSTD_dictMode_e = 3;
 pub const ZSTD_dictMatchState: ZSTD_dictMode_e = 2;
 pub const ZSTD_extDict: ZSTD_dictMode_e = 1;
 pub const ZSTD_noDict: ZSTD_dictMode_e = 0;
 
-pub type ZSTD_CParamMode_e = std::ffi::c_uint;
+pub type ZSTD_CParamMode_e = u32;
 /* ZSTD_getCParams, ZSTD_getParams, ZSTD_adjustParams.
 * We don't know what these parameters are for. We default to the legacy
 * behavior of taking both the source size and the dict size into account
@@ -753,7 +753,7 @@ pub fn ZSTD_MLcode(mut mlBase: u32) -> u32 {
 #[inline]
 pub fn ZSTD_cParam_withinBounds(
     cParam: ZSTD_cParameter,
-    value: std::ffi::c_int,
+    value: i32,
 ) -> bool {
     let bounds = ZSTD_cParam_getBounds(cParam);
     if ERR_isError(bounds.error) {
@@ -1488,7 +1488,7 @@ pub unsafe fn ZSTD_matchState_dictMode(
  * code much more frequently. This is very inefficient, and should only be
  * used for tests and fuzzers.
  */
-pub const ZSTD_WINDOW_OVERFLOW_CORRECT_FREQUENTLY: std::ffi::c_int = 0; // TODO configurable?
+pub const ZSTD_WINDOW_OVERFLOW_CORRECT_FREQUENTLY: i32 = 0; // TODO configurable?
 
 /**
  * ZSTD_window_canOverflowCorrect():
@@ -1835,7 +1835,7 @@ pub unsafe fn ZSTD_window_update(
 pub unsafe fn ZSTD_getLowestMatchIndex(
     mut ms: *const ZSTD_MatchState_t,
     mut curr: u32,
-    mut windowLog: std::ffi::c_uint,
+    mut windowLog: u32,
 ) -> u32 {
     let maxDistance = 1_u32 << windowLog;
     let lowestValid = (*ms).window.lowLimit;
@@ -1860,7 +1860,7 @@ pub unsafe fn ZSTD_getLowestMatchIndex(
 pub unsafe fn ZSTD_getLowestPrefixIndex(
     mut ms: *const ZSTD_MatchState_t,
     mut curr: u32,
-    mut windowLog: std::ffi::c_uint,
+    mut windowLog: u32,
 ) -> u32 {
     let maxDistance = 1_u32 << windowLog;
     let lowestValid = (*ms).window.dictLimit;

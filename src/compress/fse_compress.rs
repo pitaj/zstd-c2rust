@@ -13,9 +13,9 @@ use crate::common::bits::*;
  */
 pub unsafe fn FSE_buildCTable_wksp(
     mut ct: *mut FSE_CTable,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
-    mut tableLog: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
+    mut tableLog: u32,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) -> usize {
@@ -149,7 +149,7 @@ pub unsafe fn FSE_buildCTable_wksp(
     }
 
     /* Build Symbol Transformation Table */
-    let mut total: std::ffi::c_uint = 0;
+    let mut total: u32 = 0;
     for s_2 in 0..=(maxSymbolValue as usize) {
         match *normalizedCounter.add(s_2) {
             0 => {
@@ -161,9 +161,9 @@ pub unsafe fn FSE_buildCTable_wksp(
             -1 | 1 => {
                 (*symbolTT.add(s_2))
                     .deltaNbBits = (tableLog << 16).wrapping_sub(1_u32 << tableLog);
-                debug_assert!(total <= std::ffi::c_int::MAX as _);
+                debug_assert!(total <= i32::MAX as _);
                 (*symbolTT.add(s_2))
-                    .deltaFindState = (total - 1) as std::ffi::c_int;
+                    .deltaFindState = (total - 1) as i32;
                 total = total.wrapping_add(1);
             }
             _ => {
@@ -182,11 +182,11 @@ pub unsafe fn FSE_buildCTable_wksp(
                 (*symbolTT.add(s_2))
                     .deltaFindState = total
                     .wrapping_sub(
-                        *normalizedCounter.add(s_2) as std::ffi::c_uint,
-                    ) as std::ffi::c_int;
+                        *normalizedCounter.add(s_2) as u32,
+                    ) as i32;
                 total = total
                     .wrapping_add(
-                        *normalizedCounter.add(s_2) as std::ffi::c_uint,
+                        *normalizedCounter.add(s_2) as u32,
                     );
             }
         }
@@ -211,8 +211,8 @@ pub unsafe fn FSE_buildCTable_wksp(
 *  FSE NCount encoding
 ****************************************************************/
 pub unsafe fn FSE_NCountWriteBound(
-    mut maxSymbolValue: std::ffi::c_uint,
-    mut tableLog: std::ffi::c_uint,
+    mut maxSymbolValue: u32,
+    mut tableLog: u32,
 ) -> usize {
     let maxHeaderSize = (((maxSymbolValue as usize + 1) * (tableLog as usize)
         + 4 /* bitCount initialized at 4 */
@@ -225,21 +225,21 @@ pub unsafe fn FSE_NCountWriteBound(
 unsafe fn FSE_writeNCount_generic(
     mut header: *mut std::ffi::c_void,
     mut headerBufferSize: usize,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
-    mut tableLog: std::ffi::c_uint,
-    mut writeIsSafe: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
+    mut tableLog: u32,
+    mut writeIsSafe: u32,
 ) -> usize {
     let ostart = header as *mut u8;
     let mut out = ostart;
     let oend = ostart.add(headerBufferSize);
-    let mut nbBits: std::ffi::c_int = 0;
-    let tableSize = (1 as std::ffi::c_int) << tableLog;
-    let mut remaining: std::ffi::c_int = 0;
-    let mut threshold: std::ffi::c_int = 0;
+    let mut nbBits: i32 = 0;
+    let tableSize = (1 as i32) << tableLog;
+    let mut remaining: i32 = 0;
+    let mut threshold: i32 = 0;
     let mut bitStream: u32 = 0;
-    let mut bitCount: std::ffi::c_int = 0;
-    let mut symbol: std::ffi::c_uint = 0;
+    let mut bitCount: i32 = 0;
+    let mut symbol: u32 = 0;
     let alphabetSize = maxSymbolValue.wrapping_add(1);
     let mut previousIs0: bool = false;
 
@@ -252,7 +252,7 @@ unsafe fn FSE_writeNCount_generic(
     /* Init */
     remaining = tableSize + 1; /* +1 for extra accuracy */
     threshold = tableSize;
-    nbBits = tableLog as std::ffi::c_int + 1;
+    nbBits = tableLog as i32 + 1;
 
     while symbol < alphabetSize && remaining > 1 { /* stops at 1 */
         if previousIs0 {
@@ -292,7 +292,7 @@ unsafe fn FSE_writeNCount_generic(
                 bitCount -= 16;
             }
         }
-        let mut count = *normalizedCounter.offset(symbol as isize) as std::ffi::c_int;
+        let mut count = *normalizedCounter.offset(symbol as isize) as i32;
         symbol += 1;
         let max = 2 * threshold - 1 - remaining;
         remaining -= if count < 0 { -count } else { count };
@@ -302,7 +302,7 @@ unsafe fn FSE_writeNCount_generic(
         }
         bitStream = bitStream.wrapping_add((count as u32) << bitCount);
         bitCount += nbBits;
-        bitCount -= (count < max) as std::ffi::c_int;
+        bitCount -= (count < max) as i32;
         previousIs0 = count == 1;
         if remaining < 1 { return ERROR(ZSTD_error_GENERIC); }
         while remaining < threshold {
@@ -339,9 +339,9 @@ unsafe fn FSE_writeNCount_generic(
 pub unsafe fn FSE_writeNCount(
     mut buffer: *mut std::ffi::c_void,
     mut bufferSize: usize,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
-    mut tableLog: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
+    mut tableLog: u32,
 ) -> usize {
     if tableLog > FSE_MAX_TABLELOG { return ERROR(ZSTD_error_tableLog_tooLarge); } /* Unsupported */
     if tableLog < FSE_MIN_TABLELOG { return ERROR(ZSTD_error_GENERIC); } /* Unsupported */
@@ -373,8 +373,8 @@ pub unsafe fn FSE_writeNCount(
 /* provides the minimum logSize to safely represent a distribution */
 unsafe fn FSE_minTableLog(
     mut srcSize: usize,
-    mut maxSymbolValue: std::ffi::c_uint,
-) -> std::ffi::c_uint {
+    mut maxSymbolValue: u32,
+) -> u32 {
     let mut minBitsSrc = ZSTD_highbit32(srcSize as u32) + 1;
     let mut minBitsSymbols = ZSTD_highbit32(maxSymbolValue) + 2;
     let mut minBits = if minBitsSrc < minBitsSymbols {
@@ -387,11 +387,11 @@ unsafe fn FSE_minTableLog(
 }
 
 pub unsafe fn FSE_optimalTableLog_internal(
-    mut maxTableLog: std::ffi::c_uint,
+    mut maxTableLog: u32,
     mut srcSize: usize,
-    mut maxSymbolValue: std::ffi::c_uint,
-    mut minus: std::ffi::c_uint,
-) -> std::ffi::c_uint {
+    mut maxSymbolValue: u32,
+    mut minus: u32,
+) -> u32 {
     let mut maxBitsSrc = ZSTD_highbit32(srcSize.wrapping_sub(1) as u32) - minus;
     let mut tableLog = maxTableLog;
     let mut minBits = FSE_minTableLog(srcSize, maxSymbolValue);
@@ -415,10 +415,10 @@ pub unsafe fn FSE_optimalTableLog_internal(
 }
 
 pub unsafe fn FSE_optimalTableLog(
-    mut maxTableLog: std::ffi::c_uint,
+    mut maxTableLog: u32,
     mut srcSize: usize,
-    mut maxSymbolValue: std::ffi::c_uint,
-) -> std::ffi::c_uint {
+    mut maxSymbolValue: u32,
+) -> u32 {
     return FSE_optimalTableLog_internal(
         maxTableLog,
         srcSize,
@@ -431,12 +431,12 @@ pub unsafe fn FSE_optimalTableLog(
    To be used when primary method fails. */
 
 unsafe fn FSE_normalizeM2(
-    mut norm: *mut std::ffi::c_short,
+    mut norm: *mut i16,
     mut tableLog: u32,
-    mut count: *const std::ffi::c_uint,
+    mut count: *const u32,
     mut total: usize,
     mut maxSymbolValue: u32,
-    mut lowProbCount: std::ffi::c_short,
+    mut lowProbCount: i16,
 ) -> usize {
     const NOT_YET_ASSIGNED: i16 = -2;
     let mut distributed: u32 = 0;
@@ -494,7 +494,7 @@ unsafe fn FSE_normalizeM2(
             }
         }
         let ref mut fresh4 = *norm.offset(maxV as isize);
-        *fresh4 = *fresh4 + ToDistribute as std::ffi::c_short;
+        *fresh4 = *fresh4 + ToDistribute as i16;
         return 0;
     }
 
@@ -525,7 +525,7 @@ unsafe fn FSE_normalizeM2(
             if weight < 1 {
                 return ERROR(ZSTD_error_GENERIC);
             }
-            *norm.add(s) = weight as std::ffi::c_short;
+            *norm.add(s) = weight as i16;
             tmpTotal = end;
         }
     }
@@ -533,11 +533,11 @@ unsafe fn FSE_normalizeM2(
 }
 
 pub unsafe fn FSE_normalizeCount(
-    mut normalizedCounter: *mut std::ffi::c_short,
-    mut tableLog: std::ffi::c_uint,
-    mut count: *const std::ffi::c_uint,
+    mut normalizedCounter: *mut i16,
+    mut tableLog: u32,
+    mut count: *const u32,
     mut total: usize,
-    mut maxSymbolValue: std::ffi::c_uint,
+    mut maxSymbolValue: u32,
     mut useLowProbCount: bool,
 ) -> usize {
     /* Sanity checks */
@@ -554,9 +554,9 @@ pub unsafe fn FSE_normalizeCount(
     let scale = 62_u64 - u64::from(tableLog);
     let step = (1_u64 << 62) / (total as u64);
     let vStep = 1_u64 << scale - 20;
-    let mut stillToDistribute = (1 as std::ffi::c_int) << tableLog;
-    let mut largest: std::ffi::c_uint = 0;
-    let mut largestP: std::ffi::c_short = 0;
+    let mut stillToDistribute = (1 as i32) << tableLog;
+    let mut largest: u32 = 0;
+    let mut largestP: i16 = 0;
     let mut lowThreshold = (total >> tableLog) as u32;
     for s in  0..(maxSymbolValue as usize) {
         if *count.add(s) as usize == total {
@@ -568,22 +568,22 @@ pub unsafe fn FSE_normalizeCount(
             *normalizedCounter.add(s) = lowProbCount;
             stillToDistribute -= 1;
         } else {
-            let mut proba = (*count.add(s) as u64 * step >> scale) as std::ffi::c_short;
+            let mut proba = (*count.add(s) as u64 * step >> scale) as i16;
             if proba < 8 {
                 let mut restToBeat = vStep * rtbTable[proba as usize] as u64;
                 proba += ((*count.add(s) as u64 * step)
-                        .wrapping_sub((proba as u64) << scale) > restToBeat) as std::ffi::c_short;
+                        .wrapping_sub((proba as u64) << scale) > restToBeat) as i16;
             }
             if proba > largestP {
                 largestP = proba;
                 largest = s as u32;
             }
             *normalizedCounter.add(s) = proba;
-            stillToDistribute -= proba as std::ffi::c_int;
+            stillToDistribute -= proba as i32;
         }
     }
     if -stillToDistribute
-        >= *normalizedCounter.offset(largest as isize) as std::ffi::c_int >> 1
+        >= *normalizedCounter.offset(largest as isize) as i32 >> 1
     {
         /* corner case, need another normalization method */
         let errorCode = FSE_normalizeM2(
@@ -599,7 +599,7 @@ pub unsafe fn FSE_normalizeCount(
         }
     } else {
         let ref mut fresh6 = *normalizedCounter.offset(largest as isize);
-        *fresh6 += stillToDistribute as std::ffi::c_short;
+        *fresh6 += stillToDistribute as i16;
     }
 
 // TODO? #if 0
@@ -701,7 +701,7 @@ unsafe fn FSE_compress_usingCTable_generic(
         ip = ip.offset(-1);
         FSE_initCState2(&mut CState2, ct, *ip as u32);
         ip = ip.offset(-1);
-        FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
+        FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as u32);
         FSE_FLUSHBITS!(&mut bitC);
     } else {
         ip = ip.offset(-1);
@@ -716,16 +716,16 @@ unsafe fn FSE_compress_usingCTable_generic(
         > (FSE_MAX_TABLELOG as usize * 4 + 7) && srcSize & 2 != 0
     { /* test bit 2 */
         ip = ip.offset(-1);
-        FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as std::ffi::c_uint);
+        FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as u32);
         ip = ip.offset(-1);
-        FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
+        FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as u32);
         FSE_FLUSHBITS!(&mut bitC);
     }
 
     /* 2 or 4 encoding per loop */
     while ip > istart {
         ip = ip.offset(-1);
-        FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as std::ffi::c_uint);
+        FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as u32);
 
         if ::core::mem::size_of::<BitContainerType>() * 8
             < (FSE_MAX_TABLELOG as usize * 2 + 7)
@@ -734,15 +734,15 @@ unsafe fn FSE_compress_usingCTable_generic(
         }
 
         ip = ip.offset(-1);
-        FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
+        FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as u32);
 
         if ::core::mem::size_of::<BitContainerType>() * 8
             > (FSE_MAX_TABLELOG as usize * 4 + 7)
         { /* this test must be static */
             ip = ip.offset(-1);
-            FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as std::ffi::c_uint);
+            FSE_encodeSymbol(&mut bitC, &mut CState2, *ip as u32);
             ip = ip.offset(-1);
-            FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as std::ffi::c_uint);
+            FSE_encodeSymbol(&mut bitC, &mut CState1, *ip as u32);
         }
 
         FSE_FLUSHBITS!(&mut bitC);

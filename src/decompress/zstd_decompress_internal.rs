@@ -29,20 +29,20 @@ pub struct ZSTD_DCtx_s {
     pub litSize: usize,
     pub rleSize: usize,
     pub staticSize: usize,
-    pub isFrameDecompression: std::ffi::c_int,
+    pub isFrameDecompression: i32,
     // TODO #if DYNAMIC_BMI2
-    pub bmi2: std::ffi::c_int, /* == 1 if the CPU supports BMI2 and 0 otherwise. CPU support is determined dynamically once per context lifetime. */
+    pub bmi2: i32, /* == 1 if the CPU supports BMI2 and 0 otherwise. CPU support is determined dynamically once per context lifetime. */
     
     /* dictionary */
     pub ddictLocal: *mut ZSTD_DDict,
     pub ddict: *const ZSTD_DDict, /* set by ZSTD_initDStream_usingDDict(), or ZSTD_DCtx_refDDict() */
     pub dictID: u32,
-    pub ddictIsCold: std::ffi::c_int, /* if == 1 : dictionary is "new" for working context, and presumed "cold" (not in cpu cache) */
+    pub ddictIsCold: i32, /* if == 1 : dictionary is "new" for working context, and presumed "cold" (not in cpu cache) */
     pub dictUses: ZSTD_dictUses_e,
     pub ddictSet: *mut ZSTD_DDictHashSet, /* Hash set for multiple ddicts */
     pub refMultipleDDicts: ZSTD_refMultipleDDicts_e, /* User specified: if == 1, will allow references to multiple DDicts. Default == 0 (disabled) */
-    pub disableHufAsm: std::ffi::c_int,
-    pub maxBlockSizeParam: std::ffi::c_int,
+    pub disableHufAsm: i32,
+    pub maxBlockSizeParam: i32,
 
     /* streaming */
     pub streamStage: ZSTD_dStreamStage,
@@ -62,7 +62,7 @@ pub struct ZSTD_DCtx_s {
     pub legacyVersion: u32,
 
     pub hostageByte: u32,
-    pub noForwardProgress: std::ffi::c_int,
+    pub noForwardProgress: i32,
     pub outBufferMode: ZSTD_bufferMode_e,
     pub expectedOutBuffer: ZSTD_outBuffer,
 

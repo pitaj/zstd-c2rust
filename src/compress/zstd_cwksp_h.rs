@@ -21,7 +21,7 @@ pub const ZSTD_CWKSP_ALIGNMENT_BYTES: usize = 64;
 /*-*************************************
 *  Structures
 ***************************************/
-pub type ZSTD_cwksp_alloc_phase_e = std::ffi::c_uint;
+pub type ZSTD_cwksp_alloc_phase_e = u32;
 pub const ZSTD_cwksp_alloc_buffers: ZSTD_cwksp_alloc_phase_e = 3;
 pub const ZSTD_cwksp_alloc_aligned: ZSTD_cwksp_alloc_phase_e = 2;
 pub const ZSTD_cwksp_alloc_aligned_init_once: ZSTD_cwksp_alloc_phase_e = 1;
@@ -32,7 +32,7 @@ pub const ZSTD_cwksp_alloc_objects: ZSTD_cwksp_alloc_phase_e = 0;
  * necessarily ever be freed), or if it's dynamically allocated and we can
  * expect a well-formed caller to free this.
  */
-pub type ZSTD_cwksp_static_alloc_e = std::ffi::c_uint;
+pub type ZSTD_cwksp_static_alloc_e = u32;
 pub const ZSTD_cwksp_static_alloc: ZSTD_cwksp_static_alloc_e = 1;
 pub const ZSTD_cwksp_dynamic_alloc: ZSTD_cwksp_static_alloc_e = 0;
 
@@ -143,7 +143,7 @@ pub struct ZSTD_cwksp {
     pub initOnceStart: *mut std::ffi::c_void,
 
     pub allocFailed: u8,
-    pub workspaceOversizedDuration: std::ffi::c_int,
+    pub workspaceOversizedDuration: i32,
     pub phase: ZSTD_cwksp_alloc_phase_e,
     pub isStatic: ZSTD_cwksp_static_alloc_e,
 }

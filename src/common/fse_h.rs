@@ -6,9 +6,9 @@ use crate::common::bitstream_h::*;
 /*------   Version   ------*/
 macro_rules! version {
     ($major:literal , $minor:literal , $release:literal) => {
-        pub const FSE_VERSION_MAJOR: std::ffi::c_uint = $major;
-        pub const FSE_VERSION_MINOR: std::ffi::c_uint = $minor;
-        pub const FSE_VERSION_RELEASE: std::ffi::c_uint = $release;
+        pub const FSE_VERSION_MAJOR: u32 = $major;
+        pub const FSE_VERSION_MINOR: u32 = $minor;
+        pub const FSE_VERSION_RELEASE: u32 = $release;
 
         pub const FSE_VERSION_STRING: &'static str = concat!($major, ".", $minor, ".", $release);
     }
@@ -16,10 +16,10 @@ macro_rules! version {
 
 version!(0, 9, 0);
 
-pub const FSE_VERSION_NUMBER: std::ffi::c_uint = FSE_VERSION_MAJOR *100*100 + FSE_VERSION_MINOR *100 + FSE_VERSION_RELEASE;
+pub const FSE_VERSION_NUMBER: u32 = FSE_VERSION_MAJOR *100*100 + FSE_VERSION_MINOR *100 + FSE_VERSION_RELEASE;
 
 /** library version number; to be used when checking dll version */
-pub fn FSE_versionNumber() -> std::ffi::c_uint {
+pub fn FSE_versionNumber() -> u32 {
     FSE_VERSION_NUMBER
 }
 
@@ -89,7 +89,7 @@ pub use crate::compress::fse_compress::FSE_writeNCount;
 
 /* Constructor and Destructor of FSE_CTable.
     Note that FSE_CTable size depends on 'tableLog' and 'maxSymbolValue' */
-pub type FSE_CTable = std::ffi::c_uint; /* don't allocate that. It's only meant to be more restrictive than void* */
+pub type FSE_CTable = u32; /* don't allocate that. It's only meant to be more restrictive than void* */
 
 // /*! FSE_buildCTable():
 //     Builds `ct`, which must be already allocated, using FSE_createCTable().
@@ -165,7 +165,7 @@ If there is an error, the function will return an ErrorCode (which can be tested
 //                            unsigned* maxSymbolValuePtr, unsigned* tableLogPtr,
 //                            const void* rBuffer, size_t rBuffSize, int bmi2);
 
-pub type FSE_DTable = std::ffi::c_uint; /* don't allocate that. It's just a way to be more restrictive than void* */
+pub type FSE_DTable = u32; /* don't allocate that. It's just a way to be more restrictive than void* */
 
 /*/!
 Tutorial :
@@ -251,7 +251,7 @@ pub const fn FSE_BUILD_CTABLE_WORKSPACE_SIZE(maxSymbolValue: u32, tableLog: u32)
 pub use crate::compress::fse_compress::FSE_buildCTable_wksp;
 
 pub const fn FSE_BUILD_DTABLE_WKSP_SIZE(maxTableLog: u32, maxSymbolValue: u32) -> usize {
-    size_of::<std::ffi::c_short>() * ((maxSymbolValue as usize) + 1) + (1_usize << maxTableLog) + 8
+    size_of::<i16>() * ((maxSymbolValue as usize) + 1) + (1_usize << maxTableLog) + 8
 }
 pub const fn FSE_BUILD_DTABLE_WKSP_SIZE_U32(maxTableLog: u32, maxSymbolValue: u32) -> usize {
     (FSE_BUILD_DTABLE_WKSP_SIZE(maxTableLog, maxSymbolValue) + size_of::<u32>() - 1) / size_of::<u32>()
@@ -270,7 +270,7 @@ pub const fn FSE_DECOMPRESS_WKSP_SIZE(maxTableLog: u32, maxSymbolValue: u32) -> 
 // /**< same as FSE_decompress(), using an externally allocated `workSpace` produced with `FSE_DECOMPRESS_WKSP_SIZE_U32(maxLog, maxSymbolValue)`.
 //  * Set bmi2 to 1 if your CPU supports BMI2 or 0 if it doesn't */
 
-pub type FSE_repeat = std::ffi::c_uint;
+pub type FSE_repeat = u32;
 /// Cannot use the previous table
 pub const FSE_repeat_none: FSE_repeat = 0;
 /// Can use the previous table but it must be checked
@@ -291,7 +291,7 @@ pub struct FSE_CState_t {
     pub value: isize,
     pub stateTable: *const std::ffi::c_void,
     pub symbolTT: *const std::ffi::c_void,
-    pub stateLog: std::ffi::c_uint,
+    pub stateLog: u32,
 }
 
 // static void FSE_initCState(FSE_CState_t* CStatePtr, const FSE_CTable* ct);
@@ -424,7 +424,7 @@ Check also the states. There might be some symbols left there, if some high prob
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct FSE_symbolCompressionTransform {
-    pub deltaFindState: std::ffi::c_int,
+    pub deltaFindState: i32,
     pub deltaNbBits: u32,
 } /* total 8 bytes */
 
@@ -484,7 +484,7 @@ pub unsafe fn FSE_initCState2(
 pub unsafe fn FSE_encodeSymbol(
     mut bitC: *mut BIT_CStream_t,
     mut statePtr: *mut FSE_CState_t,
-    mut symbol: std::ffi::c_uint,
+    mut symbol: u32,
 ) {
     let symbolTT = *((*statePtr).symbolTT as *const FSE_symbolCompressionTransform)
         .offset(symbol as isize);
@@ -564,7 +564,7 @@ pub struct FSE_DTableHeader {
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct FSE_decode_t {
-    pub newState: std::ffi::c_ushort,
+    pub newState: u16,
     pub symbol: std::ffi::c_uchar,
     pub nbBits: std::ffi::c_uchar,
 }  /* size == U32 */

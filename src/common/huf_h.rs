@@ -68,7 +68,7 @@ pub const fn HUF_DTABLE_SIZE(maxTableLog: u32) -> usize {
  * Huffman flags bitset.
  * For all flags, 0 is the default value.
  */
-pub type HUF_flags_e = std::ffi::c_uint;
+pub type HUF_flags_e = u32;
 /**
  * If compiled with DYNAMIC_BMI2: Set flag only if the CPU supports BMI2 at runtime.
  * Otherwise: Ignored.
@@ -126,7 +126,7 @@ pub const HUF_OPTIMAL_DEPTH_THRESHOLD: ZSTD_strategy = ZSTD_btultra;
 // size_t HUF_estimateCompressedSize(const HUF_CElt* CTable, const unsigned* count, unsigned maxSymbolValue);
 // int HUF_validateCTable(const HUF_CElt* CTable, const unsigned* count, unsigned maxSymbolValue);
 
-pub type HUF_repeat = std::ffi::c_uint;
+pub type HUF_repeat = u32;
 /// Cannot use the previous table
 pub const HUF_repeat_none: HUF_repeat = 0;
 /// Can use the previous table but it must be checked. Note : The previous table must have been constructed by HUF_compress{1, 4}X_repeat

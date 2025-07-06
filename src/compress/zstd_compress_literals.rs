@@ -5,37 +5,37 @@ extern "C" {
         dstSize: usize,
         src: *const std::ffi::c_void,
         srcSize: usize,
-        maxSymbolValue: std::ffi::c_uint,
-        tableLog: std::ffi::c_uint,
+        maxSymbolValue: u32,
+        tableLog: u32,
         workSpace: *mut std::ffi::c_void,
         wkspSize: usize,
         hufTable: *mut HUF_CElt,
         repeat: *mut HUF_repeat,
-        flags: std::ffi::c_int,
+        flags: i32,
     ) -> usize;
     fn HUF_compress1X_repeat(
         dst: *mut std::ffi::c_void,
         dstSize: usize,
         src: *const std::ffi::c_void,
         srcSize: usize,
-        maxSymbolValue: std::ffi::c_uint,
-        tableLog: std::ffi::c_uint,
+        maxSymbolValue: u32,
+        tableLog: u32,
         workSpace: *mut std::ffi::c_void,
         wkspSize: usize,
         hufTable: *mut HUF_CElt,
         repeat: *mut HUF_repeat,
-        flags: std::ffi::c_int,
+        flags: i32,
     ) -> usize;
 }
 pub type unalign16 = u16;
 pub type unalign32 = u32;
 use crate::common::error::*;
-pub type SymbolEncodingType_e = std::ffi::c_uint;
+pub type SymbolEncodingType_e = u32;
 pub const set_repeat: SymbolEncodingType_e = 3;
 pub const set_compressed: SymbolEncodingType_e = 2;
 pub const set_rle: SymbolEncodingType_e = 1;
 pub const set_basic: SymbolEncodingType_e = 0;
-pub type ZSTD_strategy = std::ffi::c_uint;
+pub type ZSTD_strategy = u32;
 pub const ZSTD_btultra2: ZSTD_strategy = 9;
 pub const ZSTD_btultra: ZSTD_strategy = 8;
 pub const ZSTD_btopt: ZSTD_strategy = 7;
@@ -51,12 +51,12 @@ pub struct ZSTD_hufCTables_t {
     pub CTable: [HUF_CElt; 257],
     pub repeatMode: HUF_repeat,
 }
-pub type HUF_repeat = std::ffi::c_uint;
+pub type HUF_repeat = u32;
 pub const HUF_repeat_valid: HUF_repeat = 2;
 pub const HUF_repeat_check: HUF_repeat = 1;
 pub const HUF_repeat_none: HUF_repeat = 0;
 pub type HUF_CElt = usize;
-pub type C2RustUnnamed_0 = std::ffi::c_uint;
+pub type C2RustUnnamed_0 = u32;
 pub const HUF_flags_disableFast: C2RustUnnamed_0 = 32;
 pub const HUF_flags_disableAsm: C2RustUnnamed_0 = 16;
 pub const HUF_flags_suspectUncompressible: C2RustUnnamed_0 = 8;
@@ -69,13 +69,13 @@ pub type huf_compress_f = Option::<
         usize,
         *const std::ffi::c_void,
         usize,
-        std::ffi::c_uint,
-        std::ffi::c_uint,
+        u32,
+        u32,
         *mut std::ffi::c_void,
         usize,
         *mut HUF_CElt,
         *mut HUF_repeat,
-        std::ffi::c_int,
+        i32,
     ) -> usize,
 >;
 use crate::common::mem::*;
@@ -89,8 +89,8 @@ unsafe extern "C" fn ZSTD_minGain(
     mut srcSize: usize,
     mut strat: ZSTD_strategy,
 ) -> usize {
-    let minlog = if strat as std::ffi::c_uint
-        >= ZSTD_btultra as std::ffi::c_int as std::ffi::c_uint
+    let minlog = if strat as u32
+        >= ZSTD_btultra as i32 as u32
     {
         (strat as u32).wrapping_sub(1)
     } else {
@@ -98,9 +98,9 @@ unsafe extern "C" fn ZSTD_minGain(
     };
     return (srcSize >> minlog).wrapping_add(2);
 }
-pub const LitHufLog: std::ffi::c_int = 11;
-pub const HUF_SYMBOLVALUE_MAX: std::ffi::c_int = 255;
-pub const HUF_OPTIMAL_DEPTH_THRESHOLD: std::ffi::c_int = ZSTD_btultra as std::ffi::c_int;
+pub const LitHufLog: i32 = 11;
+pub const HUF_SYMBOLVALUE_MAX: i32 = 255;
+pub const HUF_OPTIMAL_DEPTH_THRESHOLD: i32 = ZSTD_btultra as i32;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_noCompressLiterals(
     mut dst: *mut std::ffi::c_void,
@@ -109,24 +109,24 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
     mut srcSize: usize,
 ) -> usize {
     let ostart = dst as *mut u8;
-    let flSize = (1 as std::ffi::c_int
-        + (srcSize > 31) as std::ffi::c_int
-        + (srcSize > 4095) as std::ffi::c_int) as u32;
+    let flSize = (1 as i32
+        + (srcSize > 31) as i32
+        + (srcSize > 4095) as i32) as u32;
     RETURN_ERROR_IF!(srcSize.wrapping_add(flSize as usize) > dstCapacity, ZSTD_error_dstSize_tooSmall);
     match flSize {
         1 => {
             *ostart
                 .offset(
                     0,
-                ) = (set_basic as std::ffi::c_int as u32 as usize)
+                ) = (set_basic as i32 as u32 as usize)
                 .wrapping_add(srcSize << 3) as u8;
         }
         2 => {
             MEM_writeLE16(
                 ostart as *mut std::ffi::c_void,
-                ((set_basic as std::ffi::c_int as u32)
+                ((set_basic as i32 as u32)
                     .wrapping_add(
-                        ((1 as std::ffi::c_int) << 2) as u32,
+                        ((1 as i32) << 2) as u32,
                     ) as usize)
                     .wrapping_add(srcSize << 4) as u16,
             );
@@ -134,9 +134,9 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
         3 => {
             MEM_writeLE32(
                 ostart as *mut std::ffi::c_void,
-                ((set_basic as std::ffi::c_int as u32)
+                ((set_basic as i32 as u32)
                     .wrapping_add(
-                        ((3 as std::ffi::c_int) << 2) as u32,
+                        ((3 as i32) << 2) as u32,
                     ) as usize)
                     .wrapping_add(srcSize << 4) as u32,
             );
@@ -149,13 +149,13 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
 unsafe extern "C" fn allBytesIdentical(
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
-) -> std::ffi::c_int {
+) -> i32 {
     let b = *(src as *const u8).offset(0);
     let mut p: usize = 0;
     p = 1;
     while p < srcSize {
-        if *(src as *const u8).offset(p as isize) as std::ffi::c_int
-            != b as std::ffi::c_int
+        if *(src as *const u8).offset(p as isize) as i32
+            != b as i32
         {
             return 0;
         }
@@ -172,23 +172,23 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
     mut srcSize: usize,
 ) -> usize {
     let ostart = dst as *mut u8;
-    let flSize = (1 as std::ffi::c_int
-        + (srcSize > 31) as std::ffi::c_int
-        + (srcSize > 4095) as std::ffi::c_int) as u32;
+    let flSize = (1 as i32
+        + (srcSize > 31) as i32
+        + (srcSize > 4095) as i32) as u32;
     match flSize {
         1 => {
             *ostart
                 .offset(
                     0,
-                ) = (set_rle as std::ffi::c_int as u32 as usize)
+                ) = (set_rle as i32 as u32 as usize)
                 .wrapping_add(srcSize << 3) as u8;
         }
         2 => {
             MEM_writeLE16(
                 ostart as *mut std::ffi::c_void,
-                ((set_rle as std::ffi::c_int as u32)
+                ((set_rle as i32 as u32)
                     .wrapping_add(
-                        ((1 as std::ffi::c_int) << 2) as u32,
+                        ((1 as i32) << 2) as u32,
                     ) as usize)
                     .wrapping_add(srcSize << 4) as u16,
             );
@@ -196,9 +196,9 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
         3 => {
             MEM_writeLE32(
                 ostart as *mut std::ffi::c_void,
-                ((set_rle as std::ffi::c_int as u32)
+                ((set_rle as i32 as u32)
                     .wrapping_add(
-                        ((3 as std::ffi::c_int) << 2) as u32,
+                        ((3 as i32) << 2) as u32,
                     ) as usize)
                     .wrapping_add(srcSize << 4) as u32,
             );
@@ -213,8 +213,8 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
     mut huf_repeat: HUF_repeat,
 ) -> usize {
     let shift = std::cmp::min(9 - (int) strategy, 3);
-    let mintc = if huf_repeat as std::ffi::c_uint
-        == HUF_repeat_valid as std::ffi::c_int as std::ffi::c_uint
+    let mintc = if huf_repeat as u32
+        == HUF_repeat_valid as i32 as u32
     {
         6_usize
     } else {
@@ -233,21 +233,21 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     mut prevHuf: *const ZSTD_hufCTables_t,
     mut nextHuf: *mut ZSTD_hufCTables_t,
     mut strategy: ZSTD_strategy,
-    mut disableLiteralCompression: std::ffi::c_int,
-    mut suspectUncompressible: std::ffi::c_int,
-    mut bmi2: std::ffi::c_int,
+    mut disableLiteralCompression: i32,
+    mut suspectUncompressible: i32,
+    mut bmi2: i32,
 ) -> usize {
-    let lhSize = (3 as std::ffi::c_int
+    let lhSize = (3 as i32
         + (srcSize
-            >= (1 as std::ffi::c_int * ((1 as std::ffi::c_int) << 10))
-                as usize) as std::ffi::c_int
+            >= (1 as i32 * ((1 as i32) << 10))
+                as usize) as i32
         + (srcSize
-            >= (16 as std::ffi::c_int
-                * ((1 as std::ffi::c_int) << 10)) as usize)
-            as std::ffi::c_int) as usize;
+            >= (16 as i32
+                * ((1 as i32) << 10)) as usize)
+            as i32) as usize;
     let ostart = dst as *mut u8;
     let mut singleStream = (srcSize < 256)
-        as std::ffi::c_int as u32;
+        as i32 as u32;
     let mut hType = set_compressed;
     let mut cLitSize: usize = 0;
     libc::memcpy(
@@ -263,35 +263,35 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     }
     RETURN_ERROR_IF!(dstCapacity < lhSize.wrapping_add(1), ZSTD_error_dstSize_tooSmall);
     let mut repeat = (*prevHuf).repeatMode;
-    let flags = 0 as std::ffi::c_int
+    let flags = 0 as i32
         | (if bmi2 != 0 {
-            HUF_flags_bmi2 as std::ffi::c_int
+            HUF_flags_bmi2 as i32
         } else {
-            0 as std::ffi::c_int
+            0 as i32
         })
-        | (if (strategy as std::ffi::c_uint)
-            < ZSTD_lazy as std::ffi::c_int as std::ffi::c_uint
+        | (if (strategy as u32)
+            < ZSTD_lazy as i32 as u32
             && srcSize <= 1024
         {
-            HUF_flags_preferRepeat as std::ffi::c_int
+            HUF_flags_preferRepeat as i32
         } else {
-            0 as std::ffi::c_int
+            0 as i32
         })
-        | (if strategy as std::ffi::c_uint
-            >= HUF_OPTIMAL_DEPTH_THRESHOLD as std::ffi::c_uint
+        | (if strategy as u32
+            >= HUF_OPTIMAL_DEPTH_THRESHOLD as u32
         {
-            HUF_flags_optimalDepth as std::ffi::c_int
+            HUF_flags_optimalDepth as i32
         } else {
-            0 as std::ffi::c_int
+            0 as i32
         })
         | (if suspectUncompressible != 0 {
-            HUF_flags_suspectUncompressible as std::ffi::c_int
+            HUF_flags_suspectUncompressible as i32
         } else {
-            0 as std::ffi::c_int
+            0 as i32
         });
     let mut huf_compress: huf_compress_f = None;
-    if repeat as std::ffi::c_uint
-        == HUF_repeat_valid as std::ffi::c_int as std::ffi::c_uint
+    if repeat as u32
+        == HUF_repeat_valid as i32 as u32
         && lhSize == 3
     {
         singleStream = 1;
@@ -304,13 +304,13 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
                     usize,
                     *const std::ffi::c_void,
                     usize,
-                    std::ffi::c_uint,
-                    std::ffi::c_uint,
+                    u32,
+                    u32,
                     *mut std::ffi::c_void,
                     usize,
                     *mut HUF_CElt,
                     *mut HUF_repeat,
-                    std::ffi::c_int,
+                    i32,
                 ) -> usize,
         )
     } else {
@@ -321,13 +321,13 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
                     usize,
                     *const std::ffi::c_void,
                     usize,
-                    std::ffi::c_uint,
-                    std::ffi::c_uint,
+                    u32,
+                    u32,
                     *mut std::ffi::c_void,
                     usize,
                     *mut HUF_CElt,
                     *mut HUF_repeat,
-                    std::ffi::c_int,
+                    i32,
                 ) -> usize,
         )
     };
@@ -339,16 +339,16 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         dstCapacity.wrapping_sub(lhSize),
         src,
         srcSize,
-        HUF_SYMBOLVALUE_MAX as std::ffi::c_uint,
-        LitHufLog as std::ffi::c_uint,
+        HUF_SYMBOLVALUE_MAX as u32,
+        LitHufLog as u32,
         entropyWorkspace,
         entropyWorkspaceSize,
         ((*nextHuf).CTable).as_mut_ptr(),
         &mut repeat,
         flags,
     );
-    if repeat as std::ffi::c_uint
-        != HUF_repeat_none as std::ffi::c_int as std::ffi::c_uint
+    if repeat as u32
+        != HUF_repeat_none as i32 as u32
     {
         hType = set_repeat;
     }
@@ -377,16 +377,16 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             return ZSTD_compressRleLiteralsBlock(dst, dstCapacity, src, srcSize);
         }
     }
-    if hType as std::ffi::c_uint == set_compressed as std::ffi::c_int as std::ffi::c_uint
+    if hType as u32 == set_compressed as i32 as u32
     {
         (*nextHuf).repeatMode = HUF_repeat_check;
     }
     match lhSize {
         3 => {
             singleStream == 0;
-            let lhc = (hType as std::ffi::c_uint)
+            let lhc = (hType as u32)
                 .wrapping_add(
-                    ((singleStream == 0) as std::ffi::c_int as u32)
+                    ((singleStream == 0) as i32 as u32)
                         << 2,
                 )
                 .wrapping_add((srcSize as u32) << 4)
@@ -394,18 +394,18 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             MEM_writeLE24(ostart as *mut std::ffi::c_void, lhc);
         }
         4 => {
-            let lhc_0 = (hType as std::ffi::c_uint)
+            let lhc_0 = (hType as u32)
                 .wrapping_add(
-                    ((2 as std::ffi::c_int) << 2) as std::ffi::c_uint,
+                    ((2 as i32) << 2) as u32,
                 )
                 .wrapping_add((srcSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 18);
             MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_0);
         }
         5 => {
-            let lhc_1 = (hType as std::ffi::c_uint)
+            let lhc_1 = (hType as u32)
                 .wrapping_add(
-                    ((3 as std::ffi::c_int) << 2) as std::ffi::c_uint,
+                    ((3 as i32) << 2) as u32,
                 )
                 .wrapping_add((srcSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 22);

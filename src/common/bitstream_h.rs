@@ -34,7 +34,7 @@ pub type BitContainerType = usize;
 #[repr(C)]
 pub struct BIT_CStream_t {
     pub bitContainer: BitContainerType,
-    pub bitPos: std::ffi::c_uint,
+    pub bitPos: u32,
     pub startPtr: *mut std::ffi::c_char,
     pub ptr: *mut std::ffi::c_char,
     pub endPtr: *mut std::ffi::c_char,
@@ -70,13 +70,13 @@ pub struct BIT_CStream_t {
 #[repr(C)]
 pub struct BIT_DStream_t {
     pub bitContainer: BitContainerType,
-    pub bitsConsumed: std::ffi::c_uint,
+    pub bitsConsumed: u32,
     pub ptr: *const std::ffi::c_char,
     pub start: *const std::ffi::c_char,
     pub limitPtr: *const std::ffi::c_char,
 }
 
-pub type BIT_DStream_status = std::ffi::c_uint; /* result of BIT_reloadDStream() */
+pub type BIT_DStream_status = u32; /* result of BIT_reloadDStream() */
 pub const BIT_DStream_unfinished: BIT_DStream_status = 0; /* fully refilled */
 pub const BIT_DStream_endOfBuffer: BIT_DStream_status = 1; /* still some bits left in bitstream */
 pub const BIT_DStream_completed: BIT_DStream_status = 2; /* bitstream entirely consumed, bit-exact */
@@ -186,7 +186,7 @@ pub unsafe fn BIT_getLowerBits(
 pub unsafe fn BIT_addBits(
     mut bitC: *mut BIT_CStream_t,
     mut value: BitContainerType,
-    mut nbBits: std::ffi::c_uint,
+    mut nbBits: u32,
 ) {
     const _: () = assert!(BIT_MASK_SIZE == 32);
     debug_assert!((nbBits as usize) < BIT_MASK_SIZE);
@@ -202,7 +202,7 @@ pub unsafe fn BIT_addBits(
 pub unsafe fn BIT_addBitsFast(
     mut bitC: *mut BIT_CStream_t,
     mut value: BitContainerType,
-    mut nbBits: std::ffi::c_uint,
+    mut nbBits: u32,
 ) {
     debug_assert!((value >> nbBits) == 0);
     debug_assert!(((nbBits + (*bitC).bitPos) as usize) < std::mem::size_of_val(&(*bitC).bitContainer) * 8);

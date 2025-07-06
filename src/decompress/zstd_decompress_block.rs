@@ -11,9 +11,9 @@ use std::ptr::addr_of_mut;
 extern "C" {
     pub type ZSTD_DDict_s;
     fn FSE_readNCount(
-        normalizedCounter: *mut std::ffi::c_short,
-        maxSymbolValuePtr: *mut std::ffi::c_uint,
-        tableLogPtr: *mut std::ffi::c_uint,
+        normalizedCounter: *mut i16,
+        maxSymbolValuePtr: *mut u32,
+        tableLogPtr: *mut u32,
         rBuffer: *const std::ffi::c_void,
         rBuffSize: usize,
     ) -> usize;
@@ -23,7 +23,7 @@ extern "C" {
         cSrc: *const std::ffi::c_void,
         cSrcSize: usize,
         DTable: *const HUF_DTable,
-        flags: std::ffi::c_int,
+        flags: i32,
     ) -> usize;
     fn HUF_decompress1X1_DCtx_wksp(
         dctx: *mut HUF_DTable,
@@ -33,7 +33,7 @@ extern "C" {
         cSrcSize: usize,
         workSpace: *mut std::ffi::c_void,
         wkspSize: usize,
-        flags: std::ffi::c_int,
+        flags: i32,
     ) -> usize;
     fn HUF_decompress4X_usingDTable(
         dst: *mut std::ffi::c_void,
@@ -41,7 +41,7 @@ extern "C" {
         cSrc: *const std::ffi::c_void,
         cSrcSize: usize,
         DTable: *const HUF_DTable,
-        flags: std::ffi::c_int,
+        flags: i32,
     ) -> usize;
     fn HUF_decompress4X_hufOnly_wksp(
         dctx: *mut HUF_DTable,
@@ -51,7 +51,7 @@ extern "C" {
         cSrcSize: usize,
         workSpace: *mut std::ffi::c_void,
         wkspSize: usize,
-        flags: std::ffi::c_int,
+        flags: i32,
     ) -> usize;
 }
 pub type ptrdiff_t = std::ffi::c_long;
@@ -74,18 +74,18 @@ pub type BitContainerType = usize;
 #[repr(C)]
 pub struct BIT_DStream_t {
     pub bitContainer: BitContainerType,
-    pub bitsConsumed: std::ffi::c_uint,
+    pub bitsConsumed: u32,
     pub ptr: *const std::ffi::c_char,
     pub start: *const std::ffi::c_char,
     pub limitPtr: *const std::ffi::c_char,
 }
-pub type BIT_DStream_status = std::ffi::c_uint;
+pub type BIT_DStream_status = u32;
 pub const BIT_DStream_overflow: BIT_DStream_status = 3;
 pub const BIT_DStream_completed: BIT_DStream_status = 2;
 pub const BIT_DStream_endOfBuffer: BIT_DStream_status = 1;
 pub const BIT_DStream_unfinished: BIT_DStream_status = 0;
 pub type HUF_DTable = u32;
-pub type C2RustUnnamed_0 = std::ffi::c_uint;
+pub type C2RustUnnamed_0 = u32;
 pub const HUF_flags_disableFast: C2RustUnnamed_0 = 32;
 pub const HUF_flags_disableAsm: C2RustUnnamed_0 = 16;
 pub const HUF_flags_suspectUncompressible: C2RustUnnamed_0 = 8;
@@ -132,17 +132,17 @@ pub struct ZSTD_DCtx_s {
     pub litSize: usize,
     pub rleSize: usize,
     pub staticSize: usize,
-    pub isFrameDecompression: std::ffi::c_int,
-    pub bmi2: std::ffi::c_int,
+    pub isFrameDecompression: i32,
+    pub bmi2: i32,
     pub ddictLocal: *mut ZSTD_DDict,
     pub ddict: *const ZSTD_DDict,
     pub dictID: u32,
-    pub ddictIsCold: std::ffi::c_int,
+    pub ddictIsCold: i32,
     pub dictUses: ZSTD_dictUses_e,
     pub ddictSet: *mut ZSTD_DDictHashSet,
     pub refMultipleDDicts: ZSTD_refMultipleDDicts_e,
-    pub disableHufAsm: std::ffi::c_int,
-    pub maxBlockSizeParam: std::ffi::c_int,
+    pub disableHufAsm: i32,
+    pub maxBlockSizeParam: i32,
     pub streamStage: ZSTD_dStreamStage,
     pub inBuff: *mut std::ffi::c_char,
     pub inBuffSize: usize,
@@ -157,7 +157,7 @@ pub struct ZSTD_DCtx_s {
     pub previousLegacyVersion: u32,
     pub legacyVersion: u32,
     pub hostageByte: u32,
-    pub noForwardProgress: std::ffi::c_int,
+    pub noForwardProgress: i32,
     pub outBufferMode: ZSTD_bufferMode_e,
     pub expectedOutBuffer: ZSTD_outBuffer,
     pub litBuffer: *mut u8,
@@ -168,8 +168,8 @@ pub struct ZSTD_DCtx_s {
     pub oversizedDuration: usize,
     pub traceCtx: ZSTD_TraceCtx,
 }
-pub type ZSTD_TraceCtx = std::ffi::c_ulonglong;
-pub type ZSTD_litLocation_e = std::ffi::c_uint;
+pub type ZSTD_TraceCtx = u64;
+pub type ZSTD_litLocation_e = u32;
 pub const ZSTD_split: ZSTD_litLocation_e = 2;
 pub const ZSTD_in_dst: ZSTD_litLocation_e = 1;
 pub const ZSTD_not_in_dst: ZSTD_litLocation_e = 0;
@@ -181,16 +181,16 @@ pub struct ZSTD_outBuffer_s {
     pub size: usize,
     pub pos: usize,
 }
-pub type ZSTD_bufferMode_e = std::ffi::c_uint;
+pub type ZSTD_bufferMode_e = u32;
 pub const ZSTD_bm_stable: ZSTD_bufferMode_e = 1;
 pub const ZSTD_bm_buffered: ZSTD_bufferMode_e = 0;
-pub type ZSTD_dStreamStage = std::ffi::c_uint;
+pub type ZSTD_dStreamStage = u32;
 pub const zdss_flush: ZSTD_dStreamStage = 4;
 pub const zdss_load: ZSTD_dStreamStage = 3;
 pub const zdss_read: ZSTD_dStreamStage = 2;
 pub const zdss_loadHeader: ZSTD_dStreamStage = 1;
 pub const zdss_init: ZSTD_dStreamStage = 0;
-pub type ZSTD_refMultipleDDicts_e = std::ffi::c_uint;
+pub type ZSTD_refMultipleDDicts_e = u32;
 pub const ZSTD_rmd_refMultipleDDicts: ZSTD_refMultipleDDicts_e = 1;
 pub const ZSTD_rmd_refSingleDDict: ZSTD_refMultipleDDicts_e = 0;
 #[derive(Copy, Clone)]
@@ -201,7 +201,7 @@ pub struct ZSTD_DDictHashSet {
     pub ddictPtrCount: usize,
 }
 pub type ZSTD_DDict = ZSTD_DDict_s;
-pub type ZSTD_dictUses_e = std::ffi::c_int;
+pub type ZSTD_dictUses_e = i32;
 pub const ZSTD_use_once: ZSTD_dictUses_e = 1;
 pub const ZSTD_dont_use: ZSTD_dictUses_e = 0;
 pub const ZSTD_use_indefinitely: ZSTD_dictUses_e = -1;
@@ -218,10 +218,10 @@ pub type ZSTD_freeFunction = Option::<
 pub type ZSTD_allocFunction = Option::<
     unsafe extern "C" fn(*mut std::ffi::c_void, usize) -> *mut std::ffi::c_void,
 >;
-pub type ZSTD_forceIgnoreChecksum_e = std::ffi::c_uint;
+pub type ZSTD_forceIgnoreChecksum_e = u32;
 pub const ZSTD_d_ignoreChecksum: ZSTD_forceIgnoreChecksum_e = 1;
 pub const ZSTD_d_validateChecksum: ZSTD_forceIgnoreChecksum_e = 0;
-pub type ZSTD_format_e = std::ffi::c_uint;
+pub type ZSTD_format_e = u32;
 pub const ZSTD_f_zstd1_magicless: ZSTD_format_e = 1;
 pub const ZSTD_f_zstd1: ZSTD_format_e = 0;
 pub type XXH64_state_t = XXH64_state_s;
@@ -237,7 +237,7 @@ pub struct XXH64_state_s {
 }
 pub type XXH64_hash_t = u64;
 pub type XXH32_hash_t = u32;
-pub type ZSTD_dStage = std::ffi::c_uint;
+pub type ZSTD_dStage = u32;
 pub const ZSTDds_skipFrame: ZSTD_dStage = 7;
 pub const ZSTDds_decodeSkippableHeader: ZSTD_dStage = 6;
 pub const ZSTDds_checkChecksum: ZSTD_dStage = 5;
@@ -246,7 +246,7 @@ pub const ZSTDds_decompressBlock: ZSTD_dStage = 3;
 pub const ZSTDds_decodeBlockHeader: ZSTD_dStage = 2;
 pub const ZSTDds_decodeFrameHeader: ZSTD_dStage = 1;
 pub const ZSTDds_getFrameHeaderSize: ZSTD_dStage = 0;
-pub type blockType_e = std::ffi::c_uint;
+pub type blockType_e = u32;
 pub const bt_reserved: blockType_e = 3;
 pub const bt_compressed: blockType_e = 2;
 pub const bt_rle: blockType_e = 1;
@@ -254,17 +254,17 @@ pub const bt_raw: blockType_e = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_FrameHeader {
-    pub frameContentSize: std::ffi::c_ulonglong,
-    pub windowSize: std::ffi::c_ulonglong,
-    pub blockSizeMax: std::ffi::c_uint,
+    pub frameContentSize: u64,
+    pub windowSize: u64,
+    pub blockSizeMax: u32,
     pub frameType: ZSTD_FrameType_e,
-    pub headerSize: std::ffi::c_uint,
-    pub dictID: std::ffi::c_uint,
-    pub checksumFlag: std::ffi::c_uint,
-    pub _reserved1: std::ffi::c_uint,
-    pub _reserved2: std::ffi::c_uint,
+    pub headerSize: u32,
+    pub dictID: u32,
+    pub checksumFlag: u32,
+    pub _reserved1: u32,
+    pub _reserved2: u32,
 }
-pub type ZSTD_FrameType_e = std::ffi::c_uint;
+pub type ZSTD_FrameType_e = u32;
 pub const ZSTD_skippableFrame: ZSTD_FrameType_e = 1;
 pub const ZSTD_frame: ZSTD_FrameType_e = 0;
 #[derive(Copy, Clone)]
@@ -286,10 +286,10 @@ pub struct ZSTD_seqSymbol {
     pub baseValue: u32,
 }
 pub type ZSTD_DCtx = ZSTD_DCtx_s;
-pub type streaming_operation = std::ffi::c_uint;
+pub type streaming_operation = u32;
 pub const is_streaming: streaming_operation = 1;
 pub const not_streaming: streaming_operation = 0;
-pub type ZSTD_longOffset_e = std::ffi::c_uint;
+pub type ZSTD_longOffset_e = u32;
 pub const ZSTD_lo_isLongOffset: ZSTD_longOffset_e = 1;
 pub const ZSTD_lo_isRegularOffset: ZSTD_longOffset_e = 0;
 #[derive(Copy, Clone)]
@@ -314,7 +314,7 @@ pub struct seq_t {
     pub matchLength: usize,
     pub offset: usize,
 }
-pub type ZSTD_overlap_e = std::ffi::c_uint;
+pub type ZSTD_overlap_e = u32;
 pub const ZSTD_overlap_src_before_dst: ZSTD_overlap_e = 1;
 pub const ZSTD_no_overlap: ZSTD_overlap_e = 0;
 #[derive(Copy, Clone)]
@@ -326,10 +326,10 @@ pub struct ZSTD_seqSymbol_header {
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_OffsetInfo {
-    pub longOffsetShare: std::ffi::c_uint,
-    pub maxNbAdditionalBits: std::ffi::c_uint,
+    pub longOffsetShare: u32,
+    pub maxNbAdditionalBits: u32,
 }
-pub type SymbolEncodingType_e = std::ffi::c_uint;
+pub type SymbolEncodingType_e = u32;
 pub const set_repeat: SymbolEncodingType_e = 3;
 pub const set_compressed: SymbolEncodingType_e = 2;
 pub const set_rle: SymbolEncodingType_e = 1;
@@ -341,7 +341,7 @@ pub struct blockProperties_t {
     pub lastBlock: u32,
     pub origSize: u32,
 }
-pub const CACHELINE_SIZE: std::ffi::c_int = 64;
+pub const CACHELINE_SIZE: i32 = 64;
 #[inline]
 unsafe extern "C" fn ZSTD_wrappedPtrAdd(
     mut ptr: *const std::ffi::c_void,
@@ -376,8 +376,8 @@ unsafe extern "C" fn _force_has_format_string(
     mut args: ...
 ) {}
 use crate::common::bits::*;
-pub const STREAM_ACCUMULATOR_MIN_32: std::ffi::c_int = 25;
-pub const STREAM_ACCUMULATOR_MIN_64: std::ffi::c_int = 57;
+pub const STREAM_ACCUMULATOR_MIN_32: i32 = 25;
+pub const STREAM_ACCUMULATOR_MIN_64: i32 = 57;
 #[inline]
 unsafe extern "C" fn BIT_initDStream(
     mut bitD: *mut BIT_DStream_t,
@@ -410,13 +410,13 @@ unsafe extern "C" fn BIT_initDStream(
         let lastByte = *(srcBuffer as *const u8)
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
-            .bitsConsumed = if lastByte as std::ffi::c_int != 0 {
-            (8 as std::ffi::c_uint)
+            .bitsConsumed = if lastByte as i32 != 0 {
+            (8 as u32)
                 .wrapping_sub(ZSTD_highbit32(lastByte as u32))
         } else {
-            0 as std::ffi::c_uint
+            0 as u32
         };
-        RETURN_ERROR_IF!(lastByte as std::ffi::c_int == 0, ZSTD_error_GENERIC);
+        RETURN_ERROR_IF!(lastByte as i32 == 0, ZSTD_error_GENERIC);
     } else {
         (*bitD).ptr = (*bitD).start;
         (*bitD).bitContainer = *((*bitD).start as *const u8) as BitContainerType;
@@ -527,13 +527,13 @@ unsafe extern "C" fn BIT_initDStream(
         let lastByte_0 = *(srcBuffer as *const u8)
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
-            .bitsConsumed = if lastByte_0 as std::ffi::c_int != 0 {
-            (8 as std::ffi::c_uint)
+            .bitsConsumed = if lastByte_0 as i32 != 0 {
+            (8 as u32)
                 .wrapping_sub(ZSTD_highbit32(lastByte_0 as u32))
         } else {
-            0 as std::ffi::c_uint
+            0 as u32
         };
-        RETURN_ERROR_IF!(lastByte_0 as std::ffi::c_int == 0, ZSTD_error_corruption_detected);
+        RETURN_ERROR_IF!(lastByte_0 as i32 == 0, ZSTD_error_corruption_detected);
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
@@ -589,7 +589,7 @@ unsafe extern "C" fn BIT_skipBits(mut bitD: *mut BIT_DStream_t, mut nbBits: u32)
 #[inline(always)]
 unsafe extern "C" fn BIT_readBits(
     mut bitD: *mut BIT_DStream_t,
-    mut nbBits: std::ffi::c_uint,
+    mut nbBits: u32,
 ) -> BitContainerType {
     let value = BIT_lookBits(bitD, nbBits);
     BIT_skipBits(bitD, nbBits);
@@ -598,7 +598,7 @@ unsafe extern "C" fn BIT_readBits(
 #[inline]
 unsafe extern "C" fn BIT_readBitsFast(
     mut bitD: *mut BIT_DStream_t,
-    mut nbBits: std::ffi::c_uint,
+    mut nbBits: u32,
 ) -> usize {
     let value = BIT_lookBitsFast(bitD, nbBits);
     BIT_skipBits(bitD, nbBits);
@@ -660,10 +660,10 @@ unsafe extern "C" fn BIT_endOfDStream(
         && (*DStream).bitsConsumed as usize
             == ::core::mem::size_of::<BitContainerType>().wrapping_mul(8)
 }
-pub const ZSTD_BLOCKSIZELOG_MAX: std::ffi::c_int = 17;
-pub const ZSTD_BLOCKSIZE_MAX: std::ffi::c_int = (1 as std::ffi::c_int)
+pub const ZSTD_BLOCKSIZELOG_MAX: i32 = 17;
+pub const ZSTD_BLOCKSIZE_MAX: i32 = (1 as i32)
     << ZSTD_BLOCKSIZELOG_MAX;
-pub const ZSTD_WINDOWLOG_MAX_32: std::ffi::c_int = 30;
+pub const ZSTD_WINDOWLOG_MAX_32: i32 = 30;
 static mut LL_base: [u32; 36] = [
     0,
     1,
@@ -691,50 +691,50 @@ static mut LL_base: [u32; 36] = [
     40,
     48,
     64,
-    0x80 as std::ffi::c_int as u32,
-    0x100 as std::ffi::c_int as u32,
-    0x200 as std::ffi::c_int as u32,
-    0x400 as std::ffi::c_int as u32,
-    0x800 as std::ffi::c_int as u32,
-    0x1000 as std::ffi::c_int as u32,
-    0x2000 as std::ffi::c_int as u32,
-    0x4000 as std::ffi::c_int as u32,
-    0x8000 as std::ffi::c_int as u32,
-    0x10000 as std::ffi::c_int as u32,
+    0x80 as i32 as u32,
+    0x100 as i32 as u32,
+    0x200 as i32 as u32,
+    0x400 as i32 as u32,
+    0x800 as i32 as u32,
+    0x1000 as i32 as u32,
+    0x2000 as i32 as u32,
+    0x4000 as i32 as u32,
+    0x8000 as i32 as u32,
+    0x10000 as i32 as u32,
 ];
 static mut OF_base: [u32; 32] = [
     0,
     1,
     1,
     5,
-    0xd as std::ffi::c_int as u32,
-    0x1d as std::ffi::c_int as u32,
-    0x3d as std::ffi::c_int as u32,
-    0x7d as std::ffi::c_int as u32,
-    0xfd as std::ffi::c_int as u32,
-    0x1fd as std::ffi::c_int as u32,
-    0x3fd as std::ffi::c_int as u32,
-    0x7fd as std::ffi::c_int as u32,
-    0xffd as std::ffi::c_int as u32,
-    0x1ffd as std::ffi::c_int as u32,
-    0x3ffd as std::ffi::c_int as u32,
-    0x7ffd as std::ffi::c_int as u32,
-    0xfffd as std::ffi::c_int as u32,
-    0x1fffd as std::ffi::c_int as u32,
-    0x3fffd as std::ffi::c_int as u32,
-    0x7fffd as std::ffi::c_int as u32,
-    0xffffd as std::ffi::c_int as u32,
-    0x1ffffd as std::ffi::c_int as u32,
-    0x3ffffd as std::ffi::c_int as u32,
-    0x7ffffd as std::ffi::c_int as u32,
-    0xfffffd as std::ffi::c_int as u32,
-    0x1fffffd as std::ffi::c_int as u32,
-    0x3fffffd as std::ffi::c_int as u32,
-    0x7fffffd as std::ffi::c_int as u32,
-    0xffffffd as std::ffi::c_int as u32,
-    0x1ffffffd as std::ffi::c_int as u32,
-    0x3ffffffd as std::ffi::c_int as u32,
-    0x7ffffffd as std::ffi::c_int as u32,
+    0xd as i32 as u32,
+    0x1d as i32 as u32,
+    0x3d as i32 as u32,
+    0x7d as i32 as u32,
+    0xfd as i32 as u32,
+    0x1fd as i32 as u32,
+    0x3fd as i32 as u32,
+    0x7fd as i32 as u32,
+    0xffd as i32 as u32,
+    0x1ffd as i32 as u32,
+    0x3ffd as i32 as u32,
+    0x7ffd as i32 as u32,
+    0xfffd as i32 as u32,
+    0x1fffd as i32 as u32,
+    0x3fffd as i32 as u32,
+    0x7fffd as i32 as u32,
+    0xffffd as i32 as u32,
+    0x1ffffd as i32 as u32,
+    0x3ffffd as i32 as u32,
+    0x7ffffd as i32 as u32,
+    0xfffffd as i32 as u32,
+    0x1fffffd as i32 as u32,
+    0x3fffffd as i32 as u32,
+    0x7fffffd as i32 as u32,
+    0xffffffd as i32 as u32,
+    0x1ffffffd as i32 as u32,
+    0x3ffffffd as i32 as u32,
+    0x7ffffffd as i32 as u32,
 ];
 static mut OF_bits: [u8; 32] = [
     0,
@@ -814,33 +814,33 @@ static mut ML_base: [u32; 53] = [
     67,
     83,
     99,
-    0x83 as std::ffi::c_int as u32,
-    0x103 as std::ffi::c_int as u32,
-    0x203 as std::ffi::c_int as u32,
-    0x403 as std::ffi::c_int as u32,
-    0x803 as std::ffi::c_int as u32,
-    0x1003 as std::ffi::c_int as u32,
-    0x2003 as std::ffi::c_int as u32,
-    0x4003 as std::ffi::c_int as u32,
-    0x8003 as std::ffi::c_int as u32,
-    0x10003 as std::ffi::c_int as u32,
+    0x83 as i32 as u32,
+    0x103 as i32 as u32,
+    0x203 as i32 as u32,
+    0x403 as i32 as u32,
+    0x803 as i32 as u32,
+    0x1003 as i32 as u32,
+    0x2003 as i32 as u32,
+    0x4003 as i32 as u32,
+    0x8003 as i32 as u32,
+    0x10003 as i32 as u32,
 ];
 #[inline]
 unsafe extern "C" fn ZSTD_DCtx_get_bmi2(
     mut dctx: *const ZSTD_DCtx_s,
-) -> std::ffi::c_int {
+) -> i32 {
     return (*dctx).bmi2;
 }
-pub const ZSTD_REP_NUM: std::ffi::c_int = 3;
-pub const ZSTD_BLOCKHEADERSIZE: std::ffi::c_int = 3;
+pub const ZSTD_REP_NUM: i32 = 3;
+pub const ZSTD_BLOCKHEADERSIZE: i32 = 3;
 static mut ZSTD_blockHeaderSize: usize = ZSTD_BLOCKHEADERSIZE as usize;
-pub const LONGNBSEQ: std::ffi::c_int = 0x7f00 as std::ffi::c_int;
-pub const MaxML: std::ffi::c_int = 52;
-pub const MaxLL: std::ffi::c_int = 35;
-pub const MaxOff: std::ffi::c_int = 31;
-pub const MLFSELog: std::ffi::c_int = 9;
-pub const LLFSELog: std::ffi::c_int = 9;
-pub const OffFSELog: std::ffi::c_int = 8;
+pub const LONGNBSEQ: i32 = 0x7f00 as i32;
+pub const MaxML: i32 = 52;
+pub const MaxLL: i32 = 35;
+pub const MaxOff: i32 = 31;
+pub const MLFSELog: i32 = 9;
+pub const LLFSELog: i32 = 9;
+pub const OffFSELog: i32 = 8;
 static mut LL_bits: [u8; 36] = [
     0,
     0,
@@ -879,7 +879,7 @@ static mut LL_bits: [u8; 36] = [
     15,
     16,
 ];
-pub const LL_DEFAULTNORMLOG: std::ffi::c_int = 6;
+pub const LL_DEFAULTNORMLOG: i32 = 6;
 static mut ML_bits: [u8; 53] = [
     0,
     0,
@@ -935,8 +935,8 @@ static mut ML_bits: [u8; 53] = [
     15,
     16,
 ];
-pub const ML_DEFAULTNORMLOG: std::ffi::c_int = 6;
-pub const OF_DEFAULTNORMLOG: std::ffi::c_int = 5;
+pub const ML_DEFAULTNORMLOG: i32 = 6;
+pub const OF_DEFAULTNORMLOG: i32 = 5;
 unsafe extern "C" fn ZSTD_copy8(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
@@ -963,8 +963,8 @@ unsafe extern "C" fn ZSTD_wildcopy(
     let mut ip = src as *const u8;
     let mut op = dst as *mut u8;
     let oend = op.offset(length as isize);
-    if ovtype as std::ffi::c_uint
-        == ZSTD_overlap_src_before_dst as std::ffi::c_int as std::ffi::c_uint
+    if ovtype as u32
+        == ZSTD_overlap_src_before_dst as i32 as u32
         && diff < WILDCOPY_VECLEN as ptrdiff_t
     {
         loop {
@@ -989,7 +989,7 @@ unsafe extern "C" fn ZSTD_wildcopy(
         }
     };
 }
-pub const NULL: std::ffi::c_int = 0;
+pub const NULL: i32 = 0;
 unsafe extern "C" fn ZSTD_copy4(
     mut dst: *mut std::ffi::c_void,
     mut src: *const std::ffi::c_void,
@@ -1000,7 +1000,7 @@ unsafe extern "C" fn ZSTD_blockSizeMax(mut dctx: *const ZSTD_DCtx) -> usize {
     let blockSizeMax = (if (*dctx).isFrameDecompression != 0 {
         (*dctx).fParams.blockSizeMax
     } else {
-        ZSTD_BLOCKSIZE_MAX as std::ffi::c_uint
+        ZSTD_BLOCKSIZE_MAX as u32
     }) as usize;
     return blockSizeMax;
 }
@@ -1030,11 +1030,11 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
     litSize: usize,
     streaming: streaming_operation,
     expectedWriteSize: usize,
-    splitImmediately: std::ffi::c_uint,
+    splitImmediately: u32,
 ) {
     let blockSizeMax = ZSTD_blockSizeMax(dctx);
-    if streaming as std::ffi::c_uint
-        == not_streaming as std::ffi::c_int as std::ffi::c_uint
+    if streaming as u32
+        == not_streaming as i32 as u32
         && dstCapacity
             > blockSizeMax
                 .wrapping_add(WILDCOPY_OVERLENGTH as usize)
@@ -1048,23 +1048,23 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
         (*dctx).litBufferEnd = ((*dctx).litBuffer).offset(litSize as isize);
         (*dctx).litBufferLocation = ZSTD_in_dst;
     } else if litSize
-        <= (if 64 as std::ffi::c_int
-            > (if ((1 as std::ffi::c_int) << 16)
-                < (128 as std::ffi::c_int) << 10
+        <= (if 64 as i32
+            > (if ((1 as i32) << 16)
+                < (128 as i32) << 10
             {
-                (1 as std::ffi::c_int) << 16
+                (1 as i32) << 16
             } else {
-                (128 as std::ffi::c_int) << 10
+                (128 as i32) << 10
             })
         {
-            64 as std::ffi::c_int
+            64 as i32
         } else {
-            (if ((1 as std::ffi::c_int) << 16)
-                < (128 as std::ffi::c_int) << 10
+            (if ((1 as i32) << 16)
+                < (128 as i32) << 10
             {
-                (1 as std::ffi::c_int) << 16
+                (1 as i32) << 16
             } else {
-                (128 as std::ffi::c_int) << 10
+                (128 as i32) << 10
             })
         }) as usize
     {
@@ -1078,23 +1078,23 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
                 .offset(expectedWriteSize as isize)
                 .offset(-(litSize as isize))
                 .offset(
-                    (if 64 as std::ffi::c_int
-                        > (if ((1 as std::ffi::c_int) << 16)
-                            < (128 as std::ffi::c_int) << 10
+                    (if 64 as i32
+                        > (if ((1 as i32) << 16)
+                            < (128 as i32) << 10
                         {
-                            (1 as std::ffi::c_int) << 16
+                            (1 as i32) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10
+                            (128 as i32) << 10
                         })
                     {
-                        64 as std::ffi::c_int
+                        64 as i32
                     } else {
-                        (if ((1 as std::ffi::c_int) << 16)
-                            < (128 as std::ffi::c_int) << 10
+                        (if ((1 as i32) << 16)
+                            < (128 as i32) << 10
                         {
-                            (1 as std::ffi::c_int) << 16
+                            (1 as i32) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10
+                            (128 as i32) << 10
                         })
                     }) as isize,
                 )
@@ -1103,23 +1103,23 @@ unsafe extern "C" fn ZSTD_allocateLiteralsBuffer(
                 .litBufferEnd = ((*dctx).litBuffer)
                 .offset(litSize as isize)
                 .offset(
-                    -((if 64 as std::ffi::c_int
-                        > (if ((1 as std::ffi::c_int) << 16)
-                            < (128 as std::ffi::c_int) << 10
+                    -((if 64 as i32
+                        > (if ((1 as i32) << 16)
+                            < (128 as i32) << 10
                         {
-                            (1 as std::ffi::c_int) << 16
+                            (1 as i32) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10
+                            (128 as i32) << 10
                         })
                     {
-                        64 as std::ffi::c_int
+                        64 as i32
                     } else {
-                        (if ((1 as std::ffi::c_int) << 16)
-                            < (128 as std::ffi::c_int) << 10
+                        (if ((1 as i32) << 16)
+                            < (128 as i32) << 10
                         {
-                            (1 as std::ffi::c_int) << 16
+                            (1 as i32) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10
+                            (128 as i32) << 10
                         })
                     }) as isize),
                 );
@@ -1141,12 +1141,12 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     mut dstCapacity: usize,
     streaming: streaming_operation,
 ) -> usize {
-    RETURN_ERROR_IF!(srcSize < (1 as std::ffi::c_int + 1 as std::ffi::c_int) as usize, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(srcSize < (1 as i32 + 1 as i32) as usize, ZSTD_error_corruption_detected);
     let istart = src as *const u8;
-    let litEncType = (*istart.offset(0) as std::ffi::c_int
-        & 3 as std::ffi::c_int) as SymbolEncodingType_e;
+    let litEncType = (*istart.offset(0) as i32
+        & 3 as i32) as SymbolEncodingType_e;
     let blockSizeMax = ZSTD_blockSizeMax(dctx);
-    match litEncType as std::ffi::c_uint {
+    match litEncType as u32 {
         3 => {
             RETURN_ERROR_IF!((*dctx).litEntropy == 0, ZSTD_error_dictionary_corrupted);
         }
@@ -1155,19 +1155,19 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             let mut litSize_0: usize = 0;
             let mut lhSize_0: usize = 0;
             let lhlCode_0 = (*istart.offset(0)
-                as std::ffi::c_int >> 2 & 3 as std::ffi::c_int)
+                as i32 >> 2 & 3 as i32)
                 as u32;
             let mut expectedWriteSize_0 = std::cmp::min(blockSizeMax, dstCapacity);
             match lhlCode_0 {
                 1 => {
                     lhSize_0 = 2;
                     litSize_0 = (MEM_readLE16(istart as *const std::ffi::c_void)
-                        as std::ffi::c_int >> 4) as usize;
+                        as i32 >> 4) as usize;
                 }
                 3 => {
                     lhSize_0 = 3;
                     if srcSize < 3 {
-                        return -(ZSTD_error_corruption_detected as std::ffi::c_int)
+                        return -(ZSTD_error_corruption_detected as i32)
                             as usize;
                     }
                     litSize_0 = (MEM_readLE24(istart as *const std::ffi::c_void)
@@ -1176,7 +1176,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 0 | 2 | _ => {
                     lhSize_0 = 1;
                     litSize_0 = (*istart.offset(0)
-                        as std::ffi::c_int >> 3) as usize;
+                        as i32 >> 3) as usize;
                 }
             }
             RETURN_ERROR_IF!(litSize_0 > 0 && dst.is_null(), ZSTD_error_dstSize_tooSmall);
@@ -1218,7 +1218,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
         }
         1 => {
             let lhlCode_1 = (*istart.offset(0)
-                as std::ffi::c_int >> 2 & 3 as std::ffi::c_int)
+                as i32 >> 2 & 3 as i32)
                 as u32;
             let mut litSize_1: usize = 0;
             let mut lhSize_1: usize = 0;
@@ -1227,16 +1227,16 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 1 => {
                     lhSize_1 = 2;
                     if srcSize < 3 {
-                        return -(ZSTD_error_corruption_detected as std::ffi::c_int)
+                        return -(ZSTD_error_corruption_detected as i32)
                             as usize;
                     }
                     litSize_1 = (MEM_readLE16(istart as *const std::ffi::c_void)
-                        as std::ffi::c_int >> 4) as usize;
+                        as i32 >> 4) as usize;
                 }
                 3 => {
                     lhSize_1 = 3;
                     if srcSize < 4 {
-                        return -(ZSTD_error_corruption_detected as std::ffi::c_int)
+                        return -(ZSTD_error_corruption_detected as i32)
                             as usize;
                     }
                     litSize_1 = (MEM_readLE24(istart as *const std::ffi::c_void)
@@ -1245,7 +1245,7 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 0 | 2 | _ => {
                     lhSize_1 = 1;
                     litSize_1 = (*istart.offset(0)
-                        as std::ffi::c_int >> 3) as usize;
+                        as i32 >> 3) as usize;
                 }
             }
             RETURN_ERROR_IF!(litSize_1 > 0 && dst.is_null(), ZSTD_error_dstSize_tooSmall);
@@ -1278,32 +1278,32 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     let mut litSize: usize = 0;
     let mut litCSize: usize = 0;
     let mut singleStream: u32 = 0;
-    let lhlCode = (*istart.offset(0) as std::ffi::c_int
-        >> 2 & 3 as std::ffi::c_int) as u32;
+    let lhlCode = (*istart.offset(0) as i32
+        >> 2 & 3 as i32) as u32;
     let lhc = MEM_readLE32(istart as *const std::ffi::c_void);
     let mut hufSuccess: usize = 0;
     let mut expectedWriteSize = std::cmp::min(blockSizeMax, dstCapacity);
-    let flags = 0 as std::ffi::c_int
+    let flags = 0 as i32
         | (if ZSTD_DCtx_get_bmi2(dctx) != 0 {
-            HUF_flags_bmi2 as std::ffi::c_int
+            HUF_flags_bmi2 as i32
         } else {
-            0 as std::ffi::c_int
+            0 as i32
         })
         | (if (*dctx).disableHufAsm != 0 {
-            HUF_flags_disableAsm as std::ffi::c_int
+            HUF_flags_disableAsm as i32
         } else {
-            0 as std::ffi::c_int
+            0 as i32
         });
     match lhlCode {
         2 => {
             lhSize = 4;
-            litSize = (lhc >> 4 & 0x3fff as std::ffi::c_int as u32)
+            litSize = (lhc >> 4 & 0x3fff as i32 as u32)
                 as usize;
             litCSize = (lhc >> 18) as usize;
         }
         3 => {
             lhSize = 5;
-            litSize = (lhc >> 4 & 0x3ffff as std::ffi::c_int as u32)
+            litSize = (lhc >> 4 & 0x3ffff as i32 as u32)
                 as usize;
             litCSize = ((lhc >> 22) as usize)
                 .wrapping_add(
@@ -1312,11 +1312,11 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
                 );
         }
         0 | 1 | _ => {
-            singleStream = (lhlCode == 0) as std::ffi::c_int as u32;
+            singleStream = (lhlCode == 0) as i32 as u32;
             lhSize = 3;
-            litSize = (lhc >> 4 & 0x3ff as std::ffi::c_int as u32)
+            litSize = (lhc >> 4 & 0x3ff as i32 as u32)
                 as usize;
-            litCSize = (lhc >> 14 & 0x3ff as std::ffi::c_int as u32)
+            litCSize = (lhc >> 14 & 0x3ff as i32 as u32)
                 as usize;
         }
     }
@@ -1345,8 +1345,8 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
             _pos = _pos.wrapping_add(CACHELINE_SIZE as usize);
         }
     }
-    if litEncType as std::ffi::c_uint
-        == set_repeat as std::ffi::c_int as std::ffi::c_uint
+    if litEncType as u32
+        == set_repeat as i32 as u32
     {
         if singleStream != 0 {
             hufSuccess = HUF_decompress1X_usingDTable(
@@ -1406,8 +1406,8 @@ unsafe extern "C" fn ZSTD_decodeLiteralsBlock(
     (*dctx).litPtr = (*dctx).litBuffer;
     (*dctx).litSize = litSize;
     (*dctx).litEntropy = 1;
-    if litEncType as std::ffi::c_uint
-        == set_compressed as std::ffi::c_int as std::ffi::c_uint
+    if litEncType as u32
+        == set_compressed as i32 as u32
     {
         (*dctx).HUFptr = ((*dctx).entropy.hufTable).as_mut_ptr();
     }
@@ -2915,11 +2915,11 @@ unsafe extern "C" fn ZSTD_buildSeqTable_rle(
 #[inline(always)]
 unsafe extern "C" fn ZSTD_buildFSETable_body(
     mut dt: *mut ZSTD_seqSymbol,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
     mut baseValue: *const u32,
     mut nbAdditionalBits: *const u8,
-    mut tableLog: std::ffi::c_uint,
+    mut tableLog: u32,
     mut wksp: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) {
@@ -2929,10 +2929,10 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
     let mut symbolNext = wksp as *mut u16;
     let mut spread = symbolNext
         .offset(
-            (if 35 as std::ffi::c_int > 52 {
-                35 as std::ffi::c_int
+            (if 35 as i32 > 52 {
+                35 as i32
             } else {
-                52 as std::ffi::c_int
+                52 as i32
             }) as isize,
         )
         .offset(1) as *mut u8;
@@ -2943,21 +2943,21 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
     };
     DTableH.tableLog = tableLog;
     DTableH.fastMode = 1;
-    let largeLimit = ((1 as std::ffi::c_int)
+    let largeLimit = ((1 as i32)
         << tableLog.wrapping_sub(1)) as i16;
     let mut s: u32 = 0;
     s = 0;
     while s < maxSV1 {
-        if *normalizedCounter.offset(s as isize) as std::ffi::c_int
-            == -(1 as std::ffi::c_int)
+        if *normalizedCounter.offset(s as isize) as i32
+            == -(1 as i32)
         {
             let fresh0 = highThreshold;
             highThreshold = highThreshold.wrapping_sub(1);
             (*tableDecode.offset(fresh0 as isize)).baseValue = s;
             *symbolNext.offset(s as isize) = 1;
         } else {
-            if *normalizedCounter.offset(s as isize) as std::ffi::c_int
-                >= largeLimit as std::ffi::c_int
+            if *normalizedCounter.offset(s as isize) as i32
+                >= largeLimit as i32
             {
                 DTableH.fastMode = 0;
             }
@@ -3039,7 +3039,7 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
             .nbBits = tableLog.wrapping_sub(ZSTD_highbit32(nextState)) as u8;
         (*tableDecode.offset(u_0 as isize))
             .nextState = (nextState
-            << (*tableDecode.offset(u_0 as isize)).nbBits as std::ffi::c_int)
+            << (*tableDecode.offset(u_0 as isize)).nbBits as i32)
             .wrapping_sub(tableSize) as u16;
         (*tableDecode.offset(u_0 as isize))
             .nbAdditionalBits = *nbAdditionalBits.offset(symbol as isize);
@@ -3051,11 +3051,11 @@ unsafe extern "C" fn ZSTD_buildFSETable_body(
 }
 unsafe extern "C" fn ZSTD_buildFSETable_body_default(
     mut dt: *mut ZSTD_seqSymbol,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
     mut baseValue: *const u32,
     mut nbAdditionalBits: *const u8,
-    mut tableLog: std::ffi::c_uint,
+    mut tableLog: u32,
     mut wksp: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) {
@@ -3072,11 +3072,11 @@ unsafe extern "C" fn ZSTD_buildFSETable_body_default(
 }
 unsafe extern "C" fn ZSTD_buildFSETable_body_bmi2(
     mut dt: *mut ZSTD_seqSymbol,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
     mut baseValue: *const u32,
     mut nbAdditionalBits: *const u8,
-    mut tableLog: std::ffi::c_uint,
+    mut tableLog: u32,
     mut wksp: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) {
@@ -3094,14 +3094,14 @@ unsafe extern "C" fn ZSTD_buildFSETable_body_bmi2(
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_buildFSETable(
     mut dt: *mut ZSTD_seqSymbol,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
     mut baseValue: *const u32,
     mut nbAdditionalBits: *const u8,
-    mut tableLog: std::ffi::c_uint,
+    mut tableLog: u32,
     mut wksp: *mut std::ffi::c_void,
     mut wkspSize: usize,
-    mut bmi2: std::ffi::c_int,
+    mut bmi2: i32,
 ) {
     if bmi2 != 0 {
         ZSTD_buildFSETable_body_bmi2(
@@ -3131,7 +3131,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
     mut DTableSpace: *mut ZSTD_seqSymbol,
     mut DTablePtr: *mut *const ZSTD_seqSymbol,
     mut type_0: SymbolEncodingType_e,
-    mut max: std::ffi::c_uint,
+    mut max: u32,
     mut maxLog: u32,
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
@@ -3139,16 +3139,16 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
     mut nbAdditionalBits: *const u8,
     mut defaultTable: *const ZSTD_seqSymbol,
     mut flagRepeatTable: u32,
-    mut ddictIsCold: std::ffi::c_int,
-    mut nbSeq: std::ffi::c_int,
+    mut ddictIsCold: i32,
+    mut nbSeq: i32,
     mut wksp: *mut u32,
     mut wkspSize: usize,
-    mut bmi2: std::ffi::c_int,
+    mut bmi2: i32,
 ) -> usize {
-    match type_0 as std::ffi::c_uint {
+    match type_0 as u32 {
         1 => {
             RETURN_ERROR_IF!(srcSize == 0, ZSTD_error_srcSize_wrong);
-            RETURN_ERROR_IF!(*(src as *const u8) as std::ffi::c_uint > max, ZSTD_error_corruption_detected);
+            RETURN_ERROR_IF!(*(src as *const u8) as u32 > max, ZSTD_error_corruption_detected);
             let symbol = *(src as *const u8) as u32;
             let baseline = *baseValue.offset(symbol as isize);
             let nbBits = *nbAdditionalBits.offset(symbol as isize);
@@ -3175,7 +3175,7 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
             return 0;
         }
         2 => {
-            let mut tableLog: std::ffi::c_uint = 0;
+            let mut tableLog: u32 = 0;
             let mut norm: [i16; 53] = [0; 53];
             let headerSize = FSE_readNCount(
                 norm.as_mut_ptr(),
@@ -3206,14 +3206,14 @@ unsafe extern "C" fn ZSTD_buildSeqTable(
 
 pub unsafe fn ZSTD_decodeSeqHeaders(
     mut dctx: *mut ZSTD_DCtx,
-    mut nbSeqPtr: *mut std::ffi::c_int,
+    mut nbSeqPtr: *mut i32,
     mut src: *const std::ffi::c_void,
     mut srcSize: usize,
 ) -> usize {
     let istart = src as *const u8;
     let iend = istart.offset(srcSize as isize);
     let mut ip = istart;
-    let mut nbSeq: std::ffi::c_int = 0;
+    let mut nbSeq: i32 = 0;
 
     DEBUGLOG!(5, "ZSTD_decodeSeqHeaders");
 
@@ -3221,7 +3221,7 @@ pub unsafe fn ZSTD_decodeSeqHeaders(
     RETURN_ERROR_IF!(srcSize < 1, ZSTD_error_srcSize_wrong);
 
     /* SeqHead */
-    nbSeq = *ip as std::ffi::c_int;
+    nbSeq = *ip as i32;
     ip = ip.offset(1);
     if nbSeq > 0x7f {
         if nbSeq == 0xff {
@@ -3230,7 +3230,7 @@ pub unsafe fn ZSTD_decodeSeqHeaders(
             ip = ip.offset(2);
         } else {
             RETURN_ERROR_IF!(ip >= iend, ZSTD_error_srcSize_wrong);
-            nbSeq = (nbSeq - 0x80) << 8 + (*ip as std::ffi::c_int);
+            nbSeq = (nbSeq - 0x80) << 8 + (*ip as i32);
             ip = ip.offset(1);
         }
     }
@@ -3258,7 +3258,7 @@ pub unsafe fn ZSTD_decodeSeqHeaders(
         ((*dctx).entropy.LLTable).as_mut_ptr(),
         &mut (*dctx).LLTptr,
         LLtype,
-        MaxLL as std::ffi::c_uint,
+        MaxLL as u32,
         LLFSELog as u32,
         ip as *const std::ffi::c_void,
         iend.offset_from(ip) as usize,
@@ -3339,7 +3339,7 @@ unsafe extern "C" fn ZSTD_overlapCopy8(
             4,
             4,
         ];
-        static mut dec64table: [std::ffi::c_int; 8] = [
+        static mut dec64table: [i32; 8] = [
             8,
             8,
             8,
@@ -3397,8 +3397,8 @@ unsafe extern "C" fn ZSTD_safecopy(
         }
         return;
     }
-    if ovtype as std::ffi::c_uint
-        == ZSTD_overlap_src_before_dst as std::ffi::c_int as std::ffi::c_uint
+    if ovtype as u32
+        == ZSTD_overlap_src_before_dst as i32 as u32
     {
         ZSTD_overlapCopy8(&mut op, &mut ip, diff as usize);
         length = length.wrapping_sub(8);
@@ -3588,7 +3588,7 @@ unsafe extern "C" fn ZSTD_execSequence(
         || MEM_32bits
             && (oend.offset_from(op) as std::ffi::c_long as usize)
                 < sequenceLength.wrapping_add(32))
-        as std::ffi::c_int as std::ffi::c_long != 0
+        as i32 as std::ffi::c_long != 0
     {
         return ZSTD_execSequenceEnd(
             op,
@@ -3667,7 +3667,7 @@ unsafe extern "C" fn ZSTD_execSequenceSplitLitBuffer(
         || MEM_32bits
             && (oend.offset_from(op) as std::ffi::c_long as usize)
                 < sequenceLength.wrapping_add(32))
-        as std::ffi::c_int as std::ffi::c_long != 0
+        as i32 as std::ffi::c_long != 0
     {
         return ZSTD_execSequenceEndSplitLitBuffer(
             op,
@@ -3751,7 +3751,7 @@ unsafe extern "C" fn ZSTD_updateFseStateWithDInfo(
 unsafe extern "C" fn ZSTD_decodeSequence(
     mut seqState: *mut seqState_t,
     longOffsets: ZSTD_longOffset_e,
-    isLastSeq: std::ffi::c_int,
+    isLastSeq: i32,
 ) -> seq_t {
     let mut seq = seq_t {
         litLength: 0,
@@ -3768,8 +3768,8 @@ unsafe extern "C" fn ZSTD_decodeSequence(
     let llBits = (*llDInfo).nbAdditionalBits;
     let mlBits = (*mlDInfo).nbAdditionalBits;
     let ofBits = (*ofDInfo).nbAdditionalBits;
-    let totalBits = (llBits as std::ffi::c_int + mlBits as std::ffi::c_int
-        + ofBits as std::ffi::c_int) as u8;
+    let totalBits = (llBits as i32 + mlBits as i32
+        + ofBits as i32) as u8;
     let llNext = (*llDInfo).nextState;
     let mlNext = (*mlDInfo).nextState;
     let ofNext = (*ofDInfo).nextState;
@@ -3777,14 +3777,14 @@ unsafe extern "C" fn ZSTD_decodeSequence(
     let mlnbBits = (*mlDInfo).nbBits as u32;
     let ofnbBits = (*ofDInfo).nbBits as u32;
     let mut offset: usize = 0;
-    if ofBits as std::ffi::c_int > 1 {
-        if MEM_32bits && longOffsets as std::ffi::c_uint != 0
-            && ofBits as std::ffi::c_int >= STREAM_ACCUMULATOR_MIN_32
+    if ofBits as i32 > 1 {
+        if MEM_32bits && longOffsets as u32 != 0
+            && ofBits as i32 >= STREAM_ACCUMULATOR_MIN_32
         {
             let extraBits = (if ZSTD_WINDOWLOG_MAX_32 > STREAM_ACCUMULATOR_MIN_32 {
                 ZSTD_WINDOWLOG_MAX_32 - STREAM_ACCUMULATOR_MIN_32
             } else {
-                0 as std::ffi::c_int
+                0 as i32
             }) as u32;
             offset = (ofBase as usize)
                 .wrapping_add(
@@ -3801,7 +3801,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
                 .wrapping_add(
                     BIT_readBitsFast(
                         &mut (*seqState).DStream,
-                        ofBits as std::ffi::c_uint,
+                        ofBits as u32,
                     ),
                 );
             if MEM_32bits {
@@ -3815,14 +3815,14 @@ unsafe extern "C" fn ZSTD_decodeSequence(
         (*seqState).prevOffset[0] = offset;
     } else {
         let ll0 = ((*llDInfo).baseValue == 0)
-            as std::ffi::c_int as u32;
-        if (ofBits as std::ffi::c_int == 0) as std::ffi::c_int
+            as i32 as u32;
+        if (ofBits as i32 == 0) as i32
             as std::ffi::c_long != 0
         {
             offset = (*seqState).prevOffset[ll0 as usize];
             (*seqState)
                 .prevOffset[1] = (*seqState)
-                .prevOffset[(ll0 == 0) as std::ffi::c_int as usize];
+                .prevOffset[(ll0 == 0) as i32 as usize];
             (*seqState).prevOffset[0] = offset;
         } else {
             offset = (ofBase.wrapping_add(ll0) as usize)
@@ -3838,7 +3838,7 @@ unsafe extern "C" fn ZSTD_decodeSequence(
             } else {
                 (*seqState).prevOffset[offset as usize]
             };
-            temp = temp.wrapping_sub((temp == 0) as std::ffi::c_int as usize);
+            temp = temp.wrapping_sub((temp == 0) as i32 as usize);
             if offset != 1 {
                 (*seqState)
                     .prevOffset[2] = (*seqState).prevOffset[1];
@@ -3850,37 +3850,37 @@ unsafe extern "C" fn ZSTD_decodeSequence(
         }
     }
     seq.offset = offset;
-    if mlBits as std::ffi::c_int > 0 {
+    if mlBits as i32 > 0 {
         seq
             .matchLength = (seq.matchLength)
             .wrapping_add(
-                BIT_readBitsFast(&mut (*seqState).DStream, mlBits as std::ffi::c_uint),
+                BIT_readBitsFast(&mut (*seqState).DStream, mlBits as u32),
             );
     }
     if MEM_32bits
-        && mlBits as std::ffi::c_int + llBits as std::ffi::c_int
+        && mlBits as i32 + llBits as i32
             >= STREAM_ACCUMULATOR_MIN_32
                 - (if ZSTD_WINDOWLOG_MAX_32 > STREAM_ACCUMULATOR_MIN_32 {
                     ZSTD_WINDOWLOG_MAX_32 - STREAM_ACCUMULATOR_MIN_32
                 } else {
-                    0 as std::ffi::c_int
+                    0 as i32
                 })
     {
         BIT_reloadDStream(&mut (*seqState).DStream);
     }
     if MEM_64bits
-        && (totalBits as std::ffi::c_int
+        && (totalBits as i32
             >= 57
-                - (9 as std::ffi::c_int + 9 as std::ffi::c_int + 8 as std::ffi::c_int))
-            as std::ffi::c_int as std::ffi::c_long != 0
+                - (9 as i32 + 9 as i32 + 8 as i32))
+            as i32 as std::ffi::c_long != 0
     {
         BIT_reloadDStream(&mut (*seqState).DStream);
     }
-    if llBits as std::ffi::c_int > 0 {
+    if llBits as i32 > 0 {
         seq
             .litLength = (seq.litLength)
             .wrapping_add(
-                BIT_readBitsFast(&mut (*seqState).DStream, llBits as std::ffi::c_uint),
+                BIT_readBitsFast(&mut (*seqState).DStream, llBits as u32),
             );
     }
     if MEM_32bits {
@@ -3919,7 +3919,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     let ostart = dst as *mut u8;
@@ -3985,7 +3985,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             sequence = ZSTD_decodeSequence(
                 &mut seqState,
                 isLongOffset,
-                (nbSeq == 1) as std::ffi::c_int,
+                (nbSeq == 1) as i32,
             );
             if litPtr.offset(sequence.litLength as isize) > (*dctx).litBufferEnd {
                 break;
@@ -4023,23 +4023,23 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
             litBufferEnd = ((*dctx).litExtraBuffer)
                 .as_mut_ptr()
                 .offset(
-                    (if 64 as std::ffi::c_int
-                        > (if ((1 as std::ffi::c_int) << 16)
-                            < (128 as std::ffi::c_int) << 10
+                    (if 64 as i32
+                        > (if ((1 as i32) << 16)
+                            < (128 as i32) << 10
                         {
-                            (1 as std::ffi::c_int) << 16
+                            (1 as i32) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10
+                            (128 as i32) << 10
                         })
                     {
-                        64 as std::ffi::c_int
+                        64 as i32
                     } else {
-                        (if ((1 as std::ffi::c_int) << 16)
-                            < (128 as std::ffi::c_int) << 10
+                        (if ((1 as i32) << 16)
+                            < (128 as i32) << 10
                         {
-                            (1 as std::ffi::c_int) << 16
+                            (1 as i32) << 16
                         } else {
-                            (128 as std::ffi::c_int) << 10
+                            (128 as i32) << 10
                         })
                     }) as isize,
                 );
@@ -4071,7 +4071,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
                 let sequence_0 = ZSTD_decodeSequence(
                     &mut seqState,
                     isLongOffset,
-                    (nbSeq == 1) as std::ffi::c_int,
+                    (nbSeq == 1) as i32,
                 );
                 let oneSeqSize_1 = ZSTD_execSequence(
                     op,
@@ -4112,23 +4112,23 @@ unsafe extern "C" fn ZSTD_decompressSequences_bodySplitLitBuffer(
         litBufferEnd = ((*dctx).litExtraBuffer)
             .as_mut_ptr()
             .offset(
-                (if 64 as std::ffi::c_int
-                    > (if ((1 as std::ffi::c_int) << 16)
-                        < (128 as std::ffi::c_int) << 10
+                (if 64 as i32
+                    > (if ((1 as i32) << 16)
+                        < (128 as i32) << 10
                     {
-                        (1 as std::ffi::c_int) << 16
+                        (1 as i32) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10
+                        (128 as i32) << 10
                     })
                 {
-                    64 as std::ffi::c_int
+                    64 as i32
                 } else {
-                    (if ((1 as std::ffi::c_int) << 16)
-                        < (128 as std::ffi::c_int) << 10
+                    (if ((1 as i32) << 16)
+                        < (128 as i32) << 10
                     {
-                        (1 as std::ffi::c_int) << 16
+                        (1 as i32) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10
+                        (128 as i32) << 10
                     })
                 }) as isize,
             );
@@ -4149,12 +4149,12 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     let ostart = dst as *mut u8;
-    let oend = if (*dctx).litBufferLocation as std::ffi::c_uint
-        == ZSTD_not_in_dst as std::ffi::c_int as std::ffi::c_uint
+    let oend = if (*dctx).litBufferLocation as u32
+        == ZSTD_not_in_dst as i32 as u32
     {
         ZSTD_maybeNullPtrAdd(ostart as *mut std::ffi::c_void, maxDstSize as ptrdiff_t)
             as *mut u8
@@ -4215,7 +4215,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_body(
             let sequence = ZSTD_decodeSequence(
                 &mut seqState,
                 isLongOffset,
-                (nbSeq == 1) as std::ffi::c_int,
+                (nbSeq == 1) as i32,
             );
             let oneSeqSize = ZSTD_execSequence(
                 op,
@@ -4257,7 +4257,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_default(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     return ZSTD_decompressSequences_body(
@@ -4276,7 +4276,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer_default(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     return ZSTD_decompressSequences_bodySplitLitBuffer(
@@ -4318,12 +4318,12 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     let ostart = dst as *mut u8;
-    let oend = if (*dctx).litBufferLocation as std::ffi::c_uint
-        == ZSTD_in_dst as std::ffi::c_int as std::ffi::c_uint
+    let oend = if (*dctx).litBufferLocation as u32
+        == ZSTD_in_dst as i32 as u32
     {
         (*dctx).litBuffer
     } else {
@@ -4365,10 +4365,10 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             },
             prevOffset: [0; 3],
         };
-        let mut seqNb: std::ffi::c_int = 0;
+        let mut seqNb: i32 = 0;
         let mut prefetchPos = op.offset_from(prefixStart) as std::ffi::c_long as usize;
         (*dctx).fseEntropy = 1;
-        let mut i: std::ffi::c_int = 0;
+        let mut i: i32 = 0;
         i = 0;
         while i < ZSTD_REP_NUM {
             seqState.prevOffset[i as usize] = (*dctx).entropy.rep[i as usize] as usize;
@@ -4388,7 +4388,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             let sequence = ZSTD_decodeSequence(
                 &mut seqState,
                 isLongOffset,
-                (seqNb == nbSeq - 1 as std::ffi::c_int) as std::ffi::c_int,
+                (seqNb == nbSeq - 1 as i32) as i32,
             );
             prefetchPos = ZSTD_prefetchMatch(
                 prefetchPos,
@@ -4404,10 +4404,10 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             let mut sequence_0 = ZSTD_decodeSequence(
                 &mut seqState,
                 isLongOffset,
-                (seqNb == nbSeq - 1 as std::ffi::c_int) as std::ffi::c_int,
+                (seqNb == nbSeq - 1 as i32) as i32,
             );
-            if (*dctx).litBufferLocation as std::ffi::c_uint
-                == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
+            if (*dctx).litBufferLocation as u32
+                == ZSTD_split as i32 as u32
                 && litPtr
                     .offset(
                         sequences[(seqNb - ADVANCED_SEQS & STORED_SEQS_MASK) as usize]
@@ -4418,7 +4418,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                     as std::ffi::c_long as usize;
                 if leftoverLit != 0 {
                     if leftoverLit > oend.offset_from(op) as std::ffi::c_long as usize {
-                        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int)
+                        return -(ZSTD_error_dstSize_tooSmall as i32)
                             as usize;
                     }
                     ZSTD_safecopyDstBeforeSrc(op, litPtr, leftoverLit);
@@ -4433,23 +4433,23 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                 litBufferEnd = ((*dctx).litExtraBuffer)
                     .as_mut_ptr()
                     .offset(
-                        (if 64 as std::ffi::c_int
-                            > (if ((1 as std::ffi::c_int) << 16)
-                                < (128 as std::ffi::c_int) << 10
+                        (if 64 as i32
+                            > (if ((1 as i32) << 16)
+                                < (128 as i32) << 10
                             {
-                                (1 as std::ffi::c_int) << 16
+                                (1 as i32) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10
+                                (128 as i32) << 10
                             })
                         {
-                            64 as std::ffi::c_int
+                            64 as i32
                         } else {
-                            (if ((1 as std::ffi::c_int) << 16)
-                                < (128 as std::ffi::c_int) << 10
+                            (if ((1 as i32) << 16)
+                                < (128 as i32) << 10
                             {
-                                (1 as std::ffi::c_int) << 16
+                                (1 as i32) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10
+                                (128 as i32) << 10
                             })
                         }) as isize,
                     );
@@ -4476,8 +4476,8 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                 sequences[(seqNb & STORED_SEQS_MASK) as usize] = sequence_0;
                 op = op.offset(oneSeqSize as isize);
             } else {
-                let oneSeqSize_0 = if (*dctx).litBufferLocation as std::ffi::c_uint
-                    == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
+                let oneSeqSize_0 = if (*dctx).litBufferLocation as u32
+                    == ZSTD_split as i32 as u32
                 {
                     ZSTD_execSequenceSplitLitBuffer(
                         op,
@@ -4529,8 +4529,8 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             let mut sequence_1: *mut seq_t = &mut *sequences
                 .as_mut_ptr()
                 .offset((seqNb & STORED_SEQS_MASK) as isize) as *mut seq_t;
-            if (*dctx).litBufferLocation as std::ffi::c_uint
-                == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
+            if (*dctx).litBufferLocation as u32
+                == ZSTD_split as i32 as u32
                 && litPtr.offset((*sequence_1).litLength as isize) > (*dctx).litBufferEnd
             {
                 let leftoverLit_0 = ((*dctx).litBufferEnd).offset_from(litPtr)
@@ -4538,7 +4538,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                 if leftoverLit_0 != 0 {
                     if leftoverLit_0 > oend.offset_from(op) as std::ffi::c_long as usize
                     {
-                        return -(ZSTD_error_dstSize_tooSmall as std::ffi::c_int)
+                        return -(ZSTD_error_dstSize_tooSmall as i32)
                             as usize;
                     }
                     ZSTD_safecopyDstBeforeSrc(op, litPtr, leftoverLit_0);
@@ -4551,23 +4551,23 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                 litBufferEnd = ((*dctx).litExtraBuffer)
                     .as_mut_ptr()
                     .offset(
-                        (if 64 as std::ffi::c_int
-                            > (if ((1 as std::ffi::c_int) << 16)
-                                < (128 as std::ffi::c_int) << 10
+                        (if 64 as i32
+                            > (if ((1 as i32) << 16)
+                                < (128 as i32) << 10
                             {
-                                (1 as std::ffi::c_int) << 16
+                                (1 as i32) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10
+                                (128 as i32) << 10
                             })
                         {
-                            64 as std::ffi::c_int
+                            64 as i32
                         } else {
-                            (if ((1 as std::ffi::c_int) << 16)
-                                < (128 as std::ffi::c_int) << 10
+                            (if ((1 as i32) << 16)
+                                < (128 as i32) << 10
                             {
-                                (1 as std::ffi::c_int) << 16
+                                (1 as i32) << 16
                             } else {
-                                (128 as std::ffi::c_int) << 10
+                                (128 as i32) << 10
                             })
                         }) as isize,
                     );
@@ -4587,8 +4587,8 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
                 }
                 op = op.offset(oneSeqSize_1 as isize);
             } else {
-                let oneSeqSize_2 = if (*dctx).litBufferLocation as std::ffi::c_uint
-                    == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
+                let oneSeqSize_2 = if (*dctx).litBufferLocation as u32
+                    == ZSTD_split as i32 as u32
                 {
                     ZSTD_execSequenceSplitLitBuffer(
                         op,
@@ -4631,8 +4631,8 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
             i_0;
         }
     }
-    if (*dctx).litBufferLocation as std::ffi::c_uint
-        == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
+    if (*dctx).litBufferLocation as u32
+        == ZSTD_split as i32 as u32
     {
         let lastLLSize = litBufferEnd.offset_from(litPtr) as std::ffi::c_long as usize;
         RETURN_ERROR_IF!(lastLLSize > oend.offset_from(op) as std::ffi::c_long as usize, ZSTD_error_dstSize_tooSmall);
@@ -4644,23 +4644,23 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
         litBufferEnd = ((*dctx).litExtraBuffer)
             .as_mut_ptr()
             .offset(
-                (if 64 as std::ffi::c_int
-                    > (if ((1 as std::ffi::c_int) << 16)
-                        < (128 as std::ffi::c_int) << 10
+                (if 64 as i32
+                    > (if ((1 as i32) << 16)
+                        < (128 as i32) << 10
                     {
-                        (1 as std::ffi::c_int) << 16
+                        (1 as i32) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10
+                        (128 as i32) << 10
                     })
                 {
-                    64 as std::ffi::c_int
+                    64 as i32
                 } else {
-                    (if ((1 as std::ffi::c_int) << 16)
-                        < (128 as std::ffi::c_int) << 10
+                    (if ((1 as i32) << 16)
+                        < (128 as i32) << 10
                     {
-                        (1 as std::ffi::c_int) << 16
+                        (1 as i32) << 16
                     } else {
-                        (128 as std::ffi::c_int) << 10
+                        (128 as i32) << 10
                     })
                 }) as isize,
             );
@@ -4673,16 +4673,16 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_body(
     }
     return op.offset_from(ostart) as usize;
 }
-pub const STORED_SEQS: std::ffi::c_int = 8;
-pub const STORED_SEQS_MASK: std::ffi::c_int = STORED_SEQS - 1;
-pub const ADVANCED_SEQS: std::ffi::c_int = STORED_SEQS;
+pub const STORED_SEQS: i32 = 8;
+pub const STORED_SEQS_MASK: i32 = STORED_SEQS - 1;
+pub const ADVANCED_SEQS: i32 = STORED_SEQS;
 unsafe extern "C" fn ZSTD_decompressSequencesLong_default(
     mut dctx: *mut ZSTD_DCtx,
     mut dst: *mut std::ffi::c_void,
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     return ZSTD_decompressSequencesLong_body(
@@ -4701,7 +4701,7 @@ unsafe extern "C" fn ZSTD_decompressSequences_bmi2(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     return ZSTD_decompressSequences_body(
@@ -4720,7 +4720,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer_bmi2(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     return ZSTD_decompressSequences_bodySplitLitBuffer(
@@ -4739,7 +4739,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong_bmi2(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     return ZSTD_decompressSequencesLong_body(
@@ -4758,7 +4758,7 @@ unsafe extern "C" fn ZSTD_decompressSequences(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     if ZSTD_DCtx_get_bmi2(dctx) != 0 {
@@ -4788,7 +4788,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesSplitLitBuffer(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     if ZSTD_DCtx_get_bmi2(dctx) != 0 {
@@ -4818,7 +4818,7 @@ unsafe extern "C" fn ZSTD_decompressSequencesLong(
     mut maxDstSize: usize,
     mut seqStart: *const std::ffi::c_void,
     mut seqSize: usize,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
     isLongOffset: ZSTD_longOffset_e,
 ) -> usize {
     if ZSTD_DCtx_get_bmi2(dctx) != 0 {
@@ -4852,7 +4852,7 @@ unsafe extern "C" fn ZSTD_totalHistorySize(
 }
 unsafe extern "C" fn ZSTD_getOffsetInfo(
     mut offTable: *const ZSTD_seqSymbol,
-    mut nbSeq: std::ffi::c_int,
+    mut nbSeq: i32,
 ) -> ZSTD_OffsetInfo {
     let mut info = {
         let mut init = ZSTD_OffsetInfo {
@@ -4867,15 +4867,15 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
             .offset(0))
             .tableLog;
         let mut table = offTable.offset(1);
-        let max = ((1 as std::ffi::c_int) << tableLog) as u32;
+        let max = ((1 as i32) << tableLog) as u32;
         let mut u: u32 = 0;
         u = 0;
         while u < max {
             info
                 .maxNbAdditionalBits = std::cmp::max(
-                info.maxNbAdditionalBits, (*table.offset(u as isize)).nbAdditionalBits as std::ffi::c_uint
+                info.maxNbAdditionalBits, (*table.offset(u as isize)).nbAdditionalBits as u32
             );
-            if (*table.offset(u as isize)).nbAdditionalBits as std::ffi::c_int
+            if (*table.offset(u as isize)).nbAdditionalBits as i32
                 > 22
             {
                 info
@@ -4891,7 +4891,7 @@ unsafe extern "C" fn ZSTD_getOffsetInfo(
 }
 unsafe extern "C" fn ZSTD_maxShortOffset() -> usize {
     if MEM_64bits {
-        return -(1 as std::ffi::c_int) as usize
+        return -(1 as i32) as usize
     } else {
         let maxOffbase = (1_usize
             << ((if MEM_32bits {
@@ -4939,10 +4939,10 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         (*dctx).virtualStart as *const u8 as *const std::ffi::c_void,
     );
     let mut isLongOffset = (MEM_32bits
-        && totalHistorySize > ZSTD_maxShortOffset()) as std::ffi::c_int
+        && totalHistorySize > ZSTD_maxShortOffset()) as i32
         as ZSTD_longOffset_e;
     let mut usePrefetchDecoder = (*dctx).ddictIsCold;
-    let mut nbSeq: std::ffi::c_int = 0;
+    let mut nbSeq: i32 = 0;
     let seqHSize = ZSTD_decodeSeqHeaders(
         dctx,
         &mut nbSeq,
@@ -4959,16 +4959,16 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
     RETURN_ERROR_IF!(MEM_64bits
         && ::core::mem::size_of::<usize>()
             == ::core::mem::size_of::<*mut std::ffi::c_void>()
-        && (-(1 as std::ffi::c_int) as usize).wrapping_sub(dst as usize)
-            < ((1 as std::ffi::c_int) << 20) as usize, ZSTD_error_dstSize_tooSmall);
-    if isLongOffset as std::ffi::c_uint != 0
+        && (-(1 as i32) as usize).wrapping_sub(dst as usize)
+            < ((1 as i32) << 20) as usize, ZSTD_error_dstSize_tooSmall);
+    if isLongOffset as u32 != 0
         || usePrefetchDecoder == 0
             && totalHistorySize
-                > ((1 as std::ffi::c_uint) << 24) as usize
+                > ((1 as u32) << 24) as usize
             && nbSeq > 8
     {
         let info = ZSTD_getOffsetInfo((*dctx).OFTptr, nbSeq);
-        if isLongOffset as std::ffi::c_uint != 0
+        if isLongOffset as u32 != 0
             && info.maxNbAdditionalBits
                 <= (if MEM_32bits {
                     STREAM_ACCUMULATOR_MIN_32
@@ -4980,11 +4980,11 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
         }
         if usePrefetchDecoder == 0 {
             let minShare = (if MEM_64bits {
-                7 as std::ffi::c_int
+                7 as i32
             } else {
-                20 as std::ffi::c_int
+                20 as i32
             }) as u32;
-            usePrefetchDecoder = (info.longOffsetShare >= minShare) as std::ffi::c_int;
+            usePrefetchDecoder = (info.longOffsetShare >= minShare) as i32;
         }
     }
     (*dctx).ddictIsCold = 0;
@@ -4999,8 +4999,8 @@ pub unsafe extern "C" fn ZSTD_decompressBlock_internal(
             isLongOffset,
         );
     }
-    if (*dctx).litBufferLocation as std::ffi::c_uint
-        == ZSTD_split as std::ffi::c_int as std::ffi::c_uint
+    if (*dctx).litBufferLocation as u32
+        == ZSTD_split as i32 as u32
     {
         return ZSTD_decompressSequencesSplitLitBuffer(
             dctx,

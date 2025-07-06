@@ -1,15 +1,15 @@
 use crate::zstd_h::*;
 
 /*-=====  Pre-defined compression levels  =====-*/
-pub const ZSTD_MAX_CLEVEL: std::ffi::c_int = 22;
+pub const ZSTD_MAX_CLEVEL: i32 = 22;
 
-pub fn ZSTD_maxCLevel() -> std::ffi::c_int {
+pub fn ZSTD_maxCLevel() -> i32 {
     return ZSTD_MAX_CLEVEL;
 }
-pub fn ZSTD_minCLevel() -> std::ffi::c_int {
+pub fn ZSTD_minCLevel() -> i32 {
     return -ZSTD_TARGETLENGTH_MAX;
 }
-pub fn ZSTD_defaultCLevel() -> std::ffi::c_int {
+pub fn ZSTD_defaultCLevel() -> i32 {
     return ZSTD_CLEVEL_DEFAULT;
 }
 

@@ -2,12 +2,12 @@ use ::libc;
 use crate::common::fse_h::*;
 extern "C" {
     fn FSE_readNCount_bmi2(
-        normalizedCounter: *mut std::ffi::c_short,
-        maxSymbolValuePtr: *mut std::ffi::c_uint,
-        tableLogPtr: *mut std::ffi::c_uint,
+        normalizedCounter: *mut i16,
+        maxSymbolValuePtr: *mut u32,
+        tableLogPtr: *mut u32,
         rBuffer: *const std::ffi::c_void,
         rBuffSize: usize,
-        bmi2: std::ffi::c_int,
+        bmi2: i32,
     ) -> usize;
 }
 pub type unalign32 = u32;
@@ -18,12 +18,12 @@ pub type BitContainerType = usize;
 #[repr(C)]
 pub struct BIT_DStream_t {
     pub bitContainer: BitContainerType,
-    pub bitsConsumed: std::ffi::c_uint,
+    pub bitsConsumed: u32,
     pub ptr: *const std::ffi::c_char,
     pub start: *const std::ffi::c_char,
     pub limitPtr: *const std::ffi::c_char,
 }
-pub type BIT_DStream_status = std::ffi::c_uint;
+pub type BIT_DStream_status = u32;
 pub const BIT_DStream_overflow: BIT_DStream_status = 3;
 pub const BIT_DStream_completed: BIT_DStream_status = 2;
 pub const BIT_DStream_endOfBuffer: BIT_DStream_status = 1;
@@ -31,7 +31,7 @@ pub const BIT_DStream_unfinished: BIT_DStream_status = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct FSE_decode_t {
-    pub newState: std::ffi::c_ushort,
+    pub newState: u16,
     pub symbol: std::ffi::c_uchar,
     pub nbBits: std::ffi::c_uchar,
 }
@@ -44,7 +44,7 @@ pub struct FSE_DTableHeader {
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct FSE_DecompressWksp {
-    pub ncount: [std::ffi::c_short; 256],
+    pub ncount: [i16; 256],
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -91,13 +91,13 @@ unsafe extern "C" fn BIT_initDStream(
         let lastByte = *(srcBuffer as *const u8)
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
-            .bitsConsumed = if lastByte as std::ffi::c_int != 0 {
-            (8 as std::ffi::c_uint)
+            .bitsConsumed = if lastByte as i32 != 0 {
+            (8 as u32)
                 .wrapping_sub(ZSTD_highbit32(lastByte as u32))
         } else {
-            0 as std::ffi::c_uint
+            0 as u32
         };
-        RETURN_ERROR_IF!(lastByte as std::ffi::c_int == 0, ZSTD_error_GENERIC);
+        RETURN_ERROR_IF!(lastByte as i32 == 0, ZSTD_error_GENERIC);
     } else {
         (*bitD).ptr = (*bitD).start;
         (*bitD).bitContainer = *((*bitD).start as *const u8) as BitContainerType;
@@ -208,13 +208,13 @@ unsafe extern "C" fn BIT_initDStream(
         let lastByte_0 = *(srcBuffer as *const u8)
             .offset(srcSize.wrapping_sub(1) as isize);
         (*bitD)
-            .bitsConsumed = if lastByte_0 as std::ffi::c_int != 0 {
-            (8 as std::ffi::c_uint)
+            .bitsConsumed = if lastByte_0 as i32 != 0 {
+            (8 as u32)
                 .wrapping_sub(ZSTD_highbit32(lastByte_0 as u32))
         } else {
-            0 as std::ffi::c_uint
+            0 as u32
         };
-        RETURN_ERROR_IF!(lastByte_0 as std::ffi::c_int == 0, ZSTD_error_corruption_detected);
+        RETURN_ERROR_IF!(lastByte_0 as i32 == 0, ZSTD_error_corruption_detected);
         (*bitD)
             .bitsConsumed = ((*bitD).bitsConsumed)
             .wrapping_add(
@@ -270,7 +270,7 @@ unsafe extern "C" fn BIT_skipBits(mut bitD: *mut BIT_DStream_t, mut nbBits: u32)
 #[inline(always)]
 unsafe extern "C" fn BIT_readBits(
     mut bitD: *mut BIT_DStream_t,
-    mut nbBits: std::ffi::c_uint,
+    mut nbBits: u32,
 ) -> BitContainerType {
     let value = BIT_lookBits(bitD, nbBits);
     BIT_skipBits(bitD, nbBits);
@@ -279,7 +279,7 @@ unsafe extern "C" fn BIT_readBits(
 #[inline]
 unsafe extern "C" fn BIT_readBitsFast(
     mut bitD: *mut BIT_DStream_t,
-    mut nbBits: std::ffi::c_uint,
+    mut nbBits: u32,
 ) -> usize {
     let value = BIT_lookBitsFast(bitD, nbBits);
     BIT_skipBits(bitD, nbBits);
@@ -302,10 +302,10 @@ unsafe extern "C" fn BIT_reloadDStream(
 ) -> BIT_DStream_status {
     if ((*bitD).bitsConsumed as std::ffi::c_ulong
         > (::core::mem::size_of::<BitContainerType>())
-            .wrapping_mul(8)) as std::ffi::c_int
+            .wrapping_mul(8)) as i32
         as std::ffi::c_long != 0
     {
-        static mut zeroFilled: BitContainerType = 0 as std::ffi::c_int
+        static mut zeroFilled: BitContainerType = 0 as i32
             as BitContainerType;
         (*bitD).ptr = &zeroFilled as *const BitContainerType as *const std::ffi::c_char;
         return BIT_DStream_overflow;
@@ -343,7 +343,7 @@ unsafe extern "C" fn FSE_initDState(
 ) {
     let mut ptr = dt as *const std::ffi::c_void;
     let DTableH = ptr as *const FSE_DTableHeader;
-    (*DStatePtr).state = BIT_readBits(bitD, (*DTableH).tableLog as std::ffi::c_uint);
+    (*DStatePtr).state = BIT_readBits(bitD, (*DTableH).tableLog as u32);
     BIT_reloadDStream(bitD);
     (*DStatePtr)
         .table = dt.offset(1) as *const std::ffi::c_void;
@@ -374,15 +374,15 @@ unsafe extern "C" fn FSE_decodeSymbolFast(
     (*DStatePtr).state = (DInfo.newState as usize).wrapping_add(lowBits);
     return symbol;
 }
-pub const FSE_MAX_MEMORY_USAGE: std::ffi::c_int = 14;
-pub const FSE_MAX_SYMBOL_VALUE: std::ffi::c_int = 255;
-pub const FSE_MAX_TABLELOG: std::ffi::c_int = FSE_MAX_MEMORY_USAGE
+pub const FSE_MAX_MEMORY_USAGE: i32 = 14;
+pub const FSE_MAX_SYMBOL_VALUE: i32 = 255;
+pub const FSE_MAX_TABLELOG: i32 = FSE_MAX_MEMORY_USAGE
     - 2;
 unsafe extern "C" fn FSE_buildDTable_internal(
     mut dt: *mut FSE_DTable,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
-    mut tableLog: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
+    mut tableLog: u32,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) -> usize {
@@ -393,33 +393,33 @@ unsafe extern "C" fn FSE_buildDTable_internal(
         .offset(maxSymbolValue as isize)
         .offset(1) as *mut u8;
     let maxSV1 = maxSymbolValue.wrapping_add(1);
-    let tableSize = ((1 as std::ffi::c_int) << tableLog) as u32;
+    let tableSize = ((1 as i32) << tableLog) as u32;
     let mut highThreshold = tableSize.wrapping_sub(1);
     RETURN_ERROR_IF!(FSE_BUILD_DTABLE_WKSP_SIZE(tableLog, maxSymbolValue)
-        > wkspSize as std::ffi::c_ulonglong, ZSTD_error_maxSymbolValue_tooLarge);
-    RETURN_ERROR_IF!(maxSymbolValue > FSE_MAX_SYMBOL_VALUE as std::ffi::c_uint, ZSTD_error_maxSymbolValue_tooLarge);
-    RETURN_ERROR_IF!(tableLog > FSE_MAX_TABLELOG as std::ffi::c_uint, ZSTD_error_tableLog_tooLarge);
+        > wkspSize as u64, ZSTD_error_maxSymbolValue_tooLarge);
+    RETURN_ERROR_IF!(maxSymbolValue > FSE_MAX_SYMBOL_VALUE as u32, ZSTD_error_maxSymbolValue_tooLarge);
+    RETURN_ERROR_IF!(tableLog > FSE_MAX_TABLELOG as u32, ZSTD_error_tableLog_tooLarge);
     let mut DTableH = FSE_DTableHeader {
         tableLog: 0,
         fastMode: 0,
     };
     DTableH.tableLog = tableLog as u16;
     DTableH.fastMode = 1;
-    let largeLimit = ((1 as std::ffi::c_int)
+    let largeLimit = ((1 as i32)
         << tableLog.wrapping_sub(1)) as i16;
     let mut s: u32 = 0;
     s = 0;
     while s < maxSV1 {
-        if *normalizedCounter.offset(s as isize) as std::ffi::c_int
-            == -(1 as std::ffi::c_int)
+        if *normalizedCounter.offset(s as isize) as i32
+            == -(1 as i32)
         {
             let fresh0 = highThreshold;
             highThreshold = highThreshold.wrapping_sub(1);
             (*tableDecode.offset(fresh0 as isize)).symbol = s as u8;
             *symbolNext.offset(s as isize) = 1;
         } else {
-            if *normalizedCounter.offset(s as isize) as std::ffi::c_int
-                >= largeLimit as std::ffi::c_int
+            if *normalizedCounter.offset(s as isize) as i32
+                >= largeLimit as i32
             {
                 DTableH.fastMode = 0;
             }
@@ -437,14 +437,14 @@ unsafe extern "C" fn FSE_buildDTable_internal(
     if highThreshold == tableSize.wrapping_sub(1) {
         let tableMask = tableSize.wrapping_sub(1) as usize;
         let step = FSE_TABLESTEP(tableSize);
-        let add = 0x101010101010101 as std::ffi::c_ulonglong as u64;
+        let add = 0x101010101010101 as u64 as u64;
         let mut pos: usize = 0;
         let mut sv: u64 = 0;
         let mut s_0: u32 = 0;
         s_0 = 0;
         while s_0 < maxSV1 {
-            let mut i: std::ffi::c_int = 0;
-            let n = *normalizedCounter.offset(s_0 as isize) as std::ffi::c_int;
+            let mut i: i32 = 0;
+            let n = *normalizedCounter.offset(s_0 as isize) as i32;
             MEM_write64(spread.offset(pos as isize) as *mut std::ffi::c_void, sv);
             i = 8;
             while i < n {
@@ -484,9 +484,9 @@ unsafe extern "C" fn FSE_buildDTable_internal(
         let mut position_0: u32 = 0;
         s_2 = 0;
         while s_2 < maxSV1 {
-            let mut i_0: std::ffi::c_int = 0;
+            let mut i_0: i32 = 0;
             i_0 = 0;
-            while i_0 < *normalizedCounter.offset(s_2 as isize) as std::ffi::c_int {
+            while i_0 < *normalizedCounter.offset(s_2 as isize) as i32 {
                 (*tableDecode.offset(position_0 as isize)).symbol = s_2 as u8;
                 position_0 = position_0.wrapping_add(step_0) & tableMask_0;
                 while position_0 > highThreshold {
@@ -512,7 +512,7 @@ unsafe extern "C" fn FSE_buildDTable_internal(
             .nbBits = tableLog.wrapping_sub(ZSTD_highbit32(nextState)) as u8;
         (*tableDecode.offset(u_0 as isize))
             .newState = (nextState
-            << (*tableDecode.offset(u_0 as isize)).nbBits as std::ffi::c_int)
+            << (*tableDecode.offset(u_0 as isize)).nbBits as i32)
             .wrapping_sub(tableSize) as u16;
         u_0 = u_0.wrapping_add(1);
         u_0;
@@ -522,9 +522,9 @@ unsafe extern "C" fn FSE_buildDTable_internal(
 #[no_mangle]
 pub unsafe extern "C" fn FSE_buildDTable_wksp(
     mut dt: *mut FSE_DTable,
-    mut normalizedCounter: *const std::ffi::c_short,
-    mut maxSymbolValue: std::ffi::c_uint,
-    mut tableLog: std::ffi::c_uint,
+    mut normalizedCounter: *const i16,
+    mut maxSymbolValue: u32,
+    mut tableLog: u32,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) -> usize {
@@ -544,7 +544,7 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
     mut cSrc: *const std::ffi::c_void,
     mut cSrcSize: usize,
     mut dt: *const FSE_DTable,
-    fast: std::ffi::c_uint,
+    fast: u32,
 ) -> usize {
     let ostart = dst as *mut u8;
     let mut op = ostart;
@@ -571,8 +571,8 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
     }
     FSE_initDState(&mut state1, &mut bitD, dt);
     FSE_initDState(&mut state2, &mut bitD, dt);
-    RETURN_ERROR_IF!(BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
-        == BIT_DStream_overflow as std::ffi::c_int as std::ffi::c_uint, ZSTD_error_corruption_detected);
+    RETURN_ERROR_IF!(BIT_reloadDStream(&mut bitD) as u32
+        == BIT_DStream_overflow as i32 as u32, ZSTD_error_corruption_detected);
 
     macro_rules! FSE_GETSYMBOL {
         ($statePtr:expr) => {
@@ -584,12 +584,12 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         }
     }
 
-    while (BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
-        == BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint)
-        as std::ffi::c_int & (op < olimit) as std::ffi::c_int != 0
+    while (BIT_reloadDStream(&mut bitD) as u32
+        == BIT_DStream_unfinished as i32 as u32)
+        as i32 & (op < olimit) as i32 != 0
     {
         *op.offset(0) = FSE_GETSYMBOL!(addr_of!(state1));
-        if (FSE_MAX_TABLELOG * 2 as std::ffi::c_int + 7 as std::ffi::c_int)
+        if (FSE_MAX_TABLELOG * 2 as i32 + 7 as i32)
             as std::ffi::c_ulong
             > (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8)
@@ -597,20 +597,20 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
             BIT_reloadDStream(&mut bitD);
         }
         *op.offset(1) = FSE_GETSYMBOL!(addr_of!(state2));
-        if (FSE_MAX_TABLELOG * 4 as std::ffi::c_int + 7 as std::ffi::c_int)
+        if (FSE_MAX_TABLELOG * 4 as i32 + 7 as i32)
             as std::ffi::c_ulong
             > (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8)
         {
-            if BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
-                > BIT_DStream_unfinished as std::ffi::c_int as std::ffi::c_uint
+            if BIT_reloadDStream(&mut bitD) as u32
+                > BIT_DStream_unfinished as i32 as u32
             {
                 op = op.offset(2);
                 break;
             }
         }
         *op.offset(2) = FSE_GETSYMBOL!(addr_of!(state1));
-        if (FSE_MAX_TABLELOG * 2 as std::ffi::c_int + 7 as std::ffi::c_int)
+        if (FSE_MAX_TABLELOG * 2 as i32 + 7 as i32)
             as std::ffi::c_ulong
             > (::core::mem::size_of::<BitContainerType>())
                 .wrapping_mul(8)
@@ -625,8 +625,8 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
         let fresh3 = op;
         op = op.offset(1);
         *fresh3 = FSE_GETSYMBOL!(addr_of!(state1));
-        if BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
-            == BIT_DStream_overflow as std::ffi::c_int as std::ffi::c_uint
+        if BIT_reloadDStream(&mut bitD) as u32
+            == BIT_DStream_overflow as i32 as u32
         {
             let fresh4 = op;
             op = op.offset(1);
@@ -637,8 +637,8 @@ unsafe extern "C" fn FSE_decompress_usingDTable_generic(
             let fresh5 = op;
             op = op.offset(1);
             *fresh5 = FSE_GETSYMBOL!(addr_of!(state2));
-            if !(BIT_reloadDStream(&mut bitD) as std::ffi::c_uint
-                == BIT_DStream_overflow as std::ffi::c_int as std::ffi::c_uint)
+            if !(BIT_reloadDStream(&mut bitD) as u32
+                == BIT_DStream_overflow as i32 as u32)
             {
                 continue;
             }
@@ -656,15 +656,15 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
     mut dstCapacity: usize,
     mut cSrc: *const std::ffi::c_void,
     mut cSrcSize: usize,
-    mut maxLog: std::ffi::c_uint,
+    mut maxLog: u32,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
-    mut bmi2: std::ffi::c_int,
+    mut bmi2: i32,
 ) -> usize {
     let istart = cSrc as *const u8;
     let mut ip = istart;
-    let mut tableLog: std::ffi::c_uint = 0;
-    let mut maxSymbolValue = FSE_MAX_SYMBOL_VALUE as std::ffi::c_uint;
+    let mut tableLog: u32 = 0;
+    let mut maxSymbolValue = FSE_MAX_SYMBOL_VALUE as u32;
     let wksp = workSpace as *mut FSE_DecompressWksp;
     let dtablePos = (::core::mem::size_of::<FSE_DecompressWksp>())
         .wrapping_div(::core::mem::size_of::<FSE_DTable>());
@@ -685,7 +685,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
     ip = ip.offset(NCountLength as isize);
     cSrcSize = cSrcSize.wrapping_sub(NCountLength);
     RETURN_ERROR_IF!(FSE_DECOMPRESS_WKSP_SIZE(tableLog, maxSymbolValue)
-        > wkspSize as std::ffi::c_ulonglong, ZSTD_error_tableLog_tooLarge);
+        > wkspSize as u64, ZSTD_error_tableLog_tooLarge);
     workSpace = (workSpace as *mut u8)
         .offset(
             ::core::mem::size_of::<FSE_DecompressWksp>() as isize,
@@ -734,7 +734,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body_default(
     mut dstCapacity: usize,
     mut cSrc: *const std::ffi::c_void,
     mut cSrcSize: usize,
-    mut maxLog: std::ffi::c_uint,
+    mut maxLog: u32,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) -> usize {
@@ -754,7 +754,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body_bmi2(
     mut dstCapacity: usize,
     mut cSrc: *const std::ffi::c_void,
     mut cSrcSize: usize,
-    mut maxLog: std::ffi::c_uint,
+    mut maxLog: u32,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
 ) -> usize {
@@ -775,10 +775,10 @@ pub unsafe extern "C" fn FSE_decompress_wksp_bmi2(
     mut dstCapacity: usize,
     mut cSrc: *const std::ffi::c_void,
     mut cSrcSize: usize,
-    mut maxLog: std::ffi::c_uint,
+    mut maxLog: u32,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
-    mut bmi2: std::ffi::c_int,
+    mut bmi2: i32,
 ) -> usize {
     if bmi2 != 0 {
         return FSE_decompress_wksp_body_bmi2(

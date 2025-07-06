@@ -1,12 +1,12 @@
 use ::libc;
 extern "C" {
 }
-pub type XXH_errorcode = std::ffi::c_uint;
+pub type XXH_errorcode = u32;
 pub const XXH_ERROR: XXH_errorcode = 1;
 pub const XXH_OK: XXH_errorcode = 0;
 pub type XXH32_hash_t = u32;
 pub type xxh_u32 = XXH32_hash_t;
-pub type XXH_alignment = std::ffi::c_uint;
+pub type XXH_alignment = u32;
 pub const XXH_unaligned: XXH_alignment = 1;
 pub const XXH_aligned: XXH_alignment = 0;
 pub type xxh_u8 = u8;
@@ -46,14 +46,14 @@ pub type XXH64_state_t = XXH64_state_s;
 pub struct XXH64_canonical_t {
     pub digest: [std::ffi::c_uchar; 8],
 }
-pub const XXH_VERSION_MAJOR: std::ffi::c_int = 0;
-pub const XXH_VERSION_MINOR: std::ffi::c_int = 8;
-pub const XXH_VERSION_RELEASE: std::ffi::c_int = 2;
-pub const XXH_VERSION_NUMBER: std::ffi::c_int = XXH_VERSION_MAJOR
-    * 100 as std::ffi::c_int * 100 as std::ffi::c_int
-    + XXH_VERSION_MINOR * 100 as std::ffi::c_int + XXH_VERSION_RELEASE;
-pub const XXH_FORCE_ALIGN_CHECK: std::ffi::c_int = 0;
-pub const XXH32_ENDJMP: std::ffi::c_int = 0;
+pub const XXH_VERSION_MAJOR: i32 = 0;
+pub const XXH_VERSION_MINOR: i32 = 8;
+pub const XXH_VERSION_RELEASE: i32 = 2;
+pub const XXH_VERSION_NUMBER: i32 = XXH_VERSION_MAJOR
+    * 100 as i32 * 100 as i32
+    + XXH_VERSION_MINOR * 100 as i32 + XXH_VERSION_RELEASE;
+pub const XXH_FORCE_ALIGN_CHECK: i32 = 0;
+pub const XXH32_ENDJMP: i32 = 0;
 unsafe extern "C" fn XXH_malloc(mut s: usize) -> *mut std::ffi::c_void {
     return libc::malloc(s);
 }
@@ -70,20 +70,20 @@ unsafe extern "C" fn XXH_memcpy(
 unsafe extern "C" fn XXH_read32(mut ptr: *const std::ffi::c_void) -> xxh_u32 {
     return *(ptr as *const xxh_unalign32);
 }
-pub const XXH_CPU_LITTLE_ENDIAN: std::ffi::c_int = 1;
+pub const XXH_CPU_LITTLE_ENDIAN: i32 = 1;
 pub const XXH_rotl32: unsafe extern "C" fn(
-    std::ffi::c_uint,
-    std::ffi::c_uint,
-) -> std::ffi::c_uint = __builtin_rotateleft32;
+    u32,
+    u32,
+) -> u32 = __builtin_rotateleft32;
 pub const XXH_rotl64: unsafe extern "C" fn(
     std::ffi::c_ulong,
     std::ffi::c_ulong,
 ) -> std::ffi::c_ulong = __builtin_rotateleft64;
 unsafe extern "C" fn XXH_swap32(mut x: xxh_u32) -> xxh_u32 {
-    return x << 24 & 0xff000000 as std::ffi::c_uint
-        | x << 8 & 0xff0000 as std::ffi::c_int as xxh_u32
-        | x >> 8 & 0xff00 as std::ffi::c_int as xxh_u32
-        | x >> 24 & 0xff as std::ffi::c_int as xxh_u32;
+    return x << 24 & 0xff000000 as u32
+        | x << 8 & 0xff0000 as i32 as xxh_u32
+        | x >> 8 & 0xff00 as i32 as xxh_u32
+        | x >> 24 & 0xff as i32 as xxh_u32;
 }
 unsafe extern "C" fn XXH_readLE32(mut ptr: *const std::ffi::c_void) -> xxh_u32 {
     return if XXH_CPU_LITTLE_ENDIAN != 0 {
@@ -103,7 +103,7 @@ unsafe extern "C" fn XXH_readLE32_align(
     mut ptr: *const std::ffi::c_void,
     mut align: XXH_alignment,
 ) -> xxh_u32 {
-    if align as std::ffi::c_uint == XXH_unaligned as std::ffi::c_int as std::ffi::c_uint
+    if align as u32 == XXH_unaligned as i32 as u32
     {
         return XXH_readLE32(ptr)
     } else {
@@ -115,29 +115,29 @@ unsafe extern "C" fn XXH_readLE32_align(
     };
 }
 #[no_mangle]
-pub unsafe extern "C" fn ZSTD_XXH_versionNumber() -> std::ffi::c_uint {
-    return XXH_VERSION_NUMBER as std::ffi::c_uint;
+pub unsafe extern "C" fn ZSTD_XXH_versionNumber() -> u32 {
+    return XXH_VERSION_NUMBER as u32;
 }
-pub const XXH_PRIME32_1: std::ffi::c_uint = 0x9e3779b1 as std::ffi::c_uint;
-pub const XXH_PRIME32_2: std::ffi::c_uint = 0x85ebca77 as std::ffi::c_uint;
-pub const XXH_PRIME32_3: std::ffi::c_uint = 0xc2b2ae3d as std::ffi::c_uint;
-pub const XXH_PRIME32_4: std::ffi::c_uint = 0x27d4eb2f as std::ffi::c_uint;
-pub const XXH_PRIME32_5: std::ffi::c_uint = 0x165667b1 as std::ffi::c_uint;
+pub const XXH_PRIME32_1: u32 = 0x9e3779b1 as u32;
+pub const XXH_PRIME32_2: u32 = 0x85ebca77 as u32;
+pub const XXH_PRIME32_3: u32 = 0xc2b2ae3d as u32;
+pub const XXH_PRIME32_4: u32 = 0x27d4eb2f as u32;
+pub const XXH_PRIME32_5: u32 = 0x165667b1 as u32;
 unsafe extern "C" fn XXH32_round(mut acc: xxh_u32, mut input: xxh_u32) -> xxh_u32 {
-    acc = (acc as std::ffi::c_uint).wrapping_add(input.wrapping_mul(XXH_PRIME32_2))
+    acc = (acc as u32).wrapping_add(input.wrapping_mul(XXH_PRIME32_2))
         as xxh_u32 as xxh_u32;
     acc = ::core::intrinsics::rotate_left(
         acc,
         13,
     );
-    acc = (acc as std::ffi::c_uint).wrapping_mul(XXH_PRIME32_1) as xxh_u32 as xxh_u32;
+    acc = (acc as u32).wrapping_mul(XXH_PRIME32_1) as xxh_u32 as xxh_u32;
     return acc;
 }
 unsafe extern "C" fn XXH32_avalanche(mut hash: xxh_u32) -> xxh_u32 {
     hash ^= hash >> 15;
-    hash = (hash as std::ffi::c_uint).wrapping_mul(XXH_PRIME32_2) as xxh_u32 as xxh_u32;
+    hash = (hash as u32).wrapping_mul(XXH_PRIME32_2) as xxh_u32 as xxh_u32;
     hash ^= hash >> 13;
-    hash = (hash as std::ffi::c_uint).wrapping_mul(XXH_PRIME32_3) as xxh_u32 as xxh_u32;
+    hash = (hash as u32).wrapping_mul(XXH_PRIME32_3) as xxh_u32 as xxh_u32;
     hash ^= hash >> 16;
     return hash;
 }
@@ -234,22 +234,22 @@ unsafe extern "C" fn XXH_read64(mut ptr: *const std::ffi::c_void) -> xxh_u64 {
     return *(ptr as *const xxh_unalign64);
 }
 unsafe extern "C" fn XXH_swap64(mut x: xxh_u64) -> xxh_u64 {
-    return ((x << 56) as std::ffi::c_ulonglong
-        & 0xff00000000000000 as std::ffi::c_ulonglong
-        | (x << 40) as std::ffi::c_ulonglong
-            & 0xff000000000000 as std::ffi::c_ulonglong
-        | (x << 24) as std::ffi::c_ulonglong
-            & 0xff0000000000 as std::ffi::c_ulonglong
-        | (x << 8) as std::ffi::c_ulonglong
-            & 0xff00000000 as std::ffi::c_ulonglong
-        | (x >> 8) as std::ffi::c_ulonglong
-            & 0xff000000 as std::ffi::c_ulonglong
-        | (x >> 24) as std::ffi::c_ulonglong
-            & 0xff0000 as std::ffi::c_ulonglong
-        | (x >> 40) as std::ffi::c_ulonglong
-            & 0xff00 as std::ffi::c_ulonglong
-        | (x >> 56) as std::ffi::c_ulonglong
-            & 0xff as std::ffi::c_ulonglong) as xxh_u64;
+    return ((x << 56) as u64
+        & 0xff00000000000000 as u64
+        | (x << 40) as u64
+            & 0xff000000000000 as u64
+        | (x << 24) as u64
+            & 0xff0000000000 as u64
+        | (x << 8) as u64
+            & 0xff00000000 as u64
+        | (x >> 8) as u64
+            & 0xff000000 as u64
+        | (x >> 24) as u64
+            & 0xff0000 as u64
+        | (x >> 40) as u64
+            & 0xff00 as u64
+        | (x >> 56) as u64
+            & 0xff as u64) as xxh_u64;
 }
 unsafe extern "C" fn XXH_readLE64(mut ptr: *const std::ffi::c_void) -> xxh_u64 {
     return if XXH_CPU_LITTLE_ENDIAN != 0 {
@@ -269,7 +269,7 @@ unsafe extern "C" fn XXH_readLE64_align(
     mut ptr: *const std::ffi::c_void,
     mut align: XXH_alignment,
 ) -> xxh_u64 {
-    if align as std::ffi::c_uint == XXH_unaligned as std::ffi::c_int as std::ffi::c_uint
+    if align as u32 == XXH_unaligned as i32 as u32
     {
         return XXH_readLE64(ptr)
     } else {
@@ -280,42 +280,42 @@ unsafe extern "C" fn XXH_readLE64_align(
         }
     };
 }
-pub const XXH_PRIME64_1: std::ffi::c_ulonglong = 0x9e3779b185ebca87
-    as std::ffi::c_ulonglong;
-pub const XXH_PRIME64_2: std::ffi::c_ulonglong = 0xc2b2ae3d27d4eb4f
-    as std::ffi::c_ulonglong;
-pub const XXH_PRIME64_3: std::ffi::c_ulonglong = 0x165667b19e3779f9
-    as std::ffi::c_ulonglong;
-pub const XXH_PRIME64_4: std::ffi::c_ulonglong = 0x85ebca77c2b2ae63
-    as std::ffi::c_ulonglong;
-pub const XXH_PRIME64_5: std::ffi::c_ulonglong = 0x27d4eb2f165667c5
-    as std::ffi::c_ulonglong;
+pub const XXH_PRIME64_1: u64 = 0x9e3779b185ebca87
+    as u64;
+pub const XXH_PRIME64_2: u64 = 0xc2b2ae3d27d4eb4f
+    as u64;
+pub const XXH_PRIME64_3: u64 = 0x165667b19e3779f9
+    as u64;
+pub const XXH_PRIME64_4: u64 = 0x85ebca77c2b2ae63
+    as u64;
+pub const XXH_PRIME64_5: u64 = 0x27d4eb2f165667c5
+    as u64;
 unsafe extern "C" fn XXH64_round(mut acc: xxh_u64, mut input: xxh_u64) -> xxh_u64 {
-    acc = (acc as std::ffi::c_ulonglong)
-        .wrapping_add((input as std::ffi::c_ulonglong).wrapping_mul(XXH_PRIME64_2))
+    acc = (acc as u64)
+        .wrapping_add((input as u64).wrapping_mul(XXH_PRIME64_2))
         as xxh_u64 as xxh_u64;
     acc = ::core::intrinsics::rotate_left(
         acc,
         31,
     );
-    acc = (acc as std::ffi::c_ulonglong).wrapping_mul(XXH_PRIME64_1) as xxh_u64
+    acc = (acc as u64).wrapping_mul(XXH_PRIME64_1) as xxh_u64
         as xxh_u64;
     return acc;
 }
 unsafe extern "C" fn XXH64_mergeRound(mut acc: xxh_u64, mut val: xxh_u64) -> xxh_u64 {
     val = XXH64_round(0, val);
     acc ^= val;
-    acc = (acc as std::ffi::c_ulonglong)
+    acc = (acc as u64)
         .wrapping_mul(XXH_PRIME64_1)
         .wrapping_add(XXH_PRIME64_4) as xxh_u64;
     return acc;
 }
 unsafe extern "C" fn XXH64_avalanche(mut hash: xxh_u64) -> xxh_u64 {
     hash ^= hash >> 33;
-    hash = (hash as std::ffi::c_ulonglong).wrapping_mul(XXH_PRIME64_2) as xxh_u64
+    hash = (hash as u64).wrapping_mul(XXH_PRIME64_2) as xxh_u64
         as xxh_u64;
     hash ^= hash >> 29;
-    hash = (hash as std::ffi::c_ulonglong).wrapping_mul(XXH_PRIME64_3) as xxh_u64
+    hash = (hash as u64).wrapping_mul(XXH_PRIME64_3) as xxh_u64
         as xxh_u64;
     hash ^= hash >> 32;
     return hash;
@@ -384,7 +384,7 @@ pub unsafe extern "C" fn ZSTD_XXH64_digest(
         h64 = XXH64_mergeRound(h64, (*state).v[2]);
         h64 = XXH64_mergeRound(h64, (*state).v[3]);
     } else {
-        h64 = ((*state).v[2] as std::ffi::c_ulonglong)
+        h64 = ((*state).v[2] as u64)
             .wrapping_add(XXH_PRIME64_5) as xxh_u64;
     }
     h64 = h64.wrapping_add((*state).total_len);
@@ -413,4 +413,4 @@ pub unsafe extern "C" fn ZSTD_XXH64_hashFromCanonical(
 ) -> XXH64_hash_t {
     return XXH_readBE64(src as *const std::ffi::c_void);
 }
-pub const NULL: std::ffi::c_int = 0;
+pub const NULL: i32 = 0;

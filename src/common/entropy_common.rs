@@ -5,15 +5,15 @@ extern "C" {
         dstCapacity: usize,
         cSrc: *const std::ffi::c_void,
         cSrcSize: usize,
-        maxLog: std::ffi::c_uint,
+        maxLog: u32,
         workSpace: *mut std::ffi::c_void,
         wkspSize: usize,
-        bmi2: std::ffi::c_int,
+        bmi2: i32,
     ) -> usize;
 }
 pub type unalign32 = u32;
 use crate::common::error::*;
-pub type C2RustUnnamed = std::ffi::c_uint;
+pub type C2RustUnnamed = u32;
 pub const HUF_flags_disableFast: C2RustUnnamed = 32;
 pub const HUF_flags_disableAsm: C2RustUnnamed = 16;
 pub const HUF_flags_suspectUncompressible: C2RustUnnamed = 8;
@@ -21,39 +21,39 @@ pub const HUF_flags_preferRepeat: C2RustUnnamed = 4;
 pub const HUF_flags_optimalDepth: C2RustUnnamed = 2;
 pub const HUF_flags_bmi2: C2RustUnnamed = 1;
 use crate::common::mem::*;
-pub const FSE_VERSION_MAJOR: std::ffi::c_int = 0;
-pub const FSE_VERSION_MINOR: std::ffi::c_int = 9;
-pub const FSE_VERSION_RELEASE: std::ffi::c_int = 0;
-pub const FSE_VERSION_NUMBER: std::ffi::c_int = FSE_VERSION_MAJOR
-    * 100 as std::ffi::c_int * 100 as std::ffi::c_int
-    + FSE_VERSION_MINOR * 100 as std::ffi::c_int + FSE_VERSION_RELEASE;
-pub const FSE_MIN_TABLELOG: std::ffi::c_int = 5;
-pub const FSE_TABLELOG_ABSOLUTE_MAX: std::ffi::c_int = 15;
+pub const FSE_VERSION_MAJOR: i32 = 0;
+pub const FSE_VERSION_MINOR: i32 = 9;
+pub const FSE_VERSION_RELEASE: i32 = 0;
+pub const FSE_VERSION_NUMBER: i32 = FSE_VERSION_MAJOR
+    * 100 as i32 * 100 as i32
+    + FSE_VERSION_MINOR * 100 as i32 + FSE_VERSION_RELEASE;
+pub const FSE_MIN_TABLELOG: i32 = 5;
+pub const FSE_TABLELOG_ABSOLUTE_MAX: i32 = 15;
 use crate::common::bits::*;
-pub const HUF_TABLELOG_MAX: std::ffi::c_int = 12;
+pub const HUF_TABLELOG_MAX: i32 = 12;
 #[no_mangle]
-pub unsafe extern "C" fn FSE_versionNumber() -> std::ffi::c_uint {
-    return FSE_VERSION_NUMBER as std::ffi::c_uint;
+pub unsafe extern "C" fn FSE_versionNumber() -> u32 {
+    return FSE_VERSION_NUMBER as u32;
 }
 #[inline(always)]
 unsafe extern "C" fn FSE_readNCount_body(
-    mut normalizedCounter: *mut std::ffi::c_short,
-    mut maxSVPtr: *mut std::ffi::c_uint,
-    mut tableLogPtr: *mut std::ffi::c_uint,
+    mut normalizedCounter: *mut i16,
+    mut maxSVPtr: *mut u32,
+    mut tableLogPtr: *mut u32,
     mut headerBuffer: *const std::ffi::c_void,
     mut hbSize: usize,
 ) -> usize {
     let istart = headerBuffer as *const u8;
     let iend = istart.offset(hbSize as isize);
     let mut ip = istart;
-    let mut nbBits: std::ffi::c_int = 0;
-    let mut remaining: std::ffi::c_int = 0;
-    let mut threshold: std::ffi::c_int = 0;
+    let mut nbBits: i32 = 0;
+    let mut remaining: i32 = 0;
+    let mut threshold: i32 = 0;
     let mut bitStream: u32 = 0;
-    let mut bitCount: std::ffi::c_int = 0;
-    let mut charnum: std::ffi::c_uint = 0;
+    let mut bitCount: i32 = 0;
+    let mut charnum: u32 = 0;
     let maxSV1 = (*maxSVPtr).wrapping_add(1);
-    let mut previous0: std::ffi::c_int = 0;
+    let mut previous0: i32 = 0;
     if hbSize < 8 {
         let mut buffer: [std::ffi::c_char; 8] = [
             0,
@@ -85,30 +85,30 @@ unsafe extern "C" fn FSE_readNCount_body(
         ((*maxSVPtr).wrapping_add(1)
             as std::ffi::c_ulong)
             .wrapping_mul(
-                ::core::mem::size_of::<std::ffi::c_short>(),
+                ::core::mem::size_of::<i16>(),
             ) as usize,
     );
     bitStream = MEM_readLE32(ip as *const std::ffi::c_void);
-    nbBits = (bitStream & 0xf as std::ffi::c_int as u32)
-        .wrapping_add(FSE_MIN_TABLELOG as u32) as std::ffi::c_int;
+    nbBits = (bitStream & 0xf as i32 as u32)
+        .wrapping_add(FSE_MIN_TABLELOG as u32) as i32;
     RETURN_ERROR_IF!(nbBits > FSE_TABLELOG_ABSOLUTE_MAX, ZSTD_error_tableLog_tooLarge);
     bitStream >>= 4;
     bitCount = 4;
-    *tableLogPtr = nbBits as std::ffi::c_uint;
-    remaining = ((1 as std::ffi::c_int) << nbBits) + 1;
-    threshold = (1 as std::ffi::c_int) << nbBits;
+    *tableLogPtr = nbBits as u32;
+    remaining = ((1 as i32) << nbBits) + 1;
+    threshold = (1 as i32) << nbBits;
     nbBits += 1;
     nbBits;
     loop {
         if previous0 != 0 {
             let mut repeats = (ZSTD_countTrailingZeros32(
-                !bitStream | 0x80000000 as std::ffi::c_uint,
-            ) >> 1) as std::ffi::c_int;
+                !bitStream | 0x80000000 as u32,
+            ) >> 1) as i32;
             while repeats >= 12 {
                 charnum = charnum
                     .wrapping_add(
-                        (3 as std::ffi::c_int * 12 as std::ffi::c_int)
-                            as std::ffi::c_uint,
+                        (3 as i32 * 12 as i32)
+                            as u32,
                     );
                 if LIKELY!(ip <= iend - 7) != 0 {
                     ip = ip.offset(3);
@@ -117,19 +117,19 @@ unsafe extern "C" fn FSE_readNCount_body(
                         -= (8 as std::ffi::c_long
                             * iend
                                 .offset(-7_isize)
-                                .offset_from(ip) as std::ffi::c_long) as std::ffi::c_int;
+                                .offset_from(ip) as std::ffi::c_long) as i32;
                     bitCount &= 31;
                     ip = iend.offset(-4_isize);
                 }
                 bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
                 repeats = (ZSTD_countTrailingZeros32(
-                    !bitStream | 0x80000000 as std::ffi::c_uint,
-                ) >> 1) as std::ffi::c_int;
+                    !bitStream | 0x80000000 as u32,
+                ) >> 1) as i32;
             }
             charnum = charnum
-                .wrapping_add((3 as std::ffi::c_int * repeats) as std::ffi::c_uint);
+                .wrapping_add((3 as i32 * repeats) as u32);
             bitStream >>= 2 * repeats;
-            bitCount += 2 as std::ffi::c_int * repeats;
+            bitCount += 2 as i32 * repeats;
             charnum = charnum.wrapping_add(bitStream & 3_u32);
             bitCount += 2;
             if charnum >= maxSV1 {
@@ -145,22 +145,22 @@ unsafe extern "C" fn FSE_readNCount_body(
                 bitCount
                     -= (8 as std::ffi::c_long
                         * iend.offset(-4_isize).offset_from(ip)
-                            as std::ffi::c_long) as std::ffi::c_int;
+                            as std::ffi::c_long) as i32;
                 bitCount &= 31;
                 ip = iend.offset(-4_isize);
             }
             bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
         }
-        let max = 2 as std::ffi::c_int * threshold - 1 as std::ffi::c_int - remaining;
-        let mut count: std::ffi::c_int = 0;
-        if (bitStream & (threshold - 1 as std::ffi::c_int) as u32) < max as u32 {
-            count = (bitStream & (threshold - 1 as std::ffi::c_int) as u32)
-                as std::ffi::c_int;
+        let max = 2 as i32 * threshold - 1 as i32 - remaining;
+        let mut count: i32 = 0;
+        if (bitStream & (threshold - 1 as i32) as u32) < max as u32 {
+            count = (bitStream & (threshold - 1 as i32) as u32)
+                as i32;
             bitCount += nbBits - 1;
         } else {
             count = (bitStream
-                & (2 as std::ffi::c_int * threshold - 1 as std::ffi::c_int) as u32)
-                as std::ffi::c_int;
+                & (2 as i32 * threshold - 1 as i32) as u32)
+                as i32;
             if count >= threshold {
                 count -= max;
             }
@@ -175,16 +175,16 @@ unsafe extern "C" fn FSE_readNCount_body(
         }
         let fresh0 = charnum;
         charnum = charnum.wrapping_add(1);
-        *normalizedCounter.offset(fresh0 as isize) = count as std::ffi::c_short;
-        previous0 = (count == 0) as std::ffi::c_int;
+        *normalizedCounter.offset(fresh0 as isize) = count as i16;
+        previous0 = (count == 0) as i32;
         if remaining < threshold {
             if remaining <= 1 {
                 break;
             }
             nbBits = (ZSTD_highbit32(remaining as u32))
                 .wrapping_add(1)
-                as std::ffi::c_int;
-            threshold = (1 as std::ffi::c_int) << nbBits - 1;
+                as i32;
+            threshold = (1 as i32) << nbBits - 1;
         }
         if charnum >= maxSV1 {
             break;
@@ -199,7 +199,7 @@ unsafe extern "C" fn FSE_readNCount_body(
             bitCount
                 -= (8 as std::ffi::c_long
                     * iend.offset(-4_isize).offset_from(ip)
-                        as std::ffi::c_long) as std::ffi::c_int;
+                        as std::ffi::c_long) as i32;
             bitCount &= 31;
             ip = iend.offset(-4_isize);
         }
@@ -209,13 +209,13 @@ unsafe extern "C" fn FSE_readNCount_body(
     RETURN_ERROR_IF!(charnum > maxSV1, ZSTD_error_maxSymbolValue_tooSmall);
     RETURN_ERROR_IF!(bitCount > 32, ZSTD_error_corruption_detected);
     *maxSVPtr = charnum.wrapping_sub(1);
-    ip = ip.offset((bitCount + 7 as std::ffi::c_int >> 3) as isize);
+    ip = ip.offset((bitCount + 7 as i32 >> 3) as isize);
     return ip.offset_from(istart) as std::ffi::c_long as usize;
 }
 unsafe extern "C" fn FSE_readNCount_body_default(
-    mut normalizedCounter: *mut std::ffi::c_short,
-    mut maxSVPtr: *mut std::ffi::c_uint,
-    mut tableLogPtr: *mut std::ffi::c_uint,
+    mut normalizedCounter: *mut i16,
+    mut maxSVPtr: *mut u32,
+    mut tableLogPtr: *mut u32,
     mut headerBuffer: *const std::ffi::c_void,
     mut hbSize: usize,
 ) -> usize {
@@ -228,9 +228,9 @@ unsafe extern "C" fn FSE_readNCount_body_default(
     );
 }
 unsafe extern "C" fn FSE_readNCount_body_bmi2(
-    mut normalizedCounter: *mut std::ffi::c_short,
-    mut maxSVPtr: *mut std::ffi::c_uint,
-    mut tableLogPtr: *mut std::ffi::c_uint,
+    mut normalizedCounter: *mut i16,
+    mut maxSVPtr: *mut u32,
+    mut tableLogPtr: *mut u32,
     mut headerBuffer: *const std::ffi::c_void,
     mut hbSize: usize,
 ) -> usize {
@@ -244,12 +244,12 @@ unsafe extern "C" fn FSE_readNCount_body_bmi2(
 }
 #[no_mangle]
 pub unsafe extern "C" fn FSE_readNCount_bmi2(
-    mut normalizedCounter: *mut std::ffi::c_short,
-    mut maxSVPtr: *mut std::ffi::c_uint,
-    mut tableLogPtr: *mut std::ffi::c_uint,
+    mut normalizedCounter: *mut i16,
+    mut maxSVPtr: *mut u32,
+    mut tableLogPtr: *mut u32,
     mut headerBuffer: *const std::ffi::c_void,
     mut hbSize: usize,
-    mut bmi2: std::ffi::c_int,
+    mut bmi2: i32,
 ) -> usize {
     if bmi2 != 0 {
         return FSE_readNCount_body_bmi2(
@@ -270,9 +270,9 @@ pub unsafe extern "C" fn FSE_readNCount_bmi2(
 }
 #[no_mangle]
 pub unsafe extern "C" fn FSE_readNCount(
-    mut normalizedCounter: *mut std::ffi::c_short,
-    mut maxSVPtr: *mut std::ffi::c_uint,
-    mut tableLogPtr: *mut std::ffi::c_uint,
+    mut normalizedCounter: *mut i16,
+    mut maxSVPtr: *mut u32,
+    mut tableLogPtr: *mut u32,
     mut headerBuffer: *const std::ffi::c_void,
     mut hbSize: usize,
 ) -> usize {
@@ -320,7 +320,7 @@ unsafe extern "C" fn HUF_readStats_body(
     mut srcSize: usize,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
-    mut bmi2: std::ffi::c_int,
+    mut bmi2: i32,
 ) -> usize {
     let mut weightTotal: u32 = 0;
     let mut ip = src as *const u8;
@@ -342,12 +342,12 @@ unsafe extern "C" fn HUF_readStats_body(
                 .offset(
                     n as isize,
                 ) = (*ip.offset((n / 2_u32) as isize)
-                as std::ffi::c_int >> 4) as u8;
+                as i32 >> 4) as u8;
             *huffWeight
                 .offset(
                     n.wrapping_add(1) as isize,
                 ) = (*ip.offset((n / 2_u32) as isize)
-                as std::ffi::c_int & 15 as std::ffi::c_int) as u8;
+                as i32 & 15 as i32) as u8;
             n = n.wrapping_add(2);
         }
     } else {
@@ -369,7 +369,7 @@ unsafe extern "C" fn HUF_readStats_body(
     libc::memset(
         rankStats as *mut std::ffi::c_void,
         0,
-        ((12 as std::ffi::c_int + 1 as std::ffi::c_int) as std::ffi::c_ulong)
+        ((12 as i32 + 1 as i32) as std::ffi::c_ulong)
             .wrapping_mul(::core::mem::size_of::<u32>())
             as usize,
     );
@@ -377,15 +377,15 @@ unsafe extern "C" fn HUF_readStats_body(
     let mut n_0: u32 = 0;
     n_0 = 0;
     while (n_0 as usize) < oSize {
-        RETURN_ERROR_IF!(*huffWeight.offset(n_0 as isize) as std::ffi::c_int > HUF_TABLELOG_MAX, ZSTD_error_corruption_detected);
+        RETURN_ERROR_IF!(*huffWeight.offset(n_0 as isize) as i32 > HUF_TABLELOG_MAX, ZSTD_error_corruption_detected);
         let ref mut fresh1 = *rankStats
             .offset(*huffWeight.offset(n_0 as isize) as isize);
         *fresh1 = (*fresh1).wrapping_add(1);
         *fresh1;
         weightTotal = weightTotal
             .wrapping_add(
-                ((1 as std::ffi::c_int)
-                    << *huffWeight.offset(n_0 as isize) as std::ffi::c_int
+                ((1 as i32)
+                    << *huffWeight.offset(n_0 as isize) as i32
                     >> 1) as u32,
             );
         n_0 = n_0.wrapping_add(1);
@@ -396,9 +396,9 @@ unsafe extern "C" fn HUF_readStats_body(
         .wrapping_add(1);
     RETURN_ERROR_IF!(tableLog > HUF_TABLELOG_MAX as u32, ZSTD_error_corruption_detected);
     *tableLogPtr = tableLog;
-    let total = ((1 as std::ffi::c_int) << tableLog) as u32;
+    let total = ((1 as i32) << tableLog) as u32;
     let rest = total.wrapping_sub(weightTotal);
-    let verif = ((1 as std::ffi::c_int) << ZSTD_highbit32(rest)) as u32;
+    let verif = ((1 as i32) << ZSTD_highbit32(rest)) as u32;
     let lastWeight = (ZSTD_highbit32(rest))
         .wrapping_add(1);
     RETURN_ERROR_IF!(verif != rest, ZSTD_error_corruption_detected);
@@ -471,9 +471,9 @@ pub unsafe extern "C" fn HUF_readStats_wksp(
     mut srcSize: usize,
     mut workSpace: *mut std::ffi::c_void,
     mut wkspSize: usize,
-    mut flags: std::ffi::c_int,
+    mut flags: i32,
 ) -> usize {
-    if flags & HUF_flags_bmi2 as std::ffi::c_int != 0 {
+    if flags & HUF_flags_bmi2 as i32 != 0 {
         return HUF_readStats_body_bmi2(
             huffWeight,
             hwSize,

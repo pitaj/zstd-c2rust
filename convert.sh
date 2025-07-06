@@ -574,6 +574,26 @@ case $1 in
     
     ;;
 
+  integers2)
+    # Replace integer types with rust equivalents
+
+    # short is pretty much always i16
+    perl -i -p0e 's/\bstd::ffi::c_short\b/i16/gm' src/*.rs src/*/*.rs
+    # and unsigned short is pretty much always u16
+    perl -i -p0e 's/\bstd::ffi::c_ushort\b/u16/gm' src/*.rs src/*/*.rs
+
+    # long long is pretty much always i64
+    perl -i -p0e 's/\bstd::ffi::c_longlong\b/i64/gm' src/*.rs src/*/*.rs
+    # and unsigned long long is pretty much always u64
+    perl -i -p0e 's/\bstd::ffi::c_ulonglong\b/u64/gm' src/*.rs src/*/*.rs
+
+    # unsigned is pretty much always u32
+    perl -i -p0e 's/\bstd::ffi::c_uint\b/u32/gm' src/*.rs src/*/*.rs
+    # and int is pretty much always i32
+    perl -i -p0e 's/\bstd::ffi::c_int\b/i32/gm' src/*.rs src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile

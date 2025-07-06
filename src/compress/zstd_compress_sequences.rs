@@ -10,7 +10,7 @@ use crate::compress::zstd_compress_internal::*;
 
 // ==== from zstd_compress_sequences.h ====
 
-pub type ZSTD_DefaultPolicy_e = std::ffi::c_uint;
+pub type ZSTD_DefaultPolicy_e = u32;
 pub const ZSTD_defaultAllowed: ZSTD_DefaultPolicy_e = 1;
 pub const ZSTD_defaultDisallowed: ZSTD_DefaultPolicy_e = 0;
 
@@ -22,7 +22,7 @@ pub const ZSTD_defaultDisallowed: ZSTD_DefaultPolicy_e = 0;
  * Else: Return floor(-log2(x / 256) * 256)
  */
 #[rustfmt::skip]
-const kInverseProbabilityLog256: [std::ffi::c_uint; 256] = [
+const kInverseProbabilityLog256: [u32; 256] = [
     0,    2048, 1792, 1642, 1536, 1453, 1386, 1329, 1280, 1236, 1197, 1162,
     1130, 1100, 1073, 1047, 1024, 1001, 980,  960,  941,  923,  906,  889,
     874,  859,  844,  830,  817,  804,  791,  779,  768,  756,  745,  734,
@@ -49,7 +49,7 @@ const kInverseProbabilityLog256: [std::ffi::c_uint; 256] = [
 
 unsafe fn ZSTD_getFSEMaxSymbolValue(
     mut ctable: *const FSE_CTable,
-) -> std::ffi::c_uint {
+) -> u32 {
     let mut ptr = ctable as *const std::ffi::c_void;
     let mut u16ptr = ptr as *const u16;
     let maxSymbolValue = MEM_read16(
@@ -75,10 +75,10 @@ fn ZSTD_useLowProbCount(nbSeq: usize) -> bool {
  * Returns an error if any of the helper functions return an error.
  */
 unsafe fn ZSTD_NCountCost(
-    mut count: *const std::ffi::c_uint,
-    max: std::ffi::c_uint,
+    mut count: *const u32,
+    max: u32,
     nbSeq: usize,
-    FSELog: std::ffi::c_uint,
+    FSELog: u32,
 ) -> usize {
     let mut wksp: [u8; FSE_NCOUNTBOUND] = [0; FSE_NCOUNTBOUND];
     let mut norm: [i16; MaxSeq as usize + 1] = [0; MaxSeq as usize + 1];
@@ -101,15 +101,15 @@ unsafe fn ZSTD_NCountCost(
  * using the entropy bound.
  */
 unsafe fn ZSTD_entropyCost(
-    mut count: *const std::ffi::c_uint,
-    max: std::ffi::c_uint,
+    mut count: *const u32,
+    max: u32,
     total: usize,
 ) -> usize {
-    let mut cost: std::ffi::c_uint = 0;
+    let mut cost: u32 = 0;
     for s in 0..=(max as usize) {
         let mut norm = (
             256_usize.wrapping_mul(*count.add(s) as usize) / total
-        ) as std::ffi::c_uint;
+        ) as u32;
         if *count.add(s) != 0 && norm == 0 {
             norm = 1;
         }
@@ -129,8 +129,8 @@ unsafe fn ZSTD_entropyCost(
  */
 pub unsafe fn ZSTD_fseBitCost(
     mut ctable: *const FSE_CTable,
-    mut count: *const std::ffi::c_uint,
-    max: std::ffi::c_uint,
+    mut count: *const u32,
+    max: u32,
 ) -> usize {
     let kAccuracyLog = 8;
     let mut cost: usize = 0;
@@ -168,12 +168,12 @@ pub unsafe fn ZSTD_fseBitCost(
  * norm must be valid for every symbol with non-zero probability in count.
  */
 pub unsafe fn ZSTD_crossEntropyCost(
-    mut norm: *const std::ffi::c_short,
-    mut accuracyLog: std::ffi::c_uint,
-    mut count: *const std::ffi::c_uint,
-    max: std::ffi::c_uint,
+    mut norm: *const i16,
+    mut accuracyLog: u32,
+    mut count: *const u32,
+    max: u32,
 ) -> usize {
-    let shift = (8 as std::ffi::c_uint).wrapping_sub(accuracyLog);
+    let shift = (8 as u32).wrapping_sub(accuracyLog);
     let mut cost: usize = 0;
     debug_assert!(accuracyLog <= 8);
     for s in 0..=(max as usize) {
@@ -194,13 +194,13 @@ pub unsafe fn ZSTD_crossEntropyCost(
 
 pub unsafe fn ZSTD_selectEncodingType(
     mut repeatMode: *mut FSE_repeat,
-    mut count: *const std::ffi::c_uint,
-    max: std::ffi::c_uint,
+    mut count: *const u32,
+    max: u32,
     mostFrequent: usize,
     mut nbSeq: usize,
-    FSELog: std::ffi::c_uint,
+    FSELog: u32,
     mut prevCTable: *const FSE_CTable,
-    mut defaultNorm: *const std::ffi::c_short,
+    mut defaultNorm: *const i16,
     mut defaultNormLog: u32,
     isDefaultAllowed: ZSTD_DefaultPolicy_e,
     strategy: ZSTD_strategy,
@@ -300,7 +300,7 @@ pub unsafe fn ZSTD_buildCTable(
     mut nextCTable: *mut FSE_CTable,
     mut FSELog: u32,
     mut type_0: SymbolEncodingType_e,
-    mut count: *mut std::ffi::c_uint,
+    mut count: *mut u32,
     mut max: u32,
     mut codeTable: *const u8,
     mut nbSeq: usize,
@@ -316,7 +316,7 @@ pub unsafe fn ZSTD_buildCTable(
     let oend: *const u8 = op.add(dstCapacity);
     DEBUGLOG!(6, "ZSTD_buildCTable (dstCapacity=%u)", dstCapacity);
 
-    match type_0 as std::ffi::c_uint {
+    match type_0 as u32 {
         set_rle => {
             FORWARD_IF_ERROR!(
                 FSE_buildCTable_rle(nextCTable, max as u8), ""
@@ -388,7 +388,7 @@ unsafe fn ZSTD_encodeSequences_body(
     mut llCodeTable: *const u8,
     mut sequences: *const SeqDef,
     mut nbSeq: usize,
-    mut longOffsets: std::ffi::c_int,
+    mut longOffsets: i32,
 ) -> usize {
     let mut blockStream = BIT_CStream_t {
         bitContainer: 0,
@@ -440,7 +440,7 @@ unsafe fn ZSTD_encodeSequences_body(
     BIT_addBits(
         &mut blockStream,
         (*sequences.add(nbSeq - 1)).litLength as BitContainerType,
-        LL_bits[*llCodeTable.add(nbSeq - 1) as usize] as std::ffi::c_uint,
+        LL_bits[*llCodeTable.add(nbSeq - 1) as usize] as u32,
     );
     if MEM_32bits {
         BIT_flushBits(&mut blockStream);
@@ -448,7 +448,7 @@ unsafe fn ZSTD_encodeSequences_body(
     BIT_addBits(
         &mut blockStream,
         (*sequences.add(nbSeq - 1)).mlBase as BitContainerType,
-        ML_bits[*mlCodeTable.add(nbSeq - 1) as usize] as std::ffi::c_uint,
+        ML_bits[*mlCodeTable.add(nbSeq - 1) as usize] as u32,
     );
     if MEM_32bits {
         BIT_flushBits(&mut blockStream);
@@ -473,7 +473,7 @@ unsafe fn ZSTD_encodeSequences_body(
         BIT_addBits(
             &mut blockStream,
             (*sequences.add(nbSeq - 1)).offBase as BitContainerType,
-            *ofCodeTable.add(nbSeq - 1) as std::ffi::c_uint,
+            *ofCodeTable.add(nbSeq - 1) as u32,
         );
     }
     BIT_flushBits(&mut blockStream);
@@ -496,12 +496,12 @@ unsafe fn ZSTD_encodeSequences_body(
         FSE_encodeSymbol(                       /* 15 */  /* 15 */
             &mut blockStream,
             &mut stateOffsetBits,
-            ofCode as std::ffi::c_uint,
+            ofCode as u32,
         );
         FSE_encodeSymbol(                       /* 24 */  /* 24 */
             &mut blockStream,
             &mut stateMatchLength,
-            mlCode as std::ffi::c_uint,
+            mlCode as u32,
         );
         if MEM_32bits {
             BIT_flushBits(&mut blockStream);    /* (7)*/
@@ -509,7 +509,7 @@ unsafe fn ZSTD_encodeSequences_body(
         FSE_encodeSymbol(                       /* 16 */  /* 33 */
             &mut blockStream,
             &mut stateLitLength,
-            llCode as std::ffi::c_uint,
+            llCode as u32,
         );
         if MEM_32bits
             || ofBits_0.wrapping_add(mlBits).wrapping_add(llBits)
@@ -589,7 +589,7 @@ unsafe fn ZSTD_encodeSequences_default(
     mut llCodeTable: *const u8,
     mut sequences: *const SeqDef,
     mut nbSeq: usize,
-    mut longOffsets: std::ffi::c_int,
+    mut longOffsets: i32,
 ) -> usize {
     return ZSTD_encodeSequences_body(
         dst,
@@ -618,7 +618,7 @@ unsafe fn ZSTD_encodeSequences_bmi2(
     mut llCodeTable: *const u8,
     mut sequences: *const SeqDef,
     mut nbSeq: usize,
-    mut longOffsets: std::ffi::c_int,
+    mut longOffsets: i32,
 ) -> usize {
     return ZSTD_encodeSequences_body(
         dst,
@@ -646,8 +646,8 @@ pub unsafe fn ZSTD_encodeSequences(
     mut llCodeTable: *const u8,
     mut sequences: *const SeqDef,
     mut nbSeq: usize,
-    mut longOffsets: std::ffi::c_int,
-    mut bmi2: std::ffi::c_int,
+    mut longOffsets: i32,
+    mut bmi2: i32,
 ) -> usize {
     DEBUGLOG!(5, "ZSTD_encodeSequences: dstCapacity = %u", dstCapacity);
     // TODO #if DYNAMIC_BMI2

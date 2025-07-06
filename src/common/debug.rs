@@ -1,4 +1,4 @@
 use ::libc;
-pub const DEBUGLEVEL: std::ffi::c_int = 0;
+pub const DEBUGLEVEL: i32 = 0;
 #[no_mangle]
-pub static mut g_debuglevel: std::ffi::c_int = DEBUGLEVEL;
+pub static mut g_debuglevel: i32 = DEBUGLEVEL;
