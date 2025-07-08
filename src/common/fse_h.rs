@@ -27,7 +27,7 @@ pub fn FSE_versionNumber() -> u32 {
 /*-*****************************************
 *  Tool functions
 ******************************************/
-// FSE_PUBLIC_API size_t FSE_compressBound(size_t size);       /* maximum compressed size */
+pub use crate::compress::fse_compress::FSE_compressBound; /* maximum compressed size */
 
 /* Error Management */
 // FSE_PUBLIC_API unsigned    FSE_isError(size_t code);        /* tells if a return value is an error code */
@@ -57,11 +57,11 @@ or to save and provide normalized distribution using external method.
 
 /* *** COMPRESSION *** */
 
-// /*! FSE_optimalTableLog():
-//     dynamically downsize 'tableLog' when conditions are met.
-//     It saves CPU time, by using smaller tables, while preserving or even improving compression ratio.
-//     @return : recommended tableLog (necessarily <= 'maxTableLog') */
-// FSE_PUBLIC_API unsigned FSE_optimalTableLog(unsigned maxTableLog, size_t srcSize, unsigned maxSymbolValue);
+/** FSE_optimalTableLog():
+    dynamically downsize 'tableLog' when conditions are met.
+    It saves CPU time, by using smaller tables, while preserving or even improving compression ratio.
+    @return : recommended tableLog (necessarily <= 'maxTableLog') */
+pub use crate::compress::fse_compress::FSE_optimalTableLog;
 
 /** FSE_normalizeCount():
     normalize counts so that sum(count[]) == Power_of_2 (2^tableLog)
@@ -96,12 +96,12 @@ pub type FSE_CTable = u32; /* don't allocate that. It's only meant to be more re
 //     @return : 0, or an errorCode, which can be tested using FSE_isError() */
 // FSE_PUBLIC_API size_t FSE_buildCTable(FSE_CTable* ct, const short* normalizedCounter, unsigned maxSymbolValue, unsigned tableLog);
 
-// /*! FSE_compress_usingCTable():
-//     Compress `src` using `ct` into `dst` which must be already allocated.
-//     @return : size of compressed data (<= `dstCapacity`),
-//               or 0 if compressed data could not fit into `dst`,
-//               or an errorCode, which can be tested using FSE_isError() */
-// FSE_PUBLIC_API size_t FSE_compress_usingCTable (void* dst, size_t dstCapacity, const void* src, size_t srcSize, const FSE_CTable* ct);
+/** FSE_compress_usingCTable():
+    Compress `src` using `ct` into `dst` which must be already allocated.
+    @return : size of compressed data (<= `dstCapacity`),
+              or 0 if compressed data could not fit into `dst`,
+              or an errorCode, which can be tested using FSE_isError() */
+pub use crate::compress::fse_compress::FSE_compress_usingCTable;
 
 /*/!
 Tutorial :
