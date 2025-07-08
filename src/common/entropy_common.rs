@@ -249,9 +249,9 @@ pub unsafe extern "C" fn FSE_readNCount_bmi2(
     mut tableLogPtr: *mut u32,
     mut headerBuffer: *const std::ffi::c_void,
     mut hbSize: usize,
-    mut bmi2: i32,
+    mut bmi2: bool,
 ) -> usize {
-    if bmi2 != 0 {
+    if bmi2 {
         return FSE_readNCount_body_bmi2(
             normalizedCounter,
             maxSVPtr,

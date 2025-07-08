@@ -149,21 +149,17 @@ If there is an error, the function will return an ErrorCode (which can be tested
 
 /* *** DECOMPRESSION *** */
 
-// /*! FSE_readNCount():
-//     Read compactly saved 'normalizedCounter' from 'rBuffer'.
-//     @return : size read from 'rBuffer',
-//               or an errorCode, which can be tested using FSE_isError().
-//               maxSymbolValuePtr[0] and tableLogPtr[0] will also be updated with their respective values */
-// FSE_PUBLIC_API size_t FSE_readNCount (short* normalizedCounter,
-//                            unsigned* maxSymbolValuePtr, unsigned* tableLogPtr,
-//                            const void* rBuffer, size_t rBuffSize);
+/** FSE_readNCount():
+    Read compactly saved 'normalizedCounter' from 'rBuffer'.
+    @return : size read from 'rBuffer',
+              or an errorCode, which can be tested using FSE_isError().
+              maxSymbolValuePtr[0] and tableLogPtr[0] will also be updated with their respective values */
+pub use crate::common::entropy_common::FSE_readNCount;
 
-// /*! FSE_readNCount_bmi2():
-//  * Same as FSE_readNCount() but pass bmi2=1 when your CPU supports BMI2 and 0 otherwise.
-//  */
-// FSE_PUBLIC_API size_t FSE_readNCount_bmi2(short* normalizedCounter,
-//                            unsigned* maxSymbolValuePtr, unsigned* tableLogPtr,
-//                            const void* rBuffer, size_t rBuffSize, int bmi2);
+/** FSE_readNCount_bmi2():
+ * Same as FSE_readNCount() but pass bmi2=1 when your CPU supports BMI2 and 0 otherwise.
+ */
+pub use crate::common::entropy_common::FSE_readNCount_bmi2;
 
 pub type FSE_DTable = u32; /* don't allocate that. It's just a way to be more restrictive than void* */
 
@@ -229,7 +225,7 @@ pub const fn FSE_CTABLE_SIZE(maxTableLog: u32, maxSymbolValue: u32) -> usize {
  ***************************************** */
 
 /// same as FSE_optimalTableLog(), which used `minus==2`
-pub use crate::compress::fse_compress::FSE_optimalTableLog;
+pub use crate::compress::fse_compress::FSE_optimalTableLog_internal;
 
 /// build a fake FSE_CTable, designed to compress always the same symbolValue
 pub use crate::compress::fse_compress::FSE_buildCTable_rle;
@@ -256,8 +252,8 @@ pub const fn FSE_BUILD_DTABLE_WKSP_SIZE(maxTableLog: u32, maxSymbolValue: u32) -
 pub const fn FSE_BUILD_DTABLE_WKSP_SIZE_U32(maxTableLog: u32, maxSymbolValue: u32) -> usize {
     (FSE_BUILD_DTABLE_WKSP_SIZE(maxTableLog, maxSymbolValue) + size_of::<u32>() - 1) / size_of::<u32>()
 }
-// FSE_PUBLIC_API size_t FSE_buildDTable_wksp(FSE_DTable* dt, const short* normalizedCounter, unsigned maxSymbolValue, unsigned tableLog, void* workSpace, size_t wkspSize);
-// /**< Same as FSE_buildDTable(), using an externally allocated `workspace` produced with `FSE_BUILD_DTABLE_WKSP_SIZE_U32(maxSymbolValue)` */
+/// Same as FSE_buildDTable(), using an externally allocated `workspace` produced with `FSE_BUILD_DTABLE_WKSP_SIZE_U32(maxSymbolValue)`
+pub use crate::common::fse_decompress::FSE_buildDTable_wksp;
 
 pub const fn FSE_DECOMPRESS_WKSP_SIZE_U32(maxTableLog: u32, maxSymbolValue: u32) -> usize {
     FSE_DTABLE_SIZE_U32(maxTableLog) + 1 + FSE_BUILD_DTABLE_WKSP_SIZE_U32(maxTableLog, maxSymbolValue) + (FSE_MAX_SYMBOL_VALUE + 1) / 2 + 1
@@ -266,9 +262,10 @@ pub const fn FSE_DECOMPRESS_WKSP_SIZE(maxTableLog: u32, maxSymbolValue: u32) -> 
     FSE_DECOMPRESS_WKSP_SIZE_U32(maxTableLog, maxSymbolValue) * size_of::<u32>()
 }
 
-// size_t FSE_decompress_wksp_bmi2(void* dst, size_t dstCapacity, const void* cSrc, size_t cSrcSize, unsigned maxLog, void* workSpace, size_t wkspSize, int bmi2);
-// /**< same as FSE_decompress(), using an externally allocated `workSpace` produced with `FSE_DECOMPRESS_WKSP_SIZE_U32(maxLog, maxSymbolValue)`.
-//  * Set bmi2 to 1 if your CPU supports BMI2 or 0 if it doesn't */
+/** same as FSE_decompress(), using an externally allocated `workSpace` produced with `FSE_DECOMPRESS_WKSP_SIZE_U32(maxLog, maxSymbolValue)`.
+ * Set bmi2 to 1 if your CPU supports BMI2 or 0 if it doesn't */
+ pub use crate::common::fse_decompress::FSE_decompress_wksp_bmi2;
+
 
 pub type FSE_repeat = u32;
 /// Cannot use the previous table
@@ -569,14 +566,18 @@ pub struct FSE_decode_t {
     pub nbBits: std::ffi::c_uchar,
 }  /* size == U32 */
 
-// MEM_STATIC void FSE_initDState(FSE_DState_t* DStatePtr, BIT_DStream_t* bitD, const FSE_DTable* dt)
-// {
-//     const void* ptr = dt;
-//     const FSE_DTableHeader* const DTableH = (const FSE_DTableHeader*)ptr;
-//     DStatePtr->state = BIT_readBits(bitD, DTableH->tableLog);
-//     BIT_reloadDStream(bitD);
-//     DStatePtr->table = dt + 1;
-// }
+#[inline]
+pub unsafe fn FSE_initDState(
+    mut DStatePtr: *mut FSE_DState_t,
+    mut bitD: *mut BIT_DStream_t,
+    mut dt: *const FSE_DTable,
+) {
+    let mut ptr = dt as *const std::ffi::c_void;
+    let DTableH = ptr as *const FSE_DTableHeader;
+    (*DStatePtr).state = BIT_readBits(bitD, (*DTableH).tableLog as u32);
+    BIT_reloadDStream(bitD);
+    (*DStatePtr).table = dt.offset(1) as *const std::ffi::c_void;
+}
 
 // MEM_STATIC BYTE FSE_peekSymbol(const FSE_DState_t* DStatePtr)
 // {
@@ -592,29 +593,35 @@ pub struct FSE_decode_t {
 //     DStatePtr->state = DInfo.newState + lowBits;
 // }
 
-// MEM_STATIC BYTE FSE_decodeSymbol(FSE_DState_t* DStatePtr, BIT_DStream_t* bitD)
-// {
-//     FSE_decode_t const DInfo = ((const FSE_decode_t*)(DStatePtr->table))[DStatePtr->state];
-//     U32 const nbBits = DInfo.nbBits;
-//     BYTE const symbol = DInfo.symbol;
-//     size_t const lowBits = BIT_readBits(bitD, nbBits);
+#[inline]
+pub unsafe fn FSE_decodeSymbol(
+    mut DStatePtr: *mut FSE_DState_t,
+    mut bitD: *mut BIT_DStream_t,
+) -> std::ffi::c_uchar {
+    let DInfo = *((*DStatePtr).table as *const FSE_decode_t).add((*DStatePtr).state);
+    let nbBits = DInfo.nbBits as u32;
+    let symbol = DInfo.symbol;
+    let lowBits = BIT_readBits(bitD, nbBits);
 
-//     DStatePtr->state = DInfo.newState + lowBits;
-//     return symbol;
-// }
+    (*DStatePtr).state = (DInfo.newState as usize).wrapping_add(lowBits);
+    return symbol;
+}
 
-// /*! FSE_decodeSymbolFast() :
-//     unsafe, only works if no symbol has a probability > 50% */
-// MEM_STATIC BYTE FSE_decodeSymbolFast(FSE_DState_t* DStatePtr, BIT_DStream_t* bitD)
-// {
-//     FSE_decode_t const DInfo = ((const FSE_decode_t*)(DStatePtr->table))[DStatePtr->state];
-//     U32 const nbBits = DInfo.nbBits;
-//     BYTE const symbol = DInfo.symbol;
-//     size_t const lowBits = BIT_readBitsFast(bitD, nbBits);
+/** FSE_decodeSymbolFast() :
+    unsafe, only works if no symbol has a probability > 50% */
+#[inline]
+pub unsafe fn FSE_decodeSymbolFast(
+    mut DStatePtr: *mut FSE_DState_t,
+    mut bitD: *mut BIT_DStream_t,
+) -> std::ffi::c_uchar {
+    let DInfo = *((*DStatePtr).table as *const FSE_decode_t).add((*DStatePtr).state);
+    let nbBits = DInfo.nbBits as u32;
+    let symbol = DInfo.symbol;
+    let lowBits = BIT_readBitsFast(bitD, nbBits);
 
-//     DStatePtr->state = DInfo.newState + lowBits;
-//     return symbol;
-// }
+    (*DStatePtr).state = (DInfo.newState as usize).wrapping_add(lowBits);
+    return symbol;
+}
 
 // MEM_STATIC unsigned FSE_endOfDState(const FSE_DState_t* DStatePtr)
 // {
