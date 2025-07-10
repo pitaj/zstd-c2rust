@@ -68,7 +68,7 @@ pub const fn HUF_DTABLE_SIZE(maxTableLog: u32) -> usize {
  * Huffman flags bitset.
  * For all flags, 0 is the default value.
  */
-pub type HUF_flags_e = u32;
+pub type HUF_flags_e = i32;
 /**
  * If compiled with DYNAMIC_BMI2: Set flag only if the CPU supports BMI2 at runtime.
  * Otherwise: Ignored.
