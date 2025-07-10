@@ -1,4 +1,4 @@
-use ::libc;
+use std::ffi::{c_char, c_void};
 extern "C" {
     pub type ZSTDMT_CCtx_s;
     pub type ZSTD_CDict_s;
@@ -9,13 +9,13 @@ extern "C" {
         nextEntropy: *mut ZSTD_entropyCTables_t,
         cctxParams: *const ZSTD_CCtx_params,
         entropyMetadata: *mut ZSTD_entropyCTablesMetadata_t,
-        workspace: *mut std::ffi::c_void,
+        workspace: *mut c_void,
         wkspSize: usize,
     ) -> usize;
     fn HUF_compress4X_usingCTable(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstSize: usize,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
         CTable: *const HUF_CElt,
         flags: i32,
@@ -26,9 +26,9 @@ extern "C" {
         maxSymbolValue: u32,
     ) -> usize;
     fn HUF_compress1X_usingCTable(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstSize: usize,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
         CTable: *const HUF_CElt,
         flags: i32,
@@ -36,21 +36,21 @@ extern "C" {
     fn HIST_count_wksp(
         count: *mut u32,
         maxSymbolValuePtr: *mut u32,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
-        workSpace: *mut std::ffi::c_void,
+        workSpace: *mut c_void,
         workSpaceSize: usize,
     ) -> usize;
     fn HIST_countFast_wksp(
         count: *mut u32,
         maxSymbolValuePtr: *mut u32,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
-        workSpace: *mut std::ffi::c_void,
+        workSpace: *mut c_void,
         workSpaceSize: usize,
     ) -> usize;
     fn ZSTD_encodeSequences(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstCapacity: usize,
         CTable_MatchLength: *const FSE_CTable,
         mlCodeTable: *const u8,
@@ -75,15 +75,15 @@ extern "C" {
         max: u32,
     ) -> usize;
     fn ZSTD_noCompressLiterals(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstCapacity: usize,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
     ) -> usize;
     fn ZSTD_compressRleLiteralsBlock(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstCapacity: usize,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
     ) -> usize;
 }
@@ -117,15 +117,15 @@ pub struct ZSTD_CCtx_s {
     pub maxNbLdmSequences: usize,
     pub externSeqStore: RawSeqStore_t,
     pub blockState: ZSTD_blockState_t,
-    pub tmpWorkspace: *mut std::ffi::c_void,
+    pub tmpWorkspace: *mut c_void,
     pub tmpWkspSize: usize,
     pub bufferedPolicy: ZSTD_buffered_policy_e,
-    pub inBuff: *mut std::ffi::c_char,
+    pub inBuff: *mut c_char,
     pub inBuffSize: usize,
     pub inToCompress: usize,
     pub inBuffPos: usize,
     pub inBuffTarget: usize,
-    pub outBuff: *mut std::ffi::c_char,
+    pub outBuff: *mut c_char,
     pub outBuffSize: usize,
     pub outBuffContentSize: usize,
     pub outBuffFlushedSize: usize,
@@ -223,7 +223,7 @@ pub type ZSTD_prefixDict = ZSTD_prefixDict_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_prefixDict_s {
-    pub dict: *const std::ffi::c_void,
+    pub dict: *const c_void,
     pub dictSize: usize,
     pub dictContentType: ZSTD_dictContentType_e,
 }
@@ -235,8 +235,8 @@ pub type ZSTD_CDict = ZSTD_CDict_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_localDict {
-    pub dictBuffer: *mut std::ffi::c_void,
-    pub dict: *const std::ffi::c_void,
+    pub dictBuffer: *mut c_void,
+    pub dict: *const c_void,
     pub dictSize: usize,
     pub dictContentType: ZSTD_dictContentType_e,
     pub cdict: *mut ZSTD_CDict,
@@ -245,7 +245,7 @@ pub type ZSTD_inBuffer = ZSTD_inBuffer_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_inBuffer_s {
-    pub src: *const std::ffi::c_void,
+    pub src: *const c_void,
     pub size: usize,
     pub pos: usize,
 }
@@ -453,13 +453,13 @@ pub type ZSTD_threadPool = POOL_ctx_s;
 pub struct ZSTD_customMem {
     pub customAlloc: ZSTD_allocFunction,
     pub customFree: ZSTD_freeFunction,
-    pub opaque: *mut std::ffi::c_void,
+    pub opaque: *mut c_void,
 }
 pub type ZSTD_freeFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, *mut std::ffi::c_void) -> (),
+    unsafe extern "C" fn(*mut c_void, *mut c_void) -> (),
 >;
 pub type ZSTD_allocFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, usize) -> *mut std::ffi::c_void,
+    unsafe extern "C" fn(*mut c_void, usize) -> *mut c_void,
 >;
 pub type XXH64_state_t = XXH64_state_s;
 #[derive(Copy, Clone)]
@@ -477,13 +477,13 @@ pub type XXH32_hash_t = u32;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_cwksp {
-    pub workspace: *mut std::ffi::c_void,
-    pub workspaceEnd: *mut std::ffi::c_void,
-    pub objectEnd: *mut std::ffi::c_void,
-    pub tableEnd: *mut std::ffi::c_void,
-    pub tableValidEnd: *mut std::ffi::c_void,
-    pub allocStart: *mut std::ffi::c_void,
-    pub initOnceStart: *mut std::ffi::c_void,
+    pub workspace: *mut c_void,
+    pub workspaceEnd: *mut c_void,
+    pub objectEnd: *mut c_void,
+    pub tableEnd: *mut c_void,
+    pub tableValidEnd: *mut c_void,
+    pub allocStart: *mut c_void,
+    pub initOnceStart: *mut c_void,
     pub allocFailed: u8,
     pub workspaceOversizedDuration: i32,
     pub phase: ZSTD_cwksp_alloc_phase_e,
@@ -528,18 +528,18 @@ pub struct ZSTD_CCtx_params_s {
     pub customMem: ZSTD_customMem,
     pub prefetchCDictTables: ZSTD_ParamSwitch_e,
     pub enableMatchFinderFallback: i32,
-    pub extSeqProdState: *mut std::ffi::c_void,
+    pub extSeqProdState: *mut c_void,
     pub extSeqProdFunc: ZSTD_sequenceProducer_F,
     pub searchForExternalRepcodes: ZSTD_ParamSwitch_e,
 }
 pub type ZSTD_sequenceProducer_F = Option::<
     unsafe extern "C" fn(
-        *mut std::ffi::c_void,
+        *mut c_void,
         *mut ZSTD_Sequence,
         usize,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
         i32,
         usize,
@@ -648,9 +648,9 @@ unsafe extern "C" fn ZSTD_getSequenceLength(
 }
 #[inline]
 unsafe extern "C" fn ZSTD_noCompressBlock(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     mut lastBlock: u32,
 ) -> usize {
@@ -936,7 +936,7 @@ pub const OF_DEFAULTNORMLOG: i32 = 5;
 static mut OF_defaultNormLog: u32 = OF_DEFAULTNORMLOG as u32;
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
-    mut format: *const std::ffi::c_char,
+    mut format: *const c_char,
     mut args: ...
 ) {}
 pub const STREAM_ACCUMULATOR_MIN_32: i32 = 25;
@@ -947,7 +947,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
     mut hufMetadata: *const ZSTD_hufCTablesMetadata_t,
     mut literals: *const u8,
     mut litSize: usize,
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstSize: usize,
     bmi2: i32,
     mut writeEntropy: i32,
@@ -986,7 +986,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
         return ZSTD_noCompressLiterals(
             dst,
             dstSize,
-            literals as *const std::ffi::c_void,
+            literals as *const c_void,
             litSize,
         )
     } else if (*hufMetadata).hType as u32
@@ -995,7 +995,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
         return ZSTD_compressRleLiteralsBlock(
             dst,
             dstSize,
-            literals as *const std::ffi::c_void,
+            literals as *const c_void,
             litSize,
         )
     }
@@ -1014,18 +1014,18 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
     };
     let cSize = if singleStream != 0 {
         HUF_compress1X_usingCTable(
-            op as *mut std::ffi::c_void,
+            op as *mut c_void,
             oend.offset_from(op) as std::ffi::c_long as usize,
-            literals as *const std::ffi::c_void,
+            literals as *const c_void,
             litSize,
             hufTable,
             flags,
         )
     } else {
         HUF_compress4X_usingCTable(
-            op as *mut std::ffi::c_void,
+            op as *mut c_void,
             oend.offset_from(op) as std::ffi::c_long as usize,
-            literals as *const std::ffi::c_void,
+            literals as *const c_void,
             litSize,
             hufTable,
             flags,
@@ -1040,7 +1040,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
         return ZSTD_noCompressLiterals(
             dst,
             dstSize,
-            literals as *const std::ffi::c_void,
+            literals as *const c_void,
             litSize,
         );
     }
@@ -1058,7 +1058,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
         return ZSTD_noCompressLiterals(
             dst,
             dstSize,
-            literals as *const std::ffi::c_void,
+            literals as *const c_void,
             litSize,
         );
     }
@@ -1071,7 +1071,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
                 )
                 .wrapping_add((litSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 14);
-            MEM_writeLE24(ostart as *mut std::ffi::c_void, lhc);
+            MEM_writeLE24(ostart as *mut c_void, lhc);
         }
         4 => {
             let lhc_0 = (hType as u32)
@@ -1080,7 +1080,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
                 )
                 .wrapping_add((litSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 18);
-            MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_0);
+            MEM_writeLE32(ostart as *mut c_void, lhc_0);
         }
         5 => {
             let lhc_1 = (hType as u32)
@@ -1089,7 +1089,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_literal(
                 )
                 .wrapping_add((litSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 22);
-            MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_1);
+            MEM_writeLE32(ostart as *mut c_void, lhc_1);
             *ostart
                 .offset(
                     4,
@@ -1130,7 +1130,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
     mut mlCode: *const u8,
     mut ofCode: *const u8,
     mut cctxParams: *const ZSTD_CCtx_params,
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     bmi2: i32,
     mut writeEntropy: i32,
@@ -1164,7 +1164,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
     } else {
         *op.offset(0) = 0xff as i32 as u8;
         MEM_writeLE16(
-            op.offset(1) as *mut std::ffi::c_void,
+            op.offset(1) as *mut c_void,
             nbSeq.wrapping_sub(LONGNBSEQ as usize) as u16,
         );
         op = op.offset(3);
@@ -1191,7 +1191,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_sequences(
             .wrapping_add(repeat << 2) as u8;
     }
     let bitstreamSize = ZSTD_encodeSequences(
-        op as *mut std::ffi::c_void,
+        op as *mut c_void,
         oend.offset_from(op) as std::ffi::c_long as usize,
         ((*fseTables).matchlengthCTable).as_ptr(),
         mlCode,
@@ -1231,7 +1231,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
     mut mlCode: *const u8,
     mut ofCode: *const u8,
     mut cctxParams: *const ZSTD_CCtx_params,
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     bmi2: i32,
     mut writeLitEntropy: i32,
@@ -1248,7 +1248,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
         &(*entropyMetadata).hufMetadata,
         literals,
         litSize,
-        op as *mut std::ffi::c_void,
+        op as *mut c_void,
         oend.offset_from(op) as std::ffi::c_long as usize,
         bmi2,
         writeLitEntropy,
@@ -1268,7 +1268,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
         mlCode,
         ofCode,
         cctxParams,
-        op as *mut std::ffi::c_void,
+        op as *mut c_void,
         oend.offset_from(op) as std::ffi::c_long as usize,
         bmi2,
         writeSeqEntropy,
@@ -1286,7 +1286,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock(
     let cBlockHeader24 = lastBlock
         .wrapping_add((bt_compressed as i32 as u32) << 1)
         .wrapping_add((cSize << 3) as u32);
-    MEM_writeLE24(ostart as *mut std::ffi::c_void, cBlockHeader24);
+    MEM_writeLE24(ostart as *mut c_void, cBlockHeader24);
     return op.offset_from(ostart) as std::ffi::c_long as usize;
 }
 unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
@@ -1294,7 +1294,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
     mut litSize: usize,
     mut huf: *const ZSTD_hufCTables_t,
     mut hufMetadata: *const ZSTD_hufCTablesMetadata_t,
-    mut workspace: *mut std::ffi::c_void,
+    mut workspace: *mut c_void,
     mut wkspSize: usize,
     mut writeEntropy: i32,
 ) -> usize {
@@ -1317,7 +1317,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_literal(
         let largest = HIST_count_wksp(
             countWksp,
             &mut maxSymbolValue,
-            literals as *const std::ffi::c_void,
+            literals as *const c_void,
             litSize,
             workspace,
             wkspSize,
@@ -1347,7 +1347,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_symbolType(
     mut defaultNorm: *const i16,
     mut defaultNormLog: u32,
     mut defaultMax: u32,
-    mut workspace: *mut std::ffi::c_void,
+    mut workspace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     let countWksp = workspace as *mut u32;
@@ -1359,7 +1359,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_symbolType(
     HIST_countFast_wksp(
         countWksp,
         &mut max,
-        codeTable as *const std::ffi::c_void,
+        codeTable as *const c_void,
         nbSeq,
         workspace,
         wkspSize,
@@ -1404,7 +1404,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize_sequences(
     mut nbSeq: usize,
     mut fseTables: *const ZSTD_fseCTables_t,
     mut fseMetadata: *const ZSTD_fseCTablesMetadata_t,
-    mut workspace: *mut std::ffi::c_void,
+    mut workspace: *mut c_void,
     mut wkspSize: usize,
     mut writeEntropy: i32,
 ) -> usize {
@@ -1475,7 +1475,7 @@ unsafe extern "C" fn ZSTD_estimateSubBlockSize(
     mut nbSeq: usize,
     mut entropy: *const ZSTD_entropyCTables_t,
     mut entropyMetadata: *const ZSTD_entropyCTablesMetadata_t,
-    mut workspace: *mut std::ffi::c_void,
+    mut workspace: *mut c_void,
     mut wkspSize: usize,
     mut writeLitEntropy: i32,
     mut writeSeqEntropy: i32,
@@ -1608,13 +1608,13 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
     mut nextCBlock: *mut ZSTD_compressedBlockState_t,
     mut entropyMetadata: *const ZSTD_entropyCTablesMetadata_t,
     mut cctxParams: *const ZSTD_CCtx_params,
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     bmi2: i32,
     mut lastBlock: u32,
-    mut workspace: *mut std::ffi::c_void,
+    mut workspace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     let sstart: *const SeqDef = (*seqStorePtr).sequencesStart;
@@ -1704,7 +1704,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
                 mlCodePtr,
                 ofCodePtr,
                 cctxParams,
-                op as *mut std::ffi::c_void,
+                op as *mut c_void,
                 oend.offset_from(op) as std::ffi::c_long as usize,
                 bmi2,
                 writeLitEntropy,
@@ -1756,7 +1756,7 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
         mlCodePtr,
         ofCodePtr,
         cctxParams,
-        op as *mut std::ffi::c_void,
+        op as *mut c_void,
         oend.offset_from(op) as std::ffi::c_long as usize,
         bmi2,
         writeLitEntropy,
@@ -1784,9 +1784,9 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
     if writeLitEntropy != 0 {
         libc::memcpy(
             &mut (*nextCBlock).entropy.huf as *mut ZSTD_hufCTables_t
-                as *mut std::ffi::c_void,
+                as *mut c_void,
             &(*prevCBlock).entropy.huf as *const ZSTD_hufCTables_t
-                as *const std::ffi::c_void,
+                as *const c_void,
             ::core::mem::size_of::<ZSTD_hufCTables_t>()
                 as usize,
         );
@@ -1799,9 +1799,9 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
     if ip < iend {
         let rSize = iend.offset_from(ip) as std::ffi::c_long as usize;
         let cSize_1 = ZSTD_noCompressBlock(
-            op as *mut std::ffi::c_void,
+            op as *mut c_void,
             oend.offset_from(op) as std::ffi::c_long as usize,
-            ip as *const std::ffi::c_void,
+            ip as *const c_void,
             rSize,
             lastBlock,
         );
@@ -1811,8 +1811,8 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
             let mut seq = std::ptr::null();
             let mut rep = repcodes_s { rep: [0; 3] };
             libc::memcpy(
-                &mut rep as *mut Repcodes_t as *mut std::ffi::c_void,
-                ((*prevCBlock).rep).as_ptr() as *const std::ffi::c_void,
+                &mut rep as *mut Repcodes_t as *mut c_void,
+                ((*prevCBlock).rep).as_ptr() as *const c_void,
                 ::core::mem::size_of::<Repcodes_t>() as usize,
             );
             seq = sstart;
@@ -1827,8 +1827,8 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
                 seq;
             }
             libc::memcpy(
-                ((*nextCBlock).rep).as_mut_ptr() as *mut std::ffi::c_void,
-                &mut rep as *mut Repcodes_t as *const std::ffi::c_void,
+                ((*nextCBlock).rep).as_mut_ptr() as *mut c_void,
+                &mut rep as *mut Repcodes_t as *const c_void,
                 ::core::mem::size_of::<Repcodes_t>() as usize,
             );
         }
@@ -1838,9 +1838,9 @@ unsafe extern "C" fn ZSTD_compressSubBlock_multi(
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_compressSuperBlock(
     mut zc: *mut ZSTD_CCtx,
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     mut lastBlock: u32,
 ) -> usize {

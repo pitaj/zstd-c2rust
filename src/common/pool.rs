@@ -1,16 +1,17 @@
-use ::libc;
+use std::ffi::{c_char, c_void};
+
 extern "C" {
     fn pthread_create(
         __newthread: *mut pthread_t,
         __attr: *const pthread_attr_t,
         __start_routine: Option::<
-            unsafe extern "C" fn(*mut std::ffi::c_void) -> *mut std::ffi::c_void,
+            unsafe extern "C" fn(*mut c_void) -> *mut c_void,
         >,
-        __arg: *mut std::ffi::c_void,
+        __arg: *mut c_void,
     ) -> i32;
     fn pthread_join(
         __th: pthread_t,
-        __thread_return: *mut *mut std::ffi::c_void,
+        __thread_return: *mut *mut c_void,
     ) -> i32;
     fn pthread_mutex_init(
         __mutex: *mut pthread_mutex_t,
@@ -78,47 +79,47 @@ pub type pthread_t = std::ffi::c_ulong;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_mutexattr_t {
-    pub __size: [std::ffi::c_char; 4],
+    pub __size: [c_char; 4],
     pub __align: i32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_condattr_t {
-    pub __size: [std::ffi::c_char; 4],
+    pub __size: [c_char; 4],
     pub __align: i32,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_attr_t {
-    pub __size: [std::ffi::c_char; 56],
+    pub __size: [c_char; 56],
     pub __align: std::ffi::c_long,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_mutex_t {
     pub __data: __pthread_mutex_s,
-    pub __size: [std::ffi::c_char; 40],
+    pub __size: [c_char; 40],
     pub __align: std::ffi::c_long,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_cond_t {
     pub __data: __pthread_cond_s,
-    pub __size: [std::ffi::c_char; 48],
+    pub __size: [c_char; 48],
     pub __align: i64,
 }
 pub type ZSTD_allocFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, usize) -> *mut std::ffi::c_void,
+    unsafe extern "C" fn(*mut c_void, usize) -> *mut c_void,
 >;
 pub type ZSTD_freeFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, *mut std::ffi::c_void) -> (),
+    unsafe extern "C" fn(*mut c_void, *mut c_void) -> (),
 >;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_customMem {
     pub customAlloc: ZSTD_allocFunction,
     pub customFree: ZSTD_freeFunction,
-    pub opaque: *mut std::ffi::c_void,
+    pub opaque: *mut c_void,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -143,9 +144,9 @@ pub type POOL_job = POOL_job_s;
 #[repr(C)]
 pub struct POOL_job_s {
     pub function: POOL_function,
-    pub opaque: *mut std::ffi::c_void,
+    pub opaque: *mut c_void,
 }
-pub type POOL_function = Option::<unsafe extern "C" fn(*mut std::ffi::c_void) -> ()>;
+pub type POOL_function = Option::<unsafe extern "C" fn(*mut c_void) -> ()>;
 pub type ZSTD_threadPool = POOL_ctx_s;
 pub type POOL_ctx = POOL_ctx_s;
 static mut ZSTD_defaultCMem: ZSTD_customMem = unsafe {
@@ -168,7 +169,7 @@ static mut ZSTD_defaultCMem: ZSTD_customMem = unsafe {
 unsafe extern "C" fn ZSTD_customCalloc(
     mut size: usize,
     mut customMem: ZSTD_customMem,
-) -> *mut std::ffi::c_void {
+) -> *mut c_void {
     if (customMem.customAlloc).is_some() {
         let ptr = (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
@@ -179,7 +180,7 @@ unsafe extern "C" fn ZSTD_customCalloc(
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(
-    mut ptr: *mut std::ffi::c_void,
+    mut ptr: *mut c_void,
     mut customMem: ZSTD_customMem,
 ) {
     if !ptr.is_null() {
@@ -194,11 +195,11 @@ unsafe extern "C" fn ZSTD_customFree(
 pub const NULL: i32 = 0;
 pub const NULL_0: i32 = 0;
 unsafe extern "C" fn POOL_thread(
-    mut opaque: *mut std::ffi::c_void,
-) -> *mut std::ffi::c_void {
+    mut opaque: *mut c_void,
+) -> *mut c_void {
     let ctx = opaque as *mut POOL_ctx;
     if ctx.is_null() {
-        return NULL_0 as *mut std::ffi::c_void;
+        return NULL_0 as *mut c_void;
     }
     loop {
         ZSTD_pthread_mutex_lock!(
@@ -341,7 +342,7 @@ unsafe extern "C" fn POOL_join(mut ctx: *mut POOL_ctx) {
     while i < (*ctx).threadCapacity {
         ZSTD_pthread_join!(
             ctx -> threads[i]
-        )(ZSTD_pthread_join!(ctx -> threads[i]), NULL_0 as *mut *mut std::ffi::c_void);
+        )(ZSTD_pthread_join!(ctx -> threads[i]), NULL_0 as *mut *mut c_void);
         i = i.wrapping_add(1);
         i;
     }
@@ -361,9 +362,9 @@ pub unsafe extern "C" fn POOL_free(mut ctx: *mut POOL_ctx) {
     ZSTD_pthread_cond_destroy!(
         & ctx -> queuePopCond
     )(ZSTD_pthread_cond_destroy!(& ctx -> queuePopCond));
-    ZSTD_customFree((*ctx).queue as *mut std::ffi::c_void, (*ctx).customMem);
-    ZSTD_customFree((*ctx).threads as *mut std::ffi::c_void, (*ctx).customMem);
-    ZSTD_customFree(ctx as *mut std::ffi::c_void, (*ctx).customMem);
+    ZSTD_customFree((*ctx).queue as *mut c_void, (*ctx).customMem);
+    ZSTD_customFree((*ctx).threads as *mut c_void, (*ctx).customMem);
+    ZSTD_customFree(ctx as *mut c_void, (*ctx).customMem);
 }
 #[no_mangle]
 pub unsafe extern "C" fn POOL_joinJobs(mut ctx: *mut POOL_ctx) {
@@ -423,13 +424,13 @@ unsafe extern "C" fn POOL_resize_internal(
         return 1;
     }
     libc::memcpy(
-        threadPool as *mut std::ffi::c_void,
-        (*ctx).threads as *const std::ffi::c_void,
+        threadPool as *mut c_void,
+        (*ctx).threads as *const c_void,
         ((*ctx).threadCapacity)
             .wrapping_mul(::core::mem::size_of::<pthread_t>())
             as usize,
     );
-    ZSTD_customFree((*ctx).threads as *mut std::ffi::c_void, (*ctx).customMem);
+    ZSTD_customFree((*ctx).threads as *mut c_void, (*ctx).customMem);
     (*ctx).threads = threadPool;
     let mut threadId: usize = 0;
     threadId = (*ctx).threadCapacity;
@@ -479,7 +480,7 @@ unsafe extern "C" fn isQueueFull(mut ctx: *const POOL_ctx) -> i32 {
 unsafe extern "C" fn POOL_add_internal(
     mut ctx: *mut POOL_ctx,
     mut function: POOL_function,
-    mut opaque: *mut std::ffi::c_void,
+    mut opaque: *mut c_void,
 ) {
     let mut job = POOL_job_s {
         function: None,
@@ -503,7 +504,7 @@ unsafe extern "C" fn POOL_add_internal(
 pub unsafe extern "C" fn POOL_add(
     mut ctx: *mut POOL_ctx,
     mut function: POOL_function,
-    mut opaque: *mut std::ffi::c_void,
+    mut opaque: *mut c_void,
 ) {
     ZSTD_pthread_mutex_lock!(
         & ctx -> queueMutex
@@ -525,7 +526,7 @@ pub unsafe extern "C" fn POOL_add(
 pub unsafe extern "C" fn POOL_tryAdd(
     mut ctx: *mut POOL_ctx,
     mut function: POOL_function,
-    mut opaque: *mut std::ffi::c_void,
+    mut opaque: *mut c_void,
 ) -> i32 {
     ZSTD_pthread_mutex_lock!(
         & ctx -> queueMutex

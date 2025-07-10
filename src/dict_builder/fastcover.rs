@@ -1,5 +1,4 @@
-use ::libc;
-use ::c2rust_bitfields;
+use std::ffi::{c_char, c_void};
 use crate::common::zstd_internal_h::*;
 
 /*-*************************************
@@ -30,21 +29,21 @@ extern "C" {
     pub type POOL_ctx_s;
     static mut stderr: *mut FILE;
     fn fflush(__stream: *mut FILE) -> i32;
-    fn fprintf(_: *mut FILE, _: *const std::ffi::c_char, _: ...) -> i32;
+    fn fprintf(_: *mut FILE, _: *const c_char, _: ...) -> i32;
     fn clock() -> clock_t;
     fn POOL_create(numThreads: usize, queueSize: usize) -> *mut POOL_ctx;
     fn POOL_free(ctx: *mut POOL_ctx);
     fn POOL_add(
         ctx: *mut POOL_ctx,
         function: POOL_function,
-        opaque: *mut std::ffi::c_void,
+        opaque: *mut c_void,
     );
     fn ZDICT_finalizeDictionary(
-        dstDictBuffer: *mut std::ffi::c_void,
+        dstDictBuffer: *mut c_void,
         maxDictSize: usize,
-        dictContent: *const std::ffi::c_void,
+        dictContent: *const c_void,
         dictContentSize: usize,
-        samplesBuffer: *const std::ffi::c_void,
+        samplesBuffer: *const c_void,
         samplesSizes: *const usize,
         nbSamples: u32,
         parameters: ZDICT_params_t,
@@ -94,36 +93,36 @@ pub type __clock_t = std::ffi::c_long;
 #[repr(C)]
 pub struct _IO_FILE {
     pub _flags: i32,
-    pub _IO_read_ptr: *mut std::ffi::c_char,
-    pub _IO_read_end: *mut std::ffi::c_char,
-    pub _IO_read_base: *mut std::ffi::c_char,
-    pub _IO_write_base: *mut std::ffi::c_char,
-    pub _IO_write_ptr: *mut std::ffi::c_char,
-    pub _IO_write_end: *mut std::ffi::c_char,
-    pub _IO_buf_base: *mut std::ffi::c_char,
-    pub _IO_buf_end: *mut std::ffi::c_char,
-    pub _IO_save_base: *mut std::ffi::c_char,
-    pub _IO_backup_base: *mut std::ffi::c_char,
-    pub _IO_save_end: *mut std::ffi::c_char,
+    pub _IO_read_ptr: *mut c_char,
+    pub _IO_read_end: *mut c_char,
+    pub _IO_read_base: *mut c_char,
+    pub _IO_write_base: *mut c_char,
+    pub _IO_write_ptr: *mut c_char,
+    pub _IO_write_end: *mut c_char,
+    pub _IO_buf_base: *mut c_char,
+    pub _IO_buf_end: *mut c_char,
+    pub _IO_save_base: *mut c_char,
+    pub _IO_backup_base: *mut c_char,
+    pub _IO_save_end: *mut c_char,
     pub _markers: *mut _IO_marker,
     pub _chain: *mut _IO_FILE,
     pub _fileno: i32,
     #[bitfield(name = "_flags2", ty = "i32", bits = "0..=23")]
     pub _flags2: [u8; 3],
-    pub _short_backupbuf: [std::ffi::c_char; 1],
+    pub _short_backupbuf: [c_char; 1],
     pub _old_offset: __off_t,
     pub _cur_column: u16,
     pub _vtable_offset: std::ffi::c_schar,
-    pub _shortbuf: [std::ffi::c_char; 1],
-    pub _lock: *mut std::ffi::c_void,
+    pub _shortbuf: [c_char; 1],
+    pub _lock: *mut c_void,
     pub _offset: __off64_t,
     pub _codecvt: *mut _IO_codecvt,
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
-    pub _freeres_buf: *mut std::ffi::c_void,
+    pub _freeres_buf: *mut c_void,
     pub _prevchain: *mut *mut _IO_FILE,
     pub _mode: i32,
-    pub _unused2: [std::ffi::c_char; 20],
+    pub _unused2: [c_char; 20],
 }
 pub type _IO_lock_t = ();
 pub type FILE = _IO_FILE;
@@ -175,20 +174,20 @@ pub struct __pthread_cond_s {
 #[repr(C)]
 pub union pthread_mutex_t {
     pub __data: __pthread_mutex_s,
-    pub __size: [std::ffi::c_char; 40],
+    pub __size: [c_char; 40],
     pub __align: std::ffi::c_long,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union pthread_cond_t {
     pub __data: __pthread_cond_s,
-    pub __size: [std::ffi::c_char; 48],
+    pub __size: [c_char; 48],
     pub __align: i64,
 }
 pub type unalign64 = u64;
 use crate::common::error::*;
 pub type POOL_ctx = POOL_ctx_s;
-pub type POOL_function = Option::<unsafe extern "C" fn(*mut std::ffi::c_void) -> ()>;
+pub type POOL_function = Option::<unsafe extern "C" fn(*mut c_void) -> ()>;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZDICT_params_t {
@@ -264,7 +263,7 @@ pub struct COVER_best_s {
     pub mutex: pthread_mutex_t,
     pub cond: pthread_cond_t,
     pub liveJobs: usize,
-    pub dict: *mut std::ffi::c_void,
+    pub dict: *mut c_void,
     pub dictSize: usize,
     pub parameters: ZDICT_cover_params_t,
     pub compressedSize: usize,
@@ -292,7 +291,7 @@ pub const ZDICT_DICTSIZE_MIN: i32 = 256;
 pub const CLOCKS_PER_SEC: i32 = 1000000;
 pub const NULL: i32 = 0;
 unsafe extern "C" fn FASTCOVER_hashPtrToIndex(
-    mut p: *const std::ffi::c_void,
+    mut p: *const c_void,
     mut f: u32,
     mut d: u32,
 ) -> usize {
@@ -411,7 +410,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
     while activeSegment.end < end {
         let idx = FASTCOVER_hashPtrToIndex(
             ((*ctx).samples).offset(activeSegment.end as isize)
-                as *const std::ffi::c_void,
+                as *const c_void,
             f,
             d,
         );
@@ -429,7 +428,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
         {
             let delIndex = FASTCOVER_hashPtrToIndex(
                 ((*ctx).samples).offset(activeSegment.begin as isize)
-                    as *const std::ffi::c_void,
+                    as *const c_void,
                 f,
                 d,
             );
@@ -452,7 +451,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
     while activeSegment.begin < end {
         let delIndex_0 = FASTCOVER_hashPtrToIndex(
             ((*ctx).samples).offset(activeSegment.begin as isize)
-                as *const std::ffi::c_void,
+                as *const c_void,
             f,
             d,
         );
@@ -465,7 +464,7 @@ unsafe extern "C" fn FASTCOVER_selectSegment(
     pos = bestSegment.begin;
     while pos != bestSegment.end {
         let i = FASTCOVER_hashPtrToIndex(
-            ((*ctx).samples).offset(pos as isize) as *const std::ffi::c_void,
+            ((*ctx).samples).offset(pos as isize) as *const c_void,
             f,
             d,
         );
@@ -518,9 +517,9 @@ unsafe extern "C" fn FASTCOVER_ctx_destroy(mut ctx: *mut FASTCOVER_ctx_t) {
     if ctx.is_null() {
         return;
     }
-    libc::free((*ctx).freqs as *mut std::ffi::c_void);
+    libc::free((*ctx).freqs as *mut c_void);
     (*ctx).freqs = std::ptr::null_mut();
-    libc::free((*ctx).offsets as *mut std::ffi::c_void);
+    libc::free((*ctx).offsets as *mut c_void);
     (*ctx).offsets = std::ptr::null_mut();
 }
 unsafe extern "C" fn FASTCOVER_computeFrequency(
@@ -539,7 +538,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
             .offset(i.wrapping_add(1) as isize);
         while start.wrapping_add(readLength as usize) <= currSampleEnd {
             let dmerIndex = FASTCOVER_hashPtrToIndex(
-                ((*ctx).samples).offset(start as isize) as *const std::ffi::c_void,
+                ((*ctx).samples).offset(start as isize) as *const c_void,
                 f,
                 d,
             );
@@ -556,7 +555,7 @@ unsafe extern "C" fn FASTCOVER_computeFrequency(
 }
 unsafe extern "C" fn FASTCOVER_ctx_init(
     mut ctx: *mut FASTCOVER_ctx_t,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
     mut d: u32,
@@ -596,7 +595,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
             fprintf(
                 stderr,
                 b"Total samples size is too large (%u MB), maximum size is %u MB\n\0"
-                    as *const u8 as *const std::ffi::c_char,
+                    as *const u8 as *const c_char,
                 (totalSamplesSize >> 20) as u32,
                 FASTCOVER_MAX_SAMPLES_SIZE >> 20,
             );
@@ -613,7 +612,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
         return ERROR(ZSTD_error_srcSize_wrong);
     }
     libc::memset(
-        ctx as *mut std::ffi::c_void,
+        ctx as *mut c_void,
         0,
         ::core::mem::size_of::<FASTCOVER_ctx_t>(),
     );
@@ -678,7 +677,7 @@ unsafe extern "C" fn FASTCOVER_ctx_init(
 unsafe extern "C" fn FASTCOVER_buildDictionary(
     mut ctx: *const FASTCOVER_ctx_t,
     mut freqs: *mut u32,
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictBufferCapacity: usize,
     mut parameters: ZDICT_cover_params_t,
     mut segmentFreqs: *mut u16,
@@ -724,9 +723,9 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
             }
             tail = tail.wrapping_sub(segmentSize);
             libc::memcpy(
-                dict.offset(tail as isize) as *mut std::ffi::c_void,
+                dict.offset(tail as isize) as *mut c_void,
                 ((*ctx).samples).offset(segment.begin as isize)
-                    as *const std::ffi::c_void,
+                    as *const c_void,
                 segmentSize,
             );
             if displayLevel >= 2 {
@@ -739,7 +738,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
                     lastUpdateTime = clock();
                     fprintf(
                         stderr,
-                        b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
+                        b"\r%u%%       \0" as *const u8 as *const c_char,
                         (dictBufferCapacity.wrapping_sub(tail)
                             * 100_usize / dictBufferCapacity)
                             as u32,
@@ -754,7 +753,7 @@ unsafe extern "C" fn FASTCOVER_buildDictionary(
     DISPLAYLEVEL!(2, "\r%79s\r", "");
     return tail;
 }
-unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) {
+unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut c_void) {
     let data = opaque as *mut FASTCOVER_tryParameters_data_t;
     let ctx = (*data).ctx;
     let parameters = (*data).parameters;
@@ -775,15 +774,15 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
         DISPLAYLEVEL!(1, "Failed to allocate buffers: out of memory\n");
     } else {
         libc::memcpy(
-            freqs as *mut std::ffi::c_void,
-            (*ctx).freqs as *const std::ffi::c_void,
+            freqs as *mut c_void,
+            (*ctx).freqs as *const c_void,
             (1_usize << (*ctx).f)
                 .wrapping_mul(::core::mem::size_of::<u32>()),
         );
         let tail = FASTCOVER_buildDictionary(
             ctx,
             freqs,
-            dict as *mut std::ffi::c_void,
+            dict as *mut c_void,
             dictBufferCapacity,
             parameters,
             segmentFreqs,
@@ -808,12 +807,12 @@ unsafe extern "C" fn FASTCOVER_tryParameters(mut opaque: *mut std::ffi::c_void) 
             DISPLAYLEVEL!(1, "Failed to select dictionary\n");
         }
     }
-    libc::free(dict as *mut std::ffi::c_void);
+    libc::free(dict as *mut c_void);
     COVER_best_finish((*data).best, parameters, selection);
-    libc::free(data as *mut std::ffi::c_void);
-    libc::free(segmentFreqs as *mut std::ffi::c_void);
+    libc::free(data as *mut c_void);
+    libc::free(segmentFreqs as *mut c_void);
     COVER_dictSelectionFree(selection);
-    libc::free(freqs as *mut std::ffi::c_void);
+    libc::free(freqs as *mut c_void);
 }
 unsafe extern "C" fn FASTCOVER_convertToCoverParams(
     mut fastCoverParams: ZDICT_fastCover_params_t,
@@ -845,9 +844,9 @@ unsafe extern "C" fn FASTCOVER_convertToFastCoverParams(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictBufferCapacity: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
     mut parameters: ZDICT_fastCover_params_t,
@@ -903,7 +902,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         parameters.accel
     };
     libc::memset(
-        &mut coverParams as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
+        &mut coverParams as *mut ZDICT_cover_params_t as *mut c_void,
         0,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
     );
@@ -959,9 +958,9 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
     let nbFinalizeSamples = (ctx.nbTrainSamples * ctx.accelParams.finalize as usize
         / 100_usize) as u32;
     let dictionarySize = ZDICT_finalizeDictionary(
-        dict as *mut std::ffi::c_void,
+        dict as *mut c_void,
         dictBufferCapacity,
-        dict.offset(tail as isize) as *const std::ffi::c_void,
+        dict.offset(tail as isize) as *const c_void,
         dictBufferCapacity.wrapping_sub(tail),
         samplesBuffer,
         samplesSizes,
@@ -972,14 +971,14 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_fastCover(
         DISPLAYLEVEL!(2, "Constructed dictionary of size %u\n", (unsigned) dictionarySize);
     }
     FASTCOVER_ctx_destroy(&mut ctx);
-    libc::free(segmentFreqs as *mut std::ffi::c_void);
+    libc::free(segmentFreqs as *mut c_void);
     return dictionarySize;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictBufferCapacity: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
     mut parameters: *mut ZDICT_fastCover_params_t,
@@ -1143,7 +1142,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
     }
     COVER_best_init(&mut best);
     libc::memset(
-        &mut coverParams as *mut ZDICT_cover_params_t as *mut std::ffi::c_void,
+        &mut coverParams as *mut ZDICT_cover_params_t as *mut c_void,
         0,
         ::core::mem::size_of::<ZDICT_cover_params_t>(),
     );
@@ -1230,7 +1229,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
             ) == 0
             {
                 DISPLAYLEVEL!(1, "FASTCOVER parameters incorrect\n");
-                libc::free(data as *mut std::ffi::c_void);
+                libc::free(data as *mut c_void);
             } else {
                 COVER_best_start(&mut best);
                 if !pool.is_null() {
@@ -1238,12 +1237,12 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                         pool,
                         Some(
                             FASTCOVER_tryParameters
-                                as unsafe extern "C" fn(*mut std::ffi::c_void) -> (),
+                                as unsafe extern "C" fn(*mut c_void) -> (),
                         ),
-                        data as *mut std::ffi::c_void,
+                        data as *mut c_void,
                     );
                 } else {
-                    FASTCOVER_tryParameters(data as *mut std::ffi::c_void);
+                    FASTCOVER_tryParameters(data as *mut c_void);
                 }
                 if displayLevel >= 2 {
                     let refreshRate = CLOCKS_PER_SEC as __clock_t
@@ -1255,7 +1254,7 @@ pub unsafe extern "C" fn ZDICT_optimizeTrainFromBuffer_fastCover(
                         lastUpdateTime = clock();
                         fprintf(
                             stderr,
-                            b"\r%u%%       \0" as *const u8 as *const std::ffi::c_char,
+                            b"\r%u%%       \0" as *const u8 as *const c_char,
                             iteration
                                 .wrapping_mul(100)
                                 .wrapping_div(kIterations),

@@ -1,3 +1,5 @@
+use std::ffi::{c_char, c_void};
+
 use crate::zstd_h::*;
 use crate::common::mem::*;
 use crate::compress::zstd_compress_internal::ZSTD_window_hasExtDict;
@@ -164,8 +166,8 @@ pub static OF_defaultNormLog: u32 = OF_DEFAULTNORMLOG;
 *********************************************/
 #[inline]
 pub unsafe fn ZSTD_copy8(
-    dst: *mut std::ffi::c_void,
-    src: *const std::ffi::c_void,
+    dst: *mut c_void,
+    src: *const c_void,
 ) {
     libc::memcpy(dst, src, 8);
 }
@@ -187,8 +189,8 @@ pub use crate::__COPY8 as COPY8;
    copy if the literal is being shifted by less than 16 bytes. */
 #[inline]
 pub unsafe fn ZSTD_copy16(
-    dst: *mut std::ffi::c_void,
-    src: *const std::ffi::c_void,
+    dst: *mut c_void,
+    src: *const c_void,
 ) {
     libc::memmove(dst, src, 16);
 
@@ -235,8 +237,8 @@ pub const ZSTD_no_overlap: ZSTD_overlap_e = 0;
  */
 #[inline(always)]
 pub unsafe fn ZSTD_wildcopy(
-    mut dst: *mut std::ffi::c_void,
-    mut src: *const std::ffi::c_void,
+    mut dst: *mut c_void,
+    mut src: *const c_void,
     mut length: usize,
     ovtype: ZSTD_overlap_e,
 ) {
@@ -263,7 +265,7 @@ pub unsafe fn ZSTD_wildcopy(
          * one COPY16() in the first call. Then, do two calls per loop since
          * at that point it is more likely to have a high trip count.
          */
-        ZSTD_copy16(op as *mut std::ffi::c_void, ip as *const std::ffi::c_void);
+        ZSTD_copy16(op as *mut c_void, ip as *const c_void);
         if 16 >= length {
             return;
         }
@@ -281,9 +283,9 @@ pub unsafe fn ZSTD_wildcopy(
 
 #[inline]
 pub unsafe fn ZSTD_limitCopy(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
 ) -> usize {
     let length = std::cmp::min(dstCapacity, srcSize);

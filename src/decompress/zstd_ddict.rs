@@ -1,8 +1,8 @@
-use ::libc;
+use std::ffi::{c_char, c_void};
 extern "C" {
     fn ZSTD_loadDEntropy(
         entropy: *mut ZSTD_entropyDTables_t,
-        dict: *const std::ffi::c_void,
+        dict: *const c_void,
         dictSize: usize,
     ) -> usize;
 }
@@ -16,10 +16,10 @@ pub struct ZSTD_DCtx_s {
     pub HUFptr: *const HUF_DTable,
     pub entropy: ZSTD_entropyDTables_t,
     pub workspace: [u32; 640],
-    pub previousDstEnd: *const std::ffi::c_void,
-    pub prefixStart: *const std::ffi::c_void,
-    pub virtualStart: *const std::ffi::c_void,
-    pub dictEnd: *const std::ffi::c_void,
+    pub previousDstEnd: *const c_void,
+    pub prefixStart: *const c_void,
+    pub virtualStart: *const c_void,
+    pub dictEnd: *const c_void,
     pub expected: usize,
     pub fParams: ZSTD_FrameHeader,
     pub processedCSize: u64,
@@ -50,16 +50,16 @@ pub struct ZSTD_DCtx_s {
     pub disableHufAsm: i32,
     pub maxBlockSizeParam: i32,
     pub streamStage: ZSTD_dStreamStage,
-    pub inBuff: *mut std::ffi::c_char,
+    pub inBuff: *mut c_char,
     pub inBuffSize: usize,
     pub inPos: usize,
     pub maxWindowSize: usize,
-    pub outBuff: *mut std::ffi::c_char,
+    pub outBuff: *mut c_char,
     pub outBuffSize: usize,
     pub outStart: usize,
     pub outEnd: usize,
     pub lhSize: usize,
-    pub legacyContext: *mut std::ffi::c_void,
+    pub legacyContext: *mut c_void,
     pub previousLegacyVersion: u32,
     pub legacyVersion: u32,
     pub hostageByte: u32,
@@ -83,7 +83,7 @@ pub type ZSTD_outBuffer = ZSTD_outBuffer_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_outBuffer_s {
-    pub dst: *mut std::ffi::c_void,
+    pub dst: *mut c_void,
     pub size: usize,
     pub pos: usize,
 }
@@ -110,8 +110,8 @@ pub type ZSTD_DDict = ZSTD_DDict_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_DDict_s {
-    pub dictBuffer: *mut std::ffi::c_void,
-    pub dictContent: *const std::ffi::c_void,
+    pub dictBuffer: *mut c_void,
+    pub dictContent: *const c_void,
     pub dictSize: usize,
     pub entropy: ZSTD_entropyDTables_t,
     pub dictID: u32,
@@ -123,13 +123,13 @@ pub struct ZSTD_DDict_s {
 pub struct ZSTD_customMem {
     pub customAlloc: ZSTD_allocFunction,
     pub customFree: ZSTD_freeFunction,
-    pub opaque: *mut std::ffi::c_void,
+    pub opaque: *mut c_void,
 }
 pub type ZSTD_freeFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, *mut std::ffi::c_void) -> (),
+    unsafe extern "C" fn(*mut c_void, *mut c_void) -> (),
 >;
 pub type ZSTD_allocFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, usize) -> *mut std::ffi::c_void,
+    unsafe extern "C" fn(*mut c_void, usize) -> *mut c_void,
 >;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -219,7 +219,7 @@ pub const ZSTD_FRAMEIDSIZE: i32 = 4;
 unsafe extern "C" fn ZSTD_customMalloc(
     mut size: usize,
     mut customMem: ZSTD_customMem,
-) -> *mut std::ffi::c_void {
+) -> *mut c_void {
     if (customMem.customAlloc).is_some() {
         return (customMem.customAlloc)
             .expect("non-null function pointer")(customMem.opaque, size);
@@ -228,7 +228,7 @@ unsafe extern "C" fn ZSTD_customMalloc(
 }
 #[inline]
 unsafe extern "C" fn ZSTD_customFree(
-    mut ptr: *mut std::ffi::c_void,
+    mut ptr: *mut c_void,
     mut customMem: ZSTD_customMem,
 ) {
     if !ptr.is_null() {
@@ -242,14 +242,14 @@ unsafe extern "C" fn ZSTD_customFree(
 }
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
-    mut format: *const std::ffi::c_char,
+    mut format: *const c_char,
     mut args: ...
 ) {}
 pub const NULL: i32 = 0;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_DDict_dictContent(
     mut ddict: *const ZSTD_DDict,
-) -> *const std::ffi::c_void {
+) -> *const c_void {
     return (*ddict).dictContent;
 }
 #[no_mangle]
@@ -266,7 +266,7 @@ pub unsafe extern "C" fn ZSTD_copyDDictParameters(
     (*dctx).virtualStart = (*ddict).dictContent;
     (*dctx)
         .dictEnd = ((*ddict).dictContent as *const u8)
-        .offset((*ddict).dictSize as isize) as *const std::ffi::c_void;
+        .offset((*ddict).dictSize as isize) as *const c_void;
     (*dctx).previousDstEnd = (*dctx).dictEnd;
     if (*ddict).entropyPresent != 0 {
         (*dctx).litEntropy = 1;
@@ -313,8 +313,8 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
     }
     (*ddict)
         .dictID = MEM_readLE32(
-        ((*ddict).dictContent as *const std::ffi::c_char)
-            .offset(ZSTD_FRAMEIDSIZE as isize) as *const std::ffi::c_void,
+        ((*ddict).dictContent as *const c_char)
+            .offset(ZSTD_FRAMEIDSIZE as isize) as *const c_void,
     );
     RETURN_ERROR_IF!(ERR_isError(
         ZSTD_loadDEntropy(&mut (*ddict).entropy, (*ddict).dictContent, (*ddict).dictSize),
@@ -324,7 +324,7 @@ unsafe extern "C" fn ZSTD_loadEntropy_intoDDict(
 }
 unsafe extern "C" fn ZSTD_initDDict_internal(
     mut ddict: *mut ZSTD_DDict,
-    mut dict: *const std::ffi::c_void,
+    mut dict: *const c_void,
     mut dictSize: usize,
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
     mut dictContentType: ZSTD_dictContentType_e,
@@ -356,7 +356,7 @@ unsafe extern "C" fn ZSTD_initDDict_internal(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_createDDict_advanced(
-    mut dict: *const std::ffi::c_void,
+    mut dict: *const c_void,
     mut dictSize: usize,
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
     mut dictContentType: ZSTD_dictContentType_e,
@@ -390,7 +390,7 @@ pub unsafe extern "C" fn ZSTD_createDDict_advanced(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_createDDict(
-    mut dict: *const std::ffi::c_void,
+    mut dict: *const c_void,
     mut dictSize: usize,
 ) -> *mut ZSTD_DDict {
     let allocator = {
@@ -417,7 +417,7 @@ pub unsafe extern "C" fn ZSTD_createDDict(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_createDDict_byReference(
-    mut dictBuffer: *const std::ffi::c_void,
+    mut dictBuffer: *const c_void,
     mut dictSize: usize,
 ) -> *mut ZSTD_DDict {
     let allocator = {
@@ -444,9 +444,9 @@ pub unsafe extern "C" fn ZSTD_createDDict_byReference(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_initStaticDDict(
-    mut sBuffer: *mut std::ffi::c_void,
+    mut sBuffer: *mut c_void,
     mut sBufferSize: usize,
-    mut dict: *const std::ffi::c_void,
+    mut dict: *const c_void,
     mut dictSize: usize,
     mut dictLoadMethod: ZSTD_dictLoadMethod_e,
     mut dictContentType: ZSTD_dictContentType_e,
@@ -472,7 +472,7 @@ pub unsafe extern "C" fn ZSTD_initStaticDDict(
         == ZSTD_dlm_byCopy as i32 as u32
     {
         libc::memcpy(ddict + 1, dict, (dictSize) as usize);
-        dict = ddict.offset(1) as *const std::ffi::c_void;
+        dict = ddict.offset(1) as *const c_void;
     }
     if ERR_isError(
         ZSTD_initDDict_internal(ddict, dict, dictSize, ZSTD_dlm_byRef, dictContentType),
@@ -489,7 +489,7 @@ pub unsafe extern "C" fn ZSTD_freeDDict(mut ddict: *mut ZSTD_DDict) -> usize {
     }
     let cMem = (*ddict).cMem;
     ZSTD_customFree((*ddict).dictBuffer, cMem);
-    ZSTD_customFree(ddict as *mut std::ffi::c_void, cMem);
+    ZSTD_customFree(ddict as *mut c_void, cMem);
     return 0;
 }
 #[no_mangle]

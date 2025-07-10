@@ -1,10 +1,10 @@
-use ::libc;
+use std::ffi::{c_char, c_void};
 extern "C" {
     fn __assert_fail(
-        __assertion: *const std::ffi::c_char,
-        __file: *const std::ffi::c_char,
+        __assertion: *const c_char,
+        __file: *const c_char,
         __line: u32,
-        __function: *const std::ffi::c_char,
+        __function: *const c_char,
     ) -> !;
 }
 pub type trbudget_t = _trbudget_t;
@@ -990,13 +990,13 @@ unsafe extern "C" fn ss_mintrosort(
             }
             if 0 as i32 <= ssize {} else {
                 __assert_fail(
-                    b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                    b"0 <= ssize\0" as *const u8 as *const c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const std::ffi::c_char,
+                        as *const u8 as *const c_char,
                     418,
                     (*::core::mem::transmute::<
                         &[u8; 74],
-                        &[std::ffi::c_char; 74],
+                        &[c_char; 74],
                     >(
                         b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
                     ))
@@ -1006,13 +1006,13 @@ unsafe extern "C" fn ss_mintrosort(
             'c_15386: {
                 if 0 as i32 <= ssize {} else {
                     __assert_fail(
-                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                        b"0 <= ssize\0" as *const u8 as *const c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const std::ffi::c_char,
+                            as *const u8 as *const c_char,
                         418,
                         (*::core::mem::transmute::<
                             &[u8; 74],
-                            &[std::ffi::c_char; 74],
+                            &[c_char; 74],
                         >(
                             b"void ss_mintrosort(const unsigned char *, const int *, int *, int *, int)\0",
                         ))
@@ -1822,13 +1822,13 @@ unsafe extern "C" fn ss_swapmerge(
             }
             if 0 as i32 <= ssize {} else {
                 __assert_fail(
-                    b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                    b"0 <= ssize\0" as *const u8 as *const c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const std::ffi::c_char,
+                        as *const u8 as *const c_char,
                     771,
                     (*::core::mem::transmute::<
                         &[u8; 92],
-                        &[std::ffi::c_char; 92],
+                        &[c_char; 92],
                     >(
                         b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
                     ))
@@ -1838,13 +1838,13 @@ unsafe extern "C" fn ss_swapmerge(
             'c_17274: {
                 if 0 as i32 <= ssize {} else {
                     __assert_fail(
-                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                        b"0 <= ssize\0" as *const u8 as *const c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const std::ffi::c_char,
+                            as *const u8 as *const c_char,
                         771,
                         (*::core::mem::transmute::<
                             &[u8; 92],
-                            &[std::ffi::c_char; 92],
+                            &[c_char; 92],
                         >(
                             b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
                         ))
@@ -1869,13 +1869,13 @@ unsafe extern "C" fn ss_swapmerge(
             }
             if 0 as i32 <= ssize {} else {
                 __assert_fail(
-                    b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                    b"0 <= ssize\0" as *const u8 as *const c_char,
                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                        as *const u8 as *const std::ffi::c_char,
+                        as *const u8 as *const c_char,
                     780,
                     (*::core::mem::transmute::<
                         &[u8; 92],
-                        &[std::ffi::c_char; 92],
+                        &[c_char; 92],
                     >(
                         b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
                     ))
@@ -1885,13 +1885,13 @@ unsafe extern "C" fn ss_swapmerge(
             'c_16633: {
                 if 0 as i32 <= ssize {} else {
                     __assert_fail(
-                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                        b"0 <= ssize\0" as *const u8 as *const c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const std::ffi::c_char,
+                            as *const u8 as *const c_char,
                         780,
                         (*::core::mem::transmute::<
                             &[u8; 92],
-                            &[std::ffi::c_char; 92],
+                            &[c_char; 92],
                         >(
                             b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
                         ))
@@ -2018,13 +2018,13 @@ unsafe extern "C" fn ss_swapmerge(
                 }
                 if 0 as i32 <= ssize {} else {
                     __assert_fail(
-                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                        b"0 <= ssize\0" as *const u8 as *const c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const std::ffi::c_char,
+                            as *const u8 as *const c_char,
                         822,
                         (*::core::mem::transmute::<
                             &[u8; 92],
-                            &[std::ffi::c_char; 92],
+                            &[c_char; 92],
                         >(
                             b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
                         ))
@@ -2034,13 +2034,13 @@ unsafe extern "C" fn ss_swapmerge(
                 'c_15739: {
                     if 0 as i32 <= ssize {} else {
                         __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                            b"0 <= ssize\0" as *const u8 as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             822,
                             (*::core::mem::transmute::<
                                 &[u8; 92],
-                                &[std::ffi::c_char; 92],
+                                &[c_char; 92],
                             >(
                                 b"void ss_swapmerge(const unsigned char *, const int *, int *, int *, int *, int *, int, int)\0",
                             ))
@@ -2797,13 +2797,13 @@ unsafe extern "C" fn tr_introsort(
                     } else {
                         if 0 as i32 <= ssize {} else {
                             __assert_fail(
-                                b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                b"0 <= ssize\0" as *const u8 as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1215,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
-                                    &[std::ffi::c_char; 73],
+                                    &[c_char; 73],
                                 >(
                                     b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                 ))
@@ -2813,13 +2813,13 @@ unsafe extern "C" fn tr_introsort(
                         'c_9863: {
                             if 0 as i32 <= ssize {} else {
                                 __assert_fail(
-                                    b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                    b"0 <= ssize\0" as *const u8 as *const c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
+                                        as *const u8 as *const c_char,
                                     1215,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
-                                        &[std::ffi::c_char; 73],
+                                        &[c_char; 73],
                                     >(
                                         b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                     ))
@@ -2847,13 +2847,13 @@ unsafe extern "C" fn tr_introsort(
                 } else {
                     if 0 as i32 <= ssize {} else {
                         __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                            b"0 <= ssize\0" as *const u8 as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1224,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
-                                &[std::ffi::c_char; 73],
+                                &[c_char; 73],
                             >(
                                 b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                             ))
@@ -2863,13 +2863,13 @@ unsafe extern "C" fn tr_introsort(
                     'c_9600: {
                         if 0 as i32 <= ssize {} else {
                             __assert_fail(
-                                b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                b"0 <= ssize\0" as *const u8 as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1224,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
-                                    &[std::ffi::c_char; 73],
+                                    &[c_char; 73],
                                 >(
                                     b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                 ))
@@ -2909,13 +2909,13 @@ unsafe extern "C" fn tr_introsort(
                 }
                 if 0 as i32 <= ssize {} else {
                     __assert_fail(
-                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                        b"0 <= ssize\0" as *const u8 as *const c_char,
                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                            as *const u8 as *const std::ffi::c_char,
+                            as *const u8 as *const c_char,
                         1236,
                         (*::core::mem::transmute::<
                             &[u8; 73],
-                            &[std::ffi::c_char; 73],
+                            &[c_char; 73],
                         >(
                             b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                         ))
@@ -2925,13 +2925,13 @@ unsafe extern "C" fn tr_introsort(
                 'c_8904: {
                     if 0 as i32 <= ssize {} else {
                         __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                            b"0 <= ssize\0" as *const u8 as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1236,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
-                                &[std::ffi::c_char; 73],
+                                &[c_char; 73],
                             >(
                                 b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                             ))
@@ -3020,13 +3020,13 @@ unsafe extern "C" fn tr_introsort(
                         } else {
                             if 0 as i32 <= ssize {} else {
                                 __assert_fail(
-                                    b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                    b"0 <= ssize\0" as *const u8 as *const c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
+                                        as *const u8 as *const c_char,
                                     1267,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
-                                        &[std::ffi::c_char; 73],
+                                        &[c_char; 73],
                                     >(
                                         b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                     ))
@@ -3036,13 +3036,13 @@ unsafe extern "C" fn tr_introsort(
                             'c_8341: {
                                 if 0 as i32 <= ssize {} else {
                                     __assert_fail(
-                                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                        b"0 <= ssize\0" as *const u8 as *const c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
+                                            as *const u8 as *const c_char,
                                         1267,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
-                                            &[std::ffi::c_char; 73],
+                                            &[c_char; 73],
                                         >(
                                             b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                         ))
@@ -3056,13 +3056,13 @@ unsafe extern "C" fn tr_introsort(
                 } else {
                     if 0 as i32 <= ssize {} else {
                         __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                            b"0 <= ssize\0" as *const u8 as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1271,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
-                                &[std::ffi::c_char; 73],
+                                &[c_char; 73],
                             >(
                                 b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                             ))
@@ -3072,13 +3072,13 @@ unsafe extern "C" fn tr_introsort(
                     'c_8226: {
                         if 0 as i32 <= ssize {} else {
                             __assert_fail(
-                                b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                b"0 <= ssize\0" as *const u8 as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1271,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
-                                    &[std::ffi::c_char; 73],
+                                    &[c_char; 73],
                                 >(
                                     b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                 ))
@@ -3275,13 +3275,13 @@ unsafe extern "C" fn tr_introsort(
                             } else {
                                 if 0 as i32 <= ssize {} else {
                                     __assert_fail(
-                                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                        b"0 <= ssize\0" as *const u8 as *const c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
+                                            as *const u8 as *const c_char,
                                         1370,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
-                                            &[std::ffi::c_char; 73],
+                                            &[c_char; 73],
                                         >(
                                             b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                         ))
@@ -3291,13 +3291,13 @@ unsafe extern "C" fn tr_introsort(
                                 'c_4065: {
                                     if 0 as i32 <= ssize {} else {
                                         __assert_fail(
-                                            b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                            b"0 <= ssize\0" as *const u8 as *const c_char,
                                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                                as *const u8 as *const std::ffi::c_char,
+                                                as *const u8 as *const c_char,
                                             1370,
                                             (*::core::mem::transmute::<
                                                 &[u8; 73],
-                                                &[std::ffi::c_char; 73],
+                                                &[c_char; 73],
                                             >(
                                                 b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                             ))
@@ -3319,13 +3319,13 @@ unsafe extern "C" fn tr_introsort(
                         } else {
                             if 0 as i32 <= ssize {} else {
                                 __assert_fail(
-                                    b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                    b"0 <= ssize\0" as *const u8 as *const c_char,
                                     b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                        as *const u8 as *const std::ffi::c_char,
+                                        as *const u8 as *const c_char,
                                     1379,
                                     (*::core::mem::transmute::<
                                         &[u8; 73],
-                                        &[std::ffi::c_char; 73],
+                                        &[c_char; 73],
                                     >(
                                         b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                     ))
@@ -3335,13 +3335,13 @@ unsafe extern "C" fn tr_introsort(
                             'c_3830: {
                                 if 0 as i32 <= ssize {} else {
                                     __assert_fail(
-                                        b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                        b"0 <= ssize\0" as *const u8 as *const c_char,
                                         b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                            as *const u8 as *const std::ffi::c_char,
+                                            as *const u8 as *const c_char,
                                         1379,
                                         (*::core::mem::transmute::<
                                             &[u8; 73],
-                                            &[std::ffi::c_char; 73],
+                                            &[c_char; 73],
                                         >(
                                             b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                         ))
@@ -3367,13 +3367,13 @@ unsafe extern "C" fn tr_introsort(
                     }
                     if 0 as i32 <= ssize {} else {
                         __assert_fail(
-                            b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                            b"0 <= ssize\0" as *const u8 as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1388,
                             (*::core::mem::transmute::<
                                 &[u8; 73],
-                                &[std::ffi::c_char; 73],
+                                &[c_char; 73],
                             >(
                                 b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                             ))
@@ -3383,13 +3383,13 @@ unsafe extern "C" fn tr_introsort(
                     'c_3258: {
                         if 0 as i32 <= ssize {} else {
                             __assert_fail(
-                                b"0 <= ssize\0" as *const u8 as *const std::ffi::c_char,
+                                b"0 <= ssize\0" as *const u8 as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1388,
                                 (*::core::mem::transmute::<
                                     &[u8; 73],
-                                    &[std::ffi::c_char; 73],
+                                    &[c_char; 73],
                                 >(
                                     b"void tr_introsort(int *, const int *, int *, int *, int *, trbudget_t *)\0",
                                 ))
@@ -3761,13 +3761,13 @@ unsafe extern "C" fn construct_SA(
                     {} else {
                         __assert_fail(
                             b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                as *const std::ffi::c_char,
+                                as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1631,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
-                                &[std::ffi::c_char; 72],
+                                &[c_char; 72],
                             >(
                                 b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
                             ))
@@ -3782,13 +3782,13 @@ unsafe extern "C" fn construct_SA(
                         {} else {
                             __assert_fail(
                                 b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                    as *const std::ffi::c_char,
+                                    as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1631,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
-                                    &[std::ffi::c_char; 72],
+                                    &[c_char; 72],
                                 >(
                                     b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
                                 ))
@@ -3823,13 +3823,13 @@ unsafe extern "C" fn construct_SA(
                     {} else {
                         __assert_fail(
                             b"((s == 0) && (T[s] == c1)) || (s < 0)\0" as *const u8
-                                as *const std::ffi::c_char,
+                                as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1643,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
-                                &[std::ffi::c_char; 72],
+                                &[c_char; 72],
                             >(
                                 b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
                             ))
@@ -3843,13 +3843,13 @@ unsafe extern "C" fn construct_SA(
                         {} else {
                             __assert_fail(
                                 b"((s == 0) && (T[s] == c1)) || (s < 0)\0" as *const u8
-                                    as *const std::ffi::c_char,
+                                    as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1643,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
-                                    &[std::ffi::c_char; 72],
+                                    &[c_char; 72],
                                 >(
                                     b"void construct_SA(const unsigned char *, int *, int *, int *, int, int)\0",
                                 ))
@@ -3939,13 +3939,13 @@ unsafe extern "C" fn construct_BWT(
                     {} else {
                         __assert_fail(
                             b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                as *const std::ffi::c_char,
+                                as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1695,
                             (*::core::mem::transmute::<
                                 &[u8; 72],
-                                &[std::ffi::c_char; 72],
+                                &[c_char; 72],
                             >(
                                 b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
                             ))
@@ -3960,13 +3960,13 @@ unsafe extern "C" fn construct_BWT(
                         {} else {
                             __assert_fail(
                                 b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                    as *const std::ffi::c_char,
+                                    as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1695,
                                 (*::core::mem::transmute::<
                                     &[u8; 72],
-                                    &[std::ffi::c_char; 72],
+                                    &[c_char; 72],
                                 >(
                                     b"int construct_BWT(const unsigned char *, int *, int *, int *, int, int)\0",
                                 ))
@@ -4093,13 +4093,13 @@ unsafe extern "C" fn construct_BWT_indexes(
                     {} else {
                         __assert_fail(
                             b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                as *const std::ffi::c_char,
+                                as *const c_char,
                             b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                as *const u8 as *const std::ffi::c_char,
+                                as *const u8 as *const c_char,
                             1776,
                             (*::core::mem::transmute::<
                                 &[u8; 104],
-                                &[std::ffi::c_char; 104],
+                                &[c_char; 104],
                             >(
                                 b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
                             ))
@@ -4114,13 +4114,13 @@ unsafe extern "C" fn construct_BWT_indexes(
                         {} else {
                             __assert_fail(
                                 b"((s + 1) < n) && (T[s] <= T[s + 1])\0" as *const u8
-                                    as *const std::ffi::c_char,
+                                    as *const c_char,
                                 b"/home/peter/Dev/zstd-c2rust/lib/dictBuilder/divsufsort.c\0"
-                                    as *const u8 as *const std::ffi::c_char,
+                                    as *const u8 as *const c_char,
                                 1776,
                                 (*::core::mem::transmute::<
                                     &[u8; 104],
-                                    &[std::ffi::c_char; 104],
+                                    &[c_char; 104],
                                 >(
                                     b"int construct_BWT_indexes(const unsigned char *, int *, int *, int *, int, int, unsigned char *, int *)\0",
                                 ))
@@ -4273,8 +4273,8 @@ pub unsafe extern "C" fn divsufsort(
     } else {
         err = -(2 as i32);
     }
-    libc::free(bucket_B as *mut std::ffi::c_void);
-    libc::free(bucket_A as *mut std::ffi::c_void);
+    libc::free(bucket_B as *mut c_void);
+    libc::free(bucket_A as *mut c_void);
     return err;
 }
 #[no_mangle]
@@ -4360,10 +4360,10 @@ pub unsafe extern "C" fn divbwt(
     } else {
         pidx = -(2 as i32);
     }
-    libc::free(bucket_B as *mut std::ffi::c_void);
-    libc::free(bucket_A as *mut std::ffi::c_void);
+    libc::free(bucket_B as *mut c_void);
+    libc::free(bucket_A as *mut c_void);
     if A.is_null() {
-        libc::free(B as *mut std::ffi::c_void);
+        libc::free(B as *mut c_void);
     }
     return pidx;
 }

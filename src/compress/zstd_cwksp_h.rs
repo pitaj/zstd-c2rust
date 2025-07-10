@@ -1,3 +1,5 @@
+use std::ffi::{c_char, c_void};
+
 use crate::common::zstd_internal_h::*;
 
 /*-*************************************
@@ -133,14 +135,14 @@ pub const ZSTD_cwksp_dynamic_alloc: ZSTD_cwksp_static_alloc_e = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_cwksp {
-    pub workspace: *mut std::ffi::c_void,
-    pub workspaceEnd: *mut std::ffi::c_void,
+    pub workspace: *mut c_void,
+    pub workspaceEnd: *mut c_void,
 
-    pub objectEnd: *mut std::ffi::c_void,
-    pub tableEnd: *mut std::ffi::c_void,
-    pub tableValidEnd: *mut std::ffi::c_void,
-    pub allocStart: *mut std::ffi::c_void,
-    pub initOnceStart: *mut std::ffi::c_void,
+    pub objectEnd: *mut c_void,
+    pub tableEnd: *mut c_void,
+    pub tableValidEnd: *mut c_void,
+    pub allocStart: *mut c_void,
+    pub initOnceStart: *mut c_void,
 
     pub allocFailed: u8,
     pub workspaceOversizedDuration: i32,

@@ -1,5 +1,5 @@
 use std::mem::{align_of, size_of};
-use std::ffi::c_void;
+use std::ffi::{c_char, c_void};
 
 use crate::zstd_h::DEBUGLOG;
 use crate::compress::hist::*;
@@ -65,7 +65,7 @@ unsafe fn addEvents_generic(
     mut samplingRate: usize,
     mut hashLog: u32,
 ) {
-    let mut p = src as *const std::ffi::c_char;
+    let mut p = src as *const c_char;
     let mut limit = srcSize + 1 - HASHLENGTH;
     let mut n: usize = 0;
     while n < limit {
@@ -205,7 +205,7 @@ unsafe fn ZSTD_splitBlock_byChunks(
     ];
     let record_f: RecordEvents_f = records_fs[level as usize];
     let fpstats = workspace as *mut FPStats;
-    let mut p = blockStart as *const std::ffi::c_char;
+    let mut p = blockStart as *const c_char;
     let mut penalty = THRESHOLD_PENALTY;
     let mut pos: usize = 0;
     debug_assert!(blockSize == (128_usize << 10));

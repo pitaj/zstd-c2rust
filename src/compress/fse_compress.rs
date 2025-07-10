@@ -1,3 +1,5 @@
+use std::ffi::{c_char, c_void};
+
 use crate::common::fse_h::*;
 use crate::common::error::*;
 use crate::common::bitstream_h::*;
@@ -16,12 +18,12 @@ pub unsafe fn FSE_buildCTable_wksp(
     mut normalizedCounter: *const i16,
     mut maxSymbolValue: u32,
     mut tableLog: u32,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     let tableSize = 1_u32 << tableLog;
     let tableMask = tableSize.wrapping_sub(1);
-    let ptr = ct as *mut std::ffi::c_void;
+    let ptr = ct as *mut c_void;
     let tableU16 = (ptr as *mut u16).offset(2);
     let FSCT = (ptr as *mut u32)
         .offset(1) /* header */
@@ -31,7 +33,7 @@ pub unsafe fn FSE_buildCTable_wksp(
             } else {
                 1
             },
-        ) as *mut std::ffi::c_void;
+        ) as *mut c_void;
     let symbolTT = FSCT as *mut FSE_symbolCompressionTransform;
     let step = FSE_TABLESTEP(tableSize);
     let maxSV1 = maxSymbolValue.wrapping_add(1);
@@ -223,7 +225,7 @@ pub unsafe fn FSE_NCountWriteBound(
 }
 
 unsafe fn FSE_writeNCount_generic(
-    mut header: *mut std::ffi::c_void,
+    mut header: *mut c_void,
     mut headerBufferSize: usize,
     mut normalizedCounter: *const i16,
     mut maxSymbolValue: u32,
@@ -337,7 +339,7 @@ unsafe fn FSE_writeNCount_generic(
 }
 
 pub unsafe fn FSE_writeNCount(
-    mut buffer: *mut std::ffi::c_void,
+    mut buffer: *mut c_void,
     mut bufferSize: usize,
     mut normalizedCounter: *const i16,
     mut maxSymbolValue: u32,
@@ -624,9 +626,9 @@ pub unsafe fn FSE_buildCTable_rle(
     mut ct: *mut FSE_CTable,
     mut symbolValue: u8,
 ) -> usize {
-    let mut ptr = ct as *mut std::ffi::c_void;
+    let mut ptr = ct as *mut c_void;
     let mut tableU16 = (ptr as *mut u16).offset(2);
-    let mut FSCTptr = (ptr as *mut u32).offset(2) as *mut std::ffi::c_void;
+    let mut FSCTptr = (ptr as *mut u32).offset(2) as *mut c_void;
     let mut symbolTT = FSCTptr as *mut FSE_symbolCompressionTransform;
 
     /* header */
@@ -645,9 +647,9 @@ pub unsafe fn FSE_buildCTable_rle(
 }
 
 unsafe fn FSE_compress_usingCTable_generic(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstSize: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     mut ct: *const FSE_CTable,
     fast: bool,
@@ -754,9 +756,9 @@ unsafe fn FSE_compress_usingCTable_generic(
 }
 
 pub unsafe fn FSE_compress_usingCTable(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstSize: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     mut ct: *const FSE_CTable,
 ) -> usize {

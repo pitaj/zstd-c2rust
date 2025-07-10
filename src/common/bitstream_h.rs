@@ -1,4 +1,5 @@
 use core::mem::size_of;
+use std::ffi::{c_char, c_void};
 
 use crate::zstd_h::*;
 use crate::common::mem::*;
@@ -38,9 +39,9 @@ pub type BitContainerType = usize;
 pub struct BIT_CStream_t {
     pub bitContainer: BitContainerType,
     pub bitPos: u32,
-    pub startPtr: *mut std::ffi::c_char,
-    pub ptr: *mut std::ffi::c_char,
-    pub endPtr: *mut std::ffi::c_char,
+    pub startPtr: *mut c_char,
+    pub ptr: *mut c_char,
+    pub endPtr: *mut c_char,
 }
 
 // MEM_STATIC size_t BIT_initCStream(BIT_CStream_t* bitC, void* dstBuffer, size_t dstCapacity);
@@ -74,9 +75,9 @@ pub struct BIT_CStream_t {
 pub struct BIT_DStream_t {
     pub bitContainer: BitContainerType,
     pub bitsConsumed: u32,
-    pub ptr: *const std::ffi::c_char,
-    pub start: *const std::ffi::c_char,
-    pub limitPtr: *const std::ffi::c_char,
+    pub ptr: *const c_char,
+    pub start: *const c_char,
+    pub limitPtr: *const c_char,
 }
 
 pub type BIT_DStream_status = u32; /* result of BIT_reloadDStream() */
@@ -129,12 +130,12 @@ pub const BIT_mask: [u32; BIT_MASK_SIZE] = [
 #[inline]
 pub unsafe fn BIT_initCStream(
     mut bitC: *mut BIT_CStream_t,
-    mut startPtr: *mut std::ffi::c_void,
+    mut startPtr: *mut c_void,
     mut dstCapacity: usize,
 ) -> usize {
     (*bitC).bitContainer = 0;
     (*bitC).bitPos = 0;
-    (*bitC).startPtr = startPtr as *mut std::ffi::c_char;
+    (*bitC).startPtr = startPtr as *mut c_char;
     (*bitC).ptr = (*bitC).startPtr;
     (*bitC)
         .endPtr = ((*bitC).startPtr)
@@ -214,7 +215,7 @@ pub unsafe fn BIT_flushBitsFast(mut bitC: *mut BIT_CStream_t) {
     let nbBytes = ((*bitC).bitPos >> 3) as usize;
     debug_assert!(((*bitC).bitPos as usize) < std::mem::size_of_val(&(*bitC).bitContainer) * 8);
     debug_assert!((*bitC).ptr <= (*bitC).endPtr);
-    MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, (*bitC).bitContainer);
+    MEM_writeLEST((*bitC).ptr as *mut c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).add(nbBytes);
     (*bitC).bitPos &= 7;
     (*bitC).bitContainer >>= nbBytes * 8;
@@ -230,7 +231,7 @@ pub unsafe fn BIT_flushBits(mut bitC: *mut BIT_CStream_t) {
     let nbBytes = ((*bitC).bitPos >> 3) as usize;
     debug_assert!(((*bitC).bitPos as usize) < std::mem::size_of_val(&(*bitC).bitContainer) * 8);
     debug_assert!((*bitC).ptr <= (*bitC).endPtr);
-    MEM_writeLEST((*bitC).ptr as *mut std::ffi::c_void, (*bitC).bitContainer);
+    MEM_writeLEST((*bitC).ptr as *mut c_void, (*bitC).bitContainer);
     (*bitC).ptr = ((*bitC).ptr).add(nbBytes);
     if (*bitC).ptr > (*bitC).endPtr {
         (*bitC).ptr = (*bitC).endPtr;
@@ -268,26 +269,26 @@ pub unsafe fn BIT_closeCStream(mut bitC: *mut BIT_CStream_t) -> usize {
 #[inline]
 pub unsafe fn BIT_initDStream(
     mut bitD: *mut BIT_DStream_t,
-    mut srcBuffer: *const std::ffi::c_void,
+    mut srcBuffer: *const c_void,
     mut srcSize: usize,
 ) -> usize {
     if srcSize < 1 {
         libc::memset(
-            bitD as *mut std::ffi::c_void,
+            bitD as *mut c_void,
             0,
             size_of::<BIT_DStream_t>(),
         );
         return ERROR(ZSTD_error_srcSize_wrong);
     }
 
-    (*bitD).start = srcBuffer as *const std::ffi::c_char;
+    (*bitD).start = srcBuffer as *const c_char;
     (*bitD).limitPtr = ((*bitD).start).add(size_of::<BitContainerType>());
 
     if srcSize >= size_of::<BitContainerType>() { /* normal case */
-        (*bitD).ptr = (srcBuffer as *const std::ffi::c_char)
+        (*bitD).ptr = (srcBuffer as *const c_char)
             .add(srcSize)
             .sub(size_of::<BitContainerType>());
-        (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
+        (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const c_void);
         let lastByte = *(srcBuffer as *const u8)
             .add(srcSize - 1);
         (*bitD).bitsConsumed = if lastByte != 0 {
@@ -459,7 +460,7 @@ pub unsafe fn BIT_reloadDStream_internal(
     (*bitD).ptr = ((*bitD).ptr).offset(-(((*bitD).bitsConsumed >> 3) as isize));
     debug_assert!((*bitD).ptr >= (*bitD).start);
     (*bitD).bitsConsumed &= 7;
-    (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void);
+    (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const c_void);
     return BIT_DStream_unfinished;
 }
 
@@ -491,7 +492,7 @@ pub unsafe fn BIT_reloadDStream(
     /* note : once in overflow mode, a bitstream remains in this mode until it's reset */
     if UNLIKELY!((*bitD).bitsConsumed as usize > (size_of::<BitContainerType>() * 8)) {
         const zeroFilled: BitContainerType = 0;
-        (*bitD).ptr = &zeroFilled as *const BitContainerType as *const std::ffi::c_char; /* aliasing is allowed for char */
+        (*bitD).ptr = &zeroFilled as *const BitContainerType as *const c_char; /* aliasing is allowed for char */
         /* overflow detected, erroneous scenario or end of stream: no update */
         return BIT_DStream_overflow;
     }
@@ -517,7 +518,7 @@ pub unsafe fn BIT_reloadDStream(
     }
     (*bitD).ptr = ((*bitD).ptr).offset(-(nbBytes as isize));
     (*bitD).bitsConsumed -= nbBytes * 8;
-    (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const std::ffi::c_void); /* reminder : srcSize > sizeof(bitD->bitContainer), otherwise bitD->ptr == bitD->start */
+    (*bitD).bitContainer = MEM_readLEST((*bitD).ptr as *const c_void); /* reminder : srcSize > sizeof(bitD->bitContainer), otherwise bitD->ptr == bitD->start */
     return result;
 }
 

@@ -1,3 +1,4 @@
+use std::ffi::{c_char, c_void};
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_DCtx_s {
@@ -7,10 +8,10 @@ pub struct ZSTD_DCtx_s {
     pub HUFptr: *const HUF_DTable,
     pub entropy: ZSTD_entropyDTables_t,
     pub workspace: [u32; HUF_DECOMPRESS_WORKSPACE_SIZE_U32], /* space needed when building huffman tables */
-    pub previousDstEnd: *const std::ffi::c_void, /* detect continuity */
-    pub prefixStart: *const std::ffi::c_void, /* start of current segment */
-    pub virtualStart: *const std::ffi::c_void, /* virtual start of previous segment if it was just before current one */
-    pub dictEnd: *const std::ffi::c_void, /* end of previous segment */
+    pub previousDstEnd: *const c_void, /* detect continuity */
+    pub prefixStart: *const c_void, /* start of current segment */
+    pub virtualStart: *const c_void, /* virtual start of previous segment if it was just before current one */
+    pub dictEnd: *const c_void, /* end of previous segment */
     pub expected: usize,
     pub fParams: ZSTD_FrameHeader,
     pub processedCSize: u64,
@@ -46,18 +47,18 @@ pub struct ZSTD_DCtx_s {
 
     /* streaming */
     pub streamStage: ZSTD_dStreamStage,
-    pub inBuff: *mut std::ffi::c_char,
+    pub inBuff: *mut c_char,
     pub inBuffSize: usize,
     pub inPos: usize,
     pub maxWindowSize: usize,
-    pub outBuff: *mut std::ffi::c_char,
+    pub outBuff: *mut c_char,
     pub outBuffSize: usize,
     pub outStart: usize,
     pub outEnd: usize,
     pub lhSize: usize,
 
     // TODO #if defined(ZSTD_LEGACY_SUPPORT) && (ZSTD_LEGACY_SUPPORT>=1)
-    pub legacyContext: *mut std::ffi::c_void,
+    pub legacyContext: *mut c_void,
     pub previousLegacyVersion: u32,
     pub legacyVersion: u32,
 

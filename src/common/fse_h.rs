@@ -1,4 +1,5 @@
 use std::mem::size_of;
+use std::ffi::{c_char, c_void};
 
 use crate::common::mem::*;
 use crate::common::bitstream_h::*;
@@ -286,8 +287,8 @@ pub const FSE_repeat_valid: FSE_repeat = 2;
 #[repr(C)]
 pub struct FSE_CState_t {
     pub value: isize,
-    pub stateTable: *const std::ffi::c_void,
-    pub symbolTT: *const std::ffi::c_void,
+    pub stateTable: *const c_void,
+    pub symbolTT: *const c_void,
     pub stateLog: u32,
 }
 
@@ -348,7 +349,7 @@ If there is an error, it returns an errorCode (which can be tested using FSE_isE
 #[repr(C)]
 pub struct FSE_DState_t {
     pub state: usize,
-    pub table: *const std::ffi::c_void, /* precise table may vary, depending on U16 */
+    pub table: *const c_void, /* precise table may vary, depending on U16 */
 }
 
 
@@ -430,13 +431,13 @@ pub unsafe fn FSE_initCState(
     mut statePtr: *mut FSE_CState_t,
     mut ct: *const FSE_CTable,
 ) {
-    let mut ptr = ct as *const std::ffi::c_void;
+    let mut ptr = ct as *const c_void;
     let mut u16ptr = ptr as *const u16;
     let tableLog = MEM_read16(ptr) as u32;
     (*statePtr).value = 1_isize << tableLog;
     (*statePtr)
         .stateTable = u16ptr.offset(2)
-        as *const std::ffi::c_void;
+        as *const c_void;
     (*statePtr)
         .symbolTT = ct
         .offset(1)
@@ -446,7 +447,7 @@ pub unsafe fn FSE_initCState(
             } else {
                 1
             },
-        ) as *const std::ffi::c_void;
+        ) as *const c_void;
     (*statePtr).stateLog = tableLog;
 }
 
@@ -522,7 +523,7 @@ pub unsafe fn FSE_flushCState(
  * note 2 : if freq[symbolValue]==0, @return a fake cost of tableLog+1 bits */
 #[inline]
 pub unsafe extern "C" fn FSE_bitCost(
-    mut symbolTTPtr: *const std::ffi::c_void,
+    mut symbolTTPtr: *const c_void,
     mut tableLog: u32,
     mut symbolValue: u32,
     mut accuracyLog: u32,
@@ -572,11 +573,11 @@ pub unsafe fn FSE_initDState(
     mut bitD: *mut BIT_DStream_t,
     mut dt: *const FSE_DTable,
 ) {
-    let mut ptr = dt as *const std::ffi::c_void;
+    let mut ptr = dt as *const c_void;
     let DTableH = ptr as *const FSE_DTableHeader;
     (*DStatePtr).state = BIT_readBits(bitD, (*DTableH).tableLog as u32);
     BIT_reloadDStream(bitD);
-    (*DStatePtr).table = dt.offset(1) as *const std::ffi::c_void;
+    (*DStatePtr).table = dt.offset(1) as *const c_void;
 }
 
 // MEM_STATIC BYTE FSE_peekSymbol(const FSE_DState_t* DStatePtr)

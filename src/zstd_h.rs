@@ -1,3 +1,5 @@
+use std::ffi::{c_char, c_void};
+
 use crate::common::mem::*;
 pub use crate::common::error::*;
 
@@ -671,7 +673,7 @@ pub type ZSTD_inBuffer = ZSTD_inBuffer_s;
 #[repr(C)]
 pub struct ZSTD_inBuffer_s {
     ///  start of input buffer
-    pub src: *const std::ffi::c_void, 
+    pub src: *const c_void, 
     ///  size of input buffer
     pub size: usize, 
     ///  position where reading stopped. Will be updated. Necessarily 0 <= pos <= size
@@ -683,7 +685,7 @@ pub type ZSTD_outBuffer = ZSTD_outBuffer_s;
 #[repr(C)]
 pub struct ZSTD_outBuffer_s {
     ///  start of output buffer
-    pub dst: *mut std::ffi::c_void, 
+    pub dst: *mut c_void, 
     ///  size of output buffer
     pub size: usize, 
     ///  position where writing stopped. Will be updated. Necessarily 0 <= pos <= size
@@ -1828,17 +1830,17 @@ pub type ZSTD_sequenceFormat_e = ZSTD_SequenceFormat_e; /* old name */
  *  All allocation/free operations will be completed using these custom variants instead of regular <stdlib.h> ones.
  */
 pub type ZSTD_allocFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, usize) -> *mut std::ffi::c_void,
+    unsafe extern "C" fn(*mut c_void, usize) -> *mut c_void,
 >;
 pub type ZSTD_freeFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, *mut std::ffi::c_void) -> (),
+    unsafe extern "C" fn(*mut c_void, *mut c_void) -> (),
 >;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_customMem {
     pub customAlloc: ZSTD_allocFunction,
     pub customFree: ZSTD_freeFunction,
-    pub opaque: *mut std::ffi::c_void,
+    pub opaque: *mut c_void,
 }
 /// this constant defers to stdlib's functions
 pub const ZSTD_defaultCMem: ZSTD_customMem = ZSTD_customMem {
@@ -2709,12 +2711,12 @@ pub const ZSTD_SEQUENCE_PRODUCER_ERROR: usize = usize::MAX;
 
 pub type ZSTD_sequenceProducer_F = Option::<
     unsafe extern "C" fn(
-        *mut std::ffi::c_void,
+        *mut c_void,
         *mut ZSTD_Sequence,
         usize,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
         i32,
         usize,

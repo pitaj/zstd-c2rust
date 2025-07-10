@@ -594,6 +594,12 @@ case $1 in
 
     ;;
 
+  std-ffi-cchar-cvoid)
+    # Remove std::ffi:: from remaining c types
+    perl -i -p0e 's/\bstd::ffi::(c_char|c_void)\b/$1/gm' src/*.rs src/*/*.rs
+
+    ;;
+
   reset)
     ./convert.sh clean
     ./convert.sh transpile

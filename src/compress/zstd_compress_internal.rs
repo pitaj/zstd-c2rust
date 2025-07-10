@@ -1,3 +1,6 @@
+use core::mem::size_of;
+use std::ffi::{c_char, c_void};
+
 use crate::common::bits::*;
 use crate::common::mem::*;
 use crate::common::error::*;
@@ -8,8 +11,6 @@ use crate::common::fse_h::*;
 use crate::common::bitstream_h::*;
 use crate::compress::zstd_preSplit::*;
 use crate::compress::zstd_cwksp_h::*;
-
-use core::mem::size_of;
 
 /*-*************************************
 *  Constants
@@ -43,7 +44,7 @@ pub type ZSTD_prefixDict = ZSTD_prefixDict_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_prefixDict_s {
-    pub dict: *const std::ffi::c_void,
+    pub dict: *const c_void,
     pub dictSize: usize,
     pub dictContentType: ZSTD_dictContentType_e,
 }
@@ -51,8 +52,8 @@ pub struct ZSTD_prefixDict_s {
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_localDict {
-    pub dictBuffer: *mut std::ffi::c_void,
-    pub dict: *const std::ffi::c_void,
+    pub dictBuffer: *mut c_void,
+    pub dict: *const c_void,
     pub dictSize: usize,
     pub dictContentType: ZSTD_dictContentType_e,
     pub cdict: *mut ZSTD_CDict,
@@ -545,7 +546,7 @@ pub struct ZSTD_CCtx_params_s {
     /* Parameters for the external sequence producer API.
      * Users set these parameters through ZSTD_registerSequenceProducer().
      * It is not possible to set these parameters individually through the public API. */
-    pub extSeqProdState: *mut std::ffi::c_void,
+    pub extSeqProdState: *mut c_void,
     pub extSeqProdFunc: ZSTD_sequenceProducer_F,
 
     /* Controls repcode search in external sequence parsing */
@@ -613,19 +614,19 @@ pub struct ZSTD_CCtx_s {
     pub maxNbLdmSequences: usize,
     pub externSeqStore: RawSeqStore_t, /* Mutable reference to external sequences */
     pub blockState: ZSTD_blockState_t,
-    pub tmpWorkspace: *mut std::ffi::c_void,
+    pub tmpWorkspace: *mut c_void,
     pub tmpWkspSize: usize, /* used as substitute of stack space - must be aligned for S64 type */
 
     /* Whether we are streaming or not */
     pub bufferedPolicy: ZSTD_buffered_policy_e,
 
     /* streaming */
-    pub inBuff: *mut std::ffi::c_char,
+    pub inBuff: *mut c_char,
     pub inBuffSize: usize,
     pub inToCompress: usize,
     pub inBuffPos: usize,
     pub inBuffTarget: usize,
-    pub outBuff: *mut std::ffi::c_char,
+    pub outBuff: *mut c_char,
     pub outBuffSize: usize,
     pub outBuffContentSize: usize,
     pub outBuffFlushedSize: usize,
@@ -700,7 +701,7 @@ pub type ZSTD_BlockCompressor_f = Option::<
         *mut ZSTD_MatchState_t,
         *mut SeqStore_t,
         *mut u32,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
     ) -> usize
 >;
@@ -803,9 +804,9 @@ pub unsafe fn ZSTD_selectAddr(
  * Returns the size of the block */
 #[inline]
 pub unsafe fn ZSTD_noCompressBlock(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     mut lastBlock: u32,
 ) -> usize {
@@ -820,7 +821,7 @@ pub unsafe fn ZSTD_noCompressBlock(
 
 #[inline]
 pub unsafe fn ZSTD_rleCompressBlock(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     mut src: u8,
     mut srcSize: usize,
@@ -831,7 +832,7 @@ pub unsafe fn ZSTD_rleCompressBlock(
         .wrapping_add((bt_rle as u32) << 1)
         .wrapping_add((srcSize << 3) as u32);
     RETURN_ERROR_IF!(dstCapacity < 4, ZSTD_error_dstSize_tooSmall);
-    MEM_writeLE24(op as *mut std::ffi::c_void, cBlockHeader);
+    MEM_writeLE24(op as *mut c_void, cBlockHeader);
     *op.offset(3) = src;
     return 4;
 }
@@ -883,8 +884,8 @@ pub unsafe fn ZSTD_safecopyLiterals(
 ) {
     if ip <= ilimit_w {
         ZSTD_wildcopy(
-            op as *mut std::ffi::c_void,
-            ip as *const std::ffi::c_void,
+            op as *mut c_void,
+            ip as *const c_void,
             ilimit_w.offset_from(ip) as usize,
             ZSTD_no_overlap,
         );
@@ -1019,15 +1020,15 @@ pub unsafe fn ZSTD_storeSeq(
         */
         const _: () = assert!(WILDCOPY_OVERLENGTH >= 16);
         ZSTD_copy16(
-            (*seqStorePtr).lit as *mut std::ffi::c_void,
-            literals as *const std::ffi::c_void,
+            (*seqStorePtr).lit as *mut c_void,
+            literals as *const c_void,
         );
         if litLength > 16 {
             ZSTD_wildcopy(
                 ((*seqStorePtr).lit).offset(16)
-                    as *mut std::ffi::c_void,
+                    as *mut c_void,
                 literals.offset(16)
-                    as *const std::ffi::c_void,
+                    as *const c_void,
                 litLength.wrapping_sub(16),
                 ZSTD_no_overlap,
             );
@@ -1099,8 +1100,8 @@ pub unsafe fn ZSTD_newRep(
 ) -> Repcodes_t {
     let mut newReps = repcodes_s { rep: [0; 3] };
     libc::memcpy(
-        &mut newReps as *mut Repcodes_t as *mut std::ffi::c_void,
-        rep as *const std::ffi::c_void,
+        &mut newReps as *mut Repcodes_t as *mut c_void,
+        rep as *const c_void,
         size_of::<Repcodes_t>(),
     );
     ZSTD_updateRep((newReps.rep).as_mut_ptr(), offBase, ll0);
@@ -1202,13 +1203,13 @@ pub unsafe fn ZSTD_hash3(u: u32, h: u32, s: u32) -> u32 {
     (((u << (32-24)).wrapping_mul(prime3bytes)) ^ s) >> 32_u32.wrapping_sub(h)
 }
 pub unsafe fn ZSTD_hash3Ptr( /* only in zstd_opt.h */
-    ptr: *const std::ffi::c_void,
+    ptr: *const c_void,
     h: u32,
 ) -> usize {
     ZSTD_hash3(MEM_readLE32(ptr), h, 0) as usize
 }
 pub unsafe fn ZSTD_hash3PtrS(
-    ptr: *const std::ffi::c_void,
+    ptr: *const c_void,
     h: u32,
     s: u32,
 ) -> usize {
@@ -1220,13 +1221,13 @@ pub unsafe fn ZSTD_hash4(u: u32, h: u32, s: u32) -> u32 {
     (u.wrapping_mul(prime4bytes) ^ s) >> 32_u32.wrapping_sub(h)
 }
 pub unsafe fn ZSTD_hash4Ptr(
-    ptr: *const std::ffi::c_void,
+    ptr: *const c_void,
     h: u32,
 ) -> usize {
     ZSTD_hash4(MEM_readLE32(ptr), h, 0) as usize
 }
 pub unsafe fn ZSTD_hash4PtrS(
-    ptr: *const std::ffi::c_void,
+    ptr: *const c_void,
     h: u32,
     s: u32,
 ) -> usize {
@@ -1238,13 +1239,13 @@ pub unsafe fn ZSTD_hash5(u: u64, h: u32, s: u64) -> usize {
     (((u << 64 - 40).wrapping_mul(prime5bytes) ^ s) >> 64_u32.wrapping_sub(h)) as usize
 }
 pub unsafe fn ZSTD_hash5Ptr(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
 ) -> usize {
     ZSTD_hash5(MEM_readLE64(p), h, 0)
 }
 pub unsafe fn ZSTD_hash5PtrS(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
     s: u64,
 ) -> usize {
@@ -1256,13 +1257,13 @@ pub fn ZSTD_hash6(u: u64, h: u32, s: u64) -> usize {
     (((u << 64 - 48).wrapping_mul(prime6bytes) ^ s) >> 64_u32.wrapping_sub(h)) as usize
 }
 pub unsafe fn ZSTD_hash6Ptr(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
 ) -> usize {
     ZSTD_hash6(MEM_readLE64(p), h, 0)
 }
 pub unsafe fn ZSTD_hash6PtrS(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
     s: u64,
 ) -> usize {
@@ -1274,13 +1275,13 @@ pub unsafe fn ZSTD_hash7(u: u64, h: u32, s: u64) -> usize {
     (((u << 64 - 56).wrapping_mul(prime7bytes) ^ s) >> 64_u32.wrapping_sub(h)) as usize
 }
 pub unsafe fn ZSTD_hash7Ptr(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
 ) -> usize {
     ZSTD_hash7(MEM_readLE64(p), h, 0)
 }
 pub unsafe fn ZSTD_hash7PtrS(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
     s: u64,
 ) -> usize {
@@ -1292,13 +1293,13 @@ pub fn ZSTD_hash8(u: u64, h: u32, s: u64) -> usize {
     ((u.wrapping_mul(prime8bytes) ^ s) >> 64_u32.wrapping_sub(h)) as usize
 }
 pub unsafe fn ZSTD_hash8Ptr(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
 ) -> usize {
     ZSTD_hash8(MEM_readLE64(p), h, 0)
 }
 pub unsafe fn ZSTD_hash8PtrS(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     h: u32,
     s: u64,
 ) -> usize {
@@ -1307,7 +1308,7 @@ pub unsafe fn ZSTD_hash8PtrS(
 
 #[inline(always)]
 pub unsafe fn ZSTD_hashPtr(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     hBits: u32,
     mls: u32,
 ) -> usize {
@@ -1326,7 +1327,7 @@ pub unsafe fn ZSTD_hashPtr(
 
 #[inline(always)]
 pub unsafe fn ZSTD_hashPtrS(
-    p: *const std::ffi::c_void,
+    p: *const c_void,
     hBits: u32,
     mls: u32,
     hashSalt: u64,
@@ -1358,7 +1359,7 @@ pub const ZSTD_ROLL_HASH_CHAR_OFFSET: u64 = 10;
  */
 pub unsafe fn ZSTD_rollingHash_append(
     mut hash: u64,
-    buf: *const std::ffi::c_void,
+    buf: *const c_void,
     size: usize,
 ) -> u64 {
     let mut istart = buf as *const u8;
@@ -1379,7 +1380,7 @@ pub unsafe fn ZSTD_rollingHash_append(
  */
 #[inline]
 pub unsafe fn ZSTD_rollingHash_compute(
-    buf: *const std::ffi::c_void,
+    buf: *const c_void,
     size: usize,
 ) -> u64 {
     ZSTD_rollingHash_append(0, buf, size)
@@ -1501,7 +1502,7 @@ pub unsafe fn ZSTD_window_canOverflowCorrect(
     mut cycleLog: u32,
     mut maxDist: u32,
     mut loadedDictEnd: u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
 ) -> bool {
     let cycleSize = 1_u32 << cycleLog;
     let curr = (src as *const u8).offset_from(window.base) as u32;
@@ -1539,8 +1540,8 @@ pub unsafe fn ZSTD_window_needOverflowCorrection(
     mut cycleLog: u32,
     mut maxDist: u32,
     mut loadedDictEnd: u32,
-    mut src: *const std::ffi::c_void,
-    mut srcEnd: *const std::ffi::c_void,
+    mut src: *const c_void,
+    mut srcEnd: *const c_void,
 ) -> bool {
     let curr = (srcEnd as *const u8).offset_from(window.base) as usize;
     if ZSTD_WINDOW_OVERFLOW_CORRECT_FREQUENTLY > 0 {
@@ -1564,7 +1565,7 @@ pub unsafe fn ZSTD_window_correctOverflow(
     mut window: *mut ZSTD_window_t,
     mut cycleLog: u32,
     mut maxDist: u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
 ) -> u32 {
     /* preemptive overflow correction:
      * 1. correction is large enough:
@@ -1667,7 +1668,7 @@ pub unsafe fn ZSTD_window_correctOverflow(
 #[inline]
 pub unsafe fn ZSTD_window_enforceMaxDist(
     mut window: *mut ZSTD_window_t,
-    mut blockEnd: *const std::ffi::c_void,
+    mut blockEnd: *const c_void,
     mut maxDist: u32,
     mut loadedDictEndPtr: *mut u32,
     mut dictMatchStatePtr: *mut *const ZSTD_MatchState_t,
@@ -1723,7 +1724,7 @@ pub unsafe fn ZSTD_window_enforceMaxDist(
 #[inline]
 pub unsafe fn ZSTD_checkDictValidity(
     mut window: *const ZSTD_window_t,
-    mut blockEnd: *const std::ffi::c_void,
+    mut blockEnd: *const c_void,
     mut maxDist: u32,
     mut loadedDictEndPtr: *mut u32,
     mut dictMatchStatePtr: *mut *const ZSTD_MatchState_t,
@@ -1758,7 +1759,7 @@ pub unsafe fn ZSTD_checkDictValidity(
 #[inline]
 pub unsafe fn ZSTD_window_init(mut window: *mut ZSTD_window_t) {
     libc::memset(
-        window as *mut std::ffi::c_void,
+        window as *mut c_void,
         0,
         size_of::<ZSTD_window_t>(),
     );
@@ -1781,7 +1782,7 @@ pub unsafe fn ZSTD_window_init(mut window: *mut ZSTD_window_t) {
 #[inline]
 pub unsafe fn ZSTD_window_update(
     mut window: *mut ZSTD_window_t,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     mut forceNonContiguous: bool,
 ) -> bool {

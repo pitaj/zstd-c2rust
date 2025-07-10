@@ -1,4 +1,5 @@
 use std::mem::{size_of, size_of_val};
+use std::ffi::{c_char, c_void};
 
 use crate::common::mem::*;
 use crate::common::error::*;
@@ -15,7 +16,7 @@ unsafe fn FSE_readNCount_body(
     mut normalizedCounter: *mut i16,
     mut maxSVPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut headerBuffer: *const std::ffi::c_void,
+    mut headerBuffer: *const c_void,
     mut hbSize: usize,
 ) -> usize {
     let istart = headerBuffer as *const u8;
@@ -31,7 +32,7 @@ unsafe fn FSE_readNCount_body(
     let mut previous0: bool = false;
     if hbSize < 8 {
         /* This function only works when hbSize >= 8 */
-        let mut buffer: [std::ffi::c_char; 8] = [0; 8];
+        let mut buffer: [c_char; 8] = [0; 8];
         libc::memcpy(buffer.as_mut_ptr().cast(), headerBuffer, hbSize);
         let countSize = FSE_readNCount(
             normalizedCounter,
@@ -52,7 +53,7 @@ unsafe fn FSE_readNCount_body(
     libc::memset(normalizedCounter.cast(), 0,
         ((*maxSVPtr + 1) as usize) * size_of::<i16>()
     ); /* all symbols not present in NCount have a frequency of 0 */
-    bitStream = MEM_readLE32(ip as *const std::ffi::c_void);
+    bitStream = MEM_readLE32(ip as *const c_void);
     nbBits = (bitStream & 0xf).wrapping_add(FSE_MIN_TABLELOG) as i32; /* extract tableLog */
     if nbBits > FSE_TABLELOG_ABSOLUTE_MAX as i32 { return ERROR(ZSTD_error_tableLog_tooLarge); }
     bitStream >>= 4;
@@ -79,7 +80,7 @@ unsafe fn FSE_readNCount_body(
                     bitCount &= 31;
                     ip = iend.offset(-4);
                 }
-                bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
+                bitStream = MEM_readLE32(ip as *const c_void) >> bitCount;
                 repeats = ZSTD_countTrailingZeros32(!bitStream | 0x80000000) >> 1;
             }
             charnum += 3 * repeats;
@@ -114,7 +115,7 @@ unsafe fn FSE_readNCount_body(
                 bitCount &= 31;
                 ip = iend.offset(-4);
             }
-            bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
+            bitStream = MEM_readLE32(ip as *const c_void) >> bitCount;
         }
 
         let max = (2 * threshold - 1) - remaining;
@@ -171,7 +172,7 @@ unsafe fn FSE_readNCount_body(
             bitCount &= 31;
             ip = iend.offset(-4);
         }
-        bitStream = MEM_readLE32(ip as *const std::ffi::c_void) >> bitCount;
+        bitStream = MEM_readLE32(ip as *const c_void) >> bitCount;
     }
     if remaining != 1 { return ERROR(ZSTD_error_corruption_detected); }
     /* Only possible when there are too many zeros. */
@@ -188,7 +189,7 @@ unsafe fn FSE_readNCount_body_default(
     mut normalizedCounter: *mut i16,
     mut maxSVPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut headerBuffer: *const std::ffi::c_void,
+    mut headerBuffer: *const c_void,
     mut hbSize: usize,
 ) -> usize {
     return FSE_readNCount_body(
@@ -205,7 +206,7 @@ unsafe fn FSE_readNCount_body_bmi2(
     mut normalizedCounter: *mut i16,
     mut maxSVPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut headerBuffer: *const std::ffi::c_void,
+    mut headerBuffer: *const c_void,
     mut hbSize: usize,
 ) -> usize {
     return FSE_readNCount_body(
@@ -221,7 +222,7 @@ pub unsafe fn FSE_readNCount_bmi2(
     mut normalizedCounter: *mut i16,
     mut maxSVPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut headerBuffer: *const std::ffi::c_void,
+    mut headerBuffer: *const c_void,
     mut hbSize: usize,
     mut bmi2: bool,
 ) -> usize {
@@ -248,7 +249,7 @@ pub unsafe fn FSE_readNCount(
     mut normalizedCounter: *mut i16,
     mut maxSVPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut headerBuffer: *const std::ffi::c_void,
+    mut headerBuffer: *const c_void,
     mut hbSize: usize,
 ) -> usize {
     return FSE_readNCount_bmi2(
@@ -274,7 +275,7 @@ pub unsafe fn HUF_readStats(
     mut rankStats: *mut u32,
     mut nbSymbolsPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
 ) -> usize {
     let mut wksp: [u32; HUF_READ_STATS_WORKSPACE_SIZE_U32] = [0; HUF_READ_STATS_WORKSPACE_SIZE_U32];
@@ -286,7 +287,7 @@ pub unsafe fn HUF_readStats(
         tableLogPtr,
         src,
         srcSize,
-        wksp.as_mut_ptr() as *mut std::ffi::c_void,
+        wksp.as_mut_ptr() as *mut c_void,
         size_of::<[u32; HUF_READ_STATS_WORKSPACE_SIZE_U32]>(),
         /* flags */ 0,
     );
@@ -299,9 +300,9 @@ unsafe fn HUF_readStats_body(
     mut rankStats: *mut u32,
     mut nbSymbolsPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
     mut bmi2: bool,
 ) -> usize {
@@ -330,9 +331,9 @@ unsafe fn HUF_readStats_body(
         if iSize+1 > srcSize { return ERROR(ZSTD_error_srcSize_wrong); }
         /* max (hwSize-1) values decoded, as last one is implied */
         oSize = FSE_decompress_wksp_bmi2(
-            huffWeight as *mut std::ffi::c_void,
+            huffWeight as *mut c_void,
             hwSize - 1,
-            ip.offset(1) as *const std::ffi::c_void,
+            ip.offset(1) as *const c_void,
             iSize,
             6,
             workSpace,
@@ -346,7 +347,7 @@ unsafe fn HUF_readStats_body(
 
     /* collect weight stats */
     libc::memset(
-        rankStats as *mut std::ffi::c_void,
+        rankStats as *mut c_void,
         0,
         (HUF_TABLELOG_MAX + 1) as usize * size_of::<u32>()
     );
@@ -388,9 +389,9 @@ unsafe fn HUF_readStats_body_default(
     mut rankStats: *mut u32,
     mut nbSymbolsPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     return HUF_readStats_body(
@@ -414,9 +415,9 @@ unsafe fn HUF_readStats_body_bmi2(
     mut rankStats: *mut u32,
     mut nbSymbolsPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     return HUF_readStats_body(
@@ -439,9 +440,9 @@ pub unsafe fn HUF_readStats_wksp(
     mut rankStats: *mut u32,
     mut nbSymbolsPtr: *mut u32,
     mut tableLogPtr: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
     mut flags: i32,
 ) -> usize {

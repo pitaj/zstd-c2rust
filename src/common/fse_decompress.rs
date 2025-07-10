@@ -1,4 +1,5 @@
 use std::mem::size_of;
+use std::ffi::{c_char, c_void};
 
 use crate::common::fse_h::*;
 use crate::common::bitstream_h::*;
@@ -20,10 +21,10 @@ unsafe fn FSE_buildDTable_internal(
     mut normalizedCounter: *const i16,
     mut maxSymbolValue: u32,
     mut tableLog: u32,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
-    let tdPtr = dt.offset(1) as *mut std::ffi::c_void; /* because *dt is unsigned, 32-bits aligned on 32-bits */
+    let tdPtr = dt.offset(1) as *mut c_void; /* because *dt is unsigned, 32-bits aligned on 32-bits */
     let tableDecode = tdPtr as *mut FSE_decode_t;
     let mut symbolNext = workSpace as *mut u16;
     let mut spread = symbolNext.offset(maxSymbolValue as isize).offset(1) as *mut u8;
@@ -58,8 +59,8 @@ unsafe fn FSE_buildDTable_internal(
         }
     }
     libc::memcpy(
-        dt as *mut std::ffi::c_void,
-        &mut DTableH as *mut FSE_DTableHeader as *const std::ffi::c_void,
+        dt as *mut c_void,
+        &mut DTableH as *mut FSE_DTableHeader as *const c_void,
         size_of::<FSE_DTableHeader>(),
     );
 
@@ -79,11 +80,11 @@ unsafe fn FSE_buildDTable_internal(
         for s_0 in 0..(maxSV1 as usize) {
             let mut i: isize = 0;
             let n = *normalizedCounter.add(s_0) as isize;
-            MEM_write64(spread.add(pos) as *mut std::ffi::c_void, sv);
+            MEM_write64(spread.add(pos) as *mut c_void, sv);
             i = 8;
             while i < n {
                 MEM_write64(
-                    spread.add(pos).offset(i) as *mut std::ffi::c_void,
+                    spread.add(pos).offset(i) as *mut c_void,
                     sv,
                 );
                 i += 8;
@@ -146,7 +147,7 @@ pub unsafe fn FSE_buildDTable_wksp(
     mut normalizedCounter: *const i16,
     mut maxSymbolValue: u32,
     mut tableLog: u32,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     return FSE_buildDTable_internal(
@@ -165,9 +166,9 @@ pub unsafe fn FSE_buildDTable_wksp(
 
 #[inline(always)]
 unsafe fn FSE_decompress_usingDTable_generic(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut maxDstSize: usize,
-    mut cSrc: *const std::ffi::c_void,
+    mut cSrc: *const c_void,
     mut cSrcSize: usize,
     mut dt: *const FSE_DTable,
     fast: bool,
@@ -273,12 +274,12 @@ struct FSE_DecompressWksp {
 
 #[inline(always)]
 unsafe extern "C" fn FSE_decompress_wksp_body(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut cSrc: *const std::ffi::c_void,
+    mut cSrc: *const c_void,
     mut cSrcSize: usize,
     mut maxLog: u32,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
     mut bmi2: bool,
 ) -> usize {
@@ -301,7 +302,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         ((*wksp).ncount).as_mut_ptr(),
         &mut maxSymbolValue,
         &mut tableLog,
-        istart as *const std::ffi::c_void,
+        istart as *const c_void,
         cSrcSize,
         bmi2,
     );
@@ -317,7 +318,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
     debug_assert!(size_of::<FSE_DecompressWksp>() + FSE_DTABLE_SIZE(tableLog) <= wkspSize);
     workSpace = (workSpace as *mut u8)
         .add(size_of::<FSE_DecompressWksp>())
-        .add(FSE_DTABLE_SIZE(tableLog)) as *mut std::ffi::c_void;
+        .add(FSE_DTABLE_SIZE(tableLog)) as *mut c_void;
     wkspSize -= size_of::<FSE_DecompressWksp>() + FSE_DTABLE_SIZE(tableLog);
 
     FORWARD_IF_ERROR!(FSE_buildDTable_internal(
@@ -329,7 +330,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         wkspSize,
     ));
 
-    let mut ptr = dtable as *const std::ffi::c_void;
+    let mut ptr = dtable as *const c_void;
     let mut DTableH = ptr as *const FSE_DTableHeader;
     let fastMode = (*DTableH).fastMode != 0;
 
@@ -338,7 +339,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
         return FSE_decompress_usingDTable_generic(
             dst,
             dstCapacity,
-            ip as *const std::ffi::c_void,
+            ip as *const c_void,
             cSrcSize,
             dtable,
             true,
@@ -347,7 +348,7 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
     return FSE_decompress_usingDTable_generic(
         dst,
         dstCapacity,
-        ip as *const std::ffi::c_void,
+        ip as *const c_void,
         cSrcSize,
         dtable,
         false,
@@ -356,12 +357,12 @@ unsafe extern "C" fn FSE_decompress_wksp_body(
 
 /* Avoids the FORCE_INLINE of the _body() function. */
 unsafe fn FSE_decompress_wksp_body_default(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut cSrc: *const std::ffi::c_void,
+    mut cSrc: *const c_void,
     mut cSrcSize: usize,
     mut maxLog: u32,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     return FSE_decompress_wksp_body(
@@ -378,12 +379,12 @@ unsafe fn FSE_decompress_wksp_body_default(
 
 // TODO #if DYNAMIC_BMI2
 unsafe fn FSE_decompress_wksp_body_bmi2(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut cSrc: *const std::ffi::c_void,
+    mut cSrc: *const c_void,
     mut cSrcSize: usize,
     mut maxLog: u32,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
 ) -> usize {
     return FSE_decompress_wksp_body(
@@ -399,12 +400,12 @@ unsafe fn FSE_decompress_wksp_body_bmi2(
 }
 
 pub unsafe fn FSE_decompress_wksp_bmi2(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut cSrc: *const std::ffi::c_void,
+    mut cSrc: *const c_void,
     mut cSrcSize: usize,
     mut maxLog: u32,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut wkspSize: usize,
     mut bmi2: bool,
 ) -> usize {

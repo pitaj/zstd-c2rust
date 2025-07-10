@@ -1,5 +1,5 @@
-use ::libc;
-use ::c2rust_bitfields;
+use std::ffi::{c_char, c_void};
+
 use crate::zstd_h::*;
 use crate::common::huf_h::*;
 use crate::common::mem::*;
@@ -12,7 +12,7 @@ extern "C" {
     pub type POOL_ctx_s;
     static mut stderr: *mut FILE;
     fn fflush(__stream: *mut FILE) -> i32;
-    fn fprintf(_: *mut FILE, _: *const std::ffi::c_char, _: ...) -> i32;
+    fn fprintf(_: *mut FILE, _: *const c_char, _: ...) -> i32;
     fn clock() -> clock_t;
     fn FSE_normalizeCount(
         normalizedCounter: *mut i16,
@@ -23,19 +23,19 @@ extern "C" {
         useLowProbCount: u32,
     ) -> usize;
     fn FSE_writeNCount(
-        buffer: *mut std::ffi::c_void,
+        buffer: *mut c_void,
         bufferSize: usize,
         normalizedCounter: *const i16,
         maxSymbolValue: u32,
         tableLog: u32,
     ) -> usize;
     fn HUF_writeCTable_wksp(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         maxDstSize: usize,
         CTable: *const HUF_CElt,
         maxSymbolValue: u32,
         huffLog: u32,
-        workspace: *mut std::ffi::c_void,
+        workspace: *mut c_void,
         workspaceSize: usize,
     ) -> usize;
     fn HUF_buildCTable_wksp(
@@ -43,14 +43,14 @@ extern "C" {
         count: *const u32,
         maxSymbolValue: u32,
         maxNbBits: u32,
-        workSpace: *mut std::ffi::c_void,
+        workSpace: *mut c_void,
         wkspSize: usize,
     ) -> usize;
     fn ZSTD_createCCtx() -> *mut ZSTD_CCtx;
     fn ZSTD_freeCCtx(cctx: *mut ZSTD_CCtx) -> usize;
     fn ZSTD_freeCDict(CDict: *mut ZSTD_CDict) -> usize;
     fn ZSTD_createCDict_advanced(
-        dict: *const std::ffi::c_void,
+        dict: *const c_void,
         dictSize: usize,
         dictLoadMethod: ZSTD_dictLoadMethod_e,
         dictContentType: ZSTD_dictContentType_e,
@@ -66,8 +66,8 @@ extern "C" {
     fn ZSTD_seqToCodes(seqStorePtr: *const SeqStore_t) -> i32;
     fn ZSTD_loadCEntropy(
         bs: *mut ZSTD_compressedBlockState_t,
-        workspace: *mut std::ffi::c_void,
-        dict: *const std::ffi::c_void,
+        workspace: *mut c_void,
+        dict: *const c_void,
         dictSize: usize,
     ) -> usize;
     fn ZSTD_reset_compressedBlockState(bs: *mut ZSTD_compressedBlockState_t);
@@ -77,20 +77,20 @@ extern "C" {
     ) -> usize;
     fn ZSTD_compressBlock_deprecated(
         cctx: *mut ZSTD_CCtx,
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstCapacity: usize,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
     ) -> usize;
     fn ZSTD_XXH64(
-        input: *const std::ffi::c_void,
+        input: *const c_void,
         length: usize,
         seed: XXH64_hash_t,
     ) -> XXH64_hash_t;
     fn ZDICT_optimizeTrainFromBuffer_fastCover(
-        dictBuffer: *mut std::ffi::c_void,
+        dictBuffer: *mut c_void,
         dictBufferCapacity: usize,
-        samplesBuffer: *const std::ffi::c_void,
+        samplesBuffer: *const c_void,
         samplesSizes: *const usize,
         nbSamples: u32,
         parameters: *mut ZDICT_fastCover_params_t,
@@ -110,36 +110,36 @@ pub type clock_t = __clock_t;
 #[repr(C)]
 pub struct _IO_FILE {
     pub _flags: i32,
-    pub _IO_read_ptr: *mut std::ffi::c_char,
-    pub _IO_read_end: *mut std::ffi::c_char,
-    pub _IO_read_base: *mut std::ffi::c_char,
-    pub _IO_write_base: *mut std::ffi::c_char,
-    pub _IO_write_ptr: *mut std::ffi::c_char,
-    pub _IO_write_end: *mut std::ffi::c_char,
-    pub _IO_buf_base: *mut std::ffi::c_char,
-    pub _IO_buf_end: *mut std::ffi::c_char,
-    pub _IO_save_base: *mut std::ffi::c_char,
-    pub _IO_backup_base: *mut std::ffi::c_char,
-    pub _IO_save_end: *mut std::ffi::c_char,
+    pub _IO_read_ptr: *mut c_char,
+    pub _IO_read_end: *mut c_char,
+    pub _IO_read_base: *mut c_char,
+    pub _IO_write_base: *mut c_char,
+    pub _IO_write_ptr: *mut c_char,
+    pub _IO_write_end: *mut c_char,
+    pub _IO_buf_base: *mut c_char,
+    pub _IO_buf_end: *mut c_char,
+    pub _IO_save_base: *mut c_char,
+    pub _IO_backup_base: *mut c_char,
+    pub _IO_save_end: *mut c_char,
     pub _markers: *mut _IO_marker,
     pub _chain: *mut _IO_FILE,
     pub _fileno: i32,
     #[bitfield(name = "_flags2", ty = "i32", bits = "0..=23")]
     pub _flags2: [u8; 3],
-    pub _short_backupbuf: [std::ffi::c_char; 1],
+    pub _short_backupbuf: [c_char; 1],
     pub _old_offset: __off_t,
     pub _cur_column: u16,
     pub _vtable_offset: std::ffi::c_schar,
-    pub _shortbuf: [std::ffi::c_char; 1],
-    pub _lock: *mut std::ffi::c_void,
+    pub _shortbuf: [c_char; 1],
+    pub _lock: *mut c_void,
     pub _offset: __off64_t,
     pub _codecvt: *mut _IO_codecvt,
     pub _wide_data: *mut _IO_wide_data,
     pub _freeres_list: *mut _IO_FILE,
-    pub _freeres_buf: *mut std::ffi::c_void,
+    pub _freeres_buf: *mut c_void,
     pub _prevchain: *mut *mut _IO_FILE,
     pub _mode: i32,
-    pub _unused2: [std::ffi::c_char; 20],
+    pub _unused2: [c_char; 20],
 }
 pub type _IO_lock_t = ();
 pub type FILE = _IO_FILE;
@@ -187,15 +187,15 @@ pub struct ZSTD_CCtx_s {
     pub maxNbLdmSequences: usize,
     pub externSeqStore: RawSeqStore_t,
     pub blockState: ZSTD_blockState_t,
-    pub tmpWorkspace: *mut std::ffi::c_void,
+    pub tmpWorkspace: *mut c_void,
     pub tmpWkspSize: usize,
     pub bufferedPolicy: ZSTD_buffered_policy_e,
-    pub inBuff: *mut std::ffi::c_char,
+    pub inBuff: *mut c_char,
     pub inBuffSize: usize,
     pub inToCompress: usize,
     pub inBuffPos: usize,
     pub inBuffTarget: usize,
-    pub outBuff: *mut std::ffi::c_char,
+    pub outBuff: *mut c_char,
     pub outBuffSize: usize,
     pub outBuffContentSize: usize,
     pub outBuffFlushedSize: usize,
@@ -293,7 +293,7 @@ pub type ZSTD_prefixDict = ZSTD_prefixDict_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_prefixDict_s {
-    pub dict: *const std::ffi::c_void,
+    pub dict: *const c_void,
     pub dictSize: usize,
     pub dictContentType: ZSTD_dictContentType_e,
 }
@@ -305,8 +305,8 @@ pub type ZSTD_CDict = ZSTD_CDict_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_localDict {
-    pub dictBuffer: *mut std::ffi::c_void,
-    pub dict: *const std::ffi::c_void,
+    pub dictBuffer: *mut c_void,
+    pub dict: *const c_void,
     pub dictSize: usize,
     pub dictContentType: ZSTD_dictContentType_e,
     pub cdict: *mut ZSTD_CDict,
@@ -315,7 +315,7 @@ pub type ZSTD_inBuffer = ZSTD_inBuffer_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_inBuffer_s {
-    pub src: *const std::ffi::c_void,
+    pub src: *const c_void,
     pub size: usize,
     pub pos: usize,
 }
@@ -513,13 +513,13 @@ pub type ZSTD_threadPool = POOL_ctx_s;
 pub struct ZSTD_customMem {
     pub customAlloc: ZSTD_allocFunction,
     pub customFree: ZSTD_freeFunction,
-    pub opaque: *mut std::ffi::c_void,
+    pub opaque: *mut c_void,
 }
 pub type ZSTD_freeFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, *mut std::ffi::c_void) -> (),
+    unsafe extern "C" fn(*mut c_void, *mut c_void) -> (),
 >;
 pub type ZSTD_allocFunction = Option::<
-    unsafe extern "C" fn(*mut std::ffi::c_void, usize) -> *mut std::ffi::c_void,
+    unsafe extern "C" fn(*mut c_void, usize) -> *mut c_void,
 >;
 pub type XXH64_state_t = XXH64_state_s;
 #[derive(Copy, Clone)]
@@ -537,13 +537,13 @@ pub type XXH32_hash_t = u32;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct ZSTD_cwksp {
-    pub workspace: *mut std::ffi::c_void,
-    pub workspaceEnd: *mut std::ffi::c_void,
-    pub objectEnd: *mut std::ffi::c_void,
-    pub tableEnd: *mut std::ffi::c_void,
-    pub tableValidEnd: *mut std::ffi::c_void,
-    pub allocStart: *mut std::ffi::c_void,
-    pub initOnceStart: *mut std::ffi::c_void,
+    pub workspace: *mut c_void,
+    pub workspaceEnd: *mut c_void,
+    pub objectEnd: *mut c_void,
+    pub tableEnd: *mut c_void,
+    pub tableValidEnd: *mut c_void,
+    pub allocStart: *mut c_void,
+    pub initOnceStart: *mut c_void,
     pub allocFailed: u8,
     pub workspaceOversizedDuration: i32,
     pub phase: ZSTD_cwksp_alloc_phase_e,
@@ -588,18 +588,18 @@ pub struct ZSTD_CCtx_params_s {
     pub customMem: ZSTD_customMem,
     pub prefetchCDictTables: ZSTD_ParamSwitch_e,
     pub enableMatchFinderFallback: i32,
-    pub extSeqProdState: *mut std::ffi::c_void,
+    pub extSeqProdState: *mut c_void,
     pub extSeqProdFunc: ZSTD_sequenceProducer_F,
     pub searchForExternalRepcodes: ZSTD_ParamSwitch_e,
 }
 pub type ZSTD_sequenceProducer_F = Option::<
     unsafe extern "C" fn(
-        *mut std::ffi::c_void,
+        *mut c_void,
         *mut ZSTD_Sequence,
         usize,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
         i32,
         usize,
@@ -677,7 +677,7 @@ pub struct ZDICT_params_t {
 pub struct EStats_ress_t {
     pub dict: *mut ZSTD_CDict,
     pub zc: *mut ZSTD_CCtx,
-    pub workPlace: *mut std::ffi::c_void,
+    pub workPlace: *mut c_void,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -705,7 +705,7 @@ pub const ZDICT_MIN_SAMPLES_SIZE: i32 = ZDICT_CONTENTSIZE_MIN * MINRATIO;
 use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
-    mut format: *const std::ffi::c_char,
+    mut format: *const c_char,
     mut args: ...
 ) {}
 use crate::common::bits::*;
@@ -746,7 +746,7 @@ unsafe extern "C" fn ZDICT_clockSpan(mut nPrevious: clock_t) -> clock_t {
     return clock() - nPrevious;
 }
 unsafe extern "C" fn ZDICT_printHex(
-    mut ptr: *const std::ffi::c_void,
+    mut ptr: *const c_void,
     mut length: usize,
 ) {
     let b = ptr as *const u8;
@@ -761,7 +761,7 @@ unsafe extern "C" fn ZDICT_printHex(
         }
         DISPLAY!(
             "%c", c
-        )(stderr, b"%c\0" as *const u8 as *const std::ffi::c_char, c as i32);
+        )(stderr, b"%c\0" as *const u8 as *const c_char, c as i32);
         DISPLAY!("%c", c)(stderr);
         u = u.wrapping_add(1);
         u;
@@ -769,7 +769,7 @@ unsafe extern "C" fn ZDICT_printHex(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_getDictID(
-    mut dictBuffer: *const std::ffi::c_void,
+    mut dictBuffer: *const c_void,
     mut dictSize: usize,
 ) -> u32 {
     if dictSize < 8 {
@@ -779,13 +779,13 @@ pub unsafe extern "C" fn ZDICT_getDictID(
         return 0;
     }
     return MEM_readLE32(
-        (dictBuffer as *const std::ffi::c_char).offset(4)
-            as *const std::ffi::c_void,
+        (dictBuffer as *const c_char).offset(4)
+            as *const c_void,
     );
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_getDictHeaderSize(
-    mut dictBuffer: *const std::ffi::c_void,
+    mut dictBuffer: *const c_void,
     mut dictSize: usize,
 ) -> usize {
     let mut headerSize: usize = 0;
@@ -801,33 +801,33 @@ pub unsafe extern "C" fn ZDICT_getDictHeaderSize(
         ZSTD_reset_compressedBlockState(bs);
         headerSize = ZSTD_loadCEntropy(
             bs,
-            wksp as *mut std::ffi::c_void,
+            wksp as *mut c_void,
             dictBuffer,
             dictSize,
         );
     }
-    libc::free(bs as *mut std::ffi::c_void);
-    libc::free(wksp as *mut std::ffi::c_void);
+    libc::free(bs as *mut c_void);
+    libc::free(wksp as *mut c_void);
     return headerSize;
 }
 unsafe extern "C" fn ZDICT_count(
-    mut pIn: *const std::ffi::c_void,
-    mut pMatch: *const std::ffi::c_void,
+    mut pIn: *const c_void,
+    mut pMatch: *const c_void,
 ) -> usize {
-    let pStart = pIn as *const std::ffi::c_char;
+    let pStart = pIn as *const c_char;
     loop {
         let diff = MEM_readST(pMatch) ^ MEM_readST(pIn);
         if diff == 0 {
-            pIn = (pIn as *const std::ffi::c_char)
+            pIn = (pIn as *const c_char)
                 .offset(::core::mem::size_of::<usize>() as isize)
-                as *const std::ffi::c_void;
-            pMatch = (pMatch as *const std::ffi::c_char)
+                as *const c_void;
+            pMatch = (pMatch as *const c_char)
                 .offset(::core::mem::size_of::<usize>() as isize)
-                as *const std::ffi::c_void;
+                as *const c_void;
         } else {
-            pIn = (pIn as *const std::ffi::c_char)
-                .offset(ZSTD_NbCommonBytes(diff) as isize) as *const std::ffi::c_void;
-            return (pIn as *const std::ffi::c_char).offset_from(pStart)
+            pIn = (pIn as *const c_char)
+                .offset(ZSTD_NbCommonBytes(diff) as isize) as *const c_void;
+            return (pIn as *const c_char).offset_from(pStart)
                 as std::ffi::c_long as usize;
         }
     };
@@ -843,7 +843,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
     mut doneMarks: *mut u8,
     mut suffix: *const u32,
     mut start: u32,
-    mut buffer: *const std::ffi::c_void,
+    mut buffer: *const c_void,
     mut minRatio: u32,
     mut notificationLevel: u32,
 ) -> dictItem {
@@ -1055,44 +1055,44 @@ unsafe extern "C" fn ZDICT_analyzePos(
         savings: 0,
     };
     libc::memset(
-        &mut solution as *mut dictItem as *mut std::ffi::c_void,
+        &mut solution as *mut dictItem as *mut c_void,
         0,
         ::core::mem::size_of::<dictItem>(),
     );
     *doneMarks.offset(pos as isize) = 1;
     if MEM_read16(
         b.offset(pos as isize).offset(0)
-            as *const std::ffi::c_void,
+            as *const c_void,
     ) as i32
         == MEM_read16(
             b.offset(pos as isize).offset(2)
-                as *const std::ffi::c_void,
+                as *const c_void,
         ) as i32
         || MEM_read16(
             b.offset(pos as isize).offset(1)
-                as *const std::ffi::c_void,
+                as *const c_void,
         ) as i32
             == MEM_read16(
                 b.offset(pos as isize).offset(3)
-                    as *const std::ffi::c_void,
+                    as *const c_void,
             ) as i32
         || MEM_read16(
             b.offset(pos as isize).offset(2)
-                as *const std::ffi::c_void,
+                as *const c_void,
         ) as i32
             == MEM_read16(
                 b.offset(pos as isize).offset(4)
-                    as *const std::ffi::c_void,
+                    as *const c_void,
             ) as i32
     {
         let pattern16 = MEM_read16(
             b.offset(pos as isize).offset(4)
-                as *const std::ffi::c_void,
+                as *const c_void,
         );
         let mut u: u32 = 0;
         let mut patternEnd: u32 = 6;
         while MEM_read16(
-            b.offset(pos as isize).offset(patternEnd as isize) as *const std::ffi::c_void,
+            b.offset(pos as isize).offset(patternEnd as isize) as *const c_void,
         ) as i32 == pattern16 as i32
         {
             patternEnd = patternEnd.wrapping_add(2);
@@ -1124,8 +1124,8 @@ unsafe extern "C" fn ZDICT_analyzePos(
         end = end.wrapping_add(1);
         end;
         length = ZDICT_count(
-            b.offset(pos as isize) as *const std::ffi::c_void,
-            b.offset(*suffix.offset(end as isize) as isize) as *const std::ffi::c_void,
+            b.offset(pos as isize) as *const c_void,
+            b.offset(*suffix.offset(end as isize) as isize) as *const c_void,
         );
         if !(length >= MINMATCHLENGTH as usize) {
             break;
@@ -1134,13 +1134,13 @@ unsafe extern "C" fn ZDICT_analyzePos(
     let mut length_0: usize = 0;
     loop {
         length_0 = ZDICT_count(
-            b.offset(pos as isize) as *const std::ffi::c_void,
+            b.offset(pos as isize) as *const c_void,
             b
                 .offset(
                     *suffix
                         .offset(start as isize)
                         .offset(-1_isize) as isize,
-                ) as *const std::ffi::c_void,
+                ) as *const c_void,
         );
         if length_0 >= MINMATCHLENGTH as usize {
             start = start.wrapping_sub(1);
@@ -1214,7 +1214,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
     pos = *suffix.offset(refinedStart as isize) as usize;
     end = start;
     libc::memset(
-        lengthList.as_mut_ptr() as *mut std::ffi::c_void,
+        lengthList.as_mut_ptr() as *mut c_void,
         0,
         ::core::mem::size_of::<[u32; 64]>(),
     );
@@ -1223,8 +1223,8 @@ unsafe extern "C" fn ZDICT_analyzePos(
         end = end.wrapping_add(1);
         end;
         length_1 = ZDICT_count(
-            b.offset(pos as isize) as *const std::ffi::c_void,
-            b.offset(*suffix.offset(end as isize) as isize) as *const std::ffi::c_void,
+            b.offset(pos as isize) as *const c_void,
+            b.offset(*suffix.offset(end as isize) as isize) as *const c_void,
         );
         if length_1 >= LLIMIT as usize {
             length_1 = (LLIMIT - 1 as i32) as usize;
@@ -1240,13 +1240,13 @@ unsafe extern "C" fn ZDICT_analyzePos(
         & (start > 0) as i32 != 0
     {
         length_2 = ZDICT_count(
-            b.offset(pos as isize) as *const std::ffi::c_void,
+            b.offset(pos as isize) as *const c_void,
             b
                 .offset(
                     *suffix
                         .offset(start.wrapping_sub(1) as isize)
                         as isize,
-                ) as *const std::ffi::c_void,
+                ) as *const c_void,
         );
         if length_2 >= LLIMIT as usize {
             length_2 = (LLIMIT - 1 as i32) as usize;
@@ -1259,7 +1259,7 @@ unsafe extern "C" fn ZDICT_analyzePos(
         }
     }
     libc::memset(
-        cumulLength.as_mut_ptr() as *mut std::ffi::c_void,
+        cumulLength.as_mut_ptr() as *mut c_void,
         0,
         ::core::mem::size_of::<[u32; 64]>(),
     );
@@ -1336,8 +1336,8 @@ unsafe extern "C" fn ZDICT_analyzePos(
             length_3 = solution.length;
         } else {
             length_3 = ZDICT_count(
-                b.offset(pos as isize) as *const std::ffi::c_void,
-                b.offset(testedPos as isize) as *const std::ffi::c_void,
+                b.offset(pos as isize) as *const c_void,
+                b.offset(testedPos as isize) as *const c_void,
             ) as u32;
             if length_3 > solution.length {
                 length_3 = solution.length;
@@ -1356,12 +1356,12 @@ unsafe extern "C" fn ZDICT_analyzePos(
     return solution;
 }
 unsafe extern "C" fn isIncluded(
-    mut in_0: *const std::ffi::c_void,
-    mut container: *const std::ffi::c_void,
+    mut in_0: *const c_void,
+    mut container: *const c_void,
     mut length: usize,
 ) -> i32 {
-    let ip = in_0 as *const std::ffi::c_char;
-    let into = container as *const std::ffi::c_char;
+    let ip = in_0 as *const c_char;
+    let into = container as *const c_char;
     let mut u: usize = 0;
     u = 0;
     while u < length {
@@ -1379,11 +1379,11 @@ unsafe extern "C" fn ZDICT_tryMerge(
     mut table: *mut dictItem,
     mut elt: dictItem,
     mut eltNbToSkip: u32,
-    mut buffer: *const std::ffi::c_void,
+    mut buffer: *const c_void,
 ) -> u32 {
     let tableSize = (*table).pos;
     let eltEnd = (elt.pos).wrapping_add(elt.length);
-    let buf = buffer as *const std::ffi::c_char;
+    let buf = buffer as *const c_char;
     let mut u: u32 = 0;
     u = 1;
     while u < tableSize {
@@ -1467,18 +1467,18 @@ unsafe extern "C" fn ZDICT_tryMerge(
             }
             if MEM_read64(
                 buf.offset((*table.offset(u as isize)).pos as isize)
-                    as *const std::ffi::c_void,
+                    as *const c_void,
             )
                 == MEM_read64(
                     buf.offset(elt.pos as isize).offset(1)
-                        as *const std::ffi::c_void,
+                        as *const c_void,
                 )
             {
                 if isIncluded(
                     buf.offset((*table.offset(u as isize)).pos as isize)
-                        as *const std::ffi::c_void,
+                        as *const c_void,
                     buf.offset(elt.pos as isize).offset(1)
-                        as *const std::ffi::c_void,
+                        as *const c_void,
                     (*table.offset(u as isize)).length as usize,
                 ) != 0
                 {
@@ -1523,7 +1523,7 @@ unsafe extern "C" fn ZDICT_insertDictItem(
     mut table: *mut dictItem,
     mut maxSize: u32,
     mut elt: dictItem,
-    mut buffer: *const std::ffi::c_void,
+    mut buffer: *const c_void,
 ) {
     let mut mergeId = ZDICT_tryMerge(table, elt, 0, buffer);
     if mergeId != 0 {
@@ -1573,7 +1573,7 @@ unsafe extern "C" fn ZDICT_dictSize(mut dictList: *const dictItem) -> u32 {
 unsafe extern "C" fn ZDICT_trainBuffer_legacy(
     mut dictList: *mut dictItem,
     mut dictListSize: u32,
-    buffer: *const std::ffi::c_void,
+    buffer: *const c_void,
     mut bufferSize: usize,
     mut fileSizes: *const usize,
     mut nbFiles: u32,
@@ -1614,7 +1614,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             minRatio = MINRATIO as u32;
         }
         libc::memset(
-            doneMarks as *mut std::ffi::c_void,
+            doneMarks as *mut c_void,
             0,
             bufferSize.wrapping_add(16),
         );
@@ -1623,7 +1623,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                 fprintf(
                     stderr,
                     b"sample set too large : reduced to %u MB ...\n\0" as *const u8
-                        as *const std::ffi::c_char,
+                        as *const c_char,
                     (2000 as u32) << 20
                         >> 20,
                 );
@@ -1638,7 +1638,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             fprintf(
                 stderr,
                 b"sorting %u files of total size %u MB ...\n\0" as *const u8
-                    as *const std::ffi::c_char,
+                    as *const c_char,
                 nbFiles,
                 (bufferSize >> 20) as u32,
             );
@@ -1730,7 +1730,7 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
                                 );
                                 fprintf(
                                     stderr,
-                                    b"\r%4.2f %% \r\0" as *const u8 as *const std::ffi::c_char,
+                                    b"\r%4.2f %% \r\0" as *const u8 as *const c_char,
                                     cursor as std::ffi::c_double
                                         / bufferSize as std::ffi::c_double * 100.0f64,
                                 );
@@ -1752,14 +1752,14 @@ unsafe extern "C" fn ZDICT_trainBuffer_legacy(
             }
         }
     }
-    libc::free(suffix0 as *mut std::ffi::c_void);
-    libc::free(reverseSuffix as *mut std::ffi::c_void);
-    libc::free(doneMarks as *mut std::ffi::c_void);
-    libc::free(filePos as *mut std::ffi::c_void);
+    libc::free(suffix0 as *mut c_void);
+    libc::free(reverseSuffix as *mut c_void);
+    libc::free(doneMarks as *mut c_void);
+    libc::free(filePos as *mut c_void);
     return result;
 }
 unsafe extern "C" fn ZDICT_fillNoise(
-    mut buffer: *mut std::ffi::c_void,
+    mut buffer: *mut c_void,
     mut length: usize,
 ) {
     let prime1: u32 = 2654435761;
@@ -1782,7 +1782,7 @@ unsafe extern "C" fn ZDICT_countEStats(
     mut matchlengthCount: *mut u32,
     mut litlengthCount: *mut u32,
     mut repOffsets: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
     mut notificationLevel: u32,
 ) {
@@ -1939,13 +1939,13 @@ unsafe extern "C" fn ZDICT_flatLit(mut countLit: *mut u32) {
 }
 pub const OFFCODE_MAX: i32 = 30;
 unsafe extern "C" fn ZDICT_analyzeEntropy(
-    mut dstBuffer: *mut std::ffi::c_void,
+    mut dstBuffer: *mut c_void,
     mut maxDstSize: usize,
     mut compressionLevel: i32,
-    mut srcBuffer: *const std::ffi::c_void,
+    mut srcBuffer: *const c_void,
     mut fileSizes: *const usize,
     mut nbFiles: u32,
-    mut dictBuffer: *const std::ffi::c_void,
+    mut dictBuffer: *const c_void,
     mut dictBufferSize: usize,
     mut notificationLevel: u32,
 ) -> usize {
@@ -2036,7 +2036,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
             u;
         }
         libc::memset(
-            repOffset.as_mut_ptr() as *mut std::ffi::c_void,
+            repOffset.as_mut_ptr() as *mut c_void,
             0,
             ::core::mem::size_of::<[u32; 1024]>(),
         );
@@ -2044,7 +2044,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
         repOffset[4] = repOffset[8];
         repOffset[1] = repOffset[4];
         libc::memset(
-            bestRepOffset.as_mut_ptr() as *mut std::ffi::c_void,
+            bestRepOffset.as_mut_ptr() as *mut c_void,
             0,
             ::core::mem::size_of::<[offsetCount_t; 4]>(),
         );
@@ -2081,8 +2081,8 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                     matchLengthCount.as_mut_ptr(),
                     litLengthCount.as_mut_ptr(),
                     repOffset.as_mut_ptr(),
-                    (srcBuffer as *const std::ffi::c_char).offset(pos as isize)
-                        as *const std::ffi::c_void,
+                    (srcBuffer as *const c_char).offset(pos as isize)
+                        as *const c_void,
                     *fileSizes.offset(u as isize),
                     notificationLevel,
                 );
@@ -2104,7 +2104,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                 countLit.as_mut_ptr(),
                 255,
                 huffLog,
-                wksp.as_mut_ptr() as *mut std::ffi::c_void,
+                wksp.as_mut_ptr() as *mut c_void,
                 ::core::mem::size_of::<[u32; 1216]>(),
             );
             if ERR_isError(maxNbBits) {
@@ -2119,7 +2119,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         countLit.as_mut_ptr(),
                         255,
                         huffLog,
-                        wksp.as_mut_ptr() as *mut std::ffi::c_void,
+                        wksp.as_mut_ptr() as *mut c_void,
                         ::core::mem::size_of::<[u32; 1216]>(),
                     );
                 }
@@ -2199,12 +2199,12 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                         } else {
                             llLog = errorCode as u32;
                             let hhSize = HUF_writeCTable_wksp(
-                                dstPtr as *mut std::ffi::c_void,
+                                dstPtr as *mut c_void,
                                 maxDstSize,
                                 hufTable.as_mut_ptr(),
                                 255,
                                 huffLog,
-                                wksp.as_mut_ptr() as *mut std::ffi::c_void,
+                                wksp.as_mut_ptr() as *mut c_void,
                                 ::core::mem::size_of::<[u32; 1216]>(),
                             );
                             if ERR_isError(hhSize) {
@@ -2215,7 +2215,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                 maxDstSize = maxDstSize.wrapping_sub(hhSize);
                                 eSize = eSize.wrapping_add(hhSize);
                                 let ohSize = FSE_writeNCount(
-                                    dstPtr as *mut std::ffi::c_void,
+                                    dstPtr as *mut c_void,
                                     maxDstSize,
                                     offcodeNCount.as_mut_ptr(),
                                     OFFCODE_MAX as u32,
@@ -2229,7 +2229,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                     maxDstSize = maxDstSize.wrapping_sub(ohSize);
                                     eSize = eSize.wrapping_add(ohSize);
                                     let mhSize = FSE_writeNCount(
-                                        dstPtr as *mut std::ffi::c_void,
+                                        dstPtr as *mut c_void,
                                         maxDstSize,
                                         matchLengthNCount.as_mut_ptr(),
                                         MaxML as u32,
@@ -2243,7 +2243,7 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                         maxDstSize = maxDstSize.wrapping_sub(mhSize);
                                         eSize = eSize.wrapping_add(mhSize);
                                         let lhSize = FSE_writeNCount(
-                                            dstPtr as *mut std::ffi::c_void,
+                                            dstPtr as *mut c_void,
                                             maxDstSize,
                                             litLengthNCount.as_mut_ptr(),
                                             MaxLL as u32,
@@ -2262,17 +2262,17 @@ unsafe extern "C" fn ZDICT_analyzeEntropy(
                                             } else {
                                                 MEM_writeLE32(
                                                     dstPtr.offset(0)
-                                                        as *mut std::ffi::c_void,
+                                                        as *mut c_void,
                                                     repStartValue[0],
                                                 );
                                                 MEM_writeLE32(
                                                     dstPtr.offset(4)
-                                                        as *mut std::ffi::c_void,
+                                                        as *mut c_void,
                                                     repStartValue[1],
                                                 );
                                                 MEM_writeLE32(
                                                     dstPtr.offset(8)
-                                                        as *mut std::ffi::c_void,
+                                                        as *mut c_void,
                                                     repStartValue[2],
                                                 );
                                                 eSize = eSize.wrapping_add(12);
@@ -2305,11 +2305,11 @@ unsafe extern "C" fn ZDICT_maxRep(mut reps: *const u32) -> u32 {
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_finalizeDictionary(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictBufferCapacity: usize,
-    mut customDictContent: *const std::ffi::c_void,
+    mut customDictContent: *const c_void,
     mut dictContentSize: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
     mut params: ZDICT_params_t,
@@ -2326,7 +2326,7 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
     let mut paddingSize: usize = 0;
     RETURN_ERROR_IF!(dictBufferCapacity < dictContentSize, ZSTD_error_dstSize_tooSmall);
     RETURN_ERROR_IF!(dictBufferCapacity < ZDICT_DICTSIZE_MIN as usize, ZSTD_error_dstSize_tooSmall);
-    MEM_writeLE32(header.as_mut_ptr() as *mut std::ffi::c_void, ZSTD_MAGIC_DICTIONARY);
+    MEM_writeLE32(header.as_mut_ptr() as *mut c_void, ZSTD_MAGIC_DICTIONARY);
     let randomID = ZSTD_XXH64(
         customDictContent,
         dictContentSize,
@@ -2339,14 +2339,14 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
     let dictID = if params.dictID != 0 { params.dictID } else { compliantID };
     MEM_writeLE32(
         header.as_mut_ptr().offset(4)
-            as *mut std::ffi::c_void,
+            as *mut c_void,
         dictID,
     );
     hSize = 8;
     DISPLAYLEVEL!(2, "\r%70s\r", "");
     DISPLAYLEVEL!(2, "statistics ... \n");
     let eSize = ZDICT_analyzeEntropy(
-        header.as_mut_ptr().offset(hSize as isize) as *mut std::ffi::c_void,
+        header.as_mut_ptr().offset(hSize as isize) as *mut c_void,
         (HBUFFSIZE as usize).wrapping_sub(hSize),
         compressionLevel,
         samplesBuffer,
@@ -2373,21 +2373,21 @@ pub unsafe extern "C" fn ZDICT_finalizeDictionary(
     let outDictHeader = dictBuffer as *mut u8;
     let outDictPadding = outDictHeader.offset(hSize as isize);
     let outDictContent = outDictPadding.offset(paddingSize as isize);
-    libc::memmove(outDictContent as *mut std::ffi::c_void, customDictContent, dictContentSize);
+    libc::memmove(outDictContent as *mut c_void, customDictContent, dictContentSize);
     libc::memcpy(
-        outDictHeader as *mut std::ffi::c_void,
-        header.as_mut_ptr() as *const std::ffi::c_void,
+        outDictHeader as *mut c_void,
+        header.as_mut_ptr() as *const c_void,
         hSize,
     );
-    libc::memset(outDictPadding as *mut std::ffi::c_void, 0, paddingSize);
+    libc::memset(outDictPadding as *mut c_void, 0, paddingSize);
     return dictSize;
 }
 pub const HBUFFSIZE: i32 = 256;
 unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictContentSize: usize,
     mut dictBufferCapacity: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
     mut params: ZDICT_params_t,
@@ -2402,16 +2402,16 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
     DISPLAYLEVEL!(2, "\r%70s\r", "");
     DISPLAYLEVEL!(2, "statistics ... \n");
     let eSize = ZDICT_analyzeEntropy(
-        (dictBuffer as *mut std::ffi::c_char).offset(hSize as isize)
-            as *mut std::ffi::c_void,
+        (dictBuffer as *mut c_char).offset(hSize as isize)
+            as *mut c_void,
         dictBufferCapacity.wrapping_sub(hSize),
         compressionLevel,
         samplesBuffer,
         samplesSizes,
         nbSamples,
-        (dictBuffer as *mut std::ffi::c_char)
+        (dictBuffer as *mut c_char)
             .offset(dictBufferCapacity as isize)
-            .offset(-(dictContentSize as isize)) as *const std::ffi::c_void,
+            .offset(-(dictContentSize as isize)) as *const c_void,
         dictContentSize,
         notificationLevel,
     );
@@ -2421,9 +2421,9 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
     hSize = hSize.wrapping_add(eSize);
     MEM_writeLE32(dictBuffer, ZSTD_MAGIC_DICTIONARY);
     let randomID = ZSTD_XXH64(
-        (dictBuffer as *mut std::ffi::c_char)
+        (dictBuffer as *mut c_char)
             .offset(dictBufferCapacity as isize)
-            .offset(-(dictContentSize as isize)) as *const std::ffi::c_void,
+            .offset(-(dictContentSize as isize)) as *const c_void,
         dictContentSize,
         0,
     );
@@ -2433,26 +2433,26 @@ unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer_advanced(
         .wrapping_add(32768) as u32;
     let dictID = if params.dictID != 0 { params.dictID } else { compliantID };
     MEM_writeLE32(
-        (dictBuffer as *mut std::ffi::c_char).offset(4)
-            as *mut std::ffi::c_void,
+        (dictBuffer as *mut c_char).offset(4)
+            as *mut c_void,
         dictID,
     );
     if hSize.wrapping_add(dictContentSize) < dictBufferCapacity {
         libc::memmove(
-            (dictBuffer as *mut std::ffi::c_char).offset(hSize as isize)
-                as *mut std::ffi::c_void,
-            (dictBuffer as *mut std::ffi::c_char)
+            (dictBuffer as *mut c_char).offset(hSize as isize)
+                as *mut c_void,
+            (dictBuffer as *mut c_char)
                 .offset(dictBufferCapacity as isize)
-                .offset(-(dictContentSize as isize)) as *const std::ffi::c_void,
+                .offset(-(dictContentSize as isize)) as *const c_void,
             dictContentSize,
         );
     }
     return std::cmp::min(dictBufferCapacity, hSize + dictContentSize);
 }
 unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut maxDictSize: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
     mut params: ZDICT_legacy_params_t,
@@ -2493,11 +2493,11 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     let notificationLevel = params.zParams.notificationLevel;
     RETURN_ERROR_IF!(dictList.is_null(), ZSTD_error_memory_allocation);
     if maxDictSize < ZDICT_DICTSIZE_MIN as usize {
-        libc::free(dictList as *mut std::ffi::c_void);
+        libc::free(dictList as *mut c_void);
         return ERROR(ZSTD_error_dstSize_tooSmall);
     }
     if samplesBuffSize < ZDICT_MIN_SAMPLES_SIZE as usize {
-        libc::free(dictList as *mut std::ffi::c_void);
+        libc::free(dictList as *mut c_void);
         return ERROR(ZSTD_error_dictionaryCreation_failed);
     }
     ZDICT_initDictItem(dictList);
@@ -2526,14 +2526,14 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
             if pos as usize > samplesBuffSize
                 || pos.wrapping_add(length) as usize > samplesBuffSize
             {
-                libc::free(dictList as *mut std::ffi::c_void);
+                libc::free(dictList as *mut c_void);
                 return ERROR(ZSTD_error_GENERIC);
             }
             DISPLAYLEVEL!(3, "%3u:%3u bytes at pos %8u, savings %7u bytes |", u, length, pos,
                 (unsigned) dictList[u].savings);
             ZDICT_printHex(
-                (samplesBuffer as *const std::ffi::c_char).offset(pos as isize)
-                    as *const std::ffi::c_void,
+                (samplesBuffer as *const c_char).offset(pos as isize)
+                    as *const c_void,
                 printedLength as usize,
             );
             DISPLAYLEVEL!(3, "| \n");
@@ -2543,7 +2543,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
     }
     let mut dictContentSize_0 = ZDICT_dictSize(dictList);
     if dictContentSize_0 < ZDICT_CONTENTSIZE_MIN as u32 {
-        libc::free(dictList as *mut std::ffi::c_void);
+        libc::free(dictList as *mut c_void);
         return ERROR(ZSTD_error_dictionaryCreation_failed);
     }
     if (dictContentSize_0 as usize) < targetDictSize / 4_usize {
@@ -2554,7 +2554,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
                 fprintf(
                     stderr,
                     b"!  consider increasing the number of samples (total size : %u MB)\n\0"
-                        as *const u8 as *const std::ffi::c_char,
+                        as *const u8 as *const c_char,
                     (samplesBuffSize >> 20) as u32,
                 );
                 fflush(stderr);
@@ -2606,7 +2606,7 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         let mut l = (*dictList.offset(u_0 as isize)).length;
         ptr = ptr.offset(-(l as isize));
         if ptr < dictBuffer as *mut u8 {
-            libc::free(dictList as *mut std::ffi::c_void);
+            libc::free(dictList as *mut c_void);
             return ERROR(ZSTD_error_GENERIC);
         }
         libc::memcpy(
@@ -2625,14 +2625,14 @@ unsafe extern "C" fn ZDICT_trainFromBuffer_unsafe_legacy(
         nbSamples,
         params.zParams,
     );
-    libc::free(dictList as *mut std::ffi::c_void);
+    libc::free(dictList as *mut c_void);
     return dictSize;
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_trainFromBuffer_legacy(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictBufferCapacity: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
     mut params: ZDICT_legacy_params_t,
@@ -2647,8 +2647,8 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_legacy(
     RETURN_ERROR_IF!(newBuff.is_null(), ZSTD_error_memory_allocation);
     libc::memcpy(newBuff, samplesBuffer, sBuffSize);
     ZDICT_fillNoise(
-        (newBuff as *mut std::ffi::c_char).offset(sBuffSize as isize)
-            as *mut std::ffi::c_void,
+        (newBuff as *mut c_char).offset(sBuffSize as isize)
+            as *mut c_void,
         NOISELENGTH as usize,
     );
     result = ZDICT_trainFromBuffer_unsafe_legacy(
@@ -2664,9 +2664,9 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer_legacy(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_trainFromBuffer(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictBufferCapacity: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
 ) -> usize {
@@ -2687,7 +2687,7 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer(
         },
     };
     libc::memset(
-        &mut params as *mut ZDICT_fastCover_params_t as *mut std::ffi::c_void,
+        &mut params as *mut ZDICT_fastCover_params_t as *mut c_void,
         0,
         ::core::mem::size_of::<ZDICT_fastCover_params_t>(),
     );
@@ -2705,10 +2705,10 @@ pub unsafe extern "C" fn ZDICT_trainFromBuffer(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer(
-    mut dictBuffer: *mut std::ffi::c_void,
+    mut dictBuffer: *mut c_void,
     mut dictContentSize: usize,
     mut dictBufferCapacity: usize,
-    mut samplesBuffer: *const std::ffi::c_void,
+    mut samplesBuffer: *const c_void,
     mut samplesSizes: *const usize,
     mut nbSamples: u32,
 ) -> usize {
@@ -2718,7 +2718,7 @@ pub unsafe extern "C" fn ZDICT_addEntropyTablesFromBuffer(
         dictID: 0,
     };
     libc::memset(
-        &mut params as *mut ZDICT_params_t as *mut std::ffi::c_void,
+        &mut params as *mut ZDICT_params_t as *mut c_void,
         0,
         ::core::mem::size_of::<ZDICT_params_t>(),
     );

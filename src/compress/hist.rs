@@ -1,4 +1,5 @@
 use std::mem::size_of;
+use std::ffi::{c_char, c_void};
 
 use crate::zstd_h::*;
 use crate::common::mem::*;
@@ -20,7 +21,7 @@ pub const HIST_WKSP_SIZE: usize = HIST_WKSP_SIZE_U32 * size_of::<u32>();
  */
 pub unsafe fn HIST_add(
     count: *mut u32,
-    src: *const std::ffi::c_void,
+    src: *const c_void,
     srcSize: usize,
 ) {
     let mut ip = src as *const u8;
@@ -44,7 +45,7 @@ pub unsafe fn HIST_add(
 pub unsafe fn HIST_count_simple(
     mut count: *mut u32,
     mut maxSymbolValuePtr: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
 ) -> u32 {
     let mut ip = src as *const u8;
@@ -52,7 +53,7 @@ pub unsafe fn HIST_count_simple(
     let mut maxSymbolValue = *maxSymbolValuePtr;
     let mut largestCount: u32 = 0;
     libc::memset(
-        count as *mut std::ffi::c_void,
+        count as *mut c_void,
         0,
         (maxSymbolValue as usize + 1) * size_of::<u32>(),
     );
@@ -94,7 +95,7 @@ pub const trustInput: HIST_checkInput_e = 0;
 unsafe fn HIST_count_parallel_wksp(
     mut count: *mut u32,
     mut maxSymbolValuePtr: *mut u32,
-    mut source: *const std::ffi::c_void,
+    mut source: *const c_void,
     mut sourceSize: usize,
     mut check: HIST_checkInput_e,
     workSpace: *mut u32,
@@ -117,17 +118,17 @@ unsafe fn HIST_count_parallel_wksp(
         return 0;
     }
     libc::memset(
-        workSpace as *mut std::ffi::c_void,
+        workSpace as *mut c_void,
         0,
         (4_usize * 256) * size_of::<u32>(),
     );
 
     /* by stripes of 16 bytes */
-    let mut cached = MEM_read32(ip as *const std::ffi::c_void);
+    let mut cached = MEM_read32(ip as *const c_void);
     ip = ip.offset(4);
     while ip < iend.offset(-15_isize) {
         let mut c = cached;
-        cached = MEM_read32(ip as *const std::ffi::c_void);
+        cached = MEM_read32(ip as *const c_void);
         ip = ip.offset(4);
         let ref mut fresh4 = *Counting1.offset(c as u8 as isize);
         *fresh4 = (*fresh4).wrapping_add(1);
@@ -144,7 +145,7 @@ unsafe fn HIST_count_parallel_wksp(
         *fresh7 = (*fresh7).wrapping_add(1);
         *fresh7;
         c = cached;
-        cached = MEM_read32(ip as *const std::ffi::c_void);
+        cached = MEM_read32(ip as *const c_void);
         ip = ip.offset(4);
         let ref mut fresh8 = *Counting1.offset(c as u8 as isize);
         *fresh8 = (*fresh8).wrapping_add(1);
@@ -161,7 +162,7 @@ unsafe fn HIST_count_parallel_wksp(
         *fresh11 = (*fresh11).wrapping_add(1);
         *fresh11;
         c = cached;
-        cached = MEM_read32(ip as *const std::ffi::c_void);
+        cached = MEM_read32(ip as *const c_void);
         ip = ip.offset(4);
         let ref mut fresh12 = *Counting1.offset(c as u8 as isize);
         *fresh12 = (*fresh12).wrapping_add(1);
@@ -178,7 +179,7 @@ unsafe fn HIST_count_parallel_wksp(
         *fresh15 = (*fresh15).wrapping_add(1);
         *fresh15;
         c = cached;
-        cached = MEM_read32(ip as *const std::ffi::c_void);
+        cached = MEM_read32(ip as *const c_void);
         ip = ip.offset(4);
         let ref mut fresh16 = *Counting1.offset(c as u8 as isize);
         *fresh16 = (*fresh16).wrapping_add(1);
@@ -238,9 +239,9 @@ unsafe fn HIST_count_parallel_wksp(
 pub unsafe fn HIST_countFast_wksp(
     mut count: *mut u32,
     mut maxSymbolValuePtr: *mut u32,
-    mut source: *const std::ffi::c_void,
+    mut source: *const c_void,
     mut sourceSize: usize,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut workSpaceSize: usize,
 ) -> usize {
     if sourceSize < 1500 { /* heuristic threshold */
@@ -267,9 +268,9 @@ pub unsafe fn HIST_countFast_wksp(
 pub unsafe fn HIST_count_wksp(
     mut count: *mut u32,
     mut maxSymbolValuePtr: *mut u32,
-    mut source: *const std::ffi::c_void,
+    mut source: *const c_void,
     mut sourceSize: usize,
-    mut workSpace: *mut std::ffi::c_void,
+    mut workSpace: *mut c_void,
     mut workSpaceSize: usize,
 ) -> usize {
     RETURN_ERROR_IF!(!workSpace.is_aligned_to(4), ZSTD_error_GENERIC); /* must be aligned on 4-bytes boundaries */
@@ -302,7 +303,7 @@ pub unsafe fn HIST_count_wksp(
 pub unsafe fn HIST_countFast(
     mut count: *mut u32,
     mut maxSymbolValuePtr: *mut u32,
-    mut source: *const std::ffi::c_void,
+    mut source: *const c_void,
     mut sourceSize: usize,
 ) -> usize {
     let mut tmpCounters: [u32; 1024] = [0; 1024];
@@ -311,7 +312,7 @@ pub unsafe fn HIST_countFast(
         maxSymbolValuePtr,
         source,
         sourceSize,
-        tmpCounters.as_mut_ptr() as *mut std::ffi::c_void,
+        tmpCounters.as_mut_ptr() as *mut c_void,
         size_of::<[u32; 1024]>(),
     );
 }
@@ -326,7 +327,7 @@ pub unsafe fn HIST_countFast(
 pub unsafe fn HIST_count(
     mut count: *mut u32,
     mut maxSymbolValuePtr: *mut u32,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
 ) -> usize {
     let mut tmpCounters: [u32; 1024] = [0; 1024];
@@ -335,7 +336,7 @@ pub unsafe fn HIST_count(
         maxSymbolValuePtr,
         src,
         srcSize,
-        tmpCounters.as_mut_ptr() as *mut std::ffi::c_void,
+        tmpCounters.as_mut_ptr() as *mut c_void,
         size_of::<[u32; 1024]>(),
     );
 }

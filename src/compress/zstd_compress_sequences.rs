@@ -1,4 +1,5 @@
 use std::mem::{size_of, size_of_val};
+use std::ffi::{c_char, c_void};
 
 use crate::zstd_h::*;
 use crate::common::error::*;
@@ -50,10 +51,10 @@ const kInverseProbabilityLog256: [u32; 256] = [
 unsafe fn ZSTD_getFSEMaxSymbolValue(
     mut ctable: *const FSE_CTable,
 ) -> u32 {
-    let mut ptr = ctable as *const std::ffi::c_void;
+    let mut ptr = ctable as *const c_void;
     let mut u16ptr = ptr as *const u16;
     let maxSymbolValue = MEM_read16(
-        u16ptr.offset(1) as *const std::ffi::c_void,
+        u16ptr.offset(1) as *const c_void,
     ) as u32;
     return maxSymbolValue;
 }
@@ -88,7 +89,7 @@ unsafe fn ZSTD_NCountCost(
         ZSTD_useLowProbCount(nbSeq)), ""
     );
     return FSE_writeNCount(
-        wksp.as_mut_ptr() as *mut std::ffi::c_void,
+        wksp.as_mut_ptr() as *mut c_void,
         size_of_val(&wksp),
         norm.as_mut_ptr(),
         max,
@@ -295,7 +296,7 @@ pub struct ZSTD_BuildCTableWksp {
 }
 
 pub unsafe fn ZSTD_buildCTable(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     mut nextCTable: *mut FSE_CTable,
     mut FSELog: u32,
@@ -309,7 +310,7 @@ pub unsafe fn ZSTD_buildCTable(
     mut defaultMax: u32,
     mut prevCTable: *const FSE_CTable,
     mut prevCTableSize: usize,
-    mut entropyWorkspace: *mut std::ffi::c_void,
+    mut entropyWorkspace: *mut c_void,
     mut entropyWorkspaceSize: usize,
 ) -> usize {
     let mut op = dst as *mut u8;
@@ -357,7 +358,7 @@ pub unsafe fn ZSTD_buildCTable(
             );
             debug_assert!(oend >= op);
             let NCountSize = FSE_writeNCount(
-                op as *mut std::ffi::c_void,
+                op as *mut c_void,
                 oend.offset_from(op) as usize,
                 ((*wksp).norm).as_mut_ptr(),
                 max,
@@ -378,7 +379,7 @@ pub unsafe fn ZSTD_buildCTable(
 
 #[inline(always)]
 unsafe fn ZSTD_encodeSequences_body(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     mut CTable_MatchLength: *const FSE_CTable,
     mut mlCodeTable: *const u8,
@@ -579,7 +580,7 @@ unsafe fn ZSTD_encodeSequences_body(
 }
 
 unsafe fn ZSTD_encodeSequences_default(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     mut CTable_MatchLength: *const FSE_CTable,
     mut mlCodeTable: *const u8,
@@ -608,7 +609,7 @@ unsafe fn ZSTD_encodeSequences_default(
 
 // TODO #if DYNAMIC_BMI2
 unsafe fn ZSTD_encodeSequences_bmi2(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     mut CTable_MatchLength: *const FSE_CTable,
     mut mlCodeTable: *const u8,
@@ -636,7 +637,7 @@ unsafe fn ZSTD_encodeSequences_bmi2(
 }
 
 pub unsafe fn ZSTD_encodeSequences(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
     mut CTable_MatchLength: *const FSE_CTable,
     mut mlCodeTable: *const u8,

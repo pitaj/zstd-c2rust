@@ -1,26 +1,26 @@
-use ::libc;
+use std::ffi::{c_char, c_void};
 extern "C" {
     fn HUF_compress4X_repeat(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstSize: usize,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
         maxSymbolValue: u32,
         tableLog: u32,
-        workSpace: *mut std::ffi::c_void,
+        workSpace: *mut c_void,
         wkspSize: usize,
         hufTable: *mut HUF_CElt,
         repeat: *mut HUF_repeat,
         flags: i32,
     ) -> usize;
     fn HUF_compress1X_repeat(
-        dst: *mut std::ffi::c_void,
+        dst: *mut c_void,
         dstSize: usize,
-        src: *const std::ffi::c_void,
+        src: *const c_void,
         srcSize: usize,
         maxSymbolValue: u32,
         tableLog: u32,
-        workSpace: *mut std::ffi::c_void,
+        workSpace: *mut c_void,
         wkspSize: usize,
         hufTable: *mut HUF_CElt,
         repeat: *mut HUF_repeat,
@@ -65,13 +65,13 @@ pub const HUF_flags_optimalDepth: C2RustUnnamed_0 = 2;
 pub const HUF_flags_bmi2: C2RustUnnamed_0 = 1;
 pub type huf_compress_f = Option::<
     unsafe extern "C" fn(
-        *mut std::ffi::c_void,
+        *mut c_void,
         usize,
-        *const std::ffi::c_void,
+        *const c_void,
         usize,
         u32,
         u32,
-        *mut std::ffi::c_void,
+        *mut c_void,
         usize,
         *mut HUF_CElt,
         *mut HUF_repeat,
@@ -81,7 +81,7 @@ pub type huf_compress_f = Option::<
 use crate::common::mem::*;
 #[inline]
 unsafe extern "C" fn _force_has_format_string(
-    mut format: *const std::ffi::c_char,
+    mut format: *const c_char,
     mut args: ...
 ) {}
 #[inline]
@@ -103,9 +103,9 @@ pub const HUF_SYMBOLVALUE_MAX: i32 = 255;
 pub const HUF_OPTIMAL_DEPTH_THRESHOLD: i32 = ZSTD_btultra as i32;
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_noCompressLiterals(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
 ) -> usize {
     let ostart = dst as *mut u8;
@@ -123,7 +123,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
         }
         2 => {
             MEM_writeLE16(
-                ostart as *mut std::ffi::c_void,
+                ostart as *mut c_void,
                 ((set_basic as i32 as u32)
                     .wrapping_add(
                         ((1 as i32) << 2) as u32,
@@ -133,7 +133,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
         }
         3 => {
             MEM_writeLE32(
-                ostart as *mut std::ffi::c_void,
+                ostart as *mut c_void,
                 ((set_basic as i32 as u32)
                     .wrapping_add(
                         ((3 as i32) << 2) as u32,
@@ -147,7 +147,7 @@ pub unsafe extern "C" fn ZSTD_noCompressLiterals(
     return srcSize.wrapping_add(flSize as usize);
 }
 unsafe extern "C" fn allBytesIdentical(
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
 ) -> i32 {
     let b = *(src as *const u8).offset(0);
@@ -166,9 +166,9 @@ unsafe extern "C" fn allBytesIdentical(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
 ) -> usize {
     let ostart = dst as *mut u8;
@@ -185,7 +185,7 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
         }
         2 => {
             MEM_writeLE16(
-                ostart as *mut std::ffi::c_void,
+                ostart as *mut c_void,
                 ((set_rle as i32 as u32)
                     .wrapping_add(
                         ((1 as i32) << 2) as u32,
@@ -195,7 +195,7 @@ pub unsafe extern "C" fn ZSTD_compressRleLiteralsBlock(
         }
         3 => {
             MEM_writeLE32(
-                ostart as *mut std::ffi::c_void,
+                ostart as *mut c_void,
                 ((set_rle as i32 as u32)
                     .wrapping_add(
                         ((3 as i32) << 2) as u32,
@@ -224,11 +224,11 @@ unsafe extern "C" fn ZSTD_minLiteralsToCompress(
 }
 #[no_mangle]
 pub unsafe extern "C" fn ZSTD_compressLiterals(
-    mut dst: *mut std::ffi::c_void,
+    mut dst: *mut c_void,
     mut dstCapacity: usize,
-    mut src: *const std::ffi::c_void,
+    mut src: *const c_void,
     mut srcSize: usize,
-    mut entropyWorkspace: *mut std::ffi::c_void,
+    mut entropyWorkspace: *mut c_void,
     mut entropyWorkspaceSize: usize,
     mut prevHuf: *const ZSTD_hufCTables_t,
     mut nextHuf: *mut ZSTD_hufCTables_t,
@@ -251,8 +251,8 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
     let mut hType = set_compressed;
     let mut cLitSize: usize = 0;
     libc::memcpy(
-        nextHuf as *mut std::ffi::c_void,
-        prevHuf as *const std::ffi::c_void,
+        nextHuf as *mut c_void,
+        prevHuf as *const c_void,
         ::core::mem::size_of::<ZSTD_hufCTables_t>() as usize,
     );
     if disableLiteralCompression != 0 {
@@ -300,13 +300,13 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         Some(
             HUF_compress1X_repeat
                 as unsafe extern "C" fn(
-                    *mut std::ffi::c_void,
+                    *mut c_void,
                     usize,
-                    *const std::ffi::c_void,
+                    *const c_void,
                     usize,
                     u32,
                     u32,
-                    *mut std::ffi::c_void,
+                    *mut c_void,
                     usize,
                     *mut HUF_CElt,
                     *mut HUF_repeat,
@@ -317,13 +317,13 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         Some(
             HUF_compress4X_repeat
                 as unsafe extern "C" fn(
-                    *mut std::ffi::c_void,
+                    *mut c_void,
                     usize,
-                    *const std::ffi::c_void,
+                    *const c_void,
                     usize,
                     u32,
                     u32,
-                    *mut std::ffi::c_void,
+                    *mut c_void,
                     usize,
                     *mut HUF_CElt,
                     *mut HUF_repeat,
@@ -335,7 +335,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         .expect(
             "non-null function pointer",
         )(
-        ostart.offset(lhSize as isize) as *mut std::ffi::c_void,
+        ostart.offset(lhSize as isize) as *mut c_void,
         dstCapacity.wrapping_sub(lhSize),
         src,
         srcSize,
@@ -357,8 +357,8 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
         || cLitSize >= srcSize.wrapping_sub(minGain) || ERR_isError(cLitSize) != 0
     {
         libc::memcpy(
-            nextHuf as *mut std::ffi::c_void,
-            prevHuf as *const std::ffi::c_void,
+            nextHuf as *mut c_void,
+            prevHuf as *const c_void,
             ::core::mem::size_of::<ZSTD_hufCTables_t>()
                 as usize,
         );
@@ -369,8 +369,8 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
             || allBytesIdentical(src, srcSize) != 0
         {
             libc::memcpy(
-                nextHuf as *mut std::ffi::c_void,
-                prevHuf as *const std::ffi::c_void,
+                nextHuf as *mut c_void,
+                prevHuf as *const c_void,
                 ::core::mem::size_of::<ZSTD_hufCTables_t>()
                     as usize,
             );
@@ -391,7 +391,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
                 )
                 .wrapping_add((srcSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 14);
-            MEM_writeLE24(ostart as *mut std::ffi::c_void, lhc);
+            MEM_writeLE24(ostart as *mut c_void, lhc);
         }
         4 => {
             let lhc_0 = (hType as u32)
@@ -400,7 +400,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
                 )
                 .wrapping_add((srcSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 18);
-            MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_0);
+            MEM_writeLE32(ostart as *mut c_void, lhc_0);
         }
         5 => {
             let lhc_1 = (hType as u32)
@@ -409,7 +409,7 @@ pub unsafe extern "C" fn ZSTD_compressLiterals(
                 )
                 .wrapping_add((srcSize as u32) << 4)
                 .wrapping_add((cLitSize as u32) << 22);
-            MEM_writeLE32(ostart as *mut std::ffi::c_void, lhc_1);
+            MEM_writeLE32(ostart as *mut c_void, lhc_1);
             *ostart
                 .offset(
                     4,
