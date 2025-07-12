@@ -157,27 +157,21 @@ pub const HUF_CTABLE_WORKSPACE_SIZE: usize = HUF_CTABLE_WORKSPACE_SIZE_U32 * siz
 //                        const unsigned* count, U32 maxSymbolValue, U32 maxNbBits,
 //                              void* workSpace, size_t wkspSize);
 
-// /*! HUF_readStats() :
-//  *  Read compact Huffman tree, saved by HUF_writeCTable().
-//  * `huffWeight` is destination buffer.
-//  * @return : size read from `src` , or an error Code .
-//  *  Note : Needed by HUF_readCTable() and HUF_readDTableXn() . */
-// size_t HUF_readStats(BYTE* huffWeight, size_t hwSize,
-//                      U32* rankStats, U32* nbSymbolsPtr, U32* tableLogPtr,
-//                      const void* src, size_t srcSize);
+/** HUF_readStats() :
+ *  Read compact Huffman tree, saved by HUF_writeCTable().
+ * `huffWeight` is destination buffer.
+ * @return : size read from `src` , or an error Code .
+ *  Note : Needed by HUF_readCTable() and HUF_readDTableXn() . */
+pub use crate::common::entropy_common::HUF_readStats;
 
 pub const HUF_READ_STATS_WORKSPACE_SIZE_U32: usize = FSE_DECOMPRESS_WKSP_SIZE_U32(6, HUF_TABLELOG_MAX - 1);
 pub const HUF_READ_STATS_WORKSPACE_SIZE: usize = HUF_READ_STATS_WORKSPACE_SIZE_U32 * size_of::<u32>();
-// /*! HUF_readStats_wksp() :
-//  * Same as HUF_readStats() but takes an external workspace which must be
-//  * 4-byte aligned and its size must be >= HUF_READ_STATS_WORKSPACE_SIZE.
-//  * If the CPU has BMI2 support, pass bmi2=1, otherwise pass bmi2=0.
-//  */
-// size_t HUF_readStats_wksp(BYTE* huffWeight, size_t hwSize,
-//                           U32* rankStats, U32* nbSymbolsPtr, U32* tableLogPtr,
-//                           const void* src, size_t srcSize,
-//                           void* workspace, size_t wkspSize,
-//                           int flags);
+/** HUF_readStats_wksp() :
+ * Same as HUF_readStats() but takes an external workspace which must be
+ * 4-byte aligned and its size must be >= HUF_READ_STATS_WORKSPACE_SIZE.
+ * If the CPU has BMI2 support, pass bmi2=1, otherwise pass bmi2=0.
+ */
+pub use crate::common::entropy_common::HUF_readStats_wksp;
 
 // /** HUF_readCTable() :
 //  *  Loading a CTable saved with HUF_writeCTable() */

@@ -545,6 +545,9 @@ case $1 in
 
     perl -i -p0e 's/(if ERR_isError\([^\)]*\)) != 0/$1/gm'  src/*/*.rs
 
+    # undo
+    # s/RETURN_ERROR_IF!\(([^,]*), (ZSTD_error[^\)]*)\);/if $1 { return ERROR($2); }/
+
     ;;
 
   zstd-mem)
